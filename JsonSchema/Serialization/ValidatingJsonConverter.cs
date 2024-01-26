@@ -115,7 +115,7 @@ internal interface IValidatingJsonConverter
 	public bool RequireFormatValidation { get; set; }
 }
 
-internal class ValidatingJsonConverter<T> : JsonConverter<T>, IValidatingJsonConverter
+internal class ValidatingJsonConverter<T> : JsonConverter<T>, Json.More.IJsonConverterReadWrite<T>, IValidatingJsonConverter
 {
 	private readonly JsonSchema _schema;
 	private readonly Func<JsonSerializerOptions, JsonSerializerOptions> _optionsFactory;
@@ -136,7 +136,7 @@ internal class ValidatingJsonConverter<T> : JsonConverter<T>, IValidatingJsonCon
 #pragma warning restore IL2046, IL3051
 	{
 		var readerCopy = reader;
-		var node = JsonSerializer.Deserialize(ref readerCopy, JsonSchemaSerializationContext.Default.JsonNode);
+		var node = JsonSerializer.Deserialize(ref readerCopy, JsonSchemaSerializerContext.Default.JsonNode);
 		
 		var validation = _schema.Evaluate(node, new EvaluationOptions
 		{

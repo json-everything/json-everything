@@ -68,7 +68,7 @@ public class SubtractRule : Rule
 	}
 }
 
-internal class SubtractRuleJsonConverter : JsonConverter<SubtractRule>
+internal class SubtractRuleJsonConverter : JsonConverter<SubtractRule>, Json.More.IJsonConverterReadWrite<SubtractRule>
 {
 	public override SubtractRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

@@ -84,7 +84,7 @@ public class ThenKeyword : IJsonSchemaKeyword, ISchemaContainer
 /// <summary>
 /// JSON converter for <see cref="ThenKeyword"/>.
 /// </summary>
-public sealed class ThenKeywordJsonConverter : JsonConverter<ThenKeyword>
+public sealed class ThenKeywordJsonConverter : JsonConverter<ThenKeyword>, Json.More.IJsonConverterReadWrite<ThenKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="ThenKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -93,7 +93,7 @@ public sealed class ThenKeywordJsonConverter : JsonConverter<ThenKeyword>
 	/// <returns>The converted value.</returns>
 	public override ThenKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var schema = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializationContext.Default.JsonSchema)!;
+		var schema = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializerContext.Default.JsonSchema)!;
 
 		return new ThenKeyword(schema);
 	}

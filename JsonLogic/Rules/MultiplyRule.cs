@@ -59,7 +59,7 @@ public class MultiplyRule : Rule
 	}
 }
 
-internal class MultiplyRuleJsonConverter : JsonConverter<MultiplyRule>
+internal class MultiplyRuleJsonConverter : JsonConverter<MultiplyRule>, Json.More.IJsonConverterReadWrite<MultiplyRule>
 {
 	public override MultiplyRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

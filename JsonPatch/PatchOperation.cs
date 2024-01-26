@@ -147,7 +147,7 @@ public class PatchOperation : IEquatable<PatchOperation>
 	}
 }
 
-internal class PatchOperationJsonConverter : JsonConverter<PatchOperation>
+internal class PatchOperationJsonConverter : JsonConverter<PatchOperation>, Json.More.IJsonConverterReadWrite<PatchOperation>
 {
 	internal class Model
 	{

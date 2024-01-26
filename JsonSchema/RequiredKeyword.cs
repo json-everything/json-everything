@@ -82,7 +82,7 @@ public class RequiredKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="RequiredKeyword"/>.
 /// </summary>
-public sealed class RequiredKeywordJsonConverter : JsonConverter<RequiredKeyword>
+public sealed class RequiredKeywordJsonConverter : JsonConverter<RequiredKeyword>, Json.More.IJsonConverterReadWrite<RequiredKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="RequiredKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -92,7 +92,7 @@ public sealed class RequiredKeywordJsonConverter : JsonConverter<RequiredKeyword
 	public override RequiredKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		return new RequiredKeyword(
-			JsonSerializer.Deserialize(ref reader, JsonSchemaSerializationContext.Default.StringArray) 
+			JsonSerializer.Deserialize(ref reader, JsonSchemaSerializerContext.Default.StringArray) 
 			?? throw new JsonException("Expected array"));
 	}
 

@@ -16,7 +16,7 @@ public class Test
 #pragma warning restore CS8618
 }
 
-public class TestConverter : JsonConverter<Test?>
+public class TestConverter : JsonConverter<Test?>, Json.More.IJsonConverterReadWrite<Test?>
 {
 	public override Test? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

@@ -75,7 +75,7 @@ public class MaxItemsKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="MaxItemsKeyword"/>.
 /// </summary>
-public sealed class MaxItemsKeywordJsonConverter : JsonConverter<MaxItemsKeyword>
+public sealed class MaxItemsKeywordJsonConverter : JsonConverter<MaxItemsKeyword>, Json.More.IJsonConverterReadWrite<MaxItemsKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="MaxItemsKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

@@ -72,7 +72,7 @@ public class IfKeyword : IJsonSchemaKeyword, ISchemaContainer
 /// <summary>
 /// JSON converter for <see cref="IfKeyword"/>.
 /// </summary>
-public sealed class IfKeywordJsonConverter : JsonConverter<IfKeyword>
+public sealed class IfKeywordJsonConverter : JsonConverter<IfKeyword>, Json.More.IJsonConverterReadWrite<IfKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="IfKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -81,7 +81,7 @@ public sealed class IfKeywordJsonConverter : JsonConverter<IfKeyword>
 	/// <returns>The converted value.</returns>
 	public override IfKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var schema = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializationContext.Default.JsonSchema)!;
+		var schema = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializerContext.Default.JsonSchema)!;
 
 		return new IfKeyword(schema);
 	}

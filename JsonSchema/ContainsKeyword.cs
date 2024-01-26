@@ -96,7 +96,7 @@ public class ContainsKeyword : IJsonSchemaKeyword, ISchemaContainer
 				.Where(x => x.Results.IsValid)
 				.Select(x => int.Parse(x.RelativeInstanceLocation.Segments[0].Value))
 				.ToArray();
-			evaluation.Results.SetAnnotation(Name, JsonSerializer.SerializeToNode(validIndices, JsonSchemaSerializationContext.Default.Int32Array));
+			evaluation.Results.SetAnnotation(Name, JsonSerializer.SerializeToNode(validIndices, JsonSchemaSerializerContext.Default.Int32Array));
 
 			var actual = validIndices.Length;
 			if (actual < minimum)
@@ -113,7 +113,7 @@ public class ContainsKeyword : IJsonSchemaKeyword, ISchemaContainer
 /// <summary>
 /// JSON converter for <see cref="ContainsKeyword"/>.
 /// </summary>
-public sealed class ContainsKeywordJsonConverter : JsonConverter<ContainsKeyword>
+public sealed class ContainsKeywordJsonConverter : JsonConverter<ContainsKeyword>, Json.More.IJsonConverterReadWrite<ContainsKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="ContainsKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -122,7 +122,7 @@ public sealed class ContainsKeywordJsonConverter : JsonConverter<ContainsKeyword
 	/// <returns>The converted value.</returns>
 	public override ContainsKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var schema = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializationContext.Default.JsonSchema)!;
+		var schema = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializerContext.Default.JsonSchema)!;
 
 		return new ContainsKeyword(schema);
 	}

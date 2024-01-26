@@ -101,7 +101,7 @@ public class EnumKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="EnumKeyword"/>.
 /// </summary>
-public sealed class EnumKeywordJsonConverter : JsonConverter<EnumKeyword>
+public sealed class EnumKeywordJsonConverter : JsonConverter<EnumKeyword>, Json.More.IJsonConverterReadWrite<EnumKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="EnumKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -110,7 +110,7 @@ public sealed class EnumKeywordJsonConverter : JsonConverter<EnumKeyword>
 	/// <returns>The converted value.</returns>
 	public override EnumKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var array = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializationContext.Default.JsonArray)!;
+		var array = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializerContext.Default.JsonArray)!;
 		if (array is null)
 			throw new JsonException("Expected an array, but received null");
 

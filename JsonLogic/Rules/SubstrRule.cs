@@ -87,7 +87,7 @@ public class SubstrRule : Rule
 	}
 }
 
-internal class SubstrRuleJsonConverter : JsonConverter<SubstrRule>
+internal class SubstrRuleJsonConverter : JsonConverter<SubstrRule>, Json.More.IJsonConverterReadWrite<SubstrRule>
 {
 	public override SubstrRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

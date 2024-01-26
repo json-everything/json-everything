@@ -58,7 +58,7 @@ public class TitleKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="TitleKeyword"/>.
 /// </summary>
-public sealed class TitleKeywordJsonConverter : JsonConverter<TitleKeyword>
+public sealed class TitleKeywordJsonConverter : JsonConverter<TitleKeyword>, Json.More.IJsonConverterReadWrite<TitleKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="TitleKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

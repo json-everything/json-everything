@@ -82,7 +82,7 @@ public class SchemaKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="SchemaKeyword"/>.
 /// </summary>
-public sealed class SchemaKeywordJsonConverter : JsonConverter<SchemaKeyword>
+public sealed class SchemaKeywordJsonConverter : JsonConverter<SchemaKeyword>, Json.More.IJsonConverterReadWrite<SchemaKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="SchemaKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

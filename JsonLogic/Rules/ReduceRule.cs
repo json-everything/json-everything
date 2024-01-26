@@ -81,7 +81,7 @@ public class ReduceRule : Rule
 	}
 }
 
-internal class ReduceRuleJsonConverter : JsonConverter<ReduceRule>
+internal class ReduceRuleJsonConverter : JsonConverter<ReduceRule>, Json.More.IJsonConverterReadWrite<ReduceRule>
 {
 	public override ReduceRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

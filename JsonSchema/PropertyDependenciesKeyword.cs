@@ -104,7 +104,7 @@ public class PropertyDependenciesKeyword : IJsonSchemaKeyword, ICustomSchemaColl
 /// <summary>
 /// JSON converter for <see cref="PropertyDependenciesKeyword"/>.
 /// </summary>
-public sealed class PropertyDependenciesKeywordJsonConverter : JsonConverter<PropertyDependenciesKeyword>
+public sealed class PropertyDependenciesKeywordJsonConverter : JsonConverter<PropertyDependenciesKeyword>, Json.More.IJsonConverterReadWrite<PropertyDependenciesKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="PropertyDependenciesKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -113,7 +113,7 @@ public sealed class PropertyDependenciesKeywordJsonConverter : JsonConverter<Pro
 	/// <returns>The converted value.</returns>
 	public override PropertyDependenciesKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var dependencies = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializationContext.Default.DictionaryStringPropertyDependency);
+		var dependencies = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializerContext.Default.DictionaryStringPropertyDependency);
 
 		return new PropertyDependenciesKeyword(dependencies!);
 	}

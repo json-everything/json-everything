@@ -84,7 +84,7 @@ public class ElseKeyword : IJsonSchemaKeyword, ISchemaContainer
 /// <summary>
 /// JSON converter for <see cref="ElseKeyword"/>.
 /// </summary>
-public sealed class ElseKeywordJsonConverter : JsonConverter<ElseKeyword>
+public sealed class ElseKeywordJsonConverter : JsonConverter<ElseKeyword>, Json.More.IJsonConverterReadWrite<ElseKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="ElseKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -93,7 +93,7 @@ public sealed class ElseKeywordJsonConverter : JsonConverter<ElseKeyword>
 	/// <returns>The converted value.</returns>
 	public override ElseKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var schema = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializationContext.Default.JsonSchema)!;
+		var schema = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializerContext.Default.JsonSchema)!;
 
 		return new ElseKeyword(schema);
 	}

@@ -117,7 +117,7 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 /// <summary>
 /// JSON converter for <see cref="DependenciesKeyword"/>.
 /// </summary>
-public sealed class DependenciesKeywordJsonConverter : JsonConverter<DependenciesKeyword>
+public sealed class DependenciesKeywordJsonConverter : JsonConverter<DependenciesKeyword>, Json.More.IJsonConverterReadWrite<DependenciesKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="DependenciesKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -129,7 +129,7 @@ public sealed class DependenciesKeywordJsonConverter : JsonConverter<Dependencie
 		if (reader.TokenType != JsonTokenType.StartObject)
 			throw new JsonException("Expected object");
 
-		var dependencies = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializationContext.Default.DictionaryStringSchemaOrPropertyList)!;
+		var dependencies = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializerContext.Default.DictionaryStringSchemaOrPropertyList)!;
 		return new DependenciesKeyword(dependencies);
 	}
 
@@ -210,7 +210,7 @@ public class SchemaOrPropertyList
 /// <summary>
 /// JSON converter for <see cref="SchemaOrPropertyList"/>.
 /// </summary>
-public sealed class SchemaOrPropertyListJsonConverter : JsonConverter<SchemaOrPropertyList>
+public sealed class SchemaOrPropertyListJsonConverter : JsonConverter<SchemaOrPropertyList>, Json.More.IJsonConverterReadWrite<SchemaOrPropertyList>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="SchemaOrPropertyList"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -220,9 +220,9 @@ public sealed class SchemaOrPropertyListJsonConverter : JsonConverter<SchemaOrPr
 	public override SchemaOrPropertyList Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		if (reader.TokenType == JsonTokenType.StartArray)
-			return new SchemaOrPropertyList(JsonSerializer.Deserialize(ref reader, JsonSchemaSerializationContext.Default.ListString)!);
+			return new SchemaOrPropertyList(JsonSerializer.Deserialize(ref reader, JsonSchemaSerializerContext.Default.ListString)!);
 
-		return new SchemaOrPropertyList(JsonSerializer.Deserialize(ref reader, JsonSchemaSerializationContext.Default.JsonSchema)!);
+		return new SchemaOrPropertyList(JsonSerializer.Deserialize(ref reader, JsonSchemaSerializerContext.Default.JsonSchema)!);
 	}
 
 	/// <summary>Writes a specified value as JSON.</summary>

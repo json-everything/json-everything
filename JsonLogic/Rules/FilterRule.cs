@@ -55,7 +55,7 @@ public class FilterRule : Rule
 	}
 }
 
-internal class FilterRuleJsonConverter : JsonConverter<FilterRule>
+internal class FilterRuleJsonConverter : JsonConverter<FilterRule>, Json.More.IJsonConverterReadWrite<FilterRule>
 {
 	public override FilterRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

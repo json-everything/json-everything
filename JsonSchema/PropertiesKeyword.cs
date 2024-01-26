@@ -77,7 +77,7 @@ public class PropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 /// <summary>
 /// JSON converter for <see cref="PropertiesKeyword"/>.
 /// </summary>
-public sealed class PropertiesKeywordJsonConverter : JsonConverter<PropertiesKeyword>
+public sealed class PropertiesKeywordJsonConverter : JsonConverter<PropertiesKeyword>, Json.More.IJsonConverterReadWrite<PropertiesKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="PropertiesKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -89,7 +89,7 @@ public sealed class PropertiesKeywordJsonConverter : JsonConverter<PropertiesKey
 		if (reader.TokenType != JsonTokenType.StartObject)
 			throw new JsonException("Expected object");
 
-		var schema = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializationContext.Default.DictionaryStringJsonSchema)!;
+		var schema = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializerContext.Default.DictionaryStringJsonSchema)!;
 		return new PropertiesKeyword(schema);
 	}
 

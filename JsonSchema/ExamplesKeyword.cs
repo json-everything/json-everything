@@ -71,7 +71,7 @@ public class ExamplesKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="ExamplesKeyword"/>.
 /// </summary>
-public sealed class ExamplesKeywordJsonConverter : JsonConverter<ExamplesKeyword>
+public sealed class ExamplesKeywordJsonConverter : JsonConverter<ExamplesKeyword>, Json.More.IJsonConverterReadWrite<ExamplesKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="ExamplesKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -80,7 +80,7 @@ public sealed class ExamplesKeywordJsonConverter : JsonConverter<ExamplesKeyword
 	/// <returns>The converted value.</returns>
 	public override ExamplesKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var array = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializationContext.Default.JsonArray)
+		var array = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializerContext.Default.JsonArray)
 			?? throw new JsonException("Expected an array, but received null");
 
 		return new ExamplesKeyword((IEnumerable<JsonNode>)array!);

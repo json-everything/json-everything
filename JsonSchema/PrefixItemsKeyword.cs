@@ -97,7 +97,7 @@ public class PrefixItemsKeyword : IJsonSchemaKeyword, ISchemaCollector
 /// <summary>
 /// JSON converter for <see cref="PrefixItemsKeyword"/>.
 /// </summary>
-public sealed class PrefixItemsKeywordJsonConverter : JsonConverter<PrefixItemsKeyword>
+public sealed class PrefixItemsKeywordJsonConverter : JsonConverter<PrefixItemsKeyword>, Json.More.IJsonConverterReadWrite<PrefixItemsKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="PrefixItemsKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -109,7 +109,7 @@ public sealed class PrefixItemsKeywordJsonConverter : JsonConverter<PrefixItemsK
 		if (reader.TokenType != JsonTokenType.StartArray)
 			throw new JsonException("Expected array");
 
-		var schemas = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializationContext.Default.ListJsonSchema)!;
+		var schemas = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializerContext.Default.ListJsonSchema)!;
 		return new PrefixItemsKeyword(schemas);
 	}
 

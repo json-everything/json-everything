@@ -98,7 +98,7 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer
 /// <summary>
 /// JSON converter for <see cref="AdditionalPropertiesKeyword"/>.
 /// </summary>
-public sealed class AdditionalPropertiesKeywordJsonConverter : JsonConverter<AdditionalPropertiesKeyword>
+public sealed class AdditionalPropertiesKeywordJsonConverter : JsonConverter<AdditionalPropertiesKeyword>, Json.More.IJsonConverterReadWrite<AdditionalPropertiesKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="AdditionalPropertiesKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -107,7 +107,7 @@ public sealed class AdditionalPropertiesKeywordJsonConverter : JsonConverter<Add
 	/// <returns>The converted value.</returns>
 	public override AdditionalPropertiesKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var schema = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializationContext.Default.JsonSchema)!;
+		var schema = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializerContext.Default.JsonSchema)!;
 
 		return new AdditionalPropertiesKeyword(schema);
 	}

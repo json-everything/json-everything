@@ -97,7 +97,7 @@ public class VocabularyKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="VocabularyKeyword"/>.
 /// </summary>
-public sealed class VocabularyKeywordJsonConverter : JsonConverter<VocabularyKeyword>
+public sealed class VocabularyKeywordJsonConverter : JsonConverter<VocabularyKeyword>, Json.More.IJsonConverterReadWrite<VocabularyKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="VocabularyKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -109,7 +109,7 @@ public sealed class VocabularyKeywordJsonConverter : JsonConverter<VocabularyKey
 		if (reader.TokenType != JsonTokenType.StartObject)
 			throw new JsonException("Expected object");
 
-		var schema = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializationContext.Default.DictionaryStringBoolean);
+		var schema = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializerContext.Default.DictionaryStringBoolean);
 		var withUris = schema!.ToDictionary(kvp => new Uri(kvp.Key), kvp => kvp.Value);
 		return new VocabularyKeyword(withUris);
 	}

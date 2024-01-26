@@ -81,7 +81,7 @@ public class AllOfKeyword : IJsonSchemaKeyword, ISchemaCollector
 /// <summary>
 /// JSON converter for <see cref="AllOfKeyword"/>.
 /// </summary>
-public sealed class AllOfKeywordJsonConverter : JsonConverter<AllOfKeyword>
+public sealed class AllOfKeywordJsonConverter : JsonConverter<AllOfKeyword>, Json.More.IJsonConverterReadWrite<AllOfKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="AllOfKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -93,7 +93,7 @@ public sealed class AllOfKeywordJsonConverter : JsonConverter<AllOfKeyword>
 		if (reader.TokenType != JsonTokenType.StartArray)
 			throw new JsonException("Expected array");
 
-		var schemas = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializationContext.Default.ListJsonSchema)!;
+		var schemas = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializerContext.Default.ListJsonSchema)!;
 		return new AllOfKeyword(schemas);
 	}
 

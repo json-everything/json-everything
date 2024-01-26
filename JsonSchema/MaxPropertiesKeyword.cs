@@ -75,7 +75,7 @@ public class MaxPropertiesKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="MaxPropertiesKeyword"/>.
 /// </summary>
-public sealed class MaxPropertiesKeywordJsonConverter : JsonConverter<MaxPropertiesKeyword>
+public sealed class MaxPropertiesKeywordJsonConverter : JsonConverter<MaxPropertiesKeyword>, Json.More.IJsonConverterReadWrite<MaxPropertiesKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="MaxPropertiesKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

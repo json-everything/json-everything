@@ -86,7 +86,7 @@ public class OneOfKeyword : IJsonSchemaKeyword, ISchemaCollector
 /// <summary>
 /// JSON converter for <see cref="OneOfKeyword"/>.
 /// </summary>
-public sealed class OneOfKeywordJsonConverter : JsonConverter<OneOfKeyword>
+public sealed class OneOfKeywordJsonConverter : JsonConverter<OneOfKeyword>, Json.More.IJsonConverterReadWrite<OneOfKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="OneOfKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -98,7 +98,7 @@ public sealed class OneOfKeywordJsonConverter : JsonConverter<OneOfKeyword>
 		if (reader.TokenType != JsonTokenType.StartArray)
 			throw new JsonException("Expected array");
 
-		var schemas = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializationContext.Default.ListJsonSchema)!;
+		var schemas = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializerContext.Default.ListJsonSchema)!;
 		return new OneOfKeyword(schemas);
 	}
 

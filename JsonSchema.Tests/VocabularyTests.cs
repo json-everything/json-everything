@@ -45,7 +45,7 @@ public partial class VocabularyTests
 		}
 	}
 
-	private class MinDateJsonConverter : JsonConverter<MinDateKeyword>
+	private class MinDateJsonConverter : JsonConverter<MinDateKeyword>, Json.More.IJsonConverterReadWrite<MinDateKeyword>
 	{
 		public override MinDateKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
@@ -95,7 +95,7 @@ public partial class VocabularyTests
 		}
 	}
 
-	private class NonVocabMinDateJsonConverter : JsonConverter<NonVocabMinDateKeyword>
+	private class NonVocabMinDateJsonConverter : JsonConverter<NonVocabMinDateKeyword>, Json.More.IJsonConverterReadWrite<NonVocabMinDateKeyword>
 	{
 		public override NonVocabMinDateKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
@@ -136,7 +136,7 @@ public partial class VocabularyTests
 		}
 	}
 
-	private class MaxDateJsonConverter : JsonConverter<MaxDateKeyword>
+	public class MaxDateJsonConverter : JsonConverter<MaxDateKeyword>, Json.More.IJsonConverterReadWrite<MaxDateKeyword>
 	{
 		public override MaxDateKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
@@ -399,7 +399,7 @@ public partial class VocabularyTests
 				{
 					if (!BoolValue.Value) return;
 
-					var minimum = (decimal?)6;// context.LocalSchema.GetMinimum();
+					var minimum = (decimal?) 6;// context.LocalSchema.GetMinimum();
 
 					if (!minimum.HasValue) return;
 
@@ -419,7 +419,7 @@ public partial class VocabularyTests
 		}
 	}
 
-	private class Draft4ExclusiveMinimumJsonConverter : JsonConverter<Draft4ExclusiveMinimumKeyword>
+	private class Draft4ExclusiveMinimumJsonConverter : JsonConverter<Draft4ExclusiveMinimumKeyword>, Json.More.IJsonConverterReadWrite<Draft4ExclusiveMinimumKeyword>
 	{
 		public override Draft4ExclusiveMinimumKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
@@ -523,5 +523,3 @@ public partial class VocabularyTests
 
 	}
 }
-
-

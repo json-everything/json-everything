@@ -112,7 +112,7 @@ public class RefKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="RefKeyword"/>.
 /// </summary>
-public sealed class RefKeywordJsonConverter : JsonConverter<RefKeyword>
+public sealed class RefKeywordJsonConverter : JsonConverter<RefKeyword>, Json.More.IJsonConverterReadWrite<RefKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="RefKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

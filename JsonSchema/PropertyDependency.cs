@@ -100,7 +100,7 @@ public class PropertyDependency : IKeyedSchemaCollector, IEquatable<PropertyDepe
 /// <summary>
 /// JSON converter for <see cref="PropertyDependency"/>.
 /// </summary>
-public sealed class PropertyDependencyJsonConverter : JsonConverter<PropertyDependency>
+public sealed class PropertyDependencyJsonConverter : JsonConverter<PropertyDependency>, Json.More.IJsonConverterReadWrite<PropertyDependency>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="PropertyDependency"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -109,7 +109,7 @@ public sealed class PropertyDependencyJsonConverter : JsonConverter<PropertyDepe
 	/// <returns>The converted value.</returns>
 	public override PropertyDependency Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var schemas = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializationContext.Default.DictionaryStringJsonSchema);
+		var schemas = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializerContext.Default.DictionaryStringJsonSchema);
 
 		return new PropertyDependency(schemas!);
 	}

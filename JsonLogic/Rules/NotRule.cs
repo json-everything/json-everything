@@ -43,7 +43,7 @@ public class NotRule : Rule
 	}
 }
 
-internal class NotRuleJsonConverter : JsonConverter<NotRule>
+internal class NotRuleJsonConverter : JsonConverter<NotRule>, Json.More.IJsonConverterReadWrite<NotRule>
 {
 	public override NotRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

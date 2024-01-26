@@ -52,14 +52,14 @@ public class ContentSchemaKeyword : IJsonSchemaKeyword, ISchemaContainer
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		EvaluationContext context)
 	{
-		return KeywordConstraint.SimpleAnnotation(Name, JsonSerializer.SerializeToNode(Schema, JsonSchemaSerializationContext.Default.JsonSchema));
+		return KeywordConstraint.SimpleAnnotation(Name, JsonSerializer.SerializeToNode(Schema, JsonSchemaSerializerContext.Default.JsonSchema));
 	}
 }
 
 /// <summary>
 /// JSON converter for <see cref="ContentSchemaKeyword"/>.
 /// </summary>
-public sealed class ContentSchemaKeywordJsonConverter : JsonConverter<ContentSchemaKeyword>
+public sealed class ContentSchemaKeywordJsonConverter : JsonConverter<ContentSchemaKeyword>, Json.More.IJsonConverterReadWrite<ContentSchemaKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="ContentSchemaKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -68,7 +68,7 @@ public sealed class ContentSchemaKeywordJsonConverter : JsonConverter<ContentSch
 	/// <returns>The converted value.</returns>
 	public override ContentSchemaKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var schema = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializationContext.Default.JsonSchema)!;
+		var schema = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializerContext.Default.JsonSchema)!;
 
 		return new ContentSchemaKeyword(schema);
 	}

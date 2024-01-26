@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
+using Json.More;
 
 namespace Json.Schema;
 
@@ -21,37 +24,38 @@ internal static class JsonSerializerOptionsExtensions
 			return _deserializerCache.GetOrAdd(arbitraryType, t => (ArbitraryDeserializer)Activator.CreateInstance(typeof(ArbitraryDeserializer<>).MakeGenericType(t))!);
 		}
 
-		[RequiresDynamicCode("Calls MakeGenericType")]
-		[RequiresUnreferencedCode("Calls MakeGenericType")]
-		public abstract object? Read(ref Utf8JsonReader reader, JsonSerializerOptions options);
+		public abstract object? Read(ref Utf8JsonReader reader, JsonSerializerOptions options, JsonTypeInfo? typeInfo = null);
 	}
 
 	private class ArbitraryDeserializer<T> : ArbitraryDeserializer
 	{
-		[RequiresDynamicCode("Calls MakeGenericType")]
-		[RequiresUnreferencedCode("Calls MakeGenericType")]
-		public override object? Read(ref Utf8JsonReader reader, JsonSerializerOptions options)
+		public override object? Read(ref Utf8JsonReader reader, JsonSerializerOptions options, JsonTypeInfo? typeInfo)
 		{
-			var converter = (JsonConverter<T>)options.GetConverter(typeof(T));
+			typeInfo ??= options.GetTypeInfo(typeof(T));
+			var converter = (JsonConverter<T>)typeInfo.Converter;
 
 			return converter.Read(ref reader, typeof(T), options);
 		}
 	}
 
-	[RequiresDynamicCode("Calls MakeGenericType")]
-	[RequiresUnreferencedCode("Calls MakeGenericType")]
-	internal static object? Read(this JsonSerializerOptions options, ref Utf8JsonReader reader, Type arbitraryType)
+	internal static object? Read(this JsonSerializerOptions options, ref Utf8JsonReader reader, Type arbitraryType, JsonTypeInfo? typeInfo = null)
 	{
-//#if NET6_0_OR_GREATER
-//		if (options.TryGetTypeInfo(arbitraryType, out var typeinfo))
-//		{
-//			return JsonSerializer.Deserialize(ref reader, typeinfo);
-//		}
+		typeInfo ??= options.GetTypeInfo(arbitraryType);
+		var converter = typeInfo.Converter;
 
-//		// TODO: make the above TypeInfo path support the SchemaRegistry things.
-//#endif
+#if NET8_0_OR_GREATER // Needs default interface method implementations
+		// Try using the AOT-friendly interface first.
+		if (converter is IJsonConverterReadWrite converterReadWrite)
+		{
+			return converterReadWrite.Read(ref reader, arbitraryType, options);
+		}
+#endif
 
-		var converter = ArbitraryDeserializer.GetConverter(arbitraryType);
-		return converter.Read(ref reader, options);
+		// The converter is just a JsonConverter<T> so we need to go through reflection to get it.
+		// AOT-aware callers should not have gotten this far.
+#pragma warning disable IL2026, IL3050
+		var deserializer = ArbitraryDeserializer.GetConverter(arbitraryType);
+#pragma warning restore IL2026, IL3050
+		return deserializer.Read(ref reader, options);
 	}
 }

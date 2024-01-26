@@ -84,7 +84,7 @@ public class DiscriminatorKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="DiscriminatorKeyword"/>.
 /// </summary>
-public sealed class DiscriminatorKeywordJsonConverter : JsonConverter<DiscriminatorKeyword>
+public sealed class DiscriminatorKeywordJsonConverter : JsonConverter<DiscriminatorKeyword>, Json.More.IJsonConverterReadWrite<DiscriminatorKeyword>
 {
 	private class Model
 	{

@@ -59,7 +59,7 @@ public class CommentKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="CommentKeyword"/>.
 /// </summary>
-public sealed class CommentKeywordJsonConverter : JsonConverter<CommentKeyword>
+public sealed class CommentKeywordJsonConverter : JsonConverter<CommentKeyword>, Json.More.IJsonConverterReadWrite<CommentKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="CommentKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

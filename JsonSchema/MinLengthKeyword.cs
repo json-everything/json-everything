@@ -76,7 +76,7 @@ public class MinLengthKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="MinLengthKeyword"/>.
 /// </summary>
-public sealed class MinLengthKeywordJsonConverter : JsonConverter<MinLengthKeyword>
+public sealed class MinLengthKeywordJsonConverter : JsonConverter<MinLengthKeyword>, Json.More.IJsonConverterReadWrite<MinLengthKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="MinLengthKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

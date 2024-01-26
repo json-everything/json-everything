@@ -117,7 +117,7 @@ public class UnevaluatedPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer
 /// <summary>
 /// JSON converter for <see cref="UnevaluatedPropertiesKeyword"/>.
 /// </summary>
-public sealed class UnevaluatedPropertiesKeywordJsonConverter : JsonConverter<UnevaluatedPropertiesKeyword>
+public sealed class UnevaluatedPropertiesKeywordJsonConverter : JsonConverter<UnevaluatedPropertiesKeyword>, Json.More.IJsonConverterReadWrite<UnevaluatedPropertiesKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="UnevaluatedPropertiesKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -126,7 +126,7 @@ public sealed class UnevaluatedPropertiesKeywordJsonConverter : JsonConverter<Un
 	/// <returns>The converted value.</returns>
 	public override UnevaluatedPropertiesKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var schema = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializationContext.Default.JsonSchema)!;
+		var schema = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializerContext.Default.JsonSchema)!;
 
 		return new UnevaluatedPropertiesKeyword(schema);
 	}

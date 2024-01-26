@@ -71,7 +71,7 @@ public class NotKeyword : IJsonSchemaKeyword, ISchemaContainer
 /// <summary>
 /// JSON converter for <see cref="NotKeyword"/>.
 /// </summary>
-public sealed class NotKeywordJsonConverter : JsonConverter<NotKeyword>
+public sealed class NotKeywordJsonConverter : JsonConverter<NotKeyword>, Json.More.IJsonConverterReadWrite<NotKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="NotKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -80,7 +80,7 @@ public sealed class NotKeywordJsonConverter : JsonConverter<NotKeyword>
 	/// <returns>The converted value.</returns>
 	public override NotKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var schema = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializationContext.Default.JsonSchema)!;
+		var schema = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializerContext.Default.JsonSchema)!;
 
 		return new NotKeyword(schema);
 	}

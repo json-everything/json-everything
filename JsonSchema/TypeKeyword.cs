@@ -98,7 +98,7 @@ public class TypeKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="TypeKeyword"/>.
 /// </summary>
-public sealed class TypeKeywordJsonConverter : JsonConverter<TypeKeyword>
+public sealed class TypeKeywordJsonConverter : JsonConverter<TypeKeyword>, Json.More.IJsonConverterReadWrite<TypeKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="TypeKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -107,7 +107,7 @@ public sealed class TypeKeywordJsonConverter : JsonConverter<TypeKeyword>
 	/// <returns>The converted value.</returns>
 	public override TypeKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var type = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializationContext.Default.SchemaValueType);
+		var type = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializerContext.Default.SchemaValueType);
 
 		return new TypeKeyword(type);
 	}

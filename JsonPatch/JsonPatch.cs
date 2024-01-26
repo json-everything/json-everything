@@ -96,7 +96,7 @@ internal partial class JsonPatchSerializerContext : JsonSerializerContext
 /// <summary>
 /// Provides JSON conversion logic for <see cref="JsonPatch"/>.
 /// </summary>
-public class PatchJsonConverter : JsonConverter<JsonPatch>
+public class PatchJsonConverter : JsonConverter<JsonPatch>, Json.More.IJsonConverterReadWrite<JsonPatch>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="JsonPatch"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -116,10 +116,6 @@ public class PatchJsonConverter : JsonConverter<JsonPatch>
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, JsonPatch value, JsonSerializerOptions options)
 	{
-#if NET6_0_OR_GREATER
-		JsonSerializer.Serialize(writer, value.Operations, JsonPatchSerializerContext.Default.IReadOnlyListPatchOperation);
-#else
-		JsonSerializer.Serialize(writer, value.Operations);
-#endif
+		JsonSerializer.Serialize(writer, value.Operations, options);
 	}
 }

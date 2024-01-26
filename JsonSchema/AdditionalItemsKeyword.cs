@@ -91,7 +91,7 @@ public class AdditionalItemsKeyword : IJsonSchemaKeyword, ISchemaContainer
 /// <summary>
 /// JSON converter for <see cref="AdditionalItemsKeyword"/>.
 /// </summary>
-public sealed class AdditionalItemsKeywordJsonConverter : JsonConverter<AdditionalItemsKeyword>
+public sealed class AdditionalItemsKeywordJsonConverter : JsonConverter<AdditionalItemsKeyword>, Json.More.IJsonConverterReadWrite<AdditionalItemsKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="AdditionalItemsKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -100,7 +100,7 @@ public sealed class AdditionalItemsKeywordJsonConverter : JsonConverter<Addition
 	/// <returns>The converted value.</returns>
 	public override AdditionalItemsKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var schema = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializationContext.Default.JsonSchema)!;
+		var schema = options.Read<JsonSchema>(ref reader)!;
 
 		return new AdditionalItemsKeyword(schema);
 	}
@@ -111,6 +111,6 @@ public sealed class AdditionalItemsKeywordJsonConverter : JsonConverter<Addition
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, AdditionalItemsKeyword value, JsonSerializerOptions options)
 	{
-		JsonSerializer.Serialize(writer, value.Schema, JsonSchemaSerializationContext.Default.JsonSchema);
+		JsonSerializer.Serialize(writer, value.Schema, options);
 	}
 }

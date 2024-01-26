@@ -55,7 +55,7 @@ public class AllRule : Rule
 	}
 }
 
-internal class AllRuleJsonConverter : JsonConverter<AllRule>
+internal class AllRuleJsonConverter : JsonConverter<AllRule>, Json.More.IJsonConverterReadWrite<AllRule>
 {
 	public override AllRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

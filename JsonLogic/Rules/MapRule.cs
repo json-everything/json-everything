@@ -54,7 +54,7 @@ public class MapRule : Rule
 	}
 }
 
-internal class MapRuleJsonConverter : JsonConverter<MapRule>
+internal class MapRuleJsonConverter : JsonConverter<MapRule>, Json.More.IJsonConverterReadWrite<MapRule>
 {
 	public override MapRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

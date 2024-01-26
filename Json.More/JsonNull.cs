@@ -29,7 +29,7 @@ public class JsonNull
 	private JsonNull() { }
 }
 
-internal class JsonNullConverter : JsonConverter<JsonNull>
+internal class JsonNullConverter : JsonConverter<JsonNull>, Json.More.IJsonConverterReadWrite<JsonNull>
 {
 	public override JsonNull Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

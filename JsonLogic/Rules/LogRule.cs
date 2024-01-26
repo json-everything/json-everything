@@ -38,7 +38,7 @@ public class LogRule : Rule
 	}
 }
 
-internal class LogRuleJsonConverter : JsonConverter<LogRule>
+internal class LogRuleJsonConverter : JsonConverter<LogRule>, Json.More.IJsonConverterReadWrite<LogRule>
 {
 	public override LogRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

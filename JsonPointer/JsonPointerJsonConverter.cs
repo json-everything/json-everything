@@ -7,7 +7,7 @@ namespace Json.Pointer;
 /// <summary>
 /// Converter for <see cref="JsonPointer"/>.
 /// </summary>
-public sealed class JsonPointerJsonConverter : JsonConverter<JsonPointer?>
+public sealed class JsonPointerJsonConverter : JsonConverter<JsonPointer?>, Json.More.IJsonConverterReadWrite<JsonPointer?>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="JsonPointer"/>.</summary>
 	/// <param name="reader">The reader.</param>

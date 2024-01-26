@@ -58,7 +58,7 @@ public class WriteOnlyKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="WriteOnlyKeyword"/>.
 /// </summary>
-public sealed class WriteOnlyKeywordJsonConverter : JsonConverter<WriteOnlyKeyword>
+public sealed class WriteOnlyKeywordJsonConverter : JsonConverter<WriteOnlyKeyword>, Json.More.IJsonConverterReadWrite<WriteOnlyKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="WriteOnlyKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

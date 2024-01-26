@@ -87,7 +87,7 @@ public class UniqueItemsKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="UniqueItemsKeyword"/>.
 /// </summary>
-public sealed class UniqueItemsKeywordJsonConverter : JsonConverter<UniqueItemsKeyword>
+public sealed class UniqueItemsKeywordJsonConverter : JsonConverter<UniqueItemsKeyword>, Json.More.IJsonConverterReadWrite<UniqueItemsKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="UniqueItemsKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

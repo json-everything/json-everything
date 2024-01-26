@@ -50,7 +50,7 @@ public class LooseEqualsRule : Rule
 	}
 }
 
-internal class LooseEqualsRuleJsonConverter : JsonConverter<LooseEqualsRule>
+internal class LooseEqualsRuleJsonConverter : JsonConverter<LooseEqualsRule>, Json.More.IJsonConverterReadWrite<LooseEqualsRule>
 {
 	public override LooseEqualsRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

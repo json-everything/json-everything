@@ -69,7 +69,7 @@ public class ConstKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="ConstKeyword"/>.
 /// </summary>
-public sealed class ConstKeywordJsonConverter : JsonConverter<ConstKeyword>
+public sealed class ConstKeywordJsonConverter : JsonConverter<ConstKeyword>, Json.More.IJsonConverterReadWrite<ConstKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="ConstKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -78,7 +78,7 @@ public sealed class ConstKeywordJsonConverter : JsonConverter<ConstKeyword>
 	/// <returns>The converted value.</returns>
 	public override ConstKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var node = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializationContext.Default.JsonNode);
+		var node = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializerContext.Default.JsonNode);
 
 		return new ConstKeyword(node);
 	}

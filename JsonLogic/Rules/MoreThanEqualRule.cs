@@ -63,7 +63,7 @@ public class MoreThanEqualRule : Rule
 	}
 }
 
-internal class MoreThanEqualRuleJsonConverter : JsonConverter<MoreThanEqualRule>
+internal class MoreThanEqualRuleJsonConverter : JsonConverter<MoreThanEqualRule>, Json.More.IJsonConverterReadWrite<MoreThanEqualRule>
 {
 	public override MoreThanEqualRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

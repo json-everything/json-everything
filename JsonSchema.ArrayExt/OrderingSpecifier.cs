@@ -49,7 +49,7 @@ public class OrderingSpecifier
 	}
 }
 
-internal class CustomCultureInfoConverter : JsonConverter<CultureInfo>
+internal class CustomCultureInfoConverter : JsonConverter<CultureInfo>, Json.More.IJsonConverterReadWrite<CultureInfo>
 {
 	public override CultureInfo? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

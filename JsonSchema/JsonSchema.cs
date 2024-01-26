@@ -15,88 +15,6 @@ using Json.Pointer;
 
 namespace Json.Schema;
 
-[JsonSerializable(typeof(JsonSchema))]
-[JsonSerializable(typeof(AdditionalItemsKeyword))]
-[JsonSerializable(typeof(AdditionalPropertiesKeyword))]
-[JsonSerializable(typeof(AllOfKeyword))]
-[JsonSerializable(typeof(AnchorKeyword))]
-[JsonSerializable(typeof(AnyOfKeyword))]
-[JsonSerializable(typeof(CommentKeyword))]
-[JsonSerializable(typeof(ConstKeyword))]
-[JsonSerializable(typeof(ContainsKeyword))]
-[JsonSerializable(typeof(ContentEncodingKeyword))]
-[JsonSerializable(typeof(ContentMediaTypeKeyword))]
-[JsonSerializable(typeof(ContentSchemaKeyword))]
-[JsonSerializable(typeof(DefaultKeyword))]
-[JsonSerializable(typeof(DefinitionsKeyword))]
-[JsonSerializable(typeof(DefsKeyword))]
-[JsonSerializable(typeof(DependenciesKeyword))]
-[JsonSerializable(typeof(DependentRequiredKeyword))]
-[JsonSerializable(typeof(DependentSchemasKeyword))]
-[JsonSerializable(typeof(DeprecatedKeyword))]
-[JsonSerializable(typeof(DescriptionKeyword))]
-[JsonSerializable(typeof(DynamicAnchorKeyword))]
-[JsonSerializable(typeof(DynamicRefKeyword))]
-[JsonSerializable(typeof(ElseKeyword))]
-[JsonSerializable(typeof(EnumKeyword))]
-[JsonSerializable(typeof(ExamplesKeyword))]
-[JsonSerializable(typeof(ExclusiveMaximumKeyword))]
-[JsonSerializable(typeof(ExclusiveMinimumKeyword))]
-[JsonSerializable(typeof(FormatKeyword))]
-[JsonSerializable(typeof(IdKeyword))]
-[JsonSerializable(typeof(IfKeyword))]
-[JsonSerializable(typeof(ItemsKeyword))]
-[JsonSerializable(typeof(MaxContainsKeyword))]
-[JsonSerializable(typeof(MaximumKeyword))]
-[JsonSerializable(typeof(MaxItemsKeyword))]
-[JsonSerializable(typeof(MaxLengthKeyword))]
-[JsonSerializable(typeof(MaxPropertiesKeyword))]
-[JsonSerializable(typeof(MinContainsKeyword))]
-[JsonSerializable(typeof(MinimumKeyword))]
-[JsonSerializable(typeof(MinItemsKeyword))]
-[JsonSerializable(typeof(MinLengthKeyword))]
-[JsonSerializable(typeof(MinPropertiesKeyword))]
-[JsonSerializable(typeof(MultipleOfKeyword))]
-[JsonSerializable(typeof(NotKeyword))]
-[JsonSerializable(typeof(OneOfKeyword))]
-[JsonSerializable(typeof(PatternKeyword))]
-[JsonSerializable(typeof(PatternPropertiesKeyword))]
-[JsonSerializable(typeof(PrefixItemsKeyword))]
-[JsonSerializable(typeof(PropertiesKeyword))]
-[JsonSerializable(typeof(PropertyDependenciesKeyword))]
-[JsonSerializable(typeof(PropertyNamesKeyword))]
-[JsonSerializable(typeof(ReadOnlyKeyword))]
-[JsonSerializable(typeof(RecursiveAnchorKeyword))]
-[JsonSerializable(typeof(RecursiveRefKeyword))]
-[JsonSerializable(typeof(RefKeyword))]
-[JsonSerializable(typeof(RequiredKeyword))]
-[JsonSerializable(typeof(SchemaKeyword))]
-[JsonSerializable(typeof(ThenKeyword))]
-[JsonSerializable(typeof(TitleKeyword))]
-[JsonSerializable(typeof(TypeKeyword))]
-[JsonSerializable(typeof(UnevaluatedItemsKeyword))]
-[JsonSerializable(typeof(UnevaluatedPropertiesKeyword))]
-[JsonSerializable(typeof(UniqueItemsKeyword))]
-[JsonSerializable(typeof(UnrecognizedKeyword))]
-[JsonSerializable(typeof(VocabularyKeyword))]
-[JsonSerializable(typeof(WriteOnlyKeyword))]
-[JsonSerializable(typeof(JsonNode))]
-[JsonSerializable(typeof(SchemaValueType))]
-[JsonSerializable(typeof(string[]))]
-[JsonSerializable(typeof(Dictionary<string, JsonSchema>))]
-[JsonSerializable(typeof(Dictionary<string, bool>))]
-[JsonSerializable(typeof(List<JsonSchema>))]
-[JsonSerializable(typeof(List<string>))]
-[JsonSerializable(typeof(JsonArray))]
-[JsonSerializable(typeof(Dictionary<string, SchemaOrPropertyList>))]
-[JsonSerializable(typeof(Dictionary<string, List<string>>))]
-[JsonSerializable(typeof(int[]))]
-[JsonSerializable(typeof(Dictionary<string, PropertyDependency>))]
-internal partial class JsonSchemaSerializationContext : JsonSerializerContext
-{
-
-}
-
 /// <summary>
 /// Represents a JSON Schema.
 /// </summary>
@@ -246,7 +164,7 @@ public class JsonSchema : IBaseDocument
 	/// <exception cref="JsonException">Could not deserialize a portion of the schema.</exception>
 	public static JsonSchema FromText(string jsonText)
 	{
-		return JsonSerializer.Deserialize<JsonSchema>(jsonText, JsonSchemaSerializationContext.Default.JsonSchema)!;
+		return JsonSerializer.Deserialize<JsonSchema>(jsonText, JsonSchemaSerializerContext.Default.JsonSchema)!;
 	}
 
 	/// <summary>
@@ -271,7 +189,7 @@ public class JsonSchema : IBaseDocument
 	[RequiresDynamicCode("TODO")]
 	public static ValueTask<JsonSchema> FromStream(Stream source)
 	{
-		return JsonSerializer.DeserializeAsync<JsonSchema>(source, JsonSchemaSerializationContext.Default.JsonSchema)!;
+		return JsonSerializer.DeserializeAsync<JsonSchema>(source, JsonSchemaSerializerContext.Default.JsonSchema)!;
 	}
 
 	/// <summary>
@@ -809,7 +727,7 @@ public class JsonSchema : IBaseDocument
 /// <summary>
 /// JSON converter for <see cref="JsonSchema"/>.
 /// </summary>
-public sealed class SchemaJsonConverter : JsonConverter<JsonSchema>
+public sealed class SchemaJsonConverter : JsonConverter<JsonSchema>, Json.More.IJsonConverterReadWrite<JsonSchema>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="JsonSchema"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -841,7 +759,7 @@ public sealed class SchemaJsonConverter : JsonConverter<JsonSchema>
 					var keywordType = SchemaKeywordRegistry.GetImplementationType(keyword);
 					if (keywordType == null)
 					{
-						var node = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializationContext.Default.JsonNode)!;
+						var node = options.Read<JsonNode>(ref reader)!;
 						var unrecognizedKeyword = new UnrecognizedKeyword(keyword, node);
 						keywords.Add(unrecognizedKeyword);
 						break;
@@ -853,25 +771,9 @@ public sealed class SchemaJsonConverter : JsonConverter<JsonSchema>
 										 throw new InvalidOperationException($"No null instance registered for keyword `{keyword}`");
 					else
 					{
-#if NET6_0_OR_GREATER // JsonSerializer.Deserialize that takes a Utf8Reader isn't in the STJ that NetStandard 2.0 compiles against.
-						if (SchemaKeywordRegistry.TryGetTypeInfo(keywordType, out JsonTypeInfo? typeinfo))
-						{
-							implementation = JsonSerializer.Deserialize(ref reader, typeinfo!) as IJsonSchemaKeyword ??
+						SchemaKeywordRegistry.TryGetTypeInfo(keywordType, out var keywordTypeInfo);
+						implementation = options.Read(ref reader, keywordType, keywordTypeInfo) as IJsonSchemaKeyword ??
 								throw new InvalidOperationException($"Could not deserialize expected keyword `{keyword}`");
-						}
-						else
-#endif
-						if (SchemaKeywordRegistry.RequiresDynamicSerialization)
-						{
-#pragma warning disable IL2026, IL3050 // Suppress because to get here the caller of SchemaKeywordRegistry must have suppressed the AOT warnings themselves
-							implementation = JsonSerializer.Deserialize(ref reader, keywordType) as IJsonSchemaKeyword ??
-								throw new InvalidOperationException($"Could not deserialize expected keyword `{keyword}`");
-#pragma warning restore IL2026, IL3050
-						}
-						else
-						{
-							throw new InvalidOperationException($"Could not deserialize keyword `{keyword}`; missing type information");
-						}
 					}
 					keywords.Add(implementation);
 					break;

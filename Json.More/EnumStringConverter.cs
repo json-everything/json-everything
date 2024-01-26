@@ -39,7 +39,7 @@ namespace Json.More;
 /// }
 /// ```
 /// </example>
-public class EnumStringConverter<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T> : JsonConverter<T>
+public class EnumStringConverter<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T> : JsonConverter<T>, Json.More.IJsonConverterReadWrite<T>
 	where T : Enum
 {
 	private static Dictionary<string, T>? _readValues;

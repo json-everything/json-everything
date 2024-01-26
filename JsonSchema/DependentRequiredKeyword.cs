@@ -86,7 +86,7 @@ public class DependentRequiredKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="DependentRequiredKeyword"/>.
 /// </summary>
-public sealed class DependentRequiredKeywordJsonConverter : JsonConverter<DependentRequiredKeyword>
+public sealed class DependentRequiredKeywordJsonConverter : JsonConverter<DependentRequiredKeyword>, Json.More.IJsonConverterReadWrite<DependentRequiredKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="DependentRequiredKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -98,7 +98,7 @@ public sealed class DependentRequiredKeywordJsonConverter : JsonConverter<Depend
 		if (reader.TokenType != JsonTokenType.StartObject)
 			throw new JsonException("Expected object");
 
-		var requirements = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializationContext.Default.DictionaryStringListString)!;
+		var requirements = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializerContext.Default.DictionaryStringListString)!;
 		return new DependentRequiredKeyword(requirements!.ToDictionary(x => x.Key, x => (IReadOnlyList<string>)x.Value));
 	}
 

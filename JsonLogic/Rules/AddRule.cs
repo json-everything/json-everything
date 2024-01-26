@@ -59,7 +59,7 @@ public class AddRule : Rule
 	}
 }
 
-internal class AddRuleJsonConverter : JsonConverter<AddRule>
+internal class AddRuleJsonConverter : JsonConverter<AddRule>, Json.More.IJsonConverterReadWrite<AddRule>
 {
 	public override AddRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

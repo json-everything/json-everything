@@ -83,7 +83,7 @@ public class MissingSomeRule : Rule
 	}
 }
 
-internal class MissingSomeRuleJsonConverter : JsonConverter<MissingSomeRule>
+internal class MissingSomeRuleJsonConverter : JsonConverter<MissingSomeRule>, Json.More.IJsonConverterReadWrite<MissingSomeRule>
 {
 	public override MissingSomeRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

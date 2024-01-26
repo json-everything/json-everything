@@ -82,7 +82,7 @@ public class PropertyNamesKeyword : IJsonSchemaKeyword, ISchemaContainer
 /// <summary>
 /// JSON converter for <see cref="PropertyNamesKeyword"/>.
 /// </summary>
-public sealed class PropertyNamesKeywordJsonConverter : JsonConverter<PropertyNamesKeyword>
+public sealed class PropertyNamesKeywordJsonConverter : JsonConverter<PropertyNamesKeyword>, Json.More.IJsonConverterReadWrite<PropertyNamesKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="PropertyNamesKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -91,7 +91,7 @@ public sealed class PropertyNamesKeywordJsonConverter : JsonConverter<PropertyNa
 	/// <returns>The converted value.</returns>
 	public override PropertyNamesKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var schema = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializationContext.Default.JsonSchema)!;
+		var schema = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializerContext.Default.JsonSchema)!;
 
 		return new PropertyNamesKeyword(schema);
 	}
