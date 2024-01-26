@@ -27,9 +27,15 @@ internal interface IReflectiveFunctionDefinition
 /// <summary>
 /// Base class for defining an expression function which returns `ValueType`.
 /// </summary>
-public abstract class ValueFunctionDefinition : IReflectiveFunctionDefinition, IPathFunctionDefinition
+public abstract partial class ValueFunctionDefinition : IReflectiveFunctionDefinition, IPathFunctionDefinition
 {
-	internal class NothingValue;
+	private class NothingValue;
+
+	[JsonSerializable(typeof(NothingValue))]
+	private partial class NothingValueContext : JsonSerializerContext
+	{
+
+	}
 
 	/// <summary>
 	/// Represents the absence of a JSON value and is distinct from any JSON value, including null.
@@ -100,10 +106,4 @@ public abstract class NodelistFunctionDefinition : IReflectiveFunctionDefinition
 
 		return (NodeList?)method.Invoke(this, arguments.ExtractArgumentValues(parameterTypes));
 	}
-}
-
-[JsonSerializable(typeof(ValueFunctionDefinition.NothingValue))]
-internal partial class NothingValueContext : JsonSerializerContext
-{
-
 }
