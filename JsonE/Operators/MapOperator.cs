@@ -46,13 +46,13 @@ internal class MapOperator : IOperator
 		var array = new JsonArray();
 		for (int i = 0; i < value.Count; i++)
 		{
-			itemContext[itemVar] = value[i].Copy();
+			itemContext[itemVar] = value[i].Clone();
 			if (indexVar != null)
 				itemContext[indexVar] = i;
 
 			var localResult = JsonE.Evaluate(template, context);
 			if (!ReferenceEquals(localResult, JsonE.DeleteMarker))
-				array.Add(localResult.Copy());
+				array.Add(localResult.Clone());
 		}
 
 		context.Pop();
@@ -86,12 +86,12 @@ internal class MapOperator : IOperator
 		{
 			if (keyVar != null)
 			{
-				itemContext[valueVar] = kvp.Value.Copy();
+				itemContext[valueVar] = kvp.Value.Clone();
 				itemContext[keyVar] = kvp.Key;
 			}
 			else
 			{
-				itemContext[valueVar]!["val"] = kvp.Value.Copy();
+				itemContext[valueVar]!["val"] = kvp.Value.Clone();
 				itemContext[valueVar]!["key"] = kvp.Key;
 			}
 
