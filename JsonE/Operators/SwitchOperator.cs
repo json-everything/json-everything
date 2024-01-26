@@ -36,7 +36,7 @@ internal class SwitchOperator : IOperator
 			if (result is not JsonValue val || !val.TryGetValue(out bool b))
 				throw new InterpreterException("$switch keys must evaluate to a boolean");
 
-			if (b) array.Add(kvp.Value.Copy());
+			if (b) array.Add(kvp.Value.Clone());
 		}
 
 		if (array.Count > 1)

@@ -26,7 +26,7 @@ internal class MergeOperator : IOperator
 
 		foreach (var kvp in obj)
 		{
-			result[kvp.Key] = kvp.Value.Copy();
+			result[kvp.Key] = kvp.Value.Clone();
 		}
 
 		return result;

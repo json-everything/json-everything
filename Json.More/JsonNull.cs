@@ -46,7 +46,7 @@ internal class JsonNullConverter : JsonConverter<JsonNull>, Json.More.IJsonConve
 /// Provides a serialization context for <see cref="JsonNull"/>.
 /// </summary>
 [JsonSerializable(typeof(JsonNull))]
-internal partial class JsonNullSerializationContext : JsonSerializerContext
+public partial class JsonNullSerializationContext : JsonSerializerContext
 {
 
 }

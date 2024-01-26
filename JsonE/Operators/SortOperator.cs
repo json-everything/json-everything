@@ -46,7 +46,7 @@ internal partial class SortOperator : IOperator
 
 		var itemContext = new JsonObject
 		{
-			[variableName] = value[0].Copy()
+			[variableName] = value[0].Clone()
 		};
 		context.Push(itemContext);
 		var firstSortValue = sortExpression.Evaluate(context);
@@ -62,7 +62,7 @@ internal partial class SortOperator : IOperator
 		{
 			var sorted = value.OrderBy(x =>
 			{
-				itemContext[variableName] = x.Copy();
+				itemContext[variableName] = x.Clone();
 				return sortExpression.Evaluate(context);
 			}, comparer!).ToJsonArray();
 

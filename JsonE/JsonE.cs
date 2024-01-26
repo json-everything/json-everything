@@ -60,7 +60,7 @@ public static class JsonE
 						? json.Expression.Evaluate(context)
 						: Evaluate(kvp.Value, context);
 					if (!ReferenceEquals(local, DeleteMarker))
-						result[HandleEscapedKey(kvp.Key)] = local.Copy();
+						result[HandleEscapedKey(kvp.Key)] = local.Clone();
 				}
 
 				return result;
@@ -75,7 +75,10 @@ public static class JsonE
 						? json.Expression.Evaluate(context)
 						: Evaluate(item, context);
 					if (!ReferenceEquals(local, DeleteMarker))
-						result.Add(local.Copy());
+					{
+						var copy = local.Clone();
+						result.Add(copy);
+					}
 				}
 
 				return result;

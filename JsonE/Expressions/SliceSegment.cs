@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Text;
 using System.Text.Json.Nodes;
 using Json.More;
@@ -74,7 +75,7 @@ internal class SliceSegment : IContextAccessorSegment
 			var i = lower;
 			while (i < upper)
 			{
-				result.Add(contextValue[i].Copy());
+				result.Add(contextValue[i].Clone());
 				i += step.Value;
 				if (i < 0) break; // overflow
 			}
@@ -84,7 +85,7 @@ internal class SliceSegment : IContextAccessorSegment
 			var i = upper;
 			while (lower < i)
 			{
-				result.Add(contextValue[i].Copy());
+				result.Add(contextValue[i].Clone());
 				i += step.Value;
 				if (i < 0) break; // overflow
 			}
@@ -103,18 +104,19 @@ internal class SliceSegment : IContextAccessorSegment
 		}
 
 		var result = new StringBuilder();
+		var stringInfo = new StringInfo(contextValue);
 
 		step ??= 1;
-		start ??= (step >= 0 ? 0 : contextValue.Length);
-		end ??= (step >= 0 ? contextValue.Length : -contextValue.Length - 1);
-		var (lower, upper) = Bounds(start.Value, end.Value, step.Value, contextValue.Length);
+		start ??= (step >= 0 ? 0 : stringInfo.LengthInTextElements);
+		end ??= (step >= 0 ? stringInfo.LengthInTextElements : -stringInfo.LengthInTextElements - 1);
+		var (lower, upper) = Bounds(start.Value, end.Value, step.Value, stringInfo.LengthInTextElements);
 
 		if (step > 0)
 		{
 			var i = lower;
 			while (i < upper)
 			{
-				result.Append(contextValue[i]);
+				result.Append(stringInfo.SubstringByTextElements(i, 1));
 				i += step.Value;
 				if (i < 0) break; // overflow
 			}
@@ -124,7 +126,7 @@ internal class SliceSegment : IContextAccessorSegment
 			var i = upper;
 			while (lower < i)
 			{
-				result.Append(contextValue[i]);
+				result.Append(stringInfo.SubstringByTextElements(i, 1));
 				i += step.Value;
 				if (i < 0) break; // overflow
 			}
