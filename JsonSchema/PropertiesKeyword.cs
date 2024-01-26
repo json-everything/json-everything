@@ -89,7 +89,7 @@ public sealed class PropertiesKeywordJsonConverter : JsonConverter<PropertiesKey
 		if (reader.TokenType != JsonTokenType.StartObject)
 			throw new JsonException("Expected object");
 
-		var schema = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializerContext.Default.DictionaryStringJsonSchema)!;
+		var schema = options.Read<Dictionary<string, JsonSchema>>(ref reader)!;
 		return new PropertiesKeyword(schema);
 	}
 

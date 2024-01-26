@@ -81,7 +81,7 @@ public sealed class IfKeywordJsonConverter : JsonConverter<IfKeyword>, Json.More
 	/// <returns>The converted value.</returns>
 	public override IfKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var schema = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializerContext.Default.JsonSchema)!;
+		var schema = options.Read<JsonSchema>(ref reader)!;
 
 		return new IfKeyword(schema);
 	}

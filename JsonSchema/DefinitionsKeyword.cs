@@ -69,7 +69,7 @@ public sealed class DefinitionsKeywordJsonConverter : JsonConverter<DefinitionsK
 		if (reader.TokenType != JsonTokenType.StartObject)
 			throw new JsonException("Expected object");
 
-		var schema = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializerContext.Default.DictionaryStringJsonSchema)!;
+		var schema = options.Read<Dictionary<string, JsonSchema>>(ref reader)!;
 		return new DefinitionsKeyword(schema);
 	}
 

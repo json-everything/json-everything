@@ -109,7 +109,7 @@ public sealed class VocabularyKeywordJsonConverter : JsonConverter<VocabularyKey
 		if (reader.TokenType != JsonTokenType.StartObject)
 			throw new JsonException("Expected object");
 
-		var schema = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializerContext.Default.DictionaryStringBoolean);
+		var schema = options.Read<Dictionary<string, bool>>(ref reader);
 		var withUris = schema!.ToDictionary(kvp => new Uri(kvp.Key), kvp => kvp.Value);
 		return new VocabularyKeyword(withUris);
 	}

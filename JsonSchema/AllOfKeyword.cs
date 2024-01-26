@@ -93,7 +93,7 @@ public sealed class AllOfKeywordJsonConverter : JsonConverter<AllOfKeyword>, Jso
 		if (reader.TokenType != JsonTokenType.StartArray)
 			throw new JsonException("Expected array");
 
-		var schemas = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializerContext.Default.ListJsonSchema)!;
+		var schemas = options.Read<List<JsonSchema>>(ref reader)!;
 		return new AllOfKeyword(schemas);
 	}
 

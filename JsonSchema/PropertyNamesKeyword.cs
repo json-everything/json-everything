@@ -91,7 +91,7 @@ public sealed class PropertyNamesKeywordJsonConverter : JsonConverter<PropertyNa
 	/// <returns>The converted value.</returns>
 	public override PropertyNamesKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var schema = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializerContext.Default.JsonSchema)!;
+		var schema = options.Read<JsonSchema>(ref reader)!;
 
 		return new PropertyNamesKeyword(schema);
 	}

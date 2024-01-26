@@ -162,11 +162,11 @@ public sealed class ItemsKeywordJsonConverter : JsonConverter<ItemsKeyword>, Jso
 	{
 		if (reader.TokenType == JsonTokenType.StartArray)
 		{
-			var schemas = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializerContext.Default.ListJsonSchema)!;
+			var schemas = options.Read<List<JsonSchema>>(ref reader)!;
 			return new ItemsKeyword(schemas);
 		}
 
-		var schema = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializerContext.Default.JsonSchema)!;
+		var schema = options.Read<JsonSchema>(ref reader)!;
 		return new ItemsKeyword(schema);
 	}
 

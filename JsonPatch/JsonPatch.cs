@@ -87,7 +87,6 @@ public class JsonPatch : IEquatable<JsonPatch>
 [JsonSerializable(typeof(PatchOperation))]
 [JsonSerializable(typeof(List<PatchOperation>))]
 [JsonSerializable(typeof(IReadOnlyList<PatchOperation>))]
-[JsonSerializable(typeof(PatchOperationJsonConverter.Model))]
 [JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]
 internal partial class JsonPatchSerializerContext : JsonSerializerContext
 {

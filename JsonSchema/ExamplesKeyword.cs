@@ -80,7 +80,7 @@ public sealed class ExamplesKeywordJsonConverter : JsonConverter<ExamplesKeyword
 	/// <returns>The converted value.</returns>
 	public override ExamplesKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var array = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializerContext.Default.JsonArray)
+		var array = options.Read<JsonArray>(ref reader)
 			?? throw new JsonException("Expected an array, but received null");
 
 		return new ExamplesKeyword((IEnumerable<JsonNode>)array!);

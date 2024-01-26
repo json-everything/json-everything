@@ -126,7 +126,7 @@ public sealed class UnevaluatedPropertiesKeywordJsonConverter : JsonConverter<Un
 	/// <returns>The converted value.</returns>
 	public override UnevaluatedPropertiesKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var schema = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializerContext.Default.JsonSchema)!;
+		var schema = options.Read<JsonSchema>(ref reader)!;
 
 		return new UnevaluatedPropertiesKeyword(schema);
 	}
