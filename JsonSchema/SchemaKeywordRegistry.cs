@@ -130,7 +130,6 @@ public static class SchemaKeywordRegistry
 	/// Registers a new keyword type.
 	/// </summary>
 	/// <typeparam name="T">The keyword type.</typeparam>
-	/// <param name="name">name of the keyword</param>
 	/// <param name="typeInfo">JsonTypeInfo for the keyword type</param>
 	public static void Register<T>(JsonTypeInfo typeInfo)
 		where T : IJsonSchemaKeyword

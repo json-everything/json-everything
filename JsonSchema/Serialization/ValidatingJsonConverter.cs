@@ -36,6 +36,8 @@ public class ValidatingJsonConverter : JsonConverterFactory
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
 	/// <param name="schema"></param>
+	[RequiresDynamicCode("Uses reflection")]
+	[RequiresUnreferencedCode("Uses reflection")]
 	public static void MapType<T>(JsonSchema schema)
 	{
 		_instance.CreateConverter(typeof(T), schema);
@@ -63,7 +65,12 @@ public class ValidatingJsonConverter : JsonConverterFactory
 	/// An instance of a <see cref="JsonConverter{T}"/> where `T` is compatible with <paramref name="typeToConvert"/>.
 	/// If <see langword="null"/> is returned, a <see cref="NotSupportedException"/> will be thrown.
 	/// </returns>
+	[RequiresDynamicCode("Uses reflection")]
+	[RequiresUnreferencedCode("Uses reflection")]
+
+#pragma warning disable IL2046, IL3051
 	public override JsonConverter? CreateConverter(Type typeToConvert, JsonSerializerOptions options)
+#pragma warning restore IL2046, IL3051
 	{
 		// at this point, we know that we should have a converter, so we don't need to check for null
 		if (_cache.TryGetValue(typeToConvert, out var converter)) return converter;
@@ -74,6 +81,7 @@ public class ValidatingJsonConverter : JsonConverterFactory
 		return CreateConverter(typeToConvert, schema);
 	}
 
+	[RequiresDynamicCode("Uses reflection")]
 	private JsonConverter? CreateConverter(Type typeToConvert, JsonSchema schema)
 	{
 		var converterType = typeof(ValidatingJsonConverter<>).MakeGenericType(typeToConvert);
@@ -123,7 +131,9 @@ internal class ValidatingJsonConverter<T> : JsonConverter<T>, IValidatingJsonCon
 
 	[RequiresDynamicCode("This uses a non-AOT friendly version of JsonSerializer.Deserialize.")]
 	[RequiresUnreferencedCode("This uses a non-AOT friendly version of JsonSerializer.Deserialize.")]
+#pragma warning disable IL2046, IL3051
 	public override T? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+#pragma warning restore IL2046, IL3051
 	{
 		var readerCopy = reader;
 		var node = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializationContext.Default.JsonNode);
