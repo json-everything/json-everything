@@ -38,7 +38,7 @@ public class LiteralRule : Rule
 	}
 }
 
-internal class LiteralRuleJsonConverter : JsonConverter<LiteralRule>, Json.More.IJsonConverterReadWrite<LiteralRule>
+internal class LiteralRuleJsonConverter : JsonConverter<LiteralRule>
 {
 	public override LiteralRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

@@ -48,7 +48,7 @@ public class StrictEqualsRule : Rule
 	}
 }
 
-internal class StrictEqualsRuleJsonConverter : JsonConverter<StrictEqualsRule>, Json.More.IJsonConverterReadWrite<StrictEqualsRule>
+internal class StrictEqualsRuleJsonConverter : JsonConverter<StrictEqualsRule>
 {
 	public override StrictEqualsRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

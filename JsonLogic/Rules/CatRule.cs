@@ -56,7 +56,7 @@ public class CatRule : Rule
 	}
 }
 
-internal class CatRuleJsonConverter : JsonConverter<CatRule>, Json.More.IJsonConverterReadWrite<CatRule>
+internal class CatRuleJsonConverter : JsonConverter<CatRule>
 {
 	public override CatRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

@@ -147,7 +147,7 @@ public class PatchOperation : IEquatable<PatchOperation>
 	}
 }
 
-internal partial class PatchOperationJsonConverter : JsonConverter<PatchOperation>, Json.More.IJsonConverterReadWrite<PatchOperation>
+internal class PatchOperationJsonConverter : JsonConverter<PatchOperation>
 {
 	private class Model
 	{
@@ -157,15 +157,9 @@ internal partial class PatchOperationJsonConverter : JsonConverter<PatchOperatio
 		public JsonElement Value { get; set; }
 	}
 
-	[JsonSerializable(typeof(Model))]
-	private partial class ModelSerializerContext : JsonSerializerContext
-	{
-
-	}
-
 	public override PatchOperation Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var model = options.Read<Model>(ref reader, ModelSerializerContext.Default.Model)!;
+		var model = JsonSerializer.Deserialize<Model>(ref reader, options)!;
 
 		if (model.Path == null)
 			throw new JsonException($"`{model.Op}` operation requires `path`");

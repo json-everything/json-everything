@@ -7,7 +7,7 @@ namespace Json.Path;
 /// <summary>
 /// JSON converter for <see cref="JsonPath"/>.
 /// </summary>
-public class JsonPathConverter : JsonConverter<JsonPath>, Json.More.IJsonConverterReadWrite<JsonPath>
+public class JsonPathConverter : JsonConverter<JsonPath>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="JsonPath"/>.</summary>
 	/// <param name="reader">The reader.</param>

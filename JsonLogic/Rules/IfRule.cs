@@ -81,7 +81,7 @@ public class IfRule : Rule
 	}
 }
 
-internal class IfRuleJsonConverter : JsonConverter<IfRule>, Json.More.IJsonConverterReadWrite<IfRule>
+internal class IfRuleJsonConverter : JsonConverter<IfRule>
 {
 	public override IfRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

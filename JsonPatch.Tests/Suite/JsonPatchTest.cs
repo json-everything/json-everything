@@ -84,7 +84,7 @@ public class JsonPatchTest
 	public bool HasExpectedValue { get; set; }
 }
 
-public class JsonPatchTestJsonConverter : JsonConverter<JsonPatchTest?>, Json.More.IJsonConverterReadWrite<JsonPatchTest?>
+public class JsonPatchTestJsonConverter : JsonConverter<JsonPatchTest?>
 {
 	private class Model
 	{

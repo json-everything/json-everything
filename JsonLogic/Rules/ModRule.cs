@@ -58,7 +58,7 @@ public class ModRule : Rule
 	}
 }
 
-internal class ModRuleJsonConverter : JsonConverter<ModRule>, Json.More.IJsonConverterReadWrite<ModRule>
+internal class ModRuleJsonConverter : JsonConverter<ModRule>
 {
 	public override ModRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

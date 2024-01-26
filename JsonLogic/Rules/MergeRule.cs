@@ -46,7 +46,7 @@ public class MergeRule : Rule
 	}
 }
 
-internal class MergeRuleJsonConverter : JsonConverter<MergeRule>, Json.More.IJsonConverterReadWrite<MergeRule>
+internal class MergeRuleJsonConverter : JsonConverter<MergeRule>
 {
 	public override MergeRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

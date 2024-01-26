@@ -53,7 +53,7 @@ public class OrRule : Rule
 	}
 }
 
-internal class OrRuleJsonConverter : JsonConverter<OrRule>, Json.More.IJsonConverterReadWrite<OrRule>
+internal class OrRuleJsonConverter : JsonConverter<OrRule>
 {
 	public override OrRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

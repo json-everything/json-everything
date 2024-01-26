@@ -55,7 +55,7 @@ public class VariableRule : Rule
 	}
 }
 
-internal class VariableRuleJsonConverter : JsonConverter<VariableRule>, Json.More.IJsonConverterReadWrite<VariableRule>
+internal class VariableRuleJsonConverter : JsonConverter<VariableRule>
 {
 	public override VariableRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

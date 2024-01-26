@@ -52,7 +52,7 @@ public class MinRule : Rule
 	}
 }
 
-internal class MinRuleJsonConverter : JsonConverter<MinRule>, Json.More.IJsonConverterReadWrite<MinRule>
+internal class MinRuleJsonConverter : JsonConverter<MinRule>
 {
 	public override MinRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

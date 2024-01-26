@@ -54,7 +54,7 @@ public class MaxRule : Rule
 	}
 }
 
-internal class MaxRuleJsonConverter : JsonConverter<MaxRule>, Json.More.IJsonConverterReadWrite<MaxRule>
+internal class MaxRuleJsonConverter : JsonConverter<MaxRule>
 {
 	public override MaxRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

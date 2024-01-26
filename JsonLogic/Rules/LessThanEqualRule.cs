@@ -111,7 +111,7 @@ public class LessThanEqualRule : Rule
 	}
 }
 
-internal class LessThanEqualRuleJsonConverter : JsonConverter<LessThanEqualRule>, Json.More.IJsonConverterReadWrite<LessThanEqualRule>
+internal class LessThanEqualRuleJsonConverter : JsonConverter<LessThanEqualRule>
 {
 	public override LessThanEqualRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

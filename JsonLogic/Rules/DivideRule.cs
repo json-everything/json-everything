@@ -58,7 +58,7 @@ public class DivideRule : Rule
 	}
 }
 
-internal class DivideRuleJsonConverter : JsonConverter<DivideRule>, Json.More.IJsonConverterReadWrite<DivideRule>
+internal class DivideRuleJsonConverter : JsonConverter<DivideRule>
 {
 	public override DivideRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

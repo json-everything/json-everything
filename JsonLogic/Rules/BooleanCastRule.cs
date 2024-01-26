@@ -41,7 +41,7 @@ public class BooleanCastRule : Rule
 	}
 }
 
-internal class BooleanCastRuleJsonConverter : JsonConverter<BooleanCastRule>, Json.More.IJsonConverterReadWrite<BooleanCastRule>
+internal class BooleanCastRuleJsonConverter : JsonConverter<BooleanCastRule>
 {
 	public override BooleanCastRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

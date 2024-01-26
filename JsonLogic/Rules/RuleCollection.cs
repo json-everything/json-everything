@@ -41,7 +41,7 @@ public class RuleCollection : Rule
 	}
 }
 
-internal class RuleCollectionJsonConverter : JsonConverter<RuleCollection>, Json.More.IJsonConverterReadWrite<RuleCollection>
+internal class RuleCollectionJsonConverter : JsonConverter<RuleCollection>
 {
 	public override RuleCollection? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
