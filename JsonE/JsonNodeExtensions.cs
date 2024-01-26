@@ -91,8 +91,8 @@ internal static class JsonNodeExtensions
 	public static JsonNode? Clone(this JsonNode? a)
 	{
 #if NET8_0_OR_GREATER
-		var func = a?.GetValue<FunctionDefinition>();
-		if (func is not null) return JsonValue.Create(func);
+		if (a is JsonValue value && value.TryGetValue(out FunctionDefinition? func))
+			return JsonValue.Create(func);
 
 		return a?.DeepClone();
 #else
