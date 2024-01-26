@@ -186,9 +186,9 @@ public partial class VocabularyTests
 	public void Setup()
 	{
 #if NET8_0_OR_GREATER
-		SchemaKeywordRegistry.Register<MinDateKeyword>(MinDateKeyword.Name, VocabularySerializerContext.Default.MinDateKeyword);
-		SchemaKeywordRegistry.Register<NonVocabMinDateKeyword>(NonVocabMinDateKeyword.Name, VocabularySerializerContext.Default.NonVocabMinDateKeyword);
-		SchemaKeywordRegistry.Register<MaxDateKeyword>(MaxDateKeyword.Name, VocabularySerializerContext.Default.NonVocabMinDateKeyword);
+		SchemaKeywordRegistry.Register<MinDateKeyword>(VocabularySerializerContext.Default.MinDateKeyword);
+		SchemaKeywordRegistry.Register<NonVocabMinDateKeyword>(VocabularySerializerContext.Default.NonVocabMinDateKeyword);
+		SchemaKeywordRegistry.Register<MaxDateKeyword>(VocabularySerializerContext.Default.NonVocabMinDateKeyword);
 #else
 		SchemaKeywordRegistry.Register<MinDateKeyword>();
 		SchemaKeywordRegistry.Register<NonVocabMinDateKeyword>();
@@ -451,7 +451,7 @@ public partial class VocabularyTests
 		try
 		{
 #if NET8_0_OR_GREATER
-			SchemaKeywordRegistry.Register<Draft4ExclusiveMinimumKeyword>(Draft4ExclusiveMinimumKeyword.Name, VocabularySerializerContext.Default.Draft4ExclusiveMinimumKeyword);
+			SchemaKeywordRegistry.Register<Draft4ExclusiveMinimumKeyword>(VocabularySerializerContext.Default.Draft4ExclusiveMinimumKeyword);
 #else
 			SchemaKeywordRegistry.Register<Draft4ExclusiveMinimumKeyword>();
 #endif
@@ -471,7 +471,7 @@ public partial class VocabularyTests
 		finally
 		{
 #if NET8_0_OR_GREATER
-			SchemaKeywordRegistry.Register<ExclusiveMinimumKeyword>("minimum", exclusiveMinimumKeyword!);
+			SchemaKeywordRegistry.Register<ExclusiveMinimumKeyword>(exclusiveMinimumKeyword!);
 #else
 			SchemaKeywordRegistry.Register<ExclusiveMinimumKeyword>();
 #endif
@@ -488,7 +488,7 @@ public partial class VocabularyTests
 		try
 		{
 #if NET8_0_OR_GREATER
-			SchemaKeywordRegistry.Register<Draft4ExclusiveMinimumKeyword>(Draft4ExclusiveMinimumKeyword.Name, VocabularySerializerContext.Default.Draft4ExclusiveMinimumKeyword);
+			SchemaKeywordRegistry.Register<Draft4ExclusiveMinimumKeyword>(VocabularySerializerContext.Default.Draft4ExclusiveMinimumKeyword);
 #else
 			SchemaKeywordRegistry.Register<Draft4ExclusiveMinimumKeyword>();
 #endif
@@ -507,7 +507,7 @@ public partial class VocabularyTests
 		finally
 		{
 #if NET8_0_OR_GREATER
-			SchemaKeywordRegistry.Register<ExclusiveMinimumKeyword>("minimum", exclusiveMinimumKeyword!);
+			SchemaKeywordRegistry.Register<ExclusiveMinimumKeyword>(exclusiveMinimumKeyword!);
 #else
 			SchemaKeywordRegistry.Register<ExclusiveMinimumKeyword>();
 #endif

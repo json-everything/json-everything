@@ -132,10 +132,13 @@ public static class SchemaKeywordRegistry
 	/// <typeparam name="T">The keyword type.</typeparam>
 	/// <param name="name">name of the keyword</param>
 	/// <param name="typeInfo">JsonTypeInfo for the keyword type</param>
-	public static void Register<T>(string name, JsonTypeInfo typeInfo)
+	public static void Register<T>(JsonTypeInfo typeInfo)
 		where T : IJsonSchemaKeyword
 	{
-		_keywords[name] = typeof(T);
+		var keyword = typeof(T).GetCustomAttribute<SchemaKeywordAttribute>() ??
+					  throw new ArgumentException($"Keyword implementation `{typeof(T).Name}` does not carry `{nameof(SchemaKeywordAttribute)}`");
+
+		_keywords[keyword.Name] = typeof(T);
 		_keywordTypeInfos[typeof(T)] = typeInfo;
 	}
 
