@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 using Json.Path.Expressions;
 
 namespace Json.Path;
@@ -29,16 +29,12 @@ internal interface IReflectiveFunctionDefinition
 /// </summary>
 public abstract class ValueFunctionDefinition : IReflectiveFunctionDefinition, IPathFunctionDefinition
 {
-	private class NothingValue{}
+	internal class NothingValue;
 
 	/// <summary>
 	/// Represents the absence of a JSON value and is distinct from any JSON value, including null.
 	/// </summary>
-	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code",
-		Justification = "This type is not returned to the user and should never be serialized.")]
-	[UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.",
-		Justification = "This type is not returned to the user and should never be serialized.")]
-	public static JsonValue Nothing { get; } = JsonValue.Create(new NothingValue())!;
+	public static JsonValue Nothing { get; } = JsonValue.Create(new NothingValue(), NothingValueContext.Default.NothingValue)!;
 
 	/// <summary>
 	/// Gets the function name.
@@ -104,4 +100,10 @@ public abstract class NodelistFunctionDefinition : IReflectiveFunctionDefinition
 
 		return (NodeList?)method.Invoke(this, arguments.ExtractArgumentValues(parameterTypes));
 	}
+}
+
+[JsonSerializable(typeof(ValueFunctionDefinition.NothingValue))]
+internal partial class NothingValueContext : JsonSerializerContext
+{
+
 }
