@@ -83,17 +83,11 @@ public class MissingSomeRule : Rule
 	}
 }
 
-[JsonSerializable(typeof(Rule[]))]
-internal partial class RuleJsonSerializerContext : JsonSerializerContext
-{
-
-}
-
 internal class MissingSomeRuleJsonConverter : JsonConverter<MissingSomeRule>
 {
 	public override MissingSomeRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = JsonSerializer.Deserialize(ref reader, RuleJsonSerializerContext.Default.RuleArray);
+		var parameters = JsonSerializer.Deserialize<Rule[]>(ref reader, options);
 
 		if (parameters is not { Length: 2 })
 			throw new JsonException("The missing_some rule needs an array with 2 parameters.");

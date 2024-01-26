@@ -136,7 +136,7 @@ internal class ValidatingJsonConverter<T> : JsonConverter<T>, IValidatingJsonCon
 #pragma warning restore IL2046, IL3051
 	{
 		var readerCopy = reader;
-		var node = JsonSerializer.Deserialize(ref reader, JsonSchemaSerializationContext.Default.JsonNode);
+		var node = JsonSerializer.Deserialize(ref readerCopy, JsonSchemaSerializationContext.Default.JsonNode);
 		
 		var validation = _schema.Evaluate(node, new EvaluationOptions
 		{
