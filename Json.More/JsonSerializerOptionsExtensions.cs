@@ -20,7 +20,11 @@ public static class JsonSerializerOptionsExtensions
 	/// <returns>An implementation of <see cref="JsonConverter{T}"/> as determined by the provided options</returns>
 	public static JsonConverter<T> GetConverter<T>(this JsonSerializerOptions options, JsonTypeInfo? typeInfo = null)
 	{
+#if NET8_0_OR_GREATER
 		return (JsonConverter<T>)(typeInfo ?? options.GetTypeInfo(typeof(T))).Converter;
+#else
+		return (JsonConverter<T>)options.GetConverter(typeof(T));
+#endif
 	}
 
 	/// <summary>

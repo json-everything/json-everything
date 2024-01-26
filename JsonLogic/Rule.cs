@@ -72,7 +72,7 @@ public abstract class Rule
 /// <summary>
 /// Provides serialization for all <see cref="Rule"/> derivatives.
 /// </summary>
-public class LogicComponentConverter : JsonConverter<Rule>, Json.More.IJsonConverterReadWrite<Rule>
+public class LogicComponentConverter : JsonConverter<Rule>
 {
 	/// <summary>
 	/// Indicates whether <see langword="null" /> should be passed to the converter
@@ -158,7 +158,7 @@ internal class ArgumentCollection : List<Rule>
 	}
 }
 
-internal class ArgumentCollectionConverter : JsonConverter<ArgumentCollection>, Json.More.IJsonConverterReadWrite<ArgumentCollection>
+internal class ArgumentCollectionConverter : JsonConverter<ArgumentCollection>
 {
 	public override ArgumentCollection Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

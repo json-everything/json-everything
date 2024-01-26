@@ -7,7 +7,7 @@ namespace Json.Pointer;
 /// <summary>
 /// Converter for <see cref="RelativeJsonPointer"/>.
 /// </summary>
-public sealed class RelativeJsonPointerJsonConverter : JsonConverter<RelativeJsonPointer?>, Json.More.IJsonConverterReadWrite<RelativeJsonPointer?>
+public sealed class RelativeJsonPointerJsonConverter : JsonConverter<RelativeJsonPointer?>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="RelativeJsonPointer"/>.</summary>
 	/// <param name="reader">The reader.</param>

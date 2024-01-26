@@ -37,10 +37,6 @@
 	</ItemGroup>
 	
 	<ItemGroup>
-		<PackageReference Include="System.Text.Json" Version="8.0.1" />
-	</ItemGroup>
-	
-	<ItemGroup>
 		<PackageReference Include="YamlDotNet" Version="13.7.1" />
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
 	</ItemGroup>

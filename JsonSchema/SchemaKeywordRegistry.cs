@@ -192,7 +192,7 @@ public static class SchemaKeywordRegistry
 	/// <remarks>
 	/// This supports callers that use the JsonTypeInfo overloads of JsonSerializer methods.
 	/// </remarks>
-	public static bool TryGetTypeInfo(Type keywordType, out JsonTypeInfo? jsonTypeInfo)
+	internal static bool TryGetTypeInfo(Type keywordType, out JsonTypeInfo? jsonTypeInfo)
 	{
 		return _keywordTypeInfos.TryGetValue(keywordType, out jsonTypeInfo);
 	}
