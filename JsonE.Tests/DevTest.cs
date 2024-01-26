@@ -12,6 +12,7 @@ namespace Json.JsonE.Tests;
 public class DevTest
 {
 	[Test]
+	[Ignore("dev use only")]
 	public void Check()
 	{
 		var value = JsonValue.Create(new MinFunction())!;
