@@ -74,7 +74,7 @@ internal class SliceSegment : IContextAccessorSegment
 			var i = lower;
 			while (i < upper)
 			{
-				result.Add(contextValue[i].Copy());
+				result.Add(contextValue[i].Clone());
 				i += step.Value;
 				if (i < 0) break; // overflow
 			}
@@ -84,7 +84,7 @@ internal class SliceSegment : IContextAccessorSegment
 			var i = upper;
 			while (lower < i)
 			{
-				result.Add(contextValue[i].Copy());
+				result.Add(contextValue[i].Clone());
 				i += step.Value;
 				if (i < 0) break; // overflow
 			}
