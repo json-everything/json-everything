@@ -52,11 +52,11 @@ public class MinRule : Rule
 	}
 }
 
-internal class MinRuleJsonConverter : JsonConverter<MinRule>
+internal class MinRuleJsonConverter : AotCompatibleJsonConverter<MinRule>
 {
 	public override MinRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = JsonSerializer.Deserialize<Rule[]>(ref reader, options);
+		var parameters = options.Read<Rule[]>(ref reader);
 
 		if (parameters == null || parameters.Length == 0)
 			throw new JsonException("The min rule needs an array of parameters.");

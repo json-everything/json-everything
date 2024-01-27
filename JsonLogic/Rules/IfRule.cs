@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Logic.Rules;
 
@@ -81,11 +82,11 @@ public class IfRule : Rule
 	}
 }
 
-internal class IfRuleJsonConverter : JsonConverter<IfRule>
+internal class IfRuleJsonConverter : AotCompatibleJsonConverter<IfRule>
 {
 	public override IfRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = JsonSerializer.Deserialize<Rule[]>(ref reader, options);
+		var parameters = options.Read<Rule[]>(ref reader);
 
 		if (parameters == null) return new IfRule();
 

@@ -65,11 +65,11 @@ public class InRule : Rule
 	}
 }
 
-internal class InRuleJsonConverter : JsonConverter<InRule>
+internal class InRuleJsonConverter : AotCompatibleJsonConverter<InRule>
 {
 	public override InRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = JsonSerializer.Deserialize<Rule[]>(ref reader, options);
+		var parameters = options.Read<Rule[]>(ref reader);
 
 		if (parameters is not { Length: 2 })
 			throw new JsonException("The in rule needs an array with 2 parameters.");

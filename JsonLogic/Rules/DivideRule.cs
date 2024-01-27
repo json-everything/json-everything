@@ -58,11 +58,11 @@ public class DivideRule : Rule
 	}
 }
 
-internal class DivideRuleJsonConverter : JsonConverter<DivideRule>
+internal class DivideRuleJsonConverter : AotCompatibleJsonConverter<DivideRule>
 {
 	public override DivideRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = JsonSerializer.Deserialize<Rule[]>(ref reader, options);
+		var parameters = options.Read<Rule[]>(ref reader);
 
 		if (parameters is not { Length: 2 })
 			throw new JsonException("The / rule needs an array with 2 parameters.");

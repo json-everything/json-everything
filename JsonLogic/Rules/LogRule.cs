@@ -2,6 +2,7 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Logic.Rules;
 
@@ -38,11 +39,11 @@ public class LogRule : Rule
 	}
 }
 
-internal class LogRuleJsonConverter : JsonConverter<LogRule>
+internal class LogRuleJsonConverter : AotCompatibleJsonConverter<LogRule>
 {
 	public override LogRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var node = JsonSerializer.Deserialize<JsonNode?>(ref reader, options);
+		var node = options.Read<JsonNode?>(ref reader);
 
 		var parameters = node is JsonArray
 			? node.Deserialize<Rule[]>()

@@ -54,11 +54,11 @@ public class MaxRule : Rule
 	}
 }
 
-internal class MaxRuleJsonConverter : JsonConverter<MaxRule>
+internal class MaxRuleJsonConverter : AotCompatibleJsonConverter<MaxRule>
 {
 	public override MaxRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = JsonSerializer.Deserialize<Rule[]>(ref reader, options);
+		var parameters = options.Read<Rule[]>(ref reader);
 
 		if (parameters == null || parameters.Length == 0)
 			throw new JsonException("The max rule needs an array of parameters.");

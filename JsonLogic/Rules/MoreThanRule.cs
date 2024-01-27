@@ -2,6 +2,7 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Logic.Rules;
 
@@ -63,11 +64,11 @@ public class MoreThanRule : Rule
 	}
 }
 
-internal class MoreThanRuleJsonConverter : JsonConverter<MoreThanRule>
+internal class MoreThanRuleJsonConverter : AotCompatibleJsonConverter<MoreThanRule>
 {
 	public override MoreThanRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = JsonSerializer.Deserialize<Rule[]>(ref reader, options);
+		var parameters = options.Read<Rule[]>(ref reader);
 
 		if (parameters is not { Length: 2 })
 			throw new JsonException("The > rule needs an array with 2 parameters.");

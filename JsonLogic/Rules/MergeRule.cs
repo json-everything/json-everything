@@ -46,11 +46,11 @@ public class MergeRule : Rule
 	}
 }
 
-internal class MergeRuleJsonConverter : JsonConverter<MergeRule>
+internal class MergeRuleJsonConverter : AotCompatibleJsonConverter<MergeRule>
 {
 	public override MergeRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var node = JsonSerializer.Deserialize<JsonNode?>(ref reader, options);
+		var node = options.Read<JsonNode?>(ref reader);
 
 		var parameters = node is JsonArray
 			? node.Deserialize<Rule[]>()

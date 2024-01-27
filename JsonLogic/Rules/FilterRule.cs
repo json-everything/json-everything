@@ -55,11 +55,11 @@ public class FilterRule : Rule
 	}
 }
 
-internal class FilterRuleJsonConverter : JsonConverter<FilterRule>
+internal class FilterRuleJsonConverter : AotCompatibleJsonConverter<FilterRule>
 {
 	public override FilterRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = JsonSerializer.Deserialize<Rule[]>(ref reader, options);
+		var parameters = options.Read<Rule[]>(ref reader);
 
 		if (parameters is not { Length: 2 })
 			throw new JsonException("The filter rule needs an array with 2 parameters.");

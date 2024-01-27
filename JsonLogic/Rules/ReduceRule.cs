@@ -81,11 +81,11 @@ public class ReduceRule : Rule
 	}
 }
 
-internal class ReduceRuleJsonConverter : JsonConverter<ReduceRule>
+internal class ReduceRuleJsonConverter : AotCompatibleJsonConverter<ReduceRule>
 {
 	public override ReduceRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = JsonSerializer.Deserialize<Rule[]>(ref reader, options);
+		var parameters = options.Read<Rule[]>(ref reader);
 
 		if (parameters is not { Length: 3 })
 			throw new JsonException("The reduce rule needs an array with 3 parameters.");

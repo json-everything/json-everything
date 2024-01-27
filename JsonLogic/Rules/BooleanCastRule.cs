@@ -2,6 +2,7 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Logic.Rules;
 
@@ -41,11 +42,11 @@ public class BooleanCastRule : Rule
 	}
 }
 
-internal class BooleanCastRuleJsonConverter : JsonConverter<BooleanCastRule>
+internal class BooleanCastRuleJsonConverter : AotCompatibleJsonConverter<BooleanCastRule>
 {
 	public override BooleanCastRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = JsonSerializer.Deserialize<Rule[]>(ref reader, options);
+		var parameters = options.Read<Rule[]>(ref reader);
 
 		if (parameters is not { Length: 1 })
 			throw new JsonException("The !! rule needs an array with a single parameter.");

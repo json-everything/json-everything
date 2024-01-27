@@ -112,11 +112,11 @@ public class LessThanRule : Rule
 	}
 }
 
-internal class LessThanRuleJsonConverter : JsonConverter<LessThanRule>
+internal class LessThanRuleJsonConverter : AotCompatibleJsonConverter<LessThanRule>
 {
 	public override LessThanRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = JsonSerializer.Deserialize<Rule[]>(ref reader, options);
+		var parameters = options.Read<Rule[]>(ref reader);
 
 		if (parameters is not ({ Length: 2 } or { Length: 3 }))
 			throw new JsonException("The < rule needs an array with either 2 or 3 parameters.");

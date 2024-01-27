@@ -87,11 +87,11 @@ public class SubstrRule : Rule
 	}
 }
 
-internal class SubstrRuleJsonConverter : JsonConverter<SubstrRule>
+internal class SubstrRuleJsonConverter : AotCompatibleJsonConverter<SubstrRule>
 {
 	public override SubstrRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = JsonSerializer.Deserialize<Rule[]>(ref reader, options);
+		var parameters = options.Read<Rule[]>(ref reader);
 
 		if (parameters is not ({ Length: 2 } or { Length: 3 }))
 			throw new JsonException("The substr rule needs an array with either 2 or 3 parameters.");

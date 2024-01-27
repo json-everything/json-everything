@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Logic.Rules;
 
@@ -53,11 +54,11 @@ public class AndRule : Rule
 	}
 }
 
-internal class AndRuleJsonConverter : JsonConverter<AndRule>
+internal class AndRuleJsonConverter : AotCompatibleJsonConverter<AndRule>
 {
 	public override AndRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = JsonSerializer.Deserialize<Rule[]>(ref reader, options);
+		var parameters = options.Read<Rule[]>(ref reader);
 
 		if (parameters == null || parameters.Length == 0)
 			throw new JsonException("The and rule needs an array of parameters.");

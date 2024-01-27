@@ -59,11 +59,11 @@ public class AddRule : Rule
 	}
 }
 
-internal class AddRuleJsonConverter : JsonConverter<AddRule>
+internal class AddRuleJsonConverter : AotCompatibleJsonConverter<AddRule>
 {
 	public override AddRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var node = JsonSerializer.Deserialize<JsonNode?>(ref reader, options);
+		var node = options.Read<JsonNode?>(ref reader);
 
 		var parameters = node is JsonArray
 			? node.Deserialize<Rule[]>()

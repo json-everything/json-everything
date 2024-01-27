@@ -59,11 +59,11 @@ public class MultiplyRule : Rule
 	}
 }
 
-internal class MultiplyRuleJsonConverter : JsonConverter<MultiplyRule>
+internal class MultiplyRuleJsonConverter : AotCompatibleJsonConverter<MultiplyRule>
 {
 	public override MultiplyRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = JsonSerializer.Deserialize<Rule[]>(ref reader, options);
+		var parameters = options.Read<Rule[]>(ref reader);
 
 		if (parameters == null || parameters.Length == 0)
 			throw new JsonException("The * rule needs an array of parameters.");
