@@ -14,7 +14,7 @@ public class TestSuite
 #pragma warning restore CS8618
 }
 
-public class TestSuiteConverter :JsonConverter<TestSuite?>
+public class TestSuiteConverter : JsonConverter<TestSuite?>
 {
 	public override TestSuite? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

@@ -23,10 +23,6 @@ public static class SchemaKeywordRegistry
 	private static readonly ConcurrentDictionary<string, Type> _keywords;
 	private static readonly ConcurrentDictionary<Type, JsonTypeInfo> _keywordTypeInfos;
 	private static readonly ConcurrentDictionary<Type, IJsonSchemaKeyword> _nullKeywords;
-	internal static bool RequiresDynamicSerialization { get; private set; }
-#if !NET6_0_OR_GREATER
-		= true;
-#endif
 
 	internal static IEnumerable<Type> KeywordTypes => _keywords.Values;
 
@@ -122,9 +118,6 @@ public static class SchemaKeywordRegistry
 		              throw new ArgumentException($"Keyword implementation `{typeof(T).Name}` does not carry `{nameof(SchemaKeywordAttribute)}`");
 
 		_keywords[keyword.Name] = typeof(T);
-
-		// Once someone registers a keyword, we track that we'll need to use reflection on this later.
-		RequiresDynamicSerialization = true;
 	}
 
 	/// <summary>

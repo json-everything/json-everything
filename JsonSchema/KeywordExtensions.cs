@@ -14,7 +14,7 @@ public static class KeywordExtensions
 	{
 		_keywordEvaluationGroups = new();
 
-		var allTypes = GetAllKeywordTypes().ToList();
+		var allTypes = AllKeywordTypes.ToList();
 
 		var allDependencies = allTypes.ToDictionary(x => x, x => x.GetCustomAttributes<DependsOnAnnotationsFromAttribute>().Select(x => x.DependentType));
 
@@ -45,14 +45,13 @@ public static class KeywordExtensions
 		}
 	}
 
-	private static IEnumerable<Type> GetAllKeywordTypes() =>
-		typeof(IJsonSchemaKeyword).Assembly
-			.GetTypes()
+	private static IEnumerable<Type> AllKeywordTypes { get; } = 
+		SchemaKeywordRegistry.KeywordTypes
 			.Where(t => typeof(IJsonSchemaKeyword).IsAssignableFrom(t) &&
-			            t is { IsAbstract: false, IsInterface: false });
+			            t is { IsAbstract: false, IsInterface: false }).ToList();
 
 	private static readonly Dictionary<Type, string> _keywordNames =
-		GetAllKeywordTypes()
+		AllKeywordTypes
 			.Where(t => t != typeof(UnrecognizedKeyword))
 			.ToDictionary(t => t, t => t.GetCustomAttribute<SchemaKeywordAttribute>()!.Name);
 
@@ -137,7 +136,7 @@ public static class KeywordExtensions
 	}
 
 	private static readonly Dictionary<Type, SpecVersion> _versionDeclarations =
-		GetAllKeywordTypes()
+		AllKeywordTypes
 			.ToDictionary(t => t, t => t.GetCustomAttributes<SchemaSpecVersionAttribute>()
 				.Aggregate(SpecVersion.Unspecified, (c, x) => c | x.Version));
 

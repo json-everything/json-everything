@@ -3,6 +3,13 @@
 // Project-level suppressions either have no target or are given
 // a specific target and scoped to a namespace, type, member, etc.
 
+
+// Unfortunately the overload of JsonSerializer.Serialize that these are calling has the AOT warning attributes,
+// so these suppressions are required. These calls are AOT compatible as long as the options object contains a
+// TypeInfoResolver that covers all the types we need, which should be the case for the AOT paths. I've suppressed
+// the warnings for now. A better solution might be to switch the JsonConverters to fetch the nested types'
+// JsonTypeInfo.Converter and call Write directly, just like the Read methods do. I left it for now to reduce churn.
+
 using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "<Pending>", Scope = "member", Target = "~M:Json.Schema.AdditionalPropertiesKeywordJsonConverter.Write(System.Text.Json.Utf8JsonWriter,Json.Schema.AdditionalPropertiesKeyword,System.Text.Json.JsonSerializerOptions)")]
 [assembly: SuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "<Pending>", Scope = "member", Target = "~M:Json.Schema.AllOfKeywordJsonConverter.Write(System.Text.Json.Utf8JsonWriter,Json.Schema.AllOfKeyword,System.Text.Json.JsonSerializerOptions)")]

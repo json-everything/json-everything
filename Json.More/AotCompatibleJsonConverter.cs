@@ -27,8 +27,8 @@ namespace Json.More
 	}
 
 	/// <summary>
-	/// Interface to enable JsonConverter implementations to call other JsonConverter's Read methods
-	/// without statically being aware of their type parameters.
+	/// Abstract base class of JsonConverter<typeparamref name="T"/> that helps external code call 
+	/// a JsonConverter<typeparamref name="T"/> without statically knowing about T.
 	/// </summary>
 	public abstract class AotCompatibleJsonConverter<T> : JsonConverter<T>, IJsonConverterReadWrite
 	{

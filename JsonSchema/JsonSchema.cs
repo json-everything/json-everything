@@ -88,6 +88,14 @@ public class JsonSchema : IBaseDocument
 	internal Dictionary<string, (JsonSchema Schema, bool IsDynamic)> Anchors { get; } = [];
 	internal JsonSchema? RecursiveAnchor { get; set; }
 
+#if NET8_0_OR_GREATER
+	/// <summary>
+	/// A TypeInfoResolver that can be used for serializing JsonSchema objects. Add to your custom
+	/// JsonSerializerOptions's TypeInfoResolver or TypeInfoResolveChain.
+	/// </summary>
+	public IJsonTypeInfoResolver TypeInfoResolver => JsonSchemaSerializerContext.Default;
+#endif
+
 	private JsonSchema(bool value)
 	{
 		BoolValue = value;
@@ -105,8 +113,8 @@ public class JsonSchema : IBaseDocument
 	/// <returns>A new <see cref="JsonSchema"/>.</returns>
 	/// <exception cref="JsonException">Could not deserialize a portion of the schema.</exception>
 	/// <remarks>The filename needs to not be URL-encoded as <see cref="Uri"/> attempts to encode it.</remarks>
-	[RequiresUnreferencedCode("TODO")]
-	[RequiresDynamicCode("TODO")]
+	[RequiresUnreferencedCode("Calls JsonSerializer.Deserialize with JsonSerializerOptions")]
+	[RequiresDynamicCode("Calls JsonSerializer.Deserialize with JsonSerializerOptions")]
 	public static JsonSchema FromFile(string fileName, JsonSerializerOptions? options)
 	{
 		var text = File.ReadAllText(fileName);
@@ -149,8 +157,8 @@ public class JsonSchema : IBaseDocument
 	/// <param name="options">Serializer options.</param>
 	/// <returns>A new <see cref="JsonSchema"/>.</returns>
 	/// <exception cref="JsonException">Could not deserialize a portion of the schema.</exception>
-	[RequiresUnreferencedCode("TODO")]
-	[RequiresDynamicCode("TODO")]
+	[RequiresUnreferencedCode("Calls JsonSerializer.Deserialize with JsonSerializerOptions")]
+	[RequiresDynamicCode("Calls JsonSerializer.Deserialize with JsonSerializerOptions")]
 	public static JsonSchema FromText(string jsonText, JsonSerializerOptions? options)
 	{
 		return JsonSerializer.Deserialize<JsonSchema>(jsonText, options)!;
@@ -173,8 +181,8 @@ public class JsonSchema : IBaseDocument
 	/// <param name="source">A stream.</param>
 	/// <param name="options">Serializer options.</param>
 	/// <returns>A new <see cref="JsonSchema"/>.</returns>
-	[RequiresUnreferencedCode("TODO")]
-	[RequiresDynamicCode("TODO")]
+	[RequiresUnreferencedCode("Calls JsonSerializer.Deserialize with JsonSerializerOptions")]
+	[RequiresDynamicCode("Calls JsonSerializer.Deserialize with JsonSerializerOptions")]
 	public static ValueTask<JsonSchema> FromStream(Stream source, JsonSerializerOptions? options = null)
 	{
 		return JsonSerializer.DeserializeAsync<JsonSchema>(source, options)!;
@@ -185,8 +193,6 @@ public class JsonSchema : IBaseDocument
 	/// </summary>
 	/// <param name="source">A stream.</param>
 	/// <returns>A new <see cref="JsonSchema"/>.</returns>
-	[RequiresUnreferencedCode("TODO")]
-	[RequiresDynamicCode("TODO")]
 	public static ValueTask<JsonSchema> FromStream(Stream source)
 	{
 		return JsonSerializer.DeserializeAsync<JsonSchema>(source, JsonSchemaSerializerContext.Default.JsonSchema)!;
@@ -759,7 +765,7 @@ public sealed class SchemaJsonConverter : Json.More.AotCompatibleJsonConverter<J
 					var keywordType = SchemaKeywordRegistry.GetImplementationType(keyword);
 					if (keywordType == null)
 					{
-						var node = options.Read<JsonNode>(ref reader)!;
+						var node = options.Read<JsonNode>(ref reader);
 						var unrecognizedKeyword = new UnrecognizedKeyword(keyword, node);
 						keywords.Add(unrecognizedKeyword);
 						break;
