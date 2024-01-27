@@ -9,11 +9,12 @@ var schema = JsonSchema.FromText("""
                                    "type": "object",
                                    "properties": {
                                      "foo": { "type": "integer" }
-                                   }
+                                   },
+                                   "additionalProperties": false
                                  }
                                  """);
 
-var instance = JsonNode.Parse("{\"foo\": 1}");
+var instance = JsonNode.Parse("{\"foo\": 1, \"bar\": true}");
 
 var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
 
