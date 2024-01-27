@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.Pointer;
 
 namespace Json.Schema
 {
@@ -71,6 +72,8 @@ namespace Json.Schema
 	[JsonSerializable(typeof(UnrecognizedKeyword))]
 	[JsonSerializable(typeof(VocabularyKeyword))]
 	[JsonSerializable(typeof(WriteOnlyKeyword))]
+	[JsonSerializable(typeof(EvaluationResults))]
+	[JsonSerializable(typeof(JsonPointer))]
 	[JsonSerializable(typeof(JsonNode))]
 	[JsonSerializable(typeof(SchemaValueType))]
 	[JsonSerializable(typeof(string[]))]
@@ -85,6 +88,5 @@ namespace Json.Schema
 	[JsonSerializable(typeof(Dictionary<string, PropertyDependency>))]
 	internal partial class JsonSchemaSerializerContext : JsonSerializerContext
 	{
-
 	}
 }

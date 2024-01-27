@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
 
 namespace Json.Path;
 
@@ -19,6 +20,14 @@ public class JsonPath
 	/// Gets a JSON Path with only a global root and no selectors, namely `$`.
 	/// </summary>
 	public static JsonPath Root { get; } = new(PathScope.Global, Enumerable.Empty<PathSegment>());
+
+#if NET8_0_OR_GREATER
+	/// <summary>
+	/// A TypeInfoResolver that can be used for serializing <see cref="JsonPath"/> objects. Add to your custom
+	/// JsonSerializerOptions's TypeInfoResolver or TypeInfoResolveChain.
+	/// </summary>
+	public static IJsonTypeInfoResolver JsonTypeResolver => JsonPathSerializerContext.Default;
+#endif
 
 	/// <summary>
 	/// Gets the scope of the path.

@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
@@ -96,7 +95,7 @@ public class JsonSchema : IBaseDocument
 	/// A TypeInfoResolver that can be used for serializing JsonSchema objects. Add to your custom
 	/// JsonSerializerOptions's TypeInfoResolver or TypeInfoResolveChain.
 	/// </summary>
-	public IJsonTypeInfoResolver TypeInfoResolver => JsonSchemaSerializerContext.Default;
+	public static IJsonTypeInfoResolver TypeInfoResolver => JsonSchemaSerializerContext.Default;
 #endif
 
 	private JsonSchema(bool value)
