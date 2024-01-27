@@ -142,6 +142,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonE", "JsonE\JsonE.csproj
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonE.Tests", "JsonE.Tests\JsonE.Tests.csproj", "{02701B75-3297-4B4B-BECD-5F7D61D11B8C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AotCompatibility", "AotCompatibility\AotCompatibility.csproj", "{D030EDB7-551D-4CB0-A37A-4417B9DEDDE0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -341,6 +343,12 @@ Global
 		{02701B75-3297-4B4B-BECD-5F7D61D11B8C}.Localization|Any CPU.Build.0 = Debug|Any CPU
 		{02701B75-3297-4B4B-BECD-5F7D61D11B8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{02701B75-3297-4B4B-BECD-5F7D61D11B8C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D030EDB7-551D-4CB0-A37A-4417B9DEDDE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D030EDB7-551D-4CB0-A37A-4417B9DEDDE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D030EDB7-551D-4CB0-A37A-4417B9DEDDE0}.Localization|Any CPU.ActiveCfg = Debug|Any CPU
+		{D030EDB7-551D-4CB0-A37A-4417B9DEDDE0}.Localization|Any CPU.Build.0 = Debug|Any CPU
+		{D030EDB7-551D-4CB0-A37A-4417B9DEDDE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D030EDB7-551D-4CB0-A37A-4417B9DEDDE0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -384,6 +392,7 @@ Global
 		{38E50AC7-002E-4FA4-AE19-E72A28CD4863} = {A09F0319-B69A-401D-814D-43524E883850}
 		{DCAA7E94-74F1-4B18-82A1-64F274E21394} = {36E07DAA-6682-41E6-A838-273677E3B16B}
 		{02701B75-3297-4B4B-BECD-5F7D61D11B8C} = {36E07DAA-6682-41E6-A838-273677E3B16B}
+		{D030EDB7-551D-4CB0-A37A-4417B9DEDDE0} = {A09F0319-B69A-401D-814D-43524E883850}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {366B43A8-8380-41C8-B855-B82689CBA669}
