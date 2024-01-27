@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -13,6 +14,8 @@ namespace Json.Patch;
 /// </summary>
 public static class PatchExtensions
 {
+	private const string _aotMessage = "To ensure AOT compatibility, be sure to add an IJsonTypeInfoResolver to the options resolver chain for the object type.";
+
 	/// <summary>
 	/// Apply a patch to an object to transform its data.
 	/// </summary>
@@ -22,6 +25,8 @@ public static class PatchExtensions
 	/// <typeparam name="T">The type of the object.</typeparam>
 	/// <returns>New instance of patched object</returns>
 	/// <exception cref="InvalidOperationException">Thrown when the patch cannot be applied.</exception>
+	[RequiresDynamicCode(_aotMessage)]
+	[RequiresUnreferencedCode(_aotMessage)]
 	public static T? Apply<T>(this JsonPatch patch, T obj, JsonSerializerOptions? options = null)
 	{
 		return Apply<T, T>(patch, obj, options);
@@ -37,6 +42,8 @@ public static class PatchExtensions
 	/// <typeparam name="TTarget">The type of the target object.</typeparam>
 	/// <returns>New instance of patched object</returns>
 	/// <exception cref="InvalidOperationException">Thrown when the patch cannot be applied.</exception>
+	[RequiresDynamicCode(_aotMessage)]
+	[RequiresUnreferencedCode(_aotMessage)]
 	public static TTarget? Apply<TOriginal, TTarget>(this JsonPatch patch, TOriginal obj, JsonSerializerOptions? options = null)
 	{
 		var node = JsonSerializer.SerializeToNode(obj, options);
@@ -56,6 +63,8 @@ public static class PatchExtensions
 	/// <typeparam name="TOriginal">The type of the original object.</typeparam>
 	/// <typeparam name="TTarget">The type of target object.</typeparam>
 	/// <returns>A <see cref="JsonPatch"/> that represents the transformation.</returns>
+	[RequiresDynamicCode(_aotMessage)]
+	[RequiresUnreferencedCode(_aotMessage)]
 	public static JsonPatch CreatePatch<TOriginal, TTarget>(this TOriginal original, TTarget target, JsonSerializerOptions? options = null)
 	{
 		var originalJson = JsonSerializer.SerializeToNode(original, options);

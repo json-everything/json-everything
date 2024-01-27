@@ -20,7 +20,7 @@ public class PatchExtensionTests
 	}
 
 	[Test]
-	public void CreatePatch_Test()
+	public void CreatePatch()
 	{
 		var initial = new TestModel
 		{
@@ -46,7 +46,7 @@ public class PatchExtensionTests
 	}
 
 	[Test]
-	public void CreatePatch_Test2()
+	public void CreatePatch2()
 	{
 		var initial = JsonDocument.Parse("[{\"test\":\"test123\"},{\"test\":\"test321\"},{\"test\":[1,2,3]},{\"test\":[1,2,4]}]");
 		var expected = JsonDocument.Parse("[{\"test\":\"test123\"},{\"test\":\"test32132\"},{\"test1\":\"test321\"},{\"test\":[1,2,3]},{\"test\":[1,2,3]}]");
@@ -88,7 +88,7 @@ public class PatchExtensionTests
 	}
 
 	[Test]
-	public void Add_Test()
+	public void Add()
 	{
 		var initial = new TestModel
 		{
@@ -100,14 +100,18 @@ public class PatchExtensionTests
 			Attributes = JsonDocument.Parse("[{\"test\":\"test123\"},{\"test\":\"test32132\"},{\"test1\":\"test321\"},{\"test\":[1,2,3]},{\"test\":[1,2,3]}]").RootElement
 		};
 		var patchExpectedStr = "[{\"op\":\"add\",\"path\":\"/Attributes\",\"value\":[{\"test\":\"test123\"},{\"test\":\"test32132\"},{\"test1\":\"test321\"},{\"test\":[1,2,3]},{\"test\":[1,2,3]}]}]";
-		var expected = JsonSerializer.Deserialize<JsonPatch>(patchExpectedStr)!;
+		var options = new JsonSerializerOptions();
+#if NET8_0_OR_GREATER
+		options.TypeInfoResolverChain.Add(JsonPatch.JsonTypeResolver);
+#endif
+		var expected = JsonSerializer.Deserialize<JsonPatch>(patchExpectedStr, options)!;
 		var patch = initial.CreatePatch(target, new JsonSerializerOptions { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull });
 
 		VerifyPatches(expected, patch);
 	}
 
 	[Test]
-	public void Remove_Test()
+	public void Remove()
 	{
 		var initial = new TestModel
 		{
@@ -127,7 +131,7 @@ public class PatchExtensionTests
 	}
 
 	[Test]
-	public void Replace_Test()
+	public void Replace()
 	{
 		var initial = new TestModel
 		{
@@ -145,7 +149,7 @@ public class PatchExtensionTests
 	}
 
 	[Test]
-	public void AddArray_Test()
+	public void AddArray()
 	{
 		var initial = JsonDocument.Parse("[1,2,3]");
 		var expected = JsonDocument.Parse("[1,2,3,4]");
@@ -157,7 +161,7 @@ public class PatchExtensionTests
 	}
 
 	[Test]
-	public void RemoveArray_Test()
+	public void RemoveArray()
 	{
 		var initial = JsonDocument.Parse("[1,2,3]");
 		var expected = JsonDocument.Parse("[1,2]");
@@ -169,7 +173,7 @@ public class PatchExtensionTests
 	}
 
 	[Test]
-	public void ReplaceArray_Test()
+	public void ReplaceArray()
 	{
 		var initial = JsonDocument.Parse("[1,2,3]");
 		var expected = JsonDocument.Parse("[1,2,1]");
@@ -181,7 +185,7 @@ public class PatchExtensionTests
 	}
 
 	[Test]
-	public void ComplexObject_Test()
+	public void ComplexObject()
 	{
 		var initial = new TestModel
 		{

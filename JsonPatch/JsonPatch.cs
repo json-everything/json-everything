@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
 using Json.More;
 using Json.Pointer;
 
@@ -15,6 +16,14 @@ namespace Json.Patch;
 [JsonConverter(typeof(PatchJsonConverter))]
 public class JsonPatch : IEquatable<JsonPatch>
 {
+#if NET8_0_OR_GREATER
+	/// <summary>
+	/// A TypeInfoResolver that can be used for serializing <see cref="JsonPointer"/> objects. Add to your custom
+	/// JsonSerializerOptions's TypeInfoResolver or TypeInfoResolveChain.
+	/// </summary>
+	public static IJsonTypeInfoResolver JsonTypeResolver => PatchSerializerContext.Default;
+#endif
+
 	/// <summary>
 	/// Gets the collection of operations.
 	/// </summary>
@@ -86,7 +95,7 @@ public class JsonPatch : IEquatable<JsonPatch>
 /// <summary>
 /// Provides JSON conversion logic for <see cref="JsonPatch"/>.
 /// </summary>
-public class PatchJsonConverter : JsonConverter<JsonPatch>
+public class PatchJsonConverter : AotCompatibleJsonConverter<JsonPatch>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="JsonPatch"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -95,7 +104,7 @@ public class PatchJsonConverter : JsonConverter<JsonPatch>
 	/// <returns>The converted value.</returns>
 	public override JsonPatch Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var operations = JsonSerializer.Deserialize<List<PatchOperation>>(ref reader, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase })!;
+		var operations = JsonSerializer.Deserialize(ref reader, PatchSerializerContext.Default.ListPatchOperation)!;
 
 		return new JsonPatch(operations);
 	}
@@ -106,6 +115,16 @@ public class PatchJsonConverter : JsonConverter<JsonPatch>
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, JsonPatch value, JsonSerializerOptions options)
 	{
-		JsonSerializer.Serialize(writer, value.Operations);
+		JsonSerializer.Serialize(writer, value.Operations, options);
 	}
 }
+
+[JsonSerializable(typeof(JsonPatch))]
+[JsonSerializable(typeof(PatchOperation))]
+[JsonSerializable(typeof(OperationType))]
+[JsonSerializable(typeof(JsonPointer))]
+[JsonSerializable(typeof(JsonNode))]
+[JsonSerializable(typeof(List<PatchOperation>))]
+[JsonSerializable(typeof(IReadOnlyList<PatchOperation>))]
+[JsonSerializable(typeof(PatchOperationJsonConverter.Model))]
+internal partial class PatchSerializerContext : JsonSerializerContext;

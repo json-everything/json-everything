@@ -31,6 +31,7 @@
 	<SignAssembly>true</SignAssembly>
 	<AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
 	<Nullable>enable</Nullable>
+	<IsAotCompatible Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net7.0'))">true</IsAotCompatible>
 	<PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
   </PropertyGroup>
 
@@ -51,6 +52,10 @@
   </ItemGroup>
 
   <ItemGroup>
+	<PackageReference Include="PolySharp" Version="1.14.1">
+	  <PrivateAssets>all</PrivateAssets>
+	  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	</PackageReference>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
   </ItemGroup>
 
