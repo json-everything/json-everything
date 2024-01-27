@@ -115,7 +115,7 @@ internal interface IValidatingJsonConverter
 	public bool RequireFormatValidation { get; set; }
 }
 
-internal class ValidatingJsonConverter<T> : JsonConverter<T>, Json.More.IJsonConverterReadWrite<T>, IValidatingJsonConverter
+internal class ValidatingJsonConverter<T> : AotCompatibleJsonConverter<T>, IValidatingJsonConverter
 {
 	private readonly JsonSchema _schema;
 	private readonly Func<JsonSerializerOptions, JsonSerializerOptions> _optionsFactory;

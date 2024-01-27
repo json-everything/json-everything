@@ -72,7 +72,7 @@ public class ExclusiveMaximumKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="ExclusiveMaximumKeyword"/>.
 /// </summary>
-public sealed class ExclusiveMaximumKeywordJsonConverter : JsonConverter<ExclusiveMaximumKeyword>, Json.More.IJsonConverterReadWrite<ExclusiveMaximumKeyword>
+public sealed class ExclusiveMaximumKeywordJsonConverter : Json.More.AotCompatibleJsonConverter<ExclusiveMaximumKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="ExclusiveMaximumKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

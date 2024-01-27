@@ -58,7 +58,7 @@ public class MinContainsKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="MinContainsKeyword"/>.
 /// </summary>
-public sealed class MinContainsKeywordJsonConverter : JsonConverter<MinContainsKeyword>, Json.More.IJsonConverterReadWrite<MinContainsKeyword>
+public sealed class MinContainsKeywordJsonConverter : Json.More.AotCompatibleJsonConverter<MinContainsKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="MinContainsKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

@@ -71,7 +71,7 @@ public class NotKeyword : IJsonSchemaKeyword, ISchemaContainer
 /// <summary>
 /// JSON converter for <see cref="NotKeyword"/>.
 /// </summary>
-public sealed class NotKeywordJsonConverter : JsonConverter<NotKeyword>, Json.More.IJsonConverterReadWrite<NotKeyword>
+public sealed class NotKeywordJsonConverter : Json.More.AotCompatibleJsonConverter<NotKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="NotKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

@@ -58,7 +58,7 @@ public class MaxContainsKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="MaxContainsKeyword"/>.
 /// </summary>
-public sealed class MaxContainsKeywordJsonConverter : JsonConverter<MaxContainsKeyword>, Json.More.IJsonConverterReadWrite<MaxContainsKeyword>
+public sealed class MaxContainsKeywordJsonConverter : Json.More.AotCompatibleJsonConverter<MaxContainsKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="MaxContainsKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

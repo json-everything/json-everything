@@ -60,7 +60,7 @@ public class AnchorKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="AnchorKeyword"/>.
 /// </summary>
-public sealed class AnchorKeywordJsonConverter : JsonConverter<AnchorKeyword>, Json.More.IJsonConverterReadWrite<AnchorKeyword>
+public sealed class AnchorKeywordJsonConverter : Json.More.AotCompatibleJsonConverter<AnchorKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="AnchorKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

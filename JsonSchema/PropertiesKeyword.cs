@@ -77,7 +77,7 @@ public class PropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 /// <summary>
 /// JSON converter for <see cref="PropertiesKeyword"/>.
 /// </summary>
-public sealed class PropertiesKeywordJsonConverter : JsonConverter<PropertiesKeyword>, Json.More.IJsonConverterReadWrite<PropertiesKeyword>
+public sealed class PropertiesKeywordJsonConverter : Json.More.AotCompatibleJsonConverter<PropertiesKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="PropertiesKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

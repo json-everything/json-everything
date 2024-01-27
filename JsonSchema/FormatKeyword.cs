@@ -108,7 +108,7 @@ public class FormatKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="FormatKeyword"/>.
 /// </summary>
-public sealed class FormatKeywordJsonConverter : JsonConverter<FormatKeyword>, Json.More.IJsonConverterReadWrite<FormatKeyword>
+public sealed class FormatKeywordJsonConverter : Json.More.AotCompatibleJsonConverter<FormatKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="FormatKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

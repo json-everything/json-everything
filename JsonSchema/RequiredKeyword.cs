@@ -82,7 +82,7 @@ public class RequiredKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="RequiredKeyword"/>.
 /// </summary>
-public sealed class RequiredKeywordJsonConverter : JsonConverter<RequiredKeyword>, Json.More.IJsonConverterReadWrite<RequiredKeyword>
+public sealed class RequiredKeywordJsonConverter : Json.More.AotCompatibleJsonConverter<RequiredKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="RequiredKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

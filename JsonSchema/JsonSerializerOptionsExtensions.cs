@@ -31,8 +31,12 @@ internal static class JsonSerializerOptionsExtensions
 	{
 		public override object? Read(ref Utf8JsonReader reader, JsonSerializerOptions options, JsonTypeInfo? typeInfo)
 		{
+#if NET8_0_OR_GREATER // Needs default interface method implementations
 			typeInfo ??= options.GetTypeInfo(typeof(T));
 			var converter = (JsonConverter<T>)typeInfo.Converter;
+#else
+			var converter = (JsonConverter<T>)options.GetConverter(typeof(T));
+#endif
 
 			return converter.Read(ref reader, typeof(T), options);
 		}
@@ -40,10 +44,10 @@ internal static class JsonSerializerOptionsExtensions
 
 	internal static object? Read(this JsonSerializerOptions options, ref Utf8JsonReader reader, Type arbitraryType, JsonTypeInfo? typeInfo = null)
 	{
+#if NET8_0_OR_GREATER // Needs default interface method implementations
 		typeInfo ??= options.GetTypeInfo(arbitraryType);
 		var converter = typeInfo.Converter;
 
-#if NET8_0_OR_GREATER // Needs default interface method implementations
 		// Try using the AOT-friendly interface first.
 		if (converter is IJsonConverterReadWrite converterReadWrite)
 		{

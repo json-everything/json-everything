@@ -76,7 +76,7 @@ public class MaxLengthKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="MaxLengthKeyword"/>.
 /// </summary>
-public sealed class MaxLengthKeywordJsonConverter : JsonConverter<MaxLengthKeyword>, Json.More.IJsonConverterReadWrite<MaxLengthKeyword>
+public sealed class MaxLengthKeywordJsonConverter : Json.More.AotCompatibleJsonConverter<MaxLengthKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="MaxLengthKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

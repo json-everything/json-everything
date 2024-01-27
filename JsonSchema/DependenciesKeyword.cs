@@ -117,7 +117,7 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 /// <summary>
 /// JSON converter for <see cref="DependenciesKeyword"/>.
 /// </summary>
-public sealed class DependenciesKeywordJsonConverter : JsonConverter<DependenciesKeyword>, Json.More.IJsonConverterReadWrite<DependenciesKeyword>
+public sealed class DependenciesKeywordJsonConverter : Json.More.AotCompatibleJsonConverter<DependenciesKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="DependenciesKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -210,7 +210,7 @@ public class SchemaOrPropertyList
 /// <summary>
 /// JSON converter for <see cref="SchemaOrPropertyList"/>.
 /// </summary>
-public sealed class SchemaOrPropertyListJsonConverter : JsonConverter<SchemaOrPropertyList>, Json.More.IJsonConverterReadWrite<SchemaOrPropertyList>
+public sealed class SchemaOrPropertyListJsonConverter : Json.More.AotCompatibleJsonConverter<SchemaOrPropertyList>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="SchemaOrPropertyList"/>.</summary>
 	/// <param name="reader">The reader.</param>

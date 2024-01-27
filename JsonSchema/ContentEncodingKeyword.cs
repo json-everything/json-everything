@@ -59,7 +59,7 @@ public class ContentEncodingKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="ContentEncodingKeyword"/>.
 /// </summary>
-public sealed class ContentEncodingKeywordJsonConverter : JsonConverter<ContentEncodingKeyword>, Json.More.IJsonConverterReadWrite<ContentEncodingKeyword>
+public sealed class ContentEncodingKeywordJsonConverter : Json.More.AotCompatibleJsonConverter<ContentEncodingKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="ContentEncodingKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

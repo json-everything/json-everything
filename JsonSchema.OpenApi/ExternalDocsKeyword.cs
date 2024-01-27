@@ -80,7 +80,7 @@ public class ExternalDocsKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="ExternalDocsKeyword"/>.
 /// </summary>
-public sealed class ExternalDocsKeywordJsonConverter : JsonConverter<ExternalDocsKeyword>, Json.More.IJsonConverterReadWrite<ExternalDocsKeyword>
+public sealed class ExternalDocsKeywordJsonConverter : Json.More.AotCompatibleJsonConverter<ExternalDocsKeyword>
 {
 	private class Model
 	{

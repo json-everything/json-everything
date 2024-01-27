@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
+using Json.More;
 
 namespace Json.Schema;
 
@@ -134,9 +135,13 @@ public static class SchemaKeywordRegistry
 	public static void Register<T>(JsonTypeInfo typeInfo)
 		where T : IJsonSchemaKeyword
 	{
-		// TODO: Verify that the type implements IJsonConverterRead too
 		var keyword = typeof(T).GetCustomAttribute<SchemaKeywordAttribute>() ??
 					  throw new ArgumentException($"Keyword implementation `{typeof(T).Name}` does not carry `{nameof(SchemaKeywordAttribute)}`");
+
+#if NET8_0_OR_GREATER // TypeInfo.Converter is part of System.Text.Json 8.x
+		var converter = typeInfo.Converter as IJsonConverterReadWrite ??
+			throw new ArgumentException("Keyword Converter must implement IJsonConverterReadWrite or Json.More.AotCompatibleJsonConverter to be AOT compatible");
+#endif
 
 		_keywords[keyword.Name] = typeof(T);
 		_keywordTypeInfos[typeof(T)] = typeInfo;

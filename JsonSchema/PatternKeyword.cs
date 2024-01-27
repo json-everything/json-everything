@@ -91,7 +91,7 @@ public class PatternKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="PatternKeyword"/>.
 /// </summary>
-public sealed class PatternKeywordJsonConverter : JsonConverter<PatternKeyword>, Json.More.IJsonConverterReadWrite<PatternKeyword>
+public sealed class PatternKeywordJsonConverter : Json.More.AotCompatibleJsonConverter<PatternKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="PatternKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

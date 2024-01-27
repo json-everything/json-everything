@@ -727,7 +727,7 @@ public class JsonSchema : IBaseDocument
 /// <summary>
 /// JSON converter for <see cref="JsonSchema"/>.
 /// </summary>
-public sealed class SchemaJsonConverter : JsonConverter<JsonSchema>, Json.More.IJsonConverterReadWrite<JsonSchema>
+public sealed class SchemaJsonConverter : Json.More.AotCompatibleJsonConverter<JsonSchema>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="JsonSchema"/>.</summary>
 	/// <param name="reader">The reader.</param>

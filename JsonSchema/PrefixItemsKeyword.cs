@@ -97,7 +97,7 @@ public class PrefixItemsKeyword : IJsonSchemaKeyword, ISchemaCollector
 /// <summary>
 /// JSON converter for <see cref="PrefixItemsKeyword"/>.
 /// </summary>
-public sealed class PrefixItemsKeywordJsonConverter : JsonConverter<PrefixItemsKeyword>, Json.More.IJsonConverterReadWrite<PrefixItemsKeyword>
+public sealed class PrefixItemsKeywordJsonConverter : Json.More.AotCompatibleJsonConverter<PrefixItemsKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="PrefixItemsKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

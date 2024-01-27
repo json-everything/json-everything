@@ -71,7 +71,7 @@ public class ExamplesKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="ExamplesKeyword"/>.
 /// </summary>
-public sealed class ExamplesKeywordJsonConverter : JsonConverter<ExamplesKeyword>, Json.More.IJsonConverterReadWrite<ExamplesKeyword>
+public sealed class ExamplesKeywordJsonConverter : Json.More.AotCompatibleJsonConverter<ExamplesKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="ExamplesKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

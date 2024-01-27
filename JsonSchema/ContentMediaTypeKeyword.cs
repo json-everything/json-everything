@@ -59,7 +59,7 @@ public class ContentMediaTypeKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="ContentMediaTypeKeyword"/>.
 /// </summary>
-public sealed class ContentMediaTypeKeywordJsonConverter : JsonConverter<ContentMediaTypeKeyword>, Json.More.IJsonConverterReadWrite<ContentMediaTypeKeyword>
+public sealed class ContentMediaTypeKeywordJsonConverter : Json.More.AotCompatibleJsonConverter<ContentMediaTypeKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="ContentMediaTypeKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

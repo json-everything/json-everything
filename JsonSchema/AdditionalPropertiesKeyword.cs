@@ -98,7 +98,7 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer
 /// <summary>
 /// JSON converter for <see cref="AdditionalPropertiesKeyword"/>.
 /// </summary>
-public sealed class AdditionalPropertiesKeywordJsonConverter : JsonConverter<AdditionalPropertiesKeyword>, Json.More.IJsonConverterReadWrite<AdditionalPropertiesKeyword>
+public sealed class AdditionalPropertiesKeywordJsonConverter : Json.More.AotCompatibleJsonConverter<AdditionalPropertiesKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="AdditionalPropertiesKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
