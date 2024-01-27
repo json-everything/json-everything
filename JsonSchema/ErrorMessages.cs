@@ -20,13 +20,6 @@ namespace Json.Schema;
 public static partial class ErrorMessages
 {
 	private static readonly ResourceManager _resourceManager = new("Json.Schema.Localization.Resources", typeof(ErrorMessages).Assembly);
-	private static readonly JsonSerializerOptions _jsonSerializerOptions = new JsonSerializerOptions
-	{
-		Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-#if NET8_0_OR_GREATER
-		TypeInfoResolver = JsonSchema.TypeInfoResolver
-#endif
-	};
 
 	/// <summary>
 	/// Gets or sets a culture to use for error messages.  Default is <see cref="CultureInfo.CurrentCulture"/>.
@@ -60,7 +53,7 @@ public static partial class ErrorMessages
 		{
 			var parameter = parameters[i];
 #pragma warning disable IL2026, IL3050
-			values[i] = JsonSerializer.Serialize(parameter.value, _jsonSerializerOptions);
+			values[i] = JsonSerializer.Serialize(parameter.value, JsonSchema.SerializerOptionsUnsafeRelaxedJsonEscaping);
 #pragma warning restore IL2026, IL3050
 			current = current.Replace($"[[{parameter.token}]]", $"{{{i}}}");
 		}

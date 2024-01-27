@@ -447,7 +447,6 @@ public partial class VocabularyTests
 	[Ignore("This should still work, but I'd need to implement a new minimum keyword as well because keywords can't see other keywords with the constraints model.")]
 	public void Draft4ExclusiveMinimumOverride(decimal instanceValue, bool isValid)
 	{
-		SchemaKeywordRegistry.TryGetTypeInfo(typeof(ExclusiveMinimumKeyword), out var exclusiveMinimumKeyword);
 		try
 		{
 #if NET8_0_OR_GREATER
@@ -482,7 +481,6 @@ public partial class VocabularyTests
 	[TestCase(5.1, true)]
 	public void Draft4ExclusiveMinimumOverrideWithDraft6Usage(decimal instanceValue, bool isValid)
 	{
-		SchemaKeywordRegistry.TryGetTypeInfo(typeof(ExclusiveMinimumKeyword), out var exclusiveMinimumKeyword);
 		try
 		{
 #if NET8_0_OR_GREATER

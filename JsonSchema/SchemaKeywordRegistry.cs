@@ -25,7 +25,9 @@ public static class SchemaKeywordRegistry
 	private static readonly ConcurrentDictionary<Type, JsonSerializerContext> _keywordTypeInfoResolvers = new();
 	private static readonly ConcurrentDictionary<Type, IJsonSchemaKeyword> _nullKeywords;
 
-	internal static JsonSerializerContext[] ExtraContext => _keywordTypeInfoResolvers.Values.ToArray();
+#if NET8_0_OR_GREATER
+	internal static IJsonTypeInfoResolver[] ExtraTypeInfoResolvers => _keywordTypeInfoResolvers.Values.Distinct().ToArray();
+#endif
 
 	internal static IEnumerable<Type> KeywordTypes => _keywords.Values;
 
@@ -143,7 +145,7 @@ public static class SchemaKeywordRegistry
 		_keywords[keyword.Name] = typeof(T);
 		_keywordTypeInfoResolvers[typeof(T)] = typeContext;
 
-		JsonSchema.UpdateKeywordTypeInfoResolverChain(typeContext);
+		JsonSchema.InvalidateTypeInfoResolver();
 	}
 
 	/// <summary>
@@ -185,27 +187,6 @@ public static class SchemaKeywordRegistry
 		where T : IJsonSchemaKeyword
 	{
 		_nullKeywords[typeof(T)] = nullKeyword;
-	}
-
-
-	/// <summary>
-	/// Get the JsonTypeInfo for a given keywordType
-	/// </summary>
-	/// <param name="keywordType">Type to look up</param>
-	/// <param name="jsonTypeInfo">JsonTypeInfo for serialization</param>
-	/// <remarks>
-	/// This supports callers that use the JsonTypeInfo overloads of JsonSerializer methods.
-	/// </remarks>
-	internal static bool TryGetTypeInfo(Type keywordType, out JsonTypeInfo? jsonTypeInfo)
-	{
-		if (!_keywordTypeInfoResolvers.TryGetValue(keywordType, out var context))
-		{
-			// TODO: Fix this up
-			context = JsonSchemaSerializerContext.Default;
-		}
-
-		jsonTypeInfo = context.GetTypeInfo(keywordType);
-		return jsonTypeInfo is not null;
 	}
 
 	internal static IJsonSchemaKeyword? GetNullValuedKeyword(Type keywordType)
