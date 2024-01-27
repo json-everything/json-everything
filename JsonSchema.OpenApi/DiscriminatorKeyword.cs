@@ -51,7 +51,7 @@ public class DiscriminatorKeyword : IJsonSchemaKeyword
 		Mapping = mapping;
 		Extensions = extensions;
 
-		_json = JsonSerializer.SerializeToNode(this, OpenApiSerializerContext.Default.DiscriminatorKeyword);
+		_json = JsonSerializer.SerializeToNode(this);
 	}
 
 	internal DiscriminatorKeyword(string propertyName, IReadOnlyDictionary<string, string>? mapping, IReadOnlyDictionary<string, JsonNode?>? extensions, JsonNode? json)
@@ -84,7 +84,7 @@ public class DiscriminatorKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="DiscriminatorKeyword"/>.
 /// </summary>
-public sealed class DiscriminatorKeywordJsonConverter : Json.More.AotCompatibleJsonConverter<DiscriminatorKeyword>
+public sealed class DiscriminatorKeywordJsonConverter : JsonConverter<DiscriminatorKeyword>
 {
 	private class Model
 	{

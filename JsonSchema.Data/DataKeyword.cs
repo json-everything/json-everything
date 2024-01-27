@@ -138,7 +138,7 @@ public class DataKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="DataKeyword"/>.
 /// </summary>
-public sealed class DataKeywordJsonConverter : Json.More.AotCompatibleJsonConverter<DataKeyword>
+public sealed class DataKeywordJsonConverter : JsonConverter<DataKeyword>
 {
 	private static readonly string[] _coreKeywords = Schema.Vocabularies.Core202012.Keywords.Where(x => x != typeof(UnrecognizedKeyword)).Select(GetKeyword).ToArray();
 

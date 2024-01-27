@@ -115,7 +115,7 @@ public class XmlKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="XmlKeyword"/>.
 /// </summary>
-public sealed class XmlKeywordJsonConverter : Json.More.AotCompatibleJsonConverter<XmlKeyword>
+public sealed class XmlKeywordJsonConverter : JsonConverter<XmlKeyword>
 {
 	// ReSharper disable UnusedAutoPropertyAccessor.Local
 	private class Model

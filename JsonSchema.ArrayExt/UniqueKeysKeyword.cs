@@ -109,7 +109,7 @@ public class UniqueKeysKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="UniqueKeysKeyword"/>.
 /// </summary>
-public sealed class UniqueKeysKeywordJsonConverter : Json.More.AotCompatibleJsonConverter<UniqueKeysKeyword>
+public sealed class UniqueKeysKeywordJsonConverter : JsonConverter<UniqueKeysKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="UniqueKeysKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
