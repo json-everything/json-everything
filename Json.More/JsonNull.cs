@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
 
 namespace Json.More;
 
@@ -26,6 +26,15 @@ public class JsonNull
 	/// </summary>
 	public static JsonNode SignalNode { get; } = JsonValue.Create(new JsonNull(), JsonNullSerializationContext.Default.JsonNull)!;
 
+
+#if NET8_0_OR_GREATER
+	/// <summary>
+	/// A TypeInfoResolver that can be used for serializing <see cref="JsonNull"/> objects. Add to your custom
+	/// JsonSerializerOptions's TypeInfoResolver or TypeInfoResolveChain.
+	/// </summary>
+	public static IJsonTypeInfoResolver JsonTypeResolver => JsonNullSerializationContext.Default;
+#endif
+
 	private JsonNull() { }
 }
 
@@ -42,11 +51,8 @@ internal class JsonNullConverter : JsonConverter<JsonNull>
 	}
 }
 
-/// <summary>
-/// Provides a serialization context for <see cref="JsonNull"/>.
-/// </summary>
 [JsonSerializable(typeof(JsonNull))]
-public partial class JsonNullSerializationContext : JsonSerializerContext
+internal partial class JsonNullSerializationContext : JsonSerializerContext
 {
 
 }
