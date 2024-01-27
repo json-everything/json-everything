@@ -122,7 +122,7 @@ public sealed class ContainsKeywordJsonConverter : Json.More.AotCompatibleJsonCo
 	/// <returns>The converted value.</returns>
 	public override ContainsKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var schema = options.Read<JsonSchema>(ref reader)!;
+		var schema = options.Read(ref reader, JsonSchemaSerializerContext.Default.JsonSchema)!;
 
 		return new ContainsKeyword(schema);
 	}

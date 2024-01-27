@@ -136,7 +136,7 @@ internal class ValidatingJsonConverter<T> : AotCompatibleJsonConverter<T>, IVali
 #pragma warning restore IL2046, IL3051
 	{
 		var readerCopy = reader;
-		var node = options.Read<JsonNode?>(ref readerCopy);
+		var node = options.Read(ref readerCopy, JsonSchemaSerializerContext.Default.JsonNode);
 		
 		var validation = _schema.Evaluate(node, new EvaluationOptions
 		{

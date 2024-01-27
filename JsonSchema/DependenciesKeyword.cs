@@ -129,7 +129,7 @@ public sealed class DependenciesKeywordJsonConverter : Json.More.AotCompatibleJs
 		if (reader.TokenType != JsonTokenType.StartObject)
 			throw new JsonException("Expected object");
 
-		var dependencies = options.Read<Dictionary<string, SchemaOrPropertyList>>(ref reader)!;
+		var dependencies = options.Read(ref reader, JsonSchemaSerializerContext.Default.DictionaryStringSchemaOrPropertyList)!;
 		return new DependenciesKeyword(dependencies);
 	}
 
@@ -220,9 +220,9 @@ public sealed class SchemaOrPropertyListJsonConverter : Json.More.AotCompatibleJ
 	public override SchemaOrPropertyList Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		if (reader.TokenType == JsonTokenType.StartArray)
-			return new SchemaOrPropertyList(options.Read<List<string>>(ref reader)!);
+			return new SchemaOrPropertyList(options.Read(ref reader, JsonSchemaSerializerContext.Default.ListString)!);
 
-		return new SchemaOrPropertyList(options.Read<JsonSchema>(ref reader)!);
+		return new SchemaOrPropertyList(options.Read(ref reader, JsonSchemaSerializerContext.Default.JsonSchema)!);
 	}
 
 	/// <summary>Writes a specified value as JSON.</summary>

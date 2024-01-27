@@ -80,7 +80,8 @@ public sealed class ExamplesKeywordJsonConverter : Json.More.AotCompatibleJsonCo
 	/// <returns>The converted value.</returns>
 	public override ExamplesKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var array = options.Read<JsonArray>(ref reader) ?? throw new JsonException("Expected an array, but received null");
+		var array = options.Read(ref reader, JsonSchemaSerializerContext.Default.JsonArray) ??
+		            throw new JsonException("Expected an array, but received null");
 
 		return new ExamplesKeyword((IEnumerable<JsonNode>)array!);
 	}

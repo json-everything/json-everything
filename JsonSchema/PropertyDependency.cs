@@ -109,7 +109,7 @@ public sealed class PropertyDependencyJsonConverter : Json.More.AotCompatibleJso
 	/// <returns>The converted value.</returns>
 	public override PropertyDependency Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var schemas = options.Read<Dictionary<string, JsonSchema>>(ref reader);
+		var schemas = options.Read(ref reader, JsonSchemaSerializerContext.Default.DictionaryStringJsonSchema);
 
 		return new PropertyDependency(schemas!);
 	}

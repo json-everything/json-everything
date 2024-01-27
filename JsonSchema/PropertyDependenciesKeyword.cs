@@ -113,7 +113,7 @@ public sealed class PropertyDependenciesKeywordJsonConverter : Json.More.AotComp
 	/// <returns>The converted value.</returns>
 	public override PropertyDependenciesKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var dependencies = options.Read<Dictionary<string, PropertyDependency>>(ref reader);
+		var dependencies = options.Read(ref reader, JsonSchemaSerializerContext.Default.DictionaryStringPropertyDependency);
 
 		return new PropertyDependenciesKeyword(dependencies!);
 	}

@@ -763,7 +763,7 @@ public sealed class SchemaJsonConverter : Json.More.AotCompatibleJsonConverter<J
 					var keywordType = SchemaKeywordRegistry.GetImplementationType(keyword);
 					if (keywordType == null)
 					{
-						var node = options.Read<JsonNode>(ref reader);
+						var node = options.Read(ref reader, JsonSchemaSerializerContext.Default.JsonNode);
 						var unrecognizedKeyword = new UnrecognizedKeyword(keyword, node);
 						keywords.Add(unrecognizedKeyword);
 						break;
