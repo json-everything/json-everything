@@ -445,7 +445,7 @@ public class JsonSchema : IBaseDocument
 
 			foreach (var keyword in unrecognizedButSupported)
 			{
-				var jsonText = JsonSerializer.Serialize((object) keyword);
+				var jsonText = JsonSerializer.Serialize((object) keyword, keyword.GetType(), JsonSchemaSerializerContext.Default);
 				var json = JsonNode.Parse(jsonText);
 				var keywordConstraint = KeywordConstraint.SimpleAnnotation(keyword.Keyword(), json);
 				localConstraints.Add(keywordConstraint);
@@ -665,7 +665,7 @@ public class JsonSchema : IBaseDocument
 					newResolvable = k;
 					break;
 				default: // non-applicator keyword
-					var serialized = JsonSerializer.Serialize(localResolvable);
+					var serialized = JsonSerializer.Serialize(localResolvable, localResolvable.GetType(), JsonSchemaSerializerContext.Default);
 					var json = JsonNode.Parse(serialized);
 					var newPointer = JsonPointer.Create(pointer.Segments.Skip(i));
 					i += newPointer.Segments.Length - 1;

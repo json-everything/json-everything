@@ -72,6 +72,7 @@ namespace Json.Schema
 	[JsonSerializable(typeof(VocabularyKeyword))]
 	[JsonSerializable(typeof(WriteOnlyKeyword))]
 	[JsonSerializable(typeof(JsonNode))]
+	[JsonSerializable(typeof(JsonNode[]))]
 	[JsonSerializable(typeof(SchemaValueType))]
 	[JsonSerializable(typeof(string[]))]
 	[JsonSerializable(typeof(Dictionary<string, JsonSchema>))]
@@ -83,6 +84,8 @@ namespace Json.Schema
 	[JsonSerializable(typeof(Dictionary<string, List<string>>))]
 	[JsonSerializable(typeof(int[]))]
 	[JsonSerializable(typeof(Dictionary<string, PropertyDependency>))]
+	[JsonSerializable(typeof(decimal))]
+	[JsonSerializable(typeof(uint))]
 	internal partial class JsonSchemaSerializerContext : JsonSerializerContext
 	{
 
