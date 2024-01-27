@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Text.Encodings.Web;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using Json.Schema;
 
@@ -16,7 +17,11 @@ var instance = JsonNode.Parse("{\"foo\": 1}");
 
 var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
 
-var serializerOptions = new JsonSerializerOptions();
+var serializerOptions = new JsonSerializerOptions
+{
+	WriteIndented = true,
+	Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+};
 serializerOptions.TypeInfoResolverChain.Add(JsonSchema.TypeInfoResolver);
 
 Console.WriteLine("Schema:");
