@@ -2,6 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
 
 namespace Json.More;
 
@@ -15,12 +16,15 @@ public static class JsonSerializerOptionsExtensions
 	/// </summary>
 	/// <typeparam name="T">The <see cref="Type"/> to convert.</typeparam>
 	/// <param name="options">The <see cref="JsonSerializerOptions"/> being used.</param>
+	/// <param name="typeInfo">An explicit typeInfo to use for looking up the Converter. If not provided, options.GetTypeInfo will be used.</param>
 	/// <returns>An implementation of <see cref="JsonConverter{T}"/> as determined by the provided options</returns>
-	[RequiresDynamicCode("Calls System.Text.Json.JsonSerializerOptions.GetConverter(Type)")]
-	[RequiresUnreferencedCode("Calls System.Text.Json.JsonSerializerOptions.GetConverter(Type)")]
-	public static JsonConverter<T> GetConverter<T>(this JsonSerializerOptions options)
+	public static JsonConverter<T> GetConverter<T>(this JsonSerializerOptions options, JsonTypeInfo? typeInfo = null)
 	{
+#if NET8_0_OR_GREATER
+		return (JsonConverter<T>)(typeInfo ?? options.GetTypeInfo(typeof(T))).Converter;
+#else
 		return (JsonConverter<T>)options.GetConverter(typeof(T));
+#endif
 	}
 
 	/// <summary>
@@ -32,11 +36,10 @@ public static class JsonSerializerOptionsExtensions
 	/// <typeparam name="T">The <see cref="Type"/> to convert.</typeparam>
 	/// <param name="options">The <see cref="JsonSerializerOptions"/> being used.</param>
 	/// <param name="reader">The <see cref="Utf8JsonReader"/> to read from.</param>
+	/// <param name="typeInfo">An explicit typeInfo to use for looking up the Converter. If not provided, options.GetTypeInfo will be used.</param>
 	/// <returns>The value that was converted.</returns>
-	[RequiresDynamicCode("Calls Json.More.JsonSerializerOptionsExtensions.GetConverter<T>(JsonSerializerOptions)")]
-	[RequiresUnreferencedCode("Calls Json.More.JsonSerializerOptionsExtensions.GetConverter<T>(JsonSerializerOptions)")]
-	public static T? Read<T>(this JsonSerializerOptions options, ref Utf8JsonReader reader)
+	public static T? Read<T>(this JsonSerializerOptions options, ref Utf8JsonReader reader, JsonTypeInfo? typeInfo = null)
 	{
-		return options.GetConverter<T>().Read(ref reader, typeof(T), options);
+		return options.GetConverter<T>(typeInfo).Read(ref reader, typeof(T), options);
 	}
 }

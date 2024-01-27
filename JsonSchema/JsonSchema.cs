@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
 using System.Threading.Tasks;
 using Json.More;
 using Json.Pointer;
@@ -21,7 +24,14 @@ public class JsonSchema : IBaseDocument
 {
 	private const string _unknownKeywordsAnnotationKey = "$unknownKeywords";
 
-	private static readonly HashSet<SpecVersion> _definedSpecVersions = [..Enum.GetValues(typeof(SpecVersion)).Cast<SpecVersion>()];
+	private static readonly HashSet<SpecVersion> _definedSpecVersions = [..GetSpecVersions()];
+
+	private static SpecVersion[] GetSpecVersions() =>
+#if NET6_0_OR_GREATER
+		Enum.GetValues<SpecVersion>();
+#else
+		Enum.GetValues(typeof(SpecVersion)).Cast<SpecVersion>().ToArray();
+#endif
 
 	private readonly Dictionary<string, IJsonSchemaKeyword>? _keywords;
 	private readonly List<(DynamicScope Scope, SchemaConstraint Constraint)> _constraints = [];
@@ -81,6 +91,14 @@ public class JsonSchema : IBaseDocument
 	internal Dictionary<string, (JsonSchema Schema, bool IsDynamic)> Anchors { get; } = [];
 	internal JsonSchema? RecursiveAnchor { get; set; }
 
+#if NET8_0_OR_GREATER
+	/// <summary>
+	/// A TypeInfoResolver that can be used for serializing JsonSchema objects. Add to your custom
+	/// JsonSerializerOptions's TypeInfoResolver or TypeInfoResolveChain.
+	/// </summary>
+	public IJsonTypeInfoResolver TypeInfoResolver => JsonSchemaSerializerContext.Default;
+#endif
+
 	private JsonSchema(bool value)
 	{
 		BoolValue = value;
@@ -98,10 +116,33 @@ public class JsonSchema : IBaseDocument
 	/// <returns>A new <see cref="JsonSchema"/>.</returns>
 	/// <exception cref="JsonException">Could not deserialize a portion of the schema.</exception>
 	/// <remarks>The filename needs to not be URL-encoded as <see cref="Uri"/> attempts to encode it.</remarks>
-	public static JsonSchema FromFile(string fileName, JsonSerializerOptions? options = null)
+	[RequiresUnreferencedCode("Calls JsonSerializer.Deserialize with JsonSerializerOptions")]
+	[RequiresDynamicCode("Calls JsonSerializer.Deserialize with JsonSerializerOptions")]
+	public static JsonSchema FromFile(string fileName, JsonSerializerOptions? options)
 	{
 		var text = File.ReadAllText(fileName);
 		var schema = FromText(text, options);
+		var path = Path.GetFullPath(fileName);
+		// For some reason, full *nix file paths (which start with '/') don't work quite right when
+		// being prepended with 'file:///'.  It seems the '////' is interpreted as '//' and the
+		// first folder in the path is then interpreted as the host.  To account for this, we
+		// need to prepend with 'file://' instead.
+		var protocol = path.StartsWith("/") ? "file://" : "file:///";
+		schema.BaseUri = new Uri($"{protocol}{path}");
+		return schema;
+	}
+
+	/// <summary>
+	/// Loads text from a file and deserializes a <see cref="JsonSchema"/>.
+	/// </summary>
+	/// <param name="fileName">The filename to load, URL-decoded.</param>
+	/// <returns>A new <see cref="JsonSchema"/>.</returns>
+	/// <exception cref="JsonException">Could not deserialize a portion of the schema.</exception>
+	/// <remarks>The filename needs to not be URL-encoded as <see cref="Uri"/> attempts to encode it.</remarks>
+	public static JsonSchema FromFile(string fileName)
+	{
+		var text = File.ReadAllText(fileName);
+		var schema = FromText(text);
 		var path = Path.GetFullPath(fileName);
 		// For some reason, full *nix file paths (which start with '/') don't work quite right when
 		// being prepended with 'file:///'.  It seems the '////' is interpreted as '//' and the
@@ -119,9 +160,22 @@ public class JsonSchema : IBaseDocument
 	/// <param name="options">Serializer options.</param>
 	/// <returns>A new <see cref="JsonSchema"/>.</returns>
 	/// <exception cref="JsonException">Could not deserialize a portion of the schema.</exception>
-	public static JsonSchema FromText(string jsonText, JsonSerializerOptions? options = null)
+	[RequiresUnreferencedCode("Calls JsonSerializer.Deserialize with JsonSerializerOptions")]
+	[RequiresDynamicCode("Calls JsonSerializer.Deserialize with JsonSerializerOptions")]
+	public static JsonSchema FromText(string jsonText, JsonSerializerOptions? options)
 	{
 		return JsonSerializer.Deserialize<JsonSchema>(jsonText, options)!;
+	}
+
+	/// <summary>
+	/// Deserializes a <see cref="JsonSchema"/> from text.
+	/// </summary>
+	/// <param name="jsonText">The text to parse.</param>
+	/// <returns>A new <see cref="JsonSchema"/>.</returns>
+	/// <exception cref="JsonException">Could not deserialize a portion of the schema.</exception>
+	public static JsonSchema FromText(string jsonText)
+	{
+		return JsonSerializer.Deserialize<JsonSchema>(jsonText, JsonSchemaSerializerContext.Default.JsonSchema)!;
 	}
 
 	/// <summary>
@@ -130,9 +184,21 @@ public class JsonSchema : IBaseDocument
 	/// <param name="source">A stream.</param>
 	/// <param name="options">Serializer options.</param>
 	/// <returns>A new <see cref="JsonSchema"/>.</returns>
+	[RequiresUnreferencedCode("Calls JsonSerializer.Deserialize with JsonSerializerOptions")]
+	[RequiresDynamicCode("Calls JsonSerializer.Deserialize with JsonSerializerOptions")]
 	public static ValueTask<JsonSchema> FromStream(Stream source, JsonSerializerOptions? options = null)
 	{
 		return JsonSerializer.DeserializeAsync<JsonSchema>(source, options)!;
+	}
+
+	/// <summary>
+	/// Deserializes a <see cref="JsonSchema"/> from a stream.
+	/// </summary>
+	/// <param name="source">A stream.</param>
+	/// <returns>A new <see cref="JsonSchema"/>.</returns>
+	public static ValueTask<JsonSchema> FromStream(Stream source)
+	{
+		return JsonSerializer.DeserializeAsync<JsonSchema>(source, JsonSchemaSerializerContext.Default.JsonSchema)!;
 	}
 
 	/// <summary>
@@ -438,7 +504,7 @@ public class JsonSchema : IBaseDocument
 
 		if (desiredDraft != SpecVersion.Unspecified) return desiredDraft;
 
-		var allDraftsArray = Enum.GetValues(typeof(SpecVersion)).Cast<SpecVersion>().ToArray();
+		var allDraftsArray = GetSpecVersions();
 		var allDrafts = allDraftsArray.Aggregate(SpecVersion.Unspecified, (a, x) => a | x);
 		var commonDrafts = schema.Keywords!.Aggregate(allDrafts, (a, x) => a & x.VersionsSupported());
 		var candidates = allDraftsArray.Where(x => commonDrafts.HasFlag(x)).ToArray();
@@ -666,7 +732,7 @@ public class JsonSchema : IBaseDocument
 /// <summary>
 /// JSON converter for <see cref="JsonSchema"/>.
 /// </summary>
-public sealed class SchemaJsonConverter : JsonConverter<JsonSchema>
+public sealed class SchemaJsonConverter : Json.More.AotCompatibleJsonConverter<JsonSchema>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="JsonSchema"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -709,8 +775,11 @@ public sealed class SchemaJsonConverter : JsonConverter<JsonSchema>
 						implementation = SchemaKeywordRegistry.GetNullValuedKeyword(keywordType) ??
 										 throw new InvalidOperationException($"No null instance registered for keyword `{keyword}`");
 					else
-						implementation = options.Read(ref reader, keywordType) as IJsonSchemaKeyword ??
-										 throw new InvalidOperationException($"Could not deserialize expected keyword `{keyword}`");
+					{
+						SchemaKeywordRegistry.TryGetTypeInfo(keywordType, out var keywordTypeInfo);
+						implementation = options.Read(ref reader, keywordType, keywordTypeInfo) as IJsonSchemaKeyword ??
+								throw new InvalidOperationException($"Could not deserialize expected keyword `{keyword}`");
+					}
 					keywords.Add(implementation);
 					break;
 				case JsonTokenType.EndObject:

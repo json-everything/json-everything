@@ -96,8 +96,8 @@ public class ContainsKeyword : IJsonSchemaKeyword, ISchemaContainer
 				.Where(x => x.Results.IsValid)
 				.Select(x => int.Parse(x.RelativeInstanceLocation.Segments[0].Value))
 				.ToArray();
-			evaluation.Results.SetAnnotation(Name, JsonSerializer.SerializeToNode(validIndices));
-			
+			evaluation.Results.SetAnnotation(Name, JsonSerializer.SerializeToNode(validIndices, JsonSchemaSerializerContext.Default.Int32Array));
+
 			var actual = validIndices.Length;
 			if (actual < minimum)
 				evaluation.Results.Fail(Name, ErrorMessages.GetContainsTooFew(context.Options.Culture), ("received", actual), ("minimum", minimum));
@@ -113,7 +113,7 @@ public class ContainsKeyword : IJsonSchemaKeyword, ISchemaContainer
 /// <summary>
 /// JSON converter for <see cref="ContainsKeyword"/>.
 /// </summary>
-public sealed class ContainsKeywordJsonConverter : JsonConverter<ContainsKeyword>
+public sealed class ContainsKeywordJsonConverter : Json.More.AotCompatibleJsonConverter<ContainsKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="ContainsKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

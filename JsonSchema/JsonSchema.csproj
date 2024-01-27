@@ -34,6 +34,8 @@
     <Configurations>Debug;Release;Localization</Configurations>
     <DefineConstants>$(DefineConstants)TRACE;JETBRAINS_ANNOTATIONS</DefineConstants>
     <NoWarn>IDE0290</NoWarn>
+    <IsAotCompatible Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net7.0'))">true</IsAotCompatible>	  
+    <PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">

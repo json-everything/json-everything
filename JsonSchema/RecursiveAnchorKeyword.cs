@@ -54,7 +54,7 @@ public class RecursiveAnchorKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="RecursiveAnchorKeyword"/>.
 /// </summary>
-public sealed class RecursiveAnchorKeywordJsonConverter : JsonConverter<RecursiveAnchorKeyword>
+public sealed class RecursiveAnchorKeywordJsonConverter : Json.More.AotCompatibleJsonConverter<RecursiveAnchorKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="RecursiveAnchorKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

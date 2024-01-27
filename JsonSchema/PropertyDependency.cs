@@ -100,7 +100,7 @@ public class PropertyDependency : IKeyedSchemaCollector, IEquatable<PropertyDepe
 /// <summary>
 /// JSON converter for <see cref="PropertyDependency"/>.
 /// </summary>
-public sealed class PropertyDependencyJsonConverter : JsonConverter<PropertyDependency>
+public sealed class PropertyDependencyJsonConverter : Json.More.AotCompatibleJsonConverter<PropertyDependency>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="PropertyDependency"/>.</summary>
 	/// <param name="reader">The reader.</param>

@@ -84,7 +84,7 @@ public class ThenKeyword : IJsonSchemaKeyword, ISchemaContainer
 /// <summary>
 /// JSON converter for <see cref="ThenKeyword"/>.
 /// </summary>
-public sealed class ThenKeywordJsonConverter : JsonConverter<ThenKeyword>
+public sealed class ThenKeywordJsonConverter : Json.More.AotCompatibleJsonConverter<ThenKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="ThenKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

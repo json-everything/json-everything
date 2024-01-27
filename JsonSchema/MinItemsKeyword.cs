@@ -75,7 +75,7 @@ public class MinItemsKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="MinItemsKeyword"/>.
 /// </summary>
-public sealed class MinItemsKeywordJsonConverter : JsonConverter<MinItemsKeyword>
+public sealed class MinItemsKeywordJsonConverter : Json.More.AotCompatibleJsonConverter<MinItemsKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="MinItemsKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

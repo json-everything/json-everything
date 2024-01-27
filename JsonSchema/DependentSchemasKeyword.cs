@@ -93,7 +93,7 @@ public class DependentSchemasKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 /// <summary>
 /// JSON converter for <see cref="DependentSchemasKeyword"/>.
 /// </summary>
-public sealed class DependentSchemasKeywordJsonConverter : JsonConverter<DependentSchemasKeyword>
+public sealed class DependentSchemasKeywordJsonConverter : Json.More.AotCompatibleJsonConverter<DependentSchemasKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="DependentSchemasKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

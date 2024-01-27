@@ -57,7 +57,7 @@ public class DefinitionsKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 /// <summary>
 /// JSON converter for <see cref="DefinitionsKeyword"/>.
 /// </summary>
-public sealed class DefinitionsKeywordJsonConverter : JsonConverter<DefinitionsKeyword>
+public sealed class DefinitionsKeywordJsonConverter : Json.More.AotCompatibleJsonConverter<DefinitionsKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="DefinitionsKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

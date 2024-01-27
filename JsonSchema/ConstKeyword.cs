@@ -69,7 +69,7 @@ public class ConstKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="ConstKeyword"/>.
 /// </summary>
-public sealed class ConstKeywordJsonConverter : JsonConverter<ConstKeyword>
+public sealed class ConstKeywordJsonConverter : Json.More.AotCompatibleJsonConverter<ConstKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="ConstKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

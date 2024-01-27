@@ -10,7 +10,7 @@ using NUnit.Framework;
 
 namespace Json.Schema.Tests;
 
-public class VocabularyTests
+public partial class VocabularyTests
 {
 	[SchemaKeyword(Name)]
 	[SchemaSpecVersion(SpecVersion.Draft201909 | SpecVersion.Draft202012)]
@@ -45,7 +45,7 @@ public class VocabularyTests
 		}
 	}
 
-	private class MinDateJsonConverter : JsonConverter<MinDateKeyword>
+	public class MinDateJsonConverter : Json.More.AotCompatibleJsonConverter<MinDateKeyword>
 	{
 		public override MinDateKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
@@ -95,7 +95,7 @@ public class VocabularyTests
 		}
 	}
 
-	private class NonVocabMinDateJsonConverter : JsonConverter<NonVocabMinDateKeyword>
+	public class NonVocabMinDateJsonConverter : Json.More.AotCompatibleJsonConverter<NonVocabMinDateKeyword>
 	{
 		public override NonVocabMinDateKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
@@ -136,7 +136,7 @@ public class VocabularyTests
 		}
 	}
 
-	public class MaxDateJsonConverter : JsonConverter<MaxDateKeyword>
+	public class MaxDateJsonConverter : Json.More.AotCompatibleJsonConverter<MaxDateKeyword>
 	{
 		public override MaxDateKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
@@ -185,9 +185,15 @@ public class VocabularyTests
 	[OneTimeSetUp]
 	public void Setup()
 	{
+#if NET8_0_OR_GREATER
+		SchemaKeywordRegistry.Register<MinDateKeyword>(VocabularySerializerContext.Default.MinDateKeyword);
+		SchemaKeywordRegistry.Register<NonVocabMinDateKeyword>(VocabularySerializerContext.Default.NonVocabMinDateKeyword);
+		SchemaKeywordRegistry.Register<MaxDateKeyword>(VocabularySerializerContext.Default.NonVocabMinDateKeyword);
+#else
 		SchemaKeywordRegistry.Register<MinDateKeyword>();
 		SchemaKeywordRegistry.Register<NonVocabMinDateKeyword>();
 		SchemaKeywordRegistry.Register<MaxDateKeyword>();
+#endif
 	}
 
 	[OneTimeTearDown]
@@ -413,7 +419,7 @@ public class VocabularyTests
 		}
 	}
 
-	private class Draft4ExclusiveMinimumJsonConverter : JsonConverter<Draft4ExclusiveMinimumKeyword>
+	public class Draft4ExclusiveMinimumJsonConverter : Json.More.AotCompatibleJsonConverter<Draft4ExclusiveMinimumKeyword>
 	{
 		public override Draft4ExclusiveMinimumKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
@@ -441,9 +447,14 @@ public class VocabularyTests
 	[Ignore("This should still work, but I'd need to implement a new minimum keyword as well because keywords can't see other keywords with the constraints model.")]
 	public void Draft4ExclusiveMinimumOverride(decimal instanceValue, bool isValid)
 	{
+		SchemaKeywordRegistry.TryGetTypeInfo(typeof(ExclusiveMinimumKeyword), out var exclusiveMinimumKeyword);
 		try
 		{
+#if NET8_0_OR_GREATER
+			SchemaKeywordRegistry.Register<Draft4ExclusiveMinimumKeyword>(VocabularySerializerContext.Default.Draft4ExclusiveMinimumKeyword);
+#else
 			SchemaKeywordRegistry.Register<Draft4ExclusiveMinimumKeyword>();
+#endif
 
 			var schemaText = @"{
 	""minimum"": 5,
@@ -459,7 +470,11 @@ public class VocabularyTests
 		}
 		finally
 		{
+#if NET8_0_OR_GREATER
+			SchemaKeywordRegistry.Register<ExclusiveMinimumKeyword>(exclusiveMinimumKeyword!);
+#else
 			SchemaKeywordRegistry.Register<ExclusiveMinimumKeyword>();
+#endif
 		}
 	}
 
@@ -469,9 +484,14 @@ public class VocabularyTests
 	[TestCase(5.1, true)]
 	public void Draft4ExclusiveMinimumOverrideWithDraft6Usage(decimal instanceValue, bool isValid)
 	{
+		SchemaKeywordRegistry.TryGetTypeInfo(typeof(ExclusiveMinimumKeyword), out var exclusiveMinimumKeyword);
 		try
 		{
+#if NET8_0_OR_GREATER
+			SchemaKeywordRegistry.Register<Draft4ExclusiveMinimumKeyword>(VocabularySerializerContext.Default.Draft4ExclusiveMinimumKeyword);
+#else
 			SchemaKeywordRegistry.Register<Draft4ExclusiveMinimumKeyword>();
+#endif
 
 			var schemaText = @"{
 	""exclusiveMinimum"": 5
@@ -486,7 +506,20 @@ public class VocabularyTests
 		}
 		finally
 		{
+#if NET8_0_OR_GREATER
+			SchemaKeywordRegistry.Register<ExclusiveMinimumKeyword>(exclusiveMinimumKeyword!);
+#else
 			SchemaKeywordRegistry.Register<ExclusiveMinimumKeyword>();
+#endif
 		}
+	}
+
+	[JsonSerializable(typeof(VocabularyTests.Draft4ExclusiveMinimumKeyword))]
+	[JsonSerializable(typeof(VocabularyTests.MinDateKeyword))]
+	[JsonSerializable(typeof(VocabularyTests.NonVocabMinDateKeyword))]
+	[JsonSerializable(typeof(VocabularyTests.MaxDateKeyword))]
+	internal partial class VocabularySerializerContext : JsonSerializerContext
+	{
+
 	}
 }

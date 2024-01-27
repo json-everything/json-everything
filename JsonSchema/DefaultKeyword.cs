@@ -62,7 +62,7 @@ public class DefaultKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="DefaultKeyword"/>.
 /// </summary>
-public sealed class DefaultKeywordJsonConverter : JsonConverter<DefaultKeyword>
+public sealed class DefaultKeywordJsonConverter : Json.More.AotCompatibleJsonConverter<DefaultKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="DefaultKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
