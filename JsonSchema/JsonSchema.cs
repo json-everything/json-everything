@@ -24,10 +24,13 @@ public class JsonSchema : IBaseDocument
 {
 	private const string _unknownKeywordsAnnotationKey = "$unknownKeywords";
 
+	private static readonly HashSet<SpecVersion> _definedSpecVersions = [..GetSpecVersions()];
+
+	private static SpecVersion[] GetSpecVersions() =>
 #if NET6_0_OR_GREATER
-	private static readonly HashSet<SpecVersion> _definedSpecVersions = [..Enum.GetValues<SpecVersion>()];
+		Enum.GetValues<SpecVersion>();
 #else
-	private static readonly HashSet<SpecVersion> _definedSpecVersions = [..Enum.GetValues(typeof(SpecVersion)).Cast<SpecVersion>()];
+		Enum.GetValues(typeof(SpecVersion)).Cast<SpecVersion>();
 #endif
 
 	private readonly Dictionary<string, IJsonSchemaKeyword>? _keywords;
@@ -501,11 +504,7 @@ public class JsonSchema : IBaseDocument
 
 		if (desiredDraft != SpecVersion.Unspecified) return desiredDraft;
 
-#if NET6_0_OR_GREATER
-		var allDraftsArray = Enum.GetValues<SpecVersion>();
-#else
-		var allDraftsArray = Enum.GetValues(typeof(SpecVersion)).Cast<SpecVersion>().ToArray();
-#endif
+		var allDraftsArray = GetSpecVersions();
 		var allDrafts = allDraftsArray.Aggregate(SpecVersion.Unspecified, (a, x) => a | x);
 		var commonDrafts = schema.Keywords!.Aggregate(allDrafts, (a, x) => a & x.VersionsSupported());
 		var candidates = allDraftsArray.Where(x => commonDrafts.HasFlag(x)).ToArray();
