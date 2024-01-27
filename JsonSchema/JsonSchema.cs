@@ -30,7 +30,7 @@ public class JsonSchema : IBaseDocument
 #if NET6_0_OR_GREATER
 		Enum.GetValues<SpecVersion>();
 #else
-		Enum.GetValues(typeof(SpecVersion)).Cast<SpecVersion>();
+		Enum.GetValues(typeof(SpecVersion)).Cast<SpecVersion>().ToArray();
 #endif
 
 	private readonly Dictionary<string, IJsonSchemaKeyword>? _keywords;
