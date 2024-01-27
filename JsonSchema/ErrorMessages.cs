@@ -24,7 +24,7 @@ public static partial class ErrorMessages
 	{
 		Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
 #if NET8_0_OR_GREATER
-		TypeInfoResolver = JsonSchemaSerializerContext.Default
+		TypeInfoResolver = JsonSchema.TypeInfoResolver
 #endif
 	};
 

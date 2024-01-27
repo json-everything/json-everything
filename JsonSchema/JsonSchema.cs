@@ -91,13 +91,24 @@ public class JsonSchema : IBaseDocument
 	internal Dictionary<string, (JsonSchema Schema, bool IsDynamic)> Anchors { get; } = [];
 	internal JsonSchema? RecursiveAnchor { get; set; }
 
+	internal static JsonSerializerOptions SerializerOptions { get; private set; } = JsonSchemaSerializerContext.Default.Options;
+
 #if NET8_0_OR_GREATER
 	/// <summary>
 	/// A TypeInfoResolver that can be used for serializing JsonSchema objects. Add to your custom
 	/// JsonSerializerOptions's TypeInfoResolver or TypeInfoResolveChain.
 	/// </summary>
-	public IJsonTypeInfoResolver TypeInfoResolver => JsonSchemaSerializerContext.Default;
+	public static IJsonTypeInfoResolver TypeInfoResolver => SerializerOptions.TypeInfoResolver ?? JsonSchemaSerializerContext.Default;
 #endif
+
+	internal static void UpdateKeywordTypeInfoResolverChain(JsonSerializerContext resolver)
+	{
+#if NET8_0_OR_GREATER
+		var options = new JsonSerializerOptions();
+		options.TypeInfoResolver = JsonTypeInfoResolver.Combine(JsonSchemaSerializerContext.Default, resolver);
+		SerializerOptions = options;
+#endif
+	}
 
 	private JsonSchema(bool value)
 	{
@@ -175,7 +186,9 @@ public class JsonSchema : IBaseDocument
 	/// <exception cref="JsonException">Could not deserialize a portion of the schema.</exception>
 	public static JsonSchema FromText(string jsonText)
 	{
-		return JsonSerializer.Deserialize<JsonSchema>(jsonText, JsonSchemaSerializerContext.Default.JsonSchema)!;
+#pragma warning disable IL2026, IL3050 // Deserialize is safe in AOT if the JsonSerializerOptions come from the source generator.
+		return JsonSerializer.Deserialize<JsonSchema>(jsonText, SerializerOptions)!;
+#pragma warning restore IL2026, IL3050
 	}
 
 	/// <summary>
@@ -445,7 +458,9 @@ public class JsonSchema : IBaseDocument
 
 			foreach (var keyword in unrecognizedButSupported)
 			{
-				var jsonText = JsonSerializer.Serialize((object) keyword, keyword.GetType(), JsonSchemaSerializerContext.Default);
+#pragma warning disable IL2026, IL3050 // Deserialize is safe in AOT if the JsonSerializerOptions come from the source generator.
+				var jsonText = JsonSerializer.Serialize((object) keyword, keyword.GetType(), SerializerOptions);
+#pragma warning restore IL2026, IL3050
 				var json = JsonNode.Parse(jsonText);
 				var keywordConstraint = KeywordConstraint.SimpleAnnotation(keyword.Keyword(), json);
 				localConstraints.Add(keywordConstraint);
@@ -665,7 +680,7 @@ public class JsonSchema : IBaseDocument
 					newResolvable = k;
 					break;
 				default: // non-applicator keyword
-					var serialized = JsonSerializer.Serialize(localResolvable, localResolvable.GetType(), JsonSchemaSerializerContext.Default);
+					var serialized = JsonSerializer.Serialize(localResolvable, localResolvable.GetType(), SerializerOptions);
 					var json = JsonNode.Parse(serialized);
 					var newPointer = JsonPointer.Create(pointer.Segments.Skip(i));
 					i += newPointer.Segments.Length - 1;
@@ -775,11 +790,8 @@ public sealed class SchemaJsonConverter : Json.More.AotCompatibleJsonConverter<J
 						implementation = SchemaKeywordRegistry.GetNullValuedKeyword(keywordType) ??
 										 throw new InvalidOperationException($"No null instance registered for keyword `{keyword}`");
 					else
-					{
-						SchemaKeywordRegistry.TryGetTypeInfo(keywordType, out var keywordTypeInfo);
-						implementation = options.Read(ref reader, keywordType, keywordTypeInfo) as IJsonSchemaKeyword ??
+						implementation = options.Read(ref reader, keywordType) as IJsonSchemaKeyword ??
 								throw new InvalidOperationException($"Could not deserialize expected keyword `{keyword}`");
-					}
 					keywords.Add(implementation);
 					break;
 				case JsonTokenType.EndObject:

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
 
 namespace Json.Schema
 {
@@ -71,20 +72,22 @@ namespace Json.Schema
 	[JsonSerializable(typeof(UnrecognizedKeyword))]
 	[JsonSerializable(typeof(VocabularyKeyword))]
 	[JsonSerializable(typeof(WriteOnlyKeyword))]
+	[JsonSerializable(typeof(decimal))]
+	[JsonSerializable(typeof(Dictionary<string, bool>))]
+	[JsonSerializable(typeof(Dictionary<string, JsonSchema>))]
+	[JsonSerializable(typeof(Dictionary<string, List<string>>))]
+	[JsonSerializable(typeof(Dictionary<string, PropertyDependency>))]
+	[JsonSerializable(typeof(Dictionary<string, SchemaOrPropertyList>))]
+	[JsonSerializable(typeof(Dictionary<string, string[]>))]
+	[JsonSerializable(typeof(IReadOnlyList<string>))]
+	[JsonSerializable(typeof(int[]))]
+	[JsonSerializable(typeof(JsonArray))]
 	[JsonSerializable(typeof(JsonNode))]
 	[JsonSerializable(typeof(JsonNode[]))]
-	[JsonSerializable(typeof(SchemaValueType))]
-	[JsonSerializable(typeof(string[]))]
-	[JsonSerializable(typeof(Dictionary<string, JsonSchema>))]
-	[JsonSerializable(typeof(Dictionary<string, bool>))]
 	[JsonSerializable(typeof(List<JsonSchema>))]
 	[JsonSerializable(typeof(List<string>))]
-	[JsonSerializable(typeof(JsonArray))]
-	[JsonSerializable(typeof(Dictionary<string, SchemaOrPropertyList>))]
-	[JsonSerializable(typeof(Dictionary<string, List<string>>))]
-	[JsonSerializable(typeof(int[]))]
-	[JsonSerializable(typeof(Dictionary<string, PropertyDependency>))]
-	[JsonSerializable(typeof(decimal))]
+	[JsonSerializable(typeof(SchemaValueType))]
+	[JsonSerializable(typeof(string[]))]
 	[JsonSerializable(typeof(uint))]
 	internal partial class JsonSchemaSerializerContext : JsonSerializerContext
 	{

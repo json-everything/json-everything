@@ -186,9 +186,9 @@ public partial class VocabularyTests
 	public void Setup()
 	{
 #if NET8_0_OR_GREATER
-		SchemaKeywordRegistry.Register<MinDateKeyword>(VocabularySerializerContext.Default.MinDateKeyword);
-		SchemaKeywordRegistry.Register<NonVocabMinDateKeyword>(VocabularySerializerContext.Default.NonVocabMinDateKeyword);
-		SchemaKeywordRegistry.Register<MaxDateKeyword>(VocabularySerializerContext.Default.NonVocabMinDateKeyword);
+		SchemaKeywordRegistry.Register<MinDateKeyword>(VocabularySerializerContext.Default);
+		SchemaKeywordRegistry.Register<NonVocabMinDateKeyword>(VocabularySerializerContext.Default);
+		SchemaKeywordRegistry.Register<MaxDateKeyword>(VocabularySerializerContext.Default);
 #else
 		SchemaKeywordRegistry.Register<MinDateKeyword>();
 		SchemaKeywordRegistry.Register<NonVocabMinDateKeyword>();
@@ -451,7 +451,7 @@ public partial class VocabularyTests
 		try
 		{
 #if NET8_0_OR_GREATER
-			SchemaKeywordRegistry.Register<Draft4ExclusiveMinimumKeyword>(VocabularySerializerContext.Default.Draft4ExclusiveMinimumKeyword);
+			SchemaKeywordRegistry.Register<Draft4ExclusiveMinimumKeyword>(VocabularySerializerContext.Default);
 #else
 			SchemaKeywordRegistry.Register<Draft4ExclusiveMinimumKeyword>();
 #endif
@@ -470,11 +470,9 @@ public partial class VocabularyTests
 		}
 		finally
 		{
-#if NET8_0_OR_GREATER
-			SchemaKeywordRegistry.Register<ExclusiveMinimumKeyword>(exclusiveMinimumKeyword!);
-#else
+#pragma warning disable IL2026, IL3050 // Registering a built-in keyword doesn't need us to pass in a context.
 			SchemaKeywordRegistry.Register<ExclusiveMinimumKeyword>();
-#endif
+#pragma warning restore IL2026, IL3050
 		}
 	}
 
@@ -488,7 +486,7 @@ public partial class VocabularyTests
 		try
 		{
 #if NET8_0_OR_GREATER
-			SchemaKeywordRegistry.Register<Draft4ExclusiveMinimumKeyword>(VocabularySerializerContext.Default.Draft4ExclusiveMinimumKeyword);
+			SchemaKeywordRegistry.Register<Draft4ExclusiveMinimumKeyword>(VocabularySerializerContext.Default);
 #else
 			SchemaKeywordRegistry.Register<Draft4ExclusiveMinimumKeyword>();
 #endif
@@ -506,11 +504,9 @@ public partial class VocabularyTests
 		}
 		finally
 		{
-#if NET8_0_OR_GREATER
-			SchemaKeywordRegistry.Register<ExclusiveMinimumKeyword>(exclusiveMinimumKeyword!);
-#else
+#pragma warning disable IL2026, IL3050 // Registering a built-in keyword doesn't need us to pass in a context.
 			SchemaKeywordRegistry.Register<ExclusiveMinimumKeyword>();
-#endif
+#pragma warning restore IL2026, IL3050
 		}
 	}
 
@@ -518,6 +514,7 @@ public partial class VocabularyTests
 	[JsonSerializable(typeof(VocabularyTests.MinDateKeyword))]
 	[JsonSerializable(typeof(VocabularyTests.NonVocabMinDateKeyword))]
 	[JsonSerializable(typeof(VocabularyTests.MaxDateKeyword))]
+	[JsonSerializable(typeof(DateTime))]
 	internal partial class VocabularySerializerContext : JsonSerializerContext
 	{
 
