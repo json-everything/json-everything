@@ -8,12 +8,14 @@
 	<InvariantGlobalization>true</InvariantGlobalization>
 	  
     <PublishAot>true</PublishAot>
+	<IsTrimmable>true</IsTrimmable>
 	<TrimmerSingleWarn>false</TrimmerSingleWarn>
 	<SelfContained>true</SelfContained>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\JsonSchema\JsonSchema.csproj" />
+	  <TrimmerRootAssembly Include="JsonSchema.Net" />
+	  <ProjectReference Include="..\JsonSchema\JsonSchema.csproj" />
   </ItemGroup>
 
 </Project>
