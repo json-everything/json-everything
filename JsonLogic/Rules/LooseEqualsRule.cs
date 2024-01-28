@@ -55,9 +55,6 @@ internal class LooseEqualsRuleJsonConverter : AotCompatibleJsonConverter<LooseEq
 {
 	public override LooseEqualsRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var readerCopy = reader;
-		var node = options.Read(ref readerCopy, LogicSerializerContext.Default.JsonNode);
-
 		var parameters = options.Read(ref reader, LogicSerializerContext.Default.RuleArray);
 
 		if (parameters is not { Length: 2 })

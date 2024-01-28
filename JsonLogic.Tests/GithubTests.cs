@@ -124,7 +124,7 @@ public class GithubTests
 	public void Issue286_InShouldReturnFalseForNonArray()
 	{
 #if NET8_0_OR_GREATER
-		var rule = JsonSerializer.Deserialize<Rule>("{ \"in\" : [ {\"var\": \"item\"}, {\"var\": \"list\"} ] }", _ruleTypeInfo);
+		var rule = JsonSerializer.Deserialize("{ \"in\" : [ {\"var\": \"item\"}, {\"var\": \"list\"} ] }", _ruleTypeInfo);
 #else
 		var rule = JsonSerializer.Deserialize<Rule>("{ \"in\" : [ {\"var\": \"item\"}, {\"var\": \"list\"} ] }");
 #endif
@@ -137,7 +137,7 @@ public class GithubTests
 	public void Pull303_CustomConverters()
 	{
 #if NET8_0_OR_GREATER
-		var rule = JsonSerializer.Deserialize<Rule>("{ \"+\" : [ 1, 2 ] }", _ruleTypeInfo);
+		var rule = JsonSerializer.Deserialize("{ \"+\" : [ 1, 2 ] }", _ruleTypeInfo);
 #else
 		var rule = JsonSerializer.Deserialize<Rule>("{ \"+\" : [ 1, 2 ] }");
 #endif
