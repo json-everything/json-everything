@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Schema;
 
@@ -79,6 +80,6 @@ public sealed class UnrecognizedKeywordJsonConverter : Json.More.AotCompatibleJs
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, UnrecognizedKeyword value, JsonSerializerOptions options)
 	{
-		JsonSerializer.Serialize(writer, value.Value, options);
+		options.Write(writer, value.Value, JsonSchemaSerializerContext.Default.JsonNode);
 	}
 }

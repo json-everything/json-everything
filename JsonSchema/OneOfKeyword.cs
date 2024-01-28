@@ -111,7 +111,7 @@ public sealed class OneOfKeywordJsonConverter : Json.More.AotCompatibleJsonConve
 		writer.WriteStartArray();
 		foreach (var schema in value.Schemas)
 		{
-			JsonSerializer.Serialize(writer, schema, options);
+			options.Write(writer, schema, JsonSchemaSerializerContext.Default.JsonSchema);
 		}
 		writer.WriteEndArray();
 	}

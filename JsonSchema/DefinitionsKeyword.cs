@@ -83,7 +83,7 @@ public sealed class DefinitionsKeywordJsonConverter : Json.More.AotCompatibleJso
 		foreach (var kvp in value.Definitions)
 		{
 			writer.WritePropertyName(kvp.Key);
-			JsonSerializer.Serialize(writer, kvp.Value, options);
+			options.Write(writer, kvp.Value, JsonSchemaSerializerContext.Default.JsonSchema);
 		}
 		writer.WriteEndObject();
 	}

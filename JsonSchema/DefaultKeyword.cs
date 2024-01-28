@@ -82,6 +82,6 @@ public sealed class DefaultKeywordJsonConverter : Json.More.AotCompatibleJsonCon
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, DefaultKeyword value, JsonSerializerOptions options)
 	{
-		JsonSerializer.Serialize(writer, value.Value, options);
+		options.Write(writer, value.Value, JsonSchemaSerializerContext.Default.JsonNode);
 	}
 }

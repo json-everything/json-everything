@@ -81,6 +81,11 @@ namespace Json.Schema;
 [JsonSerializable(typeof(Dictionary<string, PropertyDependency>))]
 [JsonSerializable(typeof(Dictionary<string, SchemaOrPropertyList>))]
 [JsonSerializable(typeof(Dictionary<string, string[]>))]
+[JsonSerializable(typeof(IReadOnlyDictionary<string, JsonNode?>))]
+[JsonSerializable(typeof(IReadOnlyDictionary<string, JsonSchema>))]
+[JsonSerializable(typeof(IReadOnlyDictionary<string, string>))]
+[JsonSerializable(typeof(IReadOnlyDictionary<string, PropertyDependency>))]
+[JsonSerializable(typeof(IReadOnlyList<EvaluationResults>))]
 [JsonSerializable(typeof(IReadOnlyList<string>))]
 [JsonSerializable(typeof(int[]))]
 [JsonSerializable(typeof(JsonArray))]
@@ -92,6 +97,7 @@ namespace Json.Schema;
 [JsonSerializable(typeof(SchemaValueType))]
 [JsonSerializable(typeof(string[]))]
 [JsonSerializable(typeof(uint))]
+[JsonSerializable(typeof(Uri))]
 internal partial class JsonSchemaSerializerContext : JsonSerializerContext
 {
 	public static TypeResolverOptionsManager OptionsManager { get; }

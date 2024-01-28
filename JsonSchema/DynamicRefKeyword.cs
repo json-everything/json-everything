@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Json.More;
 using Json.Pointer;
 
 namespace Json.Schema;
@@ -141,6 +142,6 @@ public sealed class DynamicRefKeywordJsonConverter : Json.More.AotCompatibleJson
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, DynamicRefKeyword value, JsonSerializerOptions options)
 	{
-		JsonSerializer.Serialize(writer, value.Reference, options);
+		options.Write(writer, value.Reference, JsonSchemaSerializerContext.Default.Uri);
 	}
 }

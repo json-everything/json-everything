@@ -143,7 +143,7 @@ public sealed class PatternPropertiesKeywordJsonConverter : Json.More.AotCompati
 		foreach (var schema in value.Patterns)
 		{
 			writer.WritePropertyName(schema.Key.ToString());
-			JsonSerializer.Serialize(writer, schema.Value, options);
+			options.Write(writer, schema.Value, JsonSchemaSerializerContext.Default.JsonSchema);;
 		}
 		writer.WriteEndObject();
 	}

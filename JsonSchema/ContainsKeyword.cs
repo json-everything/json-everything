@@ -135,7 +135,7 @@ public sealed class ContainsKeywordJsonConverter : Json.More.AotCompatibleJsonCo
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, ContainsKeyword value, JsonSerializerOptions options)
 	{
-		JsonSerializer.Serialize(writer, value.Schema, options);
+		options.Write(writer, value.Schema, JsonSchemaSerializerContext.Default.JsonSchema);
 	}
 }
 

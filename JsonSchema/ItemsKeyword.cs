@@ -177,13 +177,13 @@ public sealed class ItemsKeywordJsonConverter : Json.More.AotCompatibleJsonConve
 	public override void Write(Utf8JsonWriter writer, ItemsKeyword value, JsonSerializerOptions options)
 	{
 		if (value.SingleSchema != null)
-			JsonSerializer.Serialize(writer, value.SingleSchema, options);
+			options.Write(writer, value.SingleSchema, JsonSchemaSerializerContext.Default.JsonSchema);
 		else
 		{
 			writer.WriteStartArray();
 			foreach (var schema in value.ArraySchemas!)
 			{
-				JsonSerializer.Serialize(writer, schema, options);
+				options.Write(writer, schema, JsonSchemaSerializerContext.Default.JsonSchema);
 			}
 			writer.WriteEndArray();
 		}

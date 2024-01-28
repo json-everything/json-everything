@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Json.More;
 using Json.Pointer;
 
 namespace Json.Schema;
@@ -137,6 +138,6 @@ public sealed class RecursiveRefKeywordJsonConverter : Json.More.AotCompatibleJs
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, RecursiveRefKeyword value, JsonSerializerOptions options)
 	{
-		JsonSerializer.Serialize(writer, value.Reference, options);
+		options.Write(writer, value.Reference, JsonSchemaSerializerContext.Default.Uri);
 	}
 }
