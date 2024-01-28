@@ -16,7 +16,7 @@ public class SuiteRunner
 {
 	public static IEnumerable<TestCaseData> Suite()
 	{
-		return Task.Run(async () =>
+		var text = Task.Run(async () =>
 		{
 			var testsPath = Path.Combine(TestContext.CurrentContext.WorkDirectory, "Files\\tests.json").AdjustForPlatform();
 
@@ -37,18 +37,19 @@ public class SuiteRunner
 
 				Console.WriteLine(e);
 			}
+			return content;
 
-
-			var testSuite = JsonSerializer.Deserialize<TestSuite>(content);
-
-			return testSuite!.Tests.Select(t => new TestCaseData(t) { TestName = $"{t.Logic}  |  {t.Data.AsJsonString()}  |  {t.Expected.AsJsonString()}" });
 		}).Result;
+
+		var testSuite = JsonSerializer.Deserialize(text, TestSerializerContext.Default.TestSuite);
+
+		return testSuite!.Tests.Select(t => new TestCaseData(t) { TestName = $"{t.Logic}  |  {t.Data.AsJsonString()}  |  {t.Expected.AsJsonString()}" });
 	}
 
 	[TestCaseSource(nameof(Suite))]
 	public void Run(Test test)
 	{
-		var rule = JsonSerializer.Deserialize<Rule>(test.Logic);
+		var rule = JsonSerializer.Deserialize(test.Logic, LogicSerializerContext.Default.Rule);
 
 		if (rule == null)
 		{

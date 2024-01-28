@@ -140,7 +140,7 @@ public static class SchemaKeywordRegistry
 #if NET8_0_OR_GREATER // TypeInfo.Converter is part of System.Text.Json 8.x
 		var typeInfo = typeContext.GetTypeInfo(typeof(T)) ??
 					   throw new ArgumentException($"Keyword implementation `{typeof(T).Name}` does not have a JsonTypeInfo");
-		var converter = typeInfo.Converter as IJsonConverterReadWrite ??
+		_ = typeInfo.Converter as IJsonConverterReadWrite ??
 			throw new ArgumentException("Keyword Converter must implement IJsonConverterReadWrite or Json.More.AotCompatibleJsonConverter to be AOT compatible");
 #endif
 

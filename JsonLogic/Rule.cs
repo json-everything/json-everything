@@ -224,4 +224,17 @@ internal class ArgumentCollectionConverter : JsonConverter<ArgumentCollection>
 [JsonSerializable(typeof(Rule[]))]
 [JsonSerializable(typeof(ReduceRule.Intermediary))]
 [JsonSerializable(typeof(int))]
-internal partial class LogicSerializerContext : JsonSerializerContext;
+internal partial class LogicSerializerContext : JsonSerializerContext
+{
+	public static TypeResolverOptionsManager OptionsManager { get; }
+
+	static LogicSerializerContext()
+	{
+		OptionsManager = new TypeResolverOptionsManager(
+#if NET8_0_OR_GREATER
+			Default,
+			RuleRegistry.ExternalTypeInfoResolvers
+#endif
+		);
+	}
+}
