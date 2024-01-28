@@ -151,9 +151,13 @@ internal class PatchOperationJsonConverter : JsonConverter<PatchOperation>
 {
 	internal class Model
 	{
+		[JsonPropertyName("op")]
 		public OperationType Op { get; set; }
+		[JsonPropertyName("from")]
 		public JsonPointer? From { get; set; }
+		[JsonPropertyName("path")]
 		public JsonPointer? Path { get; set; }
+		[JsonPropertyName("value")]
 		public JsonElement Value { get; set; }
 	}
 

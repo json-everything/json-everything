@@ -353,7 +353,7 @@ public class PatchExtensionTests
 
 		var patch = initial.CreatePatch(expected);
 		// use source generated json serializer context
-		var patchJson = JsonSerializer.Serialize(patch, TestJsonContext.Default.JsonPatch);
+		var patchJson = JsonSerializer.Serialize(patch);
 
 		Assert.AreEqual(patchExpected, patchJson);
 	}
@@ -372,11 +372,5 @@ public class PatchExtensionTests
 	}
 
 
-
-}
-
-[JsonSerializable(typeof(JsonPatch))]
-public partial class TestJsonContext : JsonSerializerContext
-{
 
 }

@@ -88,11 +88,17 @@ public class JsonPatchTestJsonConverter : JsonConverter<JsonPatchTest?>
 {
 	private class Model
 	{
+		[JsonPropertyName("doc")]
 		public JsonNode? Doc { get; set; }
+		[JsonPropertyName("expected")]
 		public JsonElement Expected { get; set; }
+		[JsonPropertyName("error")]
 		public string? Error { get; set; }
+		[JsonPropertyName("comment")]
 		public string? Comment { get; set; }
+		[JsonPropertyName("patch")]
 		public JsonPatch Patch { get; set; }
+		[JsonPropertyName("disabled")]
 		public bool Disabled { get; set; }
 	}
 
