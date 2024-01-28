@@ -38,7 +38,7 @@ public static class JsonSerializerOptionsExtensions
 	/// <param name="reader">The <see cref="Utf8JsonReader"/> to read from.</param>
 	/// <param name="typeInfo">An explicit typeInfo to use for looking up the Converter. If not provided, options.GetTypeInfo will be used.</param>
 	/// <returns>The value that was converted.</returns>
-	public static T? Read<T>(this JsonSerializerOptions options, ref Utf8JsonReader reader, JsonTypeInfo? typeInfo = null)
+	public static T? Read<T>(this JsonSerializerOptions options, ref Utf8JsonReader reader, JsonTypeInfo<T>? typeInfo = null)
 	{
 		return options.GetConverter<T>(typeInfo).Read(ref reader, typeof(T), options);
 	}

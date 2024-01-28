@@ -109,7 +109,7 @@ public sealed class PrefixItemsKeywordJsonConverter : Json.More.AotCompatibleJso
 		if (reader.TokenType != JsonTokenType.StartArray)
 			throw new JsonException("Expected array");
 
-		var schemas = options.Read<List<JsonSchema>>(ref reader)!;
+		var schemas = options.Read(ref reader, JsonSchemaSerializerContext.Default.ListJsonSchema)!;
 		return new PrefixItemsKeyword(schemas);
 	}
 
