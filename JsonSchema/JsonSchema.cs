@@ -23,7 +23,7 @@ public class JsonSchema : IBaseDocument
 {
 	private const string _unknownKeywordsAnnotationKey = "$unknownKeywords";
 
-	private static readonly HashSet<SpecVersion> _definedSpecVersions = [..GetSpecVersions()];
+	private static readonly HashSet<SpecVersion> _definedSpecVersions = [.. GetSpecVersions()];
 
 	private static SpecVersion[] GetSpecVersions() =>
 #if NET6_0_OR_GREATER
@@ -95,7 +95,7 @@ public class JsonSchema : IBaseDocument
 	/// A TypeInfoResolver that can be used for serializing JsonSchema objects. Add to your custom
 	/// JsonSerializerOptions's TypeInfoResolver or TypeInfoResolveChain.
 	/// </summary>
-	public static IJsonTypeInfoResolver TypeInfoResolver => JsonSchemaSerializerContext.Default;
+	public static IJsonTypeInfoResolver TypeInfoResolver => JsonSchemaSerializerContext.TypeInfoResolver;
 #endif
 
 	private JsonSchema(bool value)
@@ -174,7 +174,9 @@ public class JsonSchema : IBaseDocument
 	/// <exception cref="JsonException">Could not deserialize a portion of the schema.</exception>
 	public static JsonSchema FromText(string jsonText)
 	{
-		return JsonSerializer.Deserialize<JsonSchema>(jsonText, JsonSchemaSerializerContext.Default.JsonSchema)!;
+#pragma warning disable IL2026, IL3050 // Deserialize is safe in AOT if the JsonSerializerOptions come from the source generator.
+		return JsonSerializer.Deserialize<JsonSchema>(jsonText, JsonSchemaSerializerContext.SerializerOptions)!;
+#pragma warning restore IL2026, IL3050
 	}
 
 	/// <summary>
@@ -444,7 +446,9 @@ public class JsonSchema : IBaseDocument
 
 			foreach (var keyword in unrecognizedButSupported)
 			{
-				var jsonText = JsonSerializer.Serialize((object) keyword);
+#pragma warning disable IL2026, IL3050 // Deserialize is safe in AOT if the JsonSerializerOptions come from the source generator.
+				var jsonText = JsonSerializer.Serialize((object) keyword, keyword.GetType(), JsonSchemaSerializerContext.SerializerOptions);
+#pragma warning restore IL2026, IL3050
 				var json = JsonNode.Parse(jsonText);
 				var keywordConstraint = KeywordConstraint.SimpleAnnotation(keyword.Keyword(), json);
 				localConstraints.Add(keywordConstraint);
@@ -664,7 +668,7 @@ public class JsonSchema : IBaseDocument
 					newResolvable = k;
 					break;
 				default: // non-applicator keyword
-					var serialized = JsonSerializer.Serialize(localResolvable);
+					var serialized = JsonSerializer.Serialize(localResolvable, localResolvable.GetType(), JsonSchemaSerializerContext.SerializerOptions);
 					var json = JsonNode.Parse(serialized);
 					var newPointer = JsonPointer.Create(pointer.Segments.Skip(i));
 					i += newPointer.Segments.Length - 1;
@@ -774,11 +778,8 @@ public sealed class SchemaJsonConverter : Json.More.AotCompatibleJsonConverter<J
 						implementation = SchemaKeywordRegistry.GetNullValuedKeyword(keywordType) ??
 										 throw new InvalidOperationException($"No null instance registered for keyword `{keyword}`");
 					else
-					{
-						SchemaKeywordRegistry.TryGetTypeInfo(keywordType, out var keywordTypeInfo);
-						implementation = options.Read(ref reader, keywordType, keywordTypeInfo) as IJsonSchemaKeyword ??
+						implementation = options.Read(ref reader, keywordType) as IJsonSchemaKeyword ??
 								throw new InvalidOperationException($"Could not deserialize expected keyword `{keyword}`");
-					}
 					keywords.Add(implementation);
 					break;
 				case JsonTokenType.EndObject:
