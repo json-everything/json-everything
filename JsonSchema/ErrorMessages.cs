@@ -53,7 +53,7 @@ public static partial class ErrorMessages
 		{
 			var parameter = parameters[i];
 #pragma warning disable IL2026, IL3050
-			values[i] = JsonSerializer.Serialize(parameter.value, JsonSchema.SerializerOptionsUnsafeRelaxedJsonEscaping);
+			values[i] = JsonSerializer.Serialize(parameter.value, JsonSchemaSerializerContext.SerializerOptionsUnsafeRelaxedJsonEscaping);
 #pragma warning restore IL2026, IL3050
 			current = current.Replace($"[[{parameter.token}]]", $"{{{i}}}");
 		}
