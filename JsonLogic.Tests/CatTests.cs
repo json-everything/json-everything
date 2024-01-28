@@ -41,7 +41,7 @@ public class CatTests
 	[Test]
 	public void CatStringAndArrayConcatsValues()
 	{
-		var array = new JsonArray { 1, 2, 3 };
+		var array = new JsonArray(1, 2, 3);
 		var rule = new CatRule("foo", array);
 
 		JsonAssert.AreEquivalent("foo1,2,3", rule.Apply());
@@ -50,8 +50,8 @@ public class CatTests
 	[Test]
 	public void CatStringAndNestedArrayConcatsValues()
 	{
-		var array = new JsonArray { 1, 2, 3 };
-		var nestedArray = new JsonArray { 1, array, 3 };
+		var array = new JsonArray(1, 2, 3);
+		var nestedArray = new JsonArray(1, array, 3);
 		var rule = new CatRule("foo", nestedArray);
 
 		JsonAssert.AreEquivalent("foo1,1,2,3,3", rule.Apply());
