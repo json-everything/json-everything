@@ -13,13 +13,19 @@ namespace Json.Logic.Rules;
 [JsonConverter(typeof(ReduceRuleJsonConverter))]
 public class ReduceRule : Rule
 {
-	private class Intermediary
+	internal class Intermediary
 	{
 		public JsonNode? Current { get; set; }
 		public JsonNode? Accumulator { get; set; }
 	}
 
-	private static readonly JsonSerializerOptions _options = new() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+	private static readonly JsonSerializerOptions _options = new()
+	{
+		PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+#if NET8_0_OR_GREATER
+		TypeInfoResolverChain = { LogicSerializerContext.Default }
+#endif
+	};
 
 	/// <summary>
 	/// A sequence of values to reduce.
@@ -70,7 +76,9 @@ public class ReduceRule : Rule
 				Current = element,
 				Accumulator = accumulator
 			};
+#pragma warning disable IL2026, IL3050
 			var item = JsonSerializer.SerializeToNode(intermediary, _options);
+#pragma warning restore IL2026, IL3050
 
 			accumulator = Rule.Apply(data, item);
 
@@ -85,7 +93,7 @@ internal class ReduceRuleJsonConverter : AotCompatibleJsonConverter<ReduceRule>
 {
 	public override ReduceRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = options.Read<Rule[]>(ref reader);
+		var parameters = options.Read(ref reader, LogicSerializerContext.Default.RuleArray);
 
 		if (parameters is not { Length: 3 })
 			throw new JsonException("The reduce rule needs an array with 3 parameters.");

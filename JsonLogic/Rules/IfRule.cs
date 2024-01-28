@@ -86,7 +86,7 @@ internal class IfRuleJsonConverter : AotCompatibleJsonConverter<IfRule>
 {
 	public override IfRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = options.Read<Rule[]>(ref reader);
+		var parameters = options.Read(ref reader, LogicSerializerContext.Default.RuleArray);
 
 		if (parameters == null) return new IfRule();
 

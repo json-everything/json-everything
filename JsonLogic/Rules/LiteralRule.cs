@@ -48,6 +48,6 @@ internal class LiteralRuleJsonConverter : AotCompatibleJsonConverter<LiteralRule
 
 	public override void Write(Utf8JsonWriter writer, LiteralRule value, JsonSerializerOptions options)
 	{
-		JsonSerializer.Serialize(writer, value.Value, options);
+		JsonSerializer.Serialize(writer, value.Value, LogicSerializerContext.Default.JsonNode!);
 	}
 }

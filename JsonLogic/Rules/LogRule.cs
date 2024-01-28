@@ -43,11 +43,11 @@ internal class LogRuleJsonConverter : AotCompatibleJsonConverter<LogRule>
 {
 	public override LogRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var node = options.Read<JsonNode?>(ref reader);
+		var node = options.Read(ref reader, LogicSerializerContext.Default.JsonNode);
 
 		var parameters = node is JsonArray
-			? node.Deserialize<Rule[]>()
-			: new[] { node.Deserialize<Rule>()! };
+			? node.Deserialize(LogicSerializerContext.Default.RuleArray)
+			: new[] { node.Deserialize(LogicSerializerContext.Default.Rule)! };
 
 		return new LogRule(parameters!.Length == 0
 			? new LiteralRule("")

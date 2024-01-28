@@ -66,11 +66,11 @@ internal class MissingRuleJsonConverter : AotCompatibleJsonConverter<MissingRule
 {
 	public override MissingRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var node = options.Read<JsonNode?>(ref reader);
+		var node = options.Read(ref reader, LogicSerializerContext.Default.JsonNode);
 
 		var parameters = node is JsonArray
-			? node.Deserialize<Rule[]>()
-			: new[] { node.Deserialize<Rule>()! };
+			? node.Deserialize(LogicSerializerContext.Default.RuleArray)
+			: new[] { node.Deserialize(LogicSerializerContext.Default.Rule)! };
 
 		if (parameters == null) return new MissingRule();
 

@@ -48,11 +48,11 @@ internal class NotRuleJsonConverter : AotCompatibleJsonConverter<NotRule>
 {
 	public override NotRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var node = options.Read<JsonNode?>(ref reader);
+		var node = options.Read(ref reader, LogicSerializerContext.Default.JsonNode);
 	
 		var parameters = node is JsonArray
-			? node.Deserialize<Rule[]>()
-			: new[] { node.Deserialize<Rule>()! };
+			? node.Deserialize(LogicSerializerContext.Default.RuleArray)
+			: new[] { node.Deserialize(LogicSerializerContext.Default.Rule)! };
 
 		if (parameters is not { Length: 1 })
 			throw new JsonException("The ! rule needs an array with a single parameter.");

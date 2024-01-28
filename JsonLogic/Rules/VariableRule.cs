@@ -60,7 +60,7 @@ internal class VariableRuleJsonConverter : AotCompatibleJsonConverter<VariableRu
 {
 	public override VariableRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var node = options.Read<JsonNode>(ref reader, LogicSerializerContext.Default.JsonNode);
+		var node = options.Read(ref reader, LogicSerializerContext.Default.JsonNode);
 
 		var parameters = node is JsonArray
 			? node.Deserialize(LogicSerializerContext.Default.RuleArray)

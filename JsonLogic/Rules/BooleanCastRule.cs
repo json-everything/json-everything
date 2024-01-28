@@ -46,7 +46,7 @@ internal class BooleanCastRuleJsonConverter : AotCompatibleJsonConverter<Boolean
 {
 	public override BooleanCastRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = options.Read<Rule[]>(ref reader);
+		var parameters = options.Read(ref reader, LogicSerializerContext.Default.RuleArray);
 
 		if (parameters is not { Length: 1 })
 			throw new JsonException("The !! rule needs an array with a single parameter.");

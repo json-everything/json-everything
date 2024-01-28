@@ -63,11 +63,11 @@ internal class AddRuleJsonConverter : AotCompatibleJsonConverter<AddRule>
 {
 	public override AddRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var node = options.Read<JsonNode?>(ref reader);
+		var node = options.Read(ref reader, LogicSerializerContext.Default.JsonNode);
 
 		var parameters = node is JsonArray
-			? node.Deserialize<Rule[]>()
-			: new[] { node.Deserialize<Rule>()! };
+			? node.Deserialize(LogicSerializerContext.Default.RuleArray)
+			: new[] { node.Deserialize(LogicSerializerContext.Default.Rule)! };
 
 		if (parameters == null || parameters.Length == 0)
 			throw new JsonException("The + rule needs an array of parameters.");

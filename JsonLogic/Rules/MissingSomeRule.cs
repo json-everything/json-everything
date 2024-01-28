@@ -87,7 +87,7 @@ internal class MissingSomeRuleJsonConverter : AotCompatibleJsonConverter<Missing
 {
 	public override MissingSomeRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = options.Read<Rule[]>(ref reader);
+		var parameters = options.Read(ref reader, LogicSerializerContext.Default.RuleArray);
 
 		if (parameters is not { Length: 2 })
 			throw new JsonException("The missing_some rule needs an array with 2 parameters.");

@@ -58,7 +58,7 @@ internal class AndRuleJsonConverter : AotCompatibleJsonConverter<AndRule>
 {
 	public override AndRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = options.Read<Rule[]>(ref reader);
+		var parameters = options.Read(ref reader, LogicSerializerContext.Default.RuleArray);
 
 		if (parameters == null || parameters.Length == 0)
 			throw new JsonException("The and rule needs an array of parameters.");
