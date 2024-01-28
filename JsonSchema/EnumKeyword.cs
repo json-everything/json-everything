@@ -126,7 +126,7 @@ public sealed class EnumKeywordJsonConverter : Json.More.AotCompatibleJsonConver
 		writer.WriteStartArray();
 		foreach (var node in value.Values)
 		{
-			JsonSerializer.Serialize(writer, node, options);
+			options.Write(writer, node, JsonSchemaSerializerContext.Default.JsonNode);
 		}
 		writer.WriteEndArray();
 	}

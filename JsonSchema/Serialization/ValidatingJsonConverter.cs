@@ -163,7 +163,11 @@ internal class ValidatingJsonConverter<T> : AotCompatibleJsonConverter<T>, IVali
 		};
 	}
 
+	[RequiresDynamicCode("Uses JsonSerializer.Serialize")]
+	[RequiresUnreferencedCode("Uses JsonSerializer.Serialize")]
+#pragma warning disable IL2046, IL3051
 	public override void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options)
+#pragma warning restore IL2046, IL3051
 	{
 		var newOptions = _optionsFactory(options);
 

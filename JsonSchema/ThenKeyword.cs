@@ -104,6 +104,6 @@ public sealed class ThenKeywordJsonConverter : Json.More.AotCompatibleJsonConver
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, ThenKeyword value, JsonSerializerOptions options)
 	{
-		JsonSerializer.Serialize(writer, value.Schema, options);
+		options.Write(writer, value.Schema, JsonSchemaSerializerContext.Default.JsonSchema);
 	}
 }

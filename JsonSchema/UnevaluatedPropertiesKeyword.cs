@@ -137,6 +137,6 @@ public sealed class UnevaluatedPropertiesKeywordJsonConverter : Json.More.AotCom
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, UnevaluatedPropertiesKeyword value, JsonSerializerOptions options)
 	{
-		JsonSerializer.Serialize(writer, value.Schema, options);
+		options.Write(writer, value.Schema, JsonSchemaSerializerContext.Default.JsonSchema);
 	}
 }
