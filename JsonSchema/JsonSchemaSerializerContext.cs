@@ -157,7 +157,7 @@ namespace Json.Schema
             lock (_serializerOptionsLock)
             {
 #if NET8_0_OR_GREATER
-                var typeInfoResolverList = SchemaKeywordRegistry.ExtraTypeInfoResolvers.Append(JsonSchemaSerializerContext.Default);
+                var typeInfoResolverList = SchemaKeywordRegistry.ExternalTypeInfoResolvers.Append(JsonSchemaSerializerContext.Default);
                 _typeInfoResolver = JsonTypeInfoResolver.Combine(typeInfoResolverList.ToArray());
 #endif
             }

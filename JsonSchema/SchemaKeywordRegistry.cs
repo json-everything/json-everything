@@ -22,11 +22,13 @@ namespace Json.Schema;
 public static class SchemaKeywordRegistry
 {
 	private static readonly ConcurrentDictionary<string, Type> _keywords;
-	private static readonly ConcurrentDictionary<Type, JsonSerializerContext> _keywordTypeInfoResolvers = new();
 	private static readonly ConcurrentDictionary<Type, IJsonSchemaKeyword> _nullKeywords;
+	// This maps external types to their TypeInfoResolvers. Built-in keywords don't need this as we already have them
+	// in our default JsonSerializerContext.
+	private static readonly ConcurrentDictionary<Type, JsonSerializerContext> _externalKeywordTypeInfoResolvers = new();
 
 #if NET8_0_OR_GREATER
-	internal static IJsonTypeInfoResolver[] ExtraTypeInfoResolvers => _keywordTypeInfoResolvers.Values.Distinct().ToArray();
+	internal static IJsonTypeInfoResolver[] ExternalTypeInfoResolvers => _externalKeywordTypeInfoResolvers.Values.Distinct().ToArray();
 #endif
 
 	internal static IEnumerable<Type> KeywordTypes => _keywords.Values;
@@ -143,7 +145,7 @@ public static class SchemaKeywordRegistry
 #endif
 
 		_keywords[keyword.Name] = typeof(T);
-		_keywordTypeInfoResolvers[typeof(T)] = typeContext;
+		_externalKeywordTypeInfoResolvers[typeof(T)] = typeContext;
 
 		JsonSchemaSerializerContext.InvalidateTypeInfoResolver();
 	}
@@ -159,7 +161,7 @@ public static class SchemaKeywordRegistry
 		              throw new ArgumentException($"Keyword implementation `{typeof(T).Name}` does not carry `{nameof(SchemaKeywordAttribute)}`");
 
 		_keywords.TryRemove(keyword.Name, out _);
-		_keywordTypeInfoResolvers.TryRemove(typeof(T), out _);
+		_externalKeywordTypeInfoResolvers.TryRemove(typeof(T), out _);
 	}
 
 	/// <summary>
