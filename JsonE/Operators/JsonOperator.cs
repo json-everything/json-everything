@@ -10,7 +10,7 @@ namespace Json.JsonE.Operators;
 internal class JsonOperator : IOperator
 {
 	private static readonly JsonSerializerOptions _serializerOptions =
-		new() { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping };
+		new(JsonSerializerOptions.Default) { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping };
 
 	public const string Name = "$json";
 

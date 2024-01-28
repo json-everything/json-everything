@@ -1,0 +1,5 @@
+<Project>
+  <PropertyGroup>
+    <SuppressTfmSupportBuildWarnings Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'netcoreapp3.1'))">true</SuppressTfmSupportBuildWarnings>
+  </PropertyGroup>
+</Project>
