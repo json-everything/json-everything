@@ -91,7 +91,7 @@ public sealed class PropertyNamesKeywordJsonConverter : Json.More.AotCompatibleJ
 	/// <returns>The converted value.</returns>
 	public override PropertyNamesKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var schema = options.Read<JsonSchema>(ref reader)!;
+		var schema = options.Read(ref reader, JsonSchemaSerializerContext.Default.JsonSchema)!;
 
 		return new PropertyNamesKeyword(schema);
 	}

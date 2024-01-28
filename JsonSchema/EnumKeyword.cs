@@ -110,7 +110,7 @@ public sealed class EnumKeywordJsonConverter : Json.More.AotCompatibleJsonConver
 	/// <returns>The converted value.</returns>
 	public override EnumKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var array = options.Read<JsonArray>(ref reader);
+		var array = options.Read(ref reader,  JsonSchemaSerializerContext.Default.JsonArray);
 		if (array is null)
 			throw new JsonException("Expected an array, but received null");
 

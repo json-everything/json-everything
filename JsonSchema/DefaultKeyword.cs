@@ -71,7 +71,7 @@ public sealed class DefaultKeywordJsonConverter : Json.More.AotCompatibleJsonCon
 	/// <returns>The converted value.</returns>
 	public override DefaultKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var node = options.Read<JsonNode>(ref reader);
+		var node = options.Read(ref reader, JsonSchemaSerializerContext.Default.JsonNode);
 
 		return new DefaultKeyword(node);
 	}

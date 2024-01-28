@@ -30,11 +30,8 @@ public class JsonPathConverter : JsonConverter<JsonPath>
 	}
 }
 
-/// <summary>
-/// Provides a JSON serializer context for <see cref="JsonPath"/>.
-/// </summary>
 [JsonSerializable(typeof(JsonPath))]
-public partial class JsonPathSerializerContext : JsonSerializerContext
+internal partial class JsonPathSerializerContext : JsonSerializerContext
 {
 
 }

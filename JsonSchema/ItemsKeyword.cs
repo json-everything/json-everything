@@ -162,11 +162,11 @@ public sealed class ItemsKeywordJsonConverter : Json.More.AotCompatibleJsonConve
 	{
 		if (reader.TokenType == JsonTokenType.StartArray)
 		{
-			var schemas = options.Read<List<JsonSchema>>(ref reader)!;
+			var schemas = options.Read(ref reader, JsonSchemaSerializerContext.Default.ListJsonSchema)!;
 			return new ItemsKeyword(schemas);
 		}
 
-		var schema = options.Read<JsonSchema>(ref reader)!;
+		var schema = options.Read(ref reader, JsonSchemaSerializerContext.Default.JsonSchema)!;
 		return new ItemsKeyword(schema);
 	}
 
