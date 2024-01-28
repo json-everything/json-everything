@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
 using Json.Logic.Rules;
 using Json.More;
 
@@ -15,6 +16,14 @@ namespace Json.Logic;
 [JsonConverter(typeof(LogicComponentConverter))]
 public abstract class Rule
 {
+#if NET8_0_OR_GREATER
+	/// <summary>
+	/// A TypeInfoResolver that can be used for serializing <see cref="Rule"/> objects. Add to your custom
+	/// JsonSerializerOptions's TypeInfoResolver or TypeInfoResolveChain.
+	/// </summary>
+	public static IJsonTypeInfoResolver JsonTypeResolver => LogicSerializerContext.Default;
+#endif
+
 	internal JsonNode? Source { get; set; }
 
 	/// <summary>
@@ -214,4 +223,5 @@ internal class ArgumentCollectionConverter : JsonConverter<ArgumentCollection>
 [JsonSerializable(typeof(JsonNode))]
 [JsonSerializable(typeof(Rule[]))]
 [JsonSerializable(typeof(ReduceRule.Intermediary))]
+[JsonSerializable(typeof(int))]
 internal partial class LogicSerializerContext : JsonSerializerContext;
