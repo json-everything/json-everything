@@ -95,7 +95,7 @@ public class JsonSchema : IBaseDocument
 	/// A TypeInfoResolver that can be used for serializing JsonSchema objects. Add to your custom
 	/// JsonSerializerOptions's TypeInfoResolver or TypeInfoResolveChain.
 	/// </summary>
-	public static IJsonTypeInfoResolver TypeInfoResolver => JsonSchemaSerializerContext.TypeInfoResolver;
+	public static IJsonTypeInfoResolver TypeInfoResolver => JsonSchemaSerializerContext.OptionsManager.TypeInfoResolver;
 #endif
 
 	private JsonSchema(bool value)
@@ -175,7 +175,7 @@ public class JsonSchema : IBaseDocument
 	public static JsonSchema FromText(string jsonText)
 	{
 #pragma warning disable IL2026, IL3050 // Deserialize is safe in AOT if the JsonSerializerOptions come from the source generator.
-		return JsonSerializer.Deserialize<JsonSchema>(jsonText, JsonSchemaSerializerContext.SerializerOptions)!;
+		return JsonSerializer.Deserialize<JsonSchema>(jsonText, JsonSchemaSerializerContext.OptionsManager.SerializerOptions)!;
 #pragma warning restore IL2026, IL3050
 	}
 
@@ -447,7 +447,7 @@ public class JsonSchema : IBaseDocument
 			foreach (var keyword in unrecognizedButSupported)
 			{
 #pragma warning disable IL2026, IL3050 // Deserialize is safe in AOT if the JsonSerializerOptions come from the source generator.
-				var jsonText = JsonSerializer.Serialize((object) keyword, keyword.GetType(), JsonSchemaSerializerContext.SerializerOptions);
+				var jsonText = JsonSerializer.Serialize((object) keyword, keyword.GetType(), JsonSchemaSerializerContext.OptionsManager.SerializerOptions);
 #pragma warning restore IL2026, IL3050
 				var json = JsonNode.Parse(jsonText);
 				var keywordConstraint = KeywordConstraint.SimpleAnnotation(keyword.Keyword(), json);
@@ -668,7 +668,7 @@ public class JsonSchema : IBaseDocument
 					newResolvable = k;
 					break;
 				default: // non-applicator keyword
-					var serialized = JsonSerializer.Serialize(localResolvable, localResolvable.GetType(), JsonSchemaSerializerContext.SerializerOptions);
+					var serialized = JsonSerializer.Serialize(localResolvable, localResolvable.GetType(), JsonSchemaSerializerContext.OptionsManager.SerializerOptions);
 					var json = JsonNode.Parse(serialized);
 					var newPointer = JsonPointer.Create(pointer.Segments.Skip(i));
 					i += newPointer.Segments.Length - 1;

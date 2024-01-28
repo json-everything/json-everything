@@ -147,7 +147,9 @@ public static class SchemaKeywordRegistry
 		_keywords[keyword.Name] = typeof(T);
 		_externalKeywordTypeInfoResolvers[typeof(T)] = typeContext;
 
-		JsonSchemaSerializerContext.InvalidateTypeInfoResolver();
+#if NET8_0_OR_GREATER
+		JsonSchemaSerializerContext.OptionsManager.RebuildTypeResolver(ExternalTypeInfoResolvers);
+#endif
 	}
 
 	/// <summary>
