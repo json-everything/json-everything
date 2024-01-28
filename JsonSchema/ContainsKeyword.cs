@@ -97,7 +97,7 @@ public class ContainsKeyword : IJsonSchemaKeyword, ISchemaContainer
 				.Select(x => int.Parse(x.RelativeInstanceLocation.Segments[0].Value))
 				.ToArray();
 #pragma warning disable IL2026, IL3050 // Deserialize is safe in AOT if the JsonSerializerOptions come from the source generator.
-			evaluation.Results.SetAnnotation(Name, JsonSerializer.SerializeToNode(validIndices, JsonSchemaSerializerContext.SerializerOptions));
+			evaluation.Results.SetAnnotation(Name, JsonSerializer.SerializeToNode(validIndices, JsonSchemaSerializerContext.OptionsManager.SerializerOptions));
 #pragma warning restore IL2026, IL3050
 
 			var actual = validIndices.Length;

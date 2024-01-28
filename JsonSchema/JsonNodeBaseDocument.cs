@@ -52,7 +52,7 @@ public class JsonNodeBaseDocument : IBaseDocument
 			if (!jsonPointer.TryEvaluate(_node, out var location)) return null;
 
 #pragma warning disable IL2026, IL3050 // Deserialize is safe in AOT if the JsonSerializerOptions come from the source generator.
-			var schema = location.Deserialize<JsonSchema>(JsonSchemaSerializerContext.SerializerOptions);
+			var schema = location.Deserialize<JsonSchema>(JsonSchemaSerializerContext.OptionsManager.SerializerOptions);
 #pragma warning restore	IL2026, IL3050
 			if (schema != null)
 				JsonSchema.Initialize(schema, options.SchemaRegistry, BaseUri);

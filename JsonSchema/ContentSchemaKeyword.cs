@@ -53,7 +53,7 @@ public class ContentSchemaKeyword : IJsonSchemaKeyword, ISchemaContainer
 		EvaluationContext context)
 	{
 #pragma warning disable IL2026, IL3050 // Deserialize is safe in AOT if the JsonSerializerOptions come from the source generator.
-		return KeywordConstraint.SimpleAnnotation(Name, JsonSerializer.SerializeToNode(Schema, JsonSchemaSerializerContext.SerializerOptions));
+		return KeywordConstraint.SimpleAnnotation(Name, JsonSerializer.SerializeToNode(Schema, JsonSchemaSerializerContext.OptionsManager.SerializerOptions));
 #pragma warning restore IL2026, IL3050
 	}
 }
