@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Encodings.Web;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.More;
@@ -99,8 +101,9 @@ internal partial class JsonSchemaSerializerContext : JsonSerializerContext
 	static JsonSchemaSerializerContext()
 	{
 		OptionsManager = new TypeResolverOptionsManager(
+			new JsonSerializerOptions { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping }
 #if NET8_0_OR_GREATER
-			Default,
+			, Default,
 			SchemaKeywordRegistry.ExternalTypeInfoResolvers
 #endif
 		);

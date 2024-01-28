@@ -57,17 +57,24 @@ public static class JsonNodeExtensions
 				var zipped = arrayA.Zip(arrayB, (ae, be) => (ae, be));
 				return zipped.All(p => p.ae.IsEquivalentTo(p.be));
 			case (JsonValue aValue, JsonValue bValue):
-				if (aValue.GetValue<object>() is JsonElement aElement &&
-					bValue.GetValue<object>() is JsonElement bElement)
-					return aElement.IsEquivalentTo(bElement);
-
 				var aNumber = aValue.GetNumber();
 				var bNumber = bValue.GetNumber();
 				if (aNumber != null) return aNumber == bNumber;
 
-				return a.ToJsonString() == b.ToJsonString();
+				var aObj = aValue.GetValue<object>();
+				var bObj = bValue.GetValue<object>();
+				if (aObj is JsonElement aElement && bObj is JsonElement bElement)
+					return aElement.IsEquivalentTo(bElement);
+
+				if (aObj is string && bObj is string)
+					return aObj.Equals(bObj);
+
+				if (aObj is bool && bObj is bool)
+					return aObj.Equals(bObj);
+
+				return false;
 			default:
-				return a?.ToJsonString() == b?.ToJsonString();
+				throw new ArgumentOutOfRangeException(nameof(a), "Cannot determine type of node");
 		}
 	}
 

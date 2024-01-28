@@ -1,11 +1,11 @@
-﻿using System.Text.Encodings.Web;
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
 
 namespace Json.More;
 
 public class TypeResolverOptionsManager
 {
+	private readonly JsonSerializerOptions _baseOptions;
 	private JsonSerializerOptions? _serializerOptions;
 	private JsonSerializerOptions? _serializerOptionsUnsafeRelaxedJsonEscaping;
 #if NET8_0_OR_GREATER
@@ -20,7 +20,7 @@ public class TypeResolverOptionsManager
 		{
 			lock (_serializerOptionsLock)
 			{
-				_serializerOptions ??= new JsonSerializerOptions
+				_serializerOptions ??= new JsonSerializerOptions(_baseOptions)
 				{
 #if NET8_0_OR_GREATER
 					TypeInfoResolver = _typeInfoResolver
@@ -32,23 +32,9 @@ public class TypeResolverOptionsManager
 		}
 	}
 
-	public JsonSerializerOptions SerializerOptionsUnsafeRelaxedJsonEscaping
+	public TypeResolverOptionsManager(JsonSerializerOptions? baseOptions = null)
 	{
-		get
-		{
-			lock (_serializerOptionsLock)
-			{
-				_serializerOptionsUnsafeRelaxedJsonEscaping ??= new JsonSerializerOptions
-				{
-					Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-#if NET8_0_OR_GREATER
-					TypeInfoResolver = _typeInfoResolver
-#endif
-				};
-
-				return _serializerOptionsUnsafeRelaxedJsonEscaping!;
-			}
-		}
+		_baseOptions = baseOptions ?? new JsonSerializerOptions();
 	}
 
 #if NET8_0_OR_GREATER
@@ -56,6 +42,14 @@ public class TypeResolverOptionsManager
 	
 	public TypeResolverOptionsManager(IJsonTypeInfoResolver baseResolver, params IJsonTypeInfoResolver[] resolvers)
 	{
+		_baseOptions = new JsonSerializerOptions();
+		_baseResolver = baseResolver;
+		_typeInfoResolver = JsonTypeInfoResolver.Combine([baseResolver, .. resolvers]);
+	}
+	
+	public TypeResolverOptionsManager(JsonSerializerOptions baseOptions, IJsonTypeInfoResolver baseResolver, params IJsonTypeInfoResolver[] resolvers)
+	{
+		_baseOptions = baseOptions;
 		_baseResolver = baseResolver;
 		_typeInfoResolver = JsonTypeInfoResolver.Combine([baseResolver, .. resolvers]);
 	}
