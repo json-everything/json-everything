@@ -12,7 +12,7 @@ internal class LiteralExpressionNode : ValueExpressionNode
 
 	public LiteralExpressionNode(JsonNode? value)
 	{
-		Value = value ?? JsonNull.SignalNode;
+		Value = value;
 	}
 
 	public override PathValue? Evaluate(JsonNode? globalParameter, JsonNode? localParameter)
@@ -41,7 +41,7 @@ internal class LiteralExpressionParser : IValueExpressionParser
 			return false;
 		}
 
-		if (node is not JsonValue && !options.AllowJsonConstructs)
+		if (node is not (null or JsonValue) && !options.AllowJsonConstructs)
 		{
 			expression = null;
 			return false;

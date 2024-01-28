@@ -50,7 +50,7 @@ public class MultiplyRule : Rule
 
 			var number = value.Numberify();
 
-			if (number == null) return JsonNull.SignalNode;
+			if (number == null) return null;
 
 			result *= number.Value;
 		}

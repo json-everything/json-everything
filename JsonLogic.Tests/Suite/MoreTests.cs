@@ -35,6 +35,6 @@ public class MoreTests
 			return;
 		}
 
-		JsonAssert.AreEquivalent(test.Expected ?? JsonNull.SignalNode, rule.Apply(test.Data));
+		JsonAssert.AreEquivalent(test.Expected, rule.Apply(test.Data));
 	}
 }

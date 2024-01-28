@@ -74,7 +74,7 @@ public class ReduceRule : Rule
 
 			accumulator = Rule.Apply(data, item);
 
-			if (accumulator == JsonNull.SignalNode) break;
+			if (accumulator == null) break;
 		}
 
 		return accumulator;

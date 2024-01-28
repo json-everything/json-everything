@@ -46,7 +46,7 @@ public class MinRule : Rule
 	{
 		var items = Items.Select(i => i.Apply(data, contextData)).Select(e => new { Type = e.JsonType(), Value = e.Numberify() }).ToList();
 		var nulls = items.Where(i => i.Value == null);
-		if (nulls.Any()) return JsonNull.SignalNode;
+		if (nulls.Any()) return null;
 
 		return items.Min(i => i.Value!.Value);
 	}

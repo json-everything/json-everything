@@ -10,11 +10,15 @@ internal class GreaterThanOperator : IBinaryComparativeOperator
 
 	public bool Evaluate(PathValue? left, PathValue? right)
 	{
-		var jLeft = left?.TryGetJson();
-		var jRight = right?.TryGetJson();
+		if (left is null) return right is null;
+		if (right is null) return false;
 
-		if (jLeft is not JsonValue lValue ||
-		    jRight is not JsonValue rValue)
+		if (!left.TryGetJson(out var lNode) ||
+		    !right.TryGetJson(out var rNode))
+			return false;
+
+		if (lNode is not JsonValue lValue ||
+		    rNode is not JsonValue rValue)
 			return false;
 
 		if (lValue.TryGetValue(out string? leftString) &&

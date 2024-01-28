@@ -20,7 +20,7 @@ public class LiteralRule : Rule
 
 	internal LiteralRule(JsonNode? value)
 	{
-		Value = ReferenceEquals(JsonNull.SignalNode, value) ? null : value.Copy();
+		Value = value?.Copy();
 	}
 
 	/// <summary>

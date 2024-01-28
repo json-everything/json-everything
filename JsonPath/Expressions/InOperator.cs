@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Text.Json.Nodes;
 using Json.More;
 
@@ -11,10 +10,14 @@ internal class InOperator : IBinaryComparativeOperator
 
 	public bool Evaluate(PathValue? left, PathValue? right)
 	{
-		var jLeft = left?.TryGetJson();
-		var jRight = right?.TryGetJson();
+		if (left is null) return right is null;
+		if (right is null) return false;
 
-		IEnumerable<JsonNode?>? values = jRight switch
+		if (!left.TryGetJson(out var lNode) ||
+		    !right.TryGetJson(out var rNode))
+			return false;
+
+		var values = rNode switch
 		{
 			JsonArray arr => arr,
 			JsonObject obj => obj.Select(x => x.Value),
@@ -23,7 +26,7 @@ internal class InOperator : IBinaryComparativeOperator
 
 		if (values == null) return false;
 
-		return values.Contains(jLeft, JsonNodeEqualityComparer.Instance);
+		return values.Contains(lNode, JsonNodeEqualityComparer.Instance);
 	}
 
 	public override string ToString()

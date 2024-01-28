@@ -35,7 +35,7 @@ namespace ApiDocsGenerator
 			await GenerateAndSaveDocs<JsonPointer>("10.10", outputDir, "api");
 			await GenerateAndSaveDocs(typeof(JsonLogic), "10.11", outputDir, "api");
 			await GenerateAndSaveDocs(typeof(JsonE), "10.12", outputDir, "api");
-			await GenerateAndSaveDocs(typeof(JsonNull), "10.13", outputDir, "api");
+			await GenerateAndSaveDocs(typeof(EnumStringConverter<>), "10.13", outputDir, "api");
 			await GenerateAndSaveDocs(typeof(YamlConverter), "10.14", outputDir, "api");
 		}
 

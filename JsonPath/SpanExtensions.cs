@@ -64,7 +64,7 @@ internal static class SpanExtensions
 		return foundNumber;
 	}
 
-	public static bool TryParseJson(this ReadOnlySpan<char> span, ref int i, [NotNullWhen(true)] out JsonNode? node)
+	public static bool TryParseJson(this ReadOnlySpan<char> span, ref int i, out JsonNode? node)
 	{
 		if (!span.ConsumeWhitespace(ref i))
 		{
@@ -156,7 +156,7 @@ internal static class SpanExtensions
 			var block = span[i..end];
 			if (block[0] == '\'' && block[^1] == '\'')
 				block = $"\"{block[1..^1].ToString()}\"".AsSpan();
-			node = JsonNode.Parse(block.ToString()) ?? JsonNull.SignalNode;
+			node = JsonNode.Parse(block.ToString());
 			i = end;
 			return true;
 		}

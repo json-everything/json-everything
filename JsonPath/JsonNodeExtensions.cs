@@ -74,10 +74,15 @@ public static class JsonNodeExtensions
 	/// that require single values as inputs rather than nodelists since function
 	/// composition is possible (e.g. `min(max(@,0),10)`) and functions return nodelists.
 	/// </remarks>
-	public static JsonNode? TryGetSingleValue(this NodeList nodeList)
+	public static bool TryGetSingleValue(this NodeList nodeList, out JsonNode? node)
 	{
-		return nodeList.Count == 1
-			? nodeList[0].Value ?? JsonNull.SignalNode
-			: null;
+		if (nodeList.Count == 1)
+		{
+			node = nodeList[0].Value;
+			return true;
+		}
+
+		node = null;
+		return false;
 	}
 }

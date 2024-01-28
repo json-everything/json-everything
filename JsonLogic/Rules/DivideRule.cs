@@ -50,9 +50,9 @@ public class DivideRule : Rule
 		var numberA = a.Numberify();
 		var numberB = b.Numberify();
 
-		if (numberA == null || numberB == null) return JsonNull.SignalNode;
+		if (numberA == null || numberB == null) return null;
 
-		if (numberB == 0) return JsonNull.SignalNode;
+		if (numberB == 0) return null;
 
 		return numberA.Value / numberB.Value;
 	}

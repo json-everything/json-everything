@@ -1,21 +1,27 @@
 ﻿using System.Text.Json.Nodes;
-using Json.More;
 
 namespace Json.Path.Expressions;
 
 internal abstract class PathValue
 {
-	public JsonNode? TryGetJson() =>
-		this switch
-		{
-			JsonPathValue v => v.Value ?? JsonNull.SignalNode,
-			NodeListPathValue n => n.Value.TryGetSingleValue(),
-			_ => null
-		};
-
-	public static implicit operator PathValue?(JsonNode? node)
+	public bool TryGetJson(out JsonNode? node)
 	{
-		return node == null ? null : new JsonPathValue { Value = node };
+		switch (this)
+		{
+			case JsonPathValue v:
+				node = v.Value;
+				return true;
+			case NodeListPathValue n:
+				return n.Value.TryGetSingleValue(out node);
+			default:
+				node = null;
+				return false;
+		}
+	}
+
+	public static implicit operator PathValue(JsonNode? node)
+	{
+		return new JsonPathValue { Value = node };
 	}
 
 	public static implicit operator PathValue?(bool? node)

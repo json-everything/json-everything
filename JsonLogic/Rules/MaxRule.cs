@@ -48,7 +48,7 @@ public class MaxRule : Rule
 			.Select(e => new { Type = e.JsonType(), Value = e.Numberify() })
 			.ToList();
 		var nulls = items.Where(i => i.Value == null);
-		if (nulls.Any()) return JsonNull.SignalNode;
+		if (nulls.Any()) return null;
 
 		return items.Max(i => i.Value!.Value);
 	}

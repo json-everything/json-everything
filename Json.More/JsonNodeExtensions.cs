@@ -73,17 +73,9 @@ public static class JsonNodeExtensions
 				var bObj = bValue.GetValue<object>();
 				if (aObj is JsonElement aElement && bObj is JsonElement bElement)
 					return aElement.IsEquivalentTo(bElement);
-				if (aObj is JsonNull && bObj is JsonNull)
-					return true;
 
-				return false;
+				return aObj.Equals(bObj);
 			default:
-				var aNull = (a as JsonValue)?.GetValue<object>() as JsonNull;
-				var bNull = (b as JsonValue)?.GetValue<object>() as JsonNull;
-				if ((a is null || aNull is not null) &&
-				    (b is null || bNull is not null))
-					return true;
-
 				return false;
 		}
 	}
