@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
@@ -60,25 +59,18 @@ public class SuiteRunner
 		JsonAssert.AreEquivalent(test.Expected, rule.Apply(test.Data));
 	}
 
-	private static readonly JsonSerializerOptions _spellingTestSerializerOptions =
-		new()
-		{
-			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-			Converters = { new LogicComponentConverter { SaveSource = false } }
-		};
-
 	[TestCaseSource(nameof(Suite))]
 	public void SpellingTest(Test test)
 	{
 		var node = JsonNode.Parse(test.Logic);
-		var rule = JsonSerializer.Deserialize<Rule>(test.Logic, _spellingTestSerializerOptions);
+		var rule = JsonSerializer.Deserialize(test.Logic, LogicSerializerContext.Default.Rule);
 
 		var serialized = JsonSerializer.SerializeToNode(rule);
 
 		if (node.IsEquivalentTo(serialized)) return;
 
-		Console.WriteLine($"Expected: {node.AsJsonString(_spellingTestSerializerOptions)}");
-		Console.WriteLine($"Actual:   {serialized.AsJsonString(_spellingTestSerializerOptions)}");
+		Console.WriteLine($"Expected: {node.AsJsonString(LogicSerializerContext.OptionsManager.SerializerOptions)}");
+		Console.WriteLine($"Actual:   {serialized.AsJsonString(LogicSerializerContext.OptionsManager.SerializerOptions)}");
 		Assert.Inconclusive();
 	}
 
