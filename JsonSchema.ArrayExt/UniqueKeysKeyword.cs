@@ -121,7 +121,7 @@ public sealed class UniqueKeysKeywordJsonConverter : JsonConverter<UniqueKeysKey
 		if (reader.TokenType != JsonTokenType.StartArray)
 			throw new JsonException("Expected array");
 
-		var references = JsonSerializer.Deserialize<List<JsonPointer>>(ref reader, options)!;
+		var references = options.Read<List<JsonPointer>>(ref reader)!;
 		return new UniqueKeysKeyword(references);
 	}
 
