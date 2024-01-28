@@ -61,20 +61,30 @@ public static class JsonNodeExtensions
 				var bNumber = bValue.GetNumber();
 				if (aNumber != null) return aNumber == bNumber;
 
+				var aString = aValue.GetString();
+				var bString = bValue.GetString();
+				if (aString != null) return aString == bString;
+
+				var aBool = aValue.GetBool();
+				var bBool = bValue.GetBool();
+				if (aBool.HasValue) return aBool == bBool;
+
 				var aObj = aValue.GetValue<object>();
 				var bObj = bValue.GetValue<object>();
 				if (aObj is JsonElement aElement && bObj is JsonElement bElement)
 					return aElement.IsEquivalentTo(bElement);
-
-				if (aObj is string && bObj is string)
-					return aObj.Equals(bObj);
-
-				if (aObj is bool && bObj is bool)
-					return aObj.Equals(bObj);
+				if (aObj is JsonNull && bObj is JsonNull)
+					return true;
 
 				return false;
 			default:
-				throw new ArgumentOutOfRangeException(nameof(a), "Cannot determine type of node");
+				var aNull = (a as JsonValue)?.GetValue<object>() as JsonNull;
+				var bNull = (b as JsonValue)?.GetValue<object>() as JsonNull;
+				if ((a is null || aNull is not null) &&
+				    (b is null || bNull is not null))
+					return true;
+
+				return false;
 		}
 	}
 
@@ -205,6 +215,35 @@ public static class JsonNodeExtensions
 		if (value.TryGetValue(out long l)) return l;
 		// this doesn't feel right... throw?
 		if (value.TryGetValue(out ulong ul)) return (long)ul;
+
+		return null;
+	}
+
+	public static string? GetString(this JsonValue value)
+	{
+		if (value.TryGetValue(out JsonElement e))
+		{
+			if (e.ValueKind != JsonValueKind.String) return null;
+			return e.GetString();
+		}
+
+		if (value.TryGetValue(out string? s)) return s;
+		if (value.TryGetValue(out char c)) return c.ToString();
+
+		return null;
+	}
+
+	public static bool? GetBool(this JsonValue value)
+	{
+		if (value.TryGetValue(out JsonElement e))
+		{
+			if (e.ValueKind == JsonValueKind.True) return true;
+			if (e.ValueKind == JsonValueKind.False) return false;
+
+			return null;
+		}
+
+		if (value.TryGetValue(out bool b)) return b;
 
 		return null;
 	}
