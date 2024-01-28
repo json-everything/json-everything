@@ -816,7 +816,9 @@ public sealed class SchemaJsonConverter : Json.More.AotCompatibleJsonConverter<J
 		foreach (var keyword in value.Keywords!)
 		{
 			writer.WritePropertyName(keyword.Keyword());
-			options.Write(writer, keyword);
+#pragma warning disable IL2026, IL3050 // This options will contain the necessary TypeInfos.
+			JsonSerializer.Serialize(writer, keyword, keyword.GetType(), options);
+#pragma warning restore IL2026, IL3050
 		}
 
 		writer.WriteEndObject();
