@@ -47,7 +47,7 @@ public class SubtractRule : Rule
 		var value = Items[0].Apply(data, contextData);
 		var number = value.Numberify();
 
-		if (number == null) return JsonNull.SignalNode;
+		if (number == null) return null;
 
 		var result = number.Value;
 
@@ -59,7 +59,7 @@ public class SubtractRule : Rule
 
 			number = value.Numberify();
 
-			if (number == null) return JsonNull.SignalNode;
+			if (number == null) return null;
 
 			result -= number.Value;
 		}

@@ -28,56 +28,35 @@ public static class JsonNodeExtensions
 	}
 
 	/// <summary>
-	/// Ensures a <see cref="JsonNode"/> only represents a single value.
-	/// </summary>
-	/// <param name="node"></param>
-	/// <returns>
-	/// Within the context of this library, a <see cref="NodeList"/>
-	/// may be stored inside a <see cref="JsonNode"/>.  Some operations, such as
-	/// expression addition, require that a single value is provided.
-	///
-	/// This method checks to see if the underlying value of a `JsonNode`
-	/// is a `NodeList`.  If not, it simply returns the JsonNode.  If the underlying
-	/// value is a `NodeList` _and_ the it only contains a single value, it
-	/// returns that value.  Otherwise, it returns null.
-	/// </returns>
-	/// <remarks>
-	/// Though a bit complex, this method can be very important for functions
-	/// that require single values as inputs rather than nodelists since function
-	/// composition is possible (e.g. `min(max(@,0),10)`) and functions return nodelists.
-	/// </remarks>
-	public static JsonNode? TryGetSingleValue(this JsonNode? node)
-	{
-		if (!node.TryGetValue<NodeList>(out var nodeList)) return node;
-
-		if (nodeList.Count == 1) return nodeList[0].Value;
-
-		return null;
-	}
-
-	/// <summary>
 	/// Ensures a <see cref="NodeList"/> only represents a single value.
 	/// </summary>
 	/// <param name="nodeList"></param>
+	/// <param name="value"></param>
 	/// <returns>
 	/// Within the context of this library, a <see cref="NodeList"/>
 	/// may be stored inside a <see cref="JsonNode"/>.  Some operations, such as
 	/// expression addition, require that a single value is provided.
-	///
+	/// 
 	/// This method checks to see if the underlying value of a `JsonNode`
-	/// is a `NodeList`.  If not, it simply returns the JsonNode.  If the underlying
-	/// value is a `NodeList` _and_ the it only contains a single value, it
-	/// returns that value.  Otherwise, it returns null.
+	/// is a `NodeList`.  If not, it simply sets <paramref name="value"/> to the JsonNode
+	/// and returns true.  If the underlying value is a `NodeList` _and_ it only
+	/// contains a single value, it sets <paramref name="value"/> to that JsonNode and
+	/// return true.  Otherwise, it returns false.
 	/// </returns>
 	/// <remarks>
 	/// Though a bit complex, this method can be very important for functions
 	/// that require single values as inputs rather than nodelists since function
 	/// composition is possible (e.g. `min(max(@,0),10)`) and functions return nodelists.
 	/// </remarks>
-	public static JsonNode? TryGetSingleValue(this NodeList nodeList)
+	public static bool TryGetSingleValue(this NodeList nodeList, out JsonNode? value)
 	{
-		return nodeList.Count == 1
-			? nodeList[0].Value ?? JsonNull.SignalNode
-			: null;
+		if (nodeList.Count == 1)
+		{
+			value = nodeList[0].Value;
+			return true;
+		}
+
+		value = null;
+		return false;
 	}
 }

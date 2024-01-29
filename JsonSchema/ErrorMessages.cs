@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Resources;
 using System.Runtime.CompilerServices;
-using System.Text.Encodings.Web;
 using System.Text.Json;
 
 namespace Json.Schema;
@@ -20,11 +19,29 @@ namespace Json.Schema;
 public static partial class ErrorMessages
 {
 	private static readonly ResourceManager _resourceManager = new("Json.Schema.Localization.Resources", typeof(ErrorMessages).Assembly);
+	private static JsonSerializerOptions? _serializerOptions;
 
 	/// <summary>
 	/// Gets or sets a culture to use for error messages.  Default is <see cref="CultureInfo.CurrentCulture"/>.
 	/// </summary>
 	public static CultureInfo? Culture { get; set; }
+
+	static ErrorMessages()
+	{
+		_serializerOptions = new JsonSerializerOptions
+		{
+#if NET8_0_OR_GREATER
+			TypeInfoResolver = JsonSchema.TypeInfoResolver
+#endif
+		};
+#if NET8_0_OR_GREATER
+		JsonSchemaSerializerContext.OptionsManager.TypeInfoResolverUpdated +=
+			(_, _) => _serializerOptions = new JsonSerializerOptions
+			{
+				TypeInfoResolver = JsonSchema.TypeInfoResolver
+			};
+#endif
+	}
 
 	private static string Get(CultureInfo? culture = null, [CallerMemberName] string? key = null)
 	{
@@ -53,7 +70,7 @@ public static partial class ErrorMessages
 		{
 			var parameter = parameters[i];
 #pragma warning disable IL2026, IL3050
-			values[i] = JsonSerializer.Serialize(parameter.value, JsonSchemaSerializerContext.OptionsManager.SerializerOptionsUnsafeRelaxedJsonEscaping);
+			values[i] = JsonSerializer.Serialize(parameter.value, _serializerOptions);
 #pragma warning restore IL2026, IL3050
 			current = current.Replace($"[[{parameter.token}]]", $"{{{i}}}");
 		}

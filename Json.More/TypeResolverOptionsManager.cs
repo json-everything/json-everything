@@ -1,4 +1,4 @@
-﻿using System.Text.Encodings.Web;
+﻿using System;
 using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
 
@@ -6,8 +6,8 @@ namespace Json.More;
 
 public class TypeResolverOptionsManager
 {
+	private readonly JsonSerializerOptions _baseOptions;
 	private JsonSerializerOptions? _serializerOptions;
-	private JsonSerializerOptions? _serializerOptionsUnsafeRelaxedJsonEscaping;
 #if NET8_0_OR_GREATER
 	private readonly IJsonTypeInfoResolver _baseResolver;
 	private IJsonTypeInfoResolver _typeInfoResolver;
@@ -20,7 +20,7 @@ public class TypeResolverOptionsManager
 		{
 			lock (_serializerOptionsLock)
 			{
-				_serializerOptions ??= new JsonSerializerOptions
+				_serializerOptions ??= new JsonSerializerOptions(_baseOptions)
 				{
 #if NET8_0_OR_GREATER
 					TypeInfoResolver = _typeInfoResolver
@@ -32,30 +32,21 @@ public class TypeResolverOptionsManager
 		}
 	}
 
-	public JsonSerializerOptions SerializerOptionsUnsafeRelaxedJsonEscaping
-	{
-		get
-		{
-			lock (_serializerOptionsLock)
-			{
-				_serializerOptionsUnsafeRelaxedJsonEscaping ??= new JsonSerializerOptions
-				{
-					Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-#if NET8_0_OR_GREATER
-					TypeInfoResolver = _typeInfoResolver
-#endif
-				};
-
-				return _serializerOptionsUnsafeRelaxedJsonEscaping!;
-			}
-		}
-	}
-
 #if NET8_0_OR_GREATER
 	public IJsonTypeInfoResolver TypeInfoResolver => _typeInfoResolver;
+
+	public event EventHandler? TypeInfoResolverUpdated;
 	
 	public TypeResolverOptionsManager(IJsonTypeInfoResolver baseResolver, params IJsonTypeInfoResolver[] resolvers)
 	{
+		_baseOptions = new JsonSerializerOptions();
+		_baseResolver = baseResolver;
+		_typeInfoResolver = JsonTypeInfoResolver.Combine([baseResolver, .. resolvers]);
+	}
+	
+	public TypeResolverOptionsManager(JsonSerializerOptions baseOptions, IJsonTypeInfoResolver baseResolver, params IJsonTypeInfoResolver[] resolvers)
+	{
+		_baseOptions = baseOptions;
 		_baseResolver = baseResolver;
 		_typeInfoResolver = JsonTypeInfoResolver.Combine([baseResolver, .. resolvers]);
 	}
@@ -66,8 +57,14 @@ public class TypeResolverOptionsManager
 		{
 			_typeInfoResolver = JsonTypeInfoResolver.Combine([_baseResolver, .. resolvers]);
 			_serializerOptions = null;
-			_serializerOptionsUnsafeRelaxedJsonEscaping = null;
 		}
+
+		TypeInfoResolverUpdated?.Invoke(this, EventArgs.Empty);
+	}
+#else
+	public TypeResolverOptionsManager(JsonSerializerOptions? baseOptions = null)
+	{
+		_baseOptions = baseOptions ?? new JsonSerializerOptions();
 	}
 #endif
 }
