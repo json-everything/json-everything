@@ -38,7 +38,7 @@ public static partial class ErrorMessages
 		JsonSchemaSerializerContext.OptionsManager.TypeInfoResolverUpdated +=
 			(_, _) => _serializerOptions = new JsonSerializerOptions
 			{
-				TypeInfoResolver = JsonSchemaSerializerContext.OptionsManager.TypeInfoResolver
+				TypeInfoResolver = JsonSchema.TypeInfoResolver;
 			};
 #endif
 	}
