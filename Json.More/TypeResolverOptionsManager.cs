@@ -32,15 +32,10 @@ public class TypeResolverOptionsManager
 		}
 	}
 
-	public TypeResolverOptionsManager(JsonSerializerOptions? baseOptions = null)
-	{
-		_baseOptions = baseOptions ?? new JsonSerializerOptions();
-	}
-
 #if NET8_0_OR_GREATER
 	public IJsonTypeInfoResolver TypeInfoResolver => _typeInfoResolver;
 
-	public event EventHandler TypeInfoResolverUpdated;
+	public event EventHandler? TypeInfoResolverUpdated;
 	
 	public TypeResolverOptionsManager(IJsonTypeInfoResolver baseResolver, params IJsonTypeInfoResolver[] resolvers)
 	{
@@ -65,6 +60,11 @@ public class TypeResolverOptionsManager
 		}
 
 		TypeInfoResolverUpdated?.Invoke(this, EventArgs.Empty);
+	}
+#else
+	public TypeResolverOptionsManager(JsonSerializerOptions? baseOptions = null)
+	{
+		_baseOptions = baseOptions ?? new JsonSerializerOptions();
 	}
 #endif
 }

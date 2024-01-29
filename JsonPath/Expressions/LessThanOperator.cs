@@ -17,8 +17,8 @@ internal class LessThanOperator : IBinaryComparativeOperator
 		    !right.TryGetJson(out var rNode))
 			return false;
 
-		if (lNode.TryGetSingleValue() is not JsonValue lValue ||
-		    rNode.TryGetSingleValue() is not JsonValue rValue)
+		if (lNode is not JsonValue lValue ||
+		    rNode is not JsonValue rValue)
 			return false;
 
 		if (lValue.TryGetValue(out string? leftString) &&
