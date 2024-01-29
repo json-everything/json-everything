@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
+using Json.More;
 using Json.Pointer;
 
 namespace Json.Schema.Data;
@@ -65,7 +67,9 @@ public class UriIdentifier : IDataResourceIdentifier
 			}
 
 			var rootSchema = (JsonSchema?) registry.Get(root.SchemaLocation);
-			data = JsonSerializer.SerializeToNode(rootSchema);
+#pragma warning disable IL2026, IL3050
+			data = JsonSerializer.SerializeToNode(rootSchema, DataGenerationSerializerContext.OptionsManager.SerializerOptions);
+#pragma warning restore IL2026, IL3050
 		}
 
 		if (!string.IsNullOrEmpty(fragment))
@@ -104,5 +108,21 @@ public class UriIdentifier : IDataResourceIdentifier
 	public override string ToString()
 	{
 		return Target.ToString();
+	}
+}
+
+[JsonSerializable(typeof(JsonSchema))]
+internal partial class DataGenerationSerializerContext : JsonSerializerContext
+{
+	public static TypeResolverOptionsManager OptionsManager { get; }
+
+	static DataGenerationSerializerContext()
+	{
+		OptionsManager = new(
+#if NET8_0_OR_GREATER
+			Default,
+			Json.Schema.JsonSchema.TypeInfoResolver
+#endif
+		);
 	}
 }

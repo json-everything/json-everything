@@ -8,6 +8,7 @@
 		<AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
 		<RootNamespace>Json.Schema.Data.Tests</RootNamespace>
 		<Nullable>enable</Nullable>
+		<JsonSerializerIsReflectionEnabledByDefault Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net7.0'))">false</JsonSerializerIsReflectionEnabledByDefault>
 	</PropertyGroup>
 
 	<ItemGroup>

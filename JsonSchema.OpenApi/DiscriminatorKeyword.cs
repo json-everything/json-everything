@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Schema.OpenApi;
 
@@ -51,7 +52,9 @@ public class DiscriminatorKeyword : IJsonSchemaKeyword
 		Mapping = mapping;
 		Extensions = extensions;
 
-		_json = JsonSerializer.SerializeToNode(this);
+#pragma warning disable IL2026, IL3050
+		_json = JsonSerializer.SerializeToNode(this, OpenApiSerializerContext.OptionsManager.SerializerOptions);
+#pragma warning restore IL2026, IL3050
 	}
 
 	internal DiscriminatorKeyword(string propertyName, IReadOnlyDictionary<string, string>? mapping, IReadOnlyDictionary<string, JsonNode?>? extensions, JsonNode? json)
@@ -84,9 +87,9 @@ public class DiscriminatorKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="DiscriminatorKeyword"/>.
 /// </summary>
-public sealed class DiscriminatorKeywordJsonConverter : JsonConverter<DiscriminatorKeyword>
+public sealed class DiscriminatorKeywordJsonConverter : AotCompatibleJsonConverter<DiscriminatorKeyword>
 {
-	private class Model
+	internal class Model
 	{
 #pragma warning disable CS8618
 		// ReSharper disable UnusedAutoPropertyAccessor.Local
@@ -105,9 +108,11 @@ public sealed class DiscriminatorKeywordJsonConverter : JsonConverter<Discrimina
 	/// <returns>The converted value.</returns>
 	public override DiscriminatorKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var node = JsonSerializer.Deserialize<JsonNode>(ref reader, options);
+		var node = options.Read(ref reader, OpenApiSerializerContext.Default.JsonNode);
 
+#pragma warning disable IL2026, IL3050
 		var model = node.Deserialize<Model>(options);
+#pragma warning restore IL2026, Il3050
 
 		var extensionData = node!.AsObject().Where(x => x.Key.StartsWith("x-"))
 			.ToDictionary(x => x.Key, x => x.Value);
@@ -126,7 +131,7 @@ public sealed class DiscriminatorKeywordJsonConverter : JsonConverter<Discrimina
 		if (value.Mapping != null)
 		{
 			writer.WritePropertyName("mapping");
-			JsonSerializer.Serialize(writer, value.Mapping, options);
+			options.Write(writer, value.Mapping, OpenApiSerializerContext.Default.IReadOnlyDictionaryStringString);
 		}
 
 		if (value.Extensions != null)
@@ -134,8 +139,8 @@ public sealed class DiscriminatorKeywordJsonConverter : JsonConverter<Discrimina
 			foreach (var extension in value.Extensions)
 			{
 				writer.WritePropertyName(extension.Key);
-				JsonSerializer.Serialize(writer, extension.Value, options);
-			}
+				options.Write(writer, extension.Value, OpenApiSerializerContext.Default.JsonNode);
+;			}
 		}
 		writer.WriteEndObject();
 	}

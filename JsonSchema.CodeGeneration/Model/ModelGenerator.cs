@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using Json.More;
 using Json.Pointer;
@@ -228,7 +230,9 @@ internal static class ModelGenerator
 		generated = new GenerationCacheItem(schema);
 		cache.Add(generated);
 
-		var json = JsonSerializer.SerializeToNode(schema);
+#pragma warning disable IL2026, IL3050
+		var json = JsonSerializer.SerializeToNode(schema, CodeGenerationSerializerContext.OptionsManager.SerializerOptions);
+#pragma warning restore IL2026, IL3050
 
 		var supportedResults = _supportedRequirements.Evaluate(json, _options);
 #if DEBUG
@@ -389,5 +393,21 @@ internal class GenerationCache : List<GenerationCacheItem>
 		{
 			item.Model.FillPlaceholders(this);
 		}
+	}
+}
+
+[JsonSerializable(typeof(JsonSchema))]
+internal partial class CodeGenerationSerializerContext : JsonSerializerContext
+{
+	public static TypeResolverOptionsManager OptionsManager { get; }
+
+	static CodeGenerationSerializerContext()
+	{
+		OptionsManager = new(
+#if NET8_0_OR_GREATER
+			Default,
+			Json.Schema.JsonSchema.TypeInfoResolver
+#endif
+		);
 	}
 }

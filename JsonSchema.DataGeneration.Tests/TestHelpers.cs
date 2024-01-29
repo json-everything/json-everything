@@ -2,12 +2,20 @@
 using System.Diagnostics;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using NUnit.Framework;
 
 namespace Json.Schema.DataGeneration.Tests;
 
 public static class TestHelpers
 {
+	public static JsonSerializerOptions SerializerOptions = new()
+	{
+#if NET8_0_OR_GREATER
+		TypeInfoResolverChain = { DataGenerationTestsSerializerContext.Default, JsonSchema.TypeInfoResolver },
+#endif
+	};
+
 	public static void Run(JsonSchema schema, EvaluationOptions? options = null)
 	{
 		var result = schema.GenerateData();
@@ -16,14 +24,14 @@ public static class TestHelpers
 
 		Assert.IsTrue(result.IsSuccess, "failed generation");
 		Console.WriteLine(JsonSerializer.Serialize(result.Result,
-			new JsonSerializerOptions
+			new JsonSerializerOptions(SerializerOptions)
 			{
 				WriteIndented = true,
 				Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
 			}));
 		var validation = schema.Evaluate(result.Result, options);
 		Console.WriteLine(JsonSerializer.Serialize(validation,
-			new JsonSerializerOptions
+			new JsonSerializerOptions(SerializerOptions)
 			{
 				WriteIndented = true,
 				Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
@@ -40,7 +48,7 @@ public static class TestHelpers
 		Console.WriteLine(result.ErrorMessage);
 		if (result.IsSuccess)
 			Console.WriteLine(JsonSerializer.Serialize(result.Result,
-				new JsonSerializerOptions
+				new JsonSerializerOptions(SerializerOptions)
 				{
 					WriteIndented = true,
 					Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
@@ -59,3 +67,6 @@ public static class TestHelpers
 		}
 	}
 }
+
+[JsonSerializable(typeof(GenerationResult))]
+internal partial class DataGenerationTestsSerializerContext : JsonSerializerContext;

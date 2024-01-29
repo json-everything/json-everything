@@ -1,4 +1,11 @@
-﻿namespace Json.Schema.Data;
+﻿using System;
+using System.Collections.Generic;
+using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
+using Json.More;
+using Json.Pointer;
+
+namespace Json.Schema.Data;
 
 /// <summary>
 /// Declares the vocabularies of the supported drafts.
@@ -24,8 +31,28 @@ public static class Vocabularies
 		schemaRegistry ??= SchemaRegistry.Global;
 
 		vocabRegistry.Register(Data);
-		SchemaKeywordRegistry.Register<DataKeyword>();
+		SchemaKeywordRegistry.Register<DataKeyword>(DataExtSerializerContext.Default);
 		schemaRegistry.Register(MetaSchemas.Data);
 		schemaRegistry.Register(MetaSchemas.Data_202012);
+	}
+}
+
+[JsonSerializable(typeof(DataKeyword))]
+[JsonSerializable(typeof(Dictionary<string, string>))]
+[JsonSerializable(typeof(Dictionary<string, JsonNode>))]
+[JsonSerializable(typeof(JsonPointer))]
+[JsonSerializable(typeof(RelativeJsonPointer))]
+[JsonSerializable(typeof(Uri))]
+internal partial class DataExtSerializerContext : JsonSerializerContext
+{
+	public static TypeResolverOptionsManager OptionsManager { get; }
+
+	static DataExtSerializerContext() {
+		OptionsManager = new(
+#if NET8_0_OR_GREATER
+			Default,
+			JsonSchema.TypeInfoResolver
+#endif
+		);
 	}
 }
