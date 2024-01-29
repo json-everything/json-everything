@@ -154,7 +154,7 @@ public partial class VocabularyTests
 		}
 	}
 
-	private static readonly JsonSerializerOptions _serializerOptions = new()
+	private static readonly JsonSerializerOptions _serializerOptions = new(TestEnvironment.SerializerOptions)
 	{
 		WriteIndented = true,
 		Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping

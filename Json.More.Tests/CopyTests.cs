@@ -12,7 +12,7 @@ public class CopyTests
 	{
 		JsonNode source = new JsonObject
 		{
-			["foo"] = new JsonArray { 1, false, "string", null, 5.4 },
+			["foo"] = new JsonArray(1, false, "string", null, 5.4),
 			["bar"] = true,
 			["baz"] = new JsonObject
 			{

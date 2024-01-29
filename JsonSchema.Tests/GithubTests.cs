@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Json.More;
 using Json.Pointer;
 using NUnit.Framework;
+using static Json.Schema.Tests.VocabularyTests;
 
 namespace Json.Schema.Tests;
 
@@ -278,7 +279,7 @@ public class GithubTests
     }
   }
 }";
-		var schema = JsonSerializer.Deserialize<JsonSchema>(schemaStr)!;
+		var schema = JsonSerializer.Deserialize<JsonSchema>(schemaStr, TestEnvironment.SerializerOptions)!;
 		var json = JsonNode.Parse(jsonStr);
 		var validation = schema.Evaluate(json, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
 
@@ -308,8 +309,8 @@ public class GithubTests
   ""$ref"": ""schema1.json""
 }";
 		var jsonStr = @"{ ""abc"": ""s"" }";
-		var schema1 = JsonSerializer.Deserialize<JsonSchema>(schema1Str)!;
-		var schema2 = JsonSerializer.Deserialize<JsonSchema>(schema2Str)!;
+		var schema1 = JsonSerializer.Deserialize<JsonSchema>(schema1Str, TestEnvironment.SerializerOptions)!;
+		var schema2 = JsonSerializer.Deserialize<JsonSchema>(schema2Str, TestEnvironment.SerializerOptions)!;
 		var json = JsonNode.Parse(jsonStr);
 		var uri1 = new Uri("https://json-everything.net/schema1.json");
 		var uri2 = new Uri("https://json-everything.net/schema2.json");
@@ -372,7 +373,7 @@ public class GithubTests
   }
 }";
 
-		var schema = JsonSerializer.Deserialize<JsonSchema>(schemaText);
+		var schema = JsonSerializer.Deserialize<JsonSchema>(schemaText, TestEnvironment.SerializerOptions);
 		var passing = JsonNode.Parse(passingText);
 		var failing = JsonNode.Parse(failingText);
 
@@ -438,7 +439,7 @@ public class GithubTests
 
 		var metaSchema = JsonSchema.FromText(GetResource(191, "MetaSchema"));
 
-		SchemaKeywordRegistry.Register<MinDateKeyword>();
+		SchemaKeywordRegistry.Register<MinDateKeyword>(VocabularySerializerContext.Default);
 
 		VocabularyRegistry.Global.Register(new Vocabulary(vocabId, typeof(MinDateKeyword)));
 
@@ -846,13 +847,13 @@ public class GithubTests
 		var schema = JsonSchema.FromFile(file);
 
 		var instance = new JsonArray
-		{
+		(
 			new JsonObject
 			{
 				["field1"] = "foo",
 				["field2"] = "bar"
 			}
-		};
+		);
 
 		var result = schema.Evaluate(instance, new EvaluationOptions{OutputFormat = OutputFormat.List});
 
@@ -888,7 +889,7 @@ public class GithubTests
 
 		var text = "{\"foo\":null,\"bar\":null}";
 
-		Assert.AreEqual(text, JsonSerializer.Serialize(actual));
+		Assert.AreEqual(text, JsonSerializer.Serialize(actual, TestEnvironment.SerializerOptions));
 	}
 
 	[TestCase(@"{""additionalItems"":""not-a-schema""}", 0, 33)]

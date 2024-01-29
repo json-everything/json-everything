@@ -12,7 +12,7 @@ public static class ResultsExtensions
 {
 	public static void AssertInvalid(this EvaluationResults results, string? expected = null)
 	{
-		Console.WriteLine(JsonSerializer.Serialize(results, TestEnvironment.SerializerOptions));
+		Console.WriteLine(JsonSerializer.Serialize(results, TestEnvironment.SerializerOptionsUnsafeRelaxedEscaping));
 
 		Assert.False(results.IsValid);
 		AssertEquivalent(results, expected);
@@ -20,7 +20,7 @@ public static class ResultsExtensions
 
 	public static void AssertValid(this EvaluationResults results, string? expected = null)
 	{
-		Console.WriteLine(JsonSerializer.Serialize(results, TestEnvironment.SerializerOptions));
+		Console.WriteLine(JsonSerializer.Serialize(results, TestEnvironment.SerializerOptionsUnsafeRelaxedEscaping));
 
 		Assert.True(results.IsValid);
 		AssertEquivalent(results, expected);

@@ -12,11 +12,11 @@ public class CrossDraftTests
 		{
 			yield return new TestCaseData((JsonNode)new JsonObject
 			{
-				["foo"] = new JsonArray { "string", 42 }
+				["foo"] = new JsonArray("string", 42)
 			}, true);
 			yield return new TestCaseData((JsonNode)new JsonObject
 			{
-				["foo"] = new JsonArray { "string", "other string" }
+				["foo"] = new JsonArray("string", "other string")
 			}, false);
 		}
 	}

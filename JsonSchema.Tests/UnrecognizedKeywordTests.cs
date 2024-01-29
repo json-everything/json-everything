@@ -51,7 +51,7 @@ public class UnrecognizedKeywordTests
 
 		Assert.IsTrue(result.IsValid);
 		Assert.AreEqual(2, result.Annotations!.Count);
-		Assert.IsTrue(new JsonArray{"foo"}.IsEquivalentTo(result.Annotations["$unknownKeywords"]));
+		Assert.IsTrue(new JsonArray("foo").IsEquivalentTo(result.Annotations["$unknownKeywords"]));
 	}
 
 	[Test]
@@ -74,7 +74,7 @@ public class UnrecognizedKeywordTests
 		Assert.IsTrue(result.IsValid);
 		Assert.AreEqual(2, result.Annotations!.Count);
 		Assert.IsTrue(new JsonObject { ["foo"] = false }.IsEquivalentTo(result.Annotations["dependencies"]));
-		Assert.IsTrue(new JsonArray{"dependencies"}.IsEquivalentTo(result.Annotations["$unknownKeywords"]));
+		Assert.IsTrue(new JsonArray("dependencies").IsEquivalentTo(result.Annotations["$unknownKeywords"]));
 	}
 
 	[Test]

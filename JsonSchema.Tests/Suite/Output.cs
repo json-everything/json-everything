@@ -6,6 +6,7 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
 using Json.More;
 using NUnit.Framework;
 
@@ -79,10 +80,11 @@ public class Output
 											  shortFileName != "uri-template";
 
 			var contents = File.ReadAllText(fileName);
-			var collections = JsonSerializer.Deserialize<List<TestCollection>>(contents, new JsonSerializerOptions
+			var serializerOptions = new JsonSerializerOptions(TestEnvironment.SerializerOptions)
 			{
 				PropertyNameCaseInsensitive = true
-			});
+			};
+			var collections = serializerOptions.Read(contents, TestSerializerContext.Default.ListTestCollection);
 
 			foreach (var collection in collections!)
 			{
@@ -106,7 +108,7 @@ public class Output
 	[TestCaseSource(nameof(TestCases))]
 	public void Test(TestCollection collection, TestCase test, string format, string fileName, EvaluationOptions options)
 	{
-		var serializerOptions = new JsonSerializerOptions
+		var serializerOptions = new JsonSerializerOptions(TestEnvironment.SerializerOptions)
 		{
 			WriteIndented = true,
 			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
@@ -118,7 +120,7 @@ public class Output
 		Console.WriteLine(collection.Description);
 		Console.WriteLine(test.Description);
 		Console.WriteLine();
-		Console.WriteLine(JsonSerializer.Serialize(collection.Schema, serializerOptions));
+		Console.WriteLine(serializerOptions.Write(collection.Schema));
 		Console.WriteLine();
 		Console.WriteLine(test.Data.AsJsonString());
 		Console.WriteLine();
@@ -138,11 +140,12 @@ public class Output
 		};
 		options.OutputFormat = outputFormat;
 		var result = collection.Schema.Evaluate(test.Data, options);
-		var serializedResult = JsonSerializer.SerializeToNode(result, new JsonSerializerOptions
+		var optionsWithConverters = new JsonSerializerOptions(TestEnvironment.SerializerOptions)
 		{
 			Converters = { converter }
-		});
-		Console.WriteLine(JsonSerializer.Serialize(serializedResult, serializerOptions));
+		};
+		var serializedResult = optionsWithConverters.WriteToNode(result);
+		Console.WriteLine(serializerOptions.Write(serializedResult));
 		Console.WriteLine();
 
 
@@ -154,7 +157,7 @@ public class Output
 
 		if (_unsupportedVersions.Contains(options.EvaluateAs))
 		{
-			Console.WriteLine(JsonSerializer.Serialize(result, serializerOptions));
+			Console.WriteLine(serializerOptions.Write(result));
 
 			if (!result.IsValid)
 				Assert.Inconclusive("not fully supported");
@@ -195,4 +198,47 @@ public class Output
 		Assert.IsFalse(_useExternal);
 		//Assert.IsFalse(_runDraftNext);
 	}
+}
+
+[JsonSerializable(typeof(TestCollection))]
+[JsonSerializable(typeof(List<TestCollection>))]
+public partial class TestSerializerContext : JsonSerializerContext;
+
+public static class TestJsonSerializerOptionsExtensions
+{
+	/// <summary>
+	/// Read and convert the JSON to T.
+	/// </summary>
+	/// <remarks>
+	/// A converter may throw any Exception, but should throw <cref>JsonException</cref> when the JSON is invalid.
+	/// </remarks>
+	/// <typeparam name="T">The <see cref="Type"/> to convert.</typeparam>
+	/// <param name="options">The <see cref="JsonSerializerOptions"/> being used.</param>
+	/// <param name="json">The json to read from.</param>
+	/// <param name="typeInfo">An explicit typeInfo to use for looking up the Converter. If not provided, options.GetTypeInfo will be used.</param>
+	/// <returns>The value that was converted.</returns>
+	public static T? Read<T>(this JsonSerializerOptions options, string json, JsonTypeInfo<T>? typeInfo = null)
+	{
+#pragma warning disable IL2026, IL3050 // This helper is expected to be called with an options object that covers the needed TypeInfos.
+		return JsonSerializer.Deserialize<T>(json, options);
+#pragma warning restore
+	}
+
+	/// <summary>
+	/// Write a T to json and return it.
+	/// </summary>
+	/// <remarks>
+	/// A converter may throw any Exception, but should throw <cref>JsonException</cref> when the JSON is invalid.
+	/// </remarks>
+	/// <typeparam name="T">The <see cref="Type"/> to convert.</typeparam>
+	/// <param name="options">The <see cref="JsonSerializerOptions"/> being used.</param>
+	/// <param name="typeInfo">An explicit typeInfo to use for looking up the Converter. If not provided, options.GetTypeInfo will be used.</param>
+	/// <returns>The value that was converted.</returns>
+	public static string Write<T>(this JsonSerializerOptions options, T? value, JsonTypeInfo<T>? typeInfo = null)
+	{
+#pragma warning disable IL2026, IL3050 // This helper is expected to be called with an options object that covers the needed TypeInfos.
+		return JsonSerializer.Serialize(value, options);
+#pragma warning restore
+	}
+
 }

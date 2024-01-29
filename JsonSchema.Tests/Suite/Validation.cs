@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Text.Json.Serialization.Metadata;
 using Json.More;
 using NUnit.Framework;
 
@@ -75,6 +76,9 @@ public class Validation
 			var contents = File.ReadAllText(fileName);
 			var collections = JsonSerializer.Deserialize<List<TestCollection>>(contents, new JsonSerializerOptions
 			{
+#if NET8_0_OR_GREATER
+				TypeInfoResolverChain = { TestSerializerContext.Default, JsonSchema.TypeInfoResolver },
+#endif
 				PropertyNameCaseInsensitive = true
 			});
 
