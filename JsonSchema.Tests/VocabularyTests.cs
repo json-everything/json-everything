@@ -154,7 +154,14 @@ public partial class VocabularyTests
 		}
 	}
 
-	private static readonly JsonSerializerOptions _serializerOptions = new()
+	private static readonly JsonSerializerOptions _basicOptions = new(TestEnvironment.SerializerOptions)
+	{
+#if NET8_0_OR_GREATER
+		TypeInfoResolverChain = { VocabularySerializerContext.Default },
+#endif
+	};
+
+	private static readonly JsonSerializerOptions _serializerOptions = new(_basicOptions)
 	{
 		WriteIndented = true,
 		Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
@@ -338,7 +345,7 @@ public partial class VocabularyTests
 			.Schema("http://mydates.com/schema")
 			.MinDate(DateTime.Now.AddDays(-1));
 
-		var schemaAsJson = JsonNode.Parse(JsonSerializer.Serialize(schema));
+		var schemaAsJson = JsonNode.Parse(JsonSerializer.Serialize(schema, _basicOptions));
 		var results = DatesMetaSchema.Evaluate(schemaAsJson, new EvaluationOptions{OutputFormat = OutputFormat.List});
 
 		Console.WriteLine(schemaAsJson);
@@ -354,7 +361,7 @@ public partial class VocabularyTests
 			.Schema("http://mydates.com/schema")
 			.MinDate(DateTime.Now.AddDays(-1));
 
-		var schemaAsJson = JsonNode.Parse(JsonSerializer.Serialize(schema));
+		var schemaAsJson = JsonNode.Parse(JsonSerializer.Serialize(schema, _basicOptions));
 		var options = new EvaluationOptions();
 		options.VocabularyRegistry.Register(DatesVocabulary);
 		var results = DatesMetaSchema.Evaluate(schemaAsJson, options);

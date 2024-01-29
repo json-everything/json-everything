@@ -66,21 +66,4 @@ public static class JsonSerializerOptionsExtensions
 		JsonSerializer.Serialize(writer, value, options);
 #pragma warning restore IL2026, IL3050
 	}
-
-	/// <summary>
-	/// Write an object to JSON. If the type is known, prefer Write<![CDATA[<T>]]>
-	/// </summary>
-	/// <remarks>
-	/// A converter may throw any Exception, but should throw <cref>JsonException</cref> when the JSON is invalid.
-	/// </remarks>
-	/// <param name="options">The <see cref="JsonSerializerOptions"/> being used.</param>
-	/// <param name="writer">The <see cref="Utf8JsonReader"/> to read from.</param>
-	/// <param name="value">The value to serialize.</param>
-	/// <returns>The value that was converted.</returns>
-	public static void Write(this JsonSerializerOptions options, Utf8JsonWriter writer, object? value)
-	{
-#pragma warning disable IL2026, IL3050 // This helper is expected to be called with an options object that covers the needed TypeInfos.
-		JsonSerializer.Serialize(writer, value, options);
-#pragma warning restore IL2026, IL3050
-	}
 }

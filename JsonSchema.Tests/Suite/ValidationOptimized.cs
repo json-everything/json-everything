@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Text.Json.Serialization.Metadata;
 using Json.More;
 using NUnit.Framework;
 
@@ -75,6 +76,10 @@ public class ValidationOptimized
 			var contents = File.ReadAllText(fileName);
 			var collections = JsonSerializer.Deserialize<List<TestCollection>>(contents, new JsonSerializerOptions
 			{
+#if NET8_0_OR_GREATER
+				TypeInfoResolverChain = { TestSerializerContext.Default, JsonSchema.TypeInfoResolver },
+#endif
+
 				PropertyNameCaseInsensitive = true
 			});
 
@@ -115,7 +120,7 @@ public class ValidationOptimized
 	[TestCaseSource(nameof(TestCases))]
 	public void Test(TestCollection collection, TestCase test, string fileName, EvaluationOptions options)
 	{
-		var serializerOptions = new JsonSerializerOptions
+		var serializerOptions = new JsonSerializerOptions(TestEnvironment.SerializerOptions)
 		{
 			WriteIndented = true,
 			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping

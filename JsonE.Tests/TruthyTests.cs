@@ -14,7 +14,7 @@ public class TruthyTests
 			yield return new TestCaseData(new JsonObject(), false);
 			yield return new TestCaseData(new JsonObject { ["foo"] = 42 }, true);
 			yield return new TestCaseData(new JsonArray(), false);
-			yield return new TestCaseData(new JsonArray { 42 }, true);
+			yield return new TestCaseData(new JsonArray(42), true);
 			yield return new TestCaseData((JsonNode?)string.Empty, false);
 			yield return new TestCaseData((JsonNode?)"foo", true);
 			yield return new TestCaseData((JsonNode?)0, false);
