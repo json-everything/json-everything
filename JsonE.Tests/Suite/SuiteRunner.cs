@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Json.More;
 using NUnit.Framework;
 using Yaml2JsonNode;
@@ -38,7 +39,7 @@ public class SuiteRunner
 
 		var yamlText = File.ReadAllText(testsPath);
 
-		var tests = DeserializeAll<Test>(yamlText)!;
+		var tests = DeserializeAll<Test>(yamlText, JsonETestSerializerContext.Default.Options)!;
 
 		return tests.Select(t => new TestCaseData(t) { TestName = $"{t.Title}  |  {t.Template.AsJsonString(_serializerOptions)}  |  {t.Context.AsJsonString(_serializerOptions)}" });
 	}
@@ -100,3 +101,7 @@ public class SuiteRunner
 			Console.WriteLine($"Result:   {test.Expected.AsJsonString(_serializerOptions)}");
 	}
 }
+
+[JsonSerializable(typeof(Test))]
+[JsonSerializable(typeof(Test[]))]
+public partial class JsonETestSerializerContext : JsonSerializerContext;

@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 using Json.JsonE.Expressions;
 using Json.JsonE.Operators;
 using Json.More;
@@ -200,3 +202,9 @@ public static class JsonE
 	}
 
 }
+
+
+[JsonSerializable(typeof(FunctionDefinition))]
+[JsonSerializable(typeof(SortedDictionary<string, JsonNode>))]
+[JsonSerializable(typeof(JsonExpression))]
+internal partial class JsonESerializerContext : JsonSerializerContext;

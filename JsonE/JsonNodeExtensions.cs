@@ -117,7 +117,7 @@ internal static class JsonNodeExtensions
 		JsonNode? CopyValue(JsonValue val)
 		{
 			if (val.TryGetValue(out FunctionDefinition? func))
-				return JsonValue.Create(func);
+				return JsonValue.Create(func, JsonESerializerContext.Default.FunctionDefinition);
 
 			return val.DeepClone();
 		}

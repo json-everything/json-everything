@@ -18,6 +18,6 @@ internal class JsonExpression
 
 	public static implicit operator JsonValue(JsonExpression expression)
 	{
-		return JsonValue.Create(expression)!;
+		return JsonValue.Create(expression, JsonESerializerContext.Default.JsonExpression)!;
 	}
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
@@ -20,6 +21,6 @@ public abstract class FunctionDefinition
 	/// <param name="func">The function.</param>
 	public static implicit operator JsonNode?(FunctionDefinition func)
 	{
-		return JsonValue.Create(func);
+		return JsonValue.Create(func, JsonESerializerContext.Default.FunctionDefinition);
 	}
 }
