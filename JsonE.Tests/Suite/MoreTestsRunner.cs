@@ -4,7 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Json.More;
+using Newtonsoft.Json.Schema;
 using NUnit.Framework;
 using Yaml2JsonNode;
 
@@ -29,7 +31,7 @@ public class MoreTestsRunner
 
 		var yamlText = File.ReadAllText(testsPath);
 
-		var tests = DeserializeAll<Test>(yamlText)!;
+		var tests = DeserializeAll<Test>(yamlText, JsonETestSerializerContext.Default.Options)!;
 
 		return tests.Select(t => new TestCaseData(t) { TestName = $"{t.Title}  |  {t.Template.AsJsonString(_serializerOptions)}  |  {t.Context.AsJsonString(_serializerOptions)}" });
 	}
