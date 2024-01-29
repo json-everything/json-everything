@@ -80,29 +80,23 @@ public static class JsonSchemaExtensions
 	}
 
 	private static readonly IEnumerable<IRequirementsGatherer> _requirementsGatherers =
-			new Type[]
+			new IRequirementsGatherer[]
 			{
-				typeof(AllOfRequirementsGatherer),
-				typeof(AnyOfRequirementsGatherer),
-				typeof(ConditionalRequirementsGatherer),
-				typeof(ConstRequirementsGatherer),
-				typeof(ContainsRequirementsGatherer),
-				typeof(EnumRequirementsGatherer),
-				typeof(FalseRequirementsGatherer),
-				typeof(ItemsRequirementsGatherer),
-				typeof(NotRequirementsGatherer),
-				typeof(NumberRequirementsGatherer),
-				typeof(OneOfRequirementsGatherer),
-				typeof(PropertiesRequirementsGatherer),
-				typeof(StringRequirementsGatherer),
-				typeof(TypeRequirementsGatherer),
-			}
-			.Where(x => typeof(IRequirementsGatherer).IsAssignableFrom(x) &&
-						!x.IsAbstract &&
-						!x.IsInterface)
-			.Select(Activator.CreateInstance)
-			.Cast<IRequirementsGatherer>()
-			.ToList();
+				new AllOfRequirementsGatherer(),
+				new AnyOfRequirementsGatherer(),
+				new ConditionalRequirementsGatherer(),
+				new ConstRequirementsGatherer(),
+				new ContainsRequirementsGatherer(),
+				new EnumRequirementsGatherer(),
+				new FalseRequirementsGatherer(),
+				new ItemsRequirementsGatherer(),
+				new NotRequirementsGatherer(),
+				new NumberRequirementsGatherer(),
+				new OneOfRequirementsGatherer(),
+				new PropertiesRequirementsGatherer(),
+				new StringRequirementsGatherer(),
+				new TypeRequirementsGatherer(),
+			};
 
 	internal static RequirementsContext GetRequirements(this JsonSchema schema)
 	{
