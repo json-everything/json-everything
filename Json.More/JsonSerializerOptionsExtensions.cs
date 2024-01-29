@@ -19,7 +19,7 @@ public static class JsonSerializerOptionsExtensions
 	/// <param name="options">The <see cref="JsonSerializerOptions"/> being used.</param>
 	/// <param name="typeInfo">An explicit typeInfo to use for looking up the Converter. If not provided, options.GetTypeInfo will be used.</param>
 	/// <returns>An implementation of <see cref="JsonConverter{T}"/> as determined by the provided options</returns>
-	public static JsonConverter<T> GetConverter<T>(this JsonSerializerOptions options, JsonTypeInfo? typeInfo = null)
+	public static JsonConverter<T> GetConverter<T>(this JsonSerializerOptions options, JsonTypeInfo? typeInfo)
 	{
 #if NET8_0_OR_GREATER
 		return (JsonConverter<T>)(typeInfo ?? options.GetTypeInfo(typeof(T))).Converter;
@@ -60,8 +60,6 @@ public static class JsonSerializerOptionsExtensions
 	/// <param name="value">The value to serialize.</param>
 	/// <param name="typeInfo">An explicit typeInfo to use for looking up the Converter. If not provided, options.GetTypeInfo will be used.</param>
 	/// <returns>The value that was converted.</returns>
-	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "Serialize is safe in AOT if the JsonSerializerOptions come from the source generator. Requiring the JsonTypeInfo parameter helps enforce that.")]
-	[UnconditionalSuppressMessage("AOT", "IL3050:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "Serialize is safe in AOT if the JsonSerializerOptions come from the source generator. Requiring the JsonTypeInfo parameter helps enforce that.")]
 	public static void Write<T>(this JsonSerializerOptions options, Utf8JsonWriter writer, T? value, JsonTypeInfo<T>? typeInfo)
 	{
 		options.GetConverter<T?>(typeInfo).Write(writer, value, options);
