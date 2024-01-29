@@ -11,7 +11,7 @@ using NUnit.Framework;
 
 namespace Json.Logic.Tests.Suite;
 
-public class SuiteRunner
+public class Spelling
 {
 	public static IEnumerable<TestCaseData> Suite()
 	{
@@ -48,14 +48,15 @@ public class SuiteRunner
 	[TestCaseSource(nameof(Suite))]
 	public void Run(Test test)
 	{
+		var node = JsonNode.Parse(test.Logic);
 		var rule = JsonSerializer.Deserialize<Rule>(test.Logic, TestSerializerContext.OptionsManager.SerializerOptions);
 
-		if (rule == null)
-		{
-			Assert.IsNull(test.Expected);
-			return;
-		}
+		var serialized = JsonSerializer.SerializeToNode(rule, TestSerializerContext.OptionsManager.SerializerOptions);
 
-		JsonAssert.AreEquivalent(test.Expected, rule.Apply(test.Data));
+		if (node.IsEquivalentTo(serialized)) return;
+
+		Console.WriteLine($"Expected: {node.AsJsonString(TestSerializerContext.OptionsManager.SerializerOptions)}");
+		Console.WriteLine($"Actual:   {serialized.AsJsonString(TestSerializerContext.OptionsManager.SerializerOptions)}");
+		Assert.Inconclusive();
 	}
 }

@@ -59,15 +59,13 @@ public class AddRule : Rule
 	}
 }
 
-internal class AddRuleJsonConverter : JsonConverter<AddRule>
+internal class AddRuleJsonConverter : AotCompatibleJsonConverter<AddRule>
 {
 	public override AddRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var node = JsonSerializer.Deserialize<JsonNode?>(ref reader, options);
-
-		var parameters = node is JsonArray
-			? node.Deserialize<Rule[]>()
-			: new[] { node.Deserialize<Rule>()! };
+		var parameters = reader.TokenType == JsonTokenType.StartArray
+			? options.Read(ref reader, LogicSerializerContext.Default.RuleArray)
+			: new[] { options.Read(ref reader, LogicSerializerContext.Default.Rule)! };
 
 		if (parameters == null || parameters.Length == 0)
 			throw new JsonException("The + rule needs an array of parameters.");

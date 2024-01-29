@@ -22,7 +22,9 @@ public static class JsonWriterExtensions
 			writer.WriteNullValue();
 			return;
 		}
-		JsonSerializer.Serialize(writer, rule, rule.GetType(), options);
+#pragma warning disable IL2026, IL3050
+		JsonSerializer.Serialize(writer, rule, rule.GetType(), LogicSerializerContext.OptionsManager.SerializerOptions);
+#pragma warning restore IL2026, IL3050
 	}
 
 	/// <summary>

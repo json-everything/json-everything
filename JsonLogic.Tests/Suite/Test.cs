@@ -3,6 +3,7 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Logic.Tests.Suite;
 
@@ -20,10 +21,10 @@ public class TestConverter : JsonConverter<Test?>
 {
 	public override Test? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var node = JsonSerializer.Deserialize<JsonNode?>(ref reader, options);
+		var node = options.Read(ref reader, TestSerializerContext.Default.JsonNode);
 		if (node is not JsonArray arr) return null;
 
-		var logic = JsonSerializer.Serialize(arr[0], new JsonSerializerOptions { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping });
+		var logic = JsonSerializer.Serialize(arr[0], TestSerializerContext.OptionsManager.SerializerOptions);
 		var data = arr[1];
 		var expected = arr[2];
 

@@ -38,7 +38,7 @@ public class LiteralRule : Rule
 	}
 }
 
-internal class LiteralRuleJsonConverter : JsonConverter<LiteralRule>
+internal class LiteralRuleJsonConverter : AotCompatibleJsonConverter<LiteralRule>
 {
 	public override LiteralRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
@@ -48,6 +48,6 @@ internal class LiteralRuleJsonConverter : JsonConverter<LiteralRule>
 
 	public override void Write(Utf8JsonWriter writer, LiteralRule value, JsonSerializerOptions options)
 	{
-		JsonSerializer.Serialize(writer, value.Value, options);
+		JsonSerializer.Serialize(writer, value.Value, LogicSerializerContext.Default.JsonNode!);
 	}
 }

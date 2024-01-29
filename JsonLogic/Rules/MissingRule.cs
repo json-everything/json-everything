@@ -62,15 +62,13 @@ public class MissingRule : Rule
 	}
 }
 
-internal class MissingRuleJsonConverter : JsonConverter<MissingRule>
+internal class MissingRuleJsonConverter : AotCompatibleJsonConverter<MissingRule>
 {
 	public override MissingRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var node = JsonSerializer.Deserialize<JsonNode?>(ref reader, options);
-
-		var parameters = node is JsonArray
-			? node.Deserialize<Rule[]>()
-			: new[] { node.Deserialize<Rule>()! };
+		var parameters = reader.TokenType == JsonTokenType.StartArray
+			? options.Read(ref reader, LogicSerializerContext.Default.RuleArray)
+			: new[] { options.Read(ref reader, LogicSerializerContext.Default.Rule)! };
 
 		if (parameters == null) return new MissingRule();
 

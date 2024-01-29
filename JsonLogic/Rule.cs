@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
 using Json.Logic.Rules;
+using Json.More;
 
 namespace Json.Logic;
 
@@ -14,6 +16,14 @@ namespace Json.Logic;
 [JsonConverter(typeof(LogicComponentConverter))]
 public abstract class Rule
 {
+#if NET8_0_OR_GREATER
+	/// <summary>
+	/// A TypeInfoResolver that can be used for serializing <see cref="Rule"/> objects. Add to your custom
+	/// JsonSerializerOptions's TypeInfoResolver or TypeInfoResolveChain.
+	/// </summary>
+	public static IJsonTypeInfoResolver JsonTypeResolver => LogicSerializerContext.Default;
+#endif
+
 	internal JsonNode? Source { get; set; }
 
 	/// <summary>
@@ -93,7 +103,7 @@ public class LogicComponentConverter : JsonConverter<Rule>
 	/// <returns>The converted value.</returns>
 	public override Rule Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var node = JsonSerializer.Deserialize<JsonNode?>(ref reader, options);
+		var node = options.Read(ref reader, LogicSerializerContext.Default.JsonNode);
 		Rule rule;
 
 		if (node is JsonObject)
@@ -111,13 +121,13 @@ public class LogicComponentConverter : JsonConverter<Rule>
 					throw new JsonException($"Cannot identify rule for {op}");
 
 				rule = args is null
-					? (Rule)JsonSerializer.Deserialize("[]", ruleType, options)!
-					: (Rule)args.Deserialize(ruleType, options)!;
+					? (Rule)JsonSerializer.Deserialize("[]", ruleType, LogicSerializerContext.Default)!
+					: (Rule)args.Deserialize(ruleType, LogicSerializerContext.Default)!;
 			}
 		}
 		else if (node is JsonArray)
 		{
-			var data = node.Deserialize<List<Rule>>(options)!;
+			var data = node.Deserialize(LogicSerializerContext.Default.RuleArray)!;
 			rule = new RuleCollection(data);
 		}
 		else
@@ -136,7 +146,7 @@ public class LogicComponentConverter : JsonConverter<Rule>
 	{
 		if (value.Source != null)
 		{
-			JsonSerializer.Serialize(writer, value.Source, options);
+			options.Write(writer, value.Source, LogicSerializerContext.Default.JsonNode);
 			return;
 		}
 
@@ -163,13 +173,74 @@ internal class ArgumentCollectionConverter : JsonConverter<ArgumentCollection>
 	public override ArgumentCollection Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		if (reader.TokenType == JsonTokenType.StartArray)
-			return new ArgumentCollection(JsonSerializer.Deserialize<List<Rule>>(ref reader, options)!);
+			return new ArgumentCollection(options.Read(ref reader, LogicSerializerContext.Default.RuleArray)!);
 
-		return new ArgumentCollection(JsonSerializer.Deserialize<Rule>(ref reader, options));
+		return new ArgumentCollection(options.Read(ref reader, LogicSerializerContext.Default.Rule));
 	}
 
 	public override void Write(Utf8JsonWriter writer, ArgumentCollection value, JsonSerializerOptions options)
 	{
 		throw new NotImplementedException();
+	}
+}
+
+[JsonSerializable(typeof(AddRule))]
+[JsonSerializable(typeof(AllRule))]
+[JsonSerializable(typeof(AndRule))]
+[JsonSerializable(typeof(BooleanCastRule))]
+[JsonSerializable(typeof(CatRule))]
+[JsonSerializable(typeof(DivideRule))]
+[JsonSerializable(typeof(FilterRule))]
+[JsonSerializable(typeof(IfRule))]
+[JsonSerializable(typeof(InRule))]
+[JsonSerializable(typeof(LessThanEqualRule))]
+[JsonSerializable(typeof(LessThanRule))]
+[JsonSerializable(typeof(LiteralRule))]
+[JsonSerializable(typeof(LogRule))]
+[JsonSerializable(typeof(LooseEqualsRule))]
+[JsonSerializable(typeof(LooseNotEqualsRule))]
+[JsonSerializable(typeof(MapRule))]
+[JsonSerializable(typeof(MaxRule))]
+[JsonSerializable(typeof(MergeRule))]
+[JsonSerializable(typeof(MinRule))]
+[JsonSerializable(typeof(MissingRule))]
+[JsonSerializable(typeof(MissingSomeRule))]
+[JsonSerializable(typeof(ModRule))]
+[JsonSerializable(typeof(MoreThanEqualRule))]
+[JsonSerializable(typeof(MoreThanRule))]
+[JsonSerializable(typeof(MultiplyRule))]
+[JsonSerializable(typeof(NoneRule))]
+[JsonSerializable(typeof(NotRule))]
+[JsonSerializable(typeof(OrRule))]
+[JsonSerializable(typeof(ReduceRule))]
+[JsonSerializable(typeof(RuleCollection))]
+[JsonSerializable(typeof(SomeRule))]
+[JsonSerializable(typeof(StrictEqualsRule))]
+[JsonSerializable(typeof(StrictNotEqualsRule))]
+[JsonSerializable(typeof(SubstrRule))]
+[JsonSerializable(typeof(SubtractRule))]
+[JsonSerializable(typeof(VariableRule))]
+[JsonSerializable(typeof(JsonNode))]
+[JsonSerializable(typeof(Rule[]))]
+[JsonSerializable(typeof(ReduceRule.Intermediary))]
+[JsonSerializable(typeof(ArgumentCollection))]
+[JsonSerializable(typeof(int))]
+[JsonSerializable(typeof(float))]
+[JsonSerializable(typeof(double))]
+[JsonSerializable(typeof(decimal))]
+[JsonSerializable(typeof(bool))]
+[JsonSerializable(typeof(string))]
+internal partial class LogicSerializerContext : JsonSerializerContext
+{
+	public static TypeResolverOptionsManager OptionsManager { get; }
+
+	static LogicSerializerContext()
+	{
+		OptionsManager = new TypeResolverOptionsManager(
+#if NET8_0_OR_GREATER
+			Default,
+			RuleRegistry.ExternalTypeInfoResolvers
+#endif
+		);
 	}
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using Json.More;
 
@@ -69,7 +70,7 @@ public static class JsonNodeExtensions
 				return string.Join(",", arr.Select(Stringify));
 			case JsonValue value:
 				if (value.TryGetValue(out string? s)) return s;
-				return node.ToJsonString();
+				return JsonSerializer.Serialize(node, LogicSerializerContext.Default.JsonNode);
 			default:
 				return null;
 		}
