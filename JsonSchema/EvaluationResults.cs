@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -344,7 +345,8 @@ internal class EvaluationResultsJsonConverter : Json.More.AotCompatibleJsonConve
 			if (value.AnnotationsToSerialize != null)
 			{
 				writer.WritePropertyName("annotations");
-				options.Write(writer, value.AnnotationsToSerialize /*, JsonSchemaSerializerContext.Default.IReadOnlyDictionaryStringJsonNode */);
+				options.Write(writer, value.AnnotationsToSerialize, 
+					null /* can't pass JsonSchemaSerializerContext.Default.IReadOnlyDictionaryStringJsonNode due to https://github.com/dotnet/runtime/issues/97665 */);
 			}
 		}
 		else
@@ -357,7 +359,8 @@ internal class EvaluationResultsJsonConverter : Json.More.AotCompatibleJsonConve
 			if (value.IncludeDroppedAnnotations && value.AnnotationsToSerialize != null)
 			{
 				writer.WritePropertyName("droppedAnnotations");
-				options.Write(writer, value.AnnotationsToSerialize /*, JsonSchemaSerializerContext.Default.IReadOnlyDictionaryStringJsonNode */);
+				options.Write(writer, value.AnnotationsToSerialize,
+					null /* can't pass JsonSchemaSerializerContext.Default.IReadOnlyDictionaryStringJsonNode due to https://github.com/dotnet/runtime/issues/97665 */);
 			}
 		}
 
@@ -593,6 +596,8 @@ public class Pre202012EvaluationResultsJsonConverter : Json.More.AotCompatibleJs
 		writer.WriteEndObject();
 	}
 
+	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
+	[UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	private static void WriteAnnotation(Utf8JsonWriter writer, EvaluationResults value, Annotation annotation, JsonSerializerOptions options)
 	{
 		writer.WriteStartObject();
@@ -612,7 +617,7 @@ public class Pre202012EvaluationResultsJsonConverter : Json.More.AotCompatibleJs
 		options.Write(writer, value.InstanceLocation, JsonSchemaSerializerContext.Default.JsonPointer);
 
 		writer.WritePropertyName("annotation");
-		options.Write(writer, annotation.Value);
+		JsonSerializer.Serialize(writer, annotation.Value, options);
 
 		writer.WriteEndObject();
 	}

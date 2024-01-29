@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
@@ -33,6 +34,8 @@ public class UriIdentifier : IDataResourceIdentifier
 	/// <param name="registry">The schema registry.</param>
 	/// <param name="value">The value, if <paramref name="evaluation"/> was resolvable.</param>
 	/// <returns>True if resolution was successful; false otherwise.</returns>
+	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
+	[UnconditionalSuppressMessage("AOT", "IL3050:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public bool TryResolve(KeywordEvaluation evaluation, SchemaRegistry registry, out JsonNode? value)
 	{
 		var parts = Target.OriginalString.Split(new[] { '#' }, StringSplitOptions.None);
@@ -67,9 +70,7 @@ public class UriIdentifier : IDataResourceIdentifier
 			}
 
 			var rootSchema = (JsonSchema?) registry.Get(root.SchemaLocation);
-#pragma warning disable IL2026, IL3050
 			data = JsonSerializer.SerializeToNode(rootSchema, DataGenerationSerializerContext.OptionsManager.SerializerOptions);
-#pragma warning restore IL2026, IL3050
 		}
 
 		if (!string.IsNullOrEmpty(fragment))

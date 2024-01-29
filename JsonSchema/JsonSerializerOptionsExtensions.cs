@@ -42,6 +42,8 @@ internal static class JsonSerializerOptionsExtensions
 		}
 	}
 
+	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We won't use dynamic code if the JsonSerializerOptions come from the source generator.")]
+	[UnconditionalSuppressMessage("AOT", "IL3050:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We won't use dynamic code if the JsonSerializerOptions come from the source generator.")]
 	internal static object? Read(this JsonSerializerOptions options, ref Utf8JsonReader reader, Type arbitraryType, JsonTypeInfo? typeInfo = null)
 	{
 #if NET8_0_OR_GREATER // Needs default interface method implementations
@@ -57,9 +59,7 @@ internal static class JsonSerializerOptionsExtensions
 
 		// The converter is just a JsonConverter<T> so we need to go through reflection to get it.
 		// AOT-aware callers should not have gotten this far.
-#pragma warning disable IL2026, IL3050
 		var deserializer = ArbitraryDeserializer.GetConverter(arbitraryType);
-#pragma warning restore IL2026, IL3050
 		return deserializer.Read(ref reader, options);
 	}
 }

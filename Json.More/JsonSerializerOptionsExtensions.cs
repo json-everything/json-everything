@@ -19,7 +19,7 @@ public static class JsonSerializerOptionsExtensions
 	/// <param name="options">The <see cref="JsonSerializerOptions"/> being used.</param>
 	/// <param name="typeInfo">An explicit typeInfo to use for looking up the Converter. If not provided, options.GetTypeInfo will be used.</param>
 	/// <returns>An implementation of <see cref="JsonConverter{T}"/> as determined by the provided options</returns>
-	public static JsonConverter<T> GetConverter<T>(this JsonSerializerOptions options, JsonTypeInfo? typeInfo = null)
+	public static JsonConverter<T> GetConverter<T>(this JsonSerializerOptions options, JsonTypeInfo? typeInfo)
 	{
 #if NET8_0_OR_GREATER
 		return (JsonConverter<T>)(typeInfo ?? options.GetTypeInfo(typeof(T))).Converter;
@@ -60,11 +60,9 @@ public static class JsonSerializerOptionsExtensions
 	/// <param name="value">The value to serialize.</param>
 	/// <param name="typeInfo">An explicit typeInfo to use for looking up the Converter. If not provided, options.GetTypeInfo will be used.</param>
 	/// <returns>The value that was converted.</returns>
-	public static void Write<T>(this JsonSerializerOptions options, Utf8JsonWriter writer, T? value, JsonTypeInfo<T>? typeInfo = null)
+	public static void Write<T>(this JsonSerializerOptions options, Utf8JsonWriter writer, T? value, JsonTypeInfo<T>? typeInfo)
 	{
-#pragma warning disable IL2026, IL3050 // This helper is expected to be called with an options object that covers the needed TypeInfos.
-		JsonSerializer.Serialize(writer, value, options);
-#pragma warning restore IL2026, IL3050
+		options.GetConverter<T?>(typeInfo).Write(writer, value, options);
 	}
 
 	/// <summary>
@@ -78,10 +76,10 @@ public static class JsonSerializerOptionsExtensions
 	/// <param name="value">The value to serialize.</param>
 	/// <param name="inputType">The type to serialize.</param>
 	/// <returns>The value that was converted.</returns>
+	[RequiresDynamicCode("Calls JsonSerializer.Serialize. Make sure the options object contains all relevant JsonTypeInfos before suppressing this warning.")]
+	[RequiresUnreferencedCode("Calls JsonSerializer.Serialize. Make sure the options object contains all relevant JsonTypeInfos before suppressing this warning.")]
 	public static void Write(this JsonSerializerOptions options, Utf8JsonWriter writer, object? value, Type inputType)
 	{
-#pragma warning disable IL2026, IL3050 // This helper is expected to be called with an options object that covers the needed TypeInfos.
 		JsonSerializer.Serialize(writer, value, inputType, options);
-#pragma warning restore IL2026, IL3050
 	}
 }

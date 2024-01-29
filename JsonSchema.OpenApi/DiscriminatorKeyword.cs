@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -46,15 +47,15 @@ public class DiscriminatorKeyword : IJsonSchemaKeyword
 	/// `x-internal-id`. Field names beginning `x-oai-` and `x-oas-` are reserved for uses defined by the OpenAPI Initiative.
 	/// The value can be null, a primitive, an array or an object.
 	/// </param>
+	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
+	[UnconditionalSuppressMessage("AOT", "IL3050:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public DiscriminatorKeyword(string propertyName, IReadOnlyDictionary<string, string>? mapping, IReadOnlyDictionary<string, JsonNode?>? extensions)
 	{
 		PropertyName = propertyName;
 		Mapping = mapping;
 		Extensions = extensions;
 
-#pragma warning disable IL2026, IL3050
 		_json = JsonSerializer.SerializeToNode(this, OpenApiSerializerContext.OptionsManager.SerializerOptions);
-#pragma warning restore IL2026, IL3050
 	}
 
 	internal DiscriminatorKeyword(string propertyName, IReadOnlyDictionary<string, string>? mapping, IReadOnlyDictionary<string, JsonNode?>? extensions, JsonNode? json)
@@ -106,13 +107,13 @@ public sealed class DiscriminatorKeywordJsonConverter : AotCompatibleJsonConvert
 	/// <param name="typeToConvert">The type to convert.</param>
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	/// <returns>The converted value.</returns>
+	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
+	[UnconditionalSuppressMessage("AOT", "IL3050:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public override DiscriminatorKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		var node = options.Read(ref reader, OpenApiSerializerContext.Default.JsonNode);
 
-#pragma warning disable IL2026, IL3050
 		var model = node.Deserialize<Model>(options);
-#pragma warning restore IL2026, Il3050
 
 		var extensionData = node!.AsObject().Where(x => x.Key.StartsWith("x-"))
 			.ToDictionary(x => x.Key, x => x.Value);

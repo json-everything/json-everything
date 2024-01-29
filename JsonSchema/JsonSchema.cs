@@ -172,11 +172,11 @@ public class JsonSchema : IBaseDocument
 	/// <param name="jsonText">The text to parse.</param>
 	/// <returns>A new <see cref="JsonSchema"/>.</returns>
 	/// <exception cref="JsonException">Could not deserialize a portion of the schema.</exception>
+	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
+	[UnconditionalSuppressMessage("AOT", "IL3050:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public static JsonSchema FromText(string jsonText)
 	{
-#pragma warning disable IL2026, IL3050 // Deserialize is safe in AOT if the JsonSerializerOptions come from the source generator.
 		return JsonSerializer.Deserialize<JsonSchema>(jsonText, JsonSchemaSerializerContext.OptionsManager.SerializerOptions)!;
-#pragma warning restore IL2026, IL3050
 	}
 
 	/// <summary>
@@ -403,6 +403,8 @@ public class JsonSchema : IBaseDocument
 		return scopedConstraint;
 	}
 
+	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
+	[UnconditionalSuppressMessage("AOT", "IL3050:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	private void PopulateConstraint(SchemaConstraint constraint, EvaluationContext context)
 	{
 		if (constraint.Constraints.Length != 0) return;
@@ -446,9 +448,7 @@ public class JsonSchema : IBaseDocument
 
 			foreach (var keyword in unrecognizedButSupported)
 			{
-#pragma warning disable IL2026, IL3050 // Deserialize is safe in AOT if the JsonSerializerOptions come from the source generator.
 				var jsonText = JsonSerializer.Serialize((object) keyword, keyword.GetType(), JsonSchemaSerializerContext.OptionsManager.SerializerOptions);
-#pragma warning restore IL2026, IL3050
 				var json = JsonNode.Parse(jsonText);
 				var keywordConstraint = KeywordConstraint.SimpleAnnotation(keyword.Keyword(), json);
 				localConstraints.Add(keywordConstraint);
@@ -605,6 +605,8 @@ public class JsonSchema : IBaseDocument
 		}
 	}
 
+	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
+	[UnconditionalSuppressMessage("AOT", "IL3050:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	JsonSchema? IBaseDocument.FindSubschema(JsonPointer pointer, EvaluationOptions options)
 	{
 		object? ExtractSchemaFromData(JsonPointer localPointer, JsonNode? data, JsonSchema hostSchema)
@@ -668,9 +670,7 @@ public class JsonSchema : IBaseDocument
 					newResolvable = k;
 					break;
 				default: // non-applicator keyword
-#pragma warning disable IL2026, IL3050 // This options will contain the necessary TypeInfos.
 					var serialized = JsonSerializer.Serialize(localResolvable, localResolvable.GetType(), JsonSchemaSerializerContext.OptionsManager.SerializerOptions);
-#pragma warning restore IL2026, IL3050
 					var json = JsonNode.Parse(serialized);
 					var newPointer = JsonPointer.Create(pointer.Segments.Skip(i));
 					i += newPointer.Segments.Length - 1;
@@ -798,6 +798,8 @@ public sealed class SchemaJsonConverter : Json.More.AotCompatibleJsonConverter<J
 	/// <param name="writer">The writer to write to.</param>
 	/// <param name="value">The value to convert to JSON.</param>
 	/// <param name="options">An object that specifies serialization options to use.</param>
+	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
+	[UnconditionalSuppressMessage("AOT", "IL3050:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public override void Write(Utf8JsonWriter writer, JsonSchema value, JsonSerializerOptions options)
 	{
 		if (value.BoolValue == true)
