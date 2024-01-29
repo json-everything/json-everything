@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using NUnit.Framework;
 // ReSharper disable UnusedAutoPropertyAccessor.Local
@@ -9,14 +10,14 @@ namespace Json.Patch.Tests;
 
 public class PatchExtensionTests
 {
-	private class TestModel
+	internal class TestModel
 	{
 		public Guid Id { get; set; }
 		public string? Name { get; set; }
 		public int[]? Numbers { get; set; }
 		public string[]? Strings { get; set; }
 		public List<TestModel>? InnerObjects { get; set; }
-		public JsonElement? Attributes { get; set; }
+		public JsonNode? Attributes { get; set; }
 	}
 
 	[Test]
@@ -25,12 +26,12 @@ public class PatchExtensionTests
 		var initial = new TestModel
 		{
 			Id = Guid.NewGuid(),
-			Attributes = JsonDocument.Parse("[{\"test\":\"test123\"},{\"test\":\"test321\"},{\"test\":[1,2,3]},{\"test\":[1,2,4]}]").RootElement
+			Attributes = JsonNode.Parse("[{\"test\":\"test123\"},{\"test\":\"test321\"},{\"test\":[1,2,3]},{\"test\":[1,2,4]}]")
 		};
 		var expected = new TestModel
 		{
 			Id = Guid.Parse("40664cc7-864f-4eed-939c-78076a252df0"),
-			Attributes = JsonDocument.Parse("[{\"test\":\"test123\"},{\"test\":\"test32132\"},{\"test1\":\"test321\"},{\"test\":[1,2,3]},{\"test\":[1,2,3]}]").RootElement
+			Attributes = JsonNode.Parse("[{\"test\":\"test123\"},{\"test\":\"test32132\"},{\"test1\":\"test321\"},{\"test\":[1,2,3]},{\"test\":[1,2,3]}]")
 		};
 		var patchExpected =
 			"[{\"op\":\"replace\",\"path\":\"/Id\",\"value\":\"40664cc7-864f-4eed-939c-78076a252df0\"}," +
@@ -40,21 +41,22 @@ public class PatchExtensionTests
 			"{\"op\":\"replace\",\"path\":\"/Attributes/3/test/2\",\"value\":3}," +
 			"{\"op\":\"add\",\"path\":\"/Attributes/4\",\"value\":{\"test\":[1,2,3]}}]";
 
-		var patch = initial.CreatePatch(expected);
+		var patch = initial.CreatePatch(expected, TestSerializerContext.OptionsManager.SerializerOptions);
 
-		Assert.AreEqual(patchExpected, JsonSerializer.Serialize(patch));
+		Assert.AreEqual(patchExpected, JsonSerializer.Serialize(patch, TestSerializerContext.OptionsManager.SerializerOptions));
 	}
 
 	[Test]
 	public void CreatePatch2()
 	{
-		var initial = JsonDocument.Parse("[{\"test\":\"test123\"},{\"test\":\"test321\"},{\"test\":[1,2,3]},{\"test\":[1,2,4]}]");
-		var expected = JsonDocument.Parse("[{\"test\":\"test123\"},{\"test\":\"test32132\"},{\"test1\":\"test321\"},{\"test\":[1,2,3]},{\"test\":[1,2,3]}]");
+		var initial = JsonNode.Parse("[{\"test\":\"test123\"},{\"test\":\"test321\"},{\"test\":[1,2,3]},{\"test\":[1,2,4]}]");
+		var expected = JsonNode.Parse("[{\"test\":\"test123\"},{\"test\":\"test32132\"},{\"test1\":\"test321\"},{\"test\":[1,2,3]},{\"test\":[1,2,3]}]");
 		var patchExpected = JsonSerializer.Deserialize<JsonPatch>(
-			"[{\"op\":\"replace\",\"path\":\"/1/test\",\"value\":\"test32132\"},{\"op\":\"remove\",\"path\":\"/2/test\"},{\"op\":\"add\",\"path\":\"/2/test1\",\"value\":\"test321\"},{\"op\":\"replace\",\"path\":\"/3/test/2\",\"value\":3},{\"op\":\"add\",\"path\":\"/4\",\"value\":{\"test\":[1,2,3]}}]"
+			"[{\"op\":\"replace\",\"path\":\"/1/test\",\"value\":\"test32132\"},{\"op\":\"remove\",\"path\":\"/2/test\"},{\"op\":\"add\",\"path\":\"/2/test1\",\"value\":\"test321\"},{\"op\":\"replace\",\"path\":\"/3/test/2\",\"value\":3},{\"op\":\"add\",\"path\":\"/4\",\"value\":{\"test\":[1,2,3]}}]",
+			TestSerializerContext.OptionsManager.SerializerOptions
 		);
 
-		var patch = initial.CreatePatch(expected);
+		var patch = initial.CreatePatch(expected, TestSerializerContext.OptionsManager.SerializerOptions);
 
 		VerifyPatches(patchExpected!, patch);
 	}
@@ -62,13 +64,14 @@ public class PatchExtensionTests
 	[Test]
 	public void CreatePatch_ChangeTypeInArray()
 	{
-		var initial = JsonDocument.Parse("[{\"test\":true},{\"test\":\"test321\"},{\"test\":[1,2,3]},{\"test\":[1,2,4]},{\"test\":[1,2,3]}]");
-		var expected = JsonDocument.Parse("[{\"test\":false},{\"test\":\"test32132\"},{\"test1\":\"test321\"},{\"test\":[1,2,3]},{\"test\":{\"test\":123}},{\"test\":[1,2,3]}]");
+		var initial = JsonNode.Parse("[{\"test\":true},{\"test\":\"test321\"},{\"test\":[1,2,3]},{\"test\":[1,2,4]},{\"test\":[1,2,3]}]");
+		var expected = JsonNode.Parse("[{\"test\":false},{\"test\":\"test32132\"},{\"test1\":\"test321\"},{\"test\":[1,2,3]},{\"test\":{\"test\":123}},{\"test\":[1,2,3]}]");
 		var patchExpected = JsonSerializer.Deserialize<JsonPatch>(
-			"[{\"op\":\"replace\",\"path\":\"/0/test\",\"value\":false},{\"op\":\"replace\",\"path\":\"/1/test\",\"value\":\"test32132\"},{\"op\":\"remove\",\"path\":\"/2/test\"},{\"op\":\"add\",\"path\":\"/2/test1\",\"value\":\"test321\"},{\"op\":\"replace\",\"path\":\"/3/test/2\",\"value\":3},{\"op\":\"replace\",\"path\":\"/4/test\",\"value\":{\"test\":123}},{\"op\":\"add\",\"path\":\"/5\",\"value\":{\"test\":[1,2,3]}}]"
+			"[{\"op\":\"replace\",\"path\":\"/0/test\",\"value\":false},{\"op\":\"replace\",\"path\":\"/1/test\",\"value\":\"test32132\"},{\"op\":\"remove\",\"path\":\"/2/test\"},{\"op\":\"add\",\"path\":\"/2/test1\",\"value\":\"test321\"},{\"op\":\"replace\",\"path\":\"/3/test/2\",\"value\":3},{\"op\":\"replace\",\"path\":\"/4/test\",\"value\":{\"test\":123}},{\"op\":\"add\",\"path\":\"/5\",\"value\":{\"test\":[1,2,3]}}]",
+			TestSerializerContext.OptionsManager.SerializerOptions
 		);
 
-		var patch = initial.CreatePatch(expected);
+		var patch = initial.CreatePatch(expected, TestSerializerContext.OptionsManager.SerializerOptions);
 
 		VerifyPatches(patchExpected!, patch);
 	}
@@ -76,16 +79,22 @@ public class PatchExtensionTests
 	[Test]
 	public void CreatePatch_ChangeTypeInObject()
 	{
-		var initial = JsonDocument.Parse("{\"test\":true, \"test2\":\"string\", \"test3\":{\"test123\":123}}");
-		var expected = JsonDocument.Parse("{\"test\":false, \"test2\":123, \"test3\":[123]}");
+		var initial = JsonNode.Parse("{\"test\":true, \"test2\":\"string\", \"test3\":{\"test123\":123}}");
+		var expected = JsonNode.Parse("{\"test\":false, \"test2\":123, \"test3\":[123]}");
 		var patchExpected = JsonSerializer.Deserialize<JsonPatch>(
-			"[{\"op\":\"replace\",\"path\":\"/test\",\"value\":false},{\"op\":\"replace\",\"path\":\"/test2\",\"value\":123},{\"op\":\"replace\",\"path\":\"/test3\",\"value\":[123]}]"
+			"[{\"op\":\"replace\",\"path\":\"/test\",\"value\":false},{\"op\":\"replace\",\"path\":\"/test2\",\"value\":123},{\"op\":\"replace\",\"path\":\"/test3\",\"value\":[123]}]",
+			TestSerializerContext.OptionsManager.SerializerOptions
 		);
 
-		var patch = initial.CreatePatch(expected);
+		var patch = initial.CreatePatch(expected, TestSerializerContext.OptionsManager.SerializerOptions);
 
 		VerifyPatches(patchExpected!, patch);
 	}
+
+	private static readonly JsonSerializerOptions _ignoreWritingNullSerializerOptions = new(TestSerializerContext.OptionsManager.SerializerOptions)
+	{
+		DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+	};
 
 	[Test]
 	public void Add()
@@ -97,15 +106,11 @@ public class PatchExtensionTests
 		var target = new TestModel
 		{
 			Id = initial.Id,
-			Attributes = JsonDocument.Parse("[{\"test\":\"test123\"},{\"test\":\"test32132\"},{\"test1\":\"test321\"},{\"test\":[1,2,3]},{\"test\":[1,2,3]}]").RootElement
+			Attributes = JsonNode.Parse("[{\"test\":\"test123\"},{\"test\":\"test32132\"},{\"test1\":\"test321\"},{\"test\":[1,2,3]},{\"test\":[1,2,3]}]")
 		};
 		var patchExpectedStr = "[{\"op\":\"add\",\"path\":\"/Attributes\",\"value\":[{\"test\":\"test123\"},{\"test\":\"test32132\"},{\"test1\":\"test321\"},{\"test\":[1,2,3]},{\"test\":[1,2,3]}]}]";
-		var options = new JsonSerializerOptions();
-#if NET8_0_OR_GREATER
-		options.TypeInfoResolverChain.Add(JsonPatch.JsonTypeResolver);
-#endif
-		var expected = JsonSerializer.Deserialize<JsonPatch>(patchExpectedStr, options)!;
-		var patch = initial.CreatePatch(target, new JsonSerializerOptions { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull });
+		var expected = JsonSerializer.Deserialize<JsonPatch>(patchExpectedStr, TestSerializerContext.OptionsManager.SerializerOptions)!;
+		var patch = initial.CreatePatch(target, _ignoreWritingNullSerializerOptions);
 
 		VerifyPatches(expected, patch);
 	}
@@ -116,16 +121,16 @@ public class PatchExtensionTests
 		var initial = new TestModel
 		{
 			Id = Guid.NewGuid(),
-			Attributes = JsonDocument.Parse("[{\"test\":\"test123\"},{\"test\":\"test32132\"},{\"test1\":\"test321\"},{\"test\":[1,2,3]},{\"test\":[1,2,3]}]").RootElement
+			Attributes = JsonNode.Parse("[{\"test\":\"test123\"},{\"test\":\"test32132\"},{\"test1\":\"test321\"},{\"test\":[1,2,3]},{\"test\":[1,2,3]}]")
 		};
 		var expected = new TestModel
 		{
 			Id = initial.Id
 		};
 		var patchExpectedStr = "[{\"op\":\"remove\",\"path\":\"/Attributes\"}]";
-		var patchExpected = JsonSerializer.Deserialize<JsonPatch>(patchExpectedStr)!;
+		var patchExpected = JsonSerializer.Deserialize<JsonPatch>(patchExpectedStr, TestSerializerContext.OptionsManager.SerializerOptions)!;
 
-		var patch = initial.CreatePatch(expected, new JsonSerializerOptions { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull });
+		var patch = initial.CreatePatch(expected, _ignoreWritingNullSerializerOptions);
 
 		VerifyPatches(patchExpected, patch);
 	}
@@ -142,8 +147,8 @@ public class PatchExtensionTests
 			Id = Guid.Parse("a299e216-dbbe-40e4-b4d4-556d7e7e9c35")
 		};
 		var patchExpectedStr = "[{\"op\":\"replace\",\"path\":\"/Id\",\"value\":\"a299e216-dbbe-40e4-b4d4-556d7e7e9c35\"}]";
-		var patchExpected = JsonSerializer.Deserialize<JsonPatch>(patchExpectedStr);
-		var patch = initial.CreatePatch(expected);
+		var patchExpected = JsonSerializer.Deserialize<JsonPatch>(patchExpectedStr, TestSerializerContext.OptionsManager.SerializerOptions);
+		var patch = initial.CreatePatch(expected, TestSerializerContext.OptionsManager.SerializerOptions);
 
 		VerifyPatches(patchExpected!, patch);
 	}
@@ -151,11 +156,11 @@ public class PatchExtensionTests
 	[Test]
 	public void AddArray()
 	{
-		var initial = JsonDocument.Parse("[1,2,3]");
-		var expected = JsonDocument.Parse("[1,2,3,4]");
+		var initial = JsonNode.Parse("[1,2,3]");
+		var expected = JsonNode.Parse("[1,2,3,4]");
 		var patchExpectedStr = "[{\"op\":\"add\",\"path\":\"/3\",\"value\":4}]";
-		var patchExpected = JsonSerializer.Deserialize<JsonPatch>(patchExpectedStr);
-		var patch = initial.CreatePatch(expected);
+		var patchExpected = JsonSerializer.Deserialize<JsonPatch>(patchExpectedStr, TestSerializerContext.OptionsManager.SerializerOptions);
+		var patch = initial.CreatePatch(expected, TestSerializerContext.OptionsManager.SerializerOptions);
 
 		VerifyPatches(patchExpected!, patch);
 	}
@@ -163,11 +168,11 @@ public class PatchExtensionTests
 	[Test]
 	public void RemoveArray()
 	{
-		var initial = JsonDocument.Parse("[1,2,3]");
-		var expected = JsonDocument.Parse("[1,2]");
+		var initial = JsonNode.Parse("[1,2,3]");
+		var expected = JsonNode.Parse("[1,2]");
 		var patchExpectedStr = "[{\"op\":\"remove\",\"path\":\"/2\"}]";
-		var patchExpected = JsonSerializer.Deserialize<JsonPatch>(patchExpectedStr);
-		var patch = initial.CreatePatch(expected);
+		var patchExpected = JsonSerializer.Deserialize<JsonPatch>(patchExpectedStr, TestSerializerContext.OptionsManager.SerializerOptions);
+		var patch = initial.CreatePatch(expected, TestSerializerContext.OptionsManager.SerializerOptions);
 
 		VerifyPatches(patchExpected!, patch);
 	}
@@ -175,11 +180,11 @@ public class PatchExtensionTests
 	[Test]
 	public void ReplaceArray()
 	{
-		var initial = JsonDocument.Parse("[1,2,3]");
-		var expected = JsonDocument.Parse("[1,2,1]");
+		var initial = JsonNode.Parse("[1,2,3]");
+		var expected = JsonNode.Parse("[1,2,1]");
 		var patch = initial.CreatePatch(expected);
 		var patchExpectedStr = "[{\"op\":\"replace\",\"path\":\"/2\",\"value\":1}]";
-		var patchExpected = JsonSerializer.Deserialize<JsonPatch>(patchExpectedStr);
+		var patchExpected = JsonSerializer.Deserialize<JsonPatch>(patchExpectedStr, TestSerializerContext.OptionsManager.SerializerOptions);
 
 		VerifyPatches(patchExpected!, patch);
 	}
@@ -190,7 +195,7 @@ public class PatchExtensionTests
 		var initial = new TestModel
 		{
 			Id = Guid.Parse("aa7daced-c9fa-489b-9bc1-540b21d277a1"),
-			Attributes = JsonDocument.Parse("[{\"test\":\"test123\"},{\"test\":\"test32132\"},{\"test1\":\"test321\"},{\"test\":[1,2,3]},{\"test\":[1,2,3]}]").RootElement,
+			Attributes = JsonNode.Parse("[{\"test\":\"test123\"},{\"test\":\"test32132\"},{\"test1\":\"test321\"},{\"test\":[1,2,3]},{\"test\":[1,2,3]}]"),
 			Name = "Test",
 			Numbers = new[] { 1, 2, 3 },
 			Strings = new[] { "test1", "test2" },
@@ -208,7 +213,7 @@ public class PatchExtensionTests
 		var expected = new TestModel
 		{
 			Id = Guid.Parse("4801bd62-a8ec-4ef2-ae3c-52b9f541625f"),
-			Attributes = JsonDocument.Parse("[{\"test1\":\"test123\"},{\"test\":\"test32132\"},{\"test1\":\"test321\"},{\"test\":[1,1,3]}]").RootElement,
+			Attributes = JsonNode.Parse("[{\"test1\":\"test123\"},{\"test\":\"test32132\"},{\"test1\":\"test321\"},{\"test\":[1,1,3]}]"),
 			Name = "Test4",
 			Numbers = new[] { 1, 2, 3, 4 },
 			Strings = new[] { "test2", "test2" },
@@ -235,7 +240,7 @@ public class PatchExtensionTests
 			"{\"op\":\"replace\",\"path\":\"/Attributes/3/test/1\",\"value\":1}," +
 			"{\"op\":\"remove\",\"path\":\"/Attributes/0/test\"}," +
 			"{\"op\":\"add\",\"path\":\"/Attributes/0/test1\",\"value\":\"test123\"}]";
-		var patchExpected = JsonSerializer.Deserialize<JsonPatch>(patchExpectedStr);
+		var patchExpected = JsonSerializer.Deserialize<JsonPatch>(patchExpectedStr, TestSerializerContext.OptionsManager.SerializerOptions);
 
 		var patchBackExpectedStr =
 			"[{\"op\":\"replace\",\"path\":\"/Id\",\"value\":\"aa7daced-c9fa-489b-9bc1-540b21d277a1\"}," +
@@ -248,10 +253,10 @@ public class PatchExtensionTests
 			"{\"op\":\"remove\",\"path\":\"/Attributes/0/test1\"}," +
 			"{\"op\":\"add\",\"path\":\"/Attributes/0/test\",\"value\":\"test123\"}," +
 			"{\"op\":\"replace\",\"path\":\"/Attributes/3/test/1\",\"value\":2},{\"op\":\"add\",\"path\":\"/Attributes/4\",\"value\":{\"test\":[1,2,3]}}]";
-		var patchBackExpected = JsonSerializer.Deserialize<JsonPatch>(patchBackExpectedStr);
+		var patchBackExpected = JsonSerializer.Deserialize<JsonPatch>(patchBackExpectedStr, TestSerializerContext.OptionsManager.SerializerOptions);
 
-		var patch = initial.CreatePatch(expected, new JsonSerializerOptions { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull });
-		var patchBack = expected.CreatePatch(initial, new JsonSerializerOptions { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull });
+		var patch = initial.CreatePatch(expected, TestSerializerContext.OptionsManager.SerializerOptions);
+		var patchBack = expected.CreatePatch(initial, TestSerializerContext.OptionsManager.SerializerOptions);
 
 		VerifyPatches(patchExpected!, patch);
 		VerifyPatches(patchBackExpected!, patchBack);
@@ -262,20 +267,20 @@ public class PatchExtensionTests
 	{
 		var model = new TestModel
 		{
-			Numbers = new[] { 1, 2, 1 },
-			Strings = new[] { "asdf " },
-			InnerObjects = new List<TestModel> { new TestModel { Id = Guid.NewGuid() }, new TestModel { Id = Guid.NewGuid() } }
+			Numbers = [1, 2, 1],
+			Strings = ["asdf "],
+			InnerObjects = [new() { Id = Guid.NewGuid() }, new() { Id = Guid.NewGuid() }]
 		};
 		var model2 = new TestModel
 		{
 			Numbers = Array.Empty<int>(),
 			Strings = Array.Empty<string>(),
-			InnerObjects = new List<TestModel>()
+			InnerObjects = []
 		};
 
-		var patch = model.CreatePatch(model2);
+		var patch = model.CreatePatch(model2, TestSerializerContext.OptionsManager.SerializerOptions);
 
-		var final = patch.Apply(model);
+		var final = patch.Apply(model, TestSerializerContext.OptionsManager.SerializerOptions);
 
 		Assert.AreEqual(0, final!.Numbers!.Length);
 		Assert.AreEqual(0, final.Strings!.Length);
@@ -287,20 +292,20 @@ public class PatchExtensionTests
 	{
 		var model = new TestModel
 		{
-			Numbers = new[] { 1, 2, 3 },
-			Strings = new[] { "123", "asdf" },
-			InnerObjects = new List<TestModel> { new TestModel { Id = Guid.NewGuid() }, new TestModel { Id = Guid.NewGuid() } }
+			Numbers = [1, 2, 3],
+			Strings = ["123", "asdf"],
+			InnerObjects = [new() { Id = Guid.NewGuid() }, new() { Id = Guid.NewGuid() }]
 		};
-		var model2 = new
+		var model2 = new TestModel
 		{
-			Numbers = new[] { 1, 3 },
-			Strings = new[] { "asdf" },
-			InnerObjects = new List<TestModel> { model.InnerObjects[1] }
+			Numbers = [1, 3],
+			Strings = ["asdf"],
+			InnerObjects = [model.InnerObjects[1]]
 		};
 
-		var patch = model.CreatePatch(model2);
+		var patch = model.CreatePatch(model2, TestSerializerContext.OptionsManager.SerializerOptions);
 
-		var final = patch.Apply(model);
+		var final = patch.Apply(model, TestSerializerContext.OptionsManager.SerializerOptions);
 
 		Assert.AreEqual(2, final!.Numbers!.Length);
 		Assert.AreEqual(1, final.Numbers[0]);
@@ -318,13 +323,13 @@ public class PatchExtensionTests
 	{
 		var model = new TestModel
 		{
-			Numbers = new int[0],
+			Numbers = [],
 		};
 
 		var patchStr = "[{\"op\":\"add\",\"path\":\"/numbers/-\",\"value\":5}]";
-		var patch = JsonSerializer.Deserialize<JsonPatch>(patchStr)!;
+		var patch = JsonSerializer.Deserialize<JsonPatch>(patchStr, TestSerializerContext.OptionsManager.SerializerOptions)!;
 
-		var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+		var options = new JsonSerializerOptions(TestSerializerContext.OptionsManager.SerializerOptions) { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
 		var final = patch.Apply(model, options);
 
 		Assert.AreEqual(5, final?.Numbers?[0]);
@@ -336,12 +341,12 @@ public class PatchExtensionTests
 		var initial = new TestModel
 		{
 			Id = Guid.NewGuid(),
-			Attributes = JsonDocument.Parse("[{\"test\":\"test123\"},{\"test\":\"test321\"},{\"test\":[1,2,3]},{\"test\":[1,2,4]}]").RootElement
+			Attributes = JsonNode.Parse("[{\"test\":\"test123\"},{\"test\":\"test321\"},{\"test\":[1,2,3]},{\"test\":[1,2,4]}]")
 		};
 		var expected = new TestModel
 		{
 			Id = Guid.Parse("40664cc7-864f-4eed-939c-78076a252df0"),
-			Attributes = JsonDocument.Parse("[{\"test\":\"test123\"},{\"test\":\"test32132\"},{\"test1\":\"test321\"},{\"test\":[1,2,3]},{\"test\":[1,2,3]}]").RootElement
+			Attributes = JsonNode.Parse("[{\"test\":\"test123\"},{\"test\":\"test32132\"},{\"test1\":\"test321\"},{\"test\":[1,2,3]},{\"test\":[1,2,3]}]")
 		};
 		var patchExpected =
 			"[{\"op\":\"replace\",\"path\":\"/Id\",\"value\":\"40664cc7-864f-4eed-939c-78076a252df0\"}," +
@@ -351,16 +356,21 @@ public class PatchExtensionTests
 			"{\"op\":\"replace\",\"path\":\"/Attributes/3/test/2\",\"value\":3}," +
 			"{\"op\":\"add\",\"path\":\"/Attributes/4\",\"value\":{\"test\":[1,2,3]}}]";
 
-		var patch = initial.CreatePatch(expected);
+		var patch = initial.CreatePatch(expected, TestSerializerContext.OptionsManager.SerializerOptions);
 		// use source generated json serializer context
-		var patchJson = JsonSerializer.Serialize(patch);
+		var patchJson = JsonSerializer.Serialize(patch, TestSerializerContext.OptionsManager.SerializerOptions);
 
 		Assert.AreEqual(patchExpected, patchJson);
 	}
 
+	private static readonly JsonSerializerOptions _indentedSerializerOptions = new(TestSerializerContext.OptionsManager.SerializerOptions)
+	{
+		WriteIndented = true
+	};
+
 	private static void OutputPatch(JsonPatch patch)
 	{
-		Console.WriteLine(JsonSerializer.Serialize(patch, new JsonSerializerOptions { WriteIndented = true }));
+		Console.WriteLine(JsonSerializer.Serialize(patch, _indentedSerializerOptions));
 	}
 
 	private static void VerifyPatches(JsonPatch expected, JsonPatch actual)
@@ -370,7 +380,4 @@ public class PatchExtensionTests
 
 		Assert.AreEqual(expected, actual);
 	}
-
-
-
 }
