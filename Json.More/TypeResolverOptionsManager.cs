@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System;
+using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
 
 namespace Json.More;
@@ -7,7 +8,6 @@ public class TypeResolverOptionsManager
 {
 	private readonly JsonSerializerOptions _baseOptions;
 	private JsonSerializerOptions? _serializerOptions;
-	private JsonSerializerOptions? _serializerOptionsUnsafeRelaxedJsonEscaping;
 #if NET8_0_OR_GREATER
 	private readonly IJsonTypeInfoResolver _baseResolver;
 	private IJsonTypeInfoResolver _typeInfoResolver;
@@ -39,6 +39,8 @@ public class TypeResolverOptionsManager
 
 #if NET8_0_OR_GREATER
 	public IJsonTypeInfoResolver TypeInfoResolver => _typeInfoResolver;
+
+	public event EventHandler TypeInfoResolverUpdated;
 	
 	public TypeResolverOptionsManager(IJsonTypeInfoResolver baseResolver, params IJsonTypeInfoResolver[] resolvers)
 	{
@@ -60,8 +62,9 @@ public class TypeResolverOptionsManager
 		{
 			_typeInfoResolver = JsonTypeInfoResolver.Combine([_baseResolver, .. resolvers]);
 			_serializerOptions = null;
-			_serializerOptionsUnsafeRelaxedJsonEscaping = null;
 		}
+
+		TypeInfoResolverUpdated?.Invoke(this, EventArgs.Empty);
 	}
 #endif
 }
