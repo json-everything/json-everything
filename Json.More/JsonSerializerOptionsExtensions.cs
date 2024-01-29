@@ -60,11 +60,11 @@ public static class JsonSerializerOptionsExtensions
 	/// <param name="value">The value to serialize.</param>
 	/// <param name="typeInfo">An explicit typeInfo to use for looking up the Converter. If not provided, options.GetTypeInfo will be used.</param>
 	/// <returns>The value that was converted.</returns>
+	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "Deserialize is safe in AOT if the JsonSerializerOptions come from the source generator.")]
+	[UnconditionalSuppressMessage("AOT", "IL3050:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "Deserialize is safe in AOT if the JsonSerializerOptions come from the source generator.")]
 	public static void Write<T>(this JsonSerializerOptions options, Utf8JsonWriter writer, T? value, JsonTypeInfo<T>? typeInfo = null)
 	{
-#pragma warning disable IL2026, IL3050 // This helper is expected to be called with an options object that covers the needed TypeInfos.
 		JsonSerializer.Serialize(writer, value, options);
-#pragma warning restore IL2026, IL3050
 	}
 
 	/// <summary>

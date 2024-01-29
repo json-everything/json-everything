@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -222,6 +223,8 @@ internal static class ModelGenerator
 		_options.SchemaRegistry.Register(_dictionaryMetaSchema);
 	}
 
+	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "JsonSerializer is safe in AOT if the JsonSerializerOptions come from the source generator.")]
+	[UnconditionalSuppressMessage("AOT", "IL3050:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "JsonSerializer is safe in AOT if the JsonSerializerOptions come from the source generator.")]
 	public static TypeModel GenerateCodeModel(this JsonSchema schema, EvaluationOptions options, GenerationCache cache)
 	{
 		var generated = cache.FirstOrDefault(x => x.Schema == schema);
@@ -230,9 +233,7 @@ internal static class ModelGenerator
 		generated = new GenerationCacheItem(schema);
 		cache.Add(generated);
 
-#pragma warning disable IL2026, IL3050
 		var json = JsonSerializer.SerializeToNode(schema, CodeGenerationSerializerContext.OptionsManager.SerializerOptions);
-#pragma warning restore IL2026, IL3050
 
 		var supportedResults = _supportedRequirements.Evaluate(json, _options);
 #if DEBUG

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Text.Json;
@@ -81,6 +82,8 @@ public class ContainsKeyword : IJsonSchemaKeyword, ISchemaContainer
 		};
 	}
 
+	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "Deserialize is safe in AOT if the JsonSerializerOptions come from the source generator.")]
+	[UnconditionalSuppressMessage("AOT", "IL3050:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "Deserialize is safe in AOT if the JsonSerializerOptions come from the source generator.")]
 	private static void Evaluator(KeywordEvaluation evaluation, EvaluationContext context)
 	{
 		if (evaluation.LocalInstance is JsonArray)
@@ -96,9 +99,7 @@ public class ContainsKeyword : IJsonSchemaKeyword, ISchemaContainer
 				.Where(x => x.Results.IsValid)
 				.Select(x => int.Parse(x.RelativeInstanceLocation.Segments[0].Value))
 				.ToArray();
-#pragma warning disable IL2026, IL3050 // Deserialize is safe in AOT if the JsonSerializerOptions come from the source generator.
 			evaluation.Results.SetAnnotation(Name, JsonSerializer.SerializeToNode(validIndices, JsonSchemaSerializerContext.OptionsManager.SerializerOptions));
-#pragma warning restore IL2026, IL3050
 
 			var actual = validIndices.Length;
 			if (actual < minimum)

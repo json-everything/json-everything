@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Json.Pointer;
@@ -45,15 +46,15 @@ public class JsonNodeBaseDocument : IBaseDocument
 	/// <param name="pointer">A JSON Pointer to the location of the schema within the document.</param>
 	/// <param name="options">Evaluation options.  This is needed for internal processing.</param>
 	/// <returns>A JSON Schema, if found.</returns>
+	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "Deserialize is safe in AOT if the JsonSerializerOptions come from the source generator.")]
+	[UnconditionalSuppressMessage("AOT", "IL3050:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "Deserialize is safe in AOT if the JsonSerializerOptions come from the source generator.")]
 	public JsonSchema? FindSubschema(JsonPointer pointer, EvaluationOptions options)
 	{
 		return _foundSubschemas.GetOrAdd(pointer, jsonPointer =>
 		{
 			if (!jsonPointer.TryEvaluate(_node, out var location)) return null;
 
-#pragma warning disable IL2026, IL3050 // Deserialize is safe in AOT if the JsonSerializerOptions come from the source generator.
 			var schema = location.Deserialize<JsonSchema>(JsonSchemaSerializerContext.OptionsManager.SerializerOptions);
-#pragma warning restore	IL2026, IL3050
 			if (schema != null)
 				JsonSchema.Initialize(schema, options.SchemaRegistry, BaseUri);
 

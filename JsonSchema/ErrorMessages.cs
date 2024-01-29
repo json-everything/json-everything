@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Resources;
 using System.Runtime.CompilerServices;
@@ -62,6 +63,8 @@ public static partial class ErrorMessages
 	/// Tuple of the token name (without brackets) and the value which will replace it.
 	/// </param>
 	/// <returns>The detokenized string.</returns>
+	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "Deserialize is safe in AOT if the JsonSerializerOptions come from the source generator.")]
+	[UnconditionalSuppressMessage("AOT", "IL3050:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "Deserialize is safe in AOT if the JsonSerializerOptions come from the source generator.")]
 	public static string ReplaceTokens(this string message, params (string token, object? value)[] parameters)
 	{
 		var current = message;
@@ -69,10 +72,8 @@ public static partial class ErrorMessages
 		for (var i = 0; i < parameters.Length; i++)
 		{
 			var parameter = parameters[i];
-#pragma warning disable IL2026, IL3050
-			values[i] = JsonSerializer.Serialize(parameter.value, _serializerOptions);
-#pragma warning restore IL2026, IL3050
-			current = current.Replace($"[[{parameter.token}]]", $"{{{i}}}");
+            values[i] = JsonSerializer.Serialize(parameter.value, _serializerOptions);
+            current = current.Replace($"[[{parameter.token}]]", $"{{{i}}}");
 		}
 
 		return string.Format(current, values);
