@@ -129,7 +129,7 @@ internal class ValidatingJsonConverter<T> : AotCompatibleJsonConverter<T>, IVali
 	}
 
 	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "JsonSerializer is safe if you guarantee all types are present in JsonSerializerOptions")]
-	[UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "\t[UnconditionalSuppressMessage(\"Trimming\", \"IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code\", Justification = \"JsonSerializer is safe if you guarantee all types are present in JsonSerializerOptions\")]\r\n")]
+	[UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "JsonSerializer is safe if you guarantee all types are present in JsonSerializerOptions")]
 	public override T? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		var readerCopy = reader;
