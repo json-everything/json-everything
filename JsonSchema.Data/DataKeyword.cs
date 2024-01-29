@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -8,6 +9,7 @@ using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 using Json.Pointer;
 
 namespace Json.Schema.Data;
@@ -96,8 +98,10 @@ public class DataKeyword : IJsonSchemaKeyword
 		if (failedReferences.Any())
 			throw new RefResolutionException(failedReferences.Select(x => x.ToString())!);
 
-		var json = JsonSerializer.Serialize(data);
-		var subschema = JsonSerializer.Deserialize<JsonSchema>(json)!;
+#pragma warning disable IL2026, IL3050
+		var json = JsonSerializer.Serialize(data, DataExtSerializerContext.OptionsManager.SerializerOptions);
+		var subschema = JsonSerializer.Deserialize<JsonSchema>(json, DataExtSerializerContext.OptionsManager.SerializerOptions)!;
+#pragma warning restore IL2026, IL3050
 
 		var schemaEvaluation = subschema
 			.GetConstraint(JsonPointer.Create(Name), evaluation.Results.InstanceLocation, evaluation.Results.InstanceLocation, context)
@@ -138,12 +142,14 @@ public class DataKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="DataKeyword"/>.
 /// </summary>
-public sealed class DataKeywordJsonConverter : JsonConverter<DataKeyword>
+public sealed class DataKeywordJsonConverter : AotCompatibleJsonConverter<DataKeyword>
 {
 	private static readonly string[] _coreKeywords = Schema.Vocabularies.Core202012.Keywords.Where(x => x != typeof(UnrecognizedKeyword)).Select(GetKeyword).ToArray();
 
 	// TODO: Reflection can be replaced with static members when moving to .Net 7
-	private static string GetKeyword(Type keywordType)
+	private static string GetKeyword(
+		[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.NonPublicFields)] 
+		Type keywordType)
 	{
 		var field = keywordType.GetField("Name", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
 		return (string)field!.GetValue(null)!;
@@ -159,7 +165,7 @@ public sealed class DataKeywordJsonConverter : JsonConverter<DataKeyword>
 		if (reader.TokenType != JsonTokenType.StartObject)
 			throw new JsonException("Expected object");
 
-		var references = JsonSerializer.Deserialize<Dictionary<string, string>>(ref reader, options)!
+		var references = options.Read(ref reader, DataExtSerializerContext.Default.DictionaryStringString)!
 			.ToDictionary(kvp => kvp.Key, kvp => JsonSchemaBuilderExtensions.CreateResourceIdentifier(kvp.Value));
 
 		if (references.Keys.Intersect(_coreKeywords).Any())
@@ -181,13 +187,13 @@ public sealed class DataKeywordJsonConverter : JsonConverter<DataKeyword>
 			switch (kvp.Value)
 			{
 				case JsonPointerIdentifier jp:
-					JsonSerializer.Serialize(writer, jp.Target, options);
+					options.Write(writer, jp.Target, DataExtSerializerContext.Default.JsonPointer);
 					break;
 				case RelativeJsonPointerIdentifier rjp:
-					JsonSerializer.Serialize(writer, rjp.Target, options);
+					options.Write(writer, rjp.Target, DataExtSerializerContext.Default.RelativeJsonPointer);
 					break;
 				case UriIdentifier uri:
-					JsonSerializer.Serialize(writer, uri.Target, options);
+					options.Write(writer, uri.Target, DataExtSerializerContext.Default.Uri);
 					break;
 			}
 		}

@@ -156,7 +156,7 @@ public class OrderingKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="OrderingKeyword"/>.
 /// </summary>
-public sealed class OrderingKeywordJsonConverter : JsonConverter<OrderingKeyword>
+public sealed class OrderingKeywordJsonConverter : AotCompatibleJsonConverter<OrderingKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="OrderingKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -168,7 +168,7 @@ public sealed class OrderingKeywordJsonConverter : JsonConverter<OrderingKeyword
 		if (reader.TokenType != JsonTokenType.StartArray)
 			throw new JsonException("Expected array");
 
-		var references = JsonSerializer.Deserialize<List<OrderingSpecifier>>(ref reader, options)!;
+		var references = options.Read(ref reader, ArrayExtSerializerContext.Default.ListOrderingSpecifier)!;
 		return new OrderingKeyword(references);
 	}
 
@@ -179,6 +179,6 @@ public sealed class OrderingKeywordJsonConverter : JsonConverter<OrderingKeyword
 	public override void Write(Utf8JsonWriter writer, OrderingKeyword value, JsonSerializerOptions options)
 	{
 		writer.WritePropertyName(OrderingKeyword.Name);
-		JsonSerializer.Serialize(writer, value.Specifiers, options);
+		options.Write(writer, value.Specifiers, ArrayExtSerializerContext.Default.IEnumerableOrderingSpecifier);
 	}
 }

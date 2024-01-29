@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Schema.OpenApi;
 
@@ -85,7 +86,9 @@ public class XmlKeyword : IJsonSchemaKeyword
 		Wrapped = wrapped;
 		Extensions = extensions;
 
-		_json = JsonSerializer.SerializeToNode(this);
+#pragma warning disable IL2026, IL3050
+		_json = JsonSerializer.SerializeToNode(this, OpenApiSerializerContext.OptionsManager.SerializerOptions);
+#pragma warning restore IL2026, IL3050
 	}
 
 	internal XmlKeyword(Uri? @namespace, string? name, string? prefix, bool? attribute, bool? wrapped, IReadOnlyDictionary<string, JsonNode?>? extensions, JsonNode? json)
@@ -115,10 +118,10 @@ public class XmlKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="XmlKeyword"/>.
 /// </summary>
-public sealed class XmlKeywordJsonConverter : JsonConverter<XmlKeyword>
+public sealed class XmlKeywordJsonConverter : AotCompatibleJsonConverter<XmlKeyword>
 {
 	// ReSharper disable UnusedAutoPropertyAccessor.Local
-	private class Model
+	internal class Model
 	{
 		[JsonPropertyName("namespace")]
 		public Uri? Namespace { get; set; }
@@ -140,9 +143,11 @@ public sealed class XmlKeywordJsonConverter : JsonConverter<XmlKeyword>
 	/// <returns>The converted value.</returns>
 	public override XmlKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var node = JsonSerializer.Deserialize<JsonNode>(ref reader, options);
+		var node = options.Read(ref reader, OpenApiSerializerContext.Default.JsonNode);
 
+#pragma warning disable IL2026, IL3050
 		var model = node.Deserialize<Model>(options);
+#pragma warning restore IL2026, IL3050
 
 		var extensionData = node!.AsObject().Where(x => x.Key.StartsWith("x-"))
 			.ToDictionary(x => x.Key, x => x.Value);
@@ -173,7 +178,7 @@ public sealed class XmlKeywordJsonConverter : JsonConverter<XmlKeyword>
 			foreach (var extension in value.Extensions)
 			{
 				writer.WritePropertyName(extension.Key);
-				JsonSerializer.Serialize(writer, extension.Value, options);
+				options.Write(writer, extension.Value, OpenApiSerializerContext.Default.JsonNode);
 			}
 		}
 	}

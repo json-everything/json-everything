@@ -128,6 +128,6 @@ public class UnrecognizedKeywordTests
 
 		var reText = JsonSerializer.Serialize(schema, TestEnvironment.SerializerOptions);
 
-		Assert.AreEqual(schemaText, reText);
+		Assert.AreEqual(schemaText, reText);	
 	}
 }

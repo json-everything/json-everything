@@ -109,7 +109,7 @@ public class UniqueKeysKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="UniqueKeysKeyword"/>.
 /// </summary>
-public sealed class UniqueKeysKeywordJsonConverter : JsonConverter<UniqueKeysKeyword>
+public sealed class UniqueKeysKeywordJsonConverter : AotCompatibleJsonConverter<UniqueKeysKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="UniqueKeysKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -121,7 +121,7 @@ public sealed class UniqueKeysKeywordJsonConverter : JsonConverter<UniqueKeysKey
 		if (reader.TokenType != JsonTokenType.StartArray)
 			throw new JsonException("Expected array");
 
-		var references = options.Read<List<JsonPointer>>(ref reader)!;
+		var references = options.Read(ref reader, ArrayExtSerializerContext.Default.ListJsonPointer)!;
 		return new UniqueKeysKeyword(references);
 	}
 
@@ -131,6 +131,6 @@ public sealed class UniqueKeysKeywordJsonConverter : JsonConverter<UniqueKeysKey
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, UniqueKeysKeyword value, JsonSerializerOptions options)
 	{
-		JsonSerializer.Serialize(writer, value.Keys, options);
+		options.Write(writer, value.Keys, ArrayExtSerializerContext.Default.IEnumerableJsonPointer);
 	}
 }
