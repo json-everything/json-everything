@@ -80,15 +80,8 @@ public static class JsonSerializerOptionsExtensions
 	/// <returns>The value that was converted.</returns>
 	[RequiresDynamicCode("Calls JsonSerializer.Serialize. Make sure the options object contains all relevant JsonTypeInfos before suppressing this warning.")]
 	[RequiresUnreferencedCode("Calls JsonSerializer.Serialize. Make sure the options object contains all relevant JsonTypeInfos before suppressing this warning.")]
-	public static void Write(this JsonSerializerOptions options, Utf8JsonWriter writer, object? value, Type? inputType)
+	public static void Write(this JsonSerializerOptions options, Utf8JsonWriter writer, object? value, Type inputType)
 	{
-		if (inputType is not null)
-		{
-			JsonSerializer.Serialize(writer, value, inputType, options);
-		}
-		else
-		{
-			JsonSerializer.Serialize(writer, value, options);
-		}
+		JsonSerializer.Serialize(writer, value, inputType, options);
 	}
 }
