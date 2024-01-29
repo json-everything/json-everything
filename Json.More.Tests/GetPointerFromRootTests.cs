@@ -10,7 +10,7 @@ public class GetPointerFromRootTests
 	{
 		var data = new JsonObject
 		{
-			["foo"] = new JsonArray { 0, 1, 2, 3 }
+			["foo"] = new JsonArray(0, 1, 2, 3)
 		};
 
 		var target = data["foo"]![2]!;
@@ -27,7 +27,7 @@ public class GetPointerFromRootTests
 	{
 		var data = new JsonObject
 		{
-			["fo~o"] = new JsonArray { 0, 1, 2, 3 }
+			["fo~o"] = new JsonArray(0, 1, 2, 3)
 		};
 
 		var target = data["fo~o"]![2]!;
@@ -44,7 +44,7 @@ public class GetPointerFromRootTests
 	{
 		var data = new JsonObject
 		{
-			["fo/o"] = new JsonArray { 0, 1, 2, 3 }
+			["fo/o"] = new JsonArray(0, 1, 2, 3)
 		};
 
 		var target = data["fo/o"]![2]!;

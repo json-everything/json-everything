@@ -59,7 +59,7 @@ public class InTests
 	[Test]
 	public void InArrayContainsFirstReturnsTrue()
 	{
-		var array = new JsonArray { 1, 2, 3 };
+		var array = new JsonArray(1, 2, 3);
 		var rule = new InRule(2, array);
 
 		JsonAssert.IsTrue(rule.Apply());
@@ -68,7 +68,7 @@ public class InTests
 	[Test]
 	public void InArrayDoesNotContainFirstReturnsFalse()
 	{
-		var array = new JsonArray { 1, 2, 3 };
+		var array = new JsonArray(1, 2, 3);
 		var rule = new InRule(5, array);
 
 		JsonAssert.IsFalse(rule.Apply());

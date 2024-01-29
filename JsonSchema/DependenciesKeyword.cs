@@ -143,7 +143,7 @@ public sealed class DependenciesKeywordJsonConverter : Json.More.AotCompatibleJs
 		foreach (var kvp in value.Requirements)
 		{
 			writer.WritePropertyName(kvp.Key);
-			JsonSerializer.Serialize(writer, kvp.Value, options);
+			options.Write(writer, kvp.Value, JsonSchemaSerializerContext.Default.SchemaOrPropertyList);
 		}
 		writer.WriteEndObject();
 	}
@@ -232,8 +232,8 @@ public sealed class SchemaOrPropertyListJsonConverter : Json.More.AotCompatibleJ
 	public override void Write(Utf8JsonWriter writer, SchemaOrPropertyList value, JsonSerializerOptions options)
 	{
 		if (value.Schema != null)
-			JsonSerializer.Serialize(writer, value.Schema, options);
+			options.Write(writer, value.Schema, JsonSchemaSerializerContext.Default.JsonSchema);
 		else
-			JsonSerializer.Serialize(writer, value.Requirements, options);
+			options.Write(writer, value.Requirements, JsonSchemaSerializerContext.Default.ListString);
 	}
 }

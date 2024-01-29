@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 using Json.Pointer;
 
 namespace Json.Schema;
@@ -322,7 +323,7 @@ internal class EvaluationResultsJsonConverter : Json.More.AotCompatibleJsonConve
 		if (value.Format == OutputFormat.Hierarchical || value.Parent != null)
 		{
 			writer.WritePropertyName("evaluationPath");
-			JsonSerializer.Serialize(writer, value.EvaluationPath, options);
+			options.Write(writer, value.EvaluationPath, JsonSchemaSerializerContext.Default.JsonPointer);
 
 			// this can still be null if the root schema is a boolean
 			if (value.SchemaLocation != null!)
@@ -331,11 +332,11 @@ internal class EvaluationResultsJsonConverter : Json.More.AotCompatibleJsonConve
 				var schemaLocation = value.SchemaLocation.OriginalString;
 				if (string.IsNullOrEmpty(value.SchemaLocation.Fragment))
 					schemaLocation += "#"; // see https://github.com/json-schema-org/JSON-Schema-Test-Suite/pull/671
-				JsonSerializer.Serialize(writer, schemaLocation, options);
+				options.Write(writer, schemaLocation, JsonSchemaSerializerContext.Default.String);
 			}
 
 			writer.WritePropertyName("instanceLocation");
-			JsonSerializer.Serialize(writer, value.InstanceLocation, options);
+			options.Write(writer, value.InstanceLocation, JsonSchemaSerializerContext.Default.JsonPointer);
 		}
 
 		if (value.IsValid)
@@ -343,7 +344,7 @@ internal class EvaluationResultsJsonConverter : Json.More.AotCompatibleJsonConve
 			if (value.AnnotationsToSerialize != null)
 			{
 				writer.WritePropertyName("annotations");
-				JsonSerializer.Serialize(writer, value.AnnotationsToSerialize, options);
+				options.Write(writer, value.AnnotationsToSerialize /*, JsonSchemaSerializerContext.Default.IReadOnlyDictionaryStringJsonNode */);
 			}
 		}
 		else
@@ -351,20 +352,20 @@ internal class EvaluationResultsJsonConverter : Json.More.AotCompatibleJsonConve
 			if (value.HasErrors)
 			{
 				writer.WritePropertyName("errors");
-				JsonSerializer.Serialize(writer, value.Errors, options);
+				options.Write(writer, value.Errors, JsonSchemaSerializerContext.Default.IReadOnlyDictionaryStringString);
 			}
 			if (value.IncludeDroppedAnnotations && value.AnnotationsToSerialize != null)
 			{
 				writer.WritePropertyName("droppedAnnotations");
-				JsonSerializer.Serialize(writer, value.AnnotationsToSerialize, options);
+				options.Write(writer, value.AnnotationsToSerialize /*, JsonSchemaSerializerContext.Default.IReadOnlyDictionaryStringJsonNode */);
 			}
 		}
 
 		if (value.HasDetails)
 		{
 			writer.WritePropertyName("details");
-			JsonSerializer.Serialize(writer, value.Details, options);
-		}
+			options.Write(writer, value.Details, JsonSchemaSerializerContext.Default.IReadOnlyListEvaluationResults);
+}
 
 		writer.WriteEndObject();
 	}
@@ -432,13 +433,13 @@ public class Pre202012EvaluationResultsJsonConverter : Json.More.AotCompatibleJs
 		if (value.Format == OutputFormat.Hierarchical || value.Parent != null)
 		{
 			writer.WritePropertyName("keywordLocation");
-			JsonSerializer.Serialize(writer, value.EvaluationPath, options);
+			options.Write(writer, value.EvaluationPath, JsonSchemaSerializerContext.Default.JsonPointer);
 
 			writer.WritePropertyName("absoluteKeywordLocation");
-			JsonSerializer.Serialize(writer, value.SchemaLocation, options);
+			options.Write(writer, value.SchemaLocation, JsonSchemaSerializerContext.Default.Uri);
 
 			writer.WritePropertyName("instanceLocation");
-			JsonSerializer.Serialize(writer, value.InstanceLocation, options);
+			options.Write(writer, value.InstanceLocation, JsonSchemaSerializerContext.Default.JsonPointer);
 		}
 
 		bool skipCloseObject = false;
@@ -457,7 +458,7 @@ public class Pre202012EvaluationResultsJsonConverter : Json.More.AotCompatibleJs
 
 					foreach (var result in value.Details)
 					{
-						JsonSerializer.Serialize(writer, result, options);
+						options.Write(writer, result, JsonSchemaSerializerContext.Default.EvaluationResults);
 					}
 
 					if (value.HasErrors)
@@ -480,7 +481,7 @@ public class Pre202012EvaluationResultsJsonConverter : Json.More.AotCompatibleJs
 
 					foreach (var result in value.Details)
 					{
-						JsonSerializer.Serialize(writer, result, options);
+						options.Write(writer, result, JsonSchemaSerializerContext.Default.EvaluationResults);
 					}
 					writer.WriteEndArray();
 				}
@@ -518,7 +519,7 @@ public class Pre202012EvaluationResultsJsonConverter : Json.More.AotCompatibleJs
 						}
 						else
 						{
-							JsonSerializer.Serialize(writer, result, options);
+							options.Write(writer, result, JsonSchemaSerializerContext.Default.EvaluationResults);
 						}
 					}
 
@@ -547,7 +548,7 @@ public class Pre202012EvaluationResultsJsonConverter : Json.More.AotCompatibleJs
 						var annotation = annotations.SingleOrDefault(a => a.Source.Equals(result.EvaluationPath));
 						if (annotation != null) continue;
 
-						JsonSerializer.Serialize(writer, result, options);
+						options.Write(writer, result, JsonSchemaSerializerContext.Default.EvaluationResults);
 					}
 					writer.WriteEndArray();
 				}
@@ -575,19 +576,19 @@ public class Pre202012EvaluationResultsJsonConverter : Json.More.AotCompatibleJs
 		writer.WriteBoolean("valid", value.IsValid);
 
 		writer.WritePropertyName("keywordLocation");
-		JsonSerializer.Serialize(writer, value.EvaluationPath.Combine(keyword), options);
+		options.Write(writer, value.EvaluationPath.Combine(keyword), JsonSchemaSerializerContext.Default.JsonPointer);
 
 		writer.WritePropertyName("absoluteKeywordLocation");
 		if (value.SchemaLocation.OriginalString.Contains('#'))
-			JsonSerializer.Serialize(writer, value.SchemaLocation.OriginalString + $"/{keyword}", options);
+			options.Write(writer, value.SchemaLocation.OriginalString + $"/{keyword}", JsonSchemaSerializerContext.Default.String);
 		else
-			JsonSerializer.Serialize(writer, value.SchemaLocation.OriginalString + $"#/{keyword}", options);
+			options.Write(writer, value.SchemaLocation.OriginalString + $"#/{keyword}", JsonSchemaSerializerContext.Default.String);
 
 		writer.WritePropertyName("instanceLocation");
-		JsonSerializer.Serialize(writer, value.InstanceLocation, options);
+		options.Write(writer, value.InstanceLocation, JsonSchemaSerializerContext.Default.JsonPointer);
 
 		writer.WritePropertyName("error");
-		JsonSerializer.Serialize(writer, error, options);
+		options.Write(writer, error, JsonSchemaSerializerContext.Default.String);
 
 		writer.WriteEndObject();
 	}
@@ -599,19 +600,19 @@ public class Pre202012EvaluationResultsJsonConverter : Json.More.AotCompatibleJs
 		writer.WriteBoolean("valid", value.IsValid);
 
 		writer.WritePropertyName("keywordLocation");
-		JsonSerializer.Serialize(writer, annotation.Source, options);
+		options.Write(writer, annotation.Source, JsonSchemaSerializerContext.Default.JsonPointer);
 
 		writer.WritePropertyName("absoluteKeywordLocation");
 		if (value.SchemaLocation.OriginalString.Contains('#'))
-			JsonSerializer.Serialize(writer, value.SchemaLocation.OriginalString + $"/{annotation.Owner}", options);
+			options.Write(writer, value.SchemaLocation.OriginalString + $"/{annotation.Owner}", JsonSchemaSerializerContext.Default.String);
 		else
-			JsonSerializer.Serialize(writer, value.SchemaLocation.OriginalString + $"#/{annotation.Owner}", options);
+			options.Write(writer, value.SchemaLocation.OriginalString + $"#/{annotation.Owner}", JsonSchemaSerializerContext.Default.String);
 
 		writer.WritePropertyName("instanceLocation");
-		JsonSerializer.Serialize(writer, value.InstanceLocation, options);
+		options.Write(writer, value.InstanceLocation, JsonSchemaSerializerContext.Default.JsonPointer);
 
 		writer.WritePropertyName("annotation");
-		JsonSerializer.Serialize(writer, annotation.Value, options);
+		options.Write(writer, annotation.Value);
 
 		writer.WriteEndObject();
 	}

@@ -43,7 +43,7 @@ public class SelfValidationTest
 	[TestCaseSource(nameof(TestData))]
 	public void Hardcoded(JsonSchema schema)
 	{
-		var json = JsonSerializer.Serialize(schema);
+		var json = JsonSerializer.Serialize(schema, TestEnvironment.SerializerOptions);
 		var validation = schema.Evaluate(JsonNode.Parse(json), new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
 
 		validation.AssertValid();
@@ -54,10 +54,10 @@ public class SelfValidationTest
 	{
 		try
 		{
-			var localSchemaJson = JsonSerializer.Serialize(schema, new JsonSerializerOptions { WriteIndented = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping });
+			var localSchemaJson = JsonSerializer.Serialize(schema, new JsonSerializerOptions(TestEnvironment.SerializerOptions) { WriteIndented = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping });
 
 			var onlineSchemaJson = new HttpClient().GetStringAsync(schema.Keywords!.OfType<IdKeyword>().Single().Id).Result;
-			var onlineSchema = JsonSerializer.Deserialize<JsonSchema>(onlineSchemaJson);
+			var onlineSchema = JsonSerializer.Deserialize<JsonSchema>(onlineSchemaJson, TestEnvironment.SerializerOptions);
 
 			var localValidation = schema.Evaluate(JsonNode.Parse(onlineSchemaJson));
 			var onlineValidation = onlineSchema!.Evaluate(JsonNode.Parse(localSchemaJson));
@@ -65,8 +65,8 @@ public class SelfValidationTest
 			try
 			{
 				Console.WriteLine("Asserting schema equality");
-				var asNode = JsonSerializer.SerializeToNode(schema);
-				var onlineAsNode = JsonSerializer.SerializeToNode(onlineSchema);
+				var asNode = JsonSerializer.SerializeToNode(schema, TestEnvironment.SerializerOptions);
+				var onlineAsNode = JsonSerializer.SerializeToNode(onlineSchema, TestEnvironment.SerializerOptions);
 				Assert.That(() => asNode.IsEquivalentTo(onlineAsNode));
 
 				Console.WriteLine("Validating local against online");
@@ -104,12 +104,12 @@ public class SelfValidationTest
 	[TestCaseSource(nameof(TestData))]
 	public void RoundTrip(JsonSchema schema)
 	{
-		var json = JsonSerializer.Serialize(schema, new JsonSerializerOptions { WriteIndented = true });
+		var json = JsonSerializer.Serialize(schema, new JsonSerializerOptions(TestEnvironment.SerializerOptions) { WriteIndented = true });
 		Console.WriteLine(json);
-		var returnTrip = JsonSerializer.Deserialize<JsonSchema>(json);
+		var returnTrip = JsonSerializer.Deserialize<JsonSchema>(json, TestEnvironment.SerializerOptions);
 
-		var asNode = JsonSerializer.SerializeToNode(schema);
-		var onlineAsNode = JsonSerializer.SerializeToNode(returnTrip);
+		var asNode = JsonSerializer.SerializeToNode(schema, TestEnvironment.SerializerOptions);
+		var onlineAsNode = JsonSerializer.SerializeToNode(returnTrip, TestEnvironment.SerializerOptions);
 		Assert.That(() => asNode.IsEquivalentTo(onlineAsNode));
 	}
 }

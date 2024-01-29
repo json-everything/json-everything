@@ -103,7 +103,7 @@ public sealed class PropertiesKeywordJsonConverter : Json.More.AotCompatibleJson
 		foreach (var kvp in value.Properties)
 		{
 			writer.WritePropertyName(kvp.Key);
-			JsonSerializer.Serialize(writer, kvp.Value, options);
+			options.Write(writer, kvp.Value, JsonSchemaSerializerContext.Default.JsonSchema);
 		}
 		writer.WriteEndObject();
 	}

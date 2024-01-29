@@ -122,7 +122,7 @@ public sealed class PrefixItemsKeywordJsonConverter : Json.More.AotCompatibleJso
 		writer.WriteStartArray();
 		foreach (var schema in value.ArraySchemas)
 		{
-			JsonSerializer.Serialize(writer, schema, options);
+			options.Write(writer, schema, JsonSchemaSerializerContext.Default.JsonSchema);
 		}
 		writer.WriteEndArray();
 	}

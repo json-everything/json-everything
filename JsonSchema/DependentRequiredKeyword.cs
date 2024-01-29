@@ -112,7 +112,7 @@ public sealed class DependentRequiredKeywordJsonConverter : Json.More.AotCompati
 		foreach (var kvp in value.Requirements)
 		{
 			writer.WritePropertyName(kvp.Key);
-			JsonSerializer.Serialize(writer, kvp.Value, options);
+			options.Write(writer, kvp.Value, JsonSchemaSerializerContext.Default.IReadOnlyListString);
 		}
 		writer.WriteEndObject();
 	}

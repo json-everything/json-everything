@@ -119,7 +119,7 @@ public sealed class DependentSchemasKeywordJsonConverter : Json.More.AotCompatib
 		foreach (var kvp in value.Schemas)
 		{
 			writer.WritePropertyName(kvp.Key);
-			JsonSerializer.Serialize(writer, kvp.Value, options);
+			options.Write(writer, kvp.Value, JsonSchemaSerializerContext.Default.JsonSchema);
 		}
 		writer.WriteEndObject();
 	}

@@ -197,7 +197,7 @@ public class GithubTests
 
 		var expected = new JsonObject
 		{
-			["Values"] = new JsonArray { 1, 2, 3, 4, 42 }
+			["Values"] = new JsonArray(1, 2, 3, 4, 42)
 		};
 
 		var patchResult = jsonPatch.Apply(target);

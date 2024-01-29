@@ -11,7 +11,7 @@ namespace Json.Schema.Tests.Serialization;
 
 public class DeserializationTests
 {
-	private class Foo
+	internal class Foo
 	{
 		[MinLength(5)]
 		public string? Bar { get; set; }
@@ -21,7 +21,7 @@ public class DeserializationTests
 	}
 
 	[JsonSchema(typeof(DeserializationTests), nameof(FooSchema))]
-	private class FooWithSchema
+	internal class FooWithSchema
 	{
 		public string? Bar { get; set; }
 		public int Value { get; set; }
@@ -51,7 +51,7 @@ public class DeserializationTests
 			)
 			.AdditionalProperties(false);
 
-	private static readonly JsonSerializerOptions _options = new()
+	private static readonly JsonSerializerOptions _options = new(TestEnvironment.SerializerOptions)
 	{
 		WriteIndented = true,
 		Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
@@ -289,7 +289,7 @@ public class DeserializationTests
 
 			for (int i = 0; i < 10; i++)
 			{
-				var options = new JsonSerializerOptions
+				var options = new JsonSerializerOptions(TestEnvironment.SerializerOptions)
 				{
 					WriteIndented = true,
 					Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
@@ -318,7 +318,7 @@ public class DeserializationTests
   ""Y"": 5
 }";
 
-			var options = new JsonSerializerOptions
+			var options = new JsonSerializerOptions(TestEnvironment.SerializerOptions)
 			{
 				WriteIndented = true,
 				Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
@@ -348,7 +348,7 @@ public class DeserializationTests
   ""Y"": 5
 }";
 
-					var options = new JsonSerializerOptions
+					var options = new JsonSerializerOptions(TestEnvironment.SerializerOptions)
 					{
 						WriteIndented = true,
 						Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
