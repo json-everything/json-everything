@@ -14,7 +14,6 @@ namespace Json.Patch.Tests.Suite;
 public class JsonPatchTestSuite
 {
 	private const string _testFolder = @"../../../../ref-repos/json-patch-tests";
-	private static readonly JsonSerializerOptions _options;
 
 	// ReSharper disable once MemberCanBePrivate.Global
 	public static IEnumerable TestData => LoadTests();
@@ -27,23 +26,14 @@ public class JsonPatchTestSuite
 		foreach (var fileName in fileNames)
 		{
 			var contents = File.ReadAllText(fileName);
-			var suite = JsonSerializer.Deserialize<List<JsonPatchTest>>(contents, _options)!;
+			var suite = JsonSerializer.Deserialize<JsonPatchTest[]>(contents, TestSerializerContext.OptionsManager.SerializerOptions)!;
 
-			foreach (var test in suite.Where(t => t != null))
+			foreach (var test in suite.Where(t => t != null!))
 			{
 				var testName = test.Comment?.Replace(' ', '_') ?? "Unnamed test";
 				yield return new TestCaseData(fileName, test) { TestName = testName };
 			}
 		}
-	}
-
-	static JsonPatchTestSuite()
-	{
-		_options = new JsonSerializerOptions
-		{
-			PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-			WriteIndented = true
-		};
 	}
 
 	[TestCaseSource(nameof(TestData))]
@@ -67,12 +57,12 @@ public class JsonPatchTestSuite
 			{
 				Console.WriteLine();
 				Console.WriteLine(fileName);
-				Console.WriteLine(JsonSerializer.Serialize(test, _options));
+				Console.WriteLine(JsonSerializer.Serialize(test, TestSerializerContext.OptionsManager.SerializerOptions));
 				Console.WriteLine(e.Message);
 				Console.WriteLine(e.StackTrace);
 				if (result != null)
 				{
-					Console.WriteLine(result.Result.AsJsonString());
+					Console.WriteLine(result.Result.AsJsonString(TestSerializerContext.OptionsManager.SerializerOptions));
 					Console.WriteLine(result.Error);
 				}
 				if (isOptional)
