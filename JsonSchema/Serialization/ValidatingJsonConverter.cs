@@ -67,10 +67,9 @@ public class ValidatingJsonConverter : JsonConverterFactory
 	/// </returns>
 	[RequiresDynamicCode("Uses reflection")]
 	[RequiresUnreferencedCode("Uses reflection")]
-
-#pragma warning disable IL2046, IL3051
+	[SuppressMessage("Trimming", "IL2046:'RequiresUnreferencedCodeAttribute' annotations must match across all interface implementations or overrides.", Justification = "Only this overload requires reflection")]
+	[SuppressMessage("AOT", "IL3051:'RequiresDynamicCodeAttribute' annotations must match across all interface implementations or overrides.", Justification = "Only this overload requires reflection")]
 	public override JsonConverter? CreateConverter(Type typeToConvert, JsonSerializerOptions options)
-#pragma warning restore IL2046, IL3051
 	{
 		// at this point, we know that we should have a converter, so we don't need to check for null
 		if (_cache.TryGetValue(typeToConvert, out var converter)) return converter;
@@ -129,11 +128,9 @@ internal class ValidatingJsonConverter<T> : AotCompatibleJsonConverter<T>, IVali
 		_optionsFactory = optionsFactory;
 	}
 
-	[RequiresDynamicCode("This uses a non-AOT friendly version of JsonSerializer.Deserialize.")]
-	[RequiresUnreferencedCode("This uses a non-AOT friendly version of JsonSerializer.Deserialize.")]
-#pragma warning disable IL2046, IL3051
+	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "JsonSerializer is safe if you guarantee all types are present in JsonSerializerOptions")]
+	[UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "\t[UnconditionalSuppressMessage(\"Trimming\", \"IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code\", Justification = \"JsonSerializer is safe if you guarantee all types are present in JsonSerializerOptions\")]\r\n")]
 	public override T? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-#pragma warning restore IL2046, IL3051
 	{
 		var readerCopy = reader;
 		var node = options.Read(ref readerCopy, JsonSchemaSerializerContext.Default.JsonNode);

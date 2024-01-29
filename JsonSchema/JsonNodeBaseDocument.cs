@@ -46,8 +46,8 @@ public class JsonNodeBaseDocument : IBaseDocument
 	/// <param name="pointer">A JSON Pointer to the location of the schema within the document.</param>
 	/// <param name="options">Evaluation options.  This is needed for internal processing.</param>
 	/// <returns>A JSON Schema, if found.</returns>
-	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "Deserialize is safe in AOT if the JsonSerializerOptions come from the source generator.")]
-	[UnconditionalSuppressMessage("AOT", "IL3050:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "Deserialize is safe in AOT if the JsonSerializerOptions come from the source generator.")]
+	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "JsonSerializer is safe in AOT if the JsonSerializerOptions come from the source generator.")]
+	[UnconditionalSuppressMessage("AOT", "IL3050:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "JsonSerializer is safe in AOT if the JsonSerializerOptions come from the source generator.")]
 	public JsonSchema? FindSubschema(JsonPointer pointer, EvaluationOptions options)
 	{
 		return _foundSubschemas.GetOrAdd(pointer, jsonPointer =>
