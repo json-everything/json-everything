@@ -64,7 +64,7 @@ public static class JsonSerializerOptionsExtensions
 	[UnconditionalSuppressMessage("AOT", "IL3050:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "Serialize is safe in AOT if the JsonSerializerOptions come from the source generator. Requiring the JsonTypeInfo parameter helps enforce that.")]
 	public static void Write<T>(this JsonSerializerOptions options, Utf8JsonWriter writer, T? value, JsonTypeInfo<T>? typeInfo)
 	{
-		JsonSerializer.Serialize(writer, value, options);
+		options.GetConverter<T?>(typeInfo).Write(writer, value, options);
 	}
 
 	/// <summary>
