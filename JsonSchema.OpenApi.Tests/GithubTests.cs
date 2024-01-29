@@ -164,7 +164,7 @@ public class GithubTests
 		var options = new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical };
 		var result = schema.Evaluate(json, options);
 
-		Console.WriteLine(JsonSerializer.Serialize(schema, new JsonSerializerOptions
+		Console.WriteLine(JsonSerializer.Serialize(schema, new JsonSerializerOptions(TestEnvironment.SerializerOptions)
 		{
 			WriteIndented = true,
 			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Text.Json.Serialization.Metadata;
 using Json.Path;
 using Json.Pointer;
 
@@ -17,6 +18,13 @@ public class OpenApiDoc : IBaseDocument
 	private static readonly JsonPath _schemasQuery = JsonPath.Parse("$..schema");
 
 	private readonly Dictionary<JsonPointer, JsonSchema> _lookup = new();
+
+	private static readonly JsonSerializerOptions _options = new()
+	{
+#if NET8_0_OR_GREATER
+		TypeInfoResolverChain = { new DefaultJsonTypeInfoResolver() }
+#endif
+	};
 
 	// implements IBaseDocument
 	public Uri BaseUri { get; }
@@ -45,7 +53,7 @@ public class OpenApiDoc : IBaseDocument
 			foreach (var (name, node) in componentSchemas!.AsObject())
 			{
 				var location = _componentSchemasLocation.Combine(name);
-				var schema = node.Deserialize<JsonSchema>()!;
+				var schema = node.Deserialize<JsonSchema>(_options)!;
 				schema.BaseUri = BaseUri;
 				_lookup[location] = schema;
 			}
@@ -58,7 +66,7 @@ public class OpenApiDoc : IBaseDocument
 			foreach (var match in otherSchemaLocations.Matches)
 			{
 				var location = ConvertToPointer(match.Location!);
-				var schema = match.Value.Deserialize<JsonSchema>()!;
+				var schema = match.Value.Deserialize<JsonSchema>(_options)!;
 				schema.BaseUri = BaseUri;
 				_lookup[location] = schema;
 			}
