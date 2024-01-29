@@ -19,8 +19,6 @@ public abstract class FunctionDefinition
 	/// Implicitly converts a <see cref="FunctionDefinition"/> into a <see cref="JsonNode"/>.
 	/// </summary>
 	/// <param name="func">The function.</param>
-	[RequiresUnreferencedCode("The JsonValue created from here isn't generally safe for serialization and requires unreferenced code.")]
-	[RequiresDynamicCode("The JsonValue created from here isn't generally safe for serialization and requires dynamic code.")]
 	public static implicit operator JsonNode?(FunctionDefinition func)
 	{
 		return JsonValue.Create(func, JsonESerializerContext.Default.FunctionDefinition);

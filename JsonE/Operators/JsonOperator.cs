@@ -39,7 +39,8 @@ internal class JsonOperator : IOperator
 		{
 			dict[kvp.Key] = Sort(kvp.Value);
 		}
-
+		
+		// Can't use the TypeInfo overload because JsonSerializerContext differs in nullability
 		return JsonSerializer.SerializeToNode(dict, JsonESerializerContext.Default.Options);
 	}
 }
