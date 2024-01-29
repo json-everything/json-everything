@@ -31,7 +31,7 @@ public static partial class ErrorMessages
 		_serializerOptions = new JsonSerializerOptions
 		{
 #if NET8_0_OR_GREATER
-			TypeInfoResolver = JsonSchemaSerializerContext.OptionsManager.TypeInfoResolver
+			TypeInfoResolver = JsonSchema.TypeInfoResolver;
 #endif
 		};
 #if NET8_0_OR_GREATER
