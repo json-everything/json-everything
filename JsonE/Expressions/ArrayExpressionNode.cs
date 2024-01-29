@@ -58,7 +58,8 @@ internal class ArrayExpressionParser : IOperandExpressionParser
 			if (!ExpressionParser.TryParse(source, ref i, out var value))
 				throw new SyntaxException(CommonErrors.WrongToken(source[i]));
 
-			arr.Add((JsonNode)(JsonValue)JsonExpression.Create(value!));
+			JsonNode expr = JsonExpression.Create(value!);
+			arr.Add(expr);
 
 			// read , or ]
 			if (source[i] is ',')
