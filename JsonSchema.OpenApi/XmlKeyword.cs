@@ -78,8 +78,8 @@ public class XmlKeyword : IJsonSchemaKeyword
 	/// `x-internal-id`. Field names beginning `x-oai-` and `x-oas-` are reserved for uses defined by the OpenAPI Initiative.
 	/// The value can be null, a primitive, an array or an object.
 	/// </param>
-	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "JsonSerializer is safe in AOT if the JsonSerializerOptions come from the source generator.")]
-	[UnconditionalSuppressMessage("AOT", "IL3050:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "JsonSerializer is safe in AOT if the JsonSerializerOptions come from the source generator.")]
+	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
+	[UnconditionalSuppressMessage("AOT", "IL3050:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public XmlKeyword(Uri? @namespace, string? name, string? prefix, bool? attribute, bool? wrapped, IReadOnlyDictionary<string, JsonNode?>? extensions)
 	{
 		Namespace = @namespace;
@@ -142,8 +142,8 @@ public sealed class XmlKeywordJsonConverter : AotCompatibleJsonConverter<XmlKeyw
 	/// <param name="typeToConvert">The type to convert.</param>
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	/// <returns>The converted value.</returns>
-	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "JsonSerializer is safe in AOT if the JsonSerializerOptions come from the source generator.")]
-	[UnconditionalSuppressMessage("AOT", "IL3050:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "JsonSerializer is safe in AOT if the JsonSerializerOptions come from the source generator.")]
+	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
+	[UnconditionalSuppressMessage("AOT", "IL3050:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public override XmlKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		var node = options.Read(ref reader, OpenApiSerializerContext.Default.JsonNode);

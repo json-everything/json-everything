@@ -60,9 +60,9 @@ public static class JsonSerializerOptionsExtensions
 	/// <param name="value">The value to serialize.</param>
 	/// <param name="typeInfo">An explicit typeInfo to use for looking up the Converter. If not provided, options.GetTypeInfo will be used.</param>
 	/// <returns>The value that was converted.</returns>
-	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "Deserialize is safe in AOT if the JsonSerializerOptions come from the source generator.")]
-	[UnconditionalSuppressMessage("AOT", "IL3050:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "Deserialize is safe in AOT if the JsonSerializerOptions come from the source generator.")]
-	public static void Write<T>(this JsonSerializerOptions options, Utf8JsonWriter writer, T? value, JsonTypeInfo<T>? typeInfo = null)
+	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "Serialize is safe in AOT if the JsonSerializerOptions come from the source generator. Requiring the JsonTypeInfo parameter helps enforce that.")]
+	[UnconditionalSuppressMessage("AOT", "IL3050:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "Serialize is safe in AOT if the JsonSerializerOptions come from the source generator. Requiring the JsonTypeInfo parameter helps enforce that.")]
+	public static void Write<T>(this JsonSerializerOptions options, Utf8JsonWriter writer, T? value, JsonTypeInfo<T>? typeInfo)
 	{
 		JsonSerializer.Serialize(writer, value, options);
 	}
@@ -78,10 +78,17 @@ public static class JsonSerializerOptionsExtensions
 	/// <param name="value">The value to serialize.</param>
 	/// <param name="inputType">The type to serialize.</param>
 	/// <returns>The value that was converted.</returns>
-	public static void Write(this JsonSerializerOptions options, Utf8JsonWriter writer, object? value, Type inputType)
+	[RequiresDynamicCode("Calls JsonSerializer.Serialize. Make sure the options object contains all relevant JsonTypeInfos before suppressing this warning.")]
+	[RequiresUnreferencedCode("Calls JsonSerializer.Serialize. Make sure the options object contains all relevant JsonTypeInfos before suppressing this warning.")]
+	public static void Write(this JsonSerializerOptions options, Utf8JsonWriter writer, object? value, Type? inputType)
 	{
-#pragma warning disable IL2026, IL3050 // This helper is expected to be called with an options object that covers the needed TypeInfos.
-		JsonSerializer.Serialize(writer, value, inputType, options);
-#pragma warning restore IL2026, IL3050
+		if (inputType is not null)
+		{
+			JsonSerializer.Serialize(writer, value, inputType, options);
+		}
+		else
+		{
+			JsonSerializer.Serialize(writer, value, options);
+		}
 	}
 }

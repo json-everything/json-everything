@@ -344,7 +344,8 @@ internal class EvaluationResultsJsonConverter : Json.More.AotCompatibleJsonConve
 			if (value.AnnotationsToSerialize != null)
 			{
 				writer.WritePropertyName("annotations");
-				options.Write(writer, value.AnnotationsToSerialize /*, JsonSchemaSerializerContext.Default.IReadOnlyDictionaryStringJsonNode */);
+				options.Write(writer, value.AnnotationsToSerialize, 
+					null /* can't pass JsonSchemaSerializerContext.Default.IReadOnlyDictionaryStringJsonNode due to https://github.com/dotnet/runtime/issues/97665 */);
 			}
 		}
 		else
@@ -357,7 +358,8 @@ internal class EvaluationResultsJsonConverter : Json.More.AotCompatibleJsonConve
 			if (value.IncludeDroppedAnnotations && value.AnnotationsToSerialize != null)
 			{
 				writer.WritePropertyName("droppedAnnotations");
-				options.Write(writer, value.AnnotationsToSerialize /*, JsonSchemaSerializerContext.Default.IReadOnlyDictionaryStringJsonNode */);
+				options.Write(writer, value.AnnotationsToSerialize,
+					null /* can't pass JsonSchemaSerializerContext.Default.IReadOnlyDictionaryStringJsonNode due to https://github.com/dotnet/runtime/issues/97665 */);
 			}
 		}
 
@@ -612,7 +614,7 @@ public class Pre202012EvaluationResultsJsonConverter : Json.More.AotCompatibleJs
 		options.Write(writer, value.InstanceLocation, JsonSchemaSerializerContext.Default.JsonPointer);
 
 		writer.WritePropertyName("annotation");
-		options.Write(writer, annotation.Value);
+		options.Write(writer, annotation.Value, annotation.Value?.GetType());
 
 		writer.WriteEndObject();
 	}

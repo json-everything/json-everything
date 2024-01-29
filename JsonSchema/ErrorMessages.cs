@@ -63,8 +63,8 @@ public static partial class ErrorMessages
     /// Tuple of the token name (without brackets) and the value which will replace it.
     /// </param>
     /// <returns>The detokenized string.</returns>
-    [UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "JsonSerializer is safe in AOT if the JsonSerializerOptions come from the source generator.")]
-    [UnconditionalSuppressMessage("AOT", "IL3050:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "JsonSerializer is safe in AOT if the JsonSerializerOptions come from the source generator.")]
+    [UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
+    [UnconditionalSuppressMessage("AOT", "IL3050:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
     public static string ReplaceTokens(this string message, params (string token, object? value)[] parameters)
     {
         var current = message;

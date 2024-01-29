@@ -53,10 +53,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="PolySharp" Version="1.14.1">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
+		<PackageReference Include="PolySharp" Version="1.14.1" PrivateAssets="All" />
 		<PackageReference Include="Humanizer.Core" Version="2.14.1" />
 	</ItemGroup>
 
