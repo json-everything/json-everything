@@ -23,7 +23,6 @@ Most of the changes to support Native AOT involve either updating internal imple
 - `JsonSerializerOptionsExtensions.Write()` and `.Write<T>()`.
 - `TypeResolverOptionsManager` which helps import `IJsonTypeInfoResolver`s and create a `JsonSerializerOptions` that incorporates all of the resolvers.
 
-
 # [1.10.1](https://github.com/gregsdennis/json-everything/pull/615) {#release-more-1.10.1}
 
 Continuation of v1.10.0: performance improvements for `JsonArrayTupleConverter`.

@@ -35,7 +35,7 @@ public class JsonPointer : IEquatable<JsonPointer>
 	/// A TypeInfoResolver that can be used for serializing <see cref="JsonPointer"/> objects. Add to your custom
 	/// JsonSerializerOptions's TypeInfoResolver or TypeInfoResolveChain.
 	/// </summary>
-	public static IJsonTypeInfoResolver JsonTypeResolver => JsonPointerSerializerContext.Default;
+	public static IJsonTypeInfoResolver TypeInfoResolver => JsonPointerSerializerContext.Default;
 
 	private string? _uriEncoded;
 	private string? _plain;

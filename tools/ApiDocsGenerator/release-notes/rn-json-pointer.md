@@ -4,6 +4,18 @@ title: JsonPointer.Net
 icon: fas fa-tag
 order: "09.10"
 ---
+# [4.0.0](https://github.com/gregsdennis/json-everything/pull/619) {#release-pointer-4.0.0}
+
+Updated for multi-framework support with .Net Standard 2.0 and .Net 8 with Native AOT support.
+
+Most of the changes to support Native AOT involve either updating internal implementation or creating overloads that do.  Whatever could not be updated was marked as requiring reflection, which will generate warnings when building Native AOT applications.
+
+No breaking changes in code; just in framework support.  It's safer to bump major version to increase awareness.
+
+## Additions
+
+- (.Net 8) `JsonPointer.TypeInfoResolver` to expose all of the type resolvers contained in the library.  Can be used to create a combined `SerializationOptions` by using a `Json.More.TypeResolverOptionsManager` in your `JsonSerializerContext`.
+
 # [3.3.0](https://github.com/gregsdennis/json-everything/pull/590) {#release-pointer-3.3.0}
 
 [#585](https://github.com/gregsdennis/json-everything/issues/585) - Added support for `TypeConverter` so that an application config can properly convert to JSON Pointer in config models.  Thanks to [@wazzamatazz](https://github.com/wazzamatazz) for raising the issue and providing the implementation.
