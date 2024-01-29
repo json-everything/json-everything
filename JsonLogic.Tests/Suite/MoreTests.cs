@@ -18,7 +18,7 @@ public class MoreTests
 
 			var content = await File.ReadAllTextAsync(testsPath);
 
-			var testSuite = JsonSerializer.Deserialize(content, TestSerializerContext.Default.TestSuite);
+			var testSuite = JsonSerializer.Deserialize<TestSuite>(content, TestSerializerContext.OptionsManager.SerializerOptions);
 
 			return testSuite!.Tests.Select(t => new TestCaseData(t) { TestName = $"{t.Logic}  |  {t.Data.AsJsonString()}  |  {t.Expected.AsJsonString()}" });
 		}).Result;
@@ -27,7 +27,7 @@ public class MoreTests
 	[TestCaseSource(nameof(Suite))]
 	public void Run(Test test)
 	{
-		var rule = JsonSerializer.Deserialize(test.Logic, LogicSerializerContext.Default.Rule);
+		var rule = JsonSerializer.Deserialize<Rule>(test.Logic, TestSerializerContext.OptionsManager.SerializerOptions);
 
 		if (rule == null)
 		{

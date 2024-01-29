@@ -50,7 +50,7 @@ internal partial class TestSerializerContext : JsonSerializerContext
 		OptionsManager = new TypeResolverOptionsManager(
 #if NET8_0_OR_GREATER
 			Default,
-			RuleRegistry.ExternalTypeInfoResolvers
+			[Rule.JsonTypeResolver, ..RuleRegistry.ExternalTypeInfoResolvers]
 #endif
 		);
 	}

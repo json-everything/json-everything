@@ -146,7 +146,7 @@ public class LogicComponentConverter : JsonConverter<Rule>
 	{
 		if (value.Source != null)
 		{
-			JsonSerializer.Serialize(writer, value.Source, LogicSerializerContext.Default.JsonNode);
+			options.Write(writer, value.Source, LogicSerializerContext.Default.JsonNode);
 			return;
 		}
 
@@ -223,6 +223,7 @@ internal class ArgumentCollectionConverter : JsonConverter<ArgumentCollection>
 [JsonSerializable(typeof(JsonNode))]
 [JsonSerializable(typeof(Rule[]))]
 [JsonSerializable(typeof(ReduceRule.Intermediary))]
+[JsonSerializable(typeof(ArgumentCollection))]
 [JsonSerializable(typeof(int))]
 [JsonSerializable(typeof(float))]
 [JsonSerializable(typeof(double))]
