@@ -119,7 +119,7 @@ public class Validation
 	[TestCaseSource(nameof(TestCases))]
 	public void Test(TestCollection collection, TestCase test, string fileName, EvaluationOptions options)
 	{
-		var serializerOptions = new JsonSerializerOptions
+		var serializerOptions = new JsonSerializerOptions(TestEnvironment.SerializerOptions)
 		{
 			WriteIndented = true,
 			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping

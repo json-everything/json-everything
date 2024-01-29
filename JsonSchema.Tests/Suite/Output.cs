@@ -8,6 +8,7 @@ using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
 using Json.More;
+using Json.Schema.Tests.Serialization;
 using NUnit.Framework;
 
 namespace Json.Schema.Tests.Suite;
@@ -84,7 +85,7 @@ public class Output
 			{
 				PropertyNameCaseInsensitive = true
 			};
-			var collections = serializerOptions.Read(contents, TestSerializerContext.Default.ListTestCollection);
+			var collections = JsonSerializer.Deserialize<List<TestCollection>>(contents, serializerOptions);
 
 			foreach (var collection in collections!)
 			{
@@ -120,7 +121,7 @@ public class Output
 		Console.WriteLine(collection.Description);
 		Console.WriteLine(test.Description);
 		Console.WriteLine();
-		Console.WriteLine(serializerOptions.Write(collection.Schema));
+		Console.WriteLine(JsonSerializer.Serialize(collection.Schema, serializerOptions));
 		Console.WriteLine();
 		Console.WriteLine(test.Data.AsJsonString());
 		Console.WriteLine();
@@ -144,8 +145,8 @@ public class Output
 		{
 			Converters = { converter }
 		};
-		var serializedResult = optionsWithConverters.WriteToNode(result);
-		Console.WriteLine(serializerOptions.Write(serializedResult));
+		var serializedResult = JsonSerializer.SerializeToNode(result, optionsWithConverters);
+		Console.WriteLine(JsonSerializer.Serialize(serializedResult, serializerOptions));
 		Console.WriteLine();
 
 
@@ -157,7 +158,7 @@ public class Output
 
 		if (_unsupportedVersions.Contains(options.EvaluateAs))
 		{
-			Console.WriteLine(serializerOptions.Write(result));
+			Console.WriteLine(JsonSerializer.Serialize(result, serializerOptions));
 
 			if (!result.IsValid)
 				Assert.Inconclusive("not fully supported");
@@ -202,43 +203,8 @@ public class Output
 
 [JsonSerializable(typeof(TestCollection))]
 [JsonSerializable(typeof(List<TestCollection>))]
-public partial class TestSerializerContext : JsonSerializerContext;
-
-public static class TestJsonSerializerOptionsExtensions
-{
-	/// <summary>
-	/// Read and convert the JSON to T.
-	/// </summary>
-	/// <remarks>
-	/// A converter may throw any Exception, but should throw <cref>JsonException</cref> when the JSON is invalid.
-	/// </remarks>
-	/// <typeparam name="T">The <see cref="Type"/> to convert.</typeparam>
-	/// <param name="options">The <see cref="JsonSerializerOptions"/> being used.</param>
-	/// <param name="json">The json to read from.</param>
-	/// <param name="typeInfo">An explicit typeInfo to use for looking up the Converter. If not provided, options.GetTypeInfo will be used.</param>
-	/// <returns>The value that was converted.</returns>
-	public static T? Read<T>(this JsonSerializerOptions options, string json, JsonTypeInfo<T>? typeInfo = null)
-	{
-#pragma warning disable IL2026, IL3050 // This helper is expected to be called with an options object that covers the needed TypeInfos.
-		return JsonSerializer.Deserialize<T>(json, options);
-#pragma warning restore
-	}
-
-	/// <summary>
-	/// Write a T to json and return it.
-	/// </summary>
-	/// <remarks>
-	/// A converter may throw any Exception, but should throw <cref>JsonException</cref> when the JSON is invalid.
-	/// </remarks>
-	/// <typeparam name="T">The <see cref="Type"/> to convert.</typeparam>
-	/// <param name="options">The <see cref="JsonSerializerOptions"/> being used.</param>
-	/// <param name="typeInfo">An explicit typeInfo to use for looking up the Converter. If not provided, options.GetTypeInfo will be used.</param>
-	/// <returns>The value that was converted.</returns>
-	public static string Write<T>(this JsonSerializerOptions options, T? value, JsonTypeInfo<T>? typeInfo = null)
-	{
-#pragma warning disable IL2026, IL3050 // This helper is expected to be called with an options object that covers the needed TypeInfos.
-		return JsonSerializer.Serialize(value, options);
-#pragma warning restore
-	}
-
-}
+[JsonSerializable(typeof(JsonObject))]
+[JsonSerializable(typeof(System.Drawing.Point))]
+[JsonSerializable(typeof(DeserializationTests.Foo))]
+[JsonSerializable(typeof(DeserializationTests.FooWithSchema))]
+internal partial class TestSerializerContext : JsonSerializerContext;

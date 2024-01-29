@@ -16,7 +16,7 @@ public class UnrecognizedKeywordTests
 	{
 		var schemaText = "{\"foo\": \"bar\"}";
 
-		var schema = JsonSerializer.Deserialize<JsonSchema>(schemaText);
+		var schema = JsonSerializer.Deserialize<JsonSchema>(schemaText, TestEnvironment.SerializerOptions);
 
 		Assert.AreEqual(1, schema!.Keywords!.Count);
 		Assert.IsInstanceOf<UnrecognizedKeyword>(schema.Keywords.First());
@@ -27,7 +27,7 @@ public class UnrecognizedKeywordTests
 	{
 		var schemaText = "{\"foo\": \"bar\"}";
 
-		var schema = JsonSerializer.Deserialize<JsonSchema>(schemaText);
+		var schema = JsonSerializer.Deserialize<JsonSchema>(schemaText, TestEnvironment.SerializerOptions);
 
 		var result = schema!.Evaluate(new JsonObject(), new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
 
@@ -41,7 +41,7 @@ public class UnrecognizedKeywordTests
 	{
 		var schemaText = "{\"foo\": \"bar\"}";
 
-		var schema = JsonSerializer.Deserialize<JsonSchema>(schemaText);
+		var schema = JsonSerializer.Deserialize<JsonSchema>(schemaText, TestEnvironment.SerializerOptions);
 
 		var result = schema!.Evaluate(new JsonObject(), new EvaluationOptions
 		{
@@ -108,7 +108,7 @@ public class UnrecognizedKeywordTests
 
 		var result = schema.Evaluate(instance, options);
 
-		Console.WriteLine(JsonSerializer.Serialize(result, new JsonSerializerOptions
+		Console.WriteLine(JsonSerializer.Serialize(result, new JsonSerializerOptions(TestEnvironment.SerializerOptions)
 		{
 			WriteIndented = true,
 			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
@@ -124,9 +124,9 @@ public class UnrecognizedKeywordTests
 	{
 		var schemaText = "{\"foo\":\"bar\"}";
 
-		var schema = JsonSerializer.Deserialize<JsonSchema>(schemaText);
+		var schema = JsonSerializer.Deserialize<JsonSchema>(schemaText, TestEnvironment.SerializerOptions);
 
-		var reText = JsonSerializer.Serialize(schema);
+		var reText = JsonSerializer.Serialize(schema, TestEnvironment.SerializerOptions);
 
 		Assert.AreEqual(schemaText, reText);
 	}

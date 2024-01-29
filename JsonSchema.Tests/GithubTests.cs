@@ -207,7 +207,7 @@ public class GithubTests
     ""dependentRequired"": {
         ""abc"": [ ""d9"" ]
     }
-}")!;
+}", TestEnvironment.SerializerOptions)!;
 		var opts = new EvaluationOptions
 		{
 			EvaluateAs = version,
@@ -439,7 +439,7 @@ public class GithubTests
 
 		var metaSchema = JsonSchema.FromText(GetResource(191, "MetaSchema"));
 
-		SchemaKeywordRegistry.Register<MinDateKeyword>(VocabularySerializerContext.Default);
+		SchemaKeywordRegistry.Register<MinDateKeyword>();
 
 		VocabularyRegistry.Global.Register(new Vocabulary(vocabId, typeof(MinDateKeyword)));
 
@@ -915,7 +915,7 @@ public class GithubTests
 	public void Issue517_IncorrectJsonExceptionLineAndBytePosition(string schemaStr, int expectedLineNumber, int expectedBytePositionInLine)
 	{
 		// Reminder: per the JsonException documentation, expectedLineNumber & expectedBytePositionInLine are 0-based
-		var exception = Assert.Throws<JsonException>(() => JsonSerializer.Deserialize<JsonSchema>(schemaStr));
+		var exception = Assert.Throws<JsonException>(() => JsonSerializer.Deserialize<JsonSchema>(schemaStr, TestEnvironment.SerializerOptions));
 		Assert.IsNotNull(exception);
 		TestContext.Out.WriteLine("Expected error");
 		TestContext.Out.WriteLine(schemaStr.Split('\n')[expectedLineNumber]);

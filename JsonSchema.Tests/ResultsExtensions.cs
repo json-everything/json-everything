@@ -31,7 +31,7 @@ public static class ResultsExtensions
 		if (expected == null) return;
 
 		var expectedJson = JsonNode.Parse(expected);
-		var actualJson = JsonSerializer.SerializeToNode(results);
+		var actualJson = JsonSerializer.SerializeToNode(results, TestEnvironment.SerializerOptions);
 
 		var (areEquivalent, errorLocation) = AreEquivalent(expectedJson, actualJson);
 		if (!areEquivalent) 
