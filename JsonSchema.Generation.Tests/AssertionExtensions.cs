@@ -10,11 +10,11 @@ internal static class AssertionExtensions
 	public static void AssertEqual(JsonSchema expected, JsonSchema actual)
 	{
 		Console.WriteLine("Expected");
-		var expectedAsNode = JsonSerializer.SerializeToNode(expected, new JsonSerializerOptions { WriteIndented = true });
+		var expectedAsNode = JsonSerializer.SerializeToNode(expected, TestEnvironment.SerializerOptionsWriteIndented);
 		Console.WriteLine(expectedAsNode);
 		Console.WriteLine();
 		Console.WriteLine("Actual");
-		var actualAsNode = JsonSerializer.SerializeToNode(actual, new JsonSerializerOptions { WriteIndented = true });
+		var actualAsNode = JsonSerializer.SerializeToNode(actual, TestEnvironment.SerializerOptionsWriteIndented);
 		Console.WriteLine(actualAsNode);
 		Assert.That(() => actualAsNode.IsEquivalentTo(expectedAsNode));
 	}
@@ -22,11 +22,11 @@ internal static class AssertionExtensions
 	public static void AssertEqual(IJsonSchemaKeyword expected, IJsonSchemaKeyword actual)
 	{
 		Console.WriteLine("Expected");
-		var expectedAsNode = JsonSerializer.SerializeToNode(expected, new JsonSerializerOptions { WriteIndented = true });
+		var expectedAsNode = JsonSerializer.SerializeToNode(expected, TestEnvironment.SerializerOptionsWriteIndented);
 		Console.WriteLine(expectedAsNode);
 		Console.WriteLine();
 		Console.WriteLine("Actual");
-		var actualAsNode = JsonSerializer.SerializeToNode(actual, new JsonSerializerOptions { WriteIndented = true });
+		var actualAsNode = JsonSerializer.SerializeToNode(actual, TestEnvironment.SerializerOptionsWriteIndented);
 		Console.WriteLine(actualAsNode);
 		Assert.That(() => actualAsNode.IsEquivalentTo(expectedAsNode));
 	}

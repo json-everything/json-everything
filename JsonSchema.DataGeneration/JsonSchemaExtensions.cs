@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Bogus;
 using Json.Schema.DataGeneration.Generators;
+using Json.Schema.DataGeneration.Requirements;
 
 namespace Json.Schema.DataGeneration;
 
@@ -79,8 +80,23 @@ public static class JsonSchemaExtensions
 	}
 
 	private static readonly IEnumerable<IRequirementsGatherer> _requirementsGatherers =
-		typeof(IRequirementsGatherer).Assembly
-			.DefinedTypes
+			new Type[]
+			{
+				typeof(AllOfRequirementsGatherer),
+				typeof(AnyOfRequirementsGatherer),
+				typeof(ConditionalRequirementsGatherer),
+				typeof(ConstRequirementsGatherer),
+				typeof(ContainsRequirementsGatherer),
+				typeof(EnumRequirementsGatherer),
+				typeof(FalseRequirementsGatherer),
+				typeof(ItemsRequirementsGatherer),
+				typeof(NotRequirementsGatherer),
+				typeof(NumberRequirementsGatherer),
+				typeof(OneOfRequirementsGatherer),
+				typeof(PropertiesRequirementsGatherer),
+				typeof(StringRequirementsGatherer),
+				typeof(TypeRequirementsGatherer),
+			}
 			.Where(x => typeof(IRequirementsGatherer).IsAssignableFrom(x) &&
 						!x.IsAbstract &&
 						!x.IsInterface)

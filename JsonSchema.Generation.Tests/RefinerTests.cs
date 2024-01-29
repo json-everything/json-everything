@@ -54,8 +54,8 @@ public class RefinerTests
 
 		JsonSchema actual = new JsonSchemaBuilder().FromType<ThreeProps>(configuration);
 
-		Console.WriteLine(JsonSerializer.Serialize(expected, new JsonSerializerOptions { WriteIndented = true }));
-		Console.WriteLine(JsonSerializer.Serialize(actual, new JsonSerializerOptions { WriteIndented = true }));
+		Console.WriteLine(JsonSerializer.Serialize(expected, TestEnvironment.SerializerOptionsWriteIndented));
+		Console.WriteLine(JsonSerializer.Serialize(actual, TestEnvironment.SerializerOptionsWriteIndented));
 		AssertEqual(expected, actual);
 	}
 
@@ -76,8 +76,8 @@ public class RefinerTests
 
 		JsonSchema actual = new JsonSchemaBuilder().FromType<TwoProps>(configuration);
 
-		Console.WriteLine(JsonSerializer.Serialize(expected, new JsonSerializerOptions { WriteIndented = true }));
-		Console.WriteLine(JsonSerializer.Serialize(actual, new JsonSerializerOptions { WriteIndented = true }));
+		Console.WriteLine(JsonSerializer.Serialize(expected, TestEnvironment.SerializerOptionsWriteIndented));
+		Console.WriteLine(JsonSerializer.Serialize(actual, TestEnvironment.SerializerOptionsWriteIndented));
 		AssertEqual(expected, actual);
 	}
 }
