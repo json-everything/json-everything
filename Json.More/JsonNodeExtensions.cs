@@ -211,6 +211,15 @@ public static class JsonNodeExtensions
 		return null;
 	}
 
+	/// <summary>
+	/// Gets a node's underlying string value.
+	/// </summary>
+	/// <param name="value">A JSON value.</param>
+	/// <returns>Gets the underlying string value, or null.</returns>
+	/// <remarks>
+	/// JsonNode may use a <see cref="JsonElement"/> under the hood which subsequently contains a string.
+	/// This means that `JsonNode.GetValue&lt;string&gt;()` will not work as expected.
+	/// </remarks>
 	public static string? GetString(this JsonValue value)
 	{
 		if (value.TryGetValue(out JsonElement e))
@@ -225,6 +234,15 @@ public static class JsonNodeExtensions
 		return null;
 	}
 
+	/// <summary>
+	/// Gets a node's underlying boolean value.
+	/// </summary>
+	/// <param name="value">A JSON value.</param>
+	/// <returns>Gets the underlying boolean value, or null.</returns>
+	/// <remarks>
+	/// JsonNode may use a <see cref="JsonElement"/> under the hood which subsequently contains a boolean.
+	/// This means that `JsonNode.GetValue&lt;bool&gt;()` will not work as expected.
+	/// </remarks>
 	public static bool? GetBool(this JsonValue value)
 	{
 		if (value.TryGetValue(out JsonElement e))

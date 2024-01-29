@@ -160,7 +160,7 @@ public class GithubTests
 	[Test]
 	public void Issue397_ReplaceShouldThrowForMissingValue()
 	{
-		JsonNode maskJson = "*****";
+		JsonNode? maskJson = "*****";
 
 		var pathsToPatch = new[] { "/first_name", "/last_name" };
 
