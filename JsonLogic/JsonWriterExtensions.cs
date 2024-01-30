@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using Json.More;
 
 namespace Json.Logic;
 
@@ -22,7 +23,7 @@ public static class JsonWriterExtensions
 			writer.WriteNullValue();
 			return;
 		}
-		JsonSerializer.Serialize(writer, rule, rule.GetType(), LogicSerializerContext.OptionsManager.SerializerOptions);
+		options.Write(writer, rule, LogicSerializerContext.Default.Rule);
 	}
 
 	/// <summary>
