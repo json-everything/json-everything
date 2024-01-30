@@ -1,4 +1,7 @@
-﻿using NUnit.Framework;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
+using Json.More;
+using NUnit.Framework;
 // ReSharper disable NonReadonlyMemberInGetHashCode
 #pragma warning disable NUnit2005
 #pragma warning disable CS8618
@@ -7,7 +10,7 @@ namespace Yaml2JsonNode.Tests;
 
 public class SerializerTests
 {
-	private class Bar
+	public class Bar
 	{
 		public string OtherString { get; set; }
 
@@ -30,7 +33,7 @@ public class SerializerTests
 		}
 	}
 
-	private class Foo
+	public class Foo
 	{
 		public string StringProp { get; set; }
 		public int IntProp { get; set; }
@@ -103,7 +106,7 @@ public class SerializerTests
 
 		var expected = File.ReadAllText(path);
 
-		var actual = YamlSerializer.Serialize(foo);
+		var actual = YamlSerializer.Serialize(foo, TestSerializerContext.OptionsManager.SerializerOptions);
 
 		Assert.AreEqual(expected, actual);
 	}
@@ -135,9 +138,22 @@ public class SerializerTests
 			}
 		};
 
-
-		var actual = YamlSerializer.Deserialize<Foo>(text);
+		var actual = YamlSerializer.Deserialize<Foo>(text, TestSerializerContext.OptionsManager.SerializerOptions);
 
 		Assert.AreEqual(expected, actual);
+	}
+}
+
+[JsonSerializable(typeof(SerializerTests.Foo))]
+[JsonSerializable(typeof(SerializerTests.Bar))]
+internal partial class TestSerializerContext : JsonSerializerContext
+{
+	public static TypeResolverOptionsManager OptionsManager { get; }
+
+	static TestSerializerContext()
+	{
+		OptionsManager = new TypeResolverOptionsManager(
+			Default
+		);
 	}
 }

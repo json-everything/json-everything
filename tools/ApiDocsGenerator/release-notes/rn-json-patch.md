@@ -4,6 +4,24 @@ title: JsonPatch.Net
 icon: fas fa-tag
 order: "09.09"
 ---
+# [3.0.0](https://github.com/gregsdennis/json-everything/pull/619) {#release-patch-3.0.0}
+
+Updated for multi-framework support with .Net Standard 2.0 and .Net 8 with Native AOT support, including updating _System.Text.Json_ from v6 to v8.
+
+Most of the changes to support Native AOT involve either updating internal implementation or creating overloads that do.  Whatever could not be updated was marked as requiring reflection, which will generate warnings when building Native AOT applications.
+
+## Breaking changes
+
+Dropping support for .Net Standard 3.1 - May still be used, but exact behavior cannot be guaranteed. 
+
+## Additions
+
+`JsonPatch.TypeInfoResolver` to expose all of the type resolvers contained in the library.  Can be used to create a combined `SerializationOptions` by using a `Json.More.TypeResolverOptionsManager` in your `JsonSerializerContext`.
+
+## Other chanages
+
+`PatchExtensions.Apply()` and `.Create()`, including all overloads, have been marked as AOT-incompatible since they use unsupported reflection.
+
 # [2.1.0](https://github.com/gregsdennis/json-everything/pull/472) {#release-patch-2.1.0}
 
 [#471](https://github.com/gregsdennis/json-everything/issues/397) - Make patch json converter public to support .Net source generation.  Thanks to [@pwelter34](https://github.com/pwelter34) for highlighting this use case.

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -75,6 +76,8 @@ internal class MissingRuleJsonConverter : AotCompatibleJsonConverter<MissingRule
 		return new MissingRule(parameters);
 	}
 
+	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "<Pending>")]
+	[UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "<Pending>")]
 	public override void Write(Utf8JsonWriter writer, MissingRule value, JsonSerializerOptions options)
 	{
 		writer.WriteStartObject();
