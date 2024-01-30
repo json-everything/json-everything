@@ -8,15 +8,10 @@ using Json.More;
 
 namespace Json.JsonE.Operators;
 
-internal partial class SortOperator : IOperator
+internal class SortOperator : IOperator
 {
-#if NETSTANDARD2_0
 	private static readonly Regex _byForm = new(@"^by\(\s*(?<var>[a-zA-Z_][a-zA-Z0-9_]*)\s*\)");
-#else
-	[GeneratedRegex(@"^by\(\s*(?<var>[a-zA-Z_][a-zA-Z0-9_]*)\s*\)")]
-	private static partial Regex MyRegex();
-	private static readonly Regex _byForm = MyRegex();
-#endif
+
 	public const string Name = "$sort";
 
 	public JsonNode? Evaluate(JsonNode? template, EvaluationContext context)

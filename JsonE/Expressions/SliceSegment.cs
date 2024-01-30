@@ -66,8 +66,8 @@ internal class SliceSegment : IContextAccessorSegment
 		var result = new JsonArray();
 
 		step ??= 1;
-		start ??= (step >= 0 ? 0 : contextValue.Count);
-		end ??= (step >= 0 ? contextValue.Count : -contextValue.Count - 1);
+		start ??= step >= 0 ? 0 : contextValue.Count;
+		end ??= step >= 0 ? contextValue.Count : -contextValue.Count - 1;
 		var (lower, upper) = Bounds(start.Value, end.Value, step.Value, contextValue.Count);
 
 		if (step > 0)
@@ -107,8 +107,8 @@ internal class SliceSegment : IContextAccessorSegment
 		var stringInfo = new StringInfo(contextValue);
 
 		step ??= 1;
-		start ??= (step >= 0 ? 0 : stringInfo.LengthInTextElements);
-		end ??= (step >= 0 ? stringInfo.LengthInTextElements : -stringInfo.LengthInTextElements - 1);
+		start ??= step >= 0 ? 0 : stringInfo.LengthInTextElements;
+		end ??= step >= 0 ? stringInfo.LengthInTextElements : -stringInfo.LengthInTextElements - 1;
 		var (lower, upper) = Bounds(start.Value, end.Value, step.Value, stringInfo.LengthInTextElements);
 
 		if (step > 0)

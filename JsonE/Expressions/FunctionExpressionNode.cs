@@ -9,7 +9,6 @@ namespace Json.JsonE.Expressions;
 
 internal class FunctionExpressionNode : ExpressionNode
 {
-	// TODO: this needs to be an expression
 	public ExpressionNode FunctionExpression { get; }
 	public ExpressionNode[] Parameters { get; }
 

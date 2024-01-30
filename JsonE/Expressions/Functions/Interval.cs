@@ -43,34 +43,6 @@ internal struct Interval
 		return interval;
 	}
 
-	private void Set(string field, int value)
-	{
-		switch (field.ToLowerInvariant())
-		{
-			case "year":
-				Years = value;
-				break;
-			case "month":
-				Months = value;
-				break;
-			case "week":
-				Weeks = value;
-				break;
-			case "day":
-				Days = value;
-				break;
-			case "hour":
-				Hours = value;
-				break;
-			case "minute":
-				Minutes = value;
-				break;
-			case "second":
-				Seconds = value;
-				break;
-		}
-	}
-
 	public DateTime AddTo(DateTime basis)
 	{
 		var totalDays = Years * GetYearLength(basis.Year) +
