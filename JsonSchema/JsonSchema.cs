@@ -262,7 +262,7 @@ public class JsonSchema : IBaseDocument
 	/// <param name="keywordName">The name of the keyword.</param>
 	/// <param name="keyword">The keyword if it exists; otherwise null.</param>
 	/// <returns>true if the keyword exists; otherwise false.</returns>
-	public bool TryGetKeyword<T>(string keywordName, out T? keyword)
+	public bool TryGetKeyword<T>(string keywordName, [NotNullWhen(true)] out T? keyword)
 		where T : IJsonSchemaKeyword
 	{
 		if (BoolValue.HasValue)
