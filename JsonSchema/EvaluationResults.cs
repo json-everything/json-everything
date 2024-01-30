@@ -345,8 +345,7 @@ internal class EvaluationResultsJsonConverter : Json.More.AotCompatibleJsonConve
 			if (value.AnnotationsToSerialize != null)
 			{
 				writer.WritePropertyName("annotations");
-				options.Write(writer, value.AnnotationsToSerialize, 
-					null /* can't pass JsonSchemaSerializerContext.Default.IReadOnlyDictionaryStringJsonNode due to https://github.com/dotnet/runtime/issues/97665 */);
+				options.Write(writer, value.AnnotationsToSerialize!, JsonSchemaSerializerContext.Default.IReadOnlyDictionaryStringJsonNode);
 			}
 		}
 		else
@@ -359,8 +358,7 @@ internal class EvaluationResultsJsonConverter : Json.More.AotCompatibleJsonConve
 			if (value.IncludeDroppedAnnotations && value.AnnotationsToSerialize != null)
 			{
 				writer.WritePropertyName("droppedAnnotations");
-				options.Write(writer, value.AnnotationsToSerialize,
-					null /* can't pass JsonSchemaSerializerContext.Default.IReadOnlyDictionaryStringJsonNode due to https://github.com/dotnet/runtime/issues/97665 */);
+				options.Write(writer, value.AnnotationsToSerialize!, JsonSchemaSerializerContext.Default.IReadOnlyDictionaryStringJsonNode);
 			}
 		}
 
