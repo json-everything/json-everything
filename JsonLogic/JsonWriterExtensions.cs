@@ -25,8 +25,7 @@ public static class JsonWriterExtensions
 		}
 
 #pragma warning disable IL2026, IL3050
-		// using the options.Write() extension here for some reason causes a StackOverflow
-		JsonSerializer.Serialize(writer, rule, rule.GetType(), LogicSerializerContext.OptionsManager.SerializerOptions);
+		options.Write(writer, rule, rule.GetType());	
 #pragma warning restore IL2026, IL3050
 	}
 
