@@ -2,7 +2,7 @@
 <package>
   <metadata minClientVersion="2.12">
     <id>JsonSchema.Net.sv-SE</id>
-    <version>1.0.1</version>
+    <version>2.0.0</version>
     <title>JsonSchema.Net Locale (sv-SE)</title>
     <authors>Greg Dennis</authors>
     <projectUrl>https://github.com/gregsdennis/json-everything</projectUrl>
@@ -13,7 +13,7 @@
     <repository type="git" url="https://github.com/gregsdennis/json-everything" />
     <language>sv-SE</language>
     <dependencies>
-      <dependency id="JsonSchema.Net" version="5.0.0" />
+      <dependency id="JsonSchema.Net" version="6.0.0" />
     </dependencies>
   </metadata>
   <files>

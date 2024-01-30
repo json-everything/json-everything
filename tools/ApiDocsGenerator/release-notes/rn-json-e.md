@@ -4,7 +4,7 @@ title: JsonE.Net
 icon: fas fa-tag
 order: "09.12"
 ---
-# [2.0.0](https://github.com/gregsdennis/json-everything/pull/619) {#release-more-2.0.0}
+# [2.0.0](https://github.com/gregsdennis/json-everything/pull/619) {#release-e-2.0.0}
 
 Updated for multi-framework support with .Net Standard 2.0 and .Net 8 with Native AOT support, including updating _System.Text.Json_ from v6 to v8.
 

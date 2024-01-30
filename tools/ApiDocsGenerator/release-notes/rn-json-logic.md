@@ -4,7 +4,7 @@ title: JsonLogic.Net
 icon: fas fa-tag
 order: "09.11"
 ---
-# [5.0.0](https://github.com/gregsdennis/json-everything/pull/619) {#release-more-5.0.0}
+# [5.0.0](https://github.com/gregsdennis/json-everything/pull/619) {#release-logic-5.0.0}
 
 Updated for multi-framework support with .Net Standard 2.0 and .Net 8 with Native AOT support, including updating _System.Text.Json_ from v6 to v8.
 

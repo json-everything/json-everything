@@ -126,9 +126,6 @@
   <data name="Error_ContainsTooMany" xml:space="preserve">
     <value>Se esperaba que la matriz contuviera al menos un elemento que coincidiera con el esquema, pero no fue así</value>
   </data>
-  <data name="Error_Dependencies" xml:space="preserve">
-    <value>Las siguientes propiedades no cumplieron con sus requisitos: [[properties]]</value>
-  </data>
   <data name="Error_DependentRequired" xml:space="preserve">
     <value>Faltan algunas dependencias de propiedad requeridas: [[missing]]</value>
   </data>
@@ -152,9 +149,6 @@
   </data>
   <data name="Error_FormatWithDetail" xml:space="preserve">
     <value>El valor no coincide con el formato [[format]]: [[detail]]</value>
-  </data>
-  <data name="Error_InvalidItemsForm" xml:space="preserve">
-    <value>La forma de matriz de "items" no es válida para draft 2020-12 y posteriores</value>
   </data>
   <data name="Error_InvalidPattern" xml:space="preserve">
     <value>La expresión regular [[pattern]] no es válida o no se admite</value>
@@ -191,9 +185,6 @@
   </data>
   <data name="Error_OneOf" xml:space="preserve">
     <value>Se esperaba 1 subesquema coincidente pero se encontraron [[count]]</value>
-  </data>
-  <data name="Error_Pattern" xml:space="preserve">
-    <value>El valor de la cadena no coincidía con la expresión regular indicada</value>
   </data>
   <data name="Error_Required" xml:space="preserve">
     <value>Las propiedades requeridas [[missing]] no estaban presentes</value>
