@@ -38,6 +38,7 @@ public static class Vocabularies
 }
 
 [JsonSerializable(typeof(DataKeyword))]
+[JsonSerializable(typeof(OptionalDataKeyword))]
 [JsonSerializable(typeof(Dictionary<string, string>))]
 [JsonSerializable(typeof(Dictionary<string, JsonNode>))]
 [JsonSerializable(typeof(JsonPointer))]
