@@ -16,7 +16,7 @@ public static class KeywordExtensions
 
 		var allTypes = AllKeywordTypes.ToList();
 
-		var allDependencies = allTypes.ToDictionary(x => x, x => x.GetCustomAttributes<DependsOnAnnotationsFromAttribute>().Select(x => x.DependentType));
+		var allDependencies = allTypes.ToDictionary(x => x, x => x.GetCustomAttributes<DependsOnAnnotationsFromAttribute>().Select(y => y.DependentType));
 
 		_keywordEvaluationGroups[typeof(SchemaKeyword)] = -2;
 		_keywordEvaluationGroups[typeof(IdKeyword)] = -1;
@@ -73,10 +73,9 @@ public static class KeywordExtensions
 		if (!_keywordNames.TryGetValue(keywordType, out var name))
 		{
 			name = keywordType.GetCustomAttribute<SchemaKeywordAttribute>()?.Name;
-			if (name == null)
-				throw new InvalidOperationException($"Type {keywordType.Name} must be decorated with {nameof(SchemaKeywordAttribute)}");
 
-			_keywordNames[keywordType] = name;
+			_keywordNames[keywordType] = name ??
+				throw new InvalidOperationException($"Type {keywordType.Name} must be decorated with {nameof(SchemaKeywordAttribute)}");
 		}
 
 		return name;
@@ -97,10 +96,9 @@ public static class KeywordExtensions
 		if (!_keywordNames.TryGetValue(keywordType, out var name))
 		{
 			name = keywordType.GetCustomAttribute<SchemaKeywordAttribute>()?.Name;
-			if (name == null)
-				throw new InvalidOperationException($"Type {keywordType.Name} must be decorated with {nameof(SchemaKeywordAttribute)}");
 
-			_keywordNames[keywordType] = name;
+			_keywordNames[keywordType] = name ??
+				throw new InvalidOperationException($"Type {keywordType.Name} must be decorated with {nameof(SchemaKeywordAttribute)}");
 		}
 
 		return name;

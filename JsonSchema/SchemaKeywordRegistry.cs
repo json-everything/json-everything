@@ -27,6 +27,7 @@ public static class SchemaKeywordRegistry
 	// in our default JsonSerializerContext.
 	private static readonly ConcurrentDictionary<Type, JsonSerializerContext> _externalKeywordTypeInfoResolvers = new();
 
+	// ReSharper disable once CoVariantArrayConversion
 	internal static IJsonTypeInfoResolver[] ExternalTypeInfoResolvers => _externalKeywordTypeInfoResolvers.Values.Distinct().ToArray();
 
 	internal static IEnumerable<Type> KeywordTypes => _keywords.Values;
@@ -138,7 +139,7 @@ public static class SchemaKeywordRegistry
 		var typeInfo = typeContext.GetTypeInfo(typeof(T)) ??
 					   throw new ArgumentException($"Keyword implementation `{typeof(T).Name}` does not have a JsonTypeInfo");
 		_ = typeInfo.Converter as IJsonConverterReadWrite ??
-			throw new ArgumentException("Keyword Converter must implement IJsonConverterReadWrite or Json.More.AotCompatibleJsonConverter to be AOT compatible");
+			throw new ArgumentException("Keyword Converter must implement IJsonConverterReadWrite or AotCompatibleJsonConverter to be AOT compatible");
 
 		_keywords[keyword.Name] = typeof(T);
 		_externalKeywordTypeInfoResolvers[typeof(T)] = typeContext;

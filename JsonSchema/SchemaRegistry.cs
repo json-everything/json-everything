@@ -143,15 +143,6 @@ public class SchemaRegistry
 		return lookup.TryGetValue(uri, out var registration) ? registration : null;
 	}
 
-	internal static string GetFullReference(Uri? uri, string? fragment)
-	{
-		var baseUri = MakeAbsolute(uri).OriginalString;
-
-		if (string.IsNullOrEmpty(fragment)) return baseUri;
-
-		return $"{baseUri}#{fragment}";
-	}
-
 	private static Uri MakeAbsolute(Uri? uri)
 	{
 		if (uri == null) return _empty;

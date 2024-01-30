@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Schema;
 
@@ -58,7 +59,7 @@ public class TitleKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="TitleKeyword"/>.
 /// </summary>
-public sealed class TitleKeywordJsonConverter : Json.More.AotCompatibleJsonConverter<TitleKeyword>
+public sealed class TitleKeywordJsonConverter : AotCompatibleJsonConverter<TitleKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="TitleKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

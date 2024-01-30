@@ -116,7 +116,7 @@ public class ContainsKeyword : IJsonSchemaKeyword, ISchemaContainer
 /// <summary>
 /// JSON converter for <see cref="ContainsKeyword"/>.
 /// </summary>
-public sealed class ContainsKeywordJsonConverter : Json.More.AotCompatibleJsonConverter<ContainsKeyword>
+public sealed class ContainsKeywordJsonConverter : AotCompatibleJsonConverter<ContainsKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="ContainsKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

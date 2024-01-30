@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Json.More;
 using Json.Pointer;
 
 namespace Json.Schema;
@@ -58,8 +59,7 @@ public class SchemaKeyword : IJsonSchemaKeyword
 		if (!context.Options.ValidateAgainstMetaSchema)
 			return KeywordConstraint.Skip;
 
-		var metaSchema = context.Options.SchemaRegistry.Get(Schema) as JsonSchema;
-		if (metaSchema == null)
+		if (context.Options.SchemaRegistry.Get(Schema) is not JsonSchema metaSchema)
 			throw new JsonSchemaException($"Cannot resolve meta-schema `{Schema}`");
 
 		context.Options.ValidateAgainstMetaSchema = false;
@@ -68,7 +68,7 @@ public class SchemaKeyword : IJsonSchemaKeyword
 
 		return new KeywordConstraint(Name, Evaluator)
 		{
-			ChildDependencies = new[] { metaSchemaConstraint }
+			ChildDependencies = [metaSchemaConstraint]
 		};
 	}
 
@@ -82,7 +82,7 @@ public class SchemaKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="SchemaKeyword"/>.
 /// </summary>
-public sealed class SchemaKeywordJsonConverter : Json.More.AotCompatibleJsonConverter<SchemaKeyword>
+public sealed class SchemaKeywordJsonConverter : AotCompatibleJsonConverter<SchemaKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="SchemaKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

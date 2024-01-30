@@ -156,7 +156,7 @@ public class EvaluationOptions
 	}
 
 	/// <summary>
-	/// 
+	/// Ignores annotations from all keywords.
 	/// </summary>
 	public void IgnoreAllAnnotations()
 	{

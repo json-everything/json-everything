@@ -73,8 +73,8 @@ public class AdditionalItemsKeyword : IJsonSchemaKeyword, ISchemaContainer
 
 		var constraint = new KeywordConstraint(Name, Evaluator)
 		{
-			SiblingDependencies = new[] { itemsConstraint },
-			ChildDependencies = new[] { subschemaConstraint }
+			SiblingDependencies = [itemsConstraint],
+			ChildDependencies = [subschemaConstraint]
 		};
 		return constraint;
 	}
@@ -91,7 +91,7 @@ public class AdditionalItemsKeyword : IJsonSchemaKeyword, ISchemaContainer
 /// <summary>
 /// JSON converter for <see cref="AdditionalItemsKeyword"/>.
 /// </summary>
-public sealed class AdditionalItemsKeywordJsonConverter : Json.More.AotCompatibleJsonConverter<AdditionalItemsKeyword>
+public sealed class AdditionalItemsKeywordJsonConverter : AotCompatibleJsonConverter<AdditionalItemsKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="AdditionalItemsKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

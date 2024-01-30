@@ -37,7 +37,7 @@ public class ExtensionTests
 					["2"] = 2,
 					["3"] = 3,
 				},
-				new Dictionary<string, int>()
+				new Dictionary<string, int>
 				{
 					["1"] = 1,
 					["2"] = 2,
@@ -69,7 +69,7 @@ public class ExtensionTests
 					["2"] = 2,
 					["3"] = 3,
 				},
-				new Dictionary<string, int>()
+				new Dictionary<string, int>
 				{
 					["3"] = 3,
 					["2"] = 2,
@@ -85,7 +85,7 @@ public class ExtensionTests
 					["4"] = 2,
 					["3"] = 3,
 				},
-				new Dictionary<string, int>()
+				new Dictionary<string, int>
 				{
 					["1"] = 1,
 					["2"] = 2,
@@ -101,7 +101,7 @@ public class ExtensionTests
 					["2"] = 2,
 					["3"] = 3,
 				},
-				new Dictionary<string, int>()
+				new Dictionary<string, int>
 				{
 					["1"] = 3,
 					["2"] = 2,

@@ -62,8 +62,8 @@ public class ThenKeyword : IJsonSchemaKeyword, ISchemaContainer
 
 		return new KeywordConstraint(Name, Evaluator)
 		{
-			SiblingDependencies = new[] { ifConstraint },
-			ChildDependencies = new[] { subschemaConstraint }
+			SiblingDependencies = [ifConstraint],
+			ChildDependencies = [subschemaConstraint]
 		};
 	}
 
@@ -84,7 +84,7 @@ public class ThenKeyword : IJsonSchemaKeyword, ISchemaContainer
 /// <summary>
 /// JSON converter for <see cref="ThenKeyword"/>.
 /// </summary>
-public sealed class ThenKeywordJsonConverter : Json.More.AotCompatibleJsonConverter<ThenKeyword>
+public sealed class ThenKeywordJsonConverter : AotCompatibleJsonConverter<ThenKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="ThenKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

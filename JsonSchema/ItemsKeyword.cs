@@ -114,8 +114,8 @@ public class ItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, ISchemaCollect
 			};
 
 			if (prefixItemsConstraint != null)
-				constraint.SiblingDependencies = new[] { prefixItemsConstraint };
-			constraint.ChildDependencies = new[] { subschemaConstraint };
+				constraint.SiblingDependencies = [prefixItemsConstraint];
+			constraint.ChildDependencies = [subschemaConstraint];
 		}
 		else // ArraySchema
 		{
@@ -151,7 +151,7 @@ public class ItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, ISchemaCollect
 /// <summary>
 /// JSON converter for <see cref="ItemsKeyword"/>.
 /// </summary>
-public sealed class ItemsKeywordJsonConverter : Json.More.AotCompatibleJsonConverter<ItemsKeyword>
+public sealed class ItemsKeywordJsonConverter : AotCompatibleJsonConverter<ItemsKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="ItemsKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

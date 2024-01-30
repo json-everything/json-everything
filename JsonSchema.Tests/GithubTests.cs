@@ -4,12 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using System.Threading;
 using System.Threading.Tasks;
-using Json.More;
 using Json.Pointer;
 using NUnit.Framework;
-using static Json.Schema.Tests.VocabularyTests;
 
 namespace Json.Schema.Tests;
 
@@ -873,7 +870,7 @@ public class GithubTests
 				)
 			).Build();
 
-		var pointer = Pointer.JsonPointer.Parse("/additionalProperties");
+		var pointer = JsonPointer.Parse("/additionalProperties");
 		var subSchema = schema.FindSubschema(pointer, EvaluationOptions.Default);
 
 		Assert.IsNotNull(subSchema);
@@ -919,7 +916,7 @@ public class GithubTests
 		Assert.IsNotNull(exception);
 		TestContext.Out.WriteLine("Expected error");
 		TestContext.Out.WriteLine(schemaStr.Split('\n')[expectedLineNumber]);
-		TestContext.Out.WriteLine(new string('-', (int)expectedBytePositionInLine - 1) + '^');
+		TestContext.Out.WriteLine(new string('-', expectedBytePositionInLine - 1) + '^');
 		Assert.AreEqual(expectedLineNumber, exception?.LineNumber);
 		Assert.AreEqual(expectedBytePositionInLine, exception?.BytePositionInLine);
 	}

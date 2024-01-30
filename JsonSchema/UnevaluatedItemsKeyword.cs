@@ -136,7 +136,7 @@ public class UnevaluatedItemsKeyword : IJsonSchemaKeyword, ISchemaContainer
 /// <summary>
 /// JSON converter for <see cref="UnevaluatedItemsKeyword"/>.
 /// </summary>
-public sealed class UnevaluatedItemsKeywordJsonConverter : Json.More.AotCompatibleJsonConverter<UnevaluatedItemsKeyword>
+public sealed class UnevaluatedItemsKeywordJsonConverter : AotCompatibleJsonConverter<UnevaluatedItemsKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="UnevaluatedItemsKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

@@ -77,7 +77,7 @@ public class RefKeyword : IJsonSchemaKeyword
 		}
 		else
 		{
-			var anchorFragment = fragment.Substring(1);
+			var anchorFragment = fragment[1..];
 			if (!AnchorKeyword.AnchorPattern.IsMatch(anchorFragment))
 				throw new JsonSchemaException($"Unrecognized fragment type `{newUri}`");
 
@@ -97,7 +97,7 @@ public class RefKeyword : IJsonSchemaKeyword
 
 		return new KeywordConstraint(Name, Evaluator)
 		{
-			ChildDependencies = new[] { subschemaConstraint }
+			ChildDependencies = [subschemaConstraint]
 		};
 	}
 
@@ -113,7 +113,7 @@ public class RefKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="RefKeyword"/>.
 /// </summary>
-public sealed class RefKeywordJsonConverter : Json.More.AotCompatibleJsonConverter<RefKeyword>
+public sealed class RefKeywordJsonConverter : AotCompatibleJsonConverter<RefKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="RefKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

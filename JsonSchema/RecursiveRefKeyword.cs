@@ -66,8 +66,7 @@ public class RecursiveRefKeyword : IJsonSchemaKeyword
 
 			if (schemaRoot.RecursiveAnchor == null) continue;
 
-			if (targetBase is JsonSchema targetBaseSchema &&
-			    targetBaseSchema.RecursiveAnchor == null) break;
+			if (targetBase is JsonSchema { RecursiveAnchor: null }) break;
 
 			targetSchema = schemaRoot.RecursiveAnchor;
 			break;
@@ -84,7 +83,7 @@ public class RecursiveRefKeyword : IJsonSchemaKeyword
 			}
 			else
 			{
-				var anchorFragment = newUri.Fragment.Substring(1);
+				var anchorFragment = newUri.Fragment[1..];
 				if (!AnchorKeyword.AnchorPattern.IsMatch(anchorFragment))
 					throw new JsonSchemaException($"Unrecognized fragment type `{newUri}`");
 
@@ -105,7 +104,7 @@ public class RecursiveRefKeyword : IJsonSchemaKeyword
 		var childEvaluation = target
 			.GetConstraint(JsonPointer.Create(Name), evaluation.Results.InstanceLocation, JsonPointer.Empty, context)
 			.BuildEvaluation(evaluation.LocalInstance, evaluation.Results.InstanceLocation, evaluation.Results.EvaluationPath.Combine(Name), context.Options);
-		evaluation.ChildEvaluations = new[] { childEvaluation };
+		evaluation.ChildEvaluations = [childEvaluation];
 
 		childEvaluation.Evaluate(context);
 
@@ -117,7 +116,7 @@ public class RecursiveRefKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="RecursiveRefKeyword"/>.
 /// </summary>
-public sealed class RecursiveRefKeywordJsonConverter : Json.More.AotCompatibleJsonConverter<RecursiveRefKeyword>
+public sealed class RecursiveRefKeywordJsonConverter : AotCompatibleJsonConverter<RecursiveRefKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="RecursiveRefKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

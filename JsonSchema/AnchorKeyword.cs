@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
+using Json.More;
 
 namespace Json.Schema;
 
@@ -60,7 +61,7 @@ public class AnchorKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="AnchorKeyword"/>.
 /// </summary>
-public sealed class AnchorKeywordJsonConverter : Json.More.AotCompatibleJsonConverter<AnchorKeyword>
+public sealed class AnchorKeywordJsonConverter : AotCompatibleJsonConverter<AnchorKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="AnchorKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

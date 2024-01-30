@@ -12,9 +12,6 @@ public class Format
 	/// </summary>
 	public string Key { get; }
 
-#pragma warning disable 8618
-	internal Format() { }
-#pragma warning restore 8618
 	/// <summary>
 	/// Creates a new <see cref="Format"/>.
 	/// </summary>
