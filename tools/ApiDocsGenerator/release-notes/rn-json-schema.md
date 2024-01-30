@@ -27,10 +27,10 @@ Most of the changes to support Native AOT involve either updating internal imple
 
 ## Other chanages
 
-- `JsonSchema.FromFile(string, JsonSerializerOptions?)` marked AOT-incompatible and replaced with `.FromFile(string)`.
-- `JsonSchema.FromText(string, JsonSerializerOptions?)` marked AOT-incompatible and replaced with `.FromText(string)`.
-- `JsonSchema.FromStream(string, JsonSerializerOptions?)` marked AOT-incompatible and replaced with `.FromStream(string)`.
-- `SchemaKeywordRegistry.Register<T>()` marked AOT-incompatible and replaced with `.Register<T>(JsonSerializerContext)`.
+- `JsonSchema.FromFile(string, JsonSerializerOptions?)` marked AOT-incompatible; added `.FromFile(string)`.
+- `JsonSchema.FromText(string, JsonSerializerOptions?)` marked AOT-incompatible; added `.FromText(string)`.
+- `JsonSchema.FromStream(string, JsonSerializerOptions?)` marked AOT-incompatible; added `.FromStream(string)`.
+- `SchemaKeywordRegistry.Register<T>()` marked AOT-incompatible, usages to be replaced with `.Register<T>(JsonSerializerContext)`.
 - `[JsonSchema]` attribute marked AOT-incompatible.
 - Methods in `ValidatingConverter` marked AOT-incompatible.
 
