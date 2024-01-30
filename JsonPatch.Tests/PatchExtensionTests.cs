@@ -197,36 +197,36 @@ public class PatchExtensionTests
 			Id = Guid.Parse("aa7daced-c9fa-489b-9bc1-540b21d277a1"),
 			Attributes = JsonNode.Parse("[{\"test\":\"test123\"},{\"test\":\"test32132\"},{\"test1\":\"test321\"},{\"test\":[1,2,3]},{\"test\":[1,2,3]}]"),
 			Name = "Test",
-			Numbers = new[] { 1, 2, 3 },
-			Strings = new[] { "test1", "test2" },
-			InnerObjects = new List<TestModel>
-			{
+			Numbers = [1, 2, 3],
+			Strings = ["test1", "test2"],
+			InnerObjects =
+			[
 				new()
 				{
 					Id = Guid.Parse("b2cab2a0-ec23-405a-a5a8-975448a10334"),
 					Name = "TestNameInner1",
-					Numbers = new[] {3, 2, 1},
-					Strings = new[] {"Test3", "test4"}
+					Numbers = [3, 2, 1],
+					Strings = ["Test3", "test4"]
 				}
-			}
+			]
 		};
 		var expected = new TestModel
 		{
 			Id = Guid.Parse("4801bd62-a8ec-4ef2-ae3c-52b9f541625f"),
 			Attributes = JsonNode.Parse("[{\"test1\":\"test123\"},{\"test\":\"test32132\"},{\"test1\":\"test321\"},{\"test\":[1,1,3]}]"),
 			Name = "Test4",
-			Numbers = new[] { 1, 2, 3, 4 },
-			Strings = new[] { "test2", "test2" },
-			InnerObjects = new List<TestModel>
-			{
+			Numbers = [1, 2, 3, 4],
+			Strings = ["test2", "test2"],
+			InnerObjects =
+			[
 				new()
 				{
 					Id = Guid.Parse("bed584b0-7ccc-4336-adba-d0d7f7c3c3f2"),
 					Name = "TestNameInner1",
-					Numbers = new[] {1, 2, 1},
-					Strings = new[] {"Test3", "test4", "test5"}
+					Numbers = [1, 2, 1],
+					Strings = ["Test3", "test4", "test5"]
 				}
-			}
+			]
 		};
 		var patchExpectedStr =
 			"[{\"op\":\"replace\",\"path\":\"/Id\",\"value\":\"4801bd62-a8ec-4ef2-ae3c-52b9f541625f\"}," +
@@ -273,8 +273,8 @@ public class PatchExtensionTests
 		};
 		var model2 = new TestModel
 		{
-			Numbers = Array.Empty<int>(),
-			Strings = Array.Empty<string>(),
+			Numbers = [],
+			Strings = [],
 			InnerObjects = []
 		};
 

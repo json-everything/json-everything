@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using System.Text.Json.Nodes;
-using Json.More;
 using Json.Pointer;
 
 namespace Json.Patch;
