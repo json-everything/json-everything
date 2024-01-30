@@ -4,7 +4,21 @@ title: JsonSchema.Net.Data
 icon: fas fa-tag
 order: "09.05"
 ---
-# [5.0.1](https://github.com/gregsdennis/json-everything/commit/d71868e58ff1c5ac1c393622c8f792eede44b09c) {#release-pointer-5.0.1}
+# [6.0.0](https://github.com/gregsdennis/json-everything/pull/619) {#release-schemadata-6.0.0}
+
+Updated for multi-framework support with .Net Standard 2.0 and .Net 8 with Native AOT support, including updating _System.Text.Json_ from v6 to v8.
+
+## Breaking changes
+
+Dropping support for .Net Standard 3.1 - May still be used, but exact behavior cannot be guaranteed. 
+
+## Additions
+
+- `OptionalDataKeyword` (should have been in v5... oversight)
+- `JsonSchemaBuilderExtensions.OptionalData()`
+- `JsonSchemaExtensions.OptionalData()`
+
+# [5.0.1](https://github.com/gregsdennis/json-everything/commit/d71868e58ff1c5ac1c393622c8f792eede44b09c) {#release-schemadata-5.0.1}
 
 Corrected meta-schema URIs.
 
@@ -18,7 +32,7 @@ Is:
 - Vocab meta-schema: `https://json-everything.net/meta/vocab/data-2023`
 - 2020-12 meta-schema: `https://json-everything.net/meta/data-2023`
 
-# [5.0.0](https://github.com/gregsdennis/json-everything/pull/565) {#release-pointer-5.0.0}
+# [5.0.0](https://github.com/gregsdennis/json-everything/pull/565) {#release-schemadata-5.0.0}
 
 Updated to support new Data 2023 vocabulary.
 
@@ -36,7 +50,7 @@ References to `MetaSchemas.Data` will need to be changed to `MetaSchemas.Data_20
 
 `data` now supports JSON Path references.  See [vocabulary spec](https://docs.json-everything.net/schema/vocabs/data-2023/) for an example.
 
-# [4.1.0](https://github.com/gregsdennis/json-everything/pull/565) {#release-pointer-4.1.0}
+# [4.1.0](https://github.com/gregsdennis/json-everything/pull/565) {#release-schemadata-4.1.0}
 
 [#549](https://github.com/gregsdennis/json-everything/issues/549) - Expose JSON converters for all types to support JSON source generation.
 

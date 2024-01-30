@@ -70,7 +70,7 @@ public class UriIdentifier : IDataResourceIdentifier
 			}
 
 			var rootSchema = (JsonSchema?) registry.Get(root.SchemaLocation);
-			data = JsonSerializer.SerializeToNode(rootSchema, DataGenerationSerializerContext.OptionsManager.SerializerOptions);
+			data = JsonSerializer.SerializeToNode(rootSchema, DataExtSerializerContext.OptionsManager.SerializerOptions);
 		}
 
 		if (!string.IsNullOrEmpty(fragment))
@@ -109,19 +109,5 @@ public class UriIdentifier : IDataResourceIdentifier
 	public override string ToString()
 	{
 		return Target.ToString();
-	}
-}
-
-[JsonSerializable(typeof(JsonSchema))]
-internal partial class DataGenerationSerializerContext : JsonSerializerContext
-{
-	public static TypeResolverOptionsManager OptionsManager { get; }
-
-	static DataGenerationSerializerContext()
-	{
-		OptionsManager = new(
-			Default,
-			Json.Schema.JsonSchema.TypeInfoResolver
-		);
 	}
 }

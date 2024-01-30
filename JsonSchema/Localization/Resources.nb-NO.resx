@@ -126,9 +126,6 @@
   <data name="Error_ContainsTooMany" xml:space="preserve">
     <value>Verdi inneholder mer enn [[maximum]] matchende elementer</value>
   </data>
-  <data name="Error_Dependencies" xml:space="preserve">
-    <value>Følgende attributter feiler kravene deres: [[properties]]</value>
-  </data>
   <data name="Error_DependentRequired" xml:space="preserve">
     <value>Noen avhengihetsforhold mangler: [[missing]]</value>
   </data>
@@ -152,12 +149,6 @@
   </data>
   <data name="Error_FormatWithDetail" xml:space="preserve">
     <value>Verdi matcher ikke formatet [[format]]: [[detail]]</value>
-  </data>
-  <data name="Error_InvalidItemsForm" xml:space="preserve">
-    <value>Arrayformatet er ikke gyldig for utkast 2020-12 eller senere</value>
-  </data>
-  <data name="Error_InvalidPattern" xml:space="preserve">
-    <value>Det vanlige utrykket [[pattern]] er enten ugyldig eller ikke supportert</value>
   </data>
   <data name="Error_Maximum" xml:space="preserve">
     <value>[[received]] er større eller lik som [[limit]]</value>

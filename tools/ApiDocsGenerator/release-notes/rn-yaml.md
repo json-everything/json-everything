@@ -4,6 +4,16 @@ title: Yaml2JsonNode
 icon: fas fa-tag
 order: "09.14"
 ---
+# [2.0.0](https://github.com/gregsdennis/json-everything/pull/619) {#release-yaml-2.0.0}
+
+Updated for multi-framework support with .Net Standard 2.0 and .Net 8.
+
+Most of the changes to support Native AOT involve either updating internal implementation or creating overloads that do.  Whatever could not be updated was marked as requiring reflection, which will generate warnings when building Native AOT applications.
+
+## Breaking changes
+
+Dropping support for .Net Standard 3.1 - May still be used, but exact behavior cannot be guaranteed. 
+
 # [1.2.4](https://github.com/gregsdennis/json-everything/pull/486) {#release-yaml-1.2.4}
 
 Fixed an issue with converting nulls to `YamlNode`.

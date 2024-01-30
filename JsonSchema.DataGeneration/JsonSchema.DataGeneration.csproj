@@ -19,9 +19,9 @@
 		<PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>
 		<PackageTags>json-schema schema json generation</PackageTags>
-		<Version>1.2.0</Version>
-		<FileVersion>1.2.0.0</FileVersion>
-		<AssemblyVersion>1.0.0.0</AssemblyVersion>
+		<Version>2.0.0</Version>
+		<FileVersion>2.0.0.0</FileVersion>
+		<AssemblyVersion>2.0.0.0</AssemblyVersion>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageIcon>json-logo-256.png</PackageIcon>
 		<PackageReleaseNotes>Release notes can be found at https://docs.json-everything.net/rn-json-schema-datageneration/</PackageReleaseNotes>

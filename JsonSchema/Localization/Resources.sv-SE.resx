@@ -126,9 +126,6 @@
   <data name="Error_ContainsTooMany" xml:space="preserve">
     <value>Värdet innehåller mer än [[maximum]] matchande saker</value>
   </data>
-  <data name="Error_Dependencies" xml:space="preserve">
-    <value>Följande egenskaper klarar inte kraven: [[properties]]</value>
-  </data>
   <data name="Error_DependentRequired" xml:space="preserve">
     <value>Några beroendeförhållanden saknas: [[missing]]</value>
   </data>
@@ -152,12 +149,6 @@
   </data>
   <data name="Error_FormatWithDetail" xml:space="preserve">
     <value>Värdet matchar inte formatet [[format]]: [[detail]]</value>
-  </data>
-  <data name="Error_InvalidItemsForm" xml:space="preserve">
-    <value>Arrayformatet är inte giltigt för utkast 2020-12 eller senare</value>
-  </data>
-  <data name="Error_InvalidPattern" xml:space="preserve">
-    <value>Det vanliga uttrycket [[pattern]] är antingen ogiltigt eller stöds ej</value>
   </data>
   <data name="Error_Maximum" xml:space="preserve">
     <value>[[received]] är större eller lika med [[limit]]</value>
