@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	  <TargetFrameworks>netstandard2.0</TargetFrameworks>
+	  <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
 	  <PackageId>Yaml2JsonNode</PackageId>
 	  <Authors>Greg Dennis</Authors>
-	  <Version>1.2.4</Version>
-	  <AssemblyVersion>1.0.0.0</AssemblyVersion>
-	  <FileVersion>1.2.4.0</FileVersion>
+	  <Version>2.0.0</Version>
+	  <AssemblyVersion>2.0.0.0</AssemblyVersion>
+	  <FileVersion>2.0.0.0</FileVersion>
 	  <Description>
 		Allows conversion of YamlDotNet's YAML models to JsonNodes.
 	
@@ -29,11 +29,16 @@
 	  <AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
 	  <NoWarn>CS1570</NoWarn>
 	  <Nullable>enable</Nullable>
+	  <IsAotCompatible Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net7.0'))">true</IsAotCompatible>
 	  <PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
   </PropertyGroup>
 
+	<ItemGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
+		<PackageReference Include="System.Text.Json" Version="6.0.0" />
+	</ItemGroup>
+
 	<ItemGroup>
-		<PackageReference Include="System.Text.Json" Version="7.0.2" />
+		<PackageReference Include="PolySharp" Version="1.14.1" PrivateAssets="all" />
 		<PackageReference Include="YamlDotNet" Version="12.2.1" />
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
 	</ItemGroup>
