@@ -5,7 +5,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
@@ -107,7 +106,7 @@ public class DataKeyword : IJsonSchemaKeyword
 			.GetConstraint(JsonPointer.Create(Name), evaluation.Results.InstanceLocation, evaluation.Results.InstanceLocation, context)
 			.BuildEvaluation(evaluation.LocalInstance, evaluation.Results.InstanceLocation, JsonPointer.Create(Name), context.Options);
 
-		evaluation.ChildEvaluations = new[] { schemaEvaluation };
+		evaluation.ChildEvaluations = [schemaEvaluation];
 
 		schemaEvaluation.Evaluate(context);
 
