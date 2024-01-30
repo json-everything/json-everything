@@ -8,8 +8,6 @@ order: "09.08"
 
 Updated for multi-framework support with .Net Standard 2.0 and .Net 8 with Native AOT support, including updating _System.Text.Json_ from v6 to v8.
 
-Most of the changes to support Native AOT involve either updating internal implementation or creating overloads that do.  Whatever could not be updated was marked as requiring reflection, which will generate warnings when building Native AOT applications.
-
 ## Breaking changes
 
 - Dropping support for .Net Standard 3.1 - May still be used, but exact behavior cannot be guaranteed. 
