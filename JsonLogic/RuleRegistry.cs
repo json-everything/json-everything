@@ -19,9 +19,7 @@ public static class RuleRegistry
 	private static readonly ConcurrentDictionary<string, Type> _rules;
 	private static readonly ConcurrentDictionary<Type, JsonSerializerContext> _externalRuleResolvers = new();
 
-#if NET8_0_OR_GREATER
 	internal static IJsonTypeInfoResolver[] ExternalTypeInfoResolvers => _externalRuleResolvers.Values.Distinct().ToArray();
-#endif
 
 	static RuleRegistry()
 	{
@@ -118,12 +116,10 @@ public static class RuleRegistry
 		where T : Rule
 	{
 		var type = typeof(T);
-#if NET8_0_OR_GREATER // TypeInfo.Converter is part of System.Text.Json 8.x
 		var typeInfo = typeContext.GetTypeInfo(typeof(T)) ??
 		               throw new ArgumentException($"Rule implementation `{typeof(T).Name}` does not have a JsonTypeInfo");
 		_ = typeInfo.Converter as IJsonConverterReadWrite ??
 		                throw new ArgumentException("Rule Converter must implement IJsonConverterReadWrite or Json.More.AotCompatibleJsonConverter to be AOT compatible");
-#endif
 		var operators = type.GetCustomAttributes<OperatorAttribute>().Select(a => a.Name);
 		foreach (var name in operators)
 		{

@@ -32,11 +32,9 @@ internal partial class TestSerializerContext : JsonSerializerContext
 	static TestSerializerContext()
 	{
 		OptionsManager = new TypeResolverOptionsManager(
-#if NET8_0_OR_GREATER
 			Default,
 			Patch.JsonPatch.TypeInfoResolver,
 			JsonSchema.TypeInfoResolver
-#endif
 		);
 	}
 }

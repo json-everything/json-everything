@@ -21,9 +21,7 @@ public class OpenApiDoc : IBaseDocument
 
 	private static readonly JsonSerializerOptions _options = new()
 	{
-#if NET8_0_OR_GREATER
 		TypeInfoResolverChain = { new DefaultJsonTypeInfoResolver() }
-#endif
 	};
 
 	// implements IBaseDocument

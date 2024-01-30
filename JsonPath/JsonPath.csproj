@@ -37,10 +37,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Compile Include="..\netstandard-support\_compatibility.cs" Link="_compatibility.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<None Include="..\tools\ApiDocsGenerator\release-notes\rn-json-path.md" Link="release-notes.md" />
 		<None Include="..\LICENSE" Link="LICENSE">
 			<PackagePath></PackagePath>
@@ -62,10 +58,8 @@
 	</ItemGroup>
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-		<Copy SourceFiles="$(TargetDir)$(DocumentationFile)" DestinationFolder="..\json-everything.net\wwwroot\xml\"
-		      SkipUnchangedFiles="True" OverwriteReadOnlyFiles="True" />
-		<Copy SourceFiles="$(TargetDir)$(DocumentationFile)" DestinationFolder="..\doc-tool\xml\"
-		      SkipUnchangedFiles="True" OverwriteReadOnlyFiles="True" />
+		<Copy SourceFiles="$(TargetDir)$(DocumentationFile)" DestinationFolder="..\json-everything.net\wwwroot\xml\" SkipUnchangedFiles="True" OverwriteReadOnlyFiles="True" />
+		<Copy SourceFiles="$(TargetDir)$(DocumentationFile)" DestinationFolder="..\doc-tool\xml\" SkipUnchangedFiles="True" OverwriteReadOnlyFiles="True" />
 	</Target>
 
 </Project>

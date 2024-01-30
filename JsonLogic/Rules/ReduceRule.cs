@@ -15,17 +15,11 @@ public class ReduceRule : Rule
 {
 	internal class Intermediary
 	{
+		[JsonPropertyName("current")]
 		public JsonNode? Current { get; set; }
+		[JsonPropertyName("accumulator")]
 		public JsonNode? Accumulator { get; set; }
 	}
-
-	private static readonly JsonSerializerOptions _options = new()
-	{
-		PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-#if NET8_0_OR_GREATER
-		TypeInfoResolverChain = { LogicSerializerContext.Default }
-#endif
-	};
 
 	/// <summary>
 	/// A sequence of values to reduce.
@@ -76,9 +70,7 @@ public class ReduceRule : Rule
 				Current = element,
 				Accumulator = accumulator
 			};
-#pragma warning disable IL2026, IL3050
-			var item = JsonSerializer.SerializeToNode(intermediary, _options);
-#pragma warning restore IL2026, IL3050
+			var item = JsonSerializer.SerializeToNode(intermediary, LogicSerializerContext.Default.Intermediary);
 
 			accumulator = Rule.Apply(data, item);
 

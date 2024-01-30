@@ -7,8 +7,6 @@ using NUnit.Framework;
 
 namespace Json.JsonE.Tests;
 
-#if NET8_0_OR_GREATER
-
 public class DevTest
 {
 	[Test]
@@ -26,5 +24,3 @@ public class DevTest
 		Assert.IsInstanceOf<MinFunction>(stored);
 	}
 }
-
-#endif

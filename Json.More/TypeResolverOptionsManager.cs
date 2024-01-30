@@ -13,10 +13,8 @@ public class TypeResolverOptionsManager
 {
 	private readonly JsonSerializerOptions _baseOptions;
 	private JsonSerializerOptions? _serializerOptions;
-#if NET8_0_OR_GREATER
 	private readonly IJsonTypeInfoResolver _baseResolver;
 	private IJsonTypeInfoResolver _typeInfoResolver;
-#endif
 	private readonly object _serializerOptionsLock = new();
 	
 	/// <summary>
@@ -30,9 +28,7 @@ public class TypeResolverOptionsManager
 			{
 				_serializerOptions ??= new JsonSerializerOptions(_baseOptions)
 				{
-#if NET8_0_OR_GREATER
 					TypeInfoResolver = _typeInfoResolver
-#endif
 				};
 
 				return _serializerOptions!;
@@ -40,7 +36,6 @@ public class TypeResolverOptionsManager
 		}
 	}
 
-#if NET8_0_OR_GREATER
 	/// <summary>
 	/// Gets the type info resolver for the associated context.
 	/// </summary>
@@ -101,14 +96,4 @@ public class TypeResolverOptionsManager
 
 		TypeInfoResolverUpdated?.Invoke(this, EventArgs.Empty);
 	}
-#else
-	/// <summary>
-	/// Creates a new instance with optional base options.
-	/// </summary>
-	/// <param name="baseOptions">(optional) The base options.</param>
-	public TypeResolverOptionsManager(JsonSerializerOptions? baseOptions = null)
-	{
-		_baseOptions = baseOptions ?? new JsonSerializerOptions();
-	}
-#endif
 }

@@ -37,10 +37,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Compile Include="..\netstandard-support\_compatibility.cs" Link="_compatibility.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<PackageReference Include="Bogus" Version="34.0.2" />
 		<PackageReference Include="Fare" Version="2.2.1" />
 	</ItemGroup>

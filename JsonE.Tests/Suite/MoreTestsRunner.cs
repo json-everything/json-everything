@@ -4,9 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using Json.More;
-using Newtonsoft.Json.Schema;
 using NUnit.Framework;
 using Yaml2JsonNode;
 
@@ -15,7 +13,11 @@ namespace Json.JsonE.Tests.Suite;
 public class MoreTestsRunner
 {
 	private const string _testsFile = "Files/more-tests.yml";
-	private static readonly JsonSerializerOptions _serializerOptions = new() { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping };
+	private static readonly JsonSerializerOptions _serializerOptions =
+		new(JsonETestSerializerContext.OptionsManager.SerializerOptions)
+		{
+			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+		};
 
 	private static IEnumerable<T>? DeserializeAll<T>(string yamlText, JsonSerializerOptions? options = null)
 	{
@@ -31,7 +33,7 @@ public class MoreTestsRunner
 
 		var yamlText = File.ReadAllText(testsPath);
 
-		var tests = DeserializeAll<Test>(yamlText, JsonETestSerializerContext.Default.Options)!;
+		var tests = DeserializeAll<Test>(yamlText, _serializerOptions)!;
 
 		return tests.Select(t => new TestCaseData(t) { TestName = $"{t.Title}  |  {t.Template.AsJsonString(_serializerOptions)}  |  {t.Context.AsJsonString(_serializerOptions)}" });
 	}

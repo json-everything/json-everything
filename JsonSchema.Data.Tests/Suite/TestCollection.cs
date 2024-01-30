@@ -23,10 +23,8 @@ public partial class DataTestsSerializerContext : JsonSerializerContext
 	static DataTestsSerializerContext()
 	{
 		OptionsManager = new(
-#if NET8_0_OR_GREATER
 			Default,
 			Json.Schema.JsonSchema.TypeInfoResolver
-#endif
 		);
 	}
 }

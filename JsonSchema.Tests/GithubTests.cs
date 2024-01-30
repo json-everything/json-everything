@@ -640,7 +640,7 @@ public class GithubTests
 		var jsonMessages = new List<JsonNode?>();
 		for (int j = 0; j < numberOfMessages; j++)
 		{
-			jsonMessages.Add(instance.Copy());
+			jsonMessages.Add(instance?.DeepClone());
 		}
 		Parallel.ForEach(jsonMessages, json =>
 		{

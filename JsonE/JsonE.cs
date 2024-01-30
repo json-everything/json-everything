@@ -207,4 +207,7 @@ public static class JsonE
 [JsonSerializable(typeof(FunctionDefinition))]
 [JsonSerializable(typeof(SortedDictionary<string, JsonNode>))]
 [JsonSerializable(typeof(JsonExpression))]
+[JsonSerializable(typeof(decimal))]
+[JsonSerializable(typeof(string))]
+[JsonSerializable(typeof(JsonNode))]
 internal partial class JsonESerializerContext : JsonSerializerContext;

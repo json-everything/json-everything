@@ -49,10 +49,8 @@ internal partial class DataExtSerializerContext : JsonSerializerContext
 
 	static DataExtSerializerContext() {
 		OptionsManager = new(
-#if NET8_0_OR_GREATER
 			Default,
 			JsonSchema.TypeInfoResolver
-#endif
 		);
 	}
 }

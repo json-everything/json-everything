@@ -1,7 +1,6 @@
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
 using Json.More;
 using Json.Schema.CodeGeneration.Language;
@@ -13,17 +12,13 @@ public static class AssertHelpers
 	private static readonly JsonSerializerOptions _options =
 		new()
 		{
-#if NET8_0_OR_GREATER
 			TypeInfoResolverChain = { JsonSchema.TypeInfoResolver }
-#endif
 		};
 
 	private static readonly JsonSerializerOptions _optionsWithReflection =
 		new(_options)
 		{
-#if NET8_0_OR_GREATER
 			TypeInfoResolverChain = { new DefaultJsonTypeInfoResolver() }
-#endif
 		};
 
 	private static readonly JsonSerializerOptions _optionsUnsafeRelaxedJsonEscaping =

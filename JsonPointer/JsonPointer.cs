@@ -31,13 +31,11 @@ public class JsonPointer : IEquatable<JsonPointer>
 			Segments = []
 		};
 
-#if NET8_0_OR_GREATER
 	/// <summary>
 	/// A TypeInfoResolver that can be used for serializing <see cref="JsonPointer"/> objects. Add to your custom
 	/// JsonSerializerOptions's TypeInfoResolver or TypeInfoResolveChain.
 	/// </summary>
 	public static IJsonTypeInfoResolver JsonTypeResolver => JsonPointerSerializerContext.Default;
-#endif
 
 	private string? _uriEncoded;
 	private string? _plain;

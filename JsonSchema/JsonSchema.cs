@@ -90,13 +90,11 @@ public class JsonSchema : IBaseDocument
 	internal Dictionary<string, (JsonSchema Schema, bool IsDynamic)> Anchors { get; } = [];
 	internal JsonSchema? RecursiveAnchor { get; set; }
 
-#if NET8_0_OR_GREATER
 	/// <summary>
 	/// A TypeInfoResolver that can be used for serializing JsonSchema objects. Add to your custom
 	/// JsonSerializerOptions's TypeInfoResolver or TypeInfoResolveChain.
 	/// </summary>
 	public static IJsonTypeInfoResolver TypeInfoResolver => JsonSchemaSerializerContext.OptionsManager.TypeInfoResolver;
-#endif
 
 	private JsonSchema(bool value)
 	{

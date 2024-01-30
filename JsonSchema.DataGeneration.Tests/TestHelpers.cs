@@ -11,9 +11,7 @@ public static class TestHelpers
 {
 	public static JsonSerializerOptions SerializerOptions = new()
 	{
-#if NET8_0_OR_GREATER
 		TypeInfoResolverChain = { DataGenerationTestsSerializerContext.Default, JsonSchema.TypeInfoResolver },
-#endif
 	};
 
 	public static void Run(JsonSchema schema, EvaluationOptions? options = null)
