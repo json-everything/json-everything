@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
 using Json.More;
 using Json.Pointer;
 
@@ -291,7 +292,67 @@ public class EvaluationResults
 	/// <param name="keyword">The keyword that failed validation.</param>
 	/// <param name="message">The error message.</param>
 	/// <param name="parameters">Parameters to replace in the message.</param>
+	[RequiresDynamicCode("Calls JsonSerializer.Serialize and might require reflection for token values serialization. Prefer Fail that takes TypeInfo parameters for AOT scenarios.")]
+	[RequiresUnreferencedCode("Calls JsonSerializer.Serialize and might require reflection for token values serialization. Prefer Fail that takes TypeInfo parameters for AOT scenarios.")]
 	public void Fail(string keyword, string message, params (string token, object? value)[] parameters)
+	{
+		IsValid = false;
+		_errors ??= new ();
+		_errors[keyword] = message.ReplaceTokens(parameters);
+	}
+
+	/// <summary>
+	/// Marks the result as invalid.
+	/// </summary>
+	/// <param name="keyword">The keyword that failed validation.</param>
+	/// <param name="message">The error message.</param>
+	/// <param name="parameters">Parameters to replace in the message.</param>
+	public void Fail(string keyword, string message, params (string token, int value)[] parameters) =>
+		Fail(keyword, message, parameters.Select(x => ErrorMessages.MakeParam(x.token, x.value, JsonSchemaSerializerContext.Default.Int32)).ToArray());
+
+	/// <summary>
+	/// Marks the result as invalid.
+	/// </summary>
+	/// <param name="keyword">The keyword that failed validation.</param>
+	/// <param name="message">The error message.</param>
+	/// <param name="parameters">Parameters to replace in the message.</param>
+	public void Fail(string keyword, string message, params (string token, decimal value)[] parameters) =>
+		Fail(keyword, message, parameters.Select(x => ErrorMessages.MakeParam(x.token, x.value, JsonSchemaSerializerContext.Default.Decimal)).ToArray());
+
+	/// <summary>
+	/// Marks the result as invalid.
+	/// </summary>
+	/// <param name="keyword">The keyword that failed validation.</param>
+	/// <param name="message">The error message.</param>
+	/// <param name="parameters">Parameters to replace in the message.</param>
+	public void Fail(string keyword, string message, params (string token, string value)[] parameters) =>
+		Fail(keyword, message, parameters.Select(x => ErrorMessages.MakeParam(x.token, x.value, JsonSchemaSerializerContext.Default.String)).ToArray());
+
+	/// <summary>
+	/// Marks the result as invalid.
+	/// </summary>
+	/// <param name="keyword">The keyword that failed validation.</param>
+	/// <param name="message">The error message.</param>
+	/// <param name="parameters">Parameters to replace in the message.</param>
+	public void Fail(string keyword, string message, params (string token, Dictionary<string, string[]> value)[] parameters) =>
+		Fail(keyword, message, parameters.Select(x => ErrorMessages.MakeParam(x.token, x.value, JsonSchemaSerializerContext.Default.DictionaryStringStringArray)).ToArray());
+
+	/// <summary>
+	/// Marks the result as invalid.
+	/// </summary>
+	/// <param name="keyword">The keyword that failed validation.</param>
+	/// <param name="message">The error message.</param>
+	/// <param name="parameters">Parameters to replace in the message.</param>
+	public void Fail(string keyword, string message, params (string token, string[] value)[] parameters) =>
+		Fail(keyword, message, parameters.Select(x => ErrorMessages.MakeParam(x.token, x.value, JsonSchemaSerializerContext.Default.StringArray)).ToArray());
+
+	/// <summary>
+	/// Marks the result as invalid.
+	/// </summary>
+	/// <param name="keyword">The keyword that failed validation.</param>
+	/// <param name="message">The error message.</param>
+	/// <param name="parameters">Parameters to replace in the message.</param>
+	public void Fail(string keyword, string message, params (string token, object? value, JsonTypeInfo)[] parameters)
 	{
 		IsValid = false;
 		_errors ??= new();

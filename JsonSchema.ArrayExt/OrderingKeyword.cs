@@ -82,8 +82,8 @@ public class OrderingKeyword : IJsonSchemaKeyword
 				{
 					evaluation.Results.Fail(Name, "Item at index [[index]] does not have a value at [[pointer]]"
 						.ReplaceTokens(
-							("index", i-1),
-							("pointer", specifier.By)
+							ErrorMessages.MakeParam("index", i-1, ArrayExtSerializerContext.Default.Int32),
+							ErrorMessages.MakeParam("pointer", specifier.By, ArrayExtSerializerContext.Default.JsonPointer)
 						));
 					return;
 				}
@@ -92,8 +92,8 @@ public class OrderingKeyword : IJsonSchemaKeyword
 				{
 					evaluation.Results.Fail(Name, "Item at index [[index]] does not have a value at [[pointer]]"
 						.ReplaceTokens(
-							("index", i),
-							("pointer", specifier.By)
+							ErrorMessages.MakeParam("index", i, ArrayExtSerializerContext.Default.Int32),
+							ErrorMessages.MakeParam("pointer", specifier.By, ArrayExtSerializerContext.Default.JsonPointer)
 						));
 					return;
 				}
@@ -105,7 +105,7 @@ public class OrderingKeyword : IJsonSchemaKeyword
 				{
 					// basis should be after current
 					evaluation.Results.Fail(Name, "Item at index [[index]] is not in order"
-						.ReplaceTokens(							("index", i)));
+						.ReplaceTokens(ErrorMessages.MakeParam("index", i, ArrayExtSerializerContext.Default.Int32)));
 					return;
 				}
 			}

@@ -42,4 +42,5 @@ public static class Vocabularies
 [JsonSerializable(typeof(List<JsonPointer>))]
 [JsonSerializable(typeof(IEnumerable<OrderingSpecifier>))]
 [JsonSerializable(typeof(List<OrderingSpecifier>))]
+[JsonSerializable(typeof(int))]
 internal partial class ArrayExtSerializerContext : JsonSerializerContext;

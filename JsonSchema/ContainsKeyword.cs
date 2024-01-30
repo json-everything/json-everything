@@ -82,8 +82,6 @@ public class ContainsKeyword : IJsonSchemaKeyword, ISchemaContainer
 		};
 	}
 
-	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
-	[UnconditionalSuppressMessage("AOT", "IL3050:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	private static void Evaluator(KeywordEvaluation evaluation, EvaluationContext context)
 	{
 		if (evaluation.LocalInstance is JsonArray)
@@ -99,13 +97,17 @@ public class ContainsKeyword : IJsonSchemaKeyword, ISchemaContainer
 				.Where(x => x.Results.IsValid)
 				.Select(x => int.Parse(x.RelativeInstanceLocation.Segments[0].Value))
 				.ToArray();
-			evaluation.Results.SetAnnotation(Name, JsonSerializer.SerializeToNode(validIndices, JsonSchemaSerializerContext.OptionsManager.SerializerOptions));
+			evaluation.Results.SetAnnotation(Name, JsonSerializer.SerializeToNode(validIndices, JsonSchemaSerializerContext.Default.Int32Array));
 
 			var actual = validIndices.Length;
 			if (actual < minimum)
-				evaluation.Results.Fail(Name, ErrorMessages.GetContainsTooFew(context.Options.Culture), ("received", actual), ("minimum", minimum));
+				evaluation.Results.Fail(Name, ErrorMessages.GetContainsTooFew(context.Options.Culture),
+					ErrorMessages.MakeParam("received", actual, JsonSchemaSerializerContext.Default.Int32),
+					ErrorMessages.MakeParam("minimum", minimum, JsonSchemaSerializerContext.Default.UInt32));
 			else if (actual > maximum)
-				evaluation.Results.Fail(Name, ErrorMessages.GetContainsTooMany(context.Options.Culture), ("received", actual), ("maximum", maximum));
+				evaluation.Results.Fail(Name, ErrorMessages.GetContainsTooMany(context.Options.Culture),
+					ErrorMessages.MakeParam("received", actual, JsonSchemaSerializerContext.Default.Int32), 
+					ErrorMessages.MakeParam("maximum", maximum.Value, JsonSchemaSerializerContext.Default.UInt32));
 			return;
 		}
 

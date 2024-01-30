@@ -67,7 +67,7 @@ public class MinimumKeyword : IJsonSchemaKeyword
 			return;
 		}
 
-		var number = evaluation.LocalInstance!.AsValue().GetNumber();
+		var number = evaluation.LocalInstance!.AsValue().GetNumber()!.Value;
 		if (Value > number)
 			evaluation.Results.Fail(Name, ErrorMessages.GetMinimum(context.Options.Culture), ("received", number), ("limit", Value));
 	}

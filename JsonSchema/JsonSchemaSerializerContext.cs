@@ -79,6 +79,7 @@ namespace Json.Schema;
 [JsonSerializable(typeof(Dictionary<string, PropertyDependency>))]
 [JsonSerializable(typeof(Dictionary<string, SchemaOrPropertyList>))]
 [JsonSerializable(typeof(Dictionary<string, string[]>))]
+[JsonSerializable(typeof(IReadOnlyCollection<JsonNode?>))]
 [JsonSerializable(typeof(IReadOnlyDictionary<string, JsonNode?>))]
 [JsonSerializable(typeof(IReadOnlyDictionary<string, JsonSchema>))]
 [JsonSerializable(typeof(IReadOnlyDictionary<string, string>))]

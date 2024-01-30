@@ -38,8 +38,8 @@ public partial class VocabularyTests
 
 				if (date < Date)
 					e.Results.Fail(Name, "[[provided:O]] must be on or after [[value:O]]",
-						("provided", date),
-						("value", Date));
+						ErrorMessages.MakeParam("provided", date, VocabularySerializerContext.Default.DateTime),
+						ErrorMessages.MakeParam("value", Date, VocabularySerializerContext.Default.DateTime));
 
 			});
 		}
@@ -88,8 +88,8 @@ public partial class VocabularyTests
 
 				if (date < Date)
 					e.Results.Fail(Name, "[[provided:O]] must be on or after [[value:O]]",
-						("provided", date),
-						("value", Date));
+						ErrorMessages.MakeParam("provided", date, VocabularySerializerContext.Default.DateTime),
+						ErrorMessages.MakeParam("value", Date, VocabularySerializerContext.Default.DateTime));
 
 			});
 		}
