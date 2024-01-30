@@ -150,9 +150,6 @@
   <data name="Error_FormatWithDetail" xml:space="preserve">
     <value>Verdi matcher ikke formatet [[format]]: [[detail]]</value>
   </data>
-  <data name="Error_InvalidPattern" xml:space="preserve">
-    <value>Det vanlige utrykket [[pattern]] er enten ugyldig eller ikke supportert</value>
-  </data>
   <data name="Error_Maximum" xml:space="preserve">
     <value>[[received]] er større eller lik som [[limit]]</value>
   </data>
@@ -185,6 +182,9 @@
   </data>
   <data name="Error_OneOf" xml:space="preserve">
     <value>Forventet 1 matchende subskjema men fant [[count]]</value>
+  </data>
+  <data name="Error_Pattern" xml:space="preserve">
+    <value>Verdi i strengen matcher ikke det vanlige utrykket</value>
   </data>
   <data name="Error_Required" xml:space="preserve">
     <value>Nødvendige attributter [[missing]] mangler</value>
