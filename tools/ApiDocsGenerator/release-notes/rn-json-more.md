@@ -6,14 +6,15 @@ order: "09.13"
 ---
 # [2.0.0](https://github.com/gregsdennis/json-everything/pull/619) {#release-more-2.0.0}
 
-Updated for multi-framework support with .Net Standard 2.0 and .Net 8 with Native AOT support.
+Updated for multi-framework support with .Net Standard 2.0 and .Net 8 with Native AOT support, including updating _System.Text.Json_ from v6 to v8.
 
 Most of the changes to support Native AOT involve either updating internal implementation or creating overloads that do.  Whatever could not be updated was marked as requiring reflection, which will generate warnings when building Native AOT applications.
 
 ## Breaking changes
 
+- Dropping support for .Net Standard 3.1 - May still be used, but exact behavior cannot be guaranteed. 
 - `JsonNull` removed in favor of using the `bool Try...(out ...)` pattern.
-- `JsonNodeExtensions.Copy()` is no longer available in .Net 8 in favor of the built-in `.DeepClone()`.
+- `JsonNodeExtensions.Copy()` removed in favor of the built-in `.DeepClone()`.
 - `JsonSerializerOptionsExtensions.GetConverter<T>()` and `.Read<T>()` updated to take a `JsonTypeInfo`.
 
 ## Additions
