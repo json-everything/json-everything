@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
-using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using Json.More;
 using NUnit.Framework;
@@ -19,7 +18,7 @@ public class SuiteRunner
 		{
 			var testsPath = Path.Combine(TestContext.CurrentContext.WorkDirectory, "Files\\tests.json").AdjustForPlatform();
 
-			string content = null!;
+			string? content = null;
 			try
 			{
 				using var client = new HttpClient();

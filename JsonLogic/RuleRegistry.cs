@@ -19,6 +19,7 @@ public static class RuleRegistry
 	private static readonly ConcurrentDictionary<string, Type> _rules;
 	private static readonly ConcurrentDictionary<Type, JsonSerializerContext> _externalRuleResolvers = new();
 
+	// ReSharper disable once CoVariantArrayConversion
 	internal static IJsonTypeInfoResolver[] ExternalTypeInfoResolvers => _externalRuleResolvers.Values.Distinct().ToArray();
 
 	static RuleRegistry()

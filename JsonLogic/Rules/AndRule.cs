@@ -28,8 +28,7 @@ public class AndRule : Rule
 	/// <param name="more">Sequence of values to And against.</param>
 	protected internal AndRule(Rule a, params Rule[] more)
 	{
-		Items = new List<Rule> { a };
-		Items.AddRange(more);
+		Items = [a, .. more];
 	}
 
 	/// <summary>
@@ -67,8 +66,8 @@ internal class AndRuleJsonConverter : AotCompatibleJsonConverter<AndRule>
 		return new AndRule(parameters[0], parameters.Skip(1).ToArray());
 	}
 
-	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "<Pending>")]
-	[UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "<Pending>")]
+	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
+	[UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public override void Write(Utf8JsonWriter writer, AndRule value, JsonSerializerOptions options)
 	{
 		writer.WriteStartObject();
