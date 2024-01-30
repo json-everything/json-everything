@@ -59,10 +59,8 @@ internal partial class OpenApiSerializerContext : JsonSerializerContext
 	static OpenApiSerializerContext()
 	{
 		OptionsManager = new(
-#if NET8_0_OR_GREATER
 			Default,
 			JsonSchema.TypeInfoResolver
-#endif
 		);
 	}
 }

@@ -120,10 +120,8 @@ internal partial class DataGenerationSerializerContext : JsonSerializerContext
 	static DataGenerationSerializerContext()
 	{
 		OptionsManager = new(
-#if NET8_0_OR_GREATER
 			Default,
 			Json.Schema.JsonSchema.TypeInfoResolver
-#endif
 		);
 	}
 }

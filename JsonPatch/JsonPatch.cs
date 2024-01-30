@@ -16,13 +16,11 @@ namespace Json.Patch;
 [JsonConverter(typeof(PatchJsonConverter))]
 public class JsonPatch : IEquatable<JsonPatch>
 {
-#if NET8_0_OR_GREATER
 	/// <summary>
 	/// A TypeInfoResolver that can be used for serializing <see cref="JsonPointer"/> objects. Add to your custom
 	/// JsonSerializerOptions's TypeInfoResolver or TypeInfoResolveChain.
 	/// </summary>
 	public static IJsonTypeInfoResolver TypeInfoResolver => PatchSerializerContext.OptionsManager.TypeInfoResolver;
-#endif
 
 	/// <summary>
 	/// Gets the collection of operations.
@@ -135,9 +133,7 @@ internal partial class PatchSerializerContext : JsonSerializerContext
 	static PatchSerializerContext()
 	{
 		OptionsManager = new TypeResolverOptionsManager(
-#if NET8_0_OR_GREATER
 			Default
-#endif
 		);
 	}
 }

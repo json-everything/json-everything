@@ -16,13 +16,11 @@ namespace Json.Logic;
 [JsonConverter(typeof(LogicComponentConverter))]
 public abstract class Rule
 {
-#if NET8_0_OR_GREATER
 	/// <summary>
 	/// A TypeInfoResolver that can be used for serializing <see cref="Rule"/> objects. Add to your custom
 	/// JsonSerializerOptions's TypeInfoResolver or TypeInfoResolveChain.
 	/// </summary>
 	public static IJsonTypeInfoResolver JsonTypeResolver => LogicSerializerContext.Default;
-#endif
 
 	internal JsonNode? Source { get; set; }
 
@@ -237,10 +235,8 @@ internal partial class LogicSerializerContext : JsonSerializerContext
 	static LogicSerializerContext()
 	{
 		OptionsManager = new TypeResolverOptionsManager(
-#if NET8_0_OR_GREATER
 			Default,
 			RuleRegistry.ExternalTypeInfoResolvers
-#endif
 		);
 	}
 }

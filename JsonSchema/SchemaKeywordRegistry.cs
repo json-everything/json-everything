@@ -27,9 +27,7 @@ public static class SchemaKeywordRegistry
 	// in our default JsonSerializerContext.
 	private static readonly ConcurrentDictionary<Type, JsonSerializerContext> _externalKeywordTypeInfoResolvers = new();
 
-#if NET8_0_OR_GREATER
 	internal static IJsonTypeInfoResolver[] ExternalTypeInfoResolvers => _externalKeywordTypeInfoResolvers.Values.Distinct().ToArray();
-#endif
 
 	internal static IEnumerable<Type> KeywordTypes => _keywords.Values;
 
@@ -137,19 +135,15 @@ public static class SchemaKeywordRegistry
 		var keyword = typeof(T).GetCustomAttribute<SchemaKeywordAttribute>() ??
 					  throw new ArgumentException($"Keyword implementation `{typeof(T).Name}` does not carry `{nameof(SchemaKeywordAttribute)}`");
 
-#if NET8_0_OR_GREATER // TypeInfo.Converter is part of System.Text.Json 8.x
 		var typeInfo = typeContext.GetTypeInfo(typeof(T)) ??
 					   throw new ArgumentException($"Keyword implementation `{typeof(T).Name}` does not have a JsonTypeInfo");
 		_ = typeInfo.Converter as IJsonConverterReadWrite ??
 			throw new ArgumentException("Keyword Converter must implement IJsonConverterReadWrite or Json.More.AotCompatibleJsonConverter to be AOT compatible");
-#endif
 
 		_keywords[keyword.Name] = typeof(T);
 		_externalKeywordTypeInfoResolvers[typeof(T)] = typeContext;
 
-#if NET8_0_OR_GREATER
 		JsonSchemaSerializerContext.OptionsManager.RebuildTypeResolver(ExternalTypeInfoResolvers);
-#endif
 	}
 
 	/// <summary>

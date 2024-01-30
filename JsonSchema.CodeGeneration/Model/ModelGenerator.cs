@@ -405,10 +405,8 @@ internal partial class CodeGenerationSerializerContext : JsonSerializerContext
 	static CodeGenerationSerializerContext()
 	{
 		OptionsManager = new(
-#if NET8_0_OR_GREATER
 			Default,
 			Json.Schema.JsonSchema.TypeInfoResolver
-#endif
 		);
 	}
 }
