@@ -52,7 +52,7 @@ internal class MoveOperationHandler : IPatchOperationHandler
 		var lastPathSegment = operation.Path.Segments.Last().Value;
 		if (target is JsonObject objTarget)
 		{
-			objTarget[lastPathSegment] = data.Copy();
+			objTarget[lastPathSegment] = data?.DeepClone();
 			return;
 		}
 
@@ -67,9 +67,9 @@ internal class MoveOperationHandler : IPatchOperationHandler
 				return;
 			}
 			if (0 <= index && index < arrTarget.Count)
-				arrTarget.Insert(index, data.Copy());
+				arrTarget.Insert(index, data?.DeepClone());
 			else if (index == arrTarget.Count)
-				arrTarget.Add(data.Copy());
+				arrTarget.Add(data?.DeepClone());
 			else
 				context.Message = "Path indicates an index greater than the bounds of the array";
 		}

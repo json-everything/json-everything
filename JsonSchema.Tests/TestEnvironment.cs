@@ -11,9 +11,7 @@ public class TestEnvironment
 {
 	public static JsonSerializerOptions SerializerOptions = new()
 	{
-#if NET8_0_OR_GREATER
 		TypeInfoResolverChain = { TestSerializerContext.Default, JsonSchema.TypeInfoResolver },
-#endif
 	};
 
 	public static JsonSerializerOptions SerializerOptionsUnsafeRelaxedEscaping = new(SerializerOptions)

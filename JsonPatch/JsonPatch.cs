@@ -52,7 +52,7 @@ public class JsonPatch : IEquatable<JsonPatch>
 	/// <returns>A result object containing the output JSON and a possible error message.</returns>
 	public PatchResult Apply(JsonNode? source)
 	{
-		var context = new PatchContext(source.Copy());
+		var context = new PatchContext(source?.DeepClone());
 
 		foreach (var operation in Operations)
 		{

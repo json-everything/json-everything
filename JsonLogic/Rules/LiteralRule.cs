@@ -20,7 +20,7 @@ public class LiteralRule : Rule
 
 	internal LiteralRule(JsonNode? value)
 	{
-		Value = value?.Copy();
+		Value = value?.DeepClone();
 	}
 
 	/// <summary>

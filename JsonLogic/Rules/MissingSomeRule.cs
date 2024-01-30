@@ -50,7 +50,7 @@ public class MissingSomeRule : Rule
 		var requiredCount = RequiredCount.Apply(data, contextData).Numberify() ?? 1;
 		var components = Components.Apply(data, contextData);
 		if (components is not JsonArray arr)
-			arr = new JsonArray(components.Copy());
+			arr = new JsonArray(components?.DeepClone());
 
 		var expected = arr.SelectMany(e => e.Flatten()).ToList();
 

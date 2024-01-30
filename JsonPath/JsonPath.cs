@@ -21,13 +21,11 @@ public class JsonPath
 	/// </summary>
 	public static JsonPath Root { get; } = new(PathScope.Global, Enumerable.Empty<PathSegment>());
 
-#if NET8_0_OR_GREATER
 	/// <summary>
 	/// A TypeInfoResolver that can be used for serializing <see cref="JsonPath"/> objects. Add to your custom
 	/// JsonSerializerOptions's TypeInfoResolver or TypeInfoResolveChain.
 	/// </summary>
 	public static IJsonTypeInfoResolver JsonTypeResolver => JsonPathSerializerContext.Default;
-#endif
 
 	/// <summary>
 	/// Gets the scope of the path.

@@ -258,56 +258,6 @@ public static class JsonNodeExtensions
 		return null;
 	}
 
-#if !NET8_0_OR_GREATER
-	/// <summary>
-	/// Creates a deep copy of a node.
-	/// </summary>
-	/// <param name="source">A node.</param>
-	/// <returns>A duplicate of the node.</returns>
-	/// <remarks>
-	///	`JsonNode` may only be part of a single JSON tree, i.e. have a single parent.
-	/// Copying a node allows its value to be saved to another JSON tree.
-	/// </remarks>
-	public static JsonNode? Copy(this JsonNode? source)
-	{
-		JsonNode CopyObject(JsonObject obj)
-		{
-			var newObj = new JsonObject(obj.Options);
-			foreach (var kvp in obj)
-			{
-				newObj[kvp.Key] = kvp.Value.Copy();
-			}
-
-			return newObj;
-		}
-
-		JsonNode CopyArray(JsonArray arr)
-		{
-			var newArr = new JsonArray(arr.Options);
-			foreach (var item in arr)
-			{
-				newArr.Add(item.Copy());
-			}
-
-			return newArr;
-		}
-
-		JsonNode? CopyValue(JsonValue val)
-		{
-			return JsonValue.Create(val.GetValue<object>());
-		}
-
-		return source switch
-		{
-			null => null,
-			JsonObject obj => CopyObject(obj),
-			JsonArray arr => CopyArray(arr),
-			JsonValue val => CopyValue(val),
-			_ => throw new ArgumentOutOfRangeException(nameof(source))
-		};
-	}
-#endif
-
 	/// <summary>
 	/// Convenience method that wraps <see cref="JsonObject.TryGetPropertyValue(string, out JsonNode?)"/>
 	/// and catches argument exceptions.
@@ -348,11 +298,7 @@ public static class JsonNodeExtensions
 	/// </remarks>
 	public static JsonArray ToJsonArray(this IEnumerable<JsonNode?> nodes)
 	{
-#if NET8_0_OR_GREATER
 		return new JsonArray(nodes.Select(x => x?.DeepClone()).ToArray());
-#else
-		return new JsonArray(nodes.Select(x => x.Copy()).ToArray());
-#endif
 	}
 
 	///  <summary>

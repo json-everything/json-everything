@@ -76,10 +76,7 @@ public class ValidationOptimized
 			var contents = File.ReadAllText(fileName);
 			var collections = JsonSerializer.Deserialize<List<TestCollection>>(contents, new JsonSerializerOptions
 			{
-#if NET8_0_OR_GREATER
 				TypeInfoResolverChain = { TestSerializerContext.Default, JsonSchema.TypeInfoResolver },
-#endif
-
 				PropertyNameCaseInsensitive = true
 			});
 

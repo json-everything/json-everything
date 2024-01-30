@@ -31,17 +31,13 @@ public static partial class ErrorMessages
     {
         _serializerOptions = new JsonSerializerOptions
         {
-#if NET8_0_OR_GREATER
             TypeInfoResolver = JsonSchema.TypeInfoResolver
-#endif
         };
-#if NET8_0_OR_GREATER
         JsonSchemaSerializerContext.OptionsManager.TypeInfoResolverUpdated +=
             (_, _) => _serializerOptions = new JsonSerializerOptions
             {
                 TypeInfoResolver = JsonSchema.TypeInfoResolver
             };
-#endif
     }
 
     private static string Get(CultureInfo? culture = null, [CallerMemberName] string? key = null)

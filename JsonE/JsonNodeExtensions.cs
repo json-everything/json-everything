@@ -91,7 +91,6 @@ internal static class JsonNodeExtensions
 
 	public static JsonNode? Clone(this JsonNode? source)
 	{
-#if NET8_0_OR_GREATER
 		JsonNode CopyObject(JsonObject obj)
 		{
 			var newObj = new JsonObject(obj.Options);
@@ -130,8 +129,5 @@ internal static class JsonNodeExtensions
 			JsonValue val => CopyValue(val),
 			_ => throw new ArgumentOutOfRangeException(nameof(source))
 		};
-#else
-		return source.Copy();
-#endif
 	}
 }

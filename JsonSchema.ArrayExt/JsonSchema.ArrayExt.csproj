@@ -36,10 +36,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Compile Include="..\netstandard-support\_compatibility.cs" Link="_compatibility.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<ProjectReference Include="..\JsonSchema\JsonSchema.csproj" />
 	</ItemGroup>
 
@@ -61,8 +57,7 @@
 	</ItemGroup>
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-		<Copy SourceFiles="$(TargetDir)$(DocumentationFile)" DestinationFolder="..\doc-tool\xml\"
-		      SkipUnchangedFiles="True" OverwriteReadOnlyFiles="True" />
+		<Copy SourceFiles="$(TargetDir)$(DocumentationFile)" DestinationFolder="..\doc-tool\xml\" SkipUnchangedFiles="True" OverwriteReadOnlyFiles="True" />
 	</Target>
 
 </Project>

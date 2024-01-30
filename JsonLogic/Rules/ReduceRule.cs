@@ -22,9 +22,7 @@ public class ReduceRule : Rule
 	private static readonly JsonSerializerOptions _options = new()
 	{
 		PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-#if NET8_0_OR_GREATER
 		TypeInfoResolverChain = { LogicSerializerContext.Default }
-#endif
 	};
 
 	/// <summary>
@@ -76,9 +74,7 @@ public class ReduceRule : Rule
 				Current = element,
 				Accumulator = accumulator
 			};
-#pragma warning disable IL2026, IL3050
 			var item = JsonSerializer.SerializeToNode(intermediary, _options);
-#pragma warning restore IL2026, IL3050
 
 			accumulator = Rule.Apply(data, item);
 

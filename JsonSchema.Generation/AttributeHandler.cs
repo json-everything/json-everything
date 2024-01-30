@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json.Serialization;
 
@@ -25,6 +26,7 @@ public static class AttributeHandler
 	/// Adds a handler for a custom attribute that cannot be made to implement <see cref="IAttributeHandler"/>.
 	/// </summary>
 	/// <typeparam name="T">The handler type.</typeparam>
+	[RequiresDynamicCode("This method uses reflection to query types and is not suited for AOT scenarios.")]
 	public static void AddHandler<T>()
 		where T : IAttributeHandler, new()
 	{
@@ -38,6 +40,7 @@ public static class AttributeHandler
 	/// Adds a handler for a custom attribute that cannot be made to implement <see cref="IAttributeHandler"/>.
 	/// </summary>
 	/// <param name="handler">The handler.</param>
+	[RequiresDynamicCode("This method uses reflection to query types and is not suited for AOT scenarios.")]
 	public static void AddHandler(IAttributeHandler handler)
 	{
 		var handlerType = handler.GetType();
@@ -51,6 +54,7 @@ public static class AttributeHandler
 	/// Removes a handler type.
 	/// </summary>
 	/// <typeparam name="T">The handler type.</typeparam>
+	[RequiresDynamicCode("This method uses reflection to query types and is not suited for AOT scenarios.")]
 	public static void RemoveHandler<T>()
 		where T : IAttributeHandler
 	{

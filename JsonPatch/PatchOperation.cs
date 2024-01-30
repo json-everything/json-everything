@@ -38,7 +38,7 @@ public class PatchOperation : IEquatable<PatchOperation>
 		Op = op;
 		From = from;
 		Path = path;
-		Value = value.Copy();
+		Value = value?.DeepClone();
 	}
 
 	/// <summary>
