@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System;
 using System.Text.Json.Nodes;
-using Json.More;
 
 namespace Json.Path.Expressions;
 

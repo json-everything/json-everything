@@ -3,9 +3,7 @@ using System;
 
 namespace Json.Path.Expressions;
 
-internal abstract class LogicalExpressionNode : BooleanResultExpressionNode
-{
-}
+internal abstract class LogicalExpressionNode : BooleanResultExpressionNode;
 
 internal static class LogicalExpressionParser
 {
