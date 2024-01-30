@@ -4,6 +4,18 @@ title: JsonSchema.Net.Generation
 icon: fas fa-tag
 order: "09.02"
 ---
+# [4.0.0](https://github.com/gregsdennis/json-everything/pull/619) {#release-schemagen-4.0.0}
+
+Updated for multi-framework support with .Net Standard 2.0 and .Net 8, including updating _System.Text.Json_ from v6 to v8.
+
+AOT support is not currently supported for this library.  Appropriate attributes have been added to public API.
+
+## Breaking changes
+
+- Dropping support for .Net Standard 3.1 - May still be used, but exact behavior cannot be guaranteed. 
+- `PropertyNamingMethods` removed.  Previously marked obsolete.
+- `SchemaGenerationConfiguration.PropertyNamingMethod` removed.  Previously marked obsolete.
+
 # [3.5.0](https://github.com/gregsdennis/json-everything/pull/581) {#release-schemagen-3.5.0}
 
 [#579](https://github.com/gregsdennis/json-everything/issues/579) - Types which contained properties with both nullable and non-nullable versions of the same value type would attribute all properties as nullable.  Thanks to [@tjochums](https://github.com/tjochums) for reporting.
