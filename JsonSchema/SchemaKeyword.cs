@@ -75,7 +75,8 @@ public class SchemaKeyword : IJsonSchemaKeyword
 	private void Evaluator(KeywordEvaluation evaluation, EvaluationContext context)
 	{
 		if (!evaluation.ChildEvaluations[0].Results.IsValid)
-			evaluation.Results.Fail(Name, ErrorMessages.GetMetaSchemaValidation(context.Options.Culture).ReplaceToken("uri", Schema.OriginalString));
+			evaluation.Results.Fail(Name, ErrorMessages.GetMetaSchemaValidation(context.Options.Culture)
+				.ReplaceToken("uri", Schema.OriginalString));
 	}
 }
 

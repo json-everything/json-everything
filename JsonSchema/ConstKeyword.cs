@@ -62,7 +62,8 @@ public class ConstKeyword : IJsonSchemaKeyword
 	private void Evaluator(KeywordEvaluation evaluation, EvaluationContext context)
 	{
 		if (!evaluation.LocalInstance.IsEquivalentTo(Value))
-			evaluation.Results.Fail(Name, ErrorMessages.GetConst(context.Options.Culture).ReplaceToken("value", Value.AsJsonString()));
+			evaluation.Results.Fail(Name, ErrorMessages.GetConst(context.Options.Culture)
+				.ReplaceToken("value", Value.AsJsonString()));
 	}
 }
 

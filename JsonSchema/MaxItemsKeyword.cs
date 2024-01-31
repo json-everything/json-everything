@@ -68,7 +68,9 @@ public class MaxItemsKeyword : IJsonSchemaKeyword
 
 		var number = array.Count;
 		if (Value < number)
-			evaluation.Results.Fail(Name, ErrorMessages.GetMaxItems(context.Options.Culture).ReplaceToken("received", number).ReplaceToken("limit", Value));
+			evaluation.Results.Fail(Name, ErrorMessages.GetMaxItems(context.Options.Culture)
+				.ReplaceToken("received", number)
+				.ReplaceToken("limit", Value));
 	}
 }
 

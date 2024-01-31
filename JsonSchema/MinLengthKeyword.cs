@@ -69,7 +69,9 @@ public class MinLengthKeyword : IJsonSchemaKeyword
 		var str = evaluation.LocalInstance!.GetValue<string>();
 		var length = new StringInfo(str).LengthInTextElements;
 		if (Value > length)
-			evaluation.Results.Fail(Name, ErrorMessages.GetMinLength(context.Options.Culture).ReplaceToken("received", length).ReplaceToken("limit", Value));
+			evaluation.Results.Fail(Name, ErrorMessages.GetMinLength(context.Options.Culture)
+				.ReplaceToken("received", length)
+				.ReplaceToken("limit", Value));
 	}
 }
 

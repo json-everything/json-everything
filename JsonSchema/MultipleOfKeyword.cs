@@ -69,7 +69,9 @@ public class MultipleOfKeyword : IJsonSchemaKeyword
 
 		var number = evaluation.LocalInstance!.AsValue().GetNumber()!.Value;
 		if (number % Value != 0)
-			evaluation.Results.Fail(Name, ErrorMessages.GetMultipleOf(context.Options.Culture).ReplaceToken("received", number).ReplaceToken("divisor", Value));
+			evaluation.Results.Fail(Name, ErrorMessages.GetMultipleOf(context.Options.Culture)
+				.ReplaceToken("received", number)
+				.ReplaceToken("divisor", Value));
 	}
 }
 

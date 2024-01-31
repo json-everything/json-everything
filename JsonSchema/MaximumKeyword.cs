@@ -69,7 +69,9 @@ public class MaximumKeyword : IJsonSchemaKeyword
 
 		var number = evaluation.LocalInstance!.AsValue().GetNumber()!.Value;
 		if (Value < number)
-			evaluation.Results.Fail(Name, ErrorMessages.GetMaximum(context.Options.Culture).ReplaceToken("received", number).ReplaceToken("limit", Value));
+			evaluation.Results.Fail(Name, ErrorMessages.GetMaximum(context.Options.Culture)
+				.ReplaceToken("received", number)
+				.ReplaceToken("limit", Value));
 	}
 }
 

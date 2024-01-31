@@ -79,7 +79,8 @@ public class DependentRequiredKeyword : IJsonSchemaKeyword
 		}
 
 		if (missing.Count != 0)
-			evaluation.Results.Fail(Name, ErrorMessages.GetDependentRequired(context.Options.Culture).ReplaceToken("missing", missing));
+			evaluation.Results.Fail(Name, ErrorMessages.GetDependentRequired(context.Options.Culture)
+				.ReplaceToken("missing", missing));
 	}
 }
 

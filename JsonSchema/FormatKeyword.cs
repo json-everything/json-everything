@@ -64,7 +64,8 @@ public class FormatKeyword : IJsonSchemaKeyword
 		EvaluationContext context)
 	{
 		if (Value is UnknownFormat && context.Options.OnlyKnownFormats)
-			return new KeywordConstraint(Name, (e, _) => e.Results.Fail(Name, ErrorMessages.GetUnknownFormat(context.Options.Culture).ReplaceToken("format", Value.Key)));
+			return new KeywordConstraint(Name, (e, _) => e.Results.Fail(Name, ErrorMessages.GetUnknownFormat(context.Options.Culture)
+				.ReplaceToken("format", Value.Key)));
 
 		var requireValidation = context.Options.RequireFormatValidation;
 
@@ -99,9 +100,12 @@ public class FormatKeyword : IJsonSchemaKeyword
 		if (Value is UnknownFormat)
 			evaluation.Results.Fail(Name, errorMessage);
 		else if (errorMessage == null)
-			evaluation.Results.Fail(Name, ErrorMessages.GetFormat(context.Options.Culture).ReplaceToken("format", Value.Key));
+			evaluation.Results.Fail(Name, ErrorMessages.GetFormat(context.Options.Culture)
+				.ReplaceToken("format", Value.Key));
 		else
-			evaluation.Results.Fail(Name, ErrorMessages.GetFormatWithDetail(context.Options.Culture).ReplaceToken("format", Value.Key).ReplaceToken("detail", errorMessage));
+			evaluation.Results.Fail(Name, ErrorMessages.GetFormatWithDetail(context.Options.Culture)
+				.ReplaceToken("format", Value.Key)
+				.ReplaceToken("detail", errorMessage));
 	}
 }
 
