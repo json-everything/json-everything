@@ -52,7 +52,7 @@ public class AllRule : Rule
 		if (input is not JsonArray arr) return false;
 
 		var results = arr.Select(value => Rule.Apply(contextData, value)).ToList();
-		return (results.Any() &&
+		return (results.Count != 0 &&
 				results.All(result => result.IsTruthy()));
 	}
 }

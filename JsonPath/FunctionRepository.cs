@@ -17,7 +17,7 @@ public static class FunctionRepository
 
 	}
 
-	private static readonly Dictionary<string, IPathFunctionDefinition> _functions = new();
+	private static readonly Dictionary<string, IPathFunctionDefinition> _functions = [];
 
 	static FunctionRepository()
 	{

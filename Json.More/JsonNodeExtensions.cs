@@ -311,7 +311,7 @@ public static class JsonNodeExtensions
 		var sb = new StringBuilder();
 		sb.Append('$');
 		segments.Pop();  // first is always null - the root
-		while (segments.Any())
+		while (segments.Count != 0)
 		{
 			var segment = segments.Pop();
 			var index = segment?.GetNumber();
@@ -331,7 +331,9 @@ public static class JsonNodeExtensions
 				null => null,
 				JsonObject obj => GetKey(obj, current),
 				JsonArray arr => GetIndex(arr, current),
+#pragma warning disable CA2208
 				_ => throw new ArgumentOutOfRangeException("parent", "this shouldn't happen")
+#pragma warning restore CA2208
 			};
 			segments.Push(segment);
 			current = current.Parent;
@@ -350,10 +352,12 @@ public static class JsonNodeExtensions
 		return JsonValue.Create(arr.IndexOf(current));
 	}
 
+	private static readonly Regex _pathSegmentTestPattern = new("^[a-z][a-z_]*$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
 	private static string GetNamedSegmentForPath(JsonValue segment, bool useShorthand)
 	{
 		var value = segment.GetValue<string>();
-		if (useShorthand && Regex.IsMatch(value, "^[a-z][a-z_]*$"))  return $".{value}";
+		if (useShorthand && _pathSegmentTestPattern.IsMatch(value))  return $".{value}";
 
 		return $"['{PrepForJsonPath(segment.AsJsonString(_unfriendlyCharSerialization))}']";
 	}
@@ -362,7 +366,7 @@ public static class JsonNodeExtensions
 	// just need to replace the quotes.
 	private static string PrepForJsonPath(string jsonString)
 	{
-		var content = jsonString.Substring(1, jsonString.Length-2);
+		var content = jsonString[1..^1];
 		var escaped = content.Replace("\\\"", "\"")
 			.Replace("'", "\\'");
 		return escaped;
@@ -385,7 +389,7 @@ public static class JsonNodeExtensions
 
 		var sb = new StringBuilder();
 		segments.Pop();  // first is always null - the root
-		while (segments.Any())
+		while (segments.Count != 0)
 		{
 			var segment = segments.Pop();
 			var index = segment?.GetNumber();

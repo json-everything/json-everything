@@ -96,7 +96,7 @@ public class DataKeyword : IJsonSchemaKeyword
 			data.Add(reference.Key, resolved!);
 		}
 
-		if (failedReferences.Any())
+		if (failedReferences.Count != 0)
 			throw new RefResolutionException(failedReferences.Select(x => x.ToString())!);
 
 		var json = JsonSerializer.Serialize(data, DataExtSerializerContext.OptionsManager.SerializerOptions);

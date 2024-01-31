@@ -35,7 +35,7 @@ public class SchemaConstraint
 	/// <summary>
 	/// Gets the set of keyword constraints.
 	/// </summary>
-	public KeywordConstraint[] Constraints { get; internal set; } = Array.Empty<KeywordConstraint>();
+	public KeywordConstraint[] Constraints { get; internal set; } = [];
 
 	/// <summary>
 	/// Defines a method to identify relative instance locations at evaluation time.

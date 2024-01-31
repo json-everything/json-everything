@@ -88,7 +88,7 @@ public class DynamicRefKeyword : IJsonSchemaKeyword
 			}
 			else
 			{
-				var anchorFragment = newUri.Fragment.Substring(1);
+				var anchorFragment = newUri.Fragment[1..];
 				if (!AnchorKeyword.AnchorPattern.IsMatch(anchorFragment))
 					throw new JsonSchemaException($"Unrecognized fragment type `{newUri}`");
 

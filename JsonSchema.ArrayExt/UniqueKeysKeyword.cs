@@ -98,7 +98,7 @@ public class UniqueKeysKeyword : IJsonSchemaKeyword
 			}
 		}
 
-		if (matchedIndexPairs.Any())
+		if (matchedIndexPairs.Count != 0)
 		{
 			var pairs = string.Join(", ", matchedIndexPairs.Select(d => $"({d.Item1}, {d.Item2})"));
 			evaluation.Results.Fail(Name, ErrorMessages.GetUniqueItems(context.Options.Culture)

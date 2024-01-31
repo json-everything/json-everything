@@ -30,8 +30,8 @@ internal class IntegerGenerator : IDataGenerator
 		if (!range.Minimum.Inclusive) minValue++;
 		if (!range.Maximum.Inclusive) maxValue--;
 
-		var value = GetValue(minValue, maxValue, context.Multiples?.ToArray() ?? Array.Empty<decimal>(),
-			context.AntiMultiples?.ToArray() ?? Array.Empty<decimal>());
+		var value = GetValue(minValue, maxValue, context.Multiples?.ToArray() ?? [],
+			context.AntiMultiples?.ToArray() ?? []);
 
 		return value.HasValue
 			? GenerationResult.Success(value.Value)
@@ -40,7 +40,7 @@ internal class IntegerGenerator : IDataGenerator
 
 	private static long? GetValue(long lowerBound, long upperBound, decimal[] requireMultiple, decimal[] requireNotMultiple)
 	{
-		var period = (int)Lcm(requireNotMultiple.Concat(requireMultiple).Concat(new[] { 1m }).ToArray());
+		var period = (int)Lcm([.. requireNotMultiple, .. requireMultiple, .. new[] { 1m }]);
 		if (period == 1) return JsonSchemaExtensions.Randomizer.Long(lowerBound, upperBound);
 
 		var range = upperBound - lowerBound;

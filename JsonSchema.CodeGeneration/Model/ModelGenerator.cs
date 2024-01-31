@@ -357,7 +357,7 @@ internal static class ModelGenerator
 		}
 		else
 		{
-			var anchorFragment = fragment.Substring(1);
+			var anchorFragment = fragment[1..];
 			if (!_anchorPattern.IsMatch(anchorFragment))
 				throw new JsonSchemaException($"Unrecognized fragment type `{newUri}`");
 

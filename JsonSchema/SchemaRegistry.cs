@@ -91,7 +91,7 @@ public class SchemaRegistry
 
 	internal void RegisterSchema(Uri? uri, IBaseDocument document)
 	{
-		_registered ??= new Dictionary<Uri, Registration>();
+		_registered ??= [];
 		uri = MakeAbsolute(uri);
 		var registration = CheckRegistry(_registered, uri);
 		if (registration == null)

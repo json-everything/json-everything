@@ -49,7 +49,7 @@ public class EvaluationResults
 	/// <summary>
 	/// The collection of nested results.
 	/// </summary>
-	public IReadOnlyList<EvaluationResults> Details => _details ??= new List<EvaluationResults>();
+	public IReadOnlyList<EvaluationResults> Details => _details ??= [];
 
 	/// <summary>
 	/// Gets whether there are nested results.
@@ -119,7 +119,7 @@ public class EvaluationResults
 		InstanceLocation = other.InstanceLocation;
 		_annotations = other._annotations?.ToDictionary(x => x.Key, x => x.Value);
 		_errors = other._errors?.ToDictionary(x => x.Key, x => x.Value);
-		IncludeDroppedAnnotations = IncludeDroppedAnnotations;
+		IncludeDroppedAnnotations = other.IncludeDroppedAnnotations;
 		_ignoredAnnotations = other._ignoredAnnotations;
 		_backgroundAnnotations = other._backgroundAnnotations;
 	}
@@ -155,14 +155,14 @@ public class EvaluationResults
 	public void ToList()
 	{
 		var children = GetAllChildren().ToList();
-		if (!children.Any()) return;
+		if (children.Count == 0) return;
 
 		children.Remove(this);
 		children.Insert(0, new EvaluationResults(this) { Parent = this });
 		_annotations?.Clear();
 		_errors?.Clear();
 		if (_details == null)
-			_details = new List<EvaluationResults>();
+			_details = [];
 		else
 			_details.Clear();
 		foreach (var child in children)
@@ -181,7 +181,7 @@ public class EvaluationResults
 		var toProcess = new Queue<EvaluationResults>();
 
 		toProcess.Enqueue(this);
-		while (toProcess.Any())
+		while (toProcess.Count != 0)
 		{
 			var current = toProcess.Dequeue();
 			all.Add(current);
@@ -219,7 +219,7 @@ public class EvaluationResults
 	{
 		if (_ignoredAnnotations?.Any(x => x == keyword) ?? false) return;
 
-		_annotations ??= new();
+		_annotations ??= [];
 
 		_annotations[keyword] = value;
 	}
@@ -281,13 +281,13 @@ public class EvaluationResults
 		IsValid = false;
 		if (message == null) return;
 
-		_errors ??= new();
+		_errors ??= [];
 		_errors[keyword] = message;
 	}
 
 	internal void AddNestedResult(EvaluationResults results)
 	{
-		_details ??= new List<EvaluationResults>();
+		_details ??= [];
 		_details.Add(results);
 		results.Parent = this;
 	}
@@ -524,7 +524,7 @@ public class Pre202012EvaluationResultsJsonConverter : AotCompatibleJsonConverte
 			}
 			else
 			{
-				var annotations = value.AnnotationsToSerialize?.Select(x => new Annotation(x.Key, x.Value, value.EvaluationPath.Combine(x.Key))).ToArray() ?? Array.Empty<Annotation>();
+				var annotations = value.AnnotationsToSerialize?.Select(x => new Annotation(x.Key, x.Value, value.EvaluationPath.Combine(x.Key))).ToArray() ?? [];
 
 				if (value.HasDetails)
 				{

@@ -34,11 +34,11 @@ public class SchemaGeneratorConfiguration
 	/// <summary>
 	/// A collection of refiners.
 	/// </summary>
-	public List<ISchemaRefiner> Refiners { get; } = new();
+	public List<ISchemaRefiner> Refiners { get; } = [];
 	/// <summary>
 	/// A collection of generators in addition to the global set.
 	/// </summary>
-	public List<ISchemaGenerator> Generators { get; } = new();
+	public List<ISchemaGenerator> Generators { get; } = [];
 	/// <summary>
 	/// Gets or sets the order in which properties will be listed in the schema.
 	/// </summary>

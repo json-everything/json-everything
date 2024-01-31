@@ -76,7 +76,7 @@ public class UniqueItemsKeyword : IJsonSchemaKeyword
 				duplicates.Add((i, j));
 		}
 
-		if (duplicates.Any())
+		if (duplicates.Count != 0)
 		{
 			var pairs = string.Join(", ", duplicates.Select(d => $"({d.Item1}, {d.Item2})"));
 			evaluation.Results.Fail(Name, ErrorMessages.GetUniqueItems(context.Options.Culture)

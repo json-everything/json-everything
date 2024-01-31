@@ -7,10 +7,13 @@ public class OrderedTypeList
 	public OrderedTypeList(Type type)
 	{
 		TypeCollection = TypeCollection.ForReferencedTypes(type);
-		TypesToDocument = TypeCollection.ReferencedTypes.Values
-			.OrderBy(t => t.Type.Namespace)
-			.ThenBy(t => t.Type.Name).ToList();
-		TypesToDocumentSet = new HashSet<Type> { type };
+		TypesToDocument =
+		[
+			.. TypeCollection.ReferencedTypes.Values
+						.OrderBy(t => t.Type.Namespace)
+						.ThenBy(t => t.Type.Name),
+		];
+		TypesToDocumentSet = [type];
 	}
 
 	public TypeCollection TypeCollection { get; set; }

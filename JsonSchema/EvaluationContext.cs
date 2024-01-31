@@ -36,7 +36,7 @@ public class EvaluationContext
 	/// Due to historic evolution of JSON Schema, some keywords (particularly `format`) require
 	/// knowledge of the active vocabularies in order to process correctly.
 	/// </remarks>
-	public Dictionary<Uri, Vocabulary[]?> Dialect { get; } = new();
+	public Dictionary<Uri, Vocabulary[]?> Dialect { get; } = [];
 	
 	/// <summary>
 	/// Gets the spec version that the schema is currently being evaluated under.

@@ -81,7 +81,7 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 			}
 
 			if (SchemaGeneratorConfiguration.Current.StrictConditionals &&
-			    localConditionalAttributes.Any())
+			    localConditionalAttributes.Count != 0)
 			{
 				addUnevaluatedProperties = true;
 				var applicableConditionGroups = localConditionalAttributes.Select(x => x.ConditionGroup).Distinct();
@@ -116,7 +116,7 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 			.GroupBy(x => x.Attribute.ConditionGroup)
 			.ToList();
 
-		if (!conditionGroups.Any()) return;
+		if (conditionGroups.Count == 0) return;
 
 		if (conditionGroups.Count == 1)
 		{
@@ -156,7 +156,7 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 						});
 				}
 			}
-			if (allOf.Subschemas.Any())
+			if (allOf.Subschemas.Count != 0)
 				context.Intents.Add(allOf);
 		}
 
@@ -258,13 +258,13 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 
 		var thenIntents = new List<ISchemaKeywordIntent>();
 
-		if (properties.Any())
+		if (properties.Count != 0)
 			thenIntents.Add(new PropertiesIntent(properties));
 
-		if (required.Any())
+		if (required.Count != 0)
 			thenIntents.Add(new RequiredIntent(required));
 
-		if (!thenIntents.Any()) return null;
+		if (thenIntents.Count == 0) return null;
 
 		var thenIntent = new ThenIntent(thenIntents);
 

@@ -80,7 +80,7 @@ internal static class FunctionArgumentParser
 		i++;
 
 		// parse list of arguments - all expressions
-		arguments = new List<ExpressionNode>();
+		arguments = [];
 		var done = false;
 
 		while (i < source.Length && !done)

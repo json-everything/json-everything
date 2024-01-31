@@ -12,7 +12,7 @@ public static class KeywordExtensions
 {
 	static KeywordExtensions()
 	{
-		_keywordEvaluationGroups = new();
+		_keywordEvaluationGroups = [];
 
 		var allTypes = AllKeywordTypes.ToList();
 

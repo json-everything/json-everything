@@ -29,7 +29,7 @@ public class EnumIntent : ISchemaKeywordIntent
 	/// <param name="names">The names defined by the enumeration.</param>
 	public EnumIntent(params string[] names)
 	{
-		Names = names.ToList();
+		Names = [.. names];
 	}
 
 	/// <summary>

@@ -2,14 +2,11 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Linq;
-using System.Reflection;
 using System.Resources;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization.Metadata;
-using System.Xml.Linq;
 
 namespace Json.Schema;
 
@@ -40,7 +37,7 @@ public static partial class ErrorMessages
         if (key == null) throw new ArgumentNullException(nameof(key), "Cannot get a null-keyed resource");
 
         if (key.StartsWith("Get"))
-            key = key.Substring(3);
+            key = key[3..];
 
         return _resourceManager.GetString($"Error_{key}", culture ?? Culture ?? CultureInfo.CurrentCulture) ??
                throw new KeyNotFoundException($"Could not find error message with key '{key}'");

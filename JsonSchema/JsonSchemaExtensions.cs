@@ -71,7 +71,7 @@ public static partial class JsonSchemaExtensions
 
 			if (!bundledReferences.Contains(nextReference))
 			{
-				externalSchemas.Add(Guid.NewGuid().ToString("N").Substring(0, 10), resolvedSchema);
+				externalSchemas.Add(Guid.NewGuid().ToString("N")[..10], resolvedSchema);
 				bundledReferences.Add(nextReference);
 			}
 			schemasToSearch.Add(resolvedSchema);

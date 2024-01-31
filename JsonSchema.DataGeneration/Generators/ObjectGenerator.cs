@@ -100,7 +100,7 @@ internal class ObjectGenerator : IDataGenerator
 			remainingPropertyCount = 0;
 		remainingPropertyCount = Math.Max(0, remainingPropertyCount);
 		var otherPropertyNames = remainingPropertyCount == 0
-			? Array.Empty<string>()
+			? []
 			: _faker.Lorem.Sentence(remainingPropertyCount * 2).Split(' ')
 				.Distinct()
 				.Take(remainingPropertyCount)

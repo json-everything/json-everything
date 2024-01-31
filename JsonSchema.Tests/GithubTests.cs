@@ -561,7 +561,7 @@ public class GithubTests
 
 		result.AssertInvalid();
 		var nodes = new List<EvaluationResults> { result };
-		while (nodes.Any())
+		while (nodes.Count != 0)
 		{
 			var node = nodes.First();
 			nodes.Remove(node);

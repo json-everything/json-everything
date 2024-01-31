@@ -150,7 +150,7 @@ public class EvaluationOptions
 	public void IgnoreAnnotationsFrom<T>()
 		where T : IJsonSchemaKeyword
 	{
-		_ignoredAnnotationTypes ??= new HashSet<Type>();
+		_ignoredAnnotationTypes ??= [];
 
 		_ignoredAnnotationTypes.Add(typeof(T));
 	}

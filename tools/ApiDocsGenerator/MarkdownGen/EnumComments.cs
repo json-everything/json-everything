@@ -12,5 +12,5 @@ public class EnumComments : CommonComments
 	///     If at least one value has summary comment then this list contains
 	///     all enum values with empty comments for values without comments.
 	/// </summary>
-	public List<EnumValueComment> ValueComments { get; set; } = new();
+	public List<EnumValueComment> ValueComments { get; set; } = [];
 }

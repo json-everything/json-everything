@@ -13,7 +13,6 @@ using static Json.Schema.Generation.Tests.AssertionExtensions;
 // ReSharper disable UnusedMember.Local
 // ReSharper disable UnusedMember.Global
 // ReSharper disable ClassNeverInstantiated.Local
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
 namespace Json.Schema.Generation.Tests;
 
@@ -189,7 +188,7 @@ public class ClientTests
 
 	public class PersonRefiner : ISchemaRefiner
 	{
-		public Dictionary<string, List<Type>> FoundAttributes { get; } = new();
+		public Dictionary<string, List<Type>> FoundAttributes { get; } = [];
 
 		public void Run(SchemaGenerationContextBase context)
 		{
@@ -296,20 +295,6 @@ public class ClientTests
 	[Test]
 	public void Issue544_DeprecatedSpillingOverToOtherPropertiesOfSameType()
 	{
-		JsonSchema expected = new JsonSchemaBuilder()
-			.Type(SchemaValueType.Object)
-			.Properties(
-				("AAA", new JsonSchemaBuilder().Ref("#/$defs/integer")),
-				("BBB", new JsonSchemaBuilder().Type(SchemaValueType.Integer)),
-				("CCC", new JsonSchemaBuilder().Ref("#/$defs/integer"))
-			)
-			.Defs(
-				("integer", new JsonSchemaBuilder()
-					.Type(SchemaValueType.Integer)
-					.Deprecated(true)
-				)
-			);
-
 		var builder = new JsonSchemaBuilder();
 		builder.FromType<Type544_ObsoleteProperties>();
 
@@ -331,12 +316,6 @@ public class ClientTests
 	[Test]
 	public void Issue551_MinMaxItemsOnStringProperty()
 	{
-		JsonSchema expected = new JsonSchemaBuilder()
-			.Type(SchemaValueType.Object)
-			.Properties(
-				("Value", new JsonSchemaBuilder().Type(SchemaValueType.String))
-			);
-
 		JsonSchema schema = new JsonSchemaBuilder().FromType<Type551_MinItemsOnString>();
 		var schemaJson = JsonSerializer.Serialize(schema, TestEnvironment.SerializerOptionsWriteIndented);
 		Console.WriteLine(schemaJson);

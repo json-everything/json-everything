@@ -37,7 +37,7 @@ internal class NumberRequirementsGatherer : IRequirementsGatherer
 			if (context.Multiples != null)
 				context.Multiples?.Add(multipleOf.Value);
 			else
-				context.Multiples = new List<decimal> { multipleOf.Value };
+				context.Multiples = [multipleOf.Value];
 			supportsNumbers = true;
 		}
 
