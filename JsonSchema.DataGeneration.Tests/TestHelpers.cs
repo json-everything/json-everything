@@ -9,7 +9,7 @@ namespace Json.Schema.DataGeneration.Tests;
 
 public static class TestHelpers
 {
-	public static JsonSerializerOptions SerializerOptions = new()
+	public static readonly JsonSerializerOptions SerializerOptions = new()
 	{
 		TypeInfoResolverChain = { DataGenerationTestsSerializerContext.Default, JsonSchema.TypeInfoResolver },
 	};

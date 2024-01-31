@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Bogus;
 using Json.Schema.DataGeneration.Generators;
@@ -34,7 +33,7 @@ public static class JsonSchemaExtensions
 		NullGenerator.Instance,
 	};
 
-	internal static readonly Randomizer Randomizer = new Randomizer();
+	internal static readonly Randomizer Randomizer = new();
 
 	/// <summary>
 	/// Attempts to generate sample data that meets the requirements of the schema.
