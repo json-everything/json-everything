@@ -84,7 +84,7 @@ public class PatternKeyword : IJsonSchemaKeyword
 
 		var str = evaluation.LocalInstance!.GetValue<string>();
 		if (!Value.IsMatch(str))
-			evaluation.Results.Fail(Name, ErrorMessages.GetPattern(context.Options.Culture), ("received", str), ("pattern", Value.ToString()));
+			evaluation.Results.Fail(Name, ErrorMessages.GetPattern(context.Options.Culture).ReplaceToken("received", str).ReplaceToken("pattern", Value.ToString()));
 	}
 }
 

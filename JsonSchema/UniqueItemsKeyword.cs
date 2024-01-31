@@ -79,7 +79,7 @@ public class UniqueItemsKeyword : IJsonSchemaKeyword
 		if (duplicates.Any())
 		{
 			var pairs = string.Join(", ", duplicates.Select(d => $"({d.Item1}, {d.Item2})"));
-			evaluation.Results.Fail(Name, ErrorMessages.GetUniqueItems(context.Options.Culture), ("duplicates", pairs));
+			evaluation.Results.Fail(Name, ErrorMessages.GetUniqueItems(context.Options.Culture).ReplaceToken("duplicates", pairs));
 		}
 	}
 }

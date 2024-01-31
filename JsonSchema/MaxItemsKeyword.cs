@@ -68,9 +68,9 @@ public class MaxItemsKeyword : IJsonSchemaKeyword
 
 		var number = array.Count;
 		if (Value < number)
-			evaluation.Results.Fail(Name, ErrorMessages.GetMaxItems(context.Options.Culture), 
-				ErrorMessages.MakeParam("received", number, JsonSchemaSerializerContext.Default.Int32), 
-				ErrorMessages.MakeParam("limit", Value, JsonSchemaSerializerContext.Default.UInt32));
+			evaluation.Results.Fail(Name, ErrorMessages.GetMaxItems(context.Options.Culture).
+				ReplaceToken("received", number, JsonSchemaSerializerContext.Default.Int32). 
+				ReplaceToken("limit", Value, JsonSchemaSerializerContext.Default.UInt32));
 	}
 }
 

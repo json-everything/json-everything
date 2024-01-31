@@ -37,9 +37,9 @@ public partial class VocabularyTests
 				var date = DateTime.Parse(dateString);
 
 				if (date < Date)
-					e.Results.Fail(Name, "[[provided:O]] must be on or after [[value:O]]",
-						ErrorMessages.MakeParam("provided", date, VocabularySerializerContext.Default.DateTime),
-						ErrorMessages.MakeParam("value", Date, VocabularySerializerContext.Default.DateTime));
+					e.Results.Fail(Name, "[[provided:O]] must be on or after [[value:O]]"
+						.ReplaceToken("provided", date, VocabularySerializerContext.Default.DateTime)
+						.ReplaceToken("value", Date, VocabularySerializerContext.Default.DateTime));
 
 			});
 		}
@@ -87,9 +87,9 @@ public partial class VocabularyTests
 				var date = DateTime.Parse(dateString);
 
 				if (date < Date)
-					e.Results.Fail(Name, "[[provided:O]] must be on or after [[value:O]]",
-						ErrorMessages.MakeParam("provided", date, VocabularySerializerContext.Default.DateTime),
-						ErrorMessages.MakeParam("value", Date, VocabularySerializerContext.Default.DateTime));
+					e.Results.Fail(Name, "[[provided:O]] must be on or after [[value:O]]"
+						.ReplaceToken("provided", date, VocabularySerializerContext.Default.DateTime)
+						.ReplaceToken("value", Date, VocabularySerializerContext.Default.DateTime));
 
 			});
 		}

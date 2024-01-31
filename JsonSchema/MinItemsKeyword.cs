@@ -68,7 +68,7 @@ public class MinItemsKeyword : IJsonSchemaKeyword
 
 		var number = array.Count;
 		if (Value > number)
-			evaluation.Results.Fail(Name, ErrorMessages.GetMinItems(context.Options.Culture), ("received", number), ("limit", Value));
+			evaluation.Results.Fail(Name, ErrorMessages.GetMinItems(context.Options.Culture).ReplaceToken("received", number).ReplaceToken("limit", Value));
 	}
 }
 

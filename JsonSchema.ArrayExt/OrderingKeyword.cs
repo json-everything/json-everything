@@ -81,20 +81,18 @@ public class OrderingKeyword : IJsonSchemaKeyword
 				if (!specifier.By.TryEvaluate(basisItem, out var basisValue))
 				{
 					evaluation.Results.Fail(Name, "Item at index [[index]] does not have a value at [[pointer]]"
-						.ReplaceTokens(
-							ErrorMessages.MakeParam("index", i-1, ArrayExtSerializerContext.Default.Int32),
-							ErrorMessages.MakeParam("pointer", specifier.By, ArrayExtSerializerContext.Default.JsonPointer)
-						));
+							.ReplaceToken("index", i-1)
+							.ReplaceToken("pointer", specifier.By, ArrayExtSerializerContext.Default.JsonPointer)
+						);
 					return;
 				}
 
 				if (!specifier.By.TryEvaluate(currentItem, out var currentValue))
 				{
 					evaluation.Results.Fail(Name, "Item at index [[index]] does not have a value at [[pointer]]"
-						.ReplaceTokens(
-							ErrorMessages.MakeParam("index", i, ArrayExtSerializerContext.Default.Int32),
-							ErrorMessages.MakeParam("pointer", specifier.By, ArrayExtSerializerContext.Default.JsonPointer)
-						));
+							.ReplaceToken("index", i)
+							.ReplaceToken("pointer", specifier.By, ArrayExtSerializerContext.Default.JsonPointer)
+						);
 					return;
 				}
 
@@ -105,7 +103,7 @@ public class OrderingKeyword : IJsonSchemaKeyword
 				{
 					// basis should be after current
 					evaluation.Results.Fail(Name, "Item at index [[index]] is not in order"
-						.ReplaceTokens(ErrorMessages.MakeParam("index", i, ArrayExtSerializerContext.Default.Int32)));
+						.ReplaceToken("index", i));
 					return;
 				}
 			}
