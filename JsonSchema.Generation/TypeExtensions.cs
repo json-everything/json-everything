@@ -96,14 +96,14 @@ public static class TypeExtensions
 		var name = type.Name;
 		if (!type.IsGenericType)
 		{
-			if (type.IsNested && !type.IsGenericParameter)
+			if (type is { IsNested: true, IsGenericParameter: false })
 				name = $"{type.DeclaringType!.CSharpName()}.{name}";
 			return name;
 		}
 
 		if (type.GetGenericTypeDefinition() == typeof(Nullable<>)) return $"{CSharpName(type.GetGenericArguments()[0])}?";
 
-		sb.Append(name.Substring(0, name.IndexOf('`')));
+		sb.Append(name[..name.IndexOf('`')]);
 		sb.Append('<');
 		sb.Append(string.Join(", ", type.GetGenericArguments()
 			.Select(x => CSharpName(x, sb))));

@@ -45,7 +45,7 @@ public partial class VocabularyTests
 		}
 	}
 
-	public class MinDateJsonConverter : Json.More.AotCompatibleJsonConverter<MinDateKeyword>
+	public class MinDateJsonConverter : AotCompatibleJsonConverter<MinDateKeyword>
 	{
 		public override MinDateKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
@@ -95,7 +95,7 @@ public partial class VocabularyTests
 		}
 	}
 
-	public class NonVocabMinDateJsonConverter : Json.More.AotCompatibleJsonConverter<NonVocabMinDateKeyword>
+	public class NonVocabMinDateJsonConverter : AotCompatibleJsonConverter<NonVocabMinDateKeyword>
 	{
 		public override NonVocabMinDateKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
@@ -136,7 +136,7 @@ public partial class VocabularyTests
 		}
 	}
 
-	public class MaxDateJsonConverter : Json.More.AotCompatibleJsonConverter<MaxDateKeyword>
+	public class MaxDateJsonConverter : AotCompatibleJsonConverter<MaxDateKeyword>
 	{
 		public override MaxDateKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
@@ -413,12 +413,12 @@ public partial class VocabularyTests
 					constraint.SiblingDependencies = new[] { minimumConstraint };
 				return constraint;
 			}
-			else
-				return _postDraft6Keyword!.GetConstraint(schemaConstraint, localConstraints, context);
+
+			return _postDraft6Keyword!.GetConstraint(schemaConstraint, localConstraints, context);
 		}
 	}
 
-	public class Draft4ExclusiveMinimumJsonConverter : Json.More.AotCompatibleJsonConverter<Draft4ExclusiveMinimumKeyword>
+	public class Draft4ExclusiveMinimumJsonConverter : AotCompatibleJsonConverter<Draft4ExclusiveMinimumKeyword>
 	{
 		public override Draft4ExclusiveMinimumKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

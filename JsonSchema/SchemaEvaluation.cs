@@ -56,7 +56,7 @@ public class SchemaEvaluation
 
 	internal KeywordEvaluation? FindEvaluation(Guid id)
 	{
-		var found = KeywordEvaluations.FirstOrDefault(x => x is not null && x.Id == id);
+		var found = KeywordEvaluations.FirstOrDefault(x => x.Id == id);
 		if (found != null) return found;
 
 		foreach (var evaluation in KeywordEvaluations)

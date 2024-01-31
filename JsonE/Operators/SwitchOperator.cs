@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Text.Json.Nodes;
 using Json.JsonE.Expressions;
-using Json.More;
 
 namespace Json.JsonE.Operators;
 
@@ -14,7 +13,6 @@ internal class SwitchOperator : IOperator
 	{
 		var obj = template!.AsObject();
 		obj.VerifyNoUndefinedProperties(Name);
-
 
 		var parameter = obj[Name];
 		if (!parameter.IsTemplateOr<JsonObject>())

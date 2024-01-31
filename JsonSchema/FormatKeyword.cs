@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Schema;
 
@@ -108,7 +109,7 @@ public class FormatKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="FormatKeyword"/>.
 /// </summary>
-public sealed class FormatKeywordJsonConverter : Json.More.AotCompatibleJsonConverter<FormatKeyword>
+public sealed class FormatKeywordJsonConverter : AotCompatibleJsonConverter<FormatKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="FormatKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

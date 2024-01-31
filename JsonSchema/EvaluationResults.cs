@@ -306,7 +306,7 @@ public class EvaluationResults
 	}
 }
 
-internal class EvaluationResultsJsonConverter : Json.More.AotCompatibleJsonConverter<EvaluationResults>
+internal class EvaluationResultsJsonConverter : AotCompatibleJsonConverter<EvaluationResults>
 {
 	public override EvaluationResults Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
@@ -355,7 +355,7 @@ internal class EvaluationResultsJsonConverter : Json.More.AotCompatibleJsonConve
 				writer.WritePropertyName("errors");
 				options.Write(writer, value.Errors, JsonSchemaSerializerContext.Default.IReadOnlyDictionaryStringString);
 			}
-			if (value.IncludeDroppedAnnotations && value.AnnotationsToSerialize != null)
+			if (value is { IncludeDroppedAnnotations: true, AnnotationsToSerialize: not null })
 			{
 				writer.WritePropertyName("droppedAnnotations");
 				options.Write(writer, value.AnnotationsToSerialize!, JsonSchemaSerializerContext.Default.IReadOnlyDictionaryStringJsonNode);
@@ -375,7 +375,7 @@ internal class EvaluationResultsJsonConverter : Json.More.AotCompatibleJsonConve
 /// <summary>
 /// Produces output formats specified by 2019-09 and 2020-12.
 /// </summary>
-public class Pre202012EvaluationResultsJsonConverter : Json.More.AotCompatibleJsonConverter<EvaluationResults>
+public class Pre202012EvaluationResultsJsonConverter : AotCompatibleJsonConverter<EvaluationResults>
 {
 	/// <summary>
 	/// Holder for an annotation value.

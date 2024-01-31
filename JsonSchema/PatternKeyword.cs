@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
+using Json.More;
 
 namespace Json.Schema;
 
@@ -91,7 +92,7 @@ public class PatternKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="PatternKeyword"/>.
 /// </summary>
-public sealed class PatternKeywordJsonConverter : Json.More.AotCompatibleJsonConverter<PatternKeyword>
+public sealed class PatternKeywordJsonConverter : AotCompatibleJsonConverter<PatternKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="PatternKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

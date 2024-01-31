@@ -97,7 +97,7 @@ public class VocabularyKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="VocabularyKeyword"/>.
 /// </summary>
-public sealed class VocabularyKeywordJsonConverter : Json.More.AotCompatibleJsonConverter<VocabularyKeyword>
+public sealed class VocabularyKeywordJsonConverter : AotCompatibleJsonConverter<VocabularyKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="VocabularyKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

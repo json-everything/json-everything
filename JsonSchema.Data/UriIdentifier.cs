@@ -2,8 +2,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using System.Text.Json.Serialization;
-using Json.More;
 using Json.Pointer;
 
 namespace Json.Schema.Data;
@@ -92,7 +90,7 @@ public class UriIdentifier : IDataResourceIdentifier
 	{
 		if (DataKeyword.ExternalDataRegistry.TryGetValue(uri, out node))
 			// protect against the off-hand that someone registered a null.
-			return node != null;
+			return node != null!;
 
 		if (DataKeyword.Fetch == null)
 		{

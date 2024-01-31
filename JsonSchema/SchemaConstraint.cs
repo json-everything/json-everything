@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json.Nodes;
 using Json.Pointer;
 
@@ -89,7 +88,7 @@ public class SchemaConstraint
 			RelativeInstanceLocation,
 			new EvaluationResults(evaluationPath, SchemaBaseUri, instanceLocation, options),
 			Constraints.Length == 0
-				? Array.Empty<KeywordEvaluation>()
+				? []
 				: new KeywordEvaluation[Constraints.Length],
 			options
 		) { Id = _id };

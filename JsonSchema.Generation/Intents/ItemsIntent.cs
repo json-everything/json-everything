@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Json.Schema.Generation.Intents;
+﻿namespace Json.Schema.Generation.Intents;
 
 /// <summary>
 /// Provides intent to create an `items` keyword.

@@ -61,7 +61,7 @@ public class DefsKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 /// <summary>
 /// JSON converter for <see cref="DefsKeyword"/>.
 /// </summary>
-public sealed class DefsKeywordJsonConverter : Json.More.AotCompatibleJsonConverter<DefsKeyword>
+public sealed class DefsKeywordJsonConverter : AotCompatibleJsonConverter<DefsKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="DefsKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

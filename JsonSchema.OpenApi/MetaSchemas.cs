@@ -9,11 +9,11 @@ namespace Json.Schema.OpenApi;
 public static class MetaSchemas
 {
 	/// <summary>
-	/// The URI ID of the the OpenAPI v3.1 dialect meta-schema.
+	/// The URI ID of the OpenAPI v3.1 dialect meta-schema.
 	/// </summary>
 	public static readonly Uri OpenApiDialectId = new("https://spec.openapis.org/oas/3.1/dialect/base");
 	/// <summary>
-	/// The URI ID of the the OpenAPI v3.1 validation meta-schema.
+	/// The URI ID of the OpenAPI v3.1 validation meta-schema.
 	/// </summary>
 	public static readonly Uri OpenApiMetaId = new("https://spec.openapis.org/oas/3.1/meta/base");
 	/// <summary>

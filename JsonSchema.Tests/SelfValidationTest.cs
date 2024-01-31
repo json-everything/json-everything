@@ -9,6 +9,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using Json.More;
 using NUnit.Framework;
+// ReSharper disable LocalizableElement
 
 namespace Json.Schema.Tests;
 

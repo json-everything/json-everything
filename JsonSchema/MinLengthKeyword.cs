@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Schema;
 
@@ -76,7 +77,7 @@ public class MinLengthKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="MinLengthKeyword"/>.
 /// </summary>
-public sealed class MinLengthKeywordJsonConverter : Json.More.AotCompatibleJsonConverter<MinLengthKeyword>
+public sealed class MinLengthKeywordJsonConverter : AotCompatibleJsonConverter<MinLengthKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="MinLengthKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

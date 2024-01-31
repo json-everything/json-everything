@@ -8,8 +8,8 @@ using Json.Pointer;
 
 namespace Json.Schema.OpenApi.Tests;
 
-// OpenAPI.Net would need to set up their root document class to handle this
-// This implementation is not optimal, but it seems to work
+// OpenAPI.Net would need to set up their root document class to handle this.
+// This implementation is not optimal, but it seems to work.
 // Having a base URI is very important.  The resolution system will break if one is not present.
 // If needed, generate one.
 public class OpenApiDoc : IBaseDocument
@@ -17,7 +17,7 @@ public class OpenApiDoc : IBaseDocument
 	private static readonly JsonPointer _componentSchemasLocation = JsonPointer.Parse("/components/schemas");
 	private static readonly JsonPath _schemasQuery = JsonPath.Parse("$..schema");
 
-	private readonly Dictionary<JsonPointer, JsonSchema> _lookup = new();
+	private readonly Dictionary<JsonPointer, JsonSchema> _lookup = [];
 
 	private static readonly JsonSerializerOptions _options = new()
 	{
@@ -40,7 +40,7 @@ public class OpenApiDoc : IBaseDocument
 	// implements IBaseDocument
 	public JsonSchema? FindSubschema(JsonPointer pointer, EvaluationOptions options)
 	{
-		return _lookup.TryGetValue(pointer, out var schema) ? schema : null;
+		return _lookup.GetValueOrDefault(pointer);
 	}
 
 	private void Initialize(JsonNode definition)

@@ -19,6 +19,7 @@ public static class RuleRegistry
 	private static readonly ConcurrentDictionary<string, Type> _rules;
 	private static readonly ConcurrentDictionary<Type, JsonSerializerContext> _externalRuleResolvers = new();
 
+	// ReSharper disable once CoVariantArrayConversion
 	internal static IJsonTypeInfoResolver[] ExternalTypeInfoResolvers => _externalRuleResolvers.Values.Distinct().ToArray();
 
 	static RuleRegistry()
@@ -119,7 +120,7 @@ public static class RuleRegistry
 		var typeInfo = typeContext.GetTypeInfo(typeof(T)) ??
 		               throw new ArgumentException($"Rule implementation `{typeof(T).Name}` does not have a JsonTypeInfo");
 		_ = typeInfo.Converter as IJsonConverterReadWrite ??
-		                throw new ArgumentException("Rule Converter must implement IJsonConverterReadWrite or Json.More.AotCompatibleJsonConverter to be AOT compatible");
+		                throw new ArgumentException("Rule Converter must implement IJsonConverterReadWrite or AotCompatibleJsonConverter to be AOT compatible");
 		var operators = type.GetCustomAttributes<OperatorAttribute>().Select(a => a.Name);
 		foreach (var name in operators)
 		{

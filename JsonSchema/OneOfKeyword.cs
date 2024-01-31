@@ -86,7 +86,7 @@ public class OneOfKeyword : IJsonSchemaKeyword, ISchemaCollector
 /// <summary>
 /// JSON converter for <see cref="OneOfKeyword"/>.
 /// </summary>
-public sealed class OneOfKeywordJsonConverter : Json.More.AotCompatibleJsonConverter<OneOfKeyword>
+public sealed class OneOfKeywordJsonConverter : AotCompatibleJsonConverter<OneOfKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="OneOfKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

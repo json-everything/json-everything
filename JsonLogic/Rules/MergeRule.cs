@@ -27,7 +27,7 @@ public class MergeRule : Rule
 	/// <param name="items">A sequence of arrays to merge into a single array.</param>
 	protected internal MergeRule(params Rule[] items)
 	{
-		Items = items.ToList();
+		Items = [.. items];
 	}
 
 	/// <summary>
@@ -60,8 +60,8 @@ internal class MergeRuleJsonConverter : AotCompatibleJsonConverter<MergeRule>
 		return new MergeRule(parameters);
 	}
 
-	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "<Pending>")]
-	[UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "<Pending>")]
+	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
+	[UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public override void Write(Utf8JsonWriter writer, MergeRule value, JsonSerializerOptions options)
 	{
 		writer.WriteStartObject();

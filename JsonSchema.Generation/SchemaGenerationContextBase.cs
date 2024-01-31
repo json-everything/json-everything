@@ -11,9 +11,9 @@ namespace Json.Schema.Generation;
 /// </summary>
 public abstract class SchemaGenerationContextBase
 {
-	internal class TrueType { }
+	internal class TrueType;
 
-	internal class FalseType { }
+	internal class FalseType;
 
 	private IComparer<MemberInfo>? _memberInfoComparer;
 

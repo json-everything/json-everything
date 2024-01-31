@@ -19,6 +19,7 @@ Most of the changes to support Native AOT involve either updating internal imple
 - `ErrorMessages.InvalidPattern` removed.  Invalid patterns result in an exception.
 - `JsonSchemaBuilderExtensions.Validate()` removed.  Was previously marked obsolete.
 - `JsonSchemaExtensions.Validate()` and overloads removed.  Were previously marked obsolete.
+- `JsonNodeExtensions.VerifyJsonObject()` removed.  Duplicate keys throws an exception.
 
 ## Additions
 

@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Schema;
 
@@ -75,7 +76,7 @@ public class MinItemsKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="MinItemsKeyword"/>.
 /// </summary>
-public sealed class MinItemsKeywordJsonConverter : Json.More.AotCompatibleJsonConverter<MinItemsKeyword>
+public sealed class MinItemsKeywordJsonConverter : AotCompatibleJsonConverter<MinItemsKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="MinItemsKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

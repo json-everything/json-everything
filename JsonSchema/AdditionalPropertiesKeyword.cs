@@ -82,7 +82,7 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer
 		return new KeywordConstraint(Name, Evaluator)
 		{
 			SiblingDependencies = keywordConstraints!,
-			ChildDependencies = new[] { subschemaConstraint }
+			ChildDependencies = [subschemaConstraint]
 		};
 	}
 
@@ -98,7 +98,7 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer
 /// <summary>
 /// JSON converter for <see cref="AdditionalPropertiesKeyword"/>.
 /// </summary>
-public sealed class AdditionalPropertiesKeywordJsonConverter : Json.More.AotCompatibleJsonConverter<AdditionalPropertiesKeyword>
+public sealed class AdditionalPropertiesKeywordJsonConverter : AotCompatibleJsonConverter<AdditionalPropertiesKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="AdditionalPropertiesKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

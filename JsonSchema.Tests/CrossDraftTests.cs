@@ -10,11 +10,11 @@ public class CrossDraftTests
 	{
 		get
 		{
-			yield return new TestCaseData((JsonNode)new JsonObject
+			yield return new TestCaseData(new JsonObject
 			{
 				["foo"] = new JsonArray("string", 42)
 			}, true);
-			yield return new TestCaseData((JsonNode)new JsonObject
+			yield return new TestCaseData(new JsonObject
 			{
 				["foo"] = new JsonArray("string", "other string")
 			}, false);

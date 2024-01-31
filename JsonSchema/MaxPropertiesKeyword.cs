@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Schema;
 
@@ -75,7 +76,7 @@ public class MaxPropertiesKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="MaxPropertiesKeyword"/>.
 /// </summary>
-public sealed class MaxPropertiesKeywordJsonConverter : Json.More.AotCompatibleJsonConverter<MaxPropertiesKeyword>
+public sealed class MaxPropertiesKeywordJsonConverter : AotCompatibleJsonConverter<MaxPropertiesKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="MaxPropertiesKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

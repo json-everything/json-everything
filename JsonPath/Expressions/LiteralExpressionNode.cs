@@ -8,26 +8,26 @@ namespace Json.Path.Expressions;
 
 internal class LiteralExpressionNode : ValueExpressionNode
 {
-	public JsonNode? Value { get; }
+	private readonly JsonNode? _value;
 
 	public LiteralExpressionNode(JsonNode? value)
 	{
-		Value = value;
+		_value = value;
 	}
 
 	public override PathValue? Evaluate(JsonNode? globalParameter, JsonNode? localParameter)
 	{
-		return Value;
+		return _value;
 	}
 
 	public override void BuildString(StringBuilder builder)
 	{
-		builder.Append(Value.AsJsonString());
+		builder.Append(_value.AsJsonString());
 	}
 
 	public override string ToString()
 	{
-		return Value.AsJsonString();
+		return _value.AsJsonString();
 	}
 }
 

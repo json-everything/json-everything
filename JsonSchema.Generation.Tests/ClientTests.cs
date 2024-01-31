@@ -13,6 +13,8 @@ using static Json.Schema.Generation.Tests.AssertionExtensions;
 // ReSharper disable InconsistentNaming
 // ReSharper disable UnusedMember.Local
 // ReSharper disable UnusedMember.Global
+// ReSharper disable ClassNeverInstantiated.Local
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
 namespace Json.Schema.Generation.Tests;
 
@@ -186,10 +188,10 @@ public class ClientTests
 	}
 
 	[AttributeUsage(AttributeTargets.Property)]
-	public class MyAttribute1 : Attribute { }
+	public class MyAttribute1 : Attribute;
 
 	[AttributeUsage(AttributeTargets.Property)]
-	public class MyAttribute2 : Attribute { }
+	public class MyAttribute2 : Attribute;
 
 	public class PersonRefiner : ISchemaRefiner
 	{

@@ -2,8 +2,6 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Reflection;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 
@@ -337,7 +335,7 @@ public static class Formats
 
 		try
 		{
-			var _ = new Regex(node!.GetValue<string>());
+			_ = new Regex(node!.GetValue<string>());
 			return true;
 		}
 		catch

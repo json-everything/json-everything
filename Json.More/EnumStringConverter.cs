@@ -6,7 +6,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace Json.More;
 
@@ -39,7 +38,7 @@ namespace Json.More;
 /// }
 /// ```
 /// </example>
-public class EnumStringConverter<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T> : Json.More.AotCompatibleJsonConverter<T>
+public class EnumStringConverter<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T> : AotCompatibleJsonConverter<T>
 	where T : Enum
 {
 	private static Dictionary<string, T>? _readValues;

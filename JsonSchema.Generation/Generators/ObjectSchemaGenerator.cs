@@ -34,8 +34,8 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 
 		membersToGenerate = SchemaGeneratorConfiguration.Current.PropertyOrder switch
 		{
-			PropertyOrder.AsDeclared => membersToGenerate.OrderBy(m => m, context.DeclarationOrderComparer).ToList(),
-			PropertyOrder.ByName => membersToGenerate.OrderBy(m => m.Name).ToList(),
+			PropertyOrder.AsDeclared => [.. membersToGenerate.OrderBy(m => m, context.DeclarationOrderComparer)],
+			PropertyOrder.ByName => [.. membersToGenerate.OrderBy(m => m.Name)],
 			_ => membersToGenerate
 		};
 
@@ -55,7 +55,7 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 			foreach (var conditions in localConditionalAttributes.GroupBy(x => x.ConditionGroup))
 			{
 				if (!conditionalAttributes.TryGetValue(conditions.Key!, out var list)) 
-					conditionalAttributes[conditions.Key!] = list = new List<(MemberInfo, ConditionalAttribute)>();
+					conditionalAttributes[conditions.Key!] = list = [];
 
 				list.AddRange(conditions.Select(x => (member, x)));
 			}
@@ -76,7 +76,7 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 			if (unconditionalAttributes.OfType<ObsoleteAttribute>().Any())
 			{
 				if (memberContext is TypeGenerationContext)
-					memberContext = new MemberGenerationContext(memberContext, new List<Attribute>());
+					memberContext = new MemberGenerationContext(memberContext, []);
 				memberContext.Intents.Add(new DeprecatedIntent(true));
 			}
 
@@ -242,7 +242,7 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 		{
 			var name = SchemaGeneratorConfiguration.Current.PropertyNameResolver!(consequence.Key);
 			if (properties.TryGetValue(name, out var localContext))
-				localContext = new MemberGenerationContext(localContext, new List<Attribute>());
+				localContext = new MemberGenerationContext(localContext, []);
 			else
 			{
 				var type = consequence.Key.GetMemberType();

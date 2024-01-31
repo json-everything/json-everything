@@ -11,6 +11,7 @@ using System.Text.Json.Serialization.Metadata;
 using System.Threading.Tasks;
 using Json.More;
 using Json.Pointer;
+// ReSharper disable LocalizableElement
 
 namespace Json.Schema;
 
@@ -113,8 +114,8 @@ public class JsonSchema : IBaseDocument
 	/// <returns>A new <see cref="JsonSchema"/>.</returns>
 	/// <exception cref="JsonException">Could not deserialize a portion of the schema.</exception>
 	/// <remarks>The filename needs to not be URL-encoded as <see cref="Uri"/> attempts to encode it.</remarks>
-	[RequiresUnreferencedCode("Calls JsonSerializer.Deserialize with JsonSerializerOptions")]
-	[RequiresDynamicCode("Calls JsonSerializer.Deserialize with JsonSerializerOptions")]
+	[RequiresUnreferencedCode("Calls JsonSerializer.Deserialize with JsonSerializerOptions. Make sure the options object contains all relevant JsonTypeInfos before suppressing this warning.")]
+	[RequiresDynamicCode("Calls JsonSerializer.Deserialize with JsonSerializerOptions. Make sure the options object contains all relevant JsonTypeInfos before suppressing this warning.")]
 	public static JsonSchema FromFile(string fileName, JsonSerializerOptions? options)
 	{
 		var text = File.ReadAllText(fileName);
@@ -157,8 +158,8 @@ public class JsonSchema : IBaseDocument
 	/// <param name="options">Serializer options.</param>
 	/// <returns>A new <see cref="JsonSchema"/>.</returns>
 	/// <exception cref="JsonException">Could not deserialize a portion of the schema.</exception>
-	[RequiresUnreferencedCode("Calls JsonSerializer.Deserialize with JsonSerializerOptions")]
-	[RequiresDynamicCode("Calls JsonSerializer.Deserialize with JsonSerializerOptions")]
+	[RequiresUnreferencedCode("Calls JsonSerializer.Deserialize with JsonSerializerOptions. Make sure the options object contains all relevant JsonTypeInfos before suppressing this warning.")]
+	[RequiresDynamicCode("Calls JsonSerializer.Deserialize with JsonSerializerOptions. Make sure the options object contains all relevant JsonTypeInfos before suppressing this warning.")]
 	public static JsonSchema FromText(string jsonText, JsonSerializerOptions? options)
 	{
 		return JsonSerializer.Deserialize<JsonSchema>(jsonText, options)!;
@@ -183,9 +184,9 @@ public class JsonSchema : IBaseDocument
 	/// <param name="source">A stream.</param>
 	/// <param name="options">Serializer options.</param>
 	/// <returns>A new <see cref="JsonSchema"/>.</returns>
-	[RequiresUnreferencedCode("Calls JsonSerializer.Deserialize with JsonSerializerOptions")]
-	[RequiresDynamicCode("Calls JsonSerializer.Deserialize with JsonSerializerOptions")]
-	public static ValueTask<JsonSchema> FromStream(Stream source, JsonSerializerOptions? options = null)
+	[RequiresUnreferencedCode("Calls JsonSerializer.Deserialize with JsonSerializerOptions. Make sure the options object contains all relevant JsonTypeInfos before suppressing this warning.")]
+	[RequiresDynamicCode("Calls JsonSerializer.Deserialize with JsonSerializerOptions. Make sure the options object contains all relevant JsonTypeInfos before suppressing this warning.")]
+	public static ValueTask<JsonSchema> FromStream(Stream source, JsonSerializerOptions? options)
 	{
 		return JsonSerializer.DeserializeAsync<JsonSchema>(source, options)!;
 	}
@@ -197,7 +198,7 @@ public class JsonSchema : IBaseDocument
 	/// <returns>A new <see cref="JsonSchema"/>.</returns>
 	public static ValueTask<JsonSchema> FromStream(Stream source)
 	{
-		return JsonSerializer.DeserializeAsync<JsonSchema>(source, JsonSchemaSerializerContext.Default.JsonSchema)!;
+		return JsonSerializer.DeserializeAsync(source, JsonSchemaSerializerContext.Default.JsonSchema)!;
 	}
 
 	/// <summary>
@@ -247,7 +248,7 @@ public class JsonSchema : IBaseDocument
 	/// <param name="keyword">The keyword if it exists; otherwise null.</param>
 	/// <typeparam name="T">The type of the keyword to get.</typeparam>
 	/// <returns>true if the keyword exists; otherwise false.</returns>
-	public bool TryGetKeyword<T>(out T? keyword)
+	public bool TryGetKeyword<T>([NotNullWhen(true)] out T? keyword)
 		where T : IJsonSchemaKeyword
 	{
 		var name = typeof(T).Keyword();
@@ -262,7 +263,7 @@ public class JsonSchema : IBaseDocument
 	/// <param name="keywordName">The name of the keyword.</param>
 	/// <param name="keyword">The keyword if it exists; otherwise null.</param>
 	/// <returns>true if the keyword exists; otherwise false.</returns>
-	public bool TryGetKeyword<T>(string keywordName, out T? keyword)
+	public bool TryGetKeyword<T>(string keywordName, [NotNullWhen(true)] out T? keyword)
 		where T : IJsonSchemaKeyword
 	{
 		if (BoolValue.HasValue)
@@ -273,7 +274,7 @@ public class JsonSchema : IBaseDocument
 
 		if (_keywords!.TryGetValue(keywordName, out var k))
 		{
-			keyword = (T)k!;
+			keyword = (T)k;
 			return true;
 		}
 
@@ -446,7 +447,7 @@ public class JsonSchema : IBaseDocument
 
 			foreach (var keyword in unrecognizedButSupported)
 			{
-				var jsonText = JsonSerializer.Serialize((object) keyword, keyword.GetType(), JsonSchemaSerializerContext.OptionsManager.SerializerOptions);
+				var jsonText = JsonSerializer.Serialize(keyword, keyword.GetType(), JsonSchemaSerializerContext.OptionsManager.SerializerOptions);
 				var json = JsonNode.Parse(jsonText);
 				var keywordConstraint = KeywordConstraint.SimpleAnnotation(keyword.Keyword(), json);
 				localConstraints.Add(keywordConstraint);
@@ -474,7 +475,7 @@ public class JsonSchema : IBaseDocument
 
 		if (schema.TryGetKeyword<SchemaKeyword>(SchemaKeyword.Name, out var schemaKeyword))
 		{
-			var metaSchemaId = schemaKeyword?.Schema;
+			var metaSchemaId = schemaKeyword.Schema;
 			while (metaSchemaId != null)
 			{
 				var version = metaSchemaId.OriginalString switch
@@ -496,10 +497,10 @@ public class JsonSchema : IBaseDocument
 					throw new JsonSchemaException("Cannot resolve custom meta-schema.");
 
 				if (metaSchema.TryGetKeyword<SchemaKeyword>(SchemaKeyword.Name, out var newMetaSchemaKeyword) &&
-				    newMetaSchemaKeyword!.Schema == metaSchemaId)
+				    newMetaSchemaKeyword.Schema == metaSchemaId)
 					throw new JsonSchemaException("Custom meta-schema `$schema` keywords must eventually resolve to a meta-schema for a supported specification version.");
 
-				metaSchemaId = newMetaSchemaKeyword!.Schema;
+				metaSchemaId = newMetaSchemaKeyword?.Schema;
 			}
 		}
 
@@ -552,15 +553,11 @@ public class JsonSchema : IBaseDocument
 					registry.RegisterSchema(schema.BaseUri, schema);
 			}
 
-			if (schema.TryGetKeyword<AnchorKeyword>(AnchorKeyword.Name, out var anchorKeyword))
-			{
-				resourceRoot.Anchors[anchorKeyword!.Anchor] = (schema, false);
-			}
+			if (schema.TryGetKeyword<AnchorKeyword>(AnchorKeyword.Name, out var anchorKeyword)) 
+				resourceRoot.Anchors[anchorKeyword.Anchor] = (schema, false);
 
-			if (schema.TryGetKeyword<DynamicAnchorKeyword>(DynamicAnchorKeyword.Name, out var dynamicAnchorKeyword))
-			{
-				resourceRoot.Anchors[dynamicAnchorKeyword!.Value] = (schema, true);
-			}
+			if (schema.TryGetKeyword<DynamicAnchorKeyword>(DynamicAnchorKeyword.Name, out var dynamicAnchorKeyword)) 
+				resourceRoot.Anchors[dynamicAnchorKeyword.Value] = (schema, true);
 
 			schema.TryGetKeyword<RecursiveAnchorKeyword>(RecursiveAnchorKeyword.Name, out var recursiveAnchorKeyword);
 			if (recursiveAnchorKeyword is { Value: true })
@@ -579,6 +576,7 @@ public class JsonSchema : IBaseDocument
 	{
 		switch (keyword)
 		{
+			// ReSharper disable once RedundantAlwaysMatchSubpattern
 			case ISchemaContainer { Schema: { } } container:
 				yield return container.Schema;
 				break;
@@ -735,7 +733,7 @@ public class JsonSchema : IBaseDocument
 /// <summary>
 /// JSON converter for <see cref="JsonSchema"/>.
 /// </summary>
-public sealed class SchemaJsonConverter : Json.More.AotCompatibleJsonConverter<JsonSchema>
+public sealed class SchemaJsonConverter : AotCompatibleJsonConverter<JsonSchema>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="JsonSchema"/>.</summary>
 	/// <param name="reader">The reader.</param>

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
@@ -10,7 +8,6 @@ using Json.More;
 
 namespace Json.Schema;
 
-// TODO: .NET 5+ would have these methods marked with `RequiresUnreferencedCodeAttribute` to warn against tree trimming
 internal static class JsonSerializerOptionsExtensions
 {
 	private abstract class ArbitraryDeserializer
@@ -29,7 +26,7 @@ internal static class JsonSerializerOptionsExtensions
 
 	private class ArbitraryDeserializer<T> : ArbitraryDeserializer
 	{
-		public override object? Read(ref Utf8JsonReader reader, JsonSerializerOptions options, JsonTypeInfo? typeInfo)
+		public override object? Read(ref Utf8JsonReader reader, JsonSerializerOptions options, JsonTypeInfo? typeInfo = null)
 		{
 			typeInfo ??= options.GetTypeInfo(typeof(T));
 			var converter = (JsonConverter<T>)typeInfo.Converter;

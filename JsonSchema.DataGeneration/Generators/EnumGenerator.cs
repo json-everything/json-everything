@@ -1,6 +1,4 @@
-﻿using Json.More;
-
-namespace Json.Schema.DataGeneration.Generators;
+﻿namespace Json.Schema.DataGeneration.Generators;
 
 internal class EnumGenerator : IPrioritizedDataGenerator
 {

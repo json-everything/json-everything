@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Security.Cryptography;
 
 namespace Json.Path.Expressions;
 

@@ -10,7 +10,8 @@ Updated for multi-framework support with .Net Standard 2.0 and .Net 8 with Nativ
 
 ## Breaking changes
 
-Dropping support for .Net Standard 3.1 - May still be used, but exact behavior cannot be guaranteed. 
+- Dropping support for .Net Standard 3.1 - May still be used, but exact behavior cannot be guaranteed.
+- `CharExtensions` removed as it was not used.
 
 ## Additions
 

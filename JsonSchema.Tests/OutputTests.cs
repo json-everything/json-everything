@@ -27,7 +27,8 @@ public class OutputTests
 					)
 				)
 			);
-	JsonSerializerOptions _serializerOptions = new(TestEnvironment.SerializerOptions)
+
+	private readonly JsonSerializerOptions _serializerOptions = new(TestEnvironment.SerializerOptions)
 	{
 		WriteIndented = true,
 		Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
