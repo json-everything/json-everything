@@ -39,7 +39,7 @@ public class SuiteRunner
 
 		}).Result;
 
-		var testSuite = JsonSerializer.Deserialize<TestSuite>(text, TestSerializerContext.OptionsManager.SerializerOptions);
+		var testSuite = JsonSerializer.Deserialize(text, TestSerializerContext.Default.TestSuite);
 
 		return testSuite!.Tests.Select(t => new TestCaseData(t) { TestName = $"{t.Logic}  |  {t.Data.AsJsonString()}  |  {t.Expected.AsJsonString()}" });
 	}
@@ -47,7 +47,7 @@ public class SuiteRunner
 	[TestCaseSource(nameof(Suite))]
 	public void Run(Test test)
 	{
-		var rule = JsonSerializer.Deserialize<Rule>(test.Logic, TestSerializerContext.OptionsManager.SerializerOptions);
+		var rule = JsonSerializer.Deserialize(test.Logic, LogicSerializerContext.Default.Rule);
 
 		if (rule == null)
 		{

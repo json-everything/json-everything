@@ -21,7 +21,7 @@ public class JsonPatch : IEquatable<JsonPatch>
 	/// A TypeInfoResolver that can be used for serializing <see cref="JsonPointer"/> objects. Add to your custom
 	/// JsonSerializerOptions's TypeInfoResolver or TypeInfoResolveChain.
 	/// </summary>
-	public static IJsonTypeInfoResolver TypeInfoResolver => PatchSerializerContext.OptionsManager.TypeInfoResolver;
+	public static IJsonTypeInfoResolver TypeInfoResolver => PatchSerializerContext.Default;
 
 	/// <summary>
 	/// Gets the collection of operations.
@@ -129,14 +129,4 @@ public class PatchJsonConverter : AotCompatibleJsonConverter<JsonPatch>
 [JsonSerializable(typeof(List<PatchOperation>))]
 [JsonSerializable(typeof(IReadOnlyList<PatchOperation>))]
 [JsonSerializable(typeof(PatchOperationJsonConverter.Model))]
-internal partial class PatchSerializerContext : JsonSerializerContext
-{
-	public static TypeResolverOptionsManager OptionsManager { get; }
-
-	static PatchSerializerContext()
-	{
-		OptionsManager = new TypeResolverOptionsManager(
-			Default
-		);
-	}
-}
+internal partial class PatchSerializerContext : JsonSerializerContext;

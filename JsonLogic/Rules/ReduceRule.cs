@@ -14,14 +14,6 @@ namespace Json.Logic.Rules;
 [JsonConverter(typeof(ReduceRuleJsonConverter))]
 public class ReduceRule : Rule
 {
-	internal class Intermediary
-	{
-		[JsonPropertyName("current")]
-		public JsonNode? Current { get; set; }
-		[JsonPropertyName("accumulator")]
-		public JsonNode? Accumulator { get; set; }
-	}
-
 	/// <summary>
 	/// A sequence of values to reduce.
 	/// </summary>
@@ -66,14 +58,13 @@ public class ReduceRule : Rule
 
 		foreach (var element in arr)
 		{
-			var intermediary = new Intermediary
+			var intermediary = new JsonObject
 			{
-				Current = element,
-				Accumulator = accumulator
+				["current"] = element?.DeepClone(),
+				["accumulator"] = accumulator?.DeepClone()
 			};
-			var item = JsonSerializer.SerializeToNode(intermediary, LogicSerializerContext.Default.Intermediary);
 
-			accumulator = Rule.Apply(data, item);
+			accumulator = Rule.Apply(data, intermediary);
 
 			if (accumulator == null) break;
 		}

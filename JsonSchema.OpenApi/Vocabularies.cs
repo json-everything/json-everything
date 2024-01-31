@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
-using Json.More;
 
 namespace Json.Schema.OpenApi;
 
@@ -52,15 +51,4 @@ public static class Vocabularies
 [JsonSerializable(typeof(XmlKeywordJsonConverter.Model), TypeInfoPropertyName = "XmlModel")]
 [JsonSerializable(typeof(JsonNode))]
 [JsonSerializable(typeof(IReadOnlyDictionary<string, string>))]
-internal partial class OpenApiSerializerContext : JsonSerializerContext
-{
-	public static TypeResolverOptionsManager OptionsManager { get; }
-
-	static OpenApiSerializerContext()
-	{
-		OptionsManager = new(
-			Default,
-			JsonSchema.TypeInfoResolver
-		);
-	}
-}
+internal partial class OpenApiSerializerContext : JsonSerializerContext;

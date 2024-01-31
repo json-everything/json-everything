@@ -14,7 +14,7 @@ public class MoreTestsRunner
 {
 	private const string _testsFile = "Files/more-tests.yml";
 	private static readonly JsonSerializerOptions _serializerOptions =
-		new(JsonETestSerializerContext.OptionsManager.SerializerOptions)
+		new(JsonETestSerializerContext.Default.Options)
 		{
 			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
 		};

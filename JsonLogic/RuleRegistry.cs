@@ -128,5 +128,7 @@ public static class RuleRegistry
 		}
 
 		_externalRuleResolvers[type] = typeContext;
+
+		LogicSerializerContext.OptionsManager.RebuildTypeResolver(ExternalTypeInfoResolvers);
 	}
 }

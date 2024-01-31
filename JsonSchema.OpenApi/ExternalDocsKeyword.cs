@@ -55,7 +55,7 @@ public class ExternalDocsKeyword : IJsonSchemaKeyword
 		Description = description;
 		Extensions = extensions;
 
-		_json = JsonSerializer.SerializeToNode(this, OpenApiSerializerContext.OptionsManager.SerializerOptions);
+		_json = JsonSerializer.SerializeToNode(this, OpenApiSerializerContext.Default.JsonNode);
 	}
 	internal ExternalDocsKeyword(Uri url, string? description, IReadOnlyDictionary<string, JsonNode?>? extensions, JsonNode? json)
 		: this(url, description, extensions)

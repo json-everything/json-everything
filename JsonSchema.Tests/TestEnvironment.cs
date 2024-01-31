@@ -19,7 +19,7 @@ public class TestEnvironment
 		Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
 	};
 
-[OneTimeSetUp]
+	[OneTimeSetUp]
 	public void Setup()
 	{
 	}

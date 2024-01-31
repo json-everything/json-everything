@@ -11,6 +11,7 @@ namespace Json.More;
 /// <remarks>
 /// WARNING: This converter is not AOT-friendly.
 /// </remarks>
+[RequiresDynamicCode("JSON serialization and deserialization might require types that cannot be statically analyzed and might need runtime code generation. Use System.Text.Json source generation for native AOT applications.")]
 public class JsonArrayTupleConverter : JsonConverterFactory
 {
 	/// <summary>When overridden in a derived class, determines whether the converter instance can convert the specified object type.</summary>

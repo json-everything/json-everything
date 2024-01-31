@@ -311,7 +311,7 @@ internal class EvaluationResultsJsonConverter : AotCompatibleJsonConverter<Evalu
 		if (value.Format == OutputFormat.Hierarchical || value.Parent != null)
 		{
 			writer.WritePropertyName("evaluationPath");
-			options.Write(writer, value.EvaluationPath, JsonSchemaSerializerContext.Default.JsonPointer);
+			options.Write(writer, value.EvaluationPath, JsonPointerSerializerContext.Default.JsonPointer);
 
 			// this can still be null if the root schema is a boolean
 			if (value.SchemaLocation != null!)
@@ -324,7 +324,7 @@ internal class EvaluationResultsJsonConverter : AotCompatibleJsonConverter<Evalu
 			}
 
 			writer.WritePropertyName("instanceLocation");
-			options.Write(writer, value.InstanceLocation, JsonSchemaSerializerContext.Default.JsonPointer);
+			options.Write(writer, value.InstanceLocation, JsonPointerSerializerContext.Default.JsonPointer);
 		}
 
 		if (value.IsValid)
@@ -421,13 +421,13 @@ public class Pre202012EvaluationResultsJsonConverter : AotCompatibleJsonConverte
 		if (value.Format == OutputFormat.Hierarchical || value.Parent != null)
 		{
 			writer.WritePropertyName("keywordLocation");
-			options.Write(writer, value.EvaluationPath, JsonSchemaSerializerContext.Default.JsonPointer);
+			options.Write(writer, value.EvaluationPath, JsonPointerSerializerContext.Default.JsonPointer);
 
 			writer.WritePropertyName("absoluteKeywordLocation");
 			options.Write(writer, value.SchemaLocation, JsonSchemaSerializerContext.Default.Uri);
 
 			writer.WritePropertyName("instanceLocation");
-			options.Write(writer, value.InstanceLocation, JsonSchemaSerializerContext.Default.JsonPointer);
+			options.Write(writer, value.InstanceLocation, JsonPointerSerializerContext.Default.JsonPointer);
 		}
 
 		bool skipCloseObject = false;
@@ -564,7 +564,7 @@ public class Pre202012EvaluationResultsJsonConverter : AotCompatibleJsonConverte
 		writer.WriteBoolean("valid", value.IsValid);
 
 		writer.WritePropertyName("keywordLocation");
-		options.Write(writer, value.EvaluationPath.Combine(keyword), JsonSchemaSerializerContext.Default.JsonPointer);
+		options.Write(writer, value.EvaluationPath.Combine(keyword), JsonPointerSerializerContext.Default.JsonPointer);
 
 		writer.WritePropertyName("absoluteKeywordLocation");
 		if (value.SchemaLocation.OriginalString.Contains('#'))
@@ -573,7 +573,7 @@ public class Pre202012EvaluationResultsJsonConverter : AotCompatibleJsonConverte
 			options.Write(writer, value.SchemaLocation.OriginalString + $"#/{keyword}", JsonSchemaSerializerContext.Default.String);
 
 		writer.WritePropertyName("instanceLocation");
-		options.Write(writer, value.InstanceLocation, JsonSchemaSerializerContext.Default.JsonPointer);
+		options.Write(writer, value.InstanceLocation, JsonPointerSerializerContext.Default.JsonPointer);
 
 		writer.WritePropertyName("error");
 		options.Write(writer, error, JsonSchemaSerializerContext.Default.String);
@@ -590,7 +590,7 @@ public class Pre202012EvaluationResultsJsonConverter : AotCompatibleJsonConverte
 		writer.WriteBoolean("valid", value.IsValid);
 
 		writer.WritePropertyName("keywordLocation");
-		options.Write(writer, annotation.Source, JsonSchemaSerializerContext.Default.JsonPointer);
+		options.Write(writer, annotation.Source, JsonPointerSerializerContext.Default.JsonPointer);
 
 		writer.WritePropertyName("absoluteKeywordLocation");
 		if (value.SchemaLocation.OriginalString.Contains('#'))
@@ -599,7 +599,7 @@ public class Pre202012EvaluationResultsJsonConverter : AotCompatibleJsonConverte
 			options.Write(writer, value.SchemaLocation.OriginalString + $"#/{annotation.Owner}", JsonSchemaSerializerContext.Default.String);
 
 		writer.WritePropertyName("instanceLocation");
-		options.Write(writer, value.InstanceLocation, JsonSchemaSerializerContext.Default.JsonPointer);
+		options.Write(writer, value.InstanceLocation, JsonPointerSerializerContext.Default.JsonPointer);
 
 		writer.WritePropertyName("annotation");
 		JsonSerializer.Serialize(writer, annotation.Value, options);

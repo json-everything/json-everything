@@ -15,7 +15,7 @@ public class SuiteRunner
 {
 	private const string _testsFile = "../../../../ref-repos/json-e/specification.yml";
 	private static readonly JsonSerializerOptions _serializerOptions =
-		new(JsonETestSerializerContext.OptionsManager.SerializerOptions)
+		new(JsonETestSerializerContext.Default.Options)
 	{
 		Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
 	};
@@ -108,15 +108,4 @@ public class SuiteRunner
 
 [JsonSerializable(typeof(Test))]
 [JsonSerializable(typeof(Test[]))]
-internal partial class JsonETestSerializerContext : JsonSerializerContext
-{
-	public static TypeResolverOptionsManager OptionsManager { get; }
-
-	static JsonETestSerializerContext()
-	{
-		OptionsManager = new TypeResolverOptionsManager(
-			Default,
-			JsonESerializerContext.Default
-		);
-	}
-}
+internal partial class JsonETestSerializerContext : JsonSerializerContext;

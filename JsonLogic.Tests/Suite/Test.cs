@@ -20,10 +20,10 @@ public class TestConverter : JsonConverter<Test?>
 {
 	public override Test? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var node = options.Read(ref reader, TestSerializerContext.Default.JsonNode);
+		var node = options.Read(ref reader, LogicSerializerContext.Default.JsonNode);
 		if (node is not JsonArray arr) return null;
 
-		var logic = JsonSerializer.Serialize(arr[0], TestSerializerContext.OptionsManager.SerializerOptions);
+		var logic = JsonSerializer.Serialize(arr[0], LogicSerializerContext.Default.JsonNode!);
 		var data = arr[1];
 		var expected = arr[2];
 

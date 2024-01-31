@@ -31,7 +31,4 @@ public class JsonPathConverter : JsonConverter<JsonPath>
 }
 
 [JsonSerializable(typeof(JsonPath))]
-internal partial class JsonPathSerializerContext : JsonSerializerContext
-{
-
-}
+internal partial class JsonPathSerializerContext : JsonSerializerContext;

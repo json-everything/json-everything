@@ -89,7 +89,7 @@ public class XmlKeyword : IJsonSchemaKeyword
 		Wrapped = wrapped;
 		Extensions = extensions;
 
-		_json = JsonSerializer.SerializeToNode(this, OpenApiSerializerContext.OptionsManager.SerializerOptions);
+		_json = JsonSerializer.SerializeToNode(this, OpenApiSerializerContext.Default.JsonNode);
 	}
 
 	internal XmlKeyword(Uri? @namespace, string? name, string? prefix, bool? attribute, bool? wrapped, IReadOnlyDictionary<string, JsonNode?>? extensions, JsonNode? json)

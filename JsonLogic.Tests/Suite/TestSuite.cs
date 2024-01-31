@@ -38,17 +38,5 @@ public class TestSuiteConverter : JsonConverter<TestSuite?>
 [JsonSerializable(typeof(TestSuite))]
 [JsonSerializable(typeof(Test))]
 [JsonSerializable(typeof(Test[]))]
-[JsonSerializable(typeof(JsonNode))]
 [JsonSerializable(typeof(string))]
-internal partial class TestSerializerContext : JsonSerializerContext
-{
-	public static TypeResolverOptionsManager OptionsManager { get; }
-
-	static TestSerializerContext()
-	{
-		OptionsManager = new TypeResolverOptionsManager(
-			Default,
-			[Rule.JsonTypeResolver, ..RuleRegistry.ExternalTypeInfoResolvers]
-		);
-	}
-}
+internal partial class TestSerializerContext : JsonSerializerContext;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.More;
@@ -90,7 +91,7 @@ namespace Json.Schema;
 [JsonSerializable(typeof(JsonArray))]
 [JsonSerializable(typeof(JsonNode))]
 [JsonSerializable(typeof(JsonNode[]))]
-[JsonSerializable(typeof(JsonPointer))]
+//[JsonSerializable(typeof(JsonPointer))]
 [JsonSerializable(typeof(List<JsonSchema>))]
 [JsonSerializable(typeof(List<string>))]
 [JsonSerializable(typeof(SchemaValueType))]
@@ -105,7 +106,7 @@ internal partial class JsonSchemaSerializerContext : JsonSerializerContext
 	{
 		OptionsManager = new TypeResolverOptionsManager(
 			Default,
-			SchemaKeywordRegistry.ExternalTypeInfoResolvers
+			[JsonPointerSerializerContext.Default, .. SchemaKeywordRegistry.ExternalTypeInfoResolvers]
 		);
 	}
 }
