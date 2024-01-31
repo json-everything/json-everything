@@ -7,12 +7,6 @@ internal class EnumModel : TypeModel
 {
 	public EnumValue[] Values { get; }
 
-	public EnumModel(string name, IEnumerable<(string name, int value)> values)
-		: base(name)
-	{
-		Values = values.Select(x => new EnumValue(x.name, x.value)).ToArray();
-	}
-
 	public EnumModel(string name, IEnumerable<string> names)
 		: base(name)
 	{

@@ -89,7 +89,7 @@ internal class CSharpCodeWriter : ICodeWriter
 	{
 		void WriteValue(EnumValue value)
 		{
-			builder.Append("\t");
+			builder.Append('\t');
 			builder.Append(TransformName(value.Name));
 			builder.Append(" = ");
 			builder.Append(value.Value);
@@ -104,7 +104,7 @@ internal class CSharpCodeWriter : ICodeWriter
 			WriteValue(value);
 			builder.AppendLine(",");
 		}
-		WriteValue(model.Values[model.Values.Length - 1]);
+		WriteValue(model.Values[^1]);
 		builder.AppendLine();
 		builder.AppendLine("}");
 	}
@@ -145,7 +145,7 @@ internal class CSharpCodeWriter : ICodeWriter
 			}
 			builder.Append("\tpublic ");
 			WriteUsage(builder, property.Type);
-			builder.Append(" ");
+			builder.Append(' ');
 			builder.Append(TransformName(property.Name));
 			builder.Append(" { ");
 			if (property.CanRead)
@@ -163,7 +163,7 @@ internal class CSharpCodeWriter : ICodeWriter
 		WriteUsage(builder, model.Keys);
 		builder.Append(", ");
 		WriteUsage(builder, model.Items);
-		builder.Append(">");
+		builder.Append('>');
 	}
 
 	private void WriteDeclaration(StringBuilder builder, DictionaryModel model)

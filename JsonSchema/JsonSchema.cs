@@ -248,7 +248,7 @@ public class JsonSchema : IBaseDocument
 	/// <param name="keyword">The keyword if it exists; otherwise null.</param>
 	/// <typeparam name="T">The type of the keyword to get.</typeparam>
 	/// <returns>true if the keyword exists; otherwise false.</returns>
-	public bool TryGetKeyword<T>(out T? keyword)
+	public bool TryGetKeyword<T>([NotNullWhen(true)] out T? keyword)
 		where T : IJsonSchemaKeyword
 	{
 		var name = typeof(T).Keyword();
