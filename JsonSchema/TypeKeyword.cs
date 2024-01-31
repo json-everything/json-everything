@@ -93,7 +93,7 @@ public class TypeKeyword : IJsonSchemaKeyword
 		var expected = expectedType.ToString().ToLower();
 		evaluation.Results.Fail(Name, ErrorMessages.GetType(context.Options.Culture).
 			ReplaceToken("received", instanceType, JsonSchemaSerializerContext.Default.SchemaValueType).
-			ReplaceToken("expected", expected, JsonSchemaSerializerContext.Default.String));
+			ReplaceToken("expected", expected));
 	}
 }
 

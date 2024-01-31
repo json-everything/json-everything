@@ -101,13 +101,13 @@ public class ContainsKeyword : IJsonSchemaKeyword, ISchemaContainer
 
 			var actual = validIndices.Length;
 			if (actual < minimum)
-				evaluation.Results.Fail(Name, ErrorMessages.GetContainsTooFew(context.Options.Culture).
-					ReplaceToken("received", actual, JsonSchemaSerializerContext.Default.Int32).
-					ReplaceToken("minimum", minimum, JsonSchemaSerializerContext.Default.UInt32));
+				evaluation.Results.Fail(Name, ErrorMessages.GetContainsTooFew(context.Options.Culture)
+					.ReplaceToken("received", actual)
+					.ReplaceToken("minimum", minimum));
 			else if (actual > maximum)
-				evaluation.Results.Fail(Name, ErrorMessages.GetContainsTooMany(context.Options.Culture).
-					ReplaceToken("received", actual, JsonSchemaSerializerContext.Default.Int32).
-					ReplaceToken("maximum", maximum.Value, JsonSchemaSerializerContext.Default.UInt32));
+				evaluation.Results.Fail(Name, ErrorMessages.GetContainsTooMany(context.Options.Culture)
+					.ReplaceToken("received", actual)
+					.ReplaceToken("maximum", maximum.Value));
 			return;
 		}
 

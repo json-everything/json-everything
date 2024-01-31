@@ -91,6 +91,17 @@ public static partial class ErrorMessages
 	/// <param name="name">The token name (without brackets)</param>
 	/// <param name="value">The value.</param>
 	/// <returns>The detokenized string.</returns>
+	public static string ReplaceToken(this string message, string name, uint value) =>
+		ReplaceToken(message, name, value, JsonSchemaSerializerContext.Default.UInt32);
+
+
+	/// <summary>
+	/// Replaces tokens in the form of `[[token]]` with a specified value, serialized as JSON.
+	/// </summary>
+	/// <param name="message">The message template.</param>
+	/// <param name="name">The token name (without brackets)</param>
+	/// <param name="value">The value.</param>
+	/// <returns>The detokenized string.</returns>
 	public static string ReplaceToken(this string message, string name, decimal value) => 
 		ReplaceToken(message, name, value, JsonSchemaSerializerContext.Default.Decimal);
 
