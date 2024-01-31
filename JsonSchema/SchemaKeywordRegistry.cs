@@ -192,4 +192,14 @@ public static class SchemaKeywordRegistry
 	{
 		return _nullKeywords.TryGetValue(keywordType, out var instance) ? instance : null;
 	}
+
+	internal static IJsonConverterReadWrite GetConverter(Type keywordType)
+	{
+		if (!_externalKeywordTypeInfoResolvers.TryGetValue(keywordType, out var context))
+		{
+			context = JsonSchemaSerializerContext.Default;
+		}
+
+		return (IJsonConverterReadWrite)context.GetTypeInfo(keywordType)!.Converter;
+	}
 }

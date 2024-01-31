@@ -10,7 +10,7 @@ public class TestEnvironment
 {
 	public static readonly JsonSerializerOptions SerializerOptions = new()
 	{
-		TypeInfoResolverChain = { TestSerializerContext.Default, JsonSchema.TypeInfoResolver },
+		TypeInfoResolverChain = { TestSerializerContext.Default },
 	};
 
 	public static readonly JsonSerializerOptions SerializerOptionsUnsafeRelaxedEscaping = new(SerializerOptions)

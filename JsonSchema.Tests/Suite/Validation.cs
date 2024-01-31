@@ -75,7 +75,7 @@ public class Validation
 			var contents = File.ReadAllText(fileName);
 			var collections = JsonSerializer.Deserialize<List<TestCollection>>(contents, new JsonSerializerOptions
 			{
-				TypeInfoResolverChain = { TestSerializerContext.Default, JsonSchema.TypeInfoResolver },
+				TypeInfoResolverChain = { TestSerializerContext.Default },
 				PropertyNameCaseInsensitive = true
 			});
 

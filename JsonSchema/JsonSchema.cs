@@ -776,8 +776,11 @@ public sealed class SchemaJsonConverter : AotCompatibleJsonConverter<JsonSchema>
 						implementation = SchemaKeywordRegistry.GetNullValuedKeyword(keywordType) ??
 										 throw new InvalidOperationException($"No null instance registered for keyword `{keyword}`");
 					else
-						implementation = options.Read(ref reader, keywordType) as IJsonSchemaKeyword ??
+					{
+						var converter = SchemaKeywordRegistry.GetConverter(keywordType);
+						implementation = converter.Read(ref reader, keywordType, options) as IJsonSchemaKeyword ??
 								throw new InvalidOperationException($"Could not deserialize expected keyword `{keyword}`");
+					}
 					keywords.Add(implementation);
 					break;
 				case JsonTokenType.EndObject:
@@ -814,7 +817,10 @@ public sealed class SchemaJsonConverter : AotCompatibleJsonConverter<JsonSchema>
 		foreach (var keyword in value.Keywords!)
 		{
 			writer.WritePropertyName(keyword.Keyword());
-			options.Write(writer, keyword, keyword.GetType());
+
+			var keywordType = keyword.GetType();
+			var converter = SchemaKeywordRegistry.GetConverter(keywordType);
+			converter.Write(writer, keywordType, options);
 		}
 
 		writer.WriteEndObject();
