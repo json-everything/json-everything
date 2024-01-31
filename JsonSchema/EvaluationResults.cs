@@ -285,19 +285,6 @@ public class EvaluationResults
 		_errors[keyword] = message;
 	}
 
-	/// <summary>
-	/// Marks the result as invalid.
-	/// </summary>
-	/// <param name="keyword">The keyword that failed validation.</param>
-	/// <param name="message">The error message.</param>
-	/// <param name="parameters">Parameters to replace in the message.</param>
-	public void Fail(string keyword, string message, params (string token, object? value)[] parameters)
-	{
-		IsValid = false;
-		_errors ??= new();
-		_errors[keyword] = message.ReplaceTokens(parameters);
-	}
-
 	internal void AddNestedResult(EvaluationResults results)
 	{
 		_details ??= new List<EvaluationResults>();

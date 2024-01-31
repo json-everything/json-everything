@@ -63,9 +63,11 @@ public class ExclusiveMinimumKeyword : IJsonSchemaKeyword
 		var schemaValueType = evaluation.LocalInstance.GetSchemaValueType();
 		if (schemaValueType is not (SchemaValueType.Number or SchemaValueType.Integer)) return;
 
-		var number = evaluation.LocalInstance!.AsValue().GetNumber();
+		var number = evaluation.LocalInstance!.AsValue().GetNumber()!.Value;
 		if (Value >= number)
-			evaluation.Results.Fail(Name, ErrorMessages.GetExclusiveMinimum(context.Options.Culture), ("received", number), ("limit", Value));
+			evaluation.Results.Fail(Name, ErrorMessages.GetExclusiveMinimum(context.Options.Culture)
+				.ReplaceToken("received", number)
+				.ReplaceToken("limit", Value));
 	}
 }
 

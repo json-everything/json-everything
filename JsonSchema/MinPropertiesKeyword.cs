@@ -69,7 +69,9 @@ public class MinPropertiesKeyword : IJsonSchemaKeyword
 
 		var number = obj.Count;
 		if (Value > number)
-			evaluation.Results.Fail(Name, ErrorMessages.GetMinProperties(context.Options.Culture), ("received", number), ("limit", Value));
+			evaluation.Results.Fail(Name, ErrorMessages.GetMinProperties(context.Options.Culture)
+				.ReplaceToken("received", number)
+				.ReplaceToken("limit", Value));
 	}
 }
 

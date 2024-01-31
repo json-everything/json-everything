@@ -94,7 +94,9 @@ public class EnumKeyword : IJsonSchemaKeyword
 	private void Evaluator(KeywordEvaluation evaluation, EvaluationContext context)
 	{
 		if (!Values.Contains(evaluation.LocalInstance, JsonNodeEqualityComparer.Instance))
-			evaluation.Results.Fail(Name, ErrorMessages.GetEnum(context.Options.Culture), ("received", evaluation.LocalInstance), ("values", Values));
+			evaluation.Results.Fail(Name, ErrorMessages.GetEnum(context.Options.Culture)
+				.ReplaceToken("received", evaluation.LocalInstance, JsonSchemaSerializerContext.Default.JsonNode)
+				.ReplaceToken("values", Values, JsonSchemaSerializerContext.Default.IReadOnlyCollectionJsonNode!));
 	}
 }
 

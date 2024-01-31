@@ -78,7 +78,8 @@ public class OneOfKeyword : IJsonSchemaKeyword, ISchemaCollector
 		if (actual != 1)
 		{
 			evaluation.Results.SetAnnotation(Name, actual);
-			evaluation.Results.Fail(Name, ErrorMessages.GetOneOf(context.Options.Culture), ("count", actual));
+			evaluation.Results.Fail(Name, ErrorMessages.GetOneOf(context.Options.Culture)
+				.ReplaceToken("count", actual));
 		}
 	}
 }

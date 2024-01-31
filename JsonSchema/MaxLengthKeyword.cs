@@ -70,7 +70,9 @@ public class MaxLengthKeyword : IJsonSchemaKeyword
 		var str = evaluation.LocalInstance!.GetValue<string>();
 		var length = new StringInfo(str).LengthInTextElements;
 		if (Value < length)
-			evaluation.Results.Fail(Name, ErrorMessages.GetMaxLength(context.Options.Culture), ("received", length), ("limit", Value));
+			evaluation.Results.Fail(Name, ErrorMessages.GetMaxLength(context.Options.Culture)
+				.ReplaceToken("received", length)
+				.ReplaceToken("limit", Value));
 	}
 }
 

@@ -90,7 +90,8 @@ public class VocabularyKeyword : IJsonSchemaKeyword
 		}
 
 		if (!overallResult)
-			evaluation.Results.Fail(Name, ErrorMessages.GetUnknownVocabularies(context.Options.Culture), ("vocabs", $"[{string.Join(", ", violations)}]"));
+			evaluation.Results.Fail(Name, ErrorMessages.GetUnknownVocabularies(context.Options.Culture)
+				.ReplaceToken("vocabs", $"[{string.Join(", ", violations)}]"));
 	}
 }
 

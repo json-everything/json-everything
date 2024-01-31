@@ -75,7 +75,8 @@ public class RequiredKeyword : IJsonSchemaKeyword
 
 		var missing = Properties.Except(obj.Select(x => x.Key)).ToArray();
 		if (missing.Length != 0)
-			evaluation.Results.Fail(Name, ErrorMessages.GetRequired(context.Options.Culture), ("missing", missing));
+			evaluation.Results.Fail(Name, ErrorMessages.GetRequired(context.Options.Culture)
+				.ReplaceToken("missing", missing));
 	}
 }
 

@@ -2,9 +2,14 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Linq;
+using System.Reflection;
 using System.Resources;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
+using System.Text.Json.Nodes;
+using System.Text.Json.Serialization.Metadata;
+using System.Xml.Linq;
 
 namespace Json.Schema;
 
@@ -20,7 +25,6 @@ namespace Json.Schema;
 public static partial class ErrorMessages
 {
     private static readonly ResourceManager _resourceManager = new("Json.Schema.Localization.Resources", typeof(ErrorMessages).Assembly);
-    private static JsonSerializerOptions? _serializerOptions;
 
     /// <summary>
     /// Gets or sets a culture to use for error messages.  Default is <see cref="CultureInfo.CurrentCulture"/>.
@@ -29,15 +33,6 @@ public static partial class ErrorMessages
 
     static ErrorMessages()
     {
-        _serializerOptions = new JsonSerializerOptions
-        {
-            TypeInfoResolver = JsonSchema.TypeInfoResolver
-        };
-        JsonSchemaSerializerContext.OptionsManager.TypeInfoResolverUpdated +=
-            (_, _) => _serializerOptions = new JsonSerializerOptions
-            {
-                TypeInfoResolver = JsonSchema.TypeInfoResolver
-            };
     }
 
     private static string Get(CultureInfo? culture = null, [CallerMemberName] string? key = null)
@@ -51,27 +46,103 @@ public static partial class ErrorMessages
                throw new KeyNotFoundException($"Could not find error message with key '{key}'");
     }
 
-    /// <summary>
-    /// Replaces tokens in the form of `[[token]]` with a specified value, serialized as JSON.
-    /// </summary>
-    /// <param name="message">The message template.</param>
-    /// <param name="parameters">
-    /// Tuple of the token name (without brackets) and the value which will replace it.
-    /// </param>
-    /// <returns>The detokenized string.</returns>
-    [UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
-    [UnconditionalSuppressMessage("AOT", "IL3050:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
-    public static string ReplaceTokens(this string message, params (string token, object? value)[] parameters)
+	/// <summary>
+	/// Replaces tokens in the form of `[[token]]` with a specified value, serialized as JSON.
+	/// </summary>
+	/// <param name="message">The message template.</param>
+	/// <param name="name">The token name (without brackets)</param>
+	/// <param name="value">The value.</param>
+	/// <returns>The detokenized string.</returns>
+	[RequiresDynamicCode("Calls JsonSerializer.Serialize and might require reflection for token values serialization. Prefer ReplaceToken that takes TypeInfo parameters for AOT scenarios.")]
+	[RequiresUnreferencedCode("Calls JsonSerializer.Serialize and might require reflection for token values serialization. Prefer ReplaceToken that takes TypeInfo parameters for AOT scenarios.")]
+	public static string ReplaceToken(this string message, string name, object? value)
     {
-        var current = message;
-        var values = new object[parameters.Length];
-        for (var i = 0; i < parameters.Length; i++)
-        {
-            var parameter = parameters[i];
-            values[i] = JsonSerializer.Serialize(parameter.value, _serializerOptions);
-            current = current.Replace($"[[{parameter.token}]]", $"{{{i}}}");
-        }
+		var stringValue = JsonSerializer.Serialize(value);
+		return message.Replace($"[[{name}]]", stringValue);
+	}
 
-        return string.Format(current, values);
-    }
+	/// <summary>
+	/// Replaces tokens in the form of `[[token]]` with a specified value, serialized as JSON.
+	/// </summary>
+	/// <param name="message">The message template.</param>
+	/// <param name="name">The token name (without brackets)</param>
+	/// <param name="value">The value.</param>
+	/// <param name="typeInfo">A JsonTypeInfo that matches <paramref name="value"/>.</param>
+	/// <returns>The detokenized string.</returns>
+	public static string ReplaceToken<T>(this string message, string name, T? value, JsonTypeInfo<T> typeInfo)
+	{
+		var stringValue = JsonSerializer.Serialize(value, typeInfo!);
+		return message.Replace($"[[{name}]]", stringValue);
+	}
+
+	/// <summary>
+	/// Replaces tokens in the form of `[[token]]` with a specified value, serialized as JSON.
+	/// </summary>
+	/// <param name="message">The message template.</param>
+	/// <param name="name">The token name (without brackets)</param>
+	/// <param name="value">The value.</param>
+	/// <returns>The detokenized string.</returns>
+	public static string ReplaceToken(this string message, string name, int value) => 
+		ReplaceToken(message, name, value, JsonSchemaSerializerContext.Default.Int32);
+
+	/// <summary>
+	/// Replaces tokens in the form of `[[token]]` with a specified value, serialized as JSON.
+	/// </summary>
+	/// <param name="message">The message template.</param>
+	/// <param name="name">The token name (without brackets)</param>
+	/// <param name="value">The value.</param>
+	/// <returns>The detokenized string.</returns>
+	public static string ReplaceToken(this string message, string name, uint value) =>
+		ReplaceToken(message, name, value, JsonSchemaSerializerContext.Default.UInt32);
+
+
+	/// <summary>
+	/// Replaces tokens in the form of `[[token]]` with a specified value, serialized as JSON.
+	/// </summary>
+	/// <param name="message">The message template.</param>
+	/// <param name="name">The token name (without brackets)</param>
+	/// <param name="value">The value.</param>
+	/// <returns>The detokenized string.</returns>
+	public static string ReplaceToken(this string message, string name, decimal value) => 
+		ReplaceToken(message, name, value, JsonSchemaSerializerContext.Default.Decimal);
+
+	/// <summary>
+	/// Replaces tokens in the form of `[[token]]` with a specified value, serialized as JSON.
+	/// </summary>
+	/// <param name="message">The message template.</param>
+	/// <param name="name">The token name (without brackets)</param>
+	/// <param name="value">The value.</param>
+	/// <returns>The detokenized string.</returns>
+	public static string ReplaceToken(this string message, string name, string value) => 
+		ReplaceToken(message, name, value, JsonSchemaSerializerContext.Default.String);
+
+	/// <summary>
+	/// Replaces tokens in the form of `[[token]]` with a specified value, serialized as JSON.
+	/// </summary>
+	/// <param name="message">The message template.</param>
+	/// <param name="name">The token name (without brackets)</param>
+	/// <param name="value">The value.</param>
+	/// <returns>The detokenized string.</returns>
+	public static string ReplaceToken(this string message, string name, string[] value) =>
+		ReplaceToken(message, name, value, JsonSchemaSerializerContext.Default.StringArray);
+
+	/// <summary>
+	/// Replaces tokens in the form of `[[token]]` with a specified value, serialized as JSON.
+	/// </summary>
+	/// <param name="message">The message template.</param>
+	/// <param name="name">The token name (without brackets)</param>
+	/// <param name="value">The value.</param>
+	/// <returns>The detokenized string.</returns>
+	public static string ReplaceToken(this string message, string name, Dictionary<string, string[]> value) =>
+		ReplaceToken(message, name, value, JsonSchemaSerializerContext.Default.DictionaryStringStringArray);
+
+	/// <summary>
+	/// Replaces tokens in the form of `[[token]]` with a specified value, serialized as JSON.
+	/// </summary>
+	/// <param name="message">The message template.</param>
+	/// <param name="name">The token name (without brackets)</param>
+	/// <param name="value">The value.</param>
+	/// <returns>The detokenized string.</returns>
+	public static string ReplaceToken(this string message, string name, JsonNode value) =>
+		ReplaceToken(message, name, value, JsonSchemaSerializerContext.Default.JsonNode);
 }
