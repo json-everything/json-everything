@@ -2,6 +2,7 @@
 using System.Text.Json;
 using NUnit.Framework;
 using Json.More;
+// ReSharper disable LocalizableElement
 
 namespace Json.Schema.Generation.Tests;
 

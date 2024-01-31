@@ -37,11 +37,9 @@ public static class TestHelpers
 		Assert.IsTrue(validation.IsValid, "failed validation");
 	}
 
-	public static void RunFailure(JsonSchema schema, EvaluationOptions? options = null)
+	public static void RunFailure(JsonSchema schema)
 	{
 		var result = schema.GenerateData();
-
-		options ??= EvaluationOptions.Default;
 
 		Console.WriteLine(result.ErrorMessage);
 		if (result.IsSuccess)

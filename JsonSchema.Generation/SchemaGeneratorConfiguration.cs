@@ -22,9 +22,9 @@ public class SchemaGeneratorConfiguration
 		public override bool IsDefined(Type attributeType, bool inherit) => false;
 
 		public override Type DeclaringType { get; } = typeof(DummyInfo);
-		public override MemberTypes MemberType { get; } = MemberTypes.Property;
+		public override MemberTypes MemberType => MemberTypes.Property;
 		public override string Name { get; }
-		public override Type? ReflectedType { get; } = null;
+		public override Type? ReflectedType => null;
 
 		public DummyInfo(string name)
 		{

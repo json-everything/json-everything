@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using NUnit.Framework;
+// ReSharper disable ClassNeverInstantiated.Local
 
 namespace Json.Schema.Generation.Tests;
 
