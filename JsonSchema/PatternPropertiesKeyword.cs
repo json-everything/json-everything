@@ -103,7 +103,7 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollecto
 /// <summary>
 /// JSON converter for <see cref="PatternPropertiesKeyword"/>.
 /// </summary>
-public sealed class PatternPropertiesKeywordJsonConverter : JsonConverter<PatternPropertiesKeyword>
+public sealed class PatternPropertiesKeywordJsonConverter : AotCompatibleJsonConverter<PatternPropertiesKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="PatternPropertiesKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -115,7 +115,7 @@ public sealed class PatternPropertiesKeywordJsonConverter : JsonConverter<Patter
 		if (reader.TokenType != JsonTokenType.StartObject)
 			throw new JsonException("Expected object");
 
-		var patternProps = options.Read<Dictionary<string, JsonSchema>>(ref reader)!;
+		var patternProps = options.Read(ref reader, JsonSchemaSerializerContext.Default.DictionaryStringJsonSchema)!;
 		var schemas = new Dictionary<Regex, JsonSchema>();
 		var invalidProps = new List<string>();
 		foreach (var prop in patternProps)
@@ -139,12 +139,11 @@ public sealed class PatternPropertiesKeywordJsonConverter : JsonConverter<Patter
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, PatternPropertiesKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(PatternPropertiesKeyword.Name);
 		writer.WriteStartObject();
 		foreach (var schema in value.Patterns)
 		{
 			writer.WritePropertyName(schema.Key.ToString());
-			JsonSerializer.Serialize(writer, schema.Value, options);
+			options.Write(writer, schema.Value, JsonSchemaSerializerContext.Default.JsonSchema);;
 		}
 		writer.WriteEndObject();
 	}

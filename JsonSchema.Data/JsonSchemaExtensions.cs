@@ -12,6 +12,14 @@ public static class JsonSchemaExtensions
 	/// </summary>
 	public static IReadOnlyDictionary<string, IDataResourceIdentifier>? GetData(this JsonSchema schema)
 	{
-		return schema.TryGetKeyword<DataKeyword>(DataKeyword.Name, out var k) ? k!.References : null;
+		return schema.TryGetKeyword<DataKeyword>(DataKeyword.Name, out var k) ? k.References : null;
+	}
+
+	/// <summary>
+	/// Gets the references in `optionalData` if the keyword exists.
+	/// </summary>
+	public static IReadOnlyDictionary<string, IDataResourceIdentifier>? GetOptionalData(this JsonSchema schema)
+	{
+		return schema.TryGetKeyword<OptionalDataKeyword>(OptionalDataKeyword.Name, out var k) ? k.References : null;
 	}
 }

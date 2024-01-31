@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -27,8 +28,7 @@ public class AddRule : Rule
 	/// <param name="more">Sequence of values to add to the first value.</param>
 	protected internal AddRule(Rule a, params Rule[] more)
 	{
-		Items = new List<Rule> { a };
-		Items.AddRange(more);
+		Items = [a, .. more];
 	}
 
 	/// <summary>
@@ -50,7 +50,7 @@ public class AddRule : Rule
 
 			var number = value.Numberify();
 
-			if (number == null) return JsonNull.SignalNode;
+			if (number == null) return null;
 
 			result += number.Value;
 		}
@@ -59,15 +59,13 @@ public class AddRule : Rule
 	}
 }
 
-internal class AddRuleJsonConverter : JsonConverter<AddRule>
+internal class AddRuleJsonConverter : AotCompatibleJsonConverter<AddRule>
 {
 	public override AddRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var node = JsonSerializer.Deserialize<JsonNode?>(ref reader, options);
-
-		var parameters = node is JsonArray
-			? node.Deserialize<Rule[]>()
-			: new[] { node.Deserialize<Rule>()! };
+		var parameters = reader.TokenType == JsonTokenType.StartArray
+			? options.Read(ref reader, LogicSerializerContext.Default.RuleArray)
+			: new[] { options.Read(ref reader, LogicSerializerContext.Default.Rule)! };
 
 		if (parameters == null || parameters.Length == 0)
 			throw new JsonException("The + rule needs an array of parameters.");
@@ -75,6 +73,8 @@ internal class AddRuleJsonConverter : JsonConverter<AddRule>
 		return new AddRule(parameters[0], parameters.Skip(1).ToArray());
 	}
 
+	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
+	[UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public override void Write(Utf8JsonWriter writer, AddRule value, JsonSerializerOptions options)
 	{
 		writer.WriteStartObject();

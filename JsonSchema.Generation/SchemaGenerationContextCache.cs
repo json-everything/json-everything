@@ -12,7 +12,7 @@ public static class SchemaGenerationContextCache
 	[ThreadStatic]
 	private static Dictionary<int, SchemaGenerationContextBase>? _cache;
 
-	internal static Dictionary<int, SchemaGenerationContextBase> Cache => _cache ??= new();
+	internal static Dictionary<int, SchemaGenerationContextBase> Cache => _cache ??= [];
 
 	/// <summary>
 	/// Gets or creates a <see cref="SchemaGenerationContextBase"/> based on the given
@@ -38,7 +38,7 @@ public static class SchemaGenerationContextCache
 		var hash = CalculateHash(type, memberAttributes?.WhereHandled());
 		if (!Cache.TryGetValue(hash, out var context))
 		{
-			if (memberAttributes != null && memberAttributes.Any())
+			if (memberAttributes != null && memberAttributes.Count != 0)
 			{
 				var memberContext = new MemberGenerationContext(type, memberAttributes);
 				context = memberContext;

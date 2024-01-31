@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Json.More;
@@ -48,18 +49,20 @@ public class ContentSchemaKeyword : IJsonSchemaKeyword, ISchemaContainer
 	/// </param>
 	/// <param name="context">The <see cref="EvaluationContext"/>.</param>
 	/// <returns>A constraint object.</returns>
+	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
+	[UnconditionalSuppressMessage("AOT", "IL3050:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		EvaluationContext context)
 	{
-		return KeywordConstraint.SimpleAnnotation(Name, JsonSerializer.SerializeToNode(Schema));
+		return KeywordConstraint.SimpleAnnotation(Name, JsonSerializer.SerializeToNode(Schema, JsonSchemaSerializerContext.OptionsManager.SerializerOptions));
 	}
 }
 
 /// <summary>
 /// JSON converter for <see cref="ContentSchemaKeyword"/>.
 /// </summary>
-public sealed class ContentSchemaKeywordJsonConverter : JsonConverter<ContentSchemaKeyword>
+public sealed class ContentSchemaKeywordJsonConverter : AotCompatibleJsonConverter<ContentSchemaKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="ContentSchemaKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -68,7 +71,7 @@ public sealed class ContentSchemaKeywordJsonConverter : JsonConverter<ContentSch
 	/// <returns>The converted value.</returns>
 	public override ContentSchemaKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var schema = options.Read<JsonSchema>(ref reader)!;
+		var schema = options.Read(ref reader, JsonSchemaSerializerContext.Default.JsonSchema)!;
 
 		return new ContentSchemaKeyword(schema);
 	}
@@ -79,7 +82,6 @@ public sealed class ContentSchemaKeywordJsonConverter : JsonConverter<ContentSch
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, ContentSchemaKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(ContentSchemaKeyword.Name);
-		JsonSerializer.Serialize(writer, value.Schema, options);
+		options.Write(writer, value.Schema, JsonSchemaSerializerContext.Default.JsonSchema);
 	}
 }

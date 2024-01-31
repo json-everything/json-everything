@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Schema;
 
@@ -58,7 +59,7 @@ public class DeprecatedKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="DeprecatedKeyword"/>.
 /// </summary>
-public sealed class DeprecatedKeywordJsonConverter : JsonConverter<DeprecatedKeyword>
+public sealed class DeprecatedKeywordJsonConverter : AotCompatibleJsonConverter<DeprecatedKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="DeprecatedKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -81,6 +82,6 @@ public sealed class DeprecatedKeywordJsonConverter : JsonConverter<DeprecatedKey
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, DeprecatedKeyword value, JsonSerializerOptions options)
 	{
-		writer.WriteBoolean(DeprecatedKeyword.Name, value.Value);
+		writer.WriteBooleanValue(value.Value);
 	}
 }

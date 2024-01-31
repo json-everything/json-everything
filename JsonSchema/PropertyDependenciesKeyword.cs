@@ -88,7 +88,8 @@ public class PropertyDependenciesKeyword : IJsonSchemaKeyword, ICustomSchemaColl
 		evaluation.Results.SetAnnotation(Name, evaluation.ChildEvaluations.Select(x => (JsonNode)x.Results.EvaluationPath.Segments.Last().Value!).ToJsonArray());
 		
 		if (failedProperties.Length != 0)
-			evaluation.Results.Fail(Name, ErrorMessages.GetDependentSchemas(context.Options.Culture), ("failed", failedProperties));
+			evaluation.Results.Fail(Name, ErrorMessages.GetDependentSchemas(context.Options.Culture)
+				.ReplaceToken("failed", failedProperties));
 	}
 
 	(JsonSchema?, int) ICustomSchemaCollector.FindSubschema(IReadOnlyList<PointerSegment> segments)
@@ -104,7 +105,7 @@ public class PropertyDependenciesKeyword : IJsonSchemaKeyword, ICustomSchemaColl
 /// <summary>
 /// JSON converter for <see cref="PropertyDependenciesKeyword"/>.
 /// </summary>
-public sealed class PropertyDependenciesKeywordJsonConverter : JsonConverter<PropertyDependenciesKeyword>
+public sealed class PropertyDependenciesKeywordJsonConverter : AotCompatibleJsonConverter<PropertyDependenciesKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="PropertyDependenciesKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -113,7 +114,7 @@ public sealed class PropertyDependenciesKeywordJsonConverter : JsonConverter<Pro
 	/// <returns>The converted value.</returns>
 	public override PropertyDependenciesKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var dependencies = options.Read<Dictionary<string, PropertyDependency>>(ref reader);
+		var dependencies = options.Read(ref reader, JsonSchemaSerializerContext.Default.DictionaryStringPropertyDependency);
 
 		return new PropertyDependenciesKeyword(dependencies!);
 	}
@@ -124,7 +125,6 @@ public sealed class PropertyDependenciesKeywordJsonConverter : JsonConverter<Pro
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, PropertyDependenciesKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(PropertyDependenciesKeyword.Name);
-		JsonSerializer.Serialize(writer, value.Dependencies, options);
+		options.Write(writer, value.Dependencies, JsonSchemaSerializerContext.Default.IReadOnlyDictionaryStringPropertyDependency);
 	}
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Schema;
 
@@ -58,7 +59,7 @@ public class MinContainsKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="MinContainsKeyword"/>.
 /// </summary>
-public sealed class MinContainsKeywordJsonConverter : JsonConverter<MinContainsKeyword>
+public sealed class MinContainsKeywordJsonConverter : AotCompatibleJsonConverter<MinContainsKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="MinContainsKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -85,6 +86,6 @@ public sealed class MinContainsKeywordJsonConverter : JsonConverter<MinContainsK
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, MinContainsKeyword value, JsonSerializerOptions options)
 	{
-		writer.WriteNumber(MinContainsKeyword.Name, value.Value);
+		writer.WriteNumberValue(value.Value);
 	}
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Schema;
 
@@ -59,7 +60,7 @@ public class CommentKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="CommentKeyword"/>.
 /// </summary>
-public sealed class CommentKeywordJsonConverter : JsonConverter<CommentKeyword>
+public sealed class CommentKeywordJsonConverter : AotCompatibleJsonConverter<CommentKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="CommentKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -82,6 +83,6 @@ public sealed class CommentKeywordJsonConverter : JsonConverter<CommentKeyword>
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, CommentKeyword value, JsonSerializerOptions options)
 	{
-		writer.WriteString(CommentKeyword.Name, value.Value);
+		writer.WriteStringValue(value.Value);
 	}
 }

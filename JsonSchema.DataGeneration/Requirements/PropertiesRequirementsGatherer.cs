@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 
 namespace Json.Schema.DataGeneration.Requirements;
 
-[UsedImplicitly]
 internal class PropertiesRequirementsGatherer : IRequirementsGatherer
 {
 	public void AddRequirements(RequirementsContext context, JsonSchema schema)
@@ -39,14 +37,14 @@ internal class PropertiesRequirementsGatherer : IRequirementsGatherer
 			if (context.RequiredProperties != null)
 				context.RequiredProperties.AddRange(requiredProperties);
 			else
-				context.RequiredProperties = requiredProperties.ToList();
+				context.RequiredProperties = [.. requiredProperties];
 			supportsObjects = true;
 		}
 
 		var properties = schema.Keywords?.OfType<PropertiesKeyword>().FirstOrDefault();
 		if (properties != null)
 		{
-			context.Properties ??= new Dictionary<string, RequirementsContext>();
+			context.Properties ??= [];
 			foreach (var property in properties.Properties)
 			{
 				if (context.Properties.TryGetValue(property.Key, out var subschema))

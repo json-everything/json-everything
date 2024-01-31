@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Json.More;
 using Json.Pointer;
 
 namespace Json.Schema;
@@ -58,8 +59,7 @@ public class SchemaKeyword : IJsonSchemaKeyword
 		if (!context.Options.ValidateAgainstMetaSchema)
 			return KeywordConstraint.Skip;
 
-		var metaSchema = context.Options.SchemaRegistry.Get(Schema) as JsonSchema;
-		if (metaSchema == null)
+		if (context.Options.SchemaRegistry.Get(Schema) is not JsonSchema metaSchema)
 			throw new JsonSchemaException($"Cannot resolve meta-schema `{Schema}`");
 
 		context.Options.ValidateAgainstMetaSchema = false;
@@ -68,21 +68,22 @@ public class SchemaKeyword : IJsonSchemaKeyword
 
 		return new KeywordConstraint(Name, Evaluator)
 		{
-			ChildDependencies = new[] { metaSchemaConstraint }
+			ChildDependencies = [metaSchemaConstraint]
 		};
 	}
 
 	private void Evaluator(KeywordEvaluation evaluation, EvaluationContext context)
 	{
 		if (!evaluation.ChildEvaluations[0].Results.IsValid)
-			evaluation.Results.Fail(Name, ErrorMessages.GetMetaSchemaValidation(context.Options.Culture), ("uri", Schema.OriginalString));
+			evaluation.Results.Fail(Name, ErrorMessages.GetMetaSchemaValidation(context.Options.Culture)
+				.ReplaceToken("uri", Schema.OriginalString));
 	}
 }
 
 /// <summary>
 /// JSON converter for <see cref="SchemaKeyword"/>.
 /// </summary>
-public sealed class SchemaKeywordJsonConverter : JsonConverter<SchemaKeyword>
+public sealed class SchemaKeywordJsonConverter : AotCompatibleJsonConverter<SchemaKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="SchemaKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -107,7 +108,7 @@ public sealed class SchemaKeywordJsonConverter : JsonConverter<SchemaKeyword>
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, SchemaKeyword value, JsonSerializerOptions options)
 	{
-		writer.WriteString(SchemaKeyword.Name, value.Schema.OriginalString);
+		writer.WriteStringValue(value.Schema.OriginalString);
 	}
 }
 

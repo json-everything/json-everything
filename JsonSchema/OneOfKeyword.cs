@@ -78,7 +78,8 @@ public class OneOfKeyword : IJsonSchemaKeyword, ISchemaCollector
 		if (actual != 1)
 		{
 			evaluation.Results.SetAnnotation(Name, actual);
-			evaluation.Results.Fail(Name, ErrorMessages.GetOneOf(context.Options.Culture), ("count", actual));
+			evaluation.Results.Fail(Name, ErrorMessages.GetOneOf(context.Options.Culture)
+				.ReplaceToken("count", actual));
 		}
 	}
 }
@@ -86,7 +87,7 @@ public class OneOfKeyword : IJsonSchemaKeyword, ISchemaCollector
 /// <summary>
 /// JSON converter for <see cref="OneOfKeyword"/>.
 /// </summary>
-public sealed class OneOfKeywordJsonConverter : JsonConverter<OneOfKeyword>
+public sealed class OneOfKeywordJsonConverter : AotCompatibleJsonConverter<OneOfKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="OneOfKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -98,7 +99,7 @@ public sealed class OneOfKeywordJsonConverter : JsonConverter<OneOfKeyword>
 		if (reader.TokenType != JsonTokenType.StartArray)
 			throw new JsonException("Expected array");
 
-		var schemas = options.Read<List<JsonSchema>>(ref reader)!;
+		var schemas = options.Read(ref reader, JsonSchemaSerializerContext.Default.ListJsonSchema)!;
 		return new OneOfKeyword(schemas);
 	}
 
@@ -108,11 +109,10 @@ public sealed class OneOfKeywordJsonConverter : JsonConverter<OneOfKeyword>
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, OneOfKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(OneOfKeyword.Name);
 		writer.WriteStartArray();
 		foreach (var schema in value.Schemas)
 		{
-			JsonSerializer.Serialize(writer, schema, options);
+			options.Write(writer, schema, JsonSchemaSerializerContext.Default.JsonSchema);
 		}
 		writer.WriteEndArray();
 	}

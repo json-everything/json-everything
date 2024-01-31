@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 using Json.Pointer;
 
 namespace Json.Schema;
@@ -47,7 +49,7 @@ public class EvaluationResults
 	/// <summary>
 	/// The collection of nested results.
 	/// </summary>
-	public IReadOnlyList<EvaluationResults> Details => _details ??= new List<EvaluationResults>();
+	public IReadOnlyList<EvaluationResults> Details => _details ??= [];
 
 	/// <summary>
 	/// Gets whether there are nested results.
@@ -117,7 +119,7 @@ public class EvaluationResults
 		InstanceLocation = other.InstanceLocation;
 		_annotations = other._annotations?.ToDictionary(x => x.Key, x => x.Value);
 		_errors = other._errors?.ToDictionary(x => x.Key, x => x.Value);
-		IncludeDroppedAnnotations = IncludeDroppedAnnotations;
+		IncludeDroppedAnnotations = other.IncludeDroppedAnnotations;
 		_ignoredAnnotations = other._ignoredAnnotations;
 		_backgroundAnnotations = other._backgroundAnnotations;
 	}
@@ -153,14 +155,14 @@ public class EvaluationResults
 	public void ToList()
 	{
 		var children = GetAllChildren().ToList();
-		if (!children.Any()) return;
+		if (children.Count == 0) return;
 
 		children.Remove(this);
 		children.Insert(0, new EvaluationResults(this) { Parent = this });
 		_annotations?.Clear();
 		_errors?.Clear();
 		if (_details == null)
-			_details = new List<EvaluationResults>();
+			_details = [];
 		else
 			_details.Clear();
 		foreach (var child in children)
@@ -179,7 +181,7 @@ public class EvaluationResults
 		var toProcess = new Queue<EvaluationResults>();
 
 		toProcess.Enqueue(this);
-		while (toProcess.Any())
+		while (toProcess.Count != 0)
 		{
 			var current = toProcess.Dequeue();
 			all.Add(current);
@@ -217,7 +219,7 @@ public class EvaluationResults
 	{
 		if (_ignoredAnnotations?.Any(x => x == keyword) ?? false) return;
 
-		_annotations ??= new();
+		_annotations ??= [];
 
 		_annotations[keyword] = value;
 	}
@@ -279,32 +281,19 @@ public class EvaluationResults
 		IsValid = false;
 		if (message == null) return;
 
-		_errors ??= new();
+		_errors ??= [];
 		_errors[keyword] = message;
-	}
-
-	/// <summary>
-	/// Marks the result as invalid.
-	/// </summary>
-	/// <param name="keyword">The keyword that failed validation.</param>
-	/// <param name="message">The error message.</param>
-	/// <param name="parameters">Parameters to replace in the message.</param>
-	public void Fail(string keyword, string message, params (string token, object? value)[] parameters)
-	{
-		IsValid = false;
-		_errors ??= new();
-		_errors[keyword] = message.ReplaceTokens(parameters);
 	}
 
 	internal void AddNestedResult(EvaluationResults results)
 	{
-		_details ??= new List<EvaluationResults>();
+		_details ??= [];
 		_details.Add(results);
 		results.Parent = this;
 	}
 }
 
-internal class EvaluationResultsJsonConverter : JsonConverter<EvaluationResults>
+internal class EvaluationResultsJsonConverter : AotCompatibleJsonConverter<EvaluationResults>
 {
 	public override EvaluationResults Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
@@ -322,7 +311,7 @@ internal class EvaluationResultsJsonConverter : JsonConverter<EvaluationResults>
 		if (value.Format == OutputFormat.Hierarchical || value.Parent != null)
 		{
 			writer.WritePropertyName("evaluationPath");
-			JsonSerializer.Serialize(writer, value.EvaluationPath, options);
+			options.Write(writer, value.EvaluationPath, JsonSchemaSerializerContext.Default.JsonPointer);
 
 			// this can still be null if the root schema is a boolean
 			if (value.SchemaLocation != null!)
@@ -331,11 +320,11 @@ internal class EvaluationResultsJsonConverter : JsonConverter<EvaluationResults>
 				var schemaLocation = value.SchemaLocation.OriginalString;
 				if (string.IsNullOrEmpty(value.SchemaLocation.Fragment))
 					schemaLocation += "#"; // see https://github.com/json-schema-org/JSON-Schema-Test-Suite/pull/671
-				JsonSerializer.Serialize(writer, schemaLocation, options);
+				options.Write(writer, schemaLocation, JsonSchemaSerializerContext.Default.String);
 			}
 
 			writer.WritePropertyName("instanceLocation");
-			JsonSerializer.Serialize(writer, value.InstanceLocation, options);
+			options.Write(writer, value.InstanceLocation, JsonSchemaSerializerContext.Default.JsonPointer);
 		}
 
 		if (value.IsValid)
@@ -343,7 +332,7 @@ internal class EvaluationResultsJsonConverter : JsonConverter<EvaluationResults>
 			if (value.AnnotationsToSerialize != null)
 			{
 				writer.WritePropertyName("annotations");
-				JsonSerializer.Serialize(writer, value.AnnotationsToSerialize, options);
+				options.Write(writer, value.AnnotationsToSerialize!, JsonSchemaSerializerContext.Default.IReadOnlyDictionaryStringJsonNode);
 			}
 		}
 		else
@@ -351,20 +340,20 @@ internal class EvaluationResultsJsonConverter : JsonConverter<EvaluationResults>
 			if (value.HasErrors)
 			{
 				writer.WritePropertyName("errors");
-				JsonSerializer.Serialize(writer, value.Errors, options);
+				options.Write(writer, value.Errors, JsonSchemaSerializerContext.Default.IReadOnlyDictionaryStringString);
 			}
-			if (value.IncludeDroppedAnnotations && value.AnnotationsToSerialize != null)
+			if (value is { IncludeDroppedAnnotations: true, AnnotationsToSerialize: not null })
 			{
 				writer.WritePropertyName("droppedAnnotations");
-				JsonSerializer.Serialize(writer, value.AnnotationsToSerialize, options);
+				options.Write(writer, value.AnnotationsToSerialize!, JsonSchemaSerializerContext.Default.IReadOnlyDictionaryStringJsonNode);
 			}
 		}
 
 		if (value.HasDetails)
 		{
 			writer.WritePropertyName("details");
-			JsonSerializer.Serialize(writer, value.Details, options);
-		}
+			options.Write(writer, value.Details, JsonSchemaSerializerContext.Default.IReadOnlyListEvaluationResults);
+}
 
 		writer.WriteEndObject();
 	}
@@ -373,7 +362,7 @@ internal class EvaluationResultsJsonConverter : JsonConverter<EvaluationResults>
 /// <summary>
 /// Produces output formats specified by 2019-09 and 2020-12.
 /// </summary>
-public class Pre202012EvaluationResultsJsonConverter : JsonConverter<EvaluationResults>
+public class Pre202012EvaluationResultsJsonConverter : AotCompatibleJsonConverter<EvaluationResults>
 {
 	/// <summary>
 	/// Holder for an annotation value.
@@ -432,13 +421,13 @@ public class Pre202012EvaluationResultsJsonConverter : JsonConverter<EvaluationR
 		if (value.Format == OutputFormat.Hierarchical || value.Parent != null)
 		{
 			writer.WritePropertyName("keywordLocation");
-			JsonSerializer.Serialize(writer, value.EvaluationPath, options);
+			options.Write(writer, value.EvaluationPath, JsonSchemaSerializerContext.Default.JsonPointer);
 
 			writer.WritePropertyName("absoluteKeywordLocation");
-			JsonSerializer.Serialize(writer, value.SchemaLocation, options);
+			options.Write(writer, value.SchemaLocation, JsonSchemaSerializerContext.Default.Uri);
 
 			writer.WritePropertyName("instanceLocation");
-			JsonSerializer.Serialize(writer, value.InstanceLocation, options);
+			options.Write(writer, value.InstanceLocation, JsonSchemaSerializerContext.Default.JsonPointer);
 		}
 
 		bool skipCloseObject = false;
@@ -457,7 +446,7 @@ public class Pre202012EvaluationResultsJsonConverter : JsonConverter<EvaluationR
 
 					foreach (var result in value.Details)
 					{
-						JsonSerializer.Serialize(writer, result, options);
+						options.Write(writer, result, JsonSchemaSerializerContext.Default.EvaluationResults);
 					}
 
 					if (value.HasErrors)
@@ -480,7 +469,7 @@ public class Pre202012EvaluationResultsJsonConverter : JsonConverter<EvaluationR
 
 					foreach (var result in value.Details)
 					{
-						JsonSerializer.Serialize(writer, result, options);
+						options.Write(writer, result, JsonSchemaSerializerContext.Default.EvaluationResults);
 					}
 					writer.WriteEndArray();
 				}
@@ -518,7 +507,7 @@ public class Pre202012EvaluationResultsJsonConverter : JsonConverter<EvaluationR
 						}
 						else
 						{
-							JsonSerializer.Serialize(writer, result, options);
+							options.Write(writer, result, JsonSchemaSerializerContext.Default.EvaluationResults);
 						}
 					}
 
@@ -535,7 +524,7 @@ public class Pre202012EvaluationResultsJsonConverter : JsonConverter<EvaluationR
 			}
 			else
 			{
-				var annotations = value.AnnotationsToSerialize?.Select(x => new Annotation(x.Key, x.Value, value.EvaluationPath.Combine(x.Key))).ToArray() ?? Array.Empty<Annotation>();
+				var annotations = value.AnnotationsToSerialize?.Select(x => new Annotation(x.Key, x.Value, value.EvaluationPath.Combine(x.Key))).ToArray() ?? [];
 
 				if (value.HasDetails)
 				{
@@ -547,7 +536,7 @@ public class Pre202012EvaluationResultsJsonConverter : JsonConverter<EvaluationR
 						var annotation = annotations.SingleOrDefault(a => a.Source.Equals(result.EvaluationPath));
 						if (annotation != null) continue;
 
-						JsonSerializer.Serialize(writer, result, options);
+						options.Write(writer, result, JsonSchemaSerializerContext.Default.EvaluationResults);
 					}
 					writer.WriteEndArray();
 				}
@@ -575,23 +564,25 @@ public class Pre202012EvaluationResultsJsonConverter : JsonConverter<EvaluationR
 		writer.WriteBoolean("valid", value.IsValid);
 
 		writer.WritePropertyName("keywordLocation");
-		JsonSerializer.Serialize(writer, value.EvaluationPath.Combine(keyword), options);
+		options.Write(writer, value.EvaluationPath.Combine(keyword), JsonSchemaSerializerContext.Default.JsonPointer);
 
 		writer.WritePropertyName("absoluteKeywordLocation");
 		if (value.SchemaLocation.OriginalString.Contains('#'))
-			JsonSerializer.Serialize(writer, value.SchemaLocation.OriginalString + $"/{keyword}", options);
+			options.Write(writer, value.SchemaLocation.OriginalString + $"/{keyword}", JsonSchemaSerializerContext.Default.String);
 		else
-			JsonSerializer.Serialize(writer, value.SchemaLocation.OriginalString + $"#/{keyword}", options);
+			options.Write(writer, value.SchemaLocation.OriginalString + $"#/{keyword}", JsonSchemaSerializerContext.Default.String);
 
 		writer.WritePropertyName("instanceLocation");
-		JsonSerializer.Serialize(writer, value.InstanceLocation, options);
+		options.Write(writer, value.InstanceLocation, JsonSchemaSerializerContext.Default.JsonPointer);
 
 		writer.WritePropertyName("error");
-		JsonSerializer.Serialize(writer, error, options);
+		options.Write(writer, error, JsonSchemaSerializerContext.Default.String);
 
 		writer.WriteEndObject();
 	}
 
+	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
+	[UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	private static void WriteAnnotation(Utf8JsonWriter writer, EvaluationResults value, Annotation annotation, JsonSerializerOptions options)
 	{
 		writer.WriteStartObject();
@@ -599,16 +590,16 @@ public class Pre202012EvaluationResultsJsonConverter : JsonConverter<EvaluationR
 		writer.WriteBoolean("valid", value.IsValid);
 
 		writer.WritePropertyName("keywordLocation");
-		JsonSerializer.Serialize(writer, annotation.Source, options);
+		options.Write(writer, annotation.Source, JsonSchemaSerializerContext.Default.JsonPointer);
 
 		writer.WritePropertyName("absoluteKeywordLocation");
 		if (value.SchemaLocation.OriginalString.Contains('#'))
-			JsonSerializer.Serialize(writer, value.SchemaLocation.OriginalString + $"/{annotation.Owner}", options);
+			options.Write(writer, value.SchemaLocation.OriginalString + $"/{annotation.Owner}", JsonSchemaSerializerContext.Default.String);
 		else
-			JsonSerializer.Serialize(writer, value.SchemaLocation.OriginalString + $"#/{annotation.Owner}", options);
+			options.Write(writer, value.SchemaLocation.OriginalString + $"#/{annotation.Owner}", JsonSchemaSerializerContext.Default.String);
 
 		writer.WritePropertyName("instanceLocation");
-		JsonSerializer.Serialize(writer, value.InstanceLocation, options);
+		options.Write(writer, value.InstanceLocation, JsonSchemaSerializerContext.Default.JsonPointer);
 
 		writer.WritePropertyName("annotation");
 		JsonSerializer.Serialize(writer, annotation.Value, options);

@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
+using Json.More;
 
 namespace Json.Schema;
 
@@ -84,14 +85,16 @@ public class PatternKeyword : IJsonSchemaKeyword
 
 		var str = evaluation.LocalInstance!.GetValue<string>();
 		if (!Value.IsMatch(str))
-			evaluation.Results.Fail(Name, ErrorMessages.GetPattern(context.Options.Culture), ("received", str), ("pattern", Value.ToString()));
+			evaluation.Results.Fail(Name, ErrorMessages.GetPattern(context.Options.Culture)
+				.ReplaceToken("received", str)
+				.ReplaceToken("pattern", Value.ToString()));
 	}
 }
 
 /// <summary>
 /// JSON converter for <see cref="PatternKeyword"/>.
 /// </summary>
-public sealed class PatternKeywordJsonConverter : JsonConverter<PatternKeyword>
+public sealed class PatternKeywordJsonConverter : AotCompatibleJsonConverter<PatternKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="PatternKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -122,29 +125,12 @@ public sealed class PatternKeywordJsonConverter : JsonConverter<PatternKeyword>
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, PatternKeyword value, JsonSerializerOptions options)
 	{
-		writer.WriteString(PatternKeyword.Name, value.Value.ToString());
+		writer.WriteStringValue(value.Value.ToString());
 	}
 }
 
 public static partial class ErrorMessages
 {
-	private static string? _invalidPattern;
-
-	/// <summary>
-	/// Gets or sets the error message for when the <see cref="PatternKeyword"/> contains
-	/// an invalid or unsupported regular expression.
-	/// </summary>
-	/// <remarks>
-	///	Available tokens are:
-	///   - [[pattern]] - the regular expression
-	/// </remarks>
-	[Obsolete("Unsupported patterns will now throw exceptions.")]
-	public static string InvalidPattern
-	{
-		get => _invalidPattern ?? Get();
-		set => _invalidPattern = value;
-	}
-
 	/// <summary>
 	/// Gets or sets the error message for <see cref="PatternKeyword"/>.
 	/// </summary>

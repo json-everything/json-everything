@@ -28,7 +28,7 @@ public class KeywordEvaluation
 	/// <remarks>
 	/// These evaluations are sourced from the associated constraint's <see cref="KeywordConstraint.SiblingDependencies"/>.
 	/// </remarks>
-	public KeywordEvaluation[] SiblingEvaluations { get; internal set; } = Array.Empty<KeywordEvaluation>();
+	public KeywordEvaluation[] SiblingEvaluations { get; internal set; } = [];
 	/// <summary>
 	/// Gets any child evaluations for this keyword.
 	/// </summary>
@@ -37,7 +37,7 @@ public class KeywordEvaluation
 	///
 	/// This property is publicly settable as some keywords cannot define child constraints until the instance is available.
 	/// </remarks>
-	public SchemaEvaluation[] ChildEvaluations { get; set; } = Array.Empty<SchemaEvaluation>();
+	public SchemaEvaluation[] ChildEvaluations { get; set; } = [];
 
 	internal Guid Id { get; set; }
 	internal KeywordConstraint Constraint { get; }

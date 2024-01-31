@@ -19,7 +19,7 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Applicator201909Id)]
 [Vocabulary(Vocabularies.Applicator202012Id)]
 [Vocabulary(Vocabularies.ApplicatorNextId)]
-[DependsOnAnnotationsFrom(typeof(IfKeyword))]
+[DependsOnAnnotationsFrom<IfKeyword>]
 [JsonConverter(typeof(ElseKeywordJsonConverter))]
 public class ElseKeyword : IJsonSchemaKeyword, ISchemaContainer
 {
@@ -62,8 +62,8 @@ public class ElseKeyword : IJsonSchemaKeyword, ISchemaContainer
 
 		return new KeywordConstraint(Name, Evaluator)
 		{
-			SiblingDependencies = new[] { ifConstraint },
-			ChildDependencies = new[] { subschemaConstraint }
+			SiblingDependencies = [ifConstraint],
+			ChildDependencies = [subschemaConstraint]
 		};
 	}
 
@@ -84,7 +84,7 @@ public class ElseKeyword : IJsonSchemaKeyword, ISchemaContainer
 /// <summary>
 /// JSON converter for <see cref="ElseKeyword"/>.
 /// </summary>
-public sealed class ElseKeywordJsonConverter : JsonConverter<ElseKeyword>
+public sealed class ElseKeywordJsonConverter : AotCompatibleJsonConverter<ElseKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="ElseKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -93,7 +93,7 @@ public sealed class ElseKeywordJsonConverter : JsonConverter<ElseKeyword>
 	/// <returns>The converted value.</returns>
 	public override ElseKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var schema = options.Read<JsonSchema>(ref reader)!;
+		var schema = options.Read(ref reader, JsonSchemaSerializerContext.Default.JsonSchema)!;
 
 		return new ElseKeyword(schema);
 	}
@@ -104,7 +104,6 @@ public sealed class ElseKeywordJsonConverter : JsonConverter<ElseKeyword>
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, ElseKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(ElseKeyword.Name);
-		JsonSerializer.Serialize(writer, value.Schema, options);
+		options.Write(writer, value.Schema, JsonSchemaSerializerContext.Default.JsonSchema);
 	}
 }

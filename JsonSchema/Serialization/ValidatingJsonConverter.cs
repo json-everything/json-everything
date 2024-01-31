@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
-using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.More;
 
@@ -35,6 +35,8 @@ public class ValidatingJsonConverter : JsonConverterFactory
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
 	/// <param name="schema"></param>
+	[RequiresDynamicCode("Uses reflection")]
+	[RequiresUnreferencedCode("Uses reflection")]
 	public static void MapType<T>(JsonSchema schema)
 	{
 		_instance.CreateConverter(typeof(T), schema);
@@ -62,6 +64,10 @@ public class ValidatingJsonConverter : JsonConverterFactory
 	/// An instance of a <see cref="JsonConverter{T}"/> where `T` is compatible with <paramref name="typeToConvert"/>.
 	/// If <see langword="null"/> is returned, a <see cref="NotSupportedException"/> will be thrown.
 	/// </returns>
+	[RequiresDynamicCode("Uses reflection")]
+	[RequiresUnreferencedCode("Uses reflection")]
+	[SuppressMessage("Trimming", "IL2046:'RequiresUnreferencedCodeAttribute' annotations must match across all interface implementations or overrides.", Justification = "Only this overload requires reflection")]
+	[SuppressMessage("AOT", "IL3051:'RequiresDynamicCodeAttribute' annotations must match across all interface implementations or overrides.", Justification = "Only this overload requires reflection")]
 	public override JsonConverter? CreateConverter(Type typeToConvert, JsonSerializerOptions options)
 	{
 		// at this point, we know that we should have a converter, so we don't need to check for null
@@ -73,6 +79,7 @@ public class ValidatingJsonConverter : JsonConverterFactory
 		return CreateConverter(typeToConvert, schema);
 	}
 
+	[RequiresDynamicCode("Uses reflection")]
 	private JsonConverter? CreateConverter(Type typeToConvert, JsonSchema schema)
 	{
 		var converterType = typeof(ValidatingJsonConverter<>).MakeGenericType(typeToConvert);
@@ -88,7 +95,7 @@ public class ValidatingJsonConverter : JsonConverterFactory
 			}
 			return newOptions;
 		};
-		var converter = (JsonConverter)Activator.CreateInstance(converterType, schema, optionsFactory);
+		var converter = (JsonConverter)Activator.CreateInstance(converterType, schema, optionsFactory)!;
 
 		var validatingConverter = (IValidatingJsonConverter)converter;
 		validatingConverter.OutputFormat = OutputFormat ?? Schema.OutputFormat.Flag;
@@ -106,7 +113,7 @@ internal interface IValidatingJsonConverter
 	public bool RequireFormatValidation { get; set; }
 }
 
-internal class ValidatingJsonConverter<T> : JsonConverter<T>, IValidatingJsonConverter
+internal class ValidatingJsonConverter<T> : AotCompatibleJsonConverter<T>, IValidatingJsonConverter
 {
 	private readonly JsonSchema _schema;
 	private readonly Func<JsonSerializerOptions, JsonSerializerOptions> _optionsFactory;
@@ -120,10 +127,12 @@ internal class ValidatingJsonConverter<T> : JsonConverter<T>, IValidatingJsonCon
 		_optionsFactory = optionsFactory;
 	}
 
+	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
+	[UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public override T? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		var readerCopy = reader;
-		var node = options.Read<JsonNode?>(ref readerCopy);
+		var node = options.Read(ref readerCopy, JsonSchemaSerializerContext.Default.JsonNode);
 		
 		var validation = _schema.Evaluate(node, new EvaluationOptions
 		{
@@ -150,10 +159,12 @@ internal class ValidatingJsonConverter<T> : JsonConverter<T>, IValidatingJsonCon
 		};
 	}
 
+	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
+	[UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public override void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options)
 	{
 		var newOptions = _optionsFactory(options);
 
-		JsonSerializer.Serialize(writer, value, newOptions);
+		newOptions.Write(writer, value, typeof(T));
 	}
 }

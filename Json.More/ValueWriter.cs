@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Text.Json;
 
@@ -7,11 +8,13 @@ namespace Json.More;
 
 internal static class ValueWriter
 {
+	[RequiresUnreferencedCode("Calls System.Text.Json.JsonSerializer.Serialize(Utf8JsonWriter, Object, Type, JsonSerializerOptions)")]
+	[RequiresDynamicCode("Calls System.Text.Json.JsonSerializer.Serialize(Utf8JsonWriter, Object, Type, JsonSerializerOptions)")]
 	public static void WriteValues(Utf8JsonWriter writer, IEnumerable<(object? value, Type type)> values, JsonSerializerOptions options)
 	{
-		foreach (var item in values)
+		foreach (var (value, type) in values)
 		{
-			JsonSerializer.Serialize(writer, item.value, item.type, options);
+			JsonSerializer.Serialize(writer, value, type, options);
 		}
 	}
 
@@ -71,6 +74,8 @@ internal static class ValueWriter
 		yield return (value.Item7, typeof(T7));
 	}
 
+	[RequiresDynamicCode("Calls Json.More.ValueWriter.GetUnwrapMethod(String, Type[])")]
+	[RequiresUnreferencedCode("Calls Json.More.ValueWriter.GetUnwrapMethod(String, Type[])")]
 	public static IEnumerable<(object?, Type)> Unwrap8<T1, T2, T3, T4, T5, T6, T7, TRest>(ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest> value)
 		where TRest : struct
 	{
@@ -85,13 +90,15 @@ internal static class ValueWriter
 		var typeParams = typeof(TRest).GetGenericArguments();
 		var method = GetUnwrapMethod($"Unwrap{typeParams.Length}", typeParams);
 
-		var unwrapped = (IEnumerable<(object?, Type)>) method.Invoke(null, new object[] { value.Rest });
+		var unwrapped = (IEnumerable<(object?, Type)>) method.Invoke(null, new object[] { value.Rest })!;
 		foreach (var item in unwrapped)
 		{
 			yield return item;
 		}
 	}
 
+	[RequiresDynamicCode("Calls System.Reflection.MethodInfo.MakeGenericMethod(params Type[])")]
+	[RequiresUnreferencedCode("Calls System.Type.GetMethod(String) and System.Reflection.MethodInfo.MakeGenericMethod(Type[])")]
 	private static MethodInfo GetUnwrapMethod(string methodName, Type[] types)
 	{
 		var type = typeof(ValueWriter);

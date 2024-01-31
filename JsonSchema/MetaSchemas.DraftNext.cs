@@ -10,40 +10,40 @@ public static partial class MetaSchemas
 	/// <summary>
 	/// The Draft 2020-12 meta-schema ID.
 	/// </summary>
-	public static readonly Uri DraftNextId = new Uri(DraftNextIdValue);
+	public static readonly Uri DraftNextId = new(DraftNextIdValue);
 
 	/// <summary>
 	/// The Draft 2020-12 Core meta-schema ID.
 	/// </summary>
-	public static readonly Uri CoreNextId = new Uri("https://json-schema.org/draft/next/meta/core");
+	public static readonly Uri CoreNextId = new("https://json-schema.org/draft/next/meta/core");
 	/// <summary>
 	/// The Draft 2020-12 Unevaluated meta-schema ID.
 	/// </summary>
-	public static readonly Uri UnevaluatedNextId = new Uri("https://json-schema.org/draft/next/meta/unevaluated");
+	public static readonly Uri UnevaluatedNextId = new("https://json-schema.org/draft/next/meta/unevaluated");
 	/// <summary>
 	/// The Draft 2020-12 Applicator meta-schema ID.
 	/// </summary>
-	public static readonly Uri ApplicatorNextId = new Uri("https://json-schema.org/draft/next/meta/applicator");
+	public static readonly Uri ApplicatorNextId = new("https://json-schema.org/draft/next/meta/applicator");
 	/// <summary>
 	/// The Draft 2020-12 Validation meta-schema ID.
 	/// </summary>
-	public static readonly Uri ValidationNextId = new Uri("https://json-schema.org/draft/next/meta/validation");
+	public static readonly Uri ValidationNextId = new("https://json-schema.org/draft/next/meta/validation");
 	/// <summary>
 	/// The Draft 2020-12 Metadata meta-schema ID.
 	/// </summary>
-	public static readonly Uri MetadataNextId = new Uri("https://json-schema.org/draft/next/meta/meta-data");
+	public static readonly Uri MetadataNextId = new("https://json-schema.org/draft/next/meta/meta-data");
 	/// <summary>
 	/// The Draft 2020-12 Format-Annotation meta-schema ID.
 	/// </summary>
-	public static readonly Uri FormatAnnotationNextId = new Uri("https://json-schema.org/draft/next/meta/format-annotation");
+	public static readonly Uri FormatAnnotationNextId = new("https://json-schema.org/draft/next/meta/format-annotation");
 	/// <summary>
 	/// The Draft 2020-12 Format-Assertion meta-schema ID.
 	/// </summary>
-	public static readonly Uri FormatAssertionNextId = new Uri("https://json-schema.org/draft/next/meta/format-assertion");
+	public static readonly Uri FormatAssertionNextId = new("https://json-schema.org/draft/next/meta/format-assertion");
 	/// <summary>
 	/// The Draft 2020-12 Content meta-schema ID.
 	/// </summary>
-	public static readonly Uri ContentNextId = new Uri("https://json-schema.org/draft/next/meta/content");
+	public static readonly Uri ContentNextId = new("https://json-schema.org/draft/next/meta/content");
 
 	/// <summary>
 	/// The Draft 2020-12 meta-schema.

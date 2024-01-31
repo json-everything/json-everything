@@ -1,10 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using JetBrains.Annotations;
+﻿using System.Linq;
 
 namespace Json.Schema.DataGeneration.Requirements;
 
-[UsedImplicitly]
 internal class OneOfRequirementsGatherer : IRequirementsGatherer
 {
 	public void AddRequirements(RequirementsContext context, JsonSchema schema)
@@ -12,7 +9,7 @@ internal class OneOfRequirementsGatherer : IRequirementsGatherer
 		var keyword = schema.Keywords?.OfType<OneOfKeyword>().FirstOrDefault();
 		if (keyword == null) return;
 
-		context.Options ??= new List<RequirementsContext>();
+		context.Options ??= [];
 		var allRequirements = keyword.Schemas.Select(x => x.GetRequirements()).ToList();
 		var inverted = allRequirements.Select(x => x.Break()).ToList();
 

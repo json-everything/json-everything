@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -26,7 +27,7 @@ public class MergeRule : Rule
 	/// <param name="items">A sequence of arrays to merge into a single array.</param>
 	protected internal MergeRule(params Rule[] items)
 	{
-		Items = items.ToList();
+		Items = [.. items];
 	}
 
 	/// <summary>
@@ -46,22 +47,21 @@ public class MergeRule : Rule
 	}
 }
 
-internal class MergeRuleJsonConverter : JsonConverter<MergeRule>
+internal class MergeRuleJsonConverter : AotCompatibleJsonConverter<MergeRule>
 {
 	public override MergeRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var node = JsonSerializer.Deserialize<JsonNode?>(ref reader, options);
-
-		var parameters = node is JsonArray
-			? node.Deserialize<Rule[]>()
-			: new[] { node.Deserialize<Rule>()! };
-
+		var parameters = reader.TokenType == JsonTokenType.StartArray
+			? options.Read(ref reader, LogicSerializerContext.Default.RuleArray)
+			: new[] { options.Read(ref reader, LogicSerializerContext.Default.Rule)! };
 
 		if (parameters == null) return new MergeRule();
 
 		return new MergeRule(parameters);
 	}
 
+	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
+	[UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public override void Write(Utf8JsonWriter writer, MergeRule value, JsonSerializerOptions options)
 	{
 		writer.WriteStartObject();

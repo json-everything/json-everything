@@ -58,7 +58,7 @@ public static class SchemaGenerationContextOptimizer
 			defs[name] = def;
 		}
 
-		if (defs.Any())
+		if (defs.Count != 0)
 		{
 			var defsIntent = new DefsIntent(defs);
 			root.Intents.Add(defsIntent);
@@ -109,7 +109,7 @@ public static class SchemaGenerationContextOptimizer
 			return name;
 		}
 
-		sb.Append(name.Substring(0, name.IndexOf('`')));
+		sb.Append(name[..name.IndexOf('`')]);
 		sb.Append(" of ");
 		sb.Append(string.Join(" and ", type.GetGenericArguments()
 			.Select(x => GetFriendlyTypeName(x, sb))));

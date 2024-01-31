@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Json.Pointer;
@@ -31,6 +32,8 @@ public class UriIdentifier : IDataResourceIdentifier
 	/// <param name="registry">The schema registry.</param>
 	/// <param name="value">The value, if <paramref name="evaluation"/> was resolvable.</param>
 	/// <returns>True if resolution was successful; false otherwise.</returns>
+	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
+	[UnconditionalSuppressMessage("AOT", "IL3050:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public bool TryResolve(KeywordEvaluation evaluation, SchemaRegistry registry, out JsonNode? value)
 	{
 		var parts = Target.OriginalString.Split(new[] { '#' }, StringSplitOptions.None);
@@ -65,7 +68,7 @@ public class UriIdentifier : IDataResourceIdentifier
 			}
 
 			var rootSchema = (JsonSchema?) registry.Get(root.SchemaLocation);
-			data = JsonSerializer.SerializeToNode(rootSchema);
+			data = JsonSerializer.SerializeToNode(rootSchema, DataExtSerializerContext.OptionsManager.SerializerOptions);
 		}
 
 		if (!string.IsNullOrEmpty(fragment))
@@ -87,7 +90,7 @@ public class UriIdentifier : IDataResourceIdentifier
 	{
 		if (DataKeyword.ExternalDataRegistry.TryGetValue(uri, out node))
 			// protect against the off-hand that someone registered a null.
-			return node != null;
+			return node != null!;
 
 		if (DataKeyword.Fetch == null)
 		{

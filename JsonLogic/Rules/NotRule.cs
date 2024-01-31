@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Logic.Rules;
 
@@ -20,7 +22,7 @@ public class NotRule : Rule
 	/// <summary>
 	/// Creates a new instance of <see cref="NotRule"/> when '!' operator is detected within json logic.
 	/// </summary>
-	/// <param name="value">The value to to test.</param>
+	/// <param name="value">The value to test.</param>
 	protected internal NotRule(Rule value)
 	{
 		Value = value;
@@ -43,15 +45,13 @@ public class NotRule : Rule
 	}
 }
 
-internal class NotRuleJsonConverter : JsonConverter<NotRule>
+internal class NotRuleJsonConverter : AotCompatibleJsonConverter<NotRule>
 {
 	public override NotRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var node = JsonSerializer.Deserialize<JsonNode?>(ref reader, options);
-	
-		var parameters = node is JsonArray
-			? node.Deserialize<Rule[]>()
-			: new[] { node.Deserialize<Rule>()! };
+		var parameters = reader.TokenType == JsonTokenType.StartArray
+			? options.Read(ref reader, LogicSerializerContext.Default.RuleArray)
+			: new[] { options.Read(ref reader, LogicSerializerContext.Default.Rule)! };
 
 		if (parameters is not { Length: 1 })
 			throw new JsonException("The ! rule needs an array with a single parameter.");
@@ -59,6 +59,8 @@ internal class NotRuleJsonConverter : JsonConverter<NotRule>
 		return new NotRule(parameters[0]);
 	}
 
+	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
+	[UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public override void Write(Utf8JsonWriter writer, NotRule value, JsonSerializerOptions options)
 	{
 		writer.WriteStartObject();

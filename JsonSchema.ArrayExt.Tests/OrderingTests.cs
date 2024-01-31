@@ -15,7 +15,7 @@ public class OrderingTests
 			.Items(new JsonSchemaBuilder().Type(SchemaValueType.Integer))
 			.Ordering(new OrderingSpecifier(JsonPointer.Empty, Direction.Ascending));
 
-		var instance = new JsonArray { 2, 3, 4, 5 };
+		var instance = new JsonArray(2, 3, 4, 5);
 
 		var result = schema.Evaluate(instance);
 
@@ -30,7 +30,7 @@ public class OrderingTests
 			.Items(new JsonSchemaBuilder().Type(SchemaValueType.Integer))
 			.Ordering(new OrderingSpecifier(JsonPointer.Empty, Direction.Ascending));
 
-		var instance = new JsonArray { 2, 3, 3, 5 };
+		var instance = new JsonArray(2, 3, 3, 5);
 
 		var result = schema.Evaluate(instance);
 
@@ -45,7 +45,7 @@ public class OrderingTests
 			.Items(new JsonSchemaBuilder().Type(SchemaValueType.Integer))
 			.Ordering(new OrderingSpecifier(JsonPointer.Empty, Direction.Ascending));
 
-		var instance = new JsonArray { 2, 3, 1, 5 };
+		var instance = new JsonArray(2, 3, 1, 5);
 
 		var result = schema.Evaluate(instance);
 
@@ -60,7 +60,7 @@ public class OrderingTests
 			.Items(new JsonSchemaBuilder().Type(SchemaValueType.Integer))
 			.Ordering(new OrderingSpecifier(JsonPointer.Empty, Direction.Descending));
 
-		var instance = new JsonArray { 5, 4, 3, 2 };
+		var instance = new JsonArray(5, 4, 3, 2);
 
 		var result = schema.Evaluate(instance);
 
@@ -75,7 +75,7 @@ public class OrderingTests
 			.Items(new JsonSchemaBuilder().Type(SchemaValueType.Integer))
 			.Ordering(new OrderingSpecifier(JsonPointer.Empty, Direction.Descending));
 
-		var instance = new JsonArray { 5, 4, 4, 2 };
+		var instance = new JsonArray(5, 4, 4, 2);
 
 		var result = schema.Evaluate(instance);
 
@@ -90,7 +90,7 @@ public class OrderingTests
 			.Items(new JsonSchemaBuilder().Type(SchemaValueType.Integer))
 			.Ordering(new OrderingSpecifier(JsonPointer.Empty, Direction.Descending));
 
-		var instance = new JsonArray { 5, 4, 6, 2 };
+		var instance = new JsonArray(5, 4, 6, 2);
 
 		var result = schema.Evaluate(instance);
 
@@ -105,7 +105,7 @@ public class OrderingTests
 			.Items(new JsonSchemaBuilder().Type(SchemaValueType.String))
 			.Ordering(new OrderingSpecifier(JsonPointer.Empty, Direction.Ascending));
 
-		var instance = new JsonArray { "alpha", "beta", "charlie", "delta" };
+		var instance = new JsonArray("alpha", "beta", "charlie", "delta");
 
 		var result = schema.Evaluate(instance);
 
@@ -120,7 +120,7 @@ public class OrderingTests
 			.Items(new JsonSchemaBuilder().Type(SchemaValueType.String))
 			.Ordering(new OrderingSpecifier(JsonPointer.Empty, Direction.Ascending));
 
-		var instance = new JsonArray { "alpha", "beta", "beta", "delta" };
+		var instance = new JsonArray("alpha", "beta", "beta", "delta");
 
 		var result = schema.Evaluate(instance);
 
@@ -135,7 +135,7 @@ public class OrderingTests
 			.Items(new JsonSchemaBuilder().Type(SchemaValueType.String))
 			.Ordering(new OrderingSpecifier(JsonPointer.Empty, Direction.Ascending));
 
-		var instance = new JsonArray { "alpha", "charlie", "beta", "delta" };
+		var instance = new JsonArray("alpha", "charlie", "beta", "delta");
 
 		var result = schema.Evaluate(instance);
 
@@ -150,7 +150,7 @@ public class OrderingTests
 			.Items(new JsonSchemaBuilder().Type(SchemaValueType.String))
 			.Ordering(new OrderingSpecifier(JsonPointer.Empty, Direction.Descending));
 
-		var instance = new JsonArray { "delta", "charlie", "beta", "alpha" };
+		var instance = new JsonArray("delta", "charlie", "beta", "alpha");
 
 		var result = schema.Evaluate(instance);
 
@@ -165,7 +165,7 @@ public class OrderingTests
 			.Items(new JsonSchemaBuilder().Type(SchemaValueType.String))
 			.Ordering(new OrderingSpecifier(JsonPointer.Empty, Direction.Descending));
 
-		var instance = new JsonArray { "delta", "charlie", "charlie", "alpha" };
+		var instance = new JsonArray("delta", "charlie", "charlie", "alpha");
 
 		var result = schema.Evaluate(instance);
 
@@ -180,7 +180,7 @@ public class OrderingTests
 			.Items(new JsonSchemaBuilder().Type(SchemaValueType.String))
 			.Ordering(new OrderingSpecifier(JsonPointer.Empty, Direction.Descending));
 
-		var instance = new JsonArray { "delta", "beta", "charlie", "alpha" };
+		var instance = new JsonArray("delta", "beta", "charlie", "alpha");
 
 		var result = schema.Evaluate(instance);
 
@@ -195,7 +195,7 @@ public class OrderingTests
 			.Items(new JsonSchemaBuilder().Type(SchemaValueType.String))
 			.Ordering(new OrderingSpecifier(JsonPointer.Empty, ignoreCase: false));
 
-		var instance = new JsonArray { "alpha", "beta", "charlie", "delta" };
+		var instance = new JsonArray("alpha", "beta", "charlie", "delta");
 
 		var result = schema.Evaluate(instance);
 
@@ -210,7 +210,7 @@ public class OrderingTests
 			.Items(new JsonSchemaBuilder().Type(SchemaValueType.String))
 			.Ordering(new OrderingSpecifier(JsonPointer.Empty, ignoreCase: false));
 
-		var instance = new JsonArray { "alpha", "Beta", "charlie", "delta" };
+		var instance = new JsonArray("alpha", "Beta", "charlie", "delta");
 
 		var result = schema.Evaluate(instance);
 
@@ -225,7 +225,7 @@ public class OrderingTests
 			.Items(new JsonSchemaBuilder().Type(SchemaValueType.String))
 			.Ordering(new OrderingSpecifier(JsonPointer.Empty, ignoreCase: true));
 
-		var instance = new JsonArray { "alpha", "Beta", "charlie", "delta" };
+		var instance = new JsonArray("alpha", "Beta", "charlie", "delta");
 
 		var result = schema.Evaluate(instance);
 

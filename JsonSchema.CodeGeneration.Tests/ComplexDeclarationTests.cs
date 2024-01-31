@@ -52,7 +52,7 @@ public class FooBar
   }
 }";
 
-		VerifyDeserialization(code, json);
+		VerifyDeserialization(code, json, isReflectionAllowed: true);
 	}
 
 	[Test]
@@ -118,7 +118,7 @@ public class FooBar
   }
 }";
 
-		VerifyDeserialization(code, json);
+		VerifyDeserialization(code, json, isReflectionAllowed: true);
 	}
 
 	[Test]

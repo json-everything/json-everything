@@ -69,7 +69,7 @@ public class RelativeJsonPointerParseTests
 	{
 		Assert.IsTrue(RelativeJsonPointer.TryParse(pointerString, out var pointer));
 
-		pointer.ParentSteps.Should().Be((uint)parentSteps);
+		pointer!.ParentSteps.Should().Be((uint)parentSteps);
 		pointer.ArrayIndexManipulator.Should().Be(indexManipulation);
 		pointer.Pointer.Segments.Length.Should().Be(segments.Length);
 		pointer.Pointer.Segments.Select(s => s.Value).Should().BeEquivalentTo(segments);

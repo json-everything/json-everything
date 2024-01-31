@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
@@ -48,11 +49,11 @@ public class StrictEqualsRule : Rule
 	}
 }
 
-internal class StrictEqualsRuleJsonConverter : JsonConverter<StrictEqualsRule>
+internal class StrictEqualsRuleJsonConverter : AotCompatibleJsonConverter<StrictEqualsRule>
 {
 	public override StrictEqualsRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = JsonSerializer.Deserialize<Rule[]>(ref reader, options);
+		var parameters = options.Read(ref reader, LogicSerializerContext.Default.RuleArray);
 
 		if (parameters is not { Length: 2 })
 			throw new JsonException("The === rule needs an array with 2 parameters.");
@@ -60,6 +61,8 @@ internal class StrictEqualsRuleJsonConverter : JsonConverter<StrictEqualsRule>
 		return new StrictEqualsRule(parameters[0], parameters[1]);
 	}
 
+	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
+	[UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public override void Write(Utf8JsonWriter writer, StrictEqualsRule value, JsonSerializerOptions options)
 	{
 		writer.WriteStartObject();

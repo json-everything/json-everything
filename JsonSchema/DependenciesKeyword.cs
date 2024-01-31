@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -100,7 +99,8 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 		}
 
 		if (missing.Count != 0)
-			evaluation.Results.Fail(Name, ErrorMessages.GetDependentRequired(context.Options.Culture), ("missing", missing));
+			evaluation.Results.Fail(Name, ErrorMessages.GetDependentRequired(context.Options.Culture)
+				.ReplaceToken("missing", missing));
 
 		
 		var failedProperties = evaluation.ChildEvaluations
@@ -110,14 +110,15 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 		evaluation.Results.SetAnnotation(Name, evaluation.ChildEvaluations.Select(x => (JsonNode)x.Results.EvaluationPath.Segments.Last().Value!).ToJsonArray());
 
 		if (failedProperties.Length != 0)
-			evaluation.Results.Fail(Name, ErrorMessages.GetDependentSchemas(context.Options.Culture), ("failed", failedProperties));
+			evaluation.Results.Fail(Name, ErrorMessages.GetDependentSchemas(context.Options.Culture)
+				.ReplaceToken("failed", failedProperties));
 	}
 }
 
 /// <summary>
 /// JSON converter for <see cref="DependenciesKeyword"/>.
 /// </summary>
-public sealed class DependenciesKeywordJsonConverter : JsonConverter<DependenciesKeyword>
+public sealed class DependenciesKeywordJsonConverter : AotCompatibleJsonConverter<DependenciesKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="DependenciesKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -129,7 +130,7 @@ public sealed class DependenciesKeywordJsonConverter : JsonConverter<Dependencie
 		if (reader.TokenType != JsonTokenType.StartObject)
 			throw new JsonException("Expected object");
 
-		var dependencies = options.Read<Dictionary<string, SchemaOrPropertyList>>(ref reader)!;
+		var dependencies = options.Read(ref reader, JsonSchemaSerializerContext.Default.DictionaryStringSchemaOrPropertyList)!;
 		return new DependenciesKeyword(dependencies);
 	}
 
@@ -139,12 +140,11 @@ public sealed class DependenciesKeywordJsonConverter : JsonConverter<Dependencie
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, DependenciesKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(DependenciesKeyword.Name);
 		writer.WriteStartObject();
 		foreach (var kvp in value.Requirements)
 		{
 			writer.WritePropertyName(kvp.Key);
-			JsonSerializer.Serialize(writer, kvp.Value, options);
+			options.Write(writer, kvp.Value, JsonSchemaSerializerContext.Default.SchemaOrPropertyList);
 		}
 		writer.WriteEndObject();
 	}
@@ -154,7 +154,7 @@ public sealed class DependenciesKeywordJsonConverter : JsonConverter<Dependencie
 /// A holder for either a schema dependency or a requirements dependency.
 /// </summary>
 [JsonConverter(typeof(SchemaOrPropertyListJsonConverter))]
-public class SchemaOrPropertyList : IEquatable<SchemaOrPropertyList>
+public class SchemaOrPropertyList
 {
 	/// <summary>
 	/// The schema dependency.
@@ -181,34 +181,6 @@ public class SchemaOrPropertyList : IEquatable<SchemaOrPropertyList>
 	public SchemaOrPropertyList(IEnumerable<string> requirements)
 	{
 		Requirements = requirements.ToList();
-	}
-
-	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
-	/// <param name="other">An object to compare with this object.</param>
-	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-	public bool Equals(SchemaOrPropertyList? other)
-	{
-		if (ReferenceEquals(null, other)) return false;
-		if (ReferenceEquals(this, other)) return true;
-		return Equals(Schema, other.Schema) && Requirements.ContentsEqual(other.Requirements);
-	}
-
-	/// <summary>Determines whether the specified object is equal to the current object.</summary>
-	/// <param name="obj">The object to compare with the current object.</param>
-	/// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
-	public override bool Equals(object obj)
-	{
-		return Equals(obj as SchemaOrPropertyList);
-	}
-
-	/// <summary>Serves as the default hash function.</summary>
-	/// <returns>A hash code for the current object.</returns>
-	public override int GetHashCode()
-	{
-		unchecked
-		{
-			return ((Schema?.GetHashCode() ?? 0) * 397) ^ (Requirements?.GetCollectionHashCode() ?? 0);
-		}
 	}
 
 	/// <summary>
@@ -239,7 +211,7 @@ public class SchemaOrPropertyList : IEquatable<SchemaOrPropertyList>
 /// <summary>
 /// JSON converter for <see cref="SchemaOrPropertyList"/>.
 /// </summary>
-public sealed class SchemaOrPropertyListJsonConverter : JsonConverter<SchemaOrPropertyList>
+public sealed class SchemaOrPropertyListJsonConverter : AotCompatibleJsonConverter<SchemaOrPropertyList>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="SchemaOrPropertyList"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -249,9 +221,9 @@ public sealed class SchemaOrPropertyListJsonConverter : JsonConverter<SchemaOrPr
 	public override SchemaOrPropertyList Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		if (reader.TokenType == JsonTokenType.StartArray)
-			return new SchemaOrPropertyList(options.Read<List<string>>(ref reader)!);
+			return new SchemaOrPropertyList(options.Read(ref reader, JsonSchemaSerializerContext.Default.ListString)!);
 
-		return new SchemaOrPropertyList(options.Read<JsonSchema>(ref reader)!);
+		return new SchemaOrPropertyList(options.Read(ref reader, JsonSchemaSerializerContext.Default.JsonSchema)!);
 	}
 
 	/// <summary>Writes a specified value as JSON.</summary>
@@ -261,27 +233,8 @@ public sealed class SchemaOrPropertyListJsonConverter : JsonConverter<SchemaOrPr
 	public override void Write(Utf8JsonWriter writer, SchemaOrPropertyList value, JsonSerializerOptions options)
 	{
 		if (value.Schema != null)
-			JsonSerializer.Serialize(writer, value.Schema, options);
+			options.Write(writer, value.Schema, JsonSchemaSerializerContext.Default.JsonSchema);
 		else
-			JsonSerializer.Serialize(writer, value.Requirements, options);
-	}
-}
-
-public static partial class ErrorMessages
-{
-	private static string? _dependencies;
-
-	/// <summary>
-	/// Gets or sets the error message for <see cref="DependenciesKeyword"/>.
-	/// </summary>
-	/// <remarks>
-	///	Available tokens are:
-	///   - [[properties]] - the properties which failed to match the requirements
-	/// </remarks>
-	[Obsolete("Use " + nameof(DependentRequired) + " or " + nameof(DependentSchemas) + " to set the appropriate message.")]
-	public static string Dependencies
-	{
-		get => _dependencies ?? Get();
-		set => _dependencies = value;
+			options.Write(writer, value.Requirements, JsonSchemaSerializerContext.Default.ListString);
 	}
 }

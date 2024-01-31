@@ -1,15 +1,15 @@
 using NUnit.Framework;
 
 using static Json.Schema.Generation.Tests.AssertionExtensions;
+// ReSharper disable ClassNeverInstantiated.Local
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
 namespace Json.Schema.Generation.Tests;
 
 public class AdditionalPropertiesTests
 {
 	[AdditionalProperties(true)]
-	private class AdditionalPropertiesTrue
-	{
-	}
+	private class AdditionalPropertiesTrue;
 
 	[Test]
 	public void TrueIsAdded()

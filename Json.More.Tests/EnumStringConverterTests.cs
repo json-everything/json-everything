@@ -1,7 +1,6 @@
 using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using JetBrains.Annotations;
 using NUnit.Framework;
 
 namespace Json.More.Tests;
@@ -11,7 +10,6 @@ public class EnumStringConverterTests
 	private class ConversionTest
 	{
 		[JsonConverter(typeof(EnumStringConverter<DayOfWeek>))]
-		[UsedImplicitly]
 		public DayOfWeek Day { get; set; }
 	}
 
@@ -23,7 +21,7 @@ public class EnumStringConverterTests
 
 		Assert.AreEqual(expected, actual);
 
-		var deserialized = JsonSerializer.Deserialize<ConversionTest>(actual);
+		var deserialized = JsonSerializer.Deserialize<ConversionTest>(actual)!;
 
 		Assert.AreEqual(DayOfWeek.Wednesday, deserialized.Day);
 	}
@@ -63,7 +61,6 @@ public class EnumStringConverterTests
 
 	private class FlagsEnumContainer
 	{
-		[UsedImplicitly]
 		public CustomFlagsEnum Value { get; set; }
 	}
 
@@ -77,7 +74,7 @@ public class EnumStringConverterTests
 
 		Assert.AreEqual(expected, actual);
 
-		var deserialized = JsonSerializer.Deserialize<FlagsEnumContainer>(actual);
+		var deserialized = JsonSerializer.Deserialize<FlagsEnumContainer>(actual)!;
 
 		Assert.AreEqual(CustomFlagsEnum.One | CustomFlagsEnum.Two, deserialized.Value);
 	}

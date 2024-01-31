@@ -79,14 +79,15 @@ public class DependentRequiredKeyword : IJsonSchemaKeyword
 		}
 
 		if (missing.Count != 0)
-			evaluation.Results.Fail(Name, ErrorMessages.GetDependentRequired(context.Options.Culture), ("missing", missing));
+			evaluation.Results.Fail(Name, ErrorMessages.GetDependentRequired(context.Options.Culture)
+				.ReplaceToken("missing", missing));
 	}
 }
 
 /// <summary>
 /// JSON converter for <see cref="DependentRequiredKeyword"/>.
 /// </summary>
-public sealed class DependentRequiredKeywordJsonConverter : JsonConverter<DependentRequiredKeyword>
+public sealed class DependentRequiredKeywordJsonConverter : AotCompatibleJsonConverter<DependentRequiredKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="DependentRequiredKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -98,7 +99,7 @@ public sealed class DependentRequiredKeywordJsonConverter : JsonConverter<Depend
 		if (reader.TokenType != JsonTokenType.StartObject)
 			throw new JsonException("Expected object");
 
-		var requirements = options.Read<Dictionary<string, List<string>>>(ref reader);
+		var requirements = options.Read(ref reader, JsonSchemaSerializerContext.Default.DictionaryStringListString);
 		return new DependentRequiredKeyword(requirements!.ToDictionary(x => x.Key, x => (IReadOnlyList<string>)x.Value));
 	}
 
@@ -108,12 +109,11 @@ public sealed class DependentRequiredKeywordJsonConverter : JsonConverter<Depend
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, DependentRequiredKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(DependentRequiredKeyword.Name);
 		writer.WriteStartObject();
 		foreach (var kvp in value.Requirements)
 		{
 			writer.WritePropertyName(kvp.Key);
-			JsonSerializer.Serialize(writer, kvp.Value, options);
+			options.Write(writer, kvp.Value, JsonSchemaSerializerContext.Default.IReadOnlyListString);
 		}
 		writer.WriteEndObject();
 	}

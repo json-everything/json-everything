@@ -13,7 +13,11 @@ namespace Json.JsonE.Tests.Suite;
 public class MoreTestsRunner
 {
 	private const string _testsFile = "Files/more-tests.yml";
-	private static readonly JsonSerializerOptions _serializerOptions = new() { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping };
+	private static readonly JsonSerializerOptions _serializerOptions =
+		new(JsonETestSerializerContext.OptionsManager.SerializerOptions)
+		{
+			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+		};
 
 	private static IEnumerable<T>? DeserializeAll<T>(string yamlText, JsonSerializerOptions? options = null)
 	{
@@ -29,7 +33,7 @@ public class MoreTestsRunner
 
 		var yamlText = File.ReadAllText(testsPath);
 
-		var tests = DeserializeAll<Test>(yamlText)!;
+		var tests = DeserializeAll<Test>(yamlText, _serializerOptions)!;
 
 		return tests.Select(t => new TestCaseData(t) { TestName = $"{t.Title}  |  {t.Template.AsJsonString(_serializerOptions)}  |  {t.Context.AsJsonString(_serializerOptions)}" });
 	}

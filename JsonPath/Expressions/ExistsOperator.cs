@@ -11,7 +11,7 @@ internal class ExistsOperator : IUnaryComparativeOperator
 		return value switch
 		{
 			JsonPathValue j => j.Value != null,
-			NodeListPathValue n => n.Value.Any(),
+			NodeListPathValue n => n.Value.Count != 0,
 			LogicalPathValue l => l.Value,
 			_ => false
 		};

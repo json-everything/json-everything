@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -24,7 +23,7 @@ public class GithubTests
 		var patchOperations = pathsToPatch.Select(path => PatchOperation.Replace(JsonPointer.Parse(path), maskJson));
 		var patchConfig = new JsonPatch(patchOperations);
 
-		Console.WriteLine(JsonSerializer.Serialize(patchConfig));
+		Console.WriteLine(JsonSerializer.Serialize(patchConfig, TestSerializerContext.OptionsManager.SerializerOptions));
 
 		const string singleObjectJson = "{" +
 										"\"_id\":\"640729d45434f90313d25c78\"," +
@@ -33,9 +32,9 @@ public class GithubTests
 										"\"last_name\":\"Pate\"" +
 										"}";
 
-		var singleObject = JsonDocument.Parse(singleObjectJson).RootElement;
-		var patchedSingleObject = patchConfig.Apply(singleObject.AsNode()).Result;
-		Console.WriteLine(JsonSerializer.Serialize(patchedSingleObject));
+		var singleObject = JsonNode.Parse(singleObjectJson);
+		var patchedSingleObject = patchConfig.Apply(singleObject).Result;
+		Console.WriteLine(JsonSerializer.Serialize(patchedSingleObject, TestSerializerContext.OptionsManager.SerializerOptions));
 
 		const string arrayObjectJson = "[" +
 									   "{" +
@@ -51,12 +50,12 @@ public class GithubTests
 									   "}" +
 									   "]";
 
-		var arrayObject = JsonDocument.Parse(arrayObjectJson).RootElement;
+		var arrayObject = JsonNode.Parse(arrayObjectJson);
 
 		// Way 1: patch whole array
-		var patchedArray = patchConfig.Apply(arrayObject.AsNode()).Result; // <- does nothing
+		var patchedArray = patchConfig.Apply(arrayObject).Result; // <- does nothing
 
-		Console.WriteLine(JsonSerializer.Serialize(patchedArray));
+		Console.WriteLine(JsonSerializer.Serialize(patchedArray, TestSerializerContext.OptionsManager.SerializerOptions));
 	}
 
 	[Test]
@@ -77,9 +76,9 @@ public class GithubTests
 										"\"last_name\":\"Pate\"" +
 										"}";
 
-		var singleObject = JsonDocument.Parse(singleObjectJson).RootElement;
-		var patchedSingleObject = patchConfig.Apply(singleObject.AsNode()).Result;
-		Console.WriteLine(JsonSerializer.Serialize(patchedSingleObject));
+		var singleObject = JsonNode.Parse(singleObjectJson);
+		var patchedSingleObject = patchConfig.Apply(singleObject).Result;
+		Console.WriteLine(JsonSerializer.Serialize(patchedSingleObject, TestSerializerContext.OptionsManager.SerializerOptions));
 
 		const string arrayObjectJson = "[" +
 									   "{" +
@@ -95,15 +94,15 @@ public class GithubTests
 									   "}" +
 									   "]";
 
-		var arrayObject = JsonDocument.Parse(arrayObjectJson).RootElement;
+		var arrayObject = JsonNode.Parse(arrayObjectJson);
 
-		var jsonArray = arrayObject.AsNode()!.AsArray();
+		var jsonArray = arrayObject!.AsArray();
 
 		// Way 2: just patch every element
 		foreach (var element in jsonArray)
 		{
 			var patchedNode = patchConfig.Apply(element).Result; // <-  throws an error
-			Console.WriteLine(JsonSerializer.Serialize(patchedNode));
+			Console.WriteLine(JsonSerializer.Serialize(patchedNode, TestSerializerContext.OptionsManager.SerializerOptions));
 		}
 	}
 
@@ -127,7 +126,7 @@ public class GithubTests
 
 		var singleObject = JsonNode.Parse(singleObjectJson);
 		var patchedSingleObject = patchConfig.Apply(singleObject).Result;
-		Console.WriteLine(JsonSerializer.Serialize(patchedSingleObject));
+		Console.WriteLine(JsonSerializer.Serialize(patchedSingleObject, TestSerializerContext.OptionsManager.SerializerOptions));
 
 		const string arrayObjectJson = "[" +
 									   "{" +
@@ -154,15 +153,14 @@ public class GithubTests
 			jsonArray.RemoveAt(currentIndex);
 
 			var patchedNode = patchConfig.Apply(nodeToPatch).Result; // <-  throws an error
-			Console.WriteLine(JsonSerializer.Serialize(patchedNode));
+			Console.WriteLine(JsonSerializer.Serialize(patchedNode, TestSerializerContext.OptionsManager.SerializerOptions));
 		}
 	}
 
 	[Test]
 	public void Issue397_ReplaceShouldThrowForMissingValue()
 	{
-		const string mask = "*****";
-		var maskJson = JsonValue.Create(mask);
+		JsonNode? maskJson = "*****";
 
 		var pathsToPatch = new[] { "/first_name", "/last_name" };
 
@@ -177,7 +175,12 @@ public class GithubTests
 
 		var singleObject = JsonNode.Parse(singleObjectJson);
 		var result = patchConfig.Apply(singleObject);
-		Console.WriteLine(JsonSerializer.Serialize(result, new JsonSerializerOptions { WriteIndented = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping }));
+		var serializerOptions = new JsonSerializerOptions(TestSerializerContext.OptionsManager.SerializerOptions)
+		{
+			WriteIndented = true,
+			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+		};
+		Console.WriteLine(JsonSerializer.Serialize(result, serializerOptions));
 		Assert.IsNotNull(patchConfig.Apply(singleObject).Error);
 	}
 
@@ -189,15 +192,15 @@ public class GithubTests
 	[Test]
 	public void Issue543_CreatePatchToAddItem()
 	{
-		var targetObj = new Target543 { Values = new List<int> { 1, 2, 3, 4 } };
-		var target = JsonSerializer.SerializeToNode(targetObj);
+		var targetObj = new Target543 { Values = [1, 2, 3, 4] };
+		var target = JsonSerializer.SerializeToNode(targetObj, TestSerializerContext.OptionsManager.SerializerOptions);
 
 		var jsonPointer = JsonPointer.Create<Target543>(x => x.Values.Last());
 		var jsonPatch = new JsonPatch(PatchOperation.Add(jsonPointer, (JsonNode)42));
 
 		var expected = new JsonObject
 		{
-			["Values"] = new JsonArray { 1, 2, 3, 4, 42 }
+			["Values"] = new JsonArray(1, 2, 3, 4, 42)
 		};
 
 		var patchResult = jsonPatch.Apply(target);

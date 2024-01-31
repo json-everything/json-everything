@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
@@ -112,11 +113,11 @@ public class LessThanRule : Rule
 	}
 }
 
-internal class LessThanRuleJsonConverter : JsonConverter<LessThanRule>
+internal class LessThanRuleJsonConverter : AotCompatibleJsonConverter<LessThanRule>
 {
 	public override LessThanRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = JsonSerializer.Deserialize<Rule[]>(ref reader, options);
+		var parameters = options.Read(ref reader, LogicSerializerContext.Default.RuleArray);
 
 		if (parameters is not ({ Length: 2 } or { Length: 3 }))
 			throw new JsonException("The < rule needs an array with either 2 or 3 parameters.");
@@ -126,6 +127,8 @@ internal class LessThanRuleJsonConverter : JsonConverter<LessThanRule>
 		return new LessThanRule(parameters[0], parameters[1], parameters[2]);
 	}
 
+	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
+	[UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public override void Write(Utf8JsonWriter writer, LessThanRule value, JsonSerializerOptions options)
 	{
 		writer.WriteStartObject();

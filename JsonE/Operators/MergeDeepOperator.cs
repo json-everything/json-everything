@@ -32,7 +32,7 @@ internal class MergeDeepOperator : IOperator
 			else if (local is JsonObject localObj && kvp.Value is JsonObject objObj)
 				result[kvp.Key] = Merge(localObj, objObj);
 			else
-				result[kvp.Key] = kvp.Value.Copy();
+				result[kvp.Key] = kvp.Value.Clone();
 		}
 
 		return result;

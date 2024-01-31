@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Json.More;
 using NUnit.Framework;
 using Yaml2JsonNode;
@@ -13,7 +14,11 @@ namespace Json.JsonE.Tests.Suite;
 public class SuiteRunner
 {
 	private const string _testsFile = "../../../../ref-repos/json-e/specification.yml";
-	private static readonly JsonSerializerOptions _serializerOptions = new() { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping };
+	private static readonly JsonSerializerOptions _serializerOptions =
+		new(JsonETestSerializerContext.OptionsManager.SerializerOptions)
+	{
+		Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+	};
 
 	private static readonly (string Name, string Reason)[] _ignored =
 	{
@@ -38,7 +43,7 @@ public class SuiteRunner
 
 		var yamlText = File.ReadAllText(testsPath);
 
-		var tests = DeserializeAll<Test>(yamlText)!;
+		var tests = DeserializeAll<Test>(yamlText, _serializerOptions)!;
 
 		return tests.Select(t => new TestCaseData(t) { TestName = $"{t.Title}  |  {t.Template.AsJsonString(_serializerOptions)}  |  {t.Context.AsJsonString(_serializerOptions)}" });
 	}
@@ -98,5 +103,20 @@ public class SuiteRunner
 			Console.WriteLine($"Error:    {test.ErrorNode.AsJsonString(_serializerOptions)}");
 		else
 			Console.WriteLine($"Result:   {test.Expected.AsJsonString(_serializerOptions)}");
+	}
+}
+
+[JsonSerializable(typeof(Test))]
+[JsonSerializable(typeof(Test[]))]
+internal partial class JsonETestSerializerContext : JsonSerializerContext
+{
+	public static TypeResolverOptionsManager OptionsManager { get; }
+
+	static JsonETestSerializerContext()
+	{
+		OptionsManager = new TypeResolverOptionsManager(
+			Default,
+			JsonESerializerContext.Default
+		);
 	}
 }

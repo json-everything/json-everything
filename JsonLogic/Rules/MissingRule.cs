@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -62,21 +63,21 @@ public class MissingRule : Rule
 	}
 }
 
-internal class MissingRuleJsonConverter : JsonConverter<MissingRule>
+internal class MissingRuleJsonConverter : AotCompatibleJsonConverter<MissingRule>
 {
 	public override MissingRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var node = JsonSerializer.Deserialize<JsonNode?>(ref reader, options);
-
-		var parameters = node is JsonArray
-			? node.Deserialize<Rule[]>()
-			: new[] { node.Deserialize<Rule>()! };
+		var parameters = reader.TokenType == JsonTokenType.StartArray
+			? options.Read(ref reader, LogicSerializerContext.Default.RuleArray)
+			: new[] { options.Read(ref reader, LogicSerializerContext.Default.Rule)! };
 
 		if (parameters == null) return new MissingRule();
 
 		return new MissingRule(parameters);
 	}
 
+	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
+	[UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public override void Write(Utf8JsonWriter writer, MissingRule value, JsonSerializerOptions options)
 	{
 		writer.WriteStartObject();

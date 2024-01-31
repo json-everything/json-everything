@@ -9,18 +9,19 @@ namespace Json.Path.Expressions;
 
 internal class FunctionValueExpressionNode : ValueExpressionNode
 {
+	private readonly ExpressionNode[] _parameters;
+	
 	public IPathFunctionDefinition Function { get; }
-	public ExpressionNode[] Parameters { get; }
 
 	public FunctionValueExpressionNode(IPathFunctionDefinition function, IEnumerable<ExpressionNode> parameters)
 	{
 		Function = function;
-		Parameters = parameters.ToArray();
+		_parameters = parameters.ToArray();
 	}
 
 	public override PathValue? Evaluate(JsonNode? globalParameter, JsonNode? localParameter)
 	{
-		var parameterValues = Parameters.Select(x =>
+		var parameterValues = _parameters.Select(x =>
 		{
 			return x switch
 			{
@@ -43,13 +44,13 @@ internal class FunctionValueExpressionNode : ValueExpressionNode
 		builder.Append(Function.Name);
 		builder.Append('(');
 
-		if (Parameters.Any())
+		if (_parameters.Any())
 		{
-			Parameters[0].BuildString(builder);
-			for (int i = 1; i < Parameters.Length; i++)
+			_parameters[0].BuildString(builder);
+			for (int i = 1; i < _parameters.Length; i++)
 			{
 				builder.Append(',');
-				Parameters[i].BuildString(builder);
+				_parameters[i].BuildString(builder);
 			}
 		}
 
@@ -58,7 +59,7 @@ internal class FunctionValueExpressionNode : ValueExpressionNode
 
 	public override string ToString()
 	{
-		return $"{Function.Name}({string.Join(',', (IEnumerable<ValueExpressionNode>)Parameters)})";
+		return $"{Function.Name}({string.Join(',', (IEnumerable<ValueExpressionNode>)_parameters)})";
 	}
 }
 

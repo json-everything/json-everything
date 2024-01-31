@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Text.Json.Nodes;
 using Json.JsonE.Expressions;
-using Json.More;
 
 namespace Json.JsonE.Operators;
 
@@ -14,7 +13,6 @@ internal class SwitchOperator : IOperator
 	{
 		var obj = template!.AsObject();
 		obj.VerifyNoUndefinedProperties(Name);
-
 
 		var parameter = obj[Name];
 		if (!parameter.IsTemplateOr<JsonObject>())
@@ -36,7 +34,7 @@ internal class SwitchOperator : IOperator
 			if (result is not JsonValue val || !val.TryGetValue(out bool b))
 				throw new InterpreterException("$switch keys must evaluate to a boolean");
 
-			if (b) array.Add(kvp.Value.Copy());
+			if (b) array.Add(kvp.Value.Clone());
 		}
 
 		if (array.Count > 1)

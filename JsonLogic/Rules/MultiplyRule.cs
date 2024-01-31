@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -27,8 +28,7 @@ public class MultiplyRule : Rule
 	/// <param name="more">Sequence of values to multiply by.</param>
 	protected internal MultiplyRule(Rule a, params Rule[] more)
 	{
-		Items = new List<Rule> { a };
-		Items.AddRange(more);
+		Items = [a, .. more];
 	}
 
 	/// <summary>
@@ -50,7 +50,7 @@ public class MultiplyRule : Rule
 
 			var number = value.Numberify();
 
-			if (number == null) return JsonNull.SignalNode;
+			if (number == null) return null;
 
 			result *= number.Value;
 		}
@@ -59,11 +59,11 @@ public class MultiplyRule : Rule
 	}
 }
 
-internal class MultiplyRuleJsonConverter : JsonConverter<MultiplyRule>
+internal class MultiplyRuleJsonConverter : AotCompatibleJsonConverter<MultiplyRule>
 {
 	public override MultiplyRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = JsonSerializer.Deserialize<Rule[]>(ref reader, options);
+		var parameters = options.Read(ref reader, LogicSerializerContext.Default.RuleArray);
 
 		if (parameters == null || parameters.Length == 0)
 			throw new JsonException("The * rule needs an array of parameters.");
@@ -71,6 +71,8 @@ internal class MultiplyRuleJsonConverter : JsonConverter<MultiplyRule>
 		return new MultiplyRule(parameters[0], parameters.Skip(1).ToArray());
 	}
 
+	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
+	[UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public override void Write(Utf8JsonWriter writer, MultiplyRule value, JsonSerializerOptions options)
 	{
 		writer.WriteStartObject();

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Logic.Rules;
 
@@ -26,8 +28,7 @@ public class AndRule : Rule
 	/// <param name="more">Sequence of values to And against.</param>
 	protected internal AndRule(Rule a, params Rule[] more)
 	{
-		Items = new List<Rule> { a };
-		Items.AddRange(more);
+		Items = [a, .. more];
 	}
 
 	/// <summary>
@@ -53,11 +54,11 @@ public class AndRule : Rule
 	}
 }
 
-internal class AndRuleJsonConverter : JsonConverter<AndRule>
+internal class AndRuleJsonConverter : AotCompatibleJsonConverter<AndRule>
 {
 	public override AndRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = JsonSerializer.Deserialize<Rule[]>(ref reader, options);
+		var parameters = options.Read(ref reader, LogicSerializerContext.Default.RuleArray);
 
 		if (parameters == null || parameters.Length == 0)
 			throw new JsonException("The and rule needs an array of parameters.");
@@ -65,6 +66,8 @@ internal class AndRuleJsonConverter : JsonConverter<AndRule>
 		return new AndRule(parameters[0], parameters.Skip(1).ToArray());
 	}
 
+	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
+	[UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public override void Write(Utf8JsonWriter writer, AndRule value, JsonSerializerOptions options)
 	{
 		writer.WriteStartObject();

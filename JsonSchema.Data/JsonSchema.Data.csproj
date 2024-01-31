@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>netstandard2.1</TargetFramework>
+		<TargetFrameworks>netstandard2.1;net8.0</TargetFrameworks>
 		<LangVersion>latest</LangVersion>
 		<AssemblyName>JsonSchema.Net.Data</AssemblyName>
 		<RootNamespace>Json.Schema.Data</RootNamespace>
@@ -20,9 +20,9 @@
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<DocumentationFile>JsonSchema.Net.Data.xml</DocumentationFile>
 		<LangVersion>latest</LangVersion>
-		<Version>5.0.1</Version>
-		<FileVersion>5.0.1.0</FileVersion>
-		<AssemblyVersion>5.0.0.0</AssemblyVersion>
+		<Version>6.0.0</Version>
+		<FileVersion>6.0.0.0</FileVersion>
+		<AssemblyVersion>6.0.0.0</AssemblyVersion>
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
@@ -30,6 +30,8 @@
 		<SignAssembly>true</SignAssembly>
 		<AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
 		<Nullable>enable</Nullable>
+		<IsAotCompatible Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net7.0'))">true</IsAotCompatible>
+		<PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -38,6 +40,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="PolySharp" Version="1.14.1" PrivateAssets="All" />
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
 	</ItemGroup>
 
@@ -54,7 +57,6 @@
 	</ItemGroup>
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-		<Copy SourceFiles="$(TargetDir)$(DocumentationFile)" DestinationFolder="..\json-everything.net\wwwroot\xml\" SkipUnchangedFiles="True" OverwriteReadOnlyFiles="True" />
 		<Copy SourceFiles="$(TargetDir)$(DocumentationFile)" DestinationFolder="..\doc-tool\xml\" SkipUnchangedFiles="True" OverwriteReadOnlyFiles="True" />
 	</Target>
 

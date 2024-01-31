@@ -98,10 +98,11 @@ public class UniqueKeysKeyword : IJsonSchemaKeyword
 			}
 		}
 
-		if (matchedIndexPairs.Any())
+		if (matchedIndexPairs.Count != 0)
 		{
 			var pairs = string.Join(", ", matchedIndexPairs.Select(d => $"({d.Item1}, {d.Item2})"));
-			evaluation.Results.Fail(Name, ErrorMessages.GetUniqueItems(context.Options.Culture), ("duplicates", pairs));
+			evaluation.Results.Fail(Name, ErrorMessages.GetUniqueItems(context.Options.Culture)
+				.ReplaceToken("duplicates", pairs));
 		}
 	}
 }
@@ -109,7 +110,7 @@ public class UniqueKeysKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="UniqueKeysKeyword"/>.
 /// </summary>
-public sealed class UniqueKeysKeywordJsonConverter : JsonConverter<UniqueKeysKeyword>
+public sealed class UniqueKeysKeywordJsonConverter : AotCompatibleJsonConverter<UniqueKeysKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="UniqueKeysKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -121,7 +122,7 @@ public sealed class UniqueKeysKeywordJsonConverter : JsonConverter<UniqueKeysKey
 		if (reader.TokenType != JsonTokenType.StartArray)
 			throw new JsonException("Expected array");
 
-		var references = JsonSerializer.Deserialize<List<JsonPointer>>(ref reader, options)!;
+		var references = options.Read(ref reader, ArrayExtSerializerContext.Default.ListJsonPointer)!;
 		return new UniqueKeysKeyword(references);
 	}
 
@@ -131,7 +132,6 @@ public sealed class UniqueKeysKeywordJsonConverter : JsonConverter<UniqueKeysKey
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, UniqueKeysKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(UniqueKeysKeyword.Name);
-		JsonSerializer.Serialize(writer, value.Keys, options);
+		options.Write(writer, value.Keys, ArrayExtSerializerContext.Default.IEnumerableJsonPointer);
 	}
 }

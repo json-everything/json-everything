@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using System.Text.Json.Nodes;
-using Json.More;
 
 namespace Json.JsonE.Operators;
 
@@ -26,7 +25,7 @@ internal class MergeOperator : IOperator
 
 		foreach (var kvp in obj)
 		{
-			result[kvp.Key] = kvp.Value.Copy();
+			result[kvp.Key] = kvp.Value.Clone();
 		}
 
 		return result;

@@ -67,16 +67,18 @@ public class MaximumKeyword : IJsonSchemaKeyword
 			return;
 		}
 
-		var number = evaluation.LocalInstance!.AsValue().GetNumber();
+		var number = evaluation.LocalInstance!.AsValue().GetNumber()!.Value;
 		if (Value < number)
-			evaluation.Results.Fail(Name, ErrorMessages.GetMaximum(context.Options.Culture), ("received", number), ("limit", Value));
+			evaluation.Results.Fail(Name, ErrorMessages.GetMaximum(context.Options.Culture)
+				.ReplaceToken("received", number)
+				.ReplaceToken("limit", Value));
 	}
 }
 
 /// <summary>
 /// JSON converter for <see cref="MaximumKeyword"/>.
 /// </summary>
-public sealed class MaximumKeywordJsonConverter : JsonConverter<MaximumKeyword>
+public sealed class MaximumKeywordJsonConverter : AotCompatibleJsonConverter<MaximumKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="MaximumKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -99,7 +101,7 @@ public sealed class MaximumKeywordJsonConverter : JsonConverter<MaximumKeyword>
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, MaximumKeyword value, JsonSerializerOptions options)
 	{
-		writer.WriteNumber(MaximumKeyword.Name, value.Value);
+		writer.WriteNumberValue(value.Value);
 	}
 }
 

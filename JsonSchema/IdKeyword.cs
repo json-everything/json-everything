@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Schema;
 
@@ -60,7 +61,7 @@ public class IdKeyword : IIdKeyword
 /// <summary>
 /// JSON converter for <see cref="IdKeyword"/>.
 /// </summary>
-public sealed class IdKeywordJsonConverter : JsonConverter<IdKeyword>
+public sealed class IdKeywordJsonConverter : AotCompatibleJsonConverter<IdKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="IdKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -85,6 +86,6 @@ public sealed class IdKeywordJsonConverter : JsonConverter<IdKeyword>
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, IdKeyword value, JsonSerializerOptions options)
 	{
-		writer.WriteString(IdKeyword.Name, value.Id.OriginalString);
+		writer.WriteStringValue(value.Id.OriginalString);
 	}
 }

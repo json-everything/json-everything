@@ -11,8 +11,7 @@ namespace Json.Schema.Generation;
 public static class GeneratorRegistry
 {
 	private static readonly List<ISchemaGenerator> _generators =
-		new()
-		{
+		[
 			new NullableValueTypeSchemaGenerator(),
 			new BooleanSchemaGenerator(),
 			new IntegerSchemaGenerator(),
@@ -33,7 +32,7 @@ public static class GeneratorRegistry
 			new ArraySchemaGenerator(),
 			// this must always be last because it thinks it can do everything
 			new ObjectSchemaGenerator()
-		};
+		];
 
 	/// <summary>
 	/// Registers a new generator.

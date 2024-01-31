@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using Json.More;
 using Json.Pointer;
@@ -220,6 +223,8 @@ internal static class ModelGenerator
 		_options.SchemaRegistry.Register(_dictionaryMetaSchema);
 	}
 
+	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
+	[UnconditionalSuppressMessage("AOT", "IL3050:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public static TypeModel GenerateCodeModel(this JsonSchema schema, EvaluationOptions options, GenerationCache cache)
 	{
 		var generated = cache.FirstOrDefault(x => x.Schema == schema);
@@ -228,7 +233,7 @@ internal static class ModelGenerator
 		generated = new GenerationCacheItem(schema);
 		cache.Add(generated);
 
-		var json = JsonSerializer.SerializeToNode(schema);
+		var json = JsonSerializer.SerializeToNode(schema, CodeGenerationSerializerContext.OptionsManager.SerializerOptions);
 
 		var supportedResults = _supportedRequirements.Evaluate(json, _options);
 #if DEBUG
@@ -352,7 +357,7 @@ internal static class ModelGenerator
 		}
 		else
 		{
-			var anchorFragment = fragment.Substring(1);
+			var anchorFragment = fragment[1..];
 			if (!_anchorPattern.IsMatch(anchorFragment))
 				throw new JsonSchemaException($"Unrecognized fragment type `{newUri}`");
 
@@ -389,5 +394,19 @@ internal class GenerationCache : List<GenerationCacheItem>
 		{
 			item.Model.FillPlaceholders(this);
 		}
+	}
+}
+
+[JsonSerializable(typeof(JsonSchema))]
+internal partial class CodeGenerationSerializerContext : JsonSerializerContext
+{
+	public static TypeResolverOptionsManager OptionsManager { get; }
+
+	static CodeGenerationSerializerContext()
+	{
+		OptionsManager = new(
+			Default,
+			Json.Schema.JsonSchema.TypeInfoResolver
+		);
 	}
 }

@@ -12,12 +12,6 @@ public static class JsonAssert
 			Assert.Fail($"Expected: {expected.AsJsonString()}\nActual: {actual.AsJsonString()}");
 	}
 
-	public static void IsNull(JsonNode? actual)
-	{
-		if (actual != null)
-			Assert.Fail($"Expected: null\nActual: {actual.AsJsonString()}");
-	}
-
 	public static void IsTrue(JsonNode? actual)
 	{
 		if (actual is not JsonValue value || !value.TryGetValue(out bool b) || !b)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace Json.Schema.Serialization;
@@ -17,6 +18,7 @@ public class JsonSchemaAttribute : Attribute
 	/// <param name="declaringType">The type declaring the schema.</param>
 	/// <param name="memberName">The property or field name for the schema.  This member must be public and static.</param>
 	/// <exception cref="ArgumentException">Thrown when the member cannot be found or is not public and static.</exception>
+	[RequiresUnreferencedCode("Uses reflection")]
 	public JsonSchemaAttribute(Type declaringType, string memberName)
 	{
 		MemberInfo? member = declaringType.GetProperty(memberName, BindingFlags.Static | BindingFlags.Public);

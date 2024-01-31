@@ -71,7 +71,7 @@ public class ExamplesKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="ExamplesKeyword"/>.
 /// </summary>
-public sealed class ExamplesKeywordJsonConverter : JsonConverter<ExamplesKeyword>
+public sealed class ExamplesKeywordJsonConverter : AotCompatibleJsonConverter<ExamplesKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="ExamplesKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -80,7 +80,8 @@ public sealed class ExamplesKeywordJsonConverter : JsonConverter<ExamplesKeyword
 	/// <returns>The converted value.</returns>
 	public override ExamplesKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var array = options.Read<JsonArray>(ref reader) ?? throw new JsonException("Expected an array, but received null");
+		var array = options.Read(ref reader, JsonSchemaSerializerContext.Default.JsonArray) ??
+		            throw new JsonException("Expected an array, but received null");
 
 		return new ExamplesKeyword((IEnumerable<JsonNode>)array!);
 	}
@@ -91,11 +92,10 @@ public sealed class ExamplesKeywordJsonConverter : JsonConverter<ExamplesKeyword
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, ExamplesKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(ExamplesKeyword.Name);
 		writer.WriteStartArray();
 		foreach (var node in value.Values)
 		{
-			JsonSerializer.Serialize(writer, node, options);
+			options.Write(writer, node, JsonSchemaSerializerContext.Default.JsonNode);
 		}
 		writer.WriteEndArray();
 	}

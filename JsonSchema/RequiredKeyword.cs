@@ -75,14 +75,15 @@ public class RequiredKeyword : IJsonSchemaKeyword
 
 		var missing = Properties.Except(obj.Select(x => x.Key)).ToArray();
 		if (missing.Length != 0)
-			evaluation.Results.Fail(Name, ErrorMessages.GetRequired(context.Options.Culture), ("missing", missing));
+			evaluation.Results.Fail(Name, ErrorMessages.GetRequired(context.Options.Culture)
+				.ReplaceToken("missing", missing));
 	}
 }
 
 /// <summary>
 /// JSON converter for <see cref="RequiredKeyword"/>.
 /// </summary>
-public sealed class RequiredKeywordJsonConverter : JsonConverter<RequiredKeyword>
+public sealed class RequiredKeywordJsonConverter : AotCompatibleJsonConverter<RequiredKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="RequiredKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -91,7 +92,8 @@ public sealed class RequiredKeywordJsonConverter : JsonConverter<RequiredKeyword
 	/// <returns>The converted value.</returns>
 	public override RequiredKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		return new RequiredKeyword(options.Read<string[]>(ref reader) ?? throw new JsonException("Expected array"));
+		return new RequiredKeyword(options.Read(ref reader, JsonSchemaSerializerContext.Default.StringArray) ??
+		                           throw new JsonException("Expected array"));
 	}
 
 	/// <summary>Writes a specified value as JSON.</summary>
@@ -100,7 +102,6 @@ public sealed class RequiredKeywordJsonConverter : JsonConverter<RequiredKeyword
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, RequiredKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(RequiredKeyword.Name);
 		writer.WriteStartArray();
 		foreach (var property in value.Properties)
 		{

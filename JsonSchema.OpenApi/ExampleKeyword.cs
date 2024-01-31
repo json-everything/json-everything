@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Schema.OpenApi;
 
@@ -52,7 +53,7 @@ public class ExampleKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="ExampleKeyword"/>.
 /// </summary>
-public sealed class ExampleKeywordJsonConverter : JsonConverter<ExampleKeyword>
+public sealed class ExampleKeywordJsonConverter : AotCompatibleJsonConverter<ExampleKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="ExampleKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -61,7 +62,7 @@ public sealed class ExampleKeywordJsonConverter : JsonConverter<ExampleKeyword>
 	/// <returns>The converted value.</returns>
 	public override ExampleKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var node = JsonSerializer.Deserialize<JsonNode>(ref reader, options);
+		var node = options.Read(ref reader, OpenApiSerializerContext.Default.JsonNode);
 
 		return new ExampleKeyword(node);
 	}
@@ -72,7 +73,6 @@ public sealed class ExampleKeywordJsonConverter : JsonConverter<ExampleKeyword>
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, ExampleKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(ExampleKeyword.Name);
-		JsonSerializer.Serialize(writer, value.Value, options);
+		options.Write(writer, value.Value, OpenApiSerializerContext.Default.JsonNode);
 	}
 }

@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using Json.Schema.Tests;
 using NUnit.Framework;
 
@@ -31,11 +32,11 @@ public class UniqueKeysSpecExampleTests
 	[Test]
 	public void SingleKeySchema_UniqueValuesAtKeyPasses()
 	{
-		var instance = JsonDocument.Parse(@"[
+		var instance = JsonNode.Parse(@"[
 			  { ""foo"": 8 },
 			  { ""foo"": 12 },
 			  { ""foo"": 42 }
-			]").RootElement;
+			]");
 
 		var results = _singleKeySchema.Evaluate(instance);
 
@@ -45,11 +46,11 @@ public class UniqueKeysSpecExampleTests
 	[Test]
 	public void SingleKeySchema_DuplicateValuesAtKeyFails()
 	{
-		var instance = JsonDocument.Parse(@"[
+		var instance = JsonNode.Parse(@"[
 			  { ""foo"": 8 },
 			  { ""foo"": 12 },
 			  { ""foo"": 8 }
-			]").RootElement;
+			]");
 
 		var results = _singleKeySchema.Evaluate(instance);
 
@@ -59,10 +60,10 @@ public class UniqueKeysSpecExampleTests
 	[Test]
 	public void SingleKeySchema_NotAllItemsHaveFooPasses()
 	{
-		var instance = JsonDocument.Parse(@"[
+		var instance = JsonNode.Parse(@"[
 			  { ""foo"": 8 },
 			  { ""bar"": 8 }
-			]").RootElement;
+			]");
 
 		var results = _singleKeySchema.Evaluate(instance);
 
@@ -72,11 +73,11 @@ public class UniqueKeysSpecExampleTests
 	[Test]
 	public void SingleKeySchema_DuplicateValuesAtKeyFailsEvenThoughItemsAreDistinct()
 	{
-		var instance = JsonDocument.Parse(@"[
+		var instance = JsonNode.Parse(@"[
 			  { ""foo"": 8, ""bar"": true },
 			  { ""foo"": 12, ""bar"": true },
 			  { ""foo"": 8, ""bar"": false }
-			]").RootElement;
+			]");
 
 		var results = _singleKeySchema.Evaluate(instance);
 
@@ -86,11 +87,11 @@ public class UniqueKeysSpecExampleTests
 	[Test]
 	public void MultiKey_UniqueValuesAtKeysPasses()
 	{
-		var instance = JsonDocument.Parse(@"[
+		var instance = JsonNode.Parse(@"[
 			  { ""foo"": 8, ""bar"": true },
 			  { ""foo"": 12, ""bar"": true },
 			  { ""foo"": 8, ""bar"": false }
-			]").RootElement;
+			]");
 
 		var results = _multiKeySchema.Evaluate(instance);
 

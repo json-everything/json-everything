@@ -12,11 +12,11 @@ public static class KeywordExtensions
 {
 	static KeywordExtensions()
 	{
-		_keywordEvaluationGroups = new Dictionary<Type, int>();
+		_keywordEvaluationGroups = [];
 
-		var allTypes = GetAllKeywordTypes().ToList();
+		var allTypes = AllKeywordTypes.ToList();
 
-		var allDependencies = allTypes.ToDictionary(x => x, x => x.GetCustomAttributes<DependsOnAnnotationsFromAttribute>().Select(x => x.DependentType));
+		var allDependencies = allTypes.ToDictionary(x => x, x => x.GetCustomAttributes<DependsOnAnnotationsFromAttribute>().Select(y => y.DependentType));
 
 		_keywordEvaluationGroups[typeof(SchemaKeyword)] = -2;
 		_keywordEvaluationGroups[typeof(IdKeyword)] = -1;
@@ -45,17 +45,15 @@ public static class KeywordExtensions
 		}
 	}
 
-	private static IEnumerable<Type> GetAllKeywordTypes() =>
-		typeof(IJsonSchemaKeyword).Assembly
-			.GetTypes()
+	private static IEnumerable<Type> AllKeywordTypes { get; } = 
+		SchemaKeywordRegistry.KeywordTypes
 			.Where(t => typeof(IJsonSchemaKeyword).IsAssignableFrom(t) &&
-			            !t.IsAbstract &&
-			            !t.IsInterface);
+			            t is { IsAbstract: false, IsInterface: false }).ToList();
 
 	private static readonly Dictionary<Type, string> _keywordNames =
-		GetAllKeywordTypes()
+		AllKeywordTypes
 			.Where(t => t != typeof(UnrecognizedKeyword))
-			.ToDictionary(t => t, t => t.GetCustomAttribute<SchemaKeywordAttribute>().Name);
+			.ToDictionary(t => t, t => t.GetCustomAttribute<SchemaKeywordAttribute>()!.Name);
 
 	/// <summary>
 	/// Gets the keyword string.
@@ -64,6 +62,7 @@ public static class KeywordExtensions
 	/// <returns>The keyword string.</returns>
 	/// <exception cref="ArgumentNullException"><paramref name="keyword"/> is null.</exception>
 	/// <exception cref="InvalidOperationException">The keyword does not carry the <see cref="SchemaKeywordAttribute"/>.</exception>
+	// TODO: Reflection can be replaced with static members when moving to .Net 7
 	public static string Keyword(this IJsonSchemaKeyword keyword)
 	{
 		if (keyword == null) throw new ArgumentNullException(nameof(keyword));
@@ -74,10 +73,9 @@ public static class KeywordExtensions
 		if (!_keywordNames.TryGetValue(keywordType, out var name))
 		{
 			name = keywordType.GetCustomAttribute<SchemaKeywordAttribute>()?.Name;
-			if (name == null)
-				throw new InvalidOperationException($"Type {keywordType.Name} must be decorated with {nameof(SchemaKeywordAttribute)}");
 
-			_keywordNames[keywordType] = name;
+			_keywordNames[keywordType] = name ??
+				throw new InvalidOperationException($"Type {keywordType.Name} must be decorated with {nameof(SchemaKeywordAttribute)}");
 		}
 
 		return name;
@@ -90,6 +88,7 @@ public static class KeywordExtensions
 	/// <returns>The keyword string.</returns>
 	/// <exception cref="ArgumentNullException"><paramref name="keywordType"/> is null.</exception>
 	/// <exception cref="InvalidOperationException">The keyword does not carry the <see cref="SchemaKeywordAttribute"/>.</exception>
+	// TODO: Reflection can be replaced with static members when moving to .Net 7
 	public static string Keyword(this Type keywordType)
 	{
 		if (keywordType == null) throw new ArgumentNullException(nameof(keywordType));
@@ -97,10 +96,9 @@ public static class KeywordExtensions
 		if (!_keywordNames.TryGetValue(keywordType, out var name))
 		{
 			name = keywordType.GetCustomAttribute<SchemaKeywordAttribute>()?.Name;
-			if (name == null)
-				throw new InvalidOperationException($"Type {keywordType.Name} must be decorated with {nameof(SchemaKeywordAttribute)}");
 
-			_keywordNames[keywordType] = name;
+			_keywordNames[keywordType] = name ??
+				throw new InvalidOperationException($"Type {keywordType.Name} must be decorated with {nameof(SchemaKeywordAttribute)}");
 		}
 
 		return name;
@@ -136,7 +134,7 @@ public static class KeywordExtensions
 	}
 
 	private static readonly Dictionary<Type, SpecVersion> _versionDeclarations =
-		GetAllKeywordTypes()
+		AllKeywordTypes
 			.ToDictionary(t => t, t => t.GetCustomAttributes<SchemaSpecVersionAttribute>()
 				.Aggregate(SpecVersion.Unspecified, (c, x) => c | x.Version));
 

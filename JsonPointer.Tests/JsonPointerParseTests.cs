@@ -75,7 +75,7 @@ public class JsonPointerParseTests
 	{
 		Assert.IsTrue(JsonPointer.TryParse(pointerString, out var pointer));
 
-		pointer.Segments.Length.Should().Be(segments.Length);
+		pointer!.Segments.Length.Should().Be(segments.Length);
 		pointer.Segments.Select(s => s.Value).Should().BeEquivalentTo(segments);
 	}
 

@@ -21,7 +21,7 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Applicator201909Id)]
 [Vocabulary(Vocabularies.Applicator202012Id)]
 [Vocabulary(Vocabularies.ApplicatorNextId)]
-[DependsOnAnnotationsFrom(typeof(PrefixItemsKeyword))]
+[DependsOnAnnotationsFrom<PrefixItemsKeyword>]
 [JsonConverter(typeof(ItemsKeywordJsonConverter))]
 public class ItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, ISchemaCollector
 {
@@ -114,8 +114,8 @@ public class ItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, ISchemaCollect
 			};
 
 			if (prefixItemsConstraint != null)
-				constraint.SiblingDependencies = new[] { prefixItemsConstraint };
-			constraint.ChildDependencies = new[] { subschemaConstraint };
+				constraint.SiblingDependencies = [prefixItemsConstraint];
+			constraint.ChildDependencies = [subschemaConstraint];
 		}
 		else // ArraySchema
 		{
@@ -151,7 +151,7 @@ public class ItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, ISchemaCollect
 /// <summary>
 /// JSON converter for <see cref="ItemsKeyword"/>.
 /// </summary>
-public sealed class ItemsKeywordJsonConverter : JsonConverter<ItemsKeyword>
+public sealed class ItemsKeywordJsonConverter : AotCompatibleJsonConverter<ItemsKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="ItemsKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -162,11 +162,11 @@ public sealed class ItemsKeywordJsonConverter : JsonConverter<ItemsKeyword>
 	{
 		if (reader.TokenType == JsonTokenType.StartArray)
 		{
-			var schemas = options.Read<List<JsonSchema>>(ref reader)!;
+			var schemas = options.Read(ref reader, JsonSchemaSerializerContext.Default.ListJsonSchema)!;
 			return new ItemsKeyword(schemas);
 		}
 
-		var schema = options.Read<JsonSchema>(ref reader)!;
+		var schema = options.Read(ref reader, JsonSchemaSerializerContext.Default.JsonSchema)!;
 		return new ItemsKeyword(schema);
 	}
 
@@ -176,34 +176,16 @@ public sealed class ItemsKeywordJsonConverter : JsonConverter<ItemsKeyword>
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, ItemsKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(ItemsKeyword.Name);
 		if (value.SingleSchema != null)
-			JsonSerializer.Serialize(writer, value.SingleSchema, options);
+			options.Write(writer, value.SingleSchema, JsonSchemaSerializerContext.Default.JsonSchema);
 		else
 		{
 			writer.WriteStartArray();
 			foreach (var schema in value.ArraySchemas!)
 			{
-				JsonSerializer.Serialize(writer, schema, options);
+				options.Write(writer, schema, JsonSchemaSerializerContext.Default.JsonSchema);
 			}
 			writer.WriteEndArray();
 		}
-	}
-}
-
-public static partial class ErrorMessages
-{
-	private static string? _invalidItemsForm;
-
-	/// <summary>
-	/// Gets or sets the error message for when <see cref="ItemsKeyword"/> is specified
-	/// with an array of schemas in a draft 2020-12 or later schema.
-	/// </summary>
-	/// <remarks>No tokens are supported.</remarks>
-	[Obsolete("Invalid use of array-form `items` will result in an exception now.")]
-	public static string InvalidItemsForm
-	{
-		get => _invalidItemsForm ?? Get();
-		set => _invalidItemsForm = value;
 	}
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Schema;
 
@@ -58,7 +59,7 @@ public class MaxContainsKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="MaxContainsKeyword"/>.
 /// </summary>
-public sealed class MaxContainsKeywordJsonConverter : JsonConverter<MaxContainsKeyword>
+public sealed class MaxContainsKeywordJsonConverter : AotCompatibleJsonConverter<MaxContainsKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="MaxContainsKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -85,6 +86,6 @@ public sealed class MaxContainsKeywordJsonConverter : JsonConverter<MaxContainsK
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, MaxContainsKeyword value, JsonSerializerOptions options)
 	{
-		writer.WriteNumber(MaxContainsKeyword.Name, value.Value);
+		writer.WriteNumberValue(value.Value);
 	}
 }

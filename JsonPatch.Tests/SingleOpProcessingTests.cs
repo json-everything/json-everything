@@ -15,7 +15,9 @@ public class SingleOpProcessingTests
   { ""op"": ""replace"", ""path"": ""/baz"", ""value"": ""boo"" },
   { ""op"": ""add"", ""path"": ""/hello"", ""value"": [""world""] },
   { ""op"": ""remove"", ""path"": ""/foo"" }
-]")!;
+]",
+			TestSerializerContext.OptionsManager.SerializerOptions)!;
+
 		Assert.AreEqual(3, patch.Operations.Count);
 		Assert.AreEqual(OperationType.Replace, patch.Operations[0].Op);
 		Assert.AreEqual(OperationType.Add, patch.Operations[1].Op);
@@ -26,7 +28,8 @@ public class SingleOpProcessingTests
 	public void Add_Local()
 	{
 		var patch = JsonSerializer.Deserialize<JsonPatch>(
-			"[{ \"op\": \"add\", \"path\": \"/hello\", \"value\": [\"world\"] }]")!;
+			"[{ \"op\": \"add\", \"path\": \"/hello\", \"value\": [\"world\"] }]",
+			TestSerializerContext.OptionsManager.SerializerOptions)!;
 
 		var element = JsonNode.Parse("{\"something\":\"added\"}");
 		var expected = JsonNode.Parse("{\"something\":\"added\",\"hello\":[\"world\"]}");
@@ -41,7 +44,8 @@ public class SingleOpProcessingTests
 	public void Add_Nested()
 	{
 		var patch = JsonSerializer.Deserialize<JsonPatch>(
-			"[{ \"op\": \"add\", \"path\": \"/inserted/hello\", \"value\": [\"world\"] }]")!;
+			"[{ \"op\": \"add\", \"path\": \"/inserted/hello\", \"value\": [\"world\"] }]",
+			TestSerializerContext.OptionsManager.SerializerOptions)!;
 
 		var element = JsonNode.Parse("{\"something\":\"added\",\"inserted\":{}}");
 		var expected = JsonNode.Parse("{\"something\":\"added\",\"inserted\":{\"hello\":[\"world\"]}}");
@@ -58,7 +62,8 @@ public class SingleOpProcessingTests
 	public void Add_Nested_ReplacesValue()
 	{
 		var patch = JsonSerializer.Deserialize<JsonPatch>(
-			"[{ \"op\": \"add\", \"path\": \"/inserted/hello\", \"value\": [\"world\"] }]")!;
+			"[{ \"op\": \"add\", \"path\": \"/inserted/hello\", \"value\": [\"world\"] }]",
+			TestSerializerContext.OptionsManager.SerializerOptions)!;
 
 		var element = JsonNode.Parse("{\"something\":\"added\",\"inserted\":{\"hello\":\"replace me\"}}");
 		var expected = JsonNode.Parse("{\"something\":\"added\",\"inserted\":{\"hello\":[\"world\"]}}");
@@ -75,7 +80,8 @@ public class SingleOpProcessingTests
 	public void Add_NestedPathNotFound()
 	{
 		var patch = JsonSerializer.Deserialize<JsonPatch>(
-			"[{ \"op\": \"add\", \"path\": \"/inserted/hello\", \"value\": [\"world\"] }]")!;
+			"[{ \"op\": \"add\", \"path\": \"/inserted/hello\", \"value\": [\"world\"] }]",
+			TestSerializerContext.OptionsManager.SerializerOptions)!;
 
 		var element = JsonNode.Parse("{\"something\":\"added\",\"insert here\":{}}");
 
@@ -90,7 +96,8 @@ public class SingleOpProcessingTests
 	public void Replace_Local()
 	{
 		var patch = JsonSerializer.Deserialize<JsonPatch>(
-			"[{ \"op\": \"replace\", \"path\": \"/something\", \"value\": \"boo\" }]")!;
+			"[{ \"op\": \"replace\", \"path\": \"/something\", \"value\": \"boo\" }]",
+			TestSerializerContext.OptionsManager.SerializerOptions)!;
 
 		var element = JsonNode.Parse("{\"something\":\"added\"}");
 		var expected = JsonNode.Parse("{\"something\":\"boo\"}");
@@ -111,11 +118,12 @@ public class SingleOpProcessingTests
 	public void Move_Array(int to, int from, int[] expected)
 	{
 		var patchStr = "[{ \"op\": \"move\", \"path\": \"/Numbers/" + to + "\", \"from\": \"/Numbers/" + from + "\" }]";
-		var patch = JsonSerializer.Deserialize<JsonPatch>(patchStr)!;
+		var patch = JsonSerializer.Deserialize<JsonPatch>(patchStr,
+			TestSerializerContext.OptionsManager.SerializerOptions)!;
 
-		var element = new { Numbers = new[] { 1, 2, 3, 4 } };
+		var element = new PatchExtensionTests.TestModel{ Numbers = [1, 2, 3, 4] };
 
-		var actual = patch.Apply(element);
+		var actual = patch.Apply(element, TestSerializerContext.OptionsManager.SerializerOptions);
 
 		CollectionAssert.AreEqual(expected, actual?.Numbers);
 	}

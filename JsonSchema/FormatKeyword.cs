@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Schema;
 
@@ -64,7 +65,8 @@ public class FormatKeyword : IJsonSchemaKeyword
 		EvaluationContext context)
 	{
 		if (Value is UnknownFormat && context.Options.OnlyKnownFormats)
-			return new KeywordConstraint(Name, (e, _) => e.Results.Fail(Name, ErrorMessages.GetUnknownFormat(context.Options.Culture), ("format", Value.Key)));
+			return new KeywordConstraint(Name, (e, _) => e.Results.Fail(Name, ErrorMessages.GetUnknownFormat(context.Options.Culture)
+				.ReplaceToken("format", Value.Key)));
 
 		var requireValidation = context.Options.RequireFormatValidation;
 
@@ -99,16 +101,19 @@ public class FormatKeyword : IJsonSchemaKeyword
 		if (Value is UnknownFormat)
 			evaluation.Results.Fail(Name, errorMessage);
 		else if (errorMessage == null)
-			evaluation.Results.Fail(Name, ErrorMessages.GetFormat(context.Options.Culture), ("format", Value.Key));
+			evaluation.Results.Fail(Name, ErrorMessages.GetFormat(context.Options.Culture)
+				.ReplaceToken("format", Value.Key));
 		else
-			evaluation.Results.Fail(Name, ErrorMessages.GetFormatWithDetail(context.Options.Culture), ("format", Value.Key), ("detail", errorMessage));
+			evaluation.Results.Fail(Name, ErrorMessages.GetFormatWithDetail(context.Options.Culture)
+				.ReplaceToken("format", Value.Key)
+				.ReplaceToken("detail", errorMessage));
 	}
 }
 
 /// <summary>
 /// JSON converter for <see cref="FormatKeyword"/>.
 /// </summary>
-public sealed class FormatKeywordJsonConverter : JsonConverter<FormatKeyword>
+public sealed class FormatKeywordJsonConverter : AotCompatibleJsonConverter<FormatKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="FormatKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -132,7 +137,7 @@ public sealed class FormatKeywordJsonConverter : JsonConverter<FormatKeyword>
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, FormatKeyword value, JsonSerializerOptions options)
 	{
-		writer.WriteString(FormatKeyword.Name, value.Value.Key);
+		writer.WriteStringValue(value.Value.Key);
 	}
 }
 

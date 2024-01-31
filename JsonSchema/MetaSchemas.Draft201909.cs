@@ -10,32 +10,32 @@ public static partial class MetaSchemas
 	/// <summary>
 	/// The Draft 2019-09 meta-schema ID.
 	/// </summary>
-	public static readonly Uri Draft201909Id = new Uri(Draft201909IdValue);
+	public static readonly Uri Draft201909Id = new(Draft201909IdValue);
 
 	/// <summary>
 	/// The Draft 2019-09 Core meta-schema ID.
 	/// </summary>
-	public static readonly Uri Core201909Id = new Uri("https://json-schema.org/draft/2019-09/meta/core");
+	public static readonly Uri Core201909Id = new("https://json-schema.org/draft/2019-09/meta/core");
 	/// <summary>
 	/// The Draft 2019-09 Applicator meta-schema ID.
 	/// </summary>
-	public static readonly Uri Applicator201909Id = new Uri("https://json-schema.org/draft/2019-09/meta/applicator");
+	public static readonly Uri Applicator201909Id = new("https://json-schema.org/draft/2019-09/meta/applicator");
 	/// <summary>
 	/// The Draft 2019-09 Validation meta-schema ID.
 	/// </summary>
-	public static readonly Uri Validation201909Id = new Uri("https://json-schema.org/draft/2019-09/meta/validation");
+	public static readonly Uri Validation201909Id = new("https://json-schema.org/draft/2019-09/meta/validation");
 	/// <summary>
 	/// The Draft 2019-09 Metadata meta-schema ID.
 	/// </summary>
-	public static readonly Uri Metadata201909Id = new Uri("https://json-schema.org/draft/2019-09/meta/meta-data");
+	public static readonly Uri Metadata201909Id = new("https://json-schema.org/draft/2019-09/meta/meta-data");
 	/// <summary>
 	/// The Draft 2019-09 Format meta-schema ID.
 	/// </summary>
-	public static readonly Uri Format201909Id = new Uri("https://json-schema.org/draft/2019-09/meta/format");
+	public static readonly Uri Format201909Id = new("https://json-schema.org/draft/2019-09/meta/format");
 	/// <summary>
 	/// The Draft 2019-09 Content meta-schema ID.
 	/// </summary>
-	public static readonly Uri Content201909Id = new Uri("https://json-schema.org/draft/2019-09/meta/content");
+	public static readonly Uri Content201909Id = new("https://json-schema.org/draft/2019-09/meta/content");
 
 	/// <summary>
 	/// The Draft 2019-09 meta-schema.

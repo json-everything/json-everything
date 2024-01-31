@@ -16,7 +16,7 @@ public class TypeCollection
 	/// <summary>
 	///     Types that had their data and functions examined.
 	/// </summary>
-	private HashSet<Type> _visitedPropTypes = new();
+	private HashSet<Type> _visitedPropTypes = [];
 
 	/// <summary>
 	///     Types that need to have their properties, methods and fields examined.
@@ -26,7 +26,7 @@ public class TypeCollection
 	/// <summary>
 	///     All referenced types.
 	/// </summary>
-	public Dictionary<Type, TypeInformation> ReferencedTypes { get; set; } = new();
+	public Dictionary<Type, TypeInformation> ReferencedTypes { get; set; } = [];
 
 	/// <summary>
 	///     Get all types referenced by the specified type.
@@ -58,8 +58,8 @@ public class TypeCollection
 	private void Init(ReflectionSettings? settings)
 	{
 		_settings = settings ?? ReflectionSettings.Default;
-		ReferencedTypes = new Dictionary<Type, TypeInformation>();
-		_visitedPropTypes = new HashSet<Type>();
+		ReferencedTypes = [];
+		_visitedPropTypes = [];
 		_pendingPropTypes = new Queue<Type>();
 	}
 
@@ -193,16 +193,16 @@ public class TypeCollection
 		/// <summary>
 		///     The list of property inforation of the class.
 		/// </summary>
-		public List<PropertyInfo> Properties { get; set; } = new();
+		public List<PropertyInfo> Properties { get; set; } = [];
 
 		/// <summary>
 		///     The list of method inforation of the class.
 		/// </summary>
-		public List<MethodBase> Methods { get; set; } = new();
+		public List<MethodBase> Methods { get; set; } = [];
 
 		/// <summary>
 		///     The list of field inforation of the class.
 		/// </summary>
-		public List<FieldInfo> Fields { get; set; } = new();
+		public List<FieldInfo> Fields { get; set; } = [];
 	}
 }

@@ -61,7 +61,7 @@ public class DefsKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 /// <summary>
 /// JSON converter for <see cref="DefsKeyword"/>.
 /// </summary>
-public sealed class DefsKeywordJsonConverter : JsonConverter<DefsKeyword>
+public sealed class DefsKeywordJsonConverter : AotCompatibleJsonConverter<DefsKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="DefsKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -73,7 +73,7 @@ public sealed class DefsKeywordJsonConverter : JsonConverter<DefsKeyword>
 		if (reader.TokenType != JsonTokenType.StartObject)
 			throw new JsonException("Expected object");
 
-		var schema = options.Read<Dictionary<string, JsonSchema>>(ref reader)!;
+		var schema = options.Read(ref reader, JsonSchemaSerializerContext.Default.DictionaryStringJsonSchema)!;
 		return new DefsKeyword(schema);
 	}
 
@@ -83,12 +83,11 @@ public sealed class DefsKeywordJsonConverter : JsonConverter<DefsKeyword>
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, DefsKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(DefsKeyword.Name);
 		writer.WriteStartObject();
 		foreach (var kvp in value.Definitions)
 		{
 			writer.WritePropertyName(kvp.Key);
-			JsonSerializer.Serialize(writer, kvp.Value, options);
+			options.Write(writer, kvp.Value, JsonSchemaSerializerContext.Default.JsonSchema);
 		}
 		writer.WriteEndObject();
 	}

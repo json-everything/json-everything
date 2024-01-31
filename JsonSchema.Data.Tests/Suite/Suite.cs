@@ -43,7 +43,7 @@ public class Suite
 		{
 			var shortFileName = System.IO.Path.GetFileNameWithoutExtension(fileName);
 			var contents = File.ReadAllText(fileName);
-			var collections = JsonSerializer.Deserialize<List<TestCollection>>(contents, new JsonSerializerOptions
+			var collections = JsonSerializer.Deserialize<List<TestCollection>>(contents, new JsonSerializerOptions(DataTestsSerializerContext.OptionsManager.SerializerOptions)
 			{
 				PropertyNameCaseInsensitive = true
 			});
@@ -90,7 +90,7 @@ public class Suite
 	[TestCaseSource(nameof(TestCases))]
 	public void Test(TestCollection collection, TestCase test, string fileName, EvaluationOptions options)
 	{
-		var serializerOptions = new JsonSerializerOptions
+		var serializerOptions = new JsonSerializerOptions(DataTestsSerializerContext.OptionsManager.SerializerOptions)
 		{
 			WriteIndented = true,
 			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
@@ -108,7 +108,7 @@ public class Suite
 		Console.WriteLine();
 		Console.WriteLine(JsonSerializer.Serialize(collection.Schema, serializerOptions));
 		Console.WriteLine();
-		Console.WriteLine(test.Data.AsJsonString());
+		Console.WriteLine(test.Data.AsJsonString(DataTestsSerializerContext.OptionsManager.SerializerOptions));
 		Console.WriteLine();
 
 		if (test.Error)
@@ -153,7 +153,7 @@ public class Suite
 	[TestCaseSource(nameof(CoreTestCases))]
 	public void CoreKeywordsAreInvalid(string schemaText)
 	{
-		Assert.Throws<JsonException>(() => JsonSerializer.Deserialize<JsonSchema>(schemaText));
+		Assert.Throws<JsonException>(() => JsonSerializer.Deserialize<JsonSchema>(schemaText, DataTestsSerializerContext.OptionsManager.SerializerOptions));
 	}
 
 	[Test]

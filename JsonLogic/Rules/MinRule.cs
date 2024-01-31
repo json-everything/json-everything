@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -29,8 +30,7 @@ public class MinRule : Rule
 	/// <param name="more">A sequence of numbers.</param>
 	protected internal MinRule(Rule a, params Rule[] more)
 	{
-		Items = new List<Rule> { a };
-		Items.AddRange(more);
+		Items = [a, .. more];
 	}
 
 	/// <summary>
@@ -46,17 +46,17 @@ public class MinRule : Rule
 	{
 		var items = Items.Select(i => i.Apply(data, contextData)).Select(e => new { Type = e.JsonType(), Value = e.Numberify() }).ToList();
 		var nulls = items.Where(i => i.Value == null);
-		if (nulls.Any()) return JsonNull.SignalNode;
+		if (nulls.Any()) return null;
 
 		return items.Min(i => i.Value!.Value);
 	}
 }
 
-internal class MinRuleJsonConverter : JsonConverter<MinRule>
+internal class MinRuleJsonConverter : AotCompatibleJsonConverter<MinRule>
 {
 	public override MinRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = JsonSerializer.Deserialize<Rule[]>(ref reader, options);
+		var parameters = options.Read(ref reader, LogicSerializerContext.Default.RuleArray);
 
 		if (parameters == null || parameters.Length == 0)
 			throw new JsonException("The min rule needs an array of parameters.");
@@ -64,6 +64,8 @@ internal class MinRuleJsonConverter : JsonConverter<MinRule>
 		return new MinRule(parameters[0], parameters.Skip(1).ToArray());
 	}
 
+	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
+	[UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public override void Write(Utf8JsonWriter writer, MinRule value, JsonSerializerOptions options)
 	{
 		writer.WriteStartObject();

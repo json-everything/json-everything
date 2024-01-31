@@ -1,4 +1,8 @@
-﻿namespace Json.Schema.ArrayExt;
+﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
+using Json.Pointer;
+
+namespace Json.Schema.ArrayExt;
 
 /// <summary>
 /// Declares the vocabularies of the supported drafts.
@@ -24,9 +28,18 @@ public static class Vocabularies
 		schemaRegistry ??= SchemaRegistry.Global;
 
 		vocabRegistry.Register(ArrayExt);
-		SchemaKeywordRegistry.Register<UniqueKeysKeyword>();
-		SchemaKeywordRegistry.Register<OrderingKeyword>();
+		SchemaKeywordRegistry.Register<UniqueKeysKeyword>(ArrayExtSerializerContext.Default);
+		SchemaKeywordRegistry.Register<OrderingKeyword>(ArrayExtSerializerContext.Default);
 		schemaRegistry.Register(MetaSchemas.ArrayExt);
 		schemaRegistry.Register(MetaSchemas.ArrayExt_202012);
 	}
 }
+
+[JsonSerializable(typeof(UniqueKeysKeyword))]
+[JsonSerializable(typeof(OrderingKeyword))]
+[JsonSerializable(typeof(IEnumerable<JsonPointer>))]
+[JsonSerializable(typeof(List<JsonPointer>))]
+[JsonSerializable(typeof(IEnumerable<OrderingSpecifier>))]
+[JsonSerializable(typeof(List<OrderingSpecifier>))]
+[JsonSerializable(typeof(int))]
+internal partial class ArrayExtSerializerContext : JsonSerializerContext;

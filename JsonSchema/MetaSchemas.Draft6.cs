@@ -10,7 +10,7 @@ public static partial class MetaSchemas
 	/// <summary>
 	/// The Draft 6 Core meta-schema ID.
 	/// </summary>
-	public static readonly Uri Draft6Id = new Uri(Draft6IdValue);
+	public static readonly Uri Draft6Id = new(Draft6IdValue);
 
 	/// <summary>
 	/// The Draft 6 Core meta-schema.

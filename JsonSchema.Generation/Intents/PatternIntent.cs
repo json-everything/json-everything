@@ -1,4 +1,4 @@
-﻿using JetBrains.Annotations;
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace Json.Schema.Generation.Intents;
 
@@ -16,7 +16,7 @@ public class PatternIntent : ISchemaKeywordIntent
 	/// Creates a new <see cref="PatternIntent"/> instance.
 	/// </summary>
 	/// <param name="value">The value.</param>
-	public PatternIntent([RegexPattern] string value)
+	public PatternIntent([StringSyntax(StringSyntaxAttribute.Regex)] string value)
 	{
 		Value = value;
 	}

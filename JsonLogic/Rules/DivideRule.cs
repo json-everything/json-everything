@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
@@ -50,19 +51,19 @@ public class DivideRule : Rule
 		var numberA = a.Numberify();
 		var numberB = b.Numberify();
 
-		if (numberA == null || numberB == null) return JsonNull.SignalNode;
+		if (numberA == null || numberB == null) return null;
 
-		if (numberB == 0) return JsonNull.SignalNode;
+		if (numberB == 0) return null;
 
 		return numberA.Value / numberB.Value;
 	}
 }
 
-internal class DivideRuleJsonConverter : JsonConverter<DivideRule>
+internal class DivideRuleJsonConverter : AotCompatibleJsonConverter<DivideRule>
 {
 	public override DivideRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = JsonSerializer.Deserialize<Rule[]>(ref reader, options);
+		var parameters = options.Read(ref reader, LogicSerializerContext.Default.RuleArray);
 
 		if (parameters is not { Length: 2 })
 			throw new JsonException("The / rule needs an array with 2 parameters.");
@@ -70,6 +71,8 @@ internal class DivideRuleJsonConverter : JsonConverter<DivideRule>
 		return new DivideRule(parameters[0], parameters[1]);
 	}
 
+	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
+	[UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public override void Write(Utf8JsonWriter writer, DivideRule value, JsonSerializerOptions options)
 	{
 		writer.WriteStartObject();

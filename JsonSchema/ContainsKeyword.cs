@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Text.Json;
@@ -22,8 +23,8 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Applicator201909Id)]
 [Vocabulary(Vocabularies.Applicator202012Id)]
 [Vocabulary(Vocabularies.ApplicatorNextId)]
-[DependsOnAnnotationsFrom(typeof(MinContainsKeyword))]
-[DependsOnAnnotationsFrom(typeof(MaxContainsKeyword))]
+[DependsOnAnnotationsFrom<MinContainsKeyword>]
+[DependsOnAnnotationsFrom<MaxContainsKeyword>]
 [JsonConverter(typeof(ContainsKeywordJsonConverter))]
 public class ContainsKeyword : IJsonSchemaKeyword, ISchemaContainer
 {
@@ -96,13 +97,17 @@ public class ContainsKeyword : IJsonSchemaKeyword, ISchemaContainer
 				.Where(x => x.Results.IsValid)
 				.Select(x => int.Parse(x.RelativeInstanceLocation.Segments[0].Value))
 				.ToArray();
-			evaluation.Results.SetAnnotation(Name, JsonSerializer.SerializeToNode(validIndices));
-			
+			evaluation.Results.SetAnnotation(Name, JsonSerializer.SerializeToNode(validIndices, JsonSchemaSerializerContext.Default.Int32Array));
+
 			var actual = validIndices.Length;
 			if (actual < minimum)
-				evaluation.Results.Fail(Name, ErrorMessages.GetContainsTooFew(context.Options.Culture), ("received", actual), ("minimum", minimum));
+				evaluation.Results.Fail(Name, ErrorMessages.GetContainsTooFew(context.Options.Culture)
+					.ReplaceToken("received", actual)
+					.ReplaceToken("minimum", minimum));
 			else if (actual > maximum)
-				evaluation.Results.Fail(Name, ErrorMessages.GetContainsTooMany(context.Options.Culture), ("received", actual), ("maximum", maximum));
+				evaluation.Results.Fail(Name, ErrorMessages.GetContainsTooMany(context.Options.Culture)
+					.ReplaceToken("received", actual)
+					.ReplaceToken("maximum", maximum.Value));
 			return;
 		}
 
@@ -113,7 +118,7 @@ public class ContainsKeyword : IJsonSchemaKeyword, ISchemaContainer
 /// <summary>
 /// JSON converter for <see cref="ContainsKeyword"/>.
 /// </summary>
-public sealed class ContainsKeywordJsonConverter : JsonConverter<ContainsKeyword>
+public sealed class ContainsKeywordJsonConverter : AotCompatibleJsonConverter<ContainsKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="ContainsKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -122,7 +127,7 @@ public sealed class ContainsKeywordJsonConverter : JsonConverter<ContainsKeyword
 	/// <returns>The converted value.</returns>
 	public override ContainsKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var schema = options.Read<JsonSchema>(ref reader)!;
+		var schema = options.Read(ref reader, JsonSchemaSerializerContext.Default.JsonSchema)!;
 
 		return new ContainsKeyword(schema);
 	}
@@ -133,8 +138,7 @@ public sealed class ContainsKeywordJsonConverter : JsonConverter<ContainsKeyword
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, ContainsKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(ContainsKeyword.Name);
-		JsonSerializer.Serialize(writer, value.Schema, options);
+		options.Write(writer, value.Schema, JsonSchemaSerializerContext.Default.JsonSchema);
 	}
 }
 

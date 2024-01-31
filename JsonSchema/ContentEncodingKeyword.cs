@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Schema;
 
@@ -59,7 +60,7 @@ public class ContentEncodingKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="ContentEncodingKeyword"/>.
 /// </summary>
-public sealed class ContentEncodingKeywordJsonConverter : JsonConverter<ContentEncodingKeyword>
+public sealed class ContentEncodingKeywordJsonConverter : AotCompatibleJsonConverter<ContentEncodingKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="ContentEncodingKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -82,6 +83,6 @@ public sealed class ContentEncodingKeywordJsonConverter : JsonConverter<ContentE
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, ContentEncodingKeyword value, JsonSerializerOptions options)
 	{
-		writer.WriteString(ContentEncodingKeyword.Name, value.Value);
+		writer.WriteStringValue(value.Value);
 	}
 }

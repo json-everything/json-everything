@@ -34,8 +34,8 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 
 		membersToGenerate = SchemaGeneratorConfiguration.Current.PropertyOrder switch
 		{
-			PropertyOrder.AsDeclared => membersToGenerate.OrderBy(m => m, context.DeclarationOrderComparer).ToList(),
-			PropertyOrder.ByName => membersToGenerate.OrderBy(m => m.Name).ToList(),
+			PropertyOrder.AsDeclared => [.. membersToGenerate.OrderBy(m => m, context.DeclarationOrderComparer)],
+			PropertyOrder.ByName => [.. membersToGenerate.OrderBy(m => m.Name)],
 			_ => membersToGenerate
 		};
 
@@ -55,7 +55,7 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 			foreach (var conditions in localConditionalAttributes.GroupBy(x => x.ConditionGroup))
 			{
 				if (!conditionalAttributes.TryGetValue(conditions.Key!, out var list)) 
-					conditionalAttributes[conditions.Key!] = list = new List<(MemberInfo, ConditionalAttribute)>();
+					conditionalAttributes[conditions.Key!] = list = [];
 
 				list.AddRange(conditions.Select(x => (member, x)));
 			}
@@ -76,12 +76,12 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 			if (unconditionalAttributes.OfType<ObsoleteAttribute>().Any())
 			{
 				if (memberContext is TypeGenerationContext)
-					memberContext = new MemberGenerationContext(memberContext, new List<Attribute>());
+					memberContext = new MemberGenerationContext(memberContext, []);
 				memberContext.Intents.Add(new DeprecatedIntent(true));
 			}
 
 			if (SchemaGeneratorConfiguration.Current.StrictConditionals &&
-			    localConditionalAttributes.Any())
+			    localConditionalAttributes.Count != 0)
 			{
 				addUnevaluatedProperties = true;
 				var applicableConditionGroups = localConditionalAttributes.Select(x => x.ConditionGroup).Distinct();
@@ -116,7 +116,7 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 			.GroupBy(x => x.Attribute.ConditionGroup)
 			.ToList();
 
-		if (!conditionGroups.Any()) return;
+		if (conditionGroups.Count == 0) return;
 
 		if (conditionGroups.Count == 1)
 		{
@@ -156,7 +156,7 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 						});
 				}
 			}
-			if (allOf.Subschemas.Any())
+			if (allOf.Subschemas.Count != 0)
 				context.Intents.Add(allOf);
 		}
 
@@ -242,7 +242,7 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 		{
 			var name = SchemaGeneratorConfiguration.Current.PropertyNameResolver!(consequence.Key);
 			if (properties.TryGetValue(name, out var localContext))
-				localContext = new MemberGenerationContext(localContext, new List<Attribute>());
+				localContext = new MemberGenerationContext(localContext, []);
 			else
 			{
 				var type = consequence.Key.GetMemberType();
@@ -258,13 +258,13 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 
 		var thenIntents = new List<ISchemaKeywordIntent>();
 
-		if (properties.Any())
+		if (properties.Count != 0)
 			thenIntents.Add(new PropertiesIntent(properties));
 
-		if (required.Any())
+		if (required.Count != 0)
 			thenIntents.Add(new RequiredIntent(required));
 
-		if (!thenIntents.Any()) return null;
+		if (thenIntents.Count == 0) return null;
 
 		var thenIntent = new ThenIntent(thenIntents);
 

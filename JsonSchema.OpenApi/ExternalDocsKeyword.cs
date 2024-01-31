@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Schema.OpenApi;
 
@@ -45,13 +47,15 @@ public class ExternalDocsKeyword : IJsonSchemaKeyword
 	/// `x-internal-id`. Field names beginning `x-oai-` and `x-oas-` are reserved for uses defined by the OpenAPI Initiative.
 	/// The value can be null, a primitive, an array or an object.
 	/// </param>
+	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
+	[UnconditionalSuppressMessage("AOT", "IL3050:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public ExternalDocsKeyword(Uri url, string? description, IReadOnlyDictionary<string, JsonNode?>? extensions)
 	{
 		Url = url;
 		Description = description;
 		Extensions = extensions;
 
-		_json = JsonSerializer.SerializeToNode(this);
+		_json = JsonSerializer.SerializeToNode(this, OpenApiSerializerContext.OptionsManager.SerializerOptions);
 	}
 	internal ExternalDocsKeyword(Uri url, string? description, IReadOnlyDictionary<string, JsonNode?>? extensions, JsonNode? json)
 		: this(url, description, extensions)
@@ -80,9 +84,9 @@ public class ExternalDocsKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="ExternalDocsKeyword"/>.
 /// </summary>
-public sealed class ExternalDocsKeywordJsonConverter : JsonConverter<ExternalDocsKeyword>
+public sealed class ExternalDocsKeywordJsonConverter : AotCompatibleJsonConverter<ExternalDocsKeyword>
 {
-	private class Model
+	internal class Model
 	{
 #pragma warning disable CS8618
 		// ReSharper disable UnusedAutoPropertyAccessor.Local
@@ -99,9 +103,11 @@ public sealed class ExternalDocsKeywordJsonConverter : JsonConverter<ExternalDoc
 	/// <param name="typeToConvert">The type to convert.</param>
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	/// <returns>The converted value.</returns>
+	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
+	[UnconditionalSuppressMessage("AOT", "IL3050:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public override ExternalDocsKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var node = JsonSerializer.Deserialize<JsonNode>(ref reader, options);
+		var node = options.Read(ref reader, OpenApiSerializerContext.Default.JsonNode);
 
 		var model = node.Deserialize<Model>(options);
 
@@ -117,7 +123,6 @@ public sealed class ExternalDocsKeywordJsonConverter : JsonConverter<ExternalDoc
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, ExternalDocsKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(DiscriminatorKeyword.Name);
 		writer.WriteStartObject();
 		writer.WriteString("propertyName", value.Url.OriginalString);
 		if (value.Description != null)
@@ -128,7 +133,7 @@ public sealed class ExternalDocsKeywordJsonConverter : JsonConverter<ExternalDoc
 			foreach (var extension in value.Extensions)
 			{
 				writer.WritePropertyName(extension.Key);
-				JsonSerializer.Serialize(writer, extension.Value, options);
+				options.Write(writer, extension.Value, OpenApiSerializerContext.Default.JsonNode);
 			}
 		}
 	}

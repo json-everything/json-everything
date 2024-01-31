@@ -28,7 +28,7 @@ public class AnyOfIntent : ISchemaKeywordIntent
 	/// <param name="subschemas">The subschemas to include.</param>
 	public AnyOfIntent(params IEnumerable<ISchemaKeywordIntent>[] subschemas)
 	{
-		Subschemas = subschemas.ToList();
+		Subschemas = [.. subschemas];
 	}
 
 	/// <summary>

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
-using JetBrains.Annotations;
 using Json.Schema.Generation.Intents;
 using NUnit.Framework;
 
@@ -13,12 +12,12 @@ using static Json.Schema.Generation.Tests.AssertionExtensions;
 // ReSharper disable InconsistentNaming
 // ReSharper disable UnusedMember.Local
 // ReSharper disable UnusedMember.Global
+// ReSharper disable ClassNeverInstantiated.Local
 
 namespace Json.Schema.Generation.Tests;
 
 public class ClientTests
 {
-	[UsedImplicitly]
 	public class TestMenu
 	{
 		public string Name { get; set; }
@@ -44,7 +43,6 @@ public class ClientTests
 		VerifyGeneration<TestMenu>(expected);
 	}
 
-	[UsedImplicitly]
 	public class TreeNode
 	{
 		public string Value { get; set; }
@@ -53,7 +51,6 @@ public class ClientTests
 		[JsonPropertyName("right")] public TreeNodeMetaData Right { get; set; }
 	}
 
-	[UsedImplicitly]
 	public class TreeNodeMetaData
 	{
 		public TreeNode Node { get; set; }
@@ -89,7 +86,6 @@ public class ClientTests
 		VerifyGeneration<TreeNode>(expected);
 	}
 
-	[UsedImplicitly]
 	private class SimpleValueWidgetSettings
 	{
 		[Required] public string name { get; set; }
@@ -115,8 +111,8 @@ public class ClientTests
 		var simpleValueSettingsSchema1 = new JsonSchemaBuilder().FromType<SimpleValueWidgetSettings>().AdditionalProperties(false).Build();
 		var simpleValueSettingsSchema2 = new JsonSchemaBuilder().FromType<SimpleValueWidgetSettings>().AdditionalProperties(false).Build();
 
-		Console.WriteLine(JsonSerializer.Serialize(simpleValueSettingsSchema1, new JsonSerializerOptions { WriteIndented = true }));
-		Console.WriteLine(JsonSerializer.Serialize(simpleValueSettingsSchema2, new JsonSerializerOptions { WriteIndented = true }));
+		Console.WriteLine(JsonSerializer.Serialize(simpleValueSettingsSchema1, TestEnvironment.SerializerOptionsWriteIndented));
+		Console.WriteLine(JsonSerializer.Serialize(simpleValueSettingsSchema2, TestEnvironment.SerializerOptionsWriteIndented));
 		AssertEqual(simpleValueSettingsSchema1, simpleValueSettingsSchema2);
 	}
 
@@ -125,7 +121,6 @@ public class ClientTests
 	{
 	}
 
-	[UsedImplicitly]
 	private class ObjectA
 	{
 		public Guid Property1 { get; set; }
@@ -186,14 +181,14 @@ public class ClientTests
 	}
 
 	[AttributeUsage(AttributeTargets.Property)]
-	public class MyAttribute1 : Attribute { }
+	public class MyAttribute1 : Attribute;
 
 	[AttributeUsage(AttributeTargets.Property)]
-	public class MyAttribute2 : Attribute { }
+	public class MyAttribute2 : Attribute;
 
 	public class PersonRefiner : ISchemaRefiner
 	{
-		public Dictionary<string, List<Type>> FoundAttributes { get; } = new();
+		public Dictionary<string, List<Type>> FoundAttributes { get; } = [];
 
 		public void Run(SchemaGenerationContextBase context)
 		{
@@ -268,7 +263,7 @@ public class ClientTests
 			.FromType<MyType450>()
 			.Build();
 
-		Console.WriteLine(JsonSerializer.Serialize(schema, new JsonSerializerOptions{WriteIndented = true}));
+		Console.WriteLine(JsonSerializer.Serialize(schema, TestEnvironment.SerializerOptionsWriteIndented));
 	}
 
 	private class Issue512_Type
@@ -283,7 +278,7 @@ public class ClientTests
 			.FromType<Issue512_Type>()
 			.Build();
 
-		Console.WriteLine(JsonSerializer.Serialize(schema, new JsonSerializerOptions { WriteIndented = true }));
+		Console.WriteLine(JsonSerializer.Serialize(schema, TestEnvironment.SerializerOptionsWriteIndented));
 	}
 
 	private class Type544_ObsoleteProperties
@@ -300,25 +295,11 @@ public class ClientTests
 	[Test]
 	public void Issue544_DeprecatedSpillingOverToOtherPropertiesOfSameType()
 	{
-		JsonSchema expected = new JsonSchemaBuilder()
-			.Type(SchemaValueType.Object)
-			.Properties(
-				("AAA", new JsonSchemaBuilder().Ref("#/$defs/integer")),
-				("BBB", new JsonSchemaBuilder().Type(SchemaValueType.Integer)),
-				("CCC", new JsonSchemaBuilder().Ref("#/$defs/integer"))
-			)
-			.Defs(
-				("integer", new JsonSchemaBuilder()
-					.Type(SchemaValueType.Integer)
-					.Deprecated(true)
-				)
-			);
-
 		var builder = new JsonSchemaBuilder();
 		builder.FromType<Type544_ObsoleteProperties>();
 
 		var schema = builder.Build();
-		var schemaJson = JsonSerializer.Serialize(schema, new JsonSerializerOptions { WriteIndented = true });
+		var schemaJson = JsonSerializer.Serialize(schema, TestEnvironment.SerializerOptionsWriteIndented);
 		Console.WriteLine(schemaJson);
 
 		Assert.AreEqual(1, schema.GetProperties()!["BBB"].Keywords!.Count);
@@ -335,14 +316,8 @@ public class ClientTests
 	[Test]
 	public void Issue551_MinMaxItemsOnStringProperty()
 	{
-		JsonSchema expected = new JsonSchemaBuilder()
-			.Type(SchemaValueType.Object)
-			.Properties(
-				("Value", new JsonSchemaBuilder().Type(SchemaValueType.String))
-			);
-
 		JsonSchema schema = new JsonSchemaBuilder().FromType<Type551_MinItemsOnString>();
-		var schemaJson = JsonSerializer.Serialize(schema, new JsonSerializerOptions { WriteIndented = true });
+		var schemaJson = JsonSerializer.Serialize(schema, TestEnvironment.SerializerOptionsWriteIndented);
 		Console.WriteLine(schemaJson);
 
 		Assert.AreEqual(1, schema.GetProperties()!["Value"].Keywords!.Count);

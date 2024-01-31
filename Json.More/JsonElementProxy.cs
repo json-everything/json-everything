@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
 
 namespace Json.More;
 
@@ -49,6 +50,8 @@ public readonly struct JsonElementProxy
 	/// Converts an `string` to a <see cref="JsonElementProxy"/>.
 	/// </summary>
 	/// <param name="value">The value.</param>
+	[RequiresDynamicCode("Calls Json.More.JsonElementExtensions.AsJsonElement(string)")]
+	[RequiresUnreferencedCode("Calls Json.More.JsonElementExtensions.AsJsonElement(string)")]
 	public static implicit operator JsonElementProxy(string value) => new(value.AsJsonElement());
 	/// <summary>
 	/// Converts an `bool` to a <see cref="JsonElementProxy"/>.

@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 using Json.Pointer;
 
 namespace Json.Schema.Data;
@@ -81,6 +82,8 @@ public class DataKeyword : IJsonSchemaKeyword
 		return new KeywordConstraint(Name, Evaluator);
 	}
 
+	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
+	[UnconditionalSuppressMessage("AOT", "IL3050:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	private void Evaluator(KeywordEvaluation evaluation, EvaluationContext context)
 	{
 		var data = new Dictionary<string, JsonNode>();
@@ -93,17 +96,17 @@ public class DataKeyword : IJsonSchemaKeyword
 			data.Add(reference.Key, resolved!);
 		}
 
-		if (failedReferences.Any())
-			throw new RefResolutionException(failedReferences.Select(x => x.ToString()));
+		if (failedReferences.Count != 0)
+			throw new RefResolutionException(failedReferences.Select(x => x.ToString())!);
 
-		var json = JsonSerializer.Serialize(data);
-		var subschema = JsonSerializer.Deserialize<JsonSchema>(json)!;
+		var json = JsonSerializer.Serialize(data, DataExtSerializerContext.OptionsManager.SerializerOptions);
+		var subschema = JsonSerializer.Deserialize<JsonSchema>(json, DataExtSerializerContext.OptionsManager.SerializerOptions)!;
 
 		var schemaEvaluation = subschema
 			.GetConstraint(JsonPointer.Create(Name), evaluation.Results.InstanceLocation, evaluation.Results.InstanceLocation, context)
 			.BuildEvaluation(evaluation.LocalInstance, evaluation.Results.InstanceLocation, JsonPointer.Create(Name), context.Options);
 
-		evaluation.ChildEvaluations = new[] { schemaEvaluation };
+		evaluation.ChildEvaluations = [schemaEvaluation];
 
 		schemaEvaluation.Evaluate(context);
 
@@ -138,15 +141,13 @@ public class DataKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="DataKeyword"/>.
 /// </summary>
-public sealed class DataKeywordJsonConverter : JsonConverter<DataKeyword>
+public sealed class DataKeywordJsonConverter : AotCompatibleJsonConverter<DataKeyword>
 {
-	private static readonly string[] _coreKeywords = Schema.Vocabularies.Core202012.Keywords.Where(x => x != typeof(UnrecognizedKeyword)).Select(GetKeyword).ToArray();
-
-	private static string GetKeyword(Type keywordType)
-	{
-		var field = keywordType.GetField("Name", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
-		return (string)field!.GetValue(null);
-	}
+	private static readonly string[] _coreKeywords =
+		Schema.Vocabularies.Core202012.Keywords
+			.Where(x => x != typeof(UnrecognizedKeyword))
+			.Select(x => x.Keyword())
+			.ToArray();
 
 	/// <summary>Reads and converts the JSON to type <see cref="DataKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -158,7 +159,7 @@ public sealed class DataKeywordJsonConverter : JsonConverter<DataKeyword>
 		if (reader.TokenType != JsonTokenType.StartObject)
 			throw new JsonException("Expected object");
 
-		var references = JsonSerializer.Deserialize<Dictionary<string, string>>(ref reader, options)!
+		var references = options.Read(ref reader, DataExtSerializerContext.Default.DictionaryStringString)!
 			.ToDictionary(kvp => kvp.Key, kvp => JsonSchemaBuilderExtensions.CreateResourceIdentifier(kvp.Value));
 
 		if (references.Keys.Intersect(_coreKeywords).Any())
@@ -173,7 +174,6 @@ public sealed class DataKeywordJsonConverter : JsonConverter<DataKeyword>
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, DataKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(DataKeyword.Name);
 		writer.WriteStartObject();
 		foreach (var kvp in value.References)
 		{
@@ -181,13 +181,13 @@ public sealed class DataKeywordJsonConverter : JsonConverter<DataKeyword>
 			switch (kvp.Value)
 			{
 				case JsonPointerIdentifier jp:
-					JsonSerializer.Serialize(writer, jp.Target, options);
+					options.Write(writer, jp.Target, DataExtSerializerContext.Default.JsonPointer);
 					break;
 				case RelativeJsonPointerIdentifier rjp:
-					JsonSerializer.Serialize(writer, rjp.Target, options);
+					options.Write(writer, rjp.Target, DataExtSerializerContext.Default.RelativeJsonPointer);
 					break;
 				case UriIdentifier uri:
-					JsonSerializer.Serialize(writer, uri.Target, options);
+					options.Write(writer, uri.Target, DataExtSerializerContext.Default.Uri);
 					break;
 			}
 		}

@@ -91,7 +91,7 @@ public class SchemaRegistry
 
 	internal void RegisterSchema(Uri? uri, IBaseDocument document)
 	{
-		_registered ??= new Dictionary<Uri, Registration>();
+		_registered ??= [];
 		uri = MakeAbsolute(uri);
 		var registration = CheckRegistry(_registered, uri);
 		if (registration == null)
@@ -141,15 +141,6 @@ public class SchemaRegistry
 	private static Registration? CheckRegistry(Dictionary<Uri, Registration> lookup, Uri uri)
 	{
 		return lookup.TryGetValue(uri, out var registration) ? registration : null;
-	}
-
-	internal static string GetFullReference(Uri? uri, string? fragment)
-	{
-		var baseUri = MakeAbsolute(uri).OriginalString;
-
-		if (string.IsNullOrEmpty(fragment)) return baseUri;
-
-		return $"{baseUri}#{fragment}";
 	}
 
 	private static Uri MakeAbsolute(Uri? uri)

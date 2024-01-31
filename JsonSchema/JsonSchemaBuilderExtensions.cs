@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
-using JetBrains.Annotations;
 
 namespace Json.Schema;
 
@@ -696,7 +696,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <param name="builder">The builder.</param>
 	/// <param name="pattern">The pattern to match.</param>
 	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder Pattern(this JsonSchemaBuilder builder, [RegexPattern] string pattern)
+	public static JsonSchemaBuilder Pattern(this JsonSchemaBuilder builder, [StringSyntax(StringSyntaxAttribute.Regex)] string pattern)
 	{
 		builder.Add(new PatternKeyword(new Regex(pattern, RegexOptions.ECMAScript | RegexOptions.Compiled)));
 		return builder;
@@ -1134,19 +1134,6 @@ public static class JsonSchemaBuilderExtensions
 	/// <param name="options">The options to use for this evaluation.</param>
 	/// <returns>A <see cref="EvaluationResults"/> that provides the outcome of the evaluation.</returns>
 	public static EvaluationResults Evaluate(this JsonSchemaBuilder builder, JsonNode? root, EvaluationOptions? options = null)
-	{
-		return builder.Build().Evaluate(root, options);
-	}
-
-	/// <summary>
-	/// Convenience method that builds and evaluates with a single call.
-	/// </summary>
-	/// <param name="builder">The builder.</param>
-	/// <param name="root">The root instance.</param>
-	/// <param name="options">The options to use for this evaluation.</param>
-	/// <returns>A <see cref="EvaluationResults"/> that provides the outcome of the evaluation.</returns>
-	[Obsolete("Use Evalute() instead.")]
-	public static EvaluationResults Validate(this JsonSchemaBuilder builder, JsonNode? root, EvaluationOptions? options = null)
 	{
 		return builder.Build().Evaluate(root, options);
 	}

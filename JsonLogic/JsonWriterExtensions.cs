@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
+using Json.More;
 
 namespace Json.Logic;
 
@@ -15,6 +17,8 @@ public static class JsonWriterExtensions
 	/// <param name="writer">The writer.</param>
 	/// <param name="rule">The rule.</param>
 	/// <param name="options">Serializer options.</param>
+	[RequiresDynamicCode("Calls JsonSerializer.Serialize. Make sure the options object contains all relevant JsonTypeInfos before suppressing this warning.")]
+	[RequiresUnreferencedCode("Calls JsonSerializer.Serialize. Make sure the options object contains all relevant JsonTypeInfos before suppressing this warning.")]
 	public static void WriteRule(this Utf8JsonWriter writer, Rule? rule, JsonSerializerOptions options)
 	{
 		if (rule == null)
@@ -22,7 +26,8 @@ public static class JsonWriterExtensions
 			writer.WriteNullValue();
 			return;
 		}
-		JsonSerializer.Serialize(writer, rule, rule.GetType(), options);
+
+		options.Write(writer, rule, rule.GetType());
 	}
 
 	/// <summary>
@@ -32,6 +37,8 @@ public static class JsonWriterExtensions
 	/// <param name="rules">The rules.</param>
 	/// <param name="options">Serializer options.</param>
 	/// <param name="unwrapSingle">Unwraps single items instead of writing an array.</param>
+	[RequiresDynamicCode("Calls JsonSerializer.Serialize. Make sure the options object contains all relevant JsonTypeInfos before suppressing this warning.")]
+	[RequiresUnreferencedCode("Calls JsonSerializer.Serialize. Make sure the options object contains all relevant JsonTypeInfos before suppressing this warning.")]
 	public static void WriteRules(this Utf8JsonWriter writer, IEnumerable<Rule> rules, JsonSerializerOptions options, bool unwrapSingle = true)
 	{
 		var array = rules.ToArray();
@@ -46,6 +53,7 @@ public static class JsonWriterExtensions
 		{
 			writer.WriteRule(rule, options);
 		}
+
 		writer.WriteEndArray();
 	}
 }

@@ -5,7 +5,7 @@ using System.Linq;
 namespace Json.Schema.DataGeneration;
 
 /// <summary>
-/// Managees a collection of number ranges as a single entity.
+/// Manages a collection of number ranges as a single entity.
 /// </summary>
 public class NumberRangeSet
 {

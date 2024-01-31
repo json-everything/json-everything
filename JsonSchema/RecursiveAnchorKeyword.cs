@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Schema;
 
@@ -54,7 +55,7 @@ public class RecursiveAnchorKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="RecursiveAnchorKeyword"/>.
 /// </summary>
-public sealed class RecursiveAnchorKeywordJsonConverter : JsonConverter<RecursiveAnchorKeyword>
+public sealed class RecursiveAnchorKeywordJsonConverter : AotCompatibleJsonConverter<RecursiveAnchorKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="RecursiveAnchorKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -77,6 +78,6 @@ public sealed class RecursiveAnchorKeywordJsonConverter : JsonConverter<Recursiv
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, RecursiveAnchorKeyword value, JsonSerializerOptions options)
 	{
-		writer.WriteBoolean(RecursiveAnchorKeyword.Name, value.Value);
+		writer.WriteBooleanValue(value.Value);
 	}
 }

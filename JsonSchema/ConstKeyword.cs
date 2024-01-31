@@ -62,14 +62,15 @@ public class ConstKeyword : IJsonSchemaKeyword
 	private void Evaluator(KeywordEvaluation evaluation, EvaluationContext context)
 	{
 		if (!evaluation.LocalInstance.IsEquivalentTo(Value))
-			evaluation.Results.Fail(Name, ErrorMessages.GetConst(context.Options.Culture), ("value", Value.AsJsonString()));
+			evaluation.Results.Fail(Name, ErrorMessages.GetConst(context.Options.Culture)
+				.ReplaceToken("value", Value.AsJsonString()));
 	}
 }
 
 /// <summary>
 /// JSON converter for <see cref="ConstKeyword"/>.
 /// </summary>
-public sealed class ConstKeywordJsonConverter : JsonConverter<ConstKeyword>
+public sealed class ConstKeywordJsonConverter : AotCompatibleJsonConverter<ConstKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="ConstKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -78,7 +79,7 @@ public sealed class ConstKeywordJsonConverter : JsonConverter<ConstKeyword>
 	/// <returns>The converted value.</returns>
 	public override ConstKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var node = options.Read<JsonNode>(ref reader);
+		var node = options.Read(ref reader, JsonSchemaSerializerContext.Default.JsonNode);
 
 		return new ConstKeyword(node);
 	}
@@ -89,8 +90,7 @@ public sealed class ConstKeywordJsonConverter : JsonConverter<ConstKeyword>
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, ConstKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(ConstKeyword.Name);
-		JsonSerializer.Serialize(writer, value.Value, options);
+		options.Write(writer, value.Value, JsonSchemaSerializerContext.Default.JsonNode);
 	}
 }
 

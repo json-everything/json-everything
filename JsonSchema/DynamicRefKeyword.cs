@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Json.More;
 using Json.Pointer;
 
 namespace Json.Schema;
@@ -87,7 +88,7 @@ public class DynamicRefKeyword : IJsonSchemaKeyword
 			}
 			else
 			{
-				var anchorFragment = newUri.Fragment.Substring(1);
+				var anchorFragment = newUri.Fragment[1..];
 				if (!AnchorKeyword.AnchorPattern.IsMatch(anchorFragment))
 					throw new JsonSchemaException($"Unrecognized fragment type `{newUri}`");
 
@@ -120,7 +121,7 @@ public class DynamicRefKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="DynamicRefKeyword"/>.
 /// </summary>
-public sealed class DynamicRefKeywordJsonConverter : JsonConverter<DynamicRefKeyword>
+public sealed class DynamicRefKeywordJsonConverter : AotCompatibleJsonConverter<DynamicRefKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="DynamicRefKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -141,7 +142,6 @@ public sealed class DynamicRefKeywordJsonConverter : JsonConverter<DynamicRefKey
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, DynamicRefKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(DynamicRefKeyword.Name);
-		JsonSerializer.Serialize(writer, value.Reference, options);
+		options.Write(writer, value.Reference, JsonSchemaSerializerContext.Default.Uri);
 	}
 }
