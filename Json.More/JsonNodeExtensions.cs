@@ -19,7 +19,6 @@ public static class JsonNodeExtensions
 		Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
 	};
 
-#if NET8_0
 	/// <summary>
 	/// Determines JSON-compatible equivalence.
 	/// </summary>
@@ -28,17 +27,9 @@ public static class JsonNodeExtensions
 	/// <returns>`true` if the element are equivalent; `false` otherwise.</returns>
 	/// <remarks>
 	/// <see cref="JsonNode.DeepEquals(JsonNode,JsonNode)"/> has trouble testing numeric
-	/// equality when `decimal` is involved.  As such it is still advised to use this
+	/// equality when `decimal` is involved.  As such, it is still advised to use this
 	/// method instead.  See https://github.com/dotnet/runtime/issues/97490.
 	/// </remarks>
-#else
-	/// <summary>
-	/// Determines JSON-compatible equivalence.
-	/// </summary>
-	/// <param name="a">The first element.</param>
-	/// <param name="b">The second element.</param>
-	/// <returns>`true` if the element are equivalent; `false` otherwise.</returns>
-#endif
 	public static bool IsEquivalentTo(this JsonNode? a, JsonNode? b)
 	{
 		switch (a, b)

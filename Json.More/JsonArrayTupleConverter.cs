@@ -8,6 +8,9 @@ namespace Json.More;
 /// <summary>
 /// Provides JSON serialization for the <see cref="ValueTuple{T1}"/> family of types.
 /// </summary>
+/// <remarks>
+/// WARNING: This converter is not AOT-friendly.
+/// </remarks>
 public class JsonArrayTupleConverter : JsonConverterFactory
 {
 	/// <summary>When overridden in a derived class, determines whether the converter instance can convert the specified object type.</summary>
