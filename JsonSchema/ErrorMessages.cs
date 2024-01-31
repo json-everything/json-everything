@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Resources;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization.Metadata;
 using System.Xml.Linq;
 
@@ -134,4 +135,14 @@ public static partial class ErrorMessages
 	/// <returns>The detokenized string.</returns>
 	public static string ReplaceToken(this string message, string name, Dictionary<string, string[]> value) =>
 		ReplaceToken(message, name, value, JsonSchemaSerializerContext.Default.DictionaryStringStringArray);
+
+	/// <summary>
+	/// Replaces tokens in the form of `[[token]]` with a specified value, serialized as JSON.
+	/// </summary>
+	/// <param name="message">The message template.</param>
+	/// <param name="name">The token name (without brackets)</param>
+	/// <param name="value">The value.</param>
+	/// <returns>The detokenized string.</returns>
+	public static string ReplaceToken(this string message, string name, JsonNode value) =>
+		ReplaceToken(message, name, value, JsonSchemaSerializerContext.Default.JsonNode);
 }
