@@ -1,9 +1,7 @@
-﻿using System.Text.Json;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 using Json.More;
 using NUnit.Framework;
 // ReSharper disable NonReadonlyMemberInGetHashCode
-#pragma warning disable NUnit2005
 #pragma warning disable CS8618
 
 namespace Yaml2JsonNode.Tests;
@@ -67,9 +65,9 @@ public class SerializerTests
 
 		public override bool Equals(object? obj)
 		{
-			if (ReferenceEquals(null, obj)) return false;
+			if (obj is null) return false;
 			if (ReferenceEquals(this, obj)) return true;
-			if (obj.GetType() != this.GetType()) return false;
+			if (obj.GetType() != GetType()) return false;
 			return Equals((Foo)obj);
 		}
 
@@ -89,7 +87,7 @@ public class SerializerTests
 			DecimalProp = 42.5m,
 			DoubleProp = 42.9,
 			BoolProp = true,
-			ListOfInts = new List<int> { 1, 2, 3, 4 },
+			ListOfInts = [1, 2, 3, 4],
 			MapOfStrings = new Dictionary<string, string>
 			{
 				["string1"] = "found",
@@ -126,7 +124,7 @@ public class SerializerTests
 			DecimalProp = 42.5m,
 			DoubleProp = 42.9,
 			BoolProp = true,
-			ListOfInts = new List<int> { 1, 2, 3, 4 },
+			ListOfInts = [1, 2, 3, 4],
 			MapOfStrings = new Dictionary<string, string>
 			{
 				["string1"] = "found",
