@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 
 namespace Json.Schema.DataGeneration.Requirements;
 
-[UsedImplicitly]
 internal class ConditionalRequirementsGatherer : IRequirementsGatherer
 {
 	public void AddRequirements(RequirementsContext context, JsonSchema schema)

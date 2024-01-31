@@ -32,7 +32,7 @@
     <AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
     <Nullable>enable</Nullable>
     <Configurations>Debug;Release;Localization</Configurations>
-    <DefineConstants>$(DefineConstants)TRACE;JETBRAINS_ANNOTATIONS</DefineConstants>
+    <DefineConstants>$(DefineConstants)TRACE</DefineConstants>
     <NoWarn>IDE0290</NoWarn>
     <IsAotCompatible Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net7.0'))">true</IsAotCompatible>	  
     <PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
@@ -44,7 +44,6 @@
 
   <ItemGroup>
     <PackageReference Include="PolySharp" Version="1.14.1" PrivateAssets="all" />
-    <PackageReference Include="JetBrains.Annotations" Version="2021.2.0" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
   </ItemGroup>
 

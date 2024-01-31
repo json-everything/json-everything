@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
-using JetBrains.Annotations;
 using NUnit.Framework;
 
 using static Json.Schema.Generation.Tests.AssertionExtensions;
 // ReSharper disable InconsistentNaming
+// ReSharper disable UnusedMember.Local
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
 namespace Json.Schema.Generation.Tests;
@@ -15,13 +15,11 @@ public class PropertyNameResolverTests
 	private class TargetWithJsonPropertyName
 	{
 		[JsonPropertyName("JsonName")]
-		[UsedImplicitly]
 		public string PropertyThatNeeds_Changing { get; set; }
 	}
 
 	private class TargetWithoutJsonPropertyName
 	{
-		[UsedImplicitly]
 		public string PropertyThatNeeds_Changing { get; set; }
 	}
 

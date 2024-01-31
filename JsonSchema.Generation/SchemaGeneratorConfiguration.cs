@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using JetBrains.Annotations;
 using Json.Schema.Generation.Generators;
 
 namespace Json.Schema.Generation;
@@ -35,12 +34,10 @@ public class SchemaGeneratorConfiguration
 	/// <summary>
 	/// A collection of refiners.
 	/// </summary>
-	[UsedImplicitly]
 	public List<ISchemaRefiner> Refiners { get; } = new();
 	/// <summary>
 	/// A collection of generators in addition to the global set.
 	/// </summary>
-	[UsedImplicitly]
 	public List<ISchemaGenerator> Generators { get; } = new();
 	/// <summary>
 	/// Gets or sets the order in which properties will be listed in the schema.

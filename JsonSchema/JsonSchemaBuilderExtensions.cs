@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
-using JetBrains.Annotations;
 
 namespace Json.Schema;
 
@@ -696,7 +696,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <param name="builder">The builder.</param>
 	/// <param name="pattern">The pattern to match.</param>
 	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder Pattern(this JsonSchemaBuilder builder, [RegexPattern] string pattern)
+	public static JsonSchemaBuilder Pattern(this JsonSchemaBuilder builder, [StringSyntax(StringSyntaxAttribute.Regex)] string pattern)
 	{
 		builder.Add(new PatternKeyword(new Regex(pattern, RegexOptions.ECMAScript | RegexOptions.Compiled)));
 		return builder;
