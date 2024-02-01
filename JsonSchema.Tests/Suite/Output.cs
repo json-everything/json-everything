@@ -103,19 +103,13 @@ public class Output
 	[TestCaseSource(nameof(TestCases))]
 	public void Test(TestCollection collection, TestCase test, string format, string fileName, EvaluationOptions options)
 	{
-		var serializerOptions = new JsonSerializerOptions(TestEnvironment.SerializerOptions)
-		{
-			WriteIndented = true,
-			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-		};
-
 		Console.WriteLine();
 		Console.WriteLine();
 		Console.WriteLine(fileName);
 		Console.WriteLine(collection.Description);
 		Console.WriteLine(test.Description);
 		Console.WriteLine();
-		Console.WriteLine(JsonSerializer.Serialize(collection.Schema, serializerOptions));
+		Console.WriteLine(JsonSerializer.Serialize(collection.Schema, TestEnvironment.TestOutputSerializerOptions));
 		Console.WriteLine();
 		Console.WriteLine(test.Data.AsJsonString());
 		Console.WriteLine();
@@ -135,12 +129,12 @@ public class Output
 		};
 		options.OutputFormat = outputFormat;
 		var result = collection.Schema.Evaluate(test.Data, options);
-		var optionsWithConverters = new JsonSerializerOptions(TestEnvironment.SerializerOptions)
+		var optionsWithConverters = new JsonSerializerOptions()
 		{
 			Converters = { converter }
-		};
+		}.WithJsonSchema();
 		var serializedResult = JsonSerializer.SerializeToNode(result, optionsWithConverters);
-		Console.WriteLine(JsonSerializer.Serialize(serializedResult, serializerOptions));
+		Console.WriteLine(JsonSerializer.Serialize(serializedResult, TestEnvironment.TestOutputSerializerOptions));
 		Console.WriteLine();
 
 
@@ -152,7 +146,7 @@ public class Output
 
 		if (_unsupportedVersions.Contains(options.EvaluateAs))
 		{
-			Console.WriteLine(JsonSerializer.Serialize(result, serializerOptions));
+			Console.WriteLine(JsonSerializer.Serialize(result, TestEnvironment.TestOutputSerializerOptions));
 
 			if (!result.IsValid)
 				Assert.Inconclusive("not fully supported");

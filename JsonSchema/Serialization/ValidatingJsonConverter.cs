@@ -66,8 +66,6 @@ public class ValidatingJsonConverter : JsonConverterFactory
 	/// </returns>
 	[RequiresDynamicCode("Uses reflection")]
 	[RequiresUnreferencedCode("Uses reflection")]
-	[SuppressMessage("Trimming", "IL2046:'RequiresUnreferencedCodeAttribute' annotations must match across all interface implementations or overrides.", Justification = "Only this overload requires reflection")]
-	[SuppressMessage("AOT", "IL3051:'RequiresDynamicCodeAttribute' annotations must match across all interface implementations or overrides.", Justification = "Only this overload requires reflection")]
 	public override JsonConverter? CreateConverter(Type typeToConvert, JsonSerializerOptions options)
 	{
 		// at this point, we know that we should have a converter, so we don't need to check for null

@@ -41,14 +41,3 @@ public static class Vocabularies
 		schemaRegistry.Register(MetaSchemas.OpenApiMeta);
 	}
 }
-
-/// <summary>
-/// A serializer context for this library.
-/// </summary>
-[JsonSerializable(typeof(ExampleKeyword))]
-[JsonSerializable(typeof(DiscriminatorKeyword))]
-[JsonSerializable(typeof(ExternalDocsKeyword))]
-[JsonSerializable(typeof(XmlKeyword))]
-[JsonSerializable(typeof(JsonNode))]
-[JsonSerializable(typeof(IReadOnlyDictionary<string, string>))]
-public partial class JsonSchemaOpenApiSerializerContext : JsonSerializerContext;

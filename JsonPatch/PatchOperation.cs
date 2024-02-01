@@ -209,7 +209,7 @@ internal partial class PatchOperationJsonConverter : JsonConverter<PatchOperatio
 		JsonSerializer.Serialize(writer, value.Op, JsonPatchSerializerContext.Default.OperationType);
 
 		writer.WritePropertyName("path");
-		JsonSerializer.Serialize(writer, value.Path, JsonPointerSerializerContext.Default.JsonPointer);
+		JsonSerializer.Serialize(writer, value.Path, options);
 
 		switch (value.Op)
 		{
@@ -225,11 +225,11 @@ internal partial class PatchOperationJsonConverter : JsonConverter<PatchOperatio
 				break;
 			case OperationType.Move:
 				writer.WritePropertyName("from");
-				JsonSerializer.Serialize(writer, value.From, JsonPointerSerializerContext.Default.JsonPointer);
+				JsonSerializer.Serialize(writer, value.From, options);
 				break;
 			case OperationType.Copy:
 				writer.WritePropertyName("from");
-				JsonSerializer.Serialize(writer, value.From, JsonPointerSerializerContext.Default.JsonPointer);
+				JsonSerializer.Serialize(writer, value.From, options);
 				break;
 			case OperationType.Test:
 				writer.WritePropertyName("value");

@@ -44,4 +44,13 @@ public sealed class JsonPointerJsonConverter : AotCompatibleJsonConverter<JsonPo
 /// </summary>
 [JsonSerializable(typeof(JsonPointer))]
 [JsonSerializable(typeof(RelativeJsonPointer))]
-public partial class JsonPointerSerializerContext : JsonSerializerContext;
+internal partial class JsonPointerSerializerContext : JsonSerializerContext;
+
+public static class JsonSerializerOptionsExtensions
+{
+	public static JsonSerializerOptions WithJsonPointer(this JsonSerializerOptions options)
+	{
+		options.TypeInfoResolverChain.Add(JsonPointerSerializerContext.Default);
+		return options;
+	}
+}

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.Encodings.Web;
 using System.Text.Json;
 using Json.More;
 using NUnit.Framework;
@@ -13,11 +12,6 @@ namespace Json.JsonE.Tests.Suite;
 public class MoreTestsRunner
 {
 	private const string _testsFile = "Files/more-tests.yml";
-	private static readonly JsonSerializerOptions _serializerOptions =
-		new(JsonETestSerializerContext.Default.Options)
-		{
-			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-		};
 
 	private static IEnumerable<T>? DeserializeAll<T>(string yamlText, JsonSerializerOptions? options = null)
 	{
@@ -33,9 +27,9 @@ public class MoreTestsRunner
 
 		var yamlText = File.ReadAllText(testsPath);
 
-		var tests = DeserializeAll<Test>(yamlText, _serializerOptions)!;
+		var tests = DeserializeAll<Test>(yamlText, TestEnvironment.SerializerOptions)!;
 
-		return tests.Select(t => new TestCaseData(t) { TestName = $"{t.Title}  |  {t.Template.AsJsonString(_serializerOptions)}  |  {t.Context.AsJsonString(_serializerOptions)}" });
+		return tests.Select(t => new TestCaseData(t) { TestName = $"{t.Title}  |  {t.Template.AsJsonString(TestEnvironment.SerializerOptions)}  |  {t.Context.AsJsonString(TestEnvironment.SerializerOptions)}" });
 	}
 
 	[TestCaseSource(nameof(Suite))]
@@ -80,11 +74,11 @@ public class MoreTestsRunner
 	{
 		Console.WriteLine();
 		Console.WriteLine($"Title:    {test.Title}");
-		Console.WriteLine($"Template: {test.Template.AsJsonString(_serializerOptions)}");
-		Console.WriteLine($"Context:  {test.Context.AsJsonString(_serializerOptions)}");
+		Console.WriteLine($"Template: {test.Template.AsJsonString(TestEnvironment.SerializerOptions)}");
+		Console.WriteLine($"Context:  {test.Context.AsJsonString(TestEnvironment.SerializerOptions)}");
 		if (test.Expected is not null)
-			Console.WriteLine($"Result:   {test.Expected.AsJsonString(_serializerOptions)}");
+			Console.WriteLine($"Result:   {test.Expected.AsJsonString(TestEnvironment.SerializerOptions)}");
 		if (test.HasError)
-			Console.WriteLine($"Error:    {test.ErrorNode.AsJsonString(_serializerOptions)}");
+			Console.WriteLine($"Error:    {test.ErrorNode.AsJsonString(TestEnvironment.SerializerOptions)}");
 	}
 }

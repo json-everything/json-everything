@@ -9,19 +9,13 @@ namespace Json.Schema.DataGeneration.Tests;
 
 public static class TestHelpers
 {
-	public static readonly JsonSerializerOptions DataGenSerializerOptions =
-		new(DataGenerationTestsSerializerContext.Default.Options)
+	public static readonly JsonSerializerOptions SerializerOptions =
+		new JsonSerializerOptions
 	{
 		WriteIndented = true,
-		Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-	};
-
-	public static readonly JsonSerializerOptions SchemaSerializerOptions =
-		new(JsonSchemaSerializerContext.Default.Options)
-	{
-		WriteIndented = true,
-		Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-	};
+		Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+		TypeInfoResolverChain = { DataGenerationTestsSerializerContext.Default }
+	}.WithJsonSchema();
 
 	public static void Run(JsonSchema schema, EvaluationOptions? options = null)
 	{
@@ -30,9 +24,9 @@ public static class TestHelpers
 		options ??= EvaluationOptions.Default;
 
 		Assert.IsTrue(result.IsSuccess, "failed generation");
-		Console.WriteLine(JsonSerializer.Serialize(result.Result, DataGenSerializerOptions));
+		Console.WriteLine(JsonSerializer.Serialize(result.Result, SerializerOptions));
 		var validation = schema.Evaluate(result.Result, options);
-		Console.WriteLine(JsonSerializer.Serialize(validation, SchemaSerializerOptions));
+		Console.WriteLine(JsonSerializer.Serialize(validation, SerializerOptions));
 		Assert.IsTrue(validation.IsValid, "failed validation");
 	}
 
@@ -42,7 +36,7 @@ public static class TestHelpers
 
 		Console.WriteLine(result.ErrorMessage);
 		if (result.IsSuccess)
-			Console.WriteLine(JsonSerializer.Serialize(result.Result, DataGenSerializerOptions));
+			Console.WriteLine(JsonSerializer.Serialize(result.Result, SerializerOptions));
 		Assert.IsFalse(result.IsSuccess, "generation succeeded");
 	}
 

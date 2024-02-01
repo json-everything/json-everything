@@ -24,16 +24,12 @@ public class Suite
 	private const string _externalCoreSchemasPath = _externalTestCasesPath + "/core";
 
 	private static readonly JsonSerializerOptions _serializerOptions =
-		new()
+		new JsonSerializerOptions
 		{
-			TypeInfoResolverChain =
-			{
-				DataTestsSerializerContext.Default,
-				JsonSchemaDataSerializerContext.Default, 
-				JsonSchemaSerializerContext.Default
-			},
-			PropertyNameCaseInsensitive = true
-		};
+			PropertyNameCaseInsensitive = true,
+			WriteIndented = true,
+			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+		}.WithDataVocab();
 
 	public static IEnumerable<TestCaseData> TestCases()
 	{
@@ -99,12 +95,6 @@ public class Suite
 	[TestCaseSource(nameof(TestCases))]
 	public void Test(TestCollection collection, TestCase test, string fileName, EvaluationOptions options)
 	{
-		var serializerOptions = new JsonSerializerOptions(_serializerOptions)
-		{
-			WriteIndented = true,
-			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-		};
-
 		Console.WriteLine();
 		Console.WriteLine();
 		Console.WriteLine(fileName);
@@ -115,9 +105,9 @@ public class Suite
 		else
 			Console.WriteLine(test.Valid ? "valid" : "invalid");
 		Console.WriteLine();
-		Console.WriteLine(JsonSerializer.Serialize(collection.Schema, serializerOptions));
+		Console.WriteLine(JsonSerializer.Serialize(collection.Schema, _serializerOptions));
 		Console.WriteLine();
-		Console.WriteLine(test.Data.AsJsonString(JsonSchemaSerializerContext.Default.Options));
+		Console.WriteLine(test.Data.AsJsonString(_serializerOptions));
 		Console.WriteLine();
 
 		if (test.Error)
@@ -128,7 +118,7 @@ public class Suite
 
 		var result = collection.Schema.Evaluate(test.Data, options);
 		//result.ToBasic();
-		Console.WriteLine(JsonSerializer.Serialize(result, serializerOptions));
+		Console.WriteLine(JsonSerializer.Serialize(result, _serializerOptions));
 
 		if (collection.IsOptional && result.IsValid != test.Valid)
 			Assert.Inconclusive("Test optional");

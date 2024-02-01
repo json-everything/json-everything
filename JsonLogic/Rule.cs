@@ -196,4 +196,14 @@ public class LogicComponentConverter : JsonConverter<Rule>
 [JsonSerializable(typeof(decimal))]
 [JsonSerializable(typeof(bool))]
 [JsonSerializable(typeof(string))]
-public partial class JsonLogicSerializerContext : JsonSerializerContext;
+internal partial class JsonLogicSerializerContext : JsonSerializerContext;
+
+
+public static class JsonSerializerOptionsExtensions
+{
+	public static JsonSerializerOptions WithJsonLogic(this JsonSerializerOptions options)
+	{
+		options.TypeInfoResolverChain.Add(JsonLogicSerializerContext.Default);
+		return options;
+	}
+}

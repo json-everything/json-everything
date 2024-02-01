@@ -177,7 +177,7 @@ public class FormatTests
 			RequireFormatValidation = true
 		});
 
-		Console.WriteLine(JsonSerializer.Serialize(results, new JsonSerializerOptions(TestEnvironment.SerializerOptions) { WriteIndented = true }));
+		Console.WriteLine(JsonSerializer.Serialize(results, TestEnvironment.TestOutputSerializerOptions));
 		Assert.AreEqual(isValid, results.IsValid);
 	}
 }

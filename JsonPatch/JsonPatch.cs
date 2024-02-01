@@ -113,15 +113,3 @@ public class PatchJsonConverter : AotCompatibleJsonConverter<JsonPatch>
 		JsonSerializer.Serialize(writer, value.Operations, options);
 	}
 }
-
-/// <summary>
-/// A serializer context for this library.
-/// </summary>
-[JsonSerializable(typeof(JsonPatch))]
-[JsonSerializable(typeof(PatchOperation))]
-[JsonSerializable(typeof(OperationType))]
-[JsonSerializable(typeof(PatchResult))]
-[JsonSerializable(typeof(JsonNode))]
-[JsonSerializable(typeof(List<PatchOperation>))]
-[JsonSerializable(typeof(IReadOnlyList<PatchOperation>))]
-public partial class JsonPatchSerializerContext : JsonSerializerContext;

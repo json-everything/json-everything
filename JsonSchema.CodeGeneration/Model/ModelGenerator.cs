@@ -231,7 +231,7 @@ internal static class ModelGenerator
 		generated = new GenerationCacheItem(schema);
 		cache.Add(generated);
 
-		var json = JsonSerializer.SerializeToNode(schema, JsonSchemaSerializerContext.Default.JsonSchema);
+		var json = JsonSerializer.SerializeToNode(schema, CodeGenExtensions.SerializerOptions);
 
 		var supportedResults = _supportedRequirements.Evaluate(json, _options);
 #if DEBUG
@@ -351,7 +351,7 @@ internal static class ModelGenerator
 			if (targetBase == null)
 				throw new JsonSchemaException($"Cannot resolve base schema from `{newUri}`");
 
-			targetSchema = targetBase.FindSubschema(pointerFragment!, options);
+			targetSchema = targetBase.FindSubschema(pointerFragment, options);
 		}
 		else
 		{

@@ -154,16 +154,19 @@ public partial class VocabularyTests
 		}
 	}
 
-	private static readonly JsonSerializerOptions _basicOptions = new(TestEnvironment.SerializerOptions)
-	{
-		TypeInfoResolverChain = { VocabularySerializerContext.Default },
-	};
+	private static readonly JsonSerializerOptions _basicOptions =
+		new JsonSerializerOptions
+		{
+			TypeInfoResolverChain = { VocabularySerializerContext.Default }
+		}.WithJsonSchema();
 
-	private static readonly JsonSerializerOptions _serializerOptions = new(_basicOptions)
-	{
-		WriteIndented = true,
-		Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-	};
+	private static readonly JsonSerializerOptions _serializerOptions =
+		new JsonSerializerOptions
+		{
+			TypeInfoResolverChain = { VocabularySerializerContext.Default },
+			WriteIndented = true,
+			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+		}.WithJsonSchema();
 
 	public static readonly Vocabulary DatesVocabulary =
 		new("http://mydates.com/vocabulary", typeof(MinDateKeyword), typeof(MaxDateKeyword));

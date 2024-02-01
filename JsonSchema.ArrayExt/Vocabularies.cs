@@ -34,15 +34,3 @@ public static class Vocabularies
 		schemaRegistry.Register(MetaSchemas.ArrayExt_202012);
 	}
 }
-
-/// <summary>
-/// A serializer context for this library.
-/// </summary>
-[JsonSerializable(typeof(UniqueKeysKeyword))]
-[JsonSerializable(typeof(OrderingKeyword))]
-[JsonSerializable(typeof(IEnumerable<JsonPointer>))]
-[JsonSerializable(typeof(List<JsonPointer>))]
-[JsonSerializable(typeof(IEnumerable<OrderingSpecifier>))]
-[JsonSerializable(typeof(List<OrderingSpecifier>))]
-[JsonSerializable(typeof(int))]
-public partial class JsonSchemaArrayExtSerializerContext : JsonSerializerContext;

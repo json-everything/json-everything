@@ -29,9 +29,3 @@ public class JsonPathConverter : JsonConverter<JsonPath>
 		writer.WriteStringValue(value.ToString());
 	}
 }
-
-/// <summary>
-/// A serializer context for this library.
-/// </summary>
-[JsonSerializable(typeof(JsonPath))]
-public partial class JsonPathSerializerContext : JsonSerializerContext;

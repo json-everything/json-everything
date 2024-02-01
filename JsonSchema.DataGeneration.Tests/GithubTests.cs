@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text.Encodings.Web;
 using System.Text.Json;
 using NUnit.Framework;
 
@@ -54,11 +53,7 @@ internal class GithubTests
 			var sampleData = generationResult.Result;
 
 			Console.WriteLine("Generated data result: " + sampleData);
-			Console.WriteLine(JsonSerializer.Serialize(generationResult, new JsonSerializerOptions(DataGenerationTestsSerializerContext.Default.Options)
-			{
-				WriteIndented = true,
-				Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-			}));
+			Console.WriteLine(JsonSerializer.Serialize(generationResult, TestHelpers.SerializerOptions));
 		}
 	}
 }

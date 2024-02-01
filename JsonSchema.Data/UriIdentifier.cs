@@ -68,7 +68,7 @@ public class UriIdentifier : IDataResourceIdentifier
 			}
 
 			var rootSchema = (JsonSchema?) registry.Get(root.SchemaLocation);
-			data = JsonSerializer.SerializeToNode(rootSchema, JsonSchemaDataSerializerContext.CombinedOptions);
+			data = JsonSerializer.SerializeToNode(rootSchema, JsonSerializerOptionsExtensions.DefaultSerializerOptions);
 		}
 
 		if (!string.IsNullOrEmpty(fragment))

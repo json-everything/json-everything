@@ -300,6 +300,8 @@ internal class EvaluationResultsJsonConverter : AotCompatibleJsonConverter<Evalu
 		throw new NotImplementedException();
 	}
 
+	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
+	[UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public override void Write(Utf8JsonWriter writer, EvaluationResults value, JsonSerializerOptions options)
 	{
 		if (value.Exclude) return;
@@ -311,7 +313,7 @@ internal class EvaluationResultsJsonConverter : AotCompatibleJsonConverter<Evalu
 		if (value.Format == OutputFormat.Hierarchical || value.Parent != null)
 		{
 			writer.WritePropertyName("evaluationPath");
-			options.Write(writer, value.EvaluationPath, JsonPointerSerializerContext.Default.JsonPointer);
+			JsonSerializer.Serialize(writer, value.EvaluationPath, options);
 
 			// this can still be null if the root schema is a boolean
 			if (value.SchemaLocation != null!)
@@ -324,7 +326,7 @@ internal class EvaluationResultsJsonConverter : AotCompatibleJsonConverter<Evalu
 			}
 
 			writer.WritePropertyName("instanceLocation");
-			options.Write(writer, value.InstanceLocation, JsonPointerSerializerContext.Default.JsonPointer);
+			JsonSerializer.Serialize(writer, value.InstanceLocation, options);
 		}
 
 		if (value.IsValid)
@@ -353,7 +355,7 @@ internal class EvaluationResultsJsonConverter : AotCompatibleJsonConverter<Evalu
 		{
 			writer.WritePropertyName("details");
 			options.Write(writer, value.Details, JsonSchemaSerializerContext.Default.IReadOnlyListEvaluationResults);
-}
+		}
 
 		writer.WriteEndObject();
 	}
@@ -410,6 +412,8 @@ public class Pre202012EvaluationResultsJsonConverter : AotCompatibleJsonConverte
 	/// <param name="writer">The writer to write to.</param>
 	/// <param name="value">The value to convert to JSON.</param>
 	/// <param name="options">An object that specifies serialization options to use.</param>
+	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
+	[UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public override void Write(Utf8JsonWriter writer, EvaluationResults value, JsonSerializerOptions options)
 	{
 		if (value.Exclude) return;
@@ -421,13 +425,13 @@ public class Pre202012EvaluationResultsJsonConverter : AotCompatibleJsonConverte
 		if (value.Format == OutputFormat.Hierarchical || value.Parent != null)
 		{
 			writer.WritePropertyName("keywordLocation");
-			options.Write(writer, value.EvaluationPath, JsonPointerSerializerContext.Default.JsonPointer);
+			JsonSerializer.Serialize(writer, value.EvaluationPath, options);
 
 			writer.WritePropertyName("absoluteKeywordLocation");
 			options.Write(writer, value.SchemaLocation, JsonSchemaSerializerContext.Default.Uri);
 
 			writer.WritePropertyName("instanceLocation");
-			options.Write(writer, value.InstanceLocation, JsonPointerSerializerContext.Default.JsonPointer);
+			JsonSerializer.Serialize(writer, value.InstanceLocation, options);
 		}
 
 		bool skipCloseObject = false;
@@ -557,6 +561,8 @@ public class Pre202012EvaluationResultsJsonConverter : AotCompatibleJsonConverte
 			writer.WriteEndObject();
 	}
 
+	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
+	[UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	private static void WriteError(Utf8JsonWriter writer, EvaluationResults value, string keyword, string error, JsonSerializerOptions options)
 	{
 		writer.WriteStartObject();
@@ -564,7 +570,7 @@ public class Pre202012EvaluationResultsJsonConverter : AotCompatibleJsonConverte
 		writer.WriteBoolean("valid", value.IsValid);
 
 		writer.WritePropertyName("keywordLocation");
-		options.Write(writer, value.EvaluationPath.Combine(keyword), JsonPointerSerializerContext.Default.JsonPointer);
+		JsonSerializer.Serialize(writer, value.EvaluationPath.Combine(keyword), options);
 
 		writer.WritePropertyName("absoluteKeywordLocation");
 		if (value.SchemaLocation.OriginalString.Contains('#'))
@@ -573,7 +579,7 @@ public class Pre202012EvaluationResultsJsonConverter : AotCompatibleJsonConverte
 			options.Write(writer, value.SchemaLocation.OriginalString + $"#/{keyword}", JsonSchemaSerializerContext.Default.String);
 
 		writer.WritePropertyName("instanceLocation");
-		options.Write(writer, value.InstanceLocation, JsonPointerSerializerContext.Default.JsonPointer);
+		JsonSerializer.Serialize(writer, value.InstanceLocation, options);
 
 		writer.WritePropertyName("error");
 		options.Write(writer, error, JsonSchemaSerializerContext.Default.String);
@@ -590,7 +596,7 @@ public class Pre202012EvaluationResultsJsonConverter : AotCompatibleJsonConverte
 		writer.WriteBoolean("valid", value.IsValid);
 
 		writer.WritePropertyName("keywordLocation");
-		options.Write(writer, annotation.Source, JsonPointerSerializerContext.Default.JsonPointer);
+		JsonSerializer.Serialize(writer, annotation.Source, options);
 
 		writer.WritePropertyName("absoluteKeywordLocation");
 		if (value.SchemaLocation.OriginalString.Contains('#'))
@@ -599,7 +605,7 @@ public class Pre202012EvaluationResultsJsonConverter : AotCompatibleJsonConverte
 			options.Write(writer, value.SchemaLocation.OriginalString + $"#/{annotation.Owner}", JsonSchemaSerializerContext.Default.String);
 
 		writer.WritePropertyName("instanceLocation");
-		options.Write(writer, value.InstanceLocation, JsonPointerSerializerContext.Default.JsonPointer);
+		JsonSerializer.Serialize(writer, value.InstanceLocation, options);
 
 		writer.WritePropertyName("annotation");
 		JsonSerializer.Serialize(writer, annotation.Value, options);

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using Json.Schema.CodeGeneration.Language;
 using Json.Schema.CodeGeneration.Model;
 
@@ -11,6 +12,9 @@ namespace Json.Schema.CodeGeneration;
 /// </summary>
 public static class CodeGenExtensions
 {
+	internal static readonly JsonSerializerOptions SerializerOptions =
+		new JsonSerializerOptions().WithJsonSchema();
+
 	/// <summary>
 	/// Generates code from a <see cref="JsonSchema"/>.
 	/// </summary>

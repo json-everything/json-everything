@@ -5,10 +5,11 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
 using Json.More;
+using Json.Pointer;
 
 namespace Json.Schema;
 
-internal static class JsonSerializerOptionsExtensions
+public static class JsonSerializerOptionsExtensions
 {
 	private abstract class ArbitraryDeserializer
 	{
@@ -66,5 +67,14 @@ internal static class JsonSerializerOptionsExtensions
 
 		// AOT-aware callers should not have gotten this far.
 		JsonSerializer.Serialize(writer, value, options);
+	}
+
+	public static JsonSerializerOptions WithJsonSchema(this JsonSerializerOptions options)
+	{
+		if (!options.TryGetTypeInfo(typeof(JsonPointer), out _))
+			options.WithJsonPointer();
+
+		options.TypeInfoResolverChain.Add(JsonSchemaSerializerContext.Default);
+		return options;
 	}
 }

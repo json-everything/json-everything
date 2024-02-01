@@ -69,7 +69,7 @@ public class OptionalDataKeyword : IJsonSchemaKeyword
 		}
 
 		var json = JsonSerializer.Serialize(data, JsonSchemaDataSerializerContext.Default.DictionaryStringJsonNode);
-		var subschema = JsonSerializer.Deserialize(json, JsonSchemaSerializerContext.Default.JsonSchema)!;
+		var subschema = JsonSerializer.Deserialize(json, JsonSchemaDataSerializerContext.Default.JsonSchema)!;
 
 		var schemaEvaluation = subschema
 			.GetConstraint(JsonPointer.Create(Name), evaluation.Results.InstanceLocation, evaluation.Results.InstanceLocation, context)
@@ -127,10 +127,10 @@ public sealed class OptionalDataKeywordJsonConverter : AotCompatibleJsonConverte
 			switch (kvp.Value)
 			{
 				case JsonPointerIdentifier jp:
-					options.Write(writer, jp.Target, JsonPointerSerializerContext.Default.JsonPointer);
+					options.Write(writer, jp.Target, JsonSchemaDataSerializerContext.Default.JsonPointer);
 					break;
 				case RelativeJsonPointerIdentifier rjp:
-					options.Write(writer, rjp.Target, JsonPointerSerializerContext.Default.RelativeJsonPointer);
+					options.Write(writer, rjp.Target, JsonSchemaDataSerializerContext.Default.RelativeJsonPointer);
 					break;
 				case UriIdentifier uri:
 					options.Write(writer, uri.Target, JsonSchemaDataSerializerContext.Default.Uri);

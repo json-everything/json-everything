@@ -1,15 +1,19 @@
+﻿using System.Text.Encodings.Web;
 using System.Text.Json;
 using NUnit.Framework;
 
-namespace Json.Schema.ArrayExt.Tests;
+namespace Json.Schema.OpenApi.Tests;
 
-[SetUpFixture]
 public class TestEnvironment
 {
 	public static readonly JsonSerializerOptions SerializerOptions =
-		new JsonSerializerOptions()
+		new JsonSerializerOptions
+			{
+				WriteIndented = true,
+				Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+			}
 			.WithJsonSchema()
-			.WithArrayExtVocab();
+			.WithOpenApiVocab();
 
 	[OneTimeSetUp]
 	public void Setup()

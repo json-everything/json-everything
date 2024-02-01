@@ -12,7 +12,3 @@ public class TestCollection
 	public List<TestCase> Tests { get; set; }
 	public bool IsOptional { get; set; }
 }
-
-[JsonSerializable(typeof(TestCollection))]
-[JsonSerializable(typeof(List<TestCollection>))]
-public partial class DataTestsSerializerContext : JsonSerializerContext;

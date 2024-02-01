@@ -1,4 +1,3 @@
-using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization.Metadata;
@@ -10,17 +9,10 @@ namespace Json.Schema.CodeGeneration.Tests;
 public static class AssertHelpers
 {
 	private static readonly JsonSerializerOptions _optionsWithReflection =
-		new(JsonSchemaSerializerContext.Default.Options)
+		new JsonSerializerOptions
 		{
 			TypeInfoResolverChain = { new DefaultJsonTypeInfoResolver() }
-		};
-
-	private static readonly JsonSerializerOptions _optionsUnsafeRelaxedJsonEscaping =
-		new(JsonSchemaSerializerContext.Default.Options)
-		{
-			WriteIndented = true,
-			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-		};
+		}.WithJsonSchema();
 
 	public static string VerifyCSharp(JsonSchema schema, string expected, EvaluationOptions? options = null)
 	{
@@ -38,13 +30,13 @@ public static class AssertHelpers
 		Assert.NotNull(assembly, "Could not compile assembly");
 
 		var targetType = assembly!.DefinedTypes.First();
-		var model = JsonSerializer.Deserialize(json, targetType, isReflectionAllowed ? _optionsWithReflection : JsonSchemaSerializerContext.Default.Options);
+		var model = JsonSerializer.Deserialize(json, targetType, isReflectionAllowed ? _optionsWithReflection : TestEnvironment.SerializerOptions);
 		Assert.NotNull(model);
 
 		var node = JsonNode.Parse(json);
-		var returnToNode = JsonSerializer.SerializeToNode(model, isReflectionAllowed ? _optionsWithReflection : JsonSchemaSerializerContext.Default.Options);
+		var returnToNode = JsonSerializer.SerializeToNode(model, isReflectionAllowed ? _optionsWithReflection : TestEnvironment.SerializerOptions);
 
-		Console.WriteLine(returnToNode.AsJsonString(_optionsUnsafeRelaxedJsonEscaping));
+		Console.WriteLine(returnToNode.AsJsonString(TestEnvironment.SerializerOptions));
 		Assert.True(node.IsEquivalentTo(returnToNode));
 	}
 

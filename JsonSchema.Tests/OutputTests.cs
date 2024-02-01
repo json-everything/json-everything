@@ -411,7 +411,7 @@ public class OutputTests
 
 		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
 
-		var serialized = JsonSerializer.Serialize(result, TestEnvironment.SerializerOptionsUnsafeRelaxedEscaping);
+		var serialized = JsonSerializer.Serialize(result, TestEnvironment.TestOutputSerializerOptions);
 		Console.WriteLine(serialized);
 
 		Assert.False(serialized.Contains("additionalProperties"));
@@ -430,7 +430,7 @@ public class OutputTests
 
 		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
 
-		var serialized = JsonSerializer.Serialize(result, TestEnvironment.SerializerOptionsUnsafeRelaxedEscaping);
+		var serialized = JsonSerializer.Serialize(result, TestEnvironment.TestOutputSerializerOptions);
 		Console.WriteLine(serialized);
 
 		Assert.False(serialized.Contains("unevaluatedProperties"));
@@ -454,7 +454,7 @@ public class OutputTests
 
 		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
 
-		var serialized = JsonSerializer.Serialize(result, TestEnvironment.SerializerOptionsUnsafeRelaxedEscaping);
+		var serialized = JsonSerializer.Serialize(result, TestEnvironment.TestOutputSerializerOptions);
 		Console.WriteLine(serialized);
 
 		Assert.True(serialized.Contains("unevaluatedProperties"));
@@ -471,7 +471,7 @@ public class OutputTests
 
 		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
 
-		var serialized = JsonSerializer.Serialize(result, TestEnvironment.SerializerOptionsUnsafeRelaxedEscaping);
+		var serialized = JsonSerializer.Serialize(result, TestEnvironment.TestOutputSerializerOptions);
 		Console.WriteLine(serialized);
 
 		Assert.False(serialized.Contains("additionalItems"));
@@ -489,7 +489,7 @@ public class OutputTests
 
 		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
 
-		var serialized = JsonSerializer.Serialize(result, TestEnvironment.SerializerOptionsUnsafeRelaxedEscaping);
+		var serialized = JsonSerializer.Serialize(result, TestEnvironment.TestOutputSerializerOptions);
 		Console.WriteLine(serialized);
 
 		Assert.False(serialized.Contains("unevaluatedItems"));
@@ -583,20 +583,20 @@ public class OutputTests
 		};
 		var result = schema.Evaluate(failing, validationOptions);
 
-		Console.WriteLine(JsonSerializer.Serialize(result, TestEnvironment.SerializerOptionsUnsafeRelaxedEscaping));
+		Console.WriteLine(JsonSerializer.Serialize(result, TestEnvironment.TestOutputSerializerOptions));
 		Console.WriteLine();
 
 		result.ToList();
-		Console.WriteLine(JsonSerializer.Serialize(result, TestEnvironment.SerializerOptionsUnsafeRelaxedEscaping));
+		Console.WriteLine(JsonSerializer.Serialize(result, TestEnvironment.TestOutputSerializerOptions));
 		Console.WriteLine();
 
 		result = schema.Evaluate(passing, validationOptions);
 
-		Console.WriteLine(JsonSerializer.Serialize(result, TestEnvironment.SerializerOptionsUnsafeRelaxedEscaping));
+		Console.WriteLine(JsonSerializer.Serialize(result, TestEnvironment.TestOutputSerializerOptions));
 		Console.WriteLine();
 
 		result.ToList();
-		Console.WriteLine(JsonSerializer.Serialize(result, TestEnvironment.SerializerOptionsUnsafeRelaxedEscaping));
+		Console.WriteLine(JsonSerializer.Serialize(result, TestEnvironment.TestOutputSerializerOptions));
 	}
 
 	[Test]
@@ -673,7 +673,7 @@ public class OutputTests
 
 		//result.ToBasic();
 
-		Console.WriteLine(JsonSerializer.Serialize(result, TestEnvironment.SerializerOptionsUnsafeRelaxedEscaping));
+		Console.WriteLine(JsonSerializer.Serialize(result, TestEnvironment.TestOutputSerializerOptions));
 	}
 
 	[Test]
@@ -735,9 +735,9 @@ public class OutputTests
 		options.IgnoreAnnotationsFrom<PropertiesKeyword>();
 		var result = schema.Evaluate(instance, options);
 
-		Console.WriteLine(JsonSerializer.Serialize(schema, TestEnvironment.SerializerOptionsUnsafeRelaxedEscaping));
+		Console.WriteLine(JsonSerializer.Serialize(schema, TestEnvironment.TestOutputSerializerOptions));
 		Console.WriteLine();
-		Console.WriteLine(JsonSerializer.Serialize((JsonNode?)instance, TestEnvironment.SerializerOptionsUnsafeRelaxedEscaping));
+		Console.WriteLine(JsonSerializer.Serialize((JsonNode?)instance, TestEnvironment.TestOutputSerializerOptions));
 		Console.WriteLine();
 
 		result.AssertValid(expected);
