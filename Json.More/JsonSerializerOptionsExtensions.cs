@@ -53,7 +53,8 @@ public static class JsonSerializerOptionsExtensions
 	/// <returns>The value that was converted.</returns>
 	public static void Write<T>(this JsonSerializerOptions options, Utf8JsonWriter writer, T? value, JsonTypeInfo<T>? typeInfo)
 	{
-		options.GetConverter<T?>(typeInfo).Write(writer, value, options);
+		((JsonConverter<T>)typeInfo.Converter).Write(writer, value, options);
+		//options.GetConverter<T?>(typeInfo).Write(writer, value, options);
 	}
 
 	/// <summary>

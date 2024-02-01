@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
 
 namespace Json.More
 {
@@ -21,7 +22,8 @@ namespace Json.More
 		/// <param name="writer">The writer to write to.</param>
 		/// <param name="value">The value to convert to JSON.</param>
 		/// <param name="options">An object that specifies serialization options to use.</param>
-		void Write(Utf8JsonWriter writer, object value, JsonSerializerOptions options);
+		/// <param name="typeInfo">The <see cref="JsonTypeInfo"/> for the value being serialized.</param>
+		void Write(Utf8JsonWriter writer, object value, JsonSerializerOptions options, JsonTypeInfo? typeInfo = null);
 	}
 
 	/// <summary>
@@ -35,9 +37,12 @@ namespace Json.More
 			return Read(ref reader, typeToConvert, options);
 		}
 
-		void IJsonConverterReadWrite.Write(Utf8JsonWriter writer, object value, JsonSerializerOptions options)
+		void IJsonConverterReadWrite.Write(Utf8JsonWriter writer, object value, JsonSerializerOptions options, JsonTypeInfo? typeInfo)
 		{
-			Write(writer, (T)value, options);
+			if (typeInfo is null)
+				Write(writer, (T)value, options);
+			else
+				options.Write(writer, (T)value, (JsonTypeInfo<T>)typeInfo);
 		}
 	}
 

@@ -23,11 +23,11 @@ internal static class AssertionExtensions
 	public static void AssertEqual(IJsonSchemaKeyword expected, IJsonSchemaKeyword actual)
 	{
 		Console.WriteLine("Expected");
-		var expectedAsNode = JsonSerializer.SerializeToNode(expected, TestEnvironment.SerializerOptionsWriteIndented);
+		var expectedAsNode = JsonSerializer.SerializeToNode<object?>(expected, TestEnvironment.SerializerOptionsWriteIndented);
 		Console.WriteLine(expectedAsNode);
 		Console.WriteLine();
 		Console.WriteLine("Actual");
-		var actualAsNode = JsonSerializer.SerializeToNode(actual, TestEnvironment.SerializerOptionsWriteIndented);
+		var actualAsNode = JsonSerializer.SerializeToNode<object?>(actual, TestEnvironment.SerializerOptionsWriteIndented);
 		Console.WriteLine(actualAsNode);
 		Assert.That(() => actualAsNode.IsEquivalentTo(expectedAsNode));
 	}

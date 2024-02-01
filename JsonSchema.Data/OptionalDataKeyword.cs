@@ -64,8 +64,8 @@ public class OptionalDataKeyword : IJsonSchemaKeyword
 		var data = new Dictionary<string, JsonNode>();
 		foreach (var reference in References)
 		{
-			reference.Value.TryResolve(evaluation, context.Options.SchemaRegistry, out var resolved);
-			data.Add(reference.Key, resolved!);
+			 if (reference.Value.TryResolve(evaluation, context.Options.SchemaRegistry, out var resolved))
+				data.Add(reference.Key, resolved!);
 		}
 
 		var json = JsonSerializer.Serialize(data, DataExtSerializerContext.Default.DictionaryStringJsonNode);

@@ -172,11 +172,11 @@ public static class SchemaKeywordRegistry
 			: null;
 	}
 
-	internal static JsonTypeInfo? GetTypeInfo(Type ruleType)
+	internal static JsonTypeInfo GetTypeInfo(Type ruleType)
 	{
 		return _keywordTypeInfoResolvers.TryGetValue(ruleType, out var context)
-			? context.GetTypeInfo(ruleType)
-			: JsonSchemaSerializerContext.Default.GetTypeInfo(typeof(UnrecognizedKeyword));
+			? context.GetTypeInfo(ruleType)!
+			: JsonSchemaSerializerContext.Default.GetTypeInfo(typeof(UnrecognizedKeyword))!;
 	}
 
 	/// <summary>

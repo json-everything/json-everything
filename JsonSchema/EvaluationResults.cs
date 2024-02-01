@@ -340,7 +340,7 @@ internal class EvaluationResultsJsonConverter : AotCompatibleJsonConverter<Evalu
 			if (value.HasErrors)
 			{
 				writer.WritePropertyName("errors");
-				options.Write(writer, value.Errors, JsonSchemaSerializerContext.Default.IReadOnlyDictionaryStringString);
+				options.Write(writer, value.Errors!, JsonSchemaSerializerContext.Default.IReadOnlyDictionaryStringString);
 			}
 			if (value is { IncludeDroppedAnnotations: true, AnnotationsToSerialize: not null })
 			{

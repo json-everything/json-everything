@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.Pointer;
@@ -19,7 +20,7 @@ public static class Vocabularies
 	/// <summary>
 	/// The data vocabulary.
 	/// </summary>
-	public static readonly Vocabulary Data = new(DataId, typeof(DataKeyword));
+	public static readonly Vocabulary Data = new(DataId, typeof(DataKeyword), typeof(OptionalDataKeyword));
 
 	/// <summary>
 	/// Registers the all components required to use the data vocabulary.
@@ -36,6 +37,9 @@ public static class Vocabularies
 	}
 }
 
+/// <summary>
+/// 
+/// </summary>
 [JsonSerializable(typeof(DataKeyword))]
 [JsonSerializable(typeof(OptionalDataKeyword))]
 [JsonSerializable(typeof(Dictionary<string, string>))]
@@ -43,4 +47,15 @@ public static class Vocabularies
 [JsonSerializable(typeof(JsonPointer))]
 [JsonSerializable(typeof(RelativeJsonPointer))]
 [JsonSerializable(typeof(Uri))]
-internal partial class DataExtSerializerContext : JsonSerializerContext;
+public partial class DataExtSerializerContext : JsonSerializerContext
+{
+	internal static JsonSerializerOptions CombinedOptions { get; }
+
+	static DataExtSerializerContext()
+	{
+		CombinedOptions = new JsonSerializerOptions
+		{
+			TypeInfoResolverChain = { Default, JsonSchemaSerializerContext.Default }
+		};
+	}
+}

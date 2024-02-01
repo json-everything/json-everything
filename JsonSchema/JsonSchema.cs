@@ -439,7 +439,7 @@ public class JsonSchema : IBaseDocument
 
 			foreach (var keyword in unrecognizedButSupported)
 			{
-				var typeInfo = SchemaKeywordRegistry.GetTypeInfo(keyword.GetType())!;
+				var typeInfo = SchemaKeywordRegistry.GetTypeInfo(keyword.GetType());
 				var jsonText = JsonSerializer.Serialize(keyword, typeInfo);
 				var json = JsonNode.Parse(jsonText);
 				var keywordConstraint = KeywordConstraint.SimpleAnnotation(keyword.Keyword(), json);
@@ -659,7 +659,7 @@ public class JsonSchema : IBaseDocument
 					newResolvable = k;
 					break;
 				default: // non-applicator keyword
-					var typeInfo = SchemaKeywordRegistry.GetTypeInfo(localResolvable.GetType())!;
+					var typeInfo = SchemaKeywordRegistry.GetTypeInfo(localResolvable.GetType());
 					var serialized = JsonSerializer.Serialize(localResolvable, typeInfo);
 					var json = JsonNode.Parse(serialized);
 					var newPointer = JsonPointer.Create(pointer.Segments.Skip(i));
@@ -811,7 +811,10 @@ public sealed class SchemaJsonConverter : AotCompatibleJsonConverter<JsonSchema>
 		foreach (var keyword in value.Keywords!)
 		{
 			writer.WritePropertyName(keyword.Keyword());
-			options.Write(writer, keyword, keyword.GetType());
+
+			var keywordType = keyword.GetType();
+			var typeInfo = SchemaKeywordRegistry.GetTypeInfo(keywordType);
+			options.Write(writer, keyword, typeInfo);
 		}
 
 		writer.WriteEndObject();

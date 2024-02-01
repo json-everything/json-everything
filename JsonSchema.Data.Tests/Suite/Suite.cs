@@ -26,7 +26,12 @@ public class Suite
 	private static readonly JsonSerializerOptions _serializerOptions =
 		new()
 		{
-			TypeInfoResolverChain = { DataTestsSerializerContext.Default, JsonSchemaSerializerContext.Default },
+			TypeInfoResolverChain =
+			{
+				DataTestsSerializerContext.Default,
+				DataExtSerializerContext.Default, 
+				JsonSchemaSerializerContext.Default
+			},
 			PropertyNameCaseInsensitive = true
 		};
 
@@ -94,7 +99,7 @@ public class Suite
 	[TestCaseSource(nameof(TestCases))]
 	public void Test(TestCollection collection, TestCase test, string fileName, EvaluationOptions options)
 	{
-		var serializerOptions = new JsonSerializerOptions(JsonSchemaSerializerContext.Default.Options)
+		var serializerOptions = new JsonSerializerOptions(_serializerOptions)
 		{
 			WriteIndented = true,
 			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
@@ -157,7 +162,7 @@ public class Suite
 	[TestCaseSource(nameof(CoreTestCases))]
 	public void CoreKeywordsAreInvalid(string schemaText)
 	{
-		Assert.Throws<JsonException>(() => JsonSerializer.Deserialize<JsonSchema>(schemaText, JsonSchemaSerializerContext.Default.JsonSchema));
+		Assert.Throws<JsonException>(() => JsonSerializer.Deserialize<JsonSchema>(schemaText, _serializerOptions));
 	}
 
 	[Test]
