@@ -95,7 +95,7 @@ public sealed class ExamplesKeywordJsonConverter : AotCompatibleJsonConverter<Ex
 		writer.WriteStartArray();
 		foreach (var node in value.Values)
 		{
-			options.Write(writer, node, JsonSchemaSerializerContext.Default.JsonNode);
+			options.Write(writer, node!, JsonSchemaSerializerContext.Default.JsonNode);
 		}
 		writer.WriteEndArray();
 	}

@@ -29,7 +29,7 @@ public class Suite
 			TypeInfoResolverChain =
 			{
 				DataTestsSerializerContext.Default,
-				DataExtSerializerContext.Default, 
+				JsonSchemaDataSerializerContext.Default, 
 				JsonSchemaSerializerContext.Default
 			},
 			PropertyNameCaseInsensitive = true

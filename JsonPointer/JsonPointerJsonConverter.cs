@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Text.Json.Serialization.Metadata;
 using Json.More;
 
 namespace Json.Pointer;
@@ -41,7 +40,8 @@ public sealed class JsonPointerJsonConverter : AotCompatibleJsonConverter<JsonPo
 }
 
 /// <summary>
-/// 
+/// A serializer context for this library.
 /// </summary>
 [JsonSerializable(typeof(JsonPointer))]
+[JsonSerializable(typeof(RelativeJsonPointer))]
 public partial class JsonPointerSerializerContext : JsonSerializerContext;

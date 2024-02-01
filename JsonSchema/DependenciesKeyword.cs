@@ -235,6 +235,6 @@ public sealed class SchemaOrPropertyListJsonConverter : AotCompatibleJsonConvert
 		if (value.Schema != null)
 			options.Write(writer, value.Schema, JsonSchemaSerializerContext.Default.JsonSchema);
 		else
-			options.Write(writer, value.Requirements, JsonSchemaSerializerContext.Default.ListString);
+			options.Write(writer, value.Requirements!, JsonSchemaSerializerContext.Default.ListString);
 	}
 }

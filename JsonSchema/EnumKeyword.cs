@@ -116,7 +116,7 @@ public sealed class EnumKeywordJsonConverter : AotCompatibleJsonConverter<EnumKe
 		if (array is null)
 			throw new JsonException("Expected an array, but received null");
 
-		return new EnumKeyword((IEnumerable<JsonNode>)array!);
+		return new EnumKeyword((IEnumerable<JsonNode?>)array);
 	}
 
 	/// <summary>Writes a specified value as JSON.</summary>
@@ -128,7 +128,7 @@ public sealed class EnumKeywordJsonConverter : AotCompatibleJsonConverter<EnumKe
 		writer.WriteStartArray();
 		foreach (var node in value.Values)
 		{
-			options.Write(writer, node, JsonSchemaSerializerContext.Default.JsonNode);
+			options.Write(writer, node!, JsonSchemaSerializerContext.Default.JsonNode);
 		}
 		writer.WriteEndArray();
 	}

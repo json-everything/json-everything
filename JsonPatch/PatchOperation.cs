@@ -206,7 +206,7 @@ internal partial class PatchOperationJsonConverter : JsonConverter<PatchOperatio
 		writer.WriteStartObject();
 
 		writer.WritePropertyName("op");
-		JsonSerializer.Serialize(writer, value.Op, PatchSerializerContext.Default.OperationType);
+		JsonSerializer.Serialize(writer, value.Op, JsonPatchSerializerContext.Default.OperationType);
 
 		writer.WritePropertyName("path");
 		JsonSerializer.Serialize(writer, value.Path, JsonPointerSerializerContext.Default.JsonPointer);
@@ -215,13 +215,13 @@ internal partial class PatchOperationJsonConverter : JsonConverter<PatchOperatio
 		{
 			case OperationType.Add:
 				writer.WritePropertyName("value");
-				JsonSerializer.Serialize(writer, value.Value, PatchSerializerContext.Default.JsonNode!);
+				JsonSerializer.Serialize(writer, value.Value, JsonPatchSerializerContext.Default.JsonNode!);
 				break;
 			case OperationType.Remove:
 				break;
 			case OperationType.Replace:
 				writer.WritePropertyName("value");
-				JsonSerializer.Serialize(writer, value.Value, PatchSerializerContext.Default.JsonNode!);
+				JsonSerializer.Serialize(writer, value.Value, JsonPatchSerializerContext.Default.JsonNode!);
 				break;
 			case OperationType.Move:
 				writer.WritePropertyName("from");
@@ -233,7 +233,7 @@ internal partial class PatchOperationJsonConverter : JsonConverter<PatchOperatio
 				break;
 			case OperationType.Test:
 				writer.WritePropertyName("value");
-				JsonSerializer.Serialize(writer, value.Value, PatchSerializerContext.Default.JsonNode!);
+				JsonSerializer.Serialize(writer, value.Value, JsonPatchSerializerContext.Default.JsonNode!);
 				break;
 			case OperationType.Unknown:
 			default:

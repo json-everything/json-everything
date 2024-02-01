@@ -122,7 +122,7 @@ public sealed class UniqueKeysKeywordJsonConverter : AotCompatibleJsonConverter<
 		if (reader.TokenType != JsonTokenType.StartArray)
 			throw new JsonException("Expected array");
 
-		var references = options.Read(ref reader, ArrayExtSerializerContext.Default.ListJsonPointer)!;
+		var references = options.Read(ref reader, JsonSchemaArrayExtSerializerContext.Default.ListJsonPointer)!;
 		return new UniqueKeysKeyword(references);
 	}
 
@@ -132,6 +132,6 @@ public sealed class UniqueKeysKeywordJsonConverter : AotCompatibleJsonConverter<
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, UniqueKeysKeyword value, JsonSerializerOptions options)
 	{
-		options.Write(writer, value.Keys, ArrayExtSerializerContext.Default.IEnumerableJsonPointer);
+		options.Write(writer, value.Keys, JsonSchemaArrayExtSerializerContext.Default.IEnumerableJsonPointer);
 	}
 }

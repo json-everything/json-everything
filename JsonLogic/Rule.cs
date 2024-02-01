@@ -94,7 +94,7 @@ public class LogicComponentConverter : JsonConverter<Rule>
 	/// <returns>The converted value.</returns>
 	public override Rule Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var node = options.Read(ref reader, LogicSerializerContext.Default.JsonNode);
+		var node = options.Read(ref reader, JsonLogicSerializerContext.Default.JsonNode);
 		Rule rule;
 
 		if (node is JsonObject)
@@ -107,10 +107,8 @@ public class LogicComponentConverter : JsonConverter<Rule>
 			{
 				var (op, args) = data.First();
 
-				var ruleType = RuleRegistry.GetRule(op);
-				if (ruleType == null)
-					throw new JsonException($"Cannot identify rule for {op}");
-
+				var ruleType = RuleRegistry.GetRule(op) ??
+				               throw new JsonException($"Cannot identify rule for {op}");
 				var typeInfo = RuleRegistry.GetTypeInfo(ruleType) ??
 				               options.GetTypeInfo(ruleType) ??
 				               throw new JsonException($"Cannot get JsonTypeInfo for rule type {ruleType}");
@@ -122,7 +120,7 @@ public class LogicComponentConverter : JsonConverter<Rule>
 		}
 		else if (node is JsonArray)
 		{
-			var data = node.Deserialize(LogicSerializerContext.Default.RuleArray)!;
+			var data = node.Deserialize(JsonLogicSerializerContext.Default.RuleArray)!;
 			rule = new RuleCollection(data);
 		}
 		else
@@ -143,7 +141,7 @@ public class LogicComponentConverter : JsonConverter<Rule>
 	{
 		if (value.Source != null)
 		{
-			options.Write(writer, value.Source, LogicSerializerContext.Default.JsonNode);
+			options.Write(writer, value.Source, JsonLogicSerializerContext.Default.JsonNode);
 			return;
 		}
 
@@ -152,7 +150,7 @@ public class LogicComponentConverter : JsonConverter<Rule>
 }
 
 /// <summary>
-/// 
+/// A serializer context for this library.
 /// </summary>
 [JsonSerializable(typeof(AddRule))]
 [JsonSerializable(typeof(AllRule))]
@@ -198,15 +196,4 @@ public class LogicComponentConverter : JsonConverter<Rule>
 [JsonSerializable(typeof(decimal))]
 [JsonSerializable(typeof(bool))]
 [JsonSerializable(typeof(string))]
-public partial class LogicSerializerContext : JsonSerializerContext
-{
-	internal static TypeResolverOptionsManager OptionsManager { get; }
-
-	static LogicSerializerContext()
-	{
-		OptionsManager = new TypeResolverOptionsManager(
-			Default,
-			RuleRegistry.ExternalTypeInfoResolvers
-		);
-	}
-}
+public partial class JsonLogicSerializerContext : JsonSerializerContext;

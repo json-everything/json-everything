@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
-using Json.Pointer;
 
 namespace Json.Schema.Data;
 
@@ -31,27 +30,25 @@ public static class Vocabularies
 		schemaRegistry ??= SchemaRegistry.Global;
 
 		vocabRegistry.Register(Data);
-		SchemaKeywordRegistry.Register<DataKeyword>(DataExtSerializerContext.Default);
+		SchemaKeywordRegistry.Register<DataKeyword>(JsonSchemaDataSerializerContext.Default);
 		schemaRegistry.Register(MetaSchemas.Data);
 		schemaRegistry.Register(MetaSchemas.Data_202012);
 	}
 }
 
 /// <summary>
-/// 
+/// A serializer context for this library.
 /// </summary>
 [JsonSerializable(typeof(DataKeyword))]
 [JsonSerializable(typeof(OptionalDataKeyword))]
 [JsonSerializable(typeof(Dictionary<string, string>))]
 [JsonSerializable(typeof(Dictionary<string, JsonNode>))]
-[JsonSerializable(typeof(JsonPointer))]
-[JsonSerializable(typeof(RelativeJsonPointer))]
 [JsonSerializable(typeof(Uri))]
-public partial class DataExtSerializerContext : JsonSerializerContext
+public partial class JsonSchemaDataSerializerContext : JsonSerializerContext
 {
 	internal static JsonSerializerOptions CombinedOptions { get; }
 
-	static DataExtSerializerContext()
+	static JsonSchemaDataSerializerContext()
 	{
 		CombinedOptions = new JsonSerializerOptions
 		{

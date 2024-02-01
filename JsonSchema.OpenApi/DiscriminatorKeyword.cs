@@ -55,7 +55,7 @@ public class DiscriminatorKeyword : IJsonSchemaKeyword
 		Mapping = mapping;
 		Extensions = extensions;
 
-		_json = JsonSerializer.SerializeToNode(this, OpenApiSerializerContext.Default.JsonNode);
+		_json = JsonSerializer.SerializeToNode(this, JsonSchemaOpenApiSerializerContext.Default.JsonNode);
 	}
 
 	internal DiscriminatorKeyword(string propertyName, IReadOnlyDictionary<string, string>? mapping, IReadOnlyDictionary<string, JsonNode?>? extensions, JsonNode? json)
@@ -88,20 +88,8 @@ public class DiscriminatorKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="DiscriminatorKeyword"/>.
 /// </summary>
-public sealed class DiscriminatorKeywordJsonConverter : AotCompatibleJsonConverter<DiscriminatorKeyword>
+public sealed partial class DiscriminatorKeywordJsonConverter : AotCompatibleJsonConverter<DiscriminatorKeyword>
 {
-	internal class Model
-	{
-#pragma warning disable CS8618
-		// ReSharper disable UnusedAutoPropertyAccessor.Local
-		[JsonPropertyName("propertyName")]
-		public string PropertyName { get; set; }
-#pragma warning restore CS8618
-		[JsonPropertyName("mapping")]
-		public Dictionary<string, string>? Mapping { get; set; }
-		// ReSharper restore UnusedAutoPropertyAccessor.Local
-	}
-
 	/// <summary>Reads and converts the JSON to type <see cref="DiscriminatorKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
 	/// <param name="typeToConvert">The type to convert.</param>
@@ -111,14 +99,15 @@ public sealed class DiscriminatorKeywordJsonConverter : AotCompatibleJsonConvert
 	[UnconditionalSuppressMessage("AOT", "IL3050:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public override DiscriminatorKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var node = options.Read(ref reader, OpenApiSerializerContext.Default.JsonNode);
+		var node = options.Read(ref reader, JsonSchemaOpenApiSerializerContext.Default.JsonNode)!;
 
-		var model = node.Deserialize<Model>(options);
-
-		var extensionData = node!.AsObject().Where(x => x.Key.StartsWith("x-"))
+		var propertyName = node["propertyName"]?.GetValue<string>() ??
+		                   throw new JsonException("'propertyName' is required for the 'discriminator' keyword.");
+		var mapping = node.Deserialize<Dictionary<string, string>>(options);
+		var extensionData = node.AsObject().Where(x => x.Key.StartsWith("x-"))
 			.ToDictionary(x => x.Key, x => x.Value);
 
-		return new DiscriminatorKeyword(model!.PropertyName, model.Mapping, extensionData, node);
+		return new DiscriminatorKeyword(propertyName, mapping, extensionData, node);
 	}
 
 	/// <summary>Writes a specified value as JSON.</summary>
@@ -132,7 +121,7 @@ public sealed class DiscriminatorKeywordJsonConverter : AotCompatibleJsonConvert
 		if (value.Mapping != null)
 		{
 			writer.WritePropertyName("mapping");
-			options.Write(writer, value.Mapping, OpenApiSerializerContext.Default.IReadOnlyDictionaryStringString);
+			options.Write(writer, value.Mapping, JsonSchemaOpenApiSerializerContext.Default.IReadOnlyDictionaryStringString);
 		}
 
 		if (value.Extensions != null)
@@ -140,7 +129,7 @@ public sealed class DiscriminatorKeywordJsonConverter : AotCompatibleJsonConvert
 			foreach (var extension in value.Extensions)
 			{
 				writer.WritePropertyName(extension.Key);
-				options.Write(writer, extension.Value, OpenApiSerializerContext.Default.JsonNode);
+				options.Write(writer, extension.Value, JsonSchemaOpenApiSerializerContext.Default.JsonNode!);
 ;			}
 		}
 		writer.WriteEndObject();

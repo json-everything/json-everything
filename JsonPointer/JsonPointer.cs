@@ -9,7 +9,6 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
-using System.Text.Json.Serialization.Metadata;
 using System.Web;
 using Json.More;
 
@@ -30,12 +29,6 @@ public class JsonPointer : IEquatable<JsonPointer>
 		{
 			Segments = []
 		};
-
-	/// <summary>
-	/// A TypeInfoResolver that can be used for serializing <see cref="JsonPointer"/> objects. Add to your custom
-	/// JsonSerializerOptions's TypeInfoResolver or TypeInfoResolveChain.
-	/// </summary>
-	public static IJsonTypeInfoResolver TypeInfoResolver => JsonPointerSerializerContext.Default;
 
 	private string? _uriEncoded;
 	private string? _plain;

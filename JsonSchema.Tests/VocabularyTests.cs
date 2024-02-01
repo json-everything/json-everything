@@ -410,7 +410,7 @@ public partial class VocabularyTests
 						e.Results.Fail(Name, "minimum is exclusive");
 				});
 				if (minimumConstraint != null)
-					constraint.SiblingDependencies = new[] { minimumConstraint };
+					constraint.SiblingDependencies = [minimumConstraint];
 				return constraint;
 			}
 

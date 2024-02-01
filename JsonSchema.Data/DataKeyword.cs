@@ -99,7 +99,7 @@ public class DataKeyword : IJsonSchemaKeyword
 		if (failedReferences.Count != 0)
 			throw new RefResolutionException(failedReferences.Select(x => x.ToString())!);
 
-		var json = JsonSerializer.Serialize(data, DataExtSerializerContext.Default.DictionaryStringJsonNode);
+		var json = JsonSerializer.Serialize(data, JsonSchemaDataSerializerContext.Default.DictionaryStringJsonNode);
 		var subschema = JsonSerializer.Deserialize(json, JsonSchemaSerializerContext.Default.JsonSchema)!;
 
 		var schemaEvaluation = subschema
@@ -159,7 +159,7 @@ public sealed class DataKeywordJsonConverter : AotCompatibleJsonConverter<DataKe
 		if (reader.TokenType != JsonTokenType.StartObject)
 			throw new JsonException("Expected object");
 
-		var references = options.Read(ref reader, DataExtSerializerContext.Default.DictionaryStringString)!
+		var references = options.Read(ref reader, JsonSchemaDataSerializerContext.Default.DictionaryStringString)!
 			.ToDictionary(kvp => kvp.Key, kvp => JsonSchemaBuilderExtensions.CreateResourceIdentifier(kvp.Value));
 
 		if (references.Keys.Intersect(_coreKeywords).Any())
@@ -181,13 +181,13 @@ public sealed class DataKeywordJsonConverter : AotCompatibleJsonConverter<DataKe
 			switch (kvp.Value)
 			{
 				case JsonPointerIdentifier jp:
-					options.Write(writer, jp.Target, DataExtSerializerContext.Default.JsonPointer);
+					options.Write(writer, jp.Target, JsonPointerSerializerContext.Default.JsonPointer);
 					break;
 				case RelativeJsonPointerIdentifier rjp:
-					options.Write(writer, rjp.Target, DataExtSerializerContext.Default.RelativeJsonPointer);
+					options.Write(writer, rjp.Target, JsonPointerSerializerContext.Default.RelativeJsonPointer);
 					break;
 				case UriIdentifier uri:
-					options.Write(writer, uri.Target, DataExtSerializerContext.Default.Uri);
+					options.Write(writer, uri.Target, JsonSchemaDataSerializerContext.Default.Uri);
 					break;
 			}
 		}

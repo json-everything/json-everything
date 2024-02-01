@@ -16,7 +16,7 @@ public class SingleOpProcessingTests
   { ""op"": ""add"", ""path"": ""/hello"", ""value"": [""world""] },
   { ""op"": ""remove"", ""path"": ""/foo"" }
 ]",
-			PatchSerializerContext.Default.JsonPatch)!;
+			JsonPatchSerializerContext.Default.JsonPatch)!;
 
 		Assert.AreEqual(3, patch.Operations.Count);
 		Assert.AreEqual(OperationType.Replace, patch.Operations[0].Op);
@@ -29,7 +29,7 @@ public class SingleOpProcessingTests
 	{
 		var patch = JsonSerializer.Deserialize<JsonPatch>(
 			"[{ \"op\": \"add\", \"path\": \"/hello\", \"value\": [\"world\"] }]",
-			PatchSerializerContext.Default.JsonPatch)!;
+			JsonPatchSerializerContext.Default.JsonPatch)!;
 
 		var element = JsonNode.Parse("{\"something\":\"added\"}");
 		var expected = JsonNode.Parse("{\"something\":\"added\",\"hello\":[\"world\"]}");
@@ -45,7 +45,7 @@ public class SingleOpProcessingTests
 	{
 		var patch = JsonSerializer.Deserialize<JsonPatch>(
 			"[{ \"op\": \"add\", \"path\": \"/inserted/hello\", \"value\": [\"world\"] }]",
-			PatchSerializerContext.Default.JsonPatch)!;
+			JsonPatchSerializerContext.Default.JsonPatch)!;
 
 		var element = JsonNode.Parse("{\"something\":\"added\",\"inserted\":{}}");
 		var expected = JsonNode.Parse("{\"something\":\"added\",\"inserted\":{\"hello\":[\"world\"]}}");
@@ -63,7 +63,7 @@ public class SingleOpProcessingTests
 	{
 		var patch = JsonSerializer.Deserialize<JsonPatch>(
 			"[{ \"op\": \"add\", \"path\": \"/inserted/hello\", \"value\": [\"world\"] }]",
-			PatchSerializerContext.Default.JsonPatch)!;
+			JsonPatchSerializerContext.Default.JsonPatch)!;
 
 		var element = JsonNode.Parse("{\"something\":\"added\",\"inserted\":{\"hello\":\"replace me\"}}");
 		var expected = JsonNode.Parse("{\"something\":\"added\",\"inserted\":{\"hello\":[\"world\"]}}");
@@ -81,7 +81,7 @@ public class SingleOpProcessingTests
 	{
 		var patch = JsonSerializer.Deserialize<JsonPatch>(
 			"[{ \"op\": \"add\", \"path\": \"/inserted/hello\", \"value\": [\"world\"] }]",
-			PatchSerializerContext.Default.JsonPatch)!;
+			JsonPatchSerializerContext.Default.JsonPatch)!;
 
 		var element = JsonNode.Parse("{\"something\":\"added\",\"insert here\":{}}");
 
@@ -97,7 +97,7 @@ public class SingleOpProcessingTests
 	{
 		var patch = JsonSerializer.Deserialize<JsonPatch>(
 			"[{ \"op\": \"replace\", \"path\": \"/something\", \"value\": \"boo\" }]",
-			PatchSerializerContext.Default.JsonPatch)!;
+			JsonPatchSerializerContext.Default.JsonPatch)!;
 
 		var element = JsonNode.Parse("{\"something\":\"added\"}");
 		var expected = JsonNode.Parse("{\"something\":\"boo\"}");
@@ -119,7 +119,7 @@ public class SingleOpProcessingTests
 	{
 		var patchStr = "[{ \"op\": \"move\", \"path\": \"/Numbers/" + to + "\", \"from\": \"/Numbers/" + from + "\" }]";
 		var patch = JsonSerializer.Deserialize<JsonPatch>(patchStr,
-			PatchSerializerContext.Default.JsonPatch)!;
+			JsonPatchSerializerContext.Default.JsonPatch)!;
 
 		var element = new PatchExtensionTests.TestModel{ Numbers = [1, 2, 3, 4] };
 

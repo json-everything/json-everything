@@ -55,7 +55,7 @@ public class ExternalDocsKeyword : IJsonSchemaKeyword
 		Description = description;
 		Extensions = extensions;
 
-		_json = JsonSerializer.SerializeToNode(this, OpenApiSerializerContext.Default.JsonNode);
+		_json = JsonSerializer.SerializeToNode(this, JsonSchemaOpenApiSerializerContext.Default.JsonNode);
 	}
 	internal ExternalDocsKeyword(Uri url, string? description, IReadOnlyDictionary<string, JsonNode?>? extensions, JsonNode? json)
 		: this(url, description, extensions)
@@ -86,18 +86,6 @@ public class ExternalDocsKeyword : IJsonSchemaKeyword
 /// </summary>
 public sealed class ExternalDocsKeywordJsonConverter : AotCompatibleJsonConverter<ExternalDocsKeyword>
 {
-	internal class Model
-	{
-#pragma warning disable CS8618
-		// ReSharper disable UnusedAutoPropertyAccessor.Local
-		[JsonPropertyName("url")]
-		public Uri Url { get; set; }
-		[JsonPropertyName("description")]
-		public string? Description { get; set; }
-#pragma warning restore CS8618
-		// ReSharper restore UnusedAutoPropertyAccessor.Local
-	}
-
 	/// <summary>Reads and converts the JSON to type <see cref="ExternalDocsKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
 	/// <param name="typeToConvert">The type to convert.</param>
@@ -107,14 +95,15 @@ public sealed class ExternalDocsKeywordJsonConverter : AotCompatibleJsonConverte
 	[UnconditionalSuppressMessage("AOT", "IL3050:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public override ExternalDocsKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var node = options.Read(ref reader, OpenApiSerializerContext.Default.JsonNode);
+		var node = options.Read(ref reader, JsonSchemaOpenApiSerializerContext.Default.JsonNode)!;
 
-		var model = node.Deserialize<Model>(options);
-
+		var url = new Uri(node["url"]?.GetValue<string>() ??
+		                  throw new JsonException("'url' is required for the 'externalDocs' keyword."));
+		var description = node["description"]?.GetValue<string>();
 		var extensionData = node!.AsObject().Where(x => x.Key.StartsWith("x-"))
 			.ToDictionary(x => x.Key, x => x.Value);
 
-		return new ExternalDocsKeyword(model!.Url, model.Description, extensionData, node);
+		return new ExternalDocsKeyword(url, description, extensionData, node);
 	}
 
 	/// <summary>Writes a specified value as JSON.</summary>
@@ -133,7 +122,7 @@ public sealed class ExternalDocsKeywordJsonConverter : AotCompatibleJsonConverte
 			foreach (var extension in value.Extensions)
 			{
 				writer.WritePropertyName(extension.Key);
-				options.Write(writer, extension.Value, OpenApiSerializerContext.Default.JsonNode);
+				options.Write(writer, extension.Value, JsonSchemaOpenApiSerializerContext.Default.JsonNode!);
 			}
 		}
 	}

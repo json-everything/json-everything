@@ -47,7 +47,7 @@ public class SuiteRunner
 	[TestCaseSource(nameof(Suite))]
 	public void Run(Test test)
 	{
-		var rule = JsonSerializer.Deserialize(test.Logic, LogicSerializerContext.Default.Rule);
+		var rule = JsonSerializer.Deserialize(test.Logic, JsonLogicSerializerContext.Default.Rule);
 
 		if (rule == null)
 		{

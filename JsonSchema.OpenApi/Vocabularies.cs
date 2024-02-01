@@ -33,22 +33,22 @@ public static class Vocabularies
 		schemaRegistry ??= SchemaRegistry.Global;
 
 		vocabRegistry.Register(OpenApi);
-		SchemaKeywordRegistry.Register<ExampleKeyword>(OpenApiSerializerContext.Default);
+		SchemaKeywordRegistry.Register<ExampleKeyword>(JsonSchemaOpenApiSerializerContext.Default);
 		SchemaKeywordRegistry.RegisterNullValue(new ExampleKeyword(null));
-		SchemaKeywordRegistry.Register<DiscriminatorKeyword>(OpenApiSerializerContext.Default);
-		SchemaKeywordRegistry.Register<ExternalDocsKeyword>(OpenApiSerializerContext.Default);
-		SchemaKeywordRegistry.Register<XmlKeyword>(OpenApiSerializerContext.Default);
+		SchemaKeywordRegistry.Register<DiscriminatorKeyword>(JsonSchemaOpenApiSerializerContext.Default);
+		SchemaKeywordRegistry.Register<ExternalDocsKeyword>(JsonSchemaOpenApiSerializerContext.Default);
+		SchemaKeywordRegistry.Register<XmlKeyword>(JsonSchemaOpenApiSerializerContext.Default);
 		schemaRegistry.Register(MetaSchemas.OpenApiMeta);
 	}
 }
 
+/// <summary>
+/// A serializer context for this library.
+/// </summary>
 [JsonSerializable(typeof(ExampleKeyword))]
 [JsonSerializable(typeof(DiscriminatorKeyword))]
-[JsonSerializable(typeof(DiscriminatorKeywordJsonConverter.Model), TypeInfoPropertyName = "DiscriminatorModel")]
 [JsonSerializable(typeof(ExternalDocsKeyword))]
-[JsonSerializable(typeof(ExternalDocsKeywordJsonConverter.Model), TypeInfoPropertyName = "ExternalDocsModel")]
 [JsonSerializable(typeof(XmlKeyword))]
-[JsonSerializable(typeof(XmlKeywordJsonConverter.Model), TypeInfoPropertyName = "XmlModel")]
 [JsonSerializable(typeof(JsonNode))]
 [JsonSerializable(typeof(IReadOnlyDictionary<string, string>))]
-internal partial class OpenApiSerializerContext : JsonSerializerContext;
+public partial class JsonSchemaOpenApiSerializerContext : JsonSerializerContext;

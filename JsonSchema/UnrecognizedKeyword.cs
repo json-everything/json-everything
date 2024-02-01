@@ -80,6 +80,6 @@ public sealed class UnrecognizedKeywordJsonConverter : AotCompatibleJsonConverte
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, UnrecognizedKeyword value, JsonSerializerOptions options)
 	{
-		options.Write(writer, value.Value, JsonSchemaSerializerContext.Default.JsonNode);
+		options.Write(writer, value.Value!, JsonSchemaSerializerContext.Default.JsonNode);
 	}
 }

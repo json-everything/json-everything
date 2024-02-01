@@ -62,7 +62,7 @@ public class JsonPatchTestSuite
 				Console.WriteLine(e.StackTrace);
 				if (result != null)
 				{
-					Console.WriteLine(result.Result.AsJsonString(PatchSerializerContext.Default.Options));
+					Console.WriteLine(result.Result.AsJsonString(JsonPatchSerializerContext.Default.Options));
 					Console.WriteLine(result.Error);
 				}
 				if (isOptional)

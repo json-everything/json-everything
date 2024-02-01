@@ -63,7 +63,7 @@ public static class RuleRegistry
 			{ "-", typeof(SubtractRule) },
 			{ "var", typeof(VariableRule) }
 		});
-		_ruleResolvers = new ConcurrentDictionary<Type, JsonSerializerContext>(_rules.Values.Distinct().ToDictionary(x => x, _ => (JsonSerializerContext)LogicSerializerContext.Default));
+		_ruleResolvers = new ConcurrentDictionary<Type, JsonSerializerContext>(_rules.Values.Distinct().ToDictionary(x => x, _ => (JsonSerializerContext)JsonLogicSerializerContext.Default));
 	}
 
 	/// <summary>
@@ -129,8 +129,6 @@ public static class RuleRegistry
 		}
 
 		_ruleResolvers[type] = typeContext;
-
-		LogicSerializerContext.OptionsManager.RebuildTypeResolver(ExternalTypeInfoResolvers);
 	}
 
 	internal static JsonTypeInfo? GetTypeInfo(Type ruleType)

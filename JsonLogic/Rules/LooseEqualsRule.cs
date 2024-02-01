@@ -56,7 +56,7 @@ internal class LooseEqualsRuleJsonConverter : AotCompatibleJsonConverter<LooseEq
 {
 	public override LooseEqualsRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = options.Read(ref reader, LogicSerializerContext.Default.RuleArray);
+		var parameters = options.Read(ref reader, JsonLogicSerializerContext.Default.RuleArray);
 
 		if (parameters is not { Length: 2 })
 			throw new JsonException("The == rule needs an array with 2 parameters.");

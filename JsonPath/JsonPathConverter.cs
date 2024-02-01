@@ -30,5 +30,8 @@ public class JsonPathConverter : JsonConverter<JsonPath>
 	}
 }
 
+/// <summary>
+/// A serializer context for this library.
+/// </summary>
 [JsonSerializable(typeof(JsonPath))]
-internal partial class JsonPathSerializerContext : JsonSerializerContext;
+public partial class JsonPathSerializerContext : JsonSerializerContext;

@@ -89,7 +89,7 @@ public class XmlKeyword : IJsonSchemaKeyword
 		Wrapped = wrapped;
 		Extensions = extensions;
 
-		_json = JsonSerializer.SerializeToNode(this, OpenApiSerializerContext.Default.JsonNode);
+		_json = JsonSerializer.SerializeToNode(this, JsonSchemaOpenApiSerializerContext.Default.JsonNode);
 	}
 
 	internal XmlKeyword(Uri? @namespace, string? name, string? prefix, bool? attribute, bool? wrapped, IReadOnlyDictionary<string, JsonNode?>? extensions, JsonNode? json)
@@ -121,22 +121,6 @@ public class XmlKeyword : IJsonSchemaKeyword
 /// </summary>
 public sealed class XmlKeywordJsonConverter : AotCompatibleJsonConverter<XmlKeyword>
 {
-	// ReSharper disable UnusedAutoPropertyAccessor.Local
-	internal class Model
-	{
-		[JsonPropertyName("namespace")]
-		public Uri? Namespace { get; set; }
-		[JsonPropertyName("name")]
-		public string? Name { get; set; }
-		[JsonPropertyName("prefix")]
-		public string? Prefix { get; set; }
-		[JsonPropertyName("attribute")]
-		public bool? Attribute { get; set; }
-		[JsonPropertyName("wrapped")]
-		public bool? Wrapped { get; set; }
-	}
-	// ReSharper restore UnusedAutoPropertyAccessor.Local
-
 	/// <summary>Reads and converts the JSON to type <see cref="XmlKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
 	/// <param name="typeToConvert">The type to convert.</param>
@@ -146,14 +130,20 @@ public sealed class XmlKeywordJsonConverter : AotCompatibleJsonConverter<XmlKeyw
 	[UnconditionalSuppressMessage("AOT", "IL3050:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public override XmlKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var node = options.Read(ref reader, OpenApiSerializerContext.Default.JsonNode);
+		var node = options.Read(ref reader, JsonSchemaOpenApiSerializerContext.Default.JsonNode)!;
 
-		var model = node.Deserialize<Model>(options);
-
+		var namespcText = node["namespace"]?.GetValue<string>();
+		var namespc = namespcText is null ? null : new Uri(namespcText);
+		var name = node["name"]?.GetValue<string>();
+		var prefix = node["prefix"]?.GetValue<string>();
+		bool? attribute = null;
+		node["attribute"]?.AsValue().TryGetValue(out attribute);
+		bool? wrapped = null;
+		node["wrapped"]?.AsValue().TryGetValue(out wrapped);
 		var extensionData = node!.AsObject().Where(x => x.Key.StartsWith("x-"))
 			.ToDictionary(x => x.Key, x => x.Value);
 
-		return new XmlKeyword(model!.Namespace, model.Name, model.Prefix, model.Attribute, model.Wrapped, extensionData, node);
+		return new XmlKeyword(namespc, name, prefix, attribute, wrapped, extensionData, node);
 	}
 
 	/// <summary>Writes a specified value as JSON.</summary>
@@ -179,7 +169,7 @@ public sealed class XmlKeywordJsonConverter : AotCompatibleJsonConverter<XmlKeyw
 			foreach (var extension in value.Extensions)
 			{
 				writer.WritePropertyName(extension.Key);
-				options.Write(writer, extension.Value, OpenApiSerializerContext.Default.JsonNode);
+				options.Write(writer, extension.Value, JsonSchemaOpenApiSerializerContext.Default.JsonNode!);
 			}
 		}
 	}

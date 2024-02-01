@@ -97,7 +97,7 @@ public class PatchJsonConverter : AotCompatibleJsonConverter<JsonPatch>
 	/// <returns>The converted value.</returns>
 	public override JsonPatch Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var operations = JsonSerializer.Deserialize(ref reader, PatchSerializerContext.Default.ListPatchOperation)!;
+		var operations = JsonSerializer.Deserialize(ref reader, JsonPatchSerializerContext.Default.ListPatchOperation)!;
 
 		return new JsonPatch(operations);
 	}
@@ -115,7 +115,7 @@ public class PatchJsonConverter : AotCompatibleJsonConverter<JsonPatch>
 }
 
 /// <summary>
-/// 
+/// A serializer context for this library.
 /// </summary>
 [JsonSerializable(typeof(JsonPatch))]
 [JsonSerializable(typeof(PatchOperation))]
@@ -124,4 +124,4 @@ public class PatchJsonConverter : AotCompatibleJsonConverter<JsonPatch>
 [JsonSerializable(typeof(JsonNode))]
 [JsonSerializable(typeof(List<PatchOperation>))]
 [JsonSerializable(typeof(IReadOnlyList<PatchOperation>))]
-public partial class PatchSerializerContext : JsonSerializerContext;
+public partial class JsonPatchSerializerContext : JsonSerializerContext;

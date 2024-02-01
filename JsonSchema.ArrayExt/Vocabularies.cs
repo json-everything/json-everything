@@ -28,13 +28,16 @@ public static class Vocabularies
 		schemaRegistry ??= SchemaRegistry.Global;
 
 		vocabRegistry.Register(ArrayExt);
-		SchemaKeywordRegistry.Register<UniqueKeysKeyword>(ArrayExtSerializerContext.Default);
-		SchemaKeywordRegistry.Register<OrderingKeyword>(ArrayExtSerializerContext.Default);
+		SchemaKeywordRegistry.Register<UniqueKeysKeyword>(JsonSchemaArrayExtSerializerContext.Default);
+		SchemaKeywordRegistry.Register<OrderingKeyword>(JsonSchemaArrayExtSerializerContext.Default);
 		schemaRegistry.Register(MetaSchemas.ArrayExt);
 		schemaRegistry.Register(MetaSchemas.ArrayExt_202012);
 	}
 }
 
+/// <summary>
+/// A serializer context for this library.
+/// </summary>
 [JsonSerializable(typeof(UniqueKeysKeyword))]
 [JsonSerializable(typeof(OrderingKeyword))]
 [JsonSerializable(typeof(IEnumerable<JsonPointer>))]
@@ -42,4 +45,4 @@ public static class Vocabularies
 [JsonSerializable(typeof(IEnumerable<OrderingSpecifier>))]
 [JsonSerializable(typeof(List<OrderingSpecifier>))]
 [JsonSerializable(typeof(int))]
-internal partial class ArrayExtSerializerContext : JsonSerializerContext;
+public partial class JsonSchemaArrayExtSerializerContext : JsonSerializerContext;

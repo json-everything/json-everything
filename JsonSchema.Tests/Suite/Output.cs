@@ -23,10 +23,10 @@ public class Output
 	private static readonly JsonConverter<EvaluationResults> _legacyResultsConverter = new Pre202012EvaluationResultsJsonConverter();
 
 	private static readonly SpecVersion[] _unsupportedVersions =
-	{
+	[
 		SpecVersion.Draft201909,
 		SpecVersion.Draft202012
-	};
+	];
 
 	public static IEnumerable<TestCaseData> TestCases()
 	{

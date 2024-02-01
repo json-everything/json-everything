@@ -6,7 +6,7 @@ using System.Text.Json.Serialization;
 namespace Json.Schema;
 
 /// <summary>
-/// 
+/// A serializer context for this library.
 /// </summary>
 [JsonSerializable(typeof(JsonSchema))]
 [JsonSerializable(typeof(AdditionalItemsKeyword))]
