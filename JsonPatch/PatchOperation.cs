@@ -147,7 +147,7 @@ public class PatchOperation : IEquatable<PatchOperation>
 	}
 }
 
-internal class PatchOperationJsonConverter : JsonConverter<PatchOperation>
+internal partial class PatchOperationJsonConverter : JsonConverter<PatchOperation>
 {
 	internal class Model
 	{
@@ -161,9 +161,12 @@ internal class PatchOperationJsonConverter : JsonConverter<PatchOperation>
 		public JsonElement Value { get; set; }
 	}
 
+	[JsonSerializable(typeof(Model))]
+	internal partial class InternalPatchOperationContext : JsonSerializerContext;
+
 	public override PatchOperation Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var model = JsonSerializer.Deserialize(ref reader, PatchSerializerContext.Default.Model)!;
+		var model = JsonSerializer.Deserialize(ref reader, InternalPatchOperationContext.Default.Model)!;
 
 		if (model.Path == null)
 			throw new JsonException($"`{model.Op}` operation requires `path`");
@@ -206,7 +209,7 @@ internal class PatchOperationJsonConverter : JsonConverter<PatchOperation>
 		JsonSerializer.Serialize(writer, value.Op, PatchSerializerContext.Default.OperationType);
 
 		writer.WritePropertyName("path");
-		JsonSerializer.Serialize(writer, value.Path, PatchSerializerContext.Default.JsonPointer);
+		JsonSerializer.Serialize(writer, value.Path, JsonPointerSerializerContext.Default.JsonPointer);
 
 		switch (value.Op)
 		{
@@ -222,11 +225,11 @@ internal class PatchOperationJsonConverter : JsonConverter<PatchOperation>
 				break;
 			case OperationType.Move:
 				writer.WritePropertyName("from");
-				JsonSerializer.Serialize(writer, value.From, PatchSerializerContext.Default.JsonPointer);
+				JsonSerializer.Serialize(writer, value.From, JsonPointerSerializerContext.Default.JsonPointer);
 				break;
 			case OperationType.Copy:
 				writer.WritePropertyName("from");
-				JsonSerializer.Serialize(writer, value.From, PatchSerializerContext.Default.JsonPointer);
+				JsonSerializer.Serialize(writer, value.From, JsonPointerSerializerContext.Default.JsonPointer);
 				break;
 			case OperationType.Test:
 				writer.WritePropertyName("value");

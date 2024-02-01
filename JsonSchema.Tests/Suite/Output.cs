@@ -7,7 +7,6 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.More;
-using Json.Schema.Tests.Serialization;
 using NUnit.Framework;
 
 namespace Json.Schema.Tests.Suite;
@@ -80,11 +79,7 @@ public class Output
 											  shortFileName != "uri-template";
 
 			var contents = File.ReadAllText(fileName);
-			var serializerOptions = new JsonSerializerOptions(TestEnvironment.SerializerOptions)
-			{
-				PropertyNameCaseInsensitive = true
-			};
-			var collections = JsonSerializer.Deserialize<List<TestCollection>>(contents, serializerOptions);
+			var collections = JsonSerializer.Deserialize<List<TestCollection>>(contents, TestEnvironment.TestSuiteSerializationOptions);
 
 			foreach (var collection in collections!)
 			{
@@ -199,11 +194,3 @@ public class Output
 		//Assert.IsFalse(_runDraftNext);
 	}
 }
-
-[JsonSerializable(typeof(TestCollection))]
-[JsonSerializable(typeof(List<TestCollection>))]
-[JsonSerializable(typeof(JsonObject))]
-[JsonSerializable(typeof(System.Drawing.Point))]
-[JsonSerializable(typeof(DeserializationTests.Foo))]
-[JsonSerializable(typeof(DeserializationTests.FooWithSchema))]
-internal partial class TestSerializerContext : JsonSerializerContext;

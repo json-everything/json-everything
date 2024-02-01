@@ -91,12 +91,6 @@ public class JsonSchema : IBaseDocument
 	internal Dictionary<string, (JsonSchema Schema, bool IsDynamic)> Anchors { get; } = [];
 	internal JsonSchema? RecursiveAnchor { get; set; }
 
-	/// <summary>
-	/// A TypeInfoResolver that can be used for serializing JsonSchema objects. Add to your custom
-	/// JsonSerializerOptions's TypeInfoResolver or TypeInfoResolveChain.
-	/// </summary>
-	public static IJsonTypeInfoResolver TypeInfoResolver => JsonSchemaSerializerContext.OptionsManager.TypeInfoResolver;
-
 	private JsonSchema(bool value)
 	{
 		BoolValue = value;
@@ -171,11 +165,9 @@ public class JsonSchema : IBaseDocument
 	/// <param name="jsonText">The text to parse.</param>
 	/// <returns>A new <see cref="JsonSchema"/>.</returns>
 	/// <exception cref="JsonException">Could not deserialize a portion of the schema.</exception>
-	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
-	[UnconditionalSuppressMessage("AOT", "IL3050:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public static JsonSchema FromText(string jsonText)
 	{
-		return JsonSerializer.Deserialize<JsonSchema>(jsonText, JsonSchemaSerializerContext.OptionsManager.SerializerOptions)!;
+		return JsonSerializer.Deserialize(jsonText, JsonSchemaSerializerContext.Default.JsonSchema)!;
 	}
 
 	/// <summary>
@@ -447,7 +439,8 @@ public class JsonSchema : IBaseDocument
 
 			foreach (var keyword in unrecognizedButSupported)
 			{
-				var jsonText = JsonSerializer.Serialize(keyword, keyword.GetType(), JsonSchemaSerializerContext.OptionsManager.SerializerOptions);
+				var typeInfo = SchemaKeywordRegistry.GetTypeInfo(keyword.GetType())!;
+				var jsonText = JsonSerializer.Serialize(keyword, typeInfo);
 				var json = JsonNode.Parse(jsonText);
 				var keywordConstraint = KeywordConstraint.SimpleAnnotation(keyword.Keyword(), json);
 				localConstraints.Add(keywordConstraint);
@@ -666,7 +659,8 @@ public class JsonSchema : IBaseDocument
 					newResolvable = k;
 					break;
 				default: // non-applicator keyword
-					var serialized = JsonSerializer.Serialize(localResolvable, localResolvable.GetType(), JsonSchemaSerializerContext.OptionsManager.SerializerOptions);
+					var typeInfo = SchemaKeywordRegistry.GetTypeInfo(localResolvable.GetType())!;
+					var serialized = JsonSerializer.Serialize(localResolvable, typeInfo);
 					var json = JsonNode.Parse(serialized);
 					var newPointer = JsonPointer.Create(pointer.Segments.Skip(i));
 					i += newPointer.Segments.Length - 1;
@@ -776,8 +770,11 @@ public sealed class SchemaJsonConverter : AotCompatibleJsonConverter<JsonSchema>
 						implementation = SchemaKeywordRegistry.GetNullValuedKeyword(keywordType) ??
 										 throw new InvalidOperationException($"No null instance registered for keyword `{keyword}`");
 					else
-						implementation = options.Read(ref reader, keywordType) as IJsonSchemaKeyword ??
-								throw new InvalidOperationException($"Could not deserialize expected keyword `{keyword}`");
+					{
+						var typeInfo = SchemaKeywordRegistry.GetTypeInfo(keywordType);
+						implementation = options.Read(ref reader, keywordType, typeInfo) as IJsonSchemaKeyword ??
+					                  throw new InvalidOperationException($"Could not deserialize expected keyword `{keyword}`");
+					}
 					keywords.Add(implementation);
 					break;
 				case JsonTokenType.EndObject:

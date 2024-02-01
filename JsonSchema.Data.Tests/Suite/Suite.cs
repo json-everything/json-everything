@@ -23,6 +23,13 @@ public class Suite
 	private const string _externalRemoteSchemasPath = _externalTestCasesPath + "/external-sources";
 	private const string _externalCoreSchemasPath = _externalTestCasesPath + "/core";
 
+	private static readonly JsonSerializerOptions _serializerOptions =
+		new()
+		{
+			TypeInfoResolverChain = { DataTestsSerializerContext.Default, JsonSchemaSerializerContext.Default },
+			PropertyNameCaseInsensitive = true
+		};
+
 	public static IEnumerable<TestCaseData> TestCases()
 	{
 		// ReSharper disable once HeuristicUnreachableCode
@@ -43,10 +50,7 @@ public class Suite
 		{
 			var shortFileName = System.IO.Path.GetFileNameWithoutExtension(fileName);
 			var contents = File.ReadAllText(fileName);
-			var collections = JsonSerializer.Deserialize<List<TestCollection>>(contents, new JsonSerializerOptions(DataTestsSerializerContext.OptionsManager.SerializerOptions)
-			{
-				PropertyNameCaseInsensitive = true
-			});
+			var collections = JsonSerializer.Deserialize<List<TestCollection>>(contents, _serializerOptions);
 
 			foreach (var collection in collections!)
 			{
@@ -90,7 +94,7 @@ public class Suite
 	[TestCaseSource(nameof(TestCases))]
 	public void Test(TestCollection collection, TestCase test, string fileName, EvaluationOptions options)
 	{
-		var serializerOptions = new JsonSerializerOptions(DataTestsSerializerContext.OptionsManager.SerializerOptions)
+		var serializerOptions = new JsonSerializerOptions(JsonSchemaSerializerContext.Default.Options)
 		{
 			WriteIndented = true,
 			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
@@ -108,7 +112,7 @@ public class Suite
 		Console.WriteLine();
 		Console.WriteLine(JsonSerializer.Serialize(collection.Schema, serializerOptions));
 		Console.WriteLine();
-		Console.WriteLine(test.Data.AsJsonString(DataTestsSerializerContext.OptionsManager.SerializerOptions));
+		Console.WriteLine(test.Data.AsJsonString(JsonSchemaSerializerContext.Default.Options));
 		Console.WriteLine();
 
 		if (test.Error)
@@ -153,7 +157,7 @@ public class Suite
 	[TestCaseSource(nameof(CoreTestCases))]
 	public void CoreKeywordsAreInvalid(string schemaText)
 	{
-		Assert.Throws<JsonException>(() => JsonSerializer.Deserialize<JsonSchema>(schemaText, DataTestsSerializerContext.OptionsManager.SerializerOptions));
+		Assert.Throws<JsonException>(() => JsonSerializer.Deserialize<JsonSchema>(schemaText, JsonSchemaSerializerContext.Default.JsonSchema));
 	}
 
 	[Test]

@@ -9,9 +9,18 @@ namespace Json.Schema.DataGeneration.Tests;
 
 public static class TestHelpers
 {
-	public static readonly JsonSerializerOptions SerializerOptions = new()
+	public static readonly JsonSerializerOptions DataGenSerializerOptions =
+		new(DataGenerationTestsSerializerContext.Default.Options)
 	{
-		TypeInfoResolverChain = { DataGenerationTestsSerializerContext.Default, JsonSchema.TypeInfoResolver },
+		WriteIndented = true,
+		Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+	};
+
+	public static readonly JsonSerializerOptions SchemaSerializerOptions =
+		new(JsonSchemaSerializerContext.Default.Options)
+	{
+		WriteIndented = true,
+		Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
 	};
 
 	public static void Run(JsonSchema schema, EvaluationOptions? options = null)
@@ -21,19 +30,9 @@ public static class TestHelpers
 		options ??= EvaluationOptions.Default;
 
 		Assert.IsTrue(result.IsSuccess, "failed generation");
-		Console.WriteLine(JsonSerializer.Serialize(result.Result,
-			new JsonSerializerOptions(SerializerOptions)
-			{
-				WriteIndented = true,
-				Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-			}));
+		Console.WriteLine(JsonSerializer.Serialize(result.Result, DataGenSerializerOptions));
 		var validation = schema.Evaluate(result.Result, options);
-		Console.WriteLine(JsonSerializer.Serialize(validation,
-			new JsonSerializerOptions(SerializerOptions)
-			{
-				WriteIndented = true,
-				Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-			}));
+		Console.WriteLine(JsonSerializer.Serialize(validation, SchemaSerializerOptions));
 		Assert.IsTrue(validation.IsValid, "failed validation");
 	}
 
@@ -43,12 +42,7 @@ public static class TestHelpers
 
 		Console.WriteLine(result.ErrorMessage);
 		if (result.IsSuccess)
-			Console.WriteLine(JsonSerializer.Serialize(result.Result,
-				new JsonSerializerOptions(SerializerOptions)
-				{
-					WriteIndented = true,
-					Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-				}));
+			Console.WriteLine(JsonSerializer.Serialize(result.Result, DataGenSerializerOptions));
 		Assert.IsFalse(result.IsSuccess, "generation succeeded");
 	}
 

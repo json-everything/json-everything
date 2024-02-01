@@ -25,10 +25,10 @@ public static class SchemaKeywordRegistry
 	private static readonly ConcurrentDictionary<Type, IJsonSchemaKeyword> _nullKeywords;
 	// This maps external types to their TypeInfoResolvers. Built-in keywords don't need this as we already have them
 	// in our default JsonSerializerContext.
-	private static readonly ConcurrentDictionary<Type, JsonSerializerContext> _externalKeywordTypeInfoResolvers = new();
+	private static readonly ConcurrentDictionary<Type, JsonSerializerContext> _keywordTypeInfoResolvers;
 
 	// ReSharper disable once CoVariantArrayConversion
-	internal static IJsonTypeInfoResolver[] ExternalTypeInfoResolvers => _externalKeywordTypeInfoResolvers.Values.Distinct().ToArray();
+	internal static IJsonTypeInfoResolver[] ExternalTypeInfoResolvers => _keywordTypeInfoResolvers.Values.Distinct().ToArray();
 
 	internal static IEnumerable<Type> KeywordTypes => _keywords.Values;
 
@@ -102,6 +102,7 @@ public static class SchemaKeywordRegistry
 		};
 
 		_keywords = new ConcurrentDictionary<string, Type>(keywordData.ToDictionary(x => x.Item2, x => x.Item1));
+		_keywordTypeInfoResolvers = new ConcurrentDictionary<Type, JsonSerializerContext>(keywordData.ToDictionary(x => x.Item1, _ => (JsonSerializerContext)JsonSchemaSerializerContext.Default));
 
 		using var document = JsonDocument.Parse("null");
 		_nullKeywords = new ConcurrentDictionary<Type, IJsonSchemaKeyword>
@@ -142,9 +143,7 @@ public static class SchemaKeywordRegistry
 			throw new ArgumentException("Keyword Converter must implement IJsonConverterReadWrite or AotCompatibleJsonConverter to be AOT compatible");
 
 		_keywords[keyword.Name] = typeof(T);
-		_externalKeywordTypeInfoResolvers[typeof(T)] = typeContext;
-
-		JsonSchemaSerializerContext.OptionsManager.RebuildTypeResolver(ExternalTypeInfoResolvers);
+		_keywordTypeInfoResolvers[typeof(T)] = typeContext;
 	}
 
 	/// <summary>
@@ -158,7 +157,7 @@ public static class SchemaKeywordRegistry
 		              throw new ArgumentException($"Keyword implementation `{typeof(T).Name}` does not carry `{nameof(SchemaKeywordAttribute)}`");
 
 		_keywords.TryRemove(keyword.Name, out _);
-		_externalKeywordTypeInfoResolvers.TryRemove(typeof(T), out _);
+		_keywordTypeInfoResolvers.TryRemove(typeof(T), out _);
 	}
 
 	/// <summary>
@@ -171,6 +170,13 @@ public static class SchemaKeywordRegistry
 		return _keywords.TryGetValue(keyword, out var implementationType)
 			? implementationType
 			: null;
+	}
+
+	internal static JsonTypeInfo? GetTypeInfo(Type ruleType)
+	{
+		return _keywordTypeInfoResolvers.TryGetValue(ruleType, out var context)
+			? context.GetTypeInfo(ruleType)
+			: JsonSchemaSerializerContext.Default.GetTypeInfo(typeof(UnrecognizedKeyword));
 	}
 
 	/// <summary>

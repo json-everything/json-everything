@@ -17,10 +17,10 @@ namespace Json.Logic;
 public static class RuleRegistry
 {
 	private static readonly ConcurrentDictionary<string, Type> _rules;
-	private static readonly ConcurrentDictionary<Type, JsonSerializerContext> _externalRuleResolvers = new();
+	private static readonly ConcurrentDictionary<Type, JsonSerializerContext> _ruleResolvers;
 
 	// ReSharper disable once CoVariantArrayConversion
-	internal static IJsonTypeInfoResolver[] ExternalTypeInfoResolvers => _externalRuleResolvers.Values.Distinct().ToArray();
+	internal static IJsonTypeInfoResolver[] ExternalTypeInfoResolvers => _ruleResolvers.Values.Distinct().ToArray();
 
 	static RuleRegistry()
 	{
@@ -63,6 +63,7 @@ public static class RuleRegistry
 			{ "-", typeof(SubtractRule) },
 			{ "var", typeof(VariableRule) }
 		});
+		_ruleResolvers = new ConcurrentDictionary<Type, JsonSerializerContext>(_rules.Values.Distinct().ToDictionary(x => x, _ => (JsonSerializerContext)LogicSerializerContext.Default));
 	}
 
 	/// <summary>
@@ -127,8 +128,13 @@ public static class RuleRegistry
 			_rules[name] = type;
 		}
 
-		_externalRuleResolvers[type] = typeContext;
+		_ruleResolvers[type] = typeContext;
 
 		LogicSerializerContext.OptionsManager.RebuildTypeResolver(ExternalTypeInfoResolvers);
+	}
+
+	internal static JsonTypeInfo? GetTypeInfo(Type ruleType)
+	{
+		return _ruleResolvers.TryGetValue(ruleType, out var context) ? context.GetTypeInfo(ruleType) : null;
 	}
 }

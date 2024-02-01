@@ -111,7 +111,9 @@ public class LogicComponentConverter : JsonConverter<Rule>
 				if (ruleType == null)
 					throw new JsonException($"Cannot identify rule for {op}");
 
-				var typeInfo = LogicSerializerContext.OptionsManager.SerializerOptions.GetTypeInfo(ruleType);
+				var typeInfo = RuleRegistry.GetTypeInfo(ruleType) ??
+				               options.GetTypeInfo(ruleType) ??
+				               throw new JsonException($"Cannot get JsonTypeInfo for rule type {ruleType}");
 
 				rule = args is null
 					? (Rule)JsonSerializer.Deserialize("[]", typeInfo)!

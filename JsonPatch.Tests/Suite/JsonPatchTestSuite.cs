@@ -26,7 +26,7 @@ public class JsonPatchTestSuite
 		foreach (var fileName in fileNames)
 		{
 			var contents = File.ReadAllText(fileName);
-			var suite = JsonSerializer.Deserialize<JsonPatchTest[]>(contents, TestSerializerContext.OptionsManager.SerializerOptions)!;
+			var suite = JsonSerializer.Deserialize<JsonPatchTest[]>(contents, TestSerializerContext.Default.JsonPatchTestArray)!;
 
 			foreach (var test in suite.Where(t => t != null!))
 			{
@@ -57,12 +57,12 @@ public class JsonPatchTestSuite
 			{
 				Console.WriteLine();
 				Console.WriteLine(fileName);
-				Console.WriteLine(JsonSerializer.Serialize(test, TestSerializerContext.OptionsManager.SerializerOptions));
+				Console.WriteLine(JsonSerializer.Serialize(test, TestSerializerContext.Default.JsonPatchTest));
 				Console.WriteLine(e.Message);
 				Console.WriteLine(e.StackTrace);
 				if (result != null)
 				{
-					Console.WriteLine(result.Result.AsJsonString(TestSerializerContext.OptionsManager.SerializerOptions));
+					Console.WriteLine(result.Result.AsJsonString(PatchSerializerContext.Default.Options));
 					Console.WriteLine(result.Error);
 				}
 				if (isOptional)

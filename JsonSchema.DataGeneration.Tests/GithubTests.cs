@@ -54,7 +54,7 @@ internal class GithubTests
 			var sampleData = generationResult.Result;
 
 			Console.WriteLine("Generated data result: " + sampleData);
-			Console.WriteLine(JsonSerializer.Serialize(generationResult, new JsonSerializerOptions(TestHelpers.SerializerOptions)
+			Console.WriteLine(JsonSerializer.Serialize(generationResult, new JsonSerializerOptions(DataGenerationTestsSerializerContext.Default.Options)
 			{
 				WriteIndented = true,
 				Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping

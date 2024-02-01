@@ -55,7 +55,7 @@ public class ContentSchemaKeyword : IJsonSchemaKeyword, ISchemaContainer
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		EvaluationContext context)
 	{
-		return KeywordConstraint.SimpleAnnotation(Name, JsonSerializer.SerializeToNode(Schema, JsonSchemaSerializerContext.OptionsManager.SerializerOptions));
+		return KeywordConstraint.SimpleAnnotation(Name, JsonSerializer.SerializeToNode(Schema, JsonSchemaSerializerContext.Default.JsonSchema));
 	}
 }
 

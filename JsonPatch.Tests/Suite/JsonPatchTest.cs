@@ -128,7 +128,7 @@ public class JsonPatchTestJsonConverter : AotCompatibleJsonConverter<JsonPatchTe
 				};
 			}
 
-			Console.WriteLine(JsonSerializer.Serialize(results, TestSerializerContext.OptionsManager.SerializerOptions));
+			Console.WriteLine(JsonSerializer.Serialize(results, JsonSchemaSerializerContext.Default.EvaluationResults));
 			return null;
 		}
 		catch (Exception e) when(e is JsonException or ArgumentException)
@@ -150,7 +150,7 @@ public class JsonPatchTestJsonConverter : AotCompatibleJsonConverter<JsonPatchTe
 		if (value.HasExpectedValue)
 		{
 			writer.WritePropertyName("expected");
-			options.Write(writer, value.ExpectedValue, TestSerializerContext.Default.JsonNode);
+			options.Write(writer, value.ExpectedValue, PatchSerializerContext.Default.JsonNode);
 		}
 		if (value.Error != null)
 			writer.WriteString("error", value.Error);
@@ -159,7 +159,7 @@ public class JsonPatchTestJsonConverter : AotCompatibleJsonConverter<JsonPatchTe
 		if (value.Patch != null)
 		{
 			writer.WritePropertyName("patch");
-			options.Write(writer, value.Patch, TestSerializerContext.Default.JsonPatch);
+			options.Write(writer, value.Patch, PatchSerializerContext.Default.JsonPatch);
 		}
 		if (value.Disabled)
 			writer.WriteBoolean("disabled", value.Disabled);

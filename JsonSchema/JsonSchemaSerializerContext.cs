@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
-using Json.More;
-using Json.Pointer;
 
 namespace Json.Schema;
 
+/// <summary>
+/// 
+/// </summary>
 [JsonSerializable(typeof(JsonSchema))]
 [JsonSerializable(typeof(AdditionalItemsKeyword))]
 [JsonSerializable(typeof(AdditionalPropertiesKeyword))]
@@ -91,22 +91,10 @@ namespace Json.Schema;
 [JsonSerializable(typeof(JsonArray))]
 [JsonSerializable(typeof(JsonNode))]
 [JsonSerializable(typeof(JsonNode[]))]
-//[JsonSerializable(typeof(JsonPointer))]
 [JsonSerializable(typeof(List<JsonSchema>))]
 [JsonSerializable(typeof(List<string>))]
 [JsonSerializable(typeof(SchemaValueType))]
 [JsonSerializable(typeof(string[]))]
 [JsonSerializable(typeof(uint))]
 [JsonSerializable(typeof(Uri))]
-internal partial class JsonSchemaSerializerContext : JsonSerializerContext
-{
-	public static TypeResolverOptionsManager OptionsManager { get; }
-
-	static JsonSchemaSerializerContext()
-	{
-		OptionsManager = new TypeResolverOptionsManager(
-			Default,
-			[JsonPointerSerializerContext.Default, .. SchemaKeywordRegistry.ExternalTypeInfoResolvers]
-		);
-	}
-}
+public partial class JsonSchemaSerializerContext : JsonSerializerContext;

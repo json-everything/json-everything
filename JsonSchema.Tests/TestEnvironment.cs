@@ -1,6 +1,5 @@
 using System.Text.Encodings.Web;
 using System.Text.Json;
-using Json.Schema.Tests.Suite;
 using NUnit.Framework;
 
 namespace Json.Schema.Tests;
@@ -10,7 +9,7 @@ public class TestEnvironment
 {
 	public static readonly JsonSerializerOptions SerializerOptions = new()
 	{
-		TypeInfoResolverChain = { TestSerializerContext.Default, JsonSchema.TypeInfoResolver },
+		TypeInfoResolverChain = { TestSerializerContext.Default, JsonSchemaSerializerContext.Default },
 	};
 
 	public static readonly JsonSerializerOptions SerializerOptionsUnsafeRelaxedEscaping = new(SerializerOptions)
@@ -18,6 +17,12 @@ public class TestEnvironment
 		WriteIndented = true,
 		Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
 	};
+
+	public static readonly JsonSerializerOptions TestSuiteSerializationOptions = new(SerializerOptions)
+	{
+		PropertyNameCaseInsensitive = true
+	};
+
 
 	[OneTimeSetUp]
 	public void Setup()

@@ -99,8 +99,8 @@ public class DataKeyword : IJsonSchemaKeyword
 		if (failedReferences.Count != 0)
 			throw new RefResolutionException(failedReferences.Select(x => x.ToString())!);
 
-		var json = JsonSerializer.Serialize(data, DataExtSerializerContext.OptionsManager.SerializerOptions);
-		var subschema = JsonSerializer.Deserialize<JsonSchema>(json, DataExtSerializerContext.OptionsManager.SerializerOptions)!;
+		var json = JsonSerializer.Serialize(data, DataExtSerializerContext.Default.DictionaryStringJsonNode);
+		var subschema = JsonSerializer.Deserialize(json, JsonSchemaSerializerContext.Default.JsonSchema)!;
 
 		var schemaEvaluation = subschema
 			.GetConstraint(JsonPointer.Create(Name), evaluation.Results.InstanceLocation, evaluation.Results.InstanceLocation, context)

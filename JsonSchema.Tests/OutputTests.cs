@@ -737,7 +737,7 @@ public class OutputTests
 
 		Console.WriteLine(JsonSerializer.Serialize(schema, TestEnvironment.SerializerOptionsUnsafeRelaxedEscaping));
 		Console.WriteLine();
-		Console.WriteLine(JsonSerializer.Serialize(instance, TestEnvironment.SerializerOptionsUnsafeRelaxedEscaping));
+		Console.WriteLine(JsonSerializer.Serialize((JsonNode?)instance, TestEnvironment.SerializerOptionsUnsafeRelaxedEscaping));
 		Console.WriteLine();
 
 		result.AssertValid(expected);

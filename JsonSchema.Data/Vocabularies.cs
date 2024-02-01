@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
-using Json.More;
 using Json.Pointer;
 
 namespace Json.Schema.Data;
@@ -44,14 +43,4 @@ public static class Vocabularies
 [JsonSerializable(typeof(JsonPointer))]
 [JsonSerializable(typeof(RelativeJsonPointer))]
 [JsonSerializable(typeof(Uri))]
-internal partial class DataExtSerializerContext : JsonSerializerContext
-{
-	public static TypeResolverOptionsManager OptionsManager { get; }
-
-	static DataExtSerializerContext() {
-		OptionsManager = new(
-			Default,
-			JsonSchema.TypeInfoResolver
-		);
-	}
-}
+internal partial class DataExtSerializerContext : JsonSerializerContext;
