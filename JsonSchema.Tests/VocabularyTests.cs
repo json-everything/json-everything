@@ -155,18 +155,18 @@ public partial class VocabularyTests
 	}
 
 	private static readonly JsonSerializerOptions _basicOptions =
-		new JsonSerializerOptions
+		new()
 		{
-			TypeInfoResolverChain = { VocabularySerializerContext.Default }
-		}.WithJsonSchema();
+			TypeInfoResolverChain = { VocabularySerializerContext.Default, TestSerializerContext.Default }
+		};
 
 	private static readonly JsonSerializerOptions _serializerOptions =
-		new JsonSerializerOptions
+		new()
 		{
-			TypeInfoResolverChain = { VocabularySerializerContext.Default },
+			TypeInfoResolverChain = { VocabularySerializerContext.Default, TestSerializerContext.Default },
 			WriteIndented = true,
 			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-		}.WithJsonSchema();
+		};
 
 	public static readonly Vocabulary DatesVocabulary =
 		new("http://mydates.com/vocabulary", typeof(MinDateKeyword), typeof(MaxDateKeyword));
@@ -503,8 +503,5 @@ public partial class VocabularyTests
 	[JsonSerializable(typeof(NonVocabMinDateKeyword))]
 	[JsonSerializable(typeof(MaxDateKeyword))]
 	[JsonSerializable(typeof(DateTime))]
-	internal partial class VocabularySerializerContext : JsonSerializerContext
-	{
-
-	}
+	internal partial class VocabularySerializerContext : JsonSerializerContext;
 }

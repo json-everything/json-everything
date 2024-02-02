@@ -9,10 +9,10 @@ namespace Json.Schema.CodeGeneration.Tests;
 public static class AssertHelpers
 {
 	private static readonly JsonSerializerOptions _optionsWithReflection =
-		new JsonSerializerOptions
+		new()
 		{
 			TypeInfoResolverChain = { new DefaultJsonTypeInfoResolver() }
-		}.WithJsonSchema();
+		};
 
 	public static string VerifyCSharp(JsonSchema schema, string expected, EvaluationOptions? options = null)
 	{

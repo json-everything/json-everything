@@ -7,10 +7,9 @@ namespace Json.Schema.CodeGeneration.Tests;
 public class TestEnvironment
 {
 	public static readonly JsonSerializerOptions SerializerOptions =
-		new JsonSerializerOptions
-			{
-				WriteIndented = true,
-				Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-			}
-			.WithJsonSchema();
+		new()
+		{
+			WriteIndented = true,
+			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+		};
 }

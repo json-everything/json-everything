@@ -159,7 +159,7 @@ public sealed class DataKeywordJsonConverter : WeaklyTypedJsonConverter<DataKeyw
 		if (reader.TokenType != JsonTokenType.StartObject)
 			throw new JsonException("Expected object");
 
-		var references = options.Read(ref reader, JsonSchemaDataSerializerContext.Default.DictionaryStringString)!
+		var references = options.ReadDictionary(ref reader, JsonSchemaDataSerializerContext.Default.String)!
 			.ToDictionary(kvp => kvp.Key, kvp => JsonSchemaBuilderExtensions.CreateResourceIdentifier(kvp.Value));
 
 		if (references.Keys.Intersect(_coreKeywords).Any())

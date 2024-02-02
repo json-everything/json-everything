@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Text.Json.Serialization;
-using Json.Pointer;
-
-namespace Json.Schema.ArrayExt;
+﻿namespace Json.Schema.ArrayExt;
 
 /// <summary>
 /// Declares the vocabularies of the supported drafts.

@@ -10,12 +10,12 @@ namespace Json.Schema.DataGeneration.Tests;
 public static class TestHelpers
 {
 	public static readonly JsonSerializerOptions SerializerOptions =
-		new JsonSerializerOptions
-	{
-		WriteIndented = true,
-		Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-		TypeInfoResolverChain = { DataGenerationTestsSerializerContext.Default }
-	}.WithJsonSchema();
+		new()
+		{
+			WriteIndented = true,
+			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+			TypeInfoResolverChain = { DataGenerationTestsSerializerContext.Default }
+		};
 
 	public static void Run(JsonSchema schema, EvaluationOptions? options = null)
 	{
@@ -53,4 +53,6 @@ public static class TestHelpers
 }
 
 [JsonSerializable(typeof(GenerationResult))]
+[JsonSerializable(typeof(JsonSchema))]
+[JsonSerializable(typeof(EvaluationResults))]
 internal partial class DataGenerationTestsSerializerContext : JsonSerializerContext;

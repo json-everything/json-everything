@@ -51,13 +51,13 @@ public class DeserializationTests
 			)
 			.AdditionalProperties(false);
 
-	private static readonly JsonSerializerOptions _options = new JsonSerializerOptions
+	private static readonly JsonSerializerOptions _options = new()
 	{
 		TypeInfoResolverChain = { TestSerializerContext.Default },
 		WriteIndented = true,
 		Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
 		Converters = { new ValidatingJsonConverter { OutputFormat = OutputFormat.List } }
-	}.WithJsonSchema();
+	};
 
 	[SetUp]
 	public void Setup()
@@ -296,7 +296,7 @@ public class DeserializationTests
 					WriteIndented = true,
 					Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
 					Converters = { new ValidatingJsonConverter { OutputFormat = OutputFormat.List } }
-				}.WithJsonSchema();
+				};
 
 				var model = JsonSerializer.Deserialize<FooWithSchema>(jsonText, options);
 
@@ -326,7 +326,7 @@ public class DeserializationTests
 				WriteIndented = true,
 				Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
 				Converters = { new ValidatingJsonConverter { OutputFormat = OutputFormat.List } }
-			}.WithJsonSchema();
+			};
 
 			var model = JsonSerializer.Deserialize<Point>(jsonText, options);
 
@@ -357,7 +357,7 @@ public class DeserializationTests
 						WriteIndented = true,
 						Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
 						Converters = { new ValidatingJsonConverter { OutputFormat = OutputFormat.List } }
-					}.WithJsonSchema();
+					};
 
 					var model = JsonSerializer.Deserialize<Point>(jsonText, options);
 

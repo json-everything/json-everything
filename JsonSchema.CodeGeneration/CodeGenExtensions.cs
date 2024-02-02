@@ -12,8 +12,7 @@ namespace Json.Schema.CodeGeneration;
 /// </summary>
 public static class CodeGenExtensions
 {
-	internal static readonly JsonSerializerOptions SerializerOptions =
-		new JsonSerializerOptions().WithJsonSchema();
+	internal static readonly JsonSerializerOptions SerializerOptions = new();
 
 	/// <summary>
 	/// Generates code from a <see cref="JsonSchema"/>.

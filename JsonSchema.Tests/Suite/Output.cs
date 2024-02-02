@@ -129,10 +129,11 @@ public class Output
 		};
 		options.OutputFormat = outputFormat;
 		var result = collection.Schema.Evaluate(test.Data, options);
-		var optionsWithConverters = new JsonSerializerOptions()
+		var optionsWithConverters = new JsonSerializerOptions
 		{
+			TypeInfoResolverChain = { TestSerializerContext.Default },
 			Converters = { converter }
-		}.WithJsonSchema();
+		};
 		var serializedResult = JsonSerializer.SerializeToNode(result, optionsWithConverters);
 		Console.WriteLine(JsonSerializer.Serialize(serializedResult, TestEnvironment.TestOutputSerializerOptions));
 		Console.WriteLine();

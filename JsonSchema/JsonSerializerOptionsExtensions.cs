@@ -5,7 +5,6 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
 using Json.More;
-using Json.Pointer;
 
 namespace Json.Schema;
 
@@ -53,19 +52,5 @@ public static class JsonSerializerOptionsExtensions
 		// AOT-aware callers should not have gotten this far.
 		var deserializer = ArbitraryDeserializer.GetConverter(arbitraryType);
 		return deserializer.Read(ref reader, options);
-	}
-
-	/// <summary>
-	/// Adds serializer context information to the type resolver chain.
-	/// </summary>
-	/// <param name="options">The options.</param>
-	/// <returns>The same options.</returns>
-	/// <remarks>
-	/// Also adds the context for <see cref="JsonPointer"/>.
-	/// </remarks>
-	public static JsonSerializerOptions WithJsonSchema(this JsonSerializerOptions options)
-	{
-		options.TypeInfoResolverChain.Add(JsonSchemaSerializerContext.Default);
-		return options;
 	}
 }
