@@ -231,7 +231,7 @@ internal static class ModelGenerator
 		generated = new GenerationCacheItem(schema);
 		cache.Add(generated);
 
-		var json = JsonSerializer.SerializeToNode(schema, CodeGenExtensions.SerializerOptions);
+		var json = JsonSerializer.SerializeToNode(schema, CodeGenSerializerContext.Default.JsonSchema);
 
 		var supportedResults = _supportedRequirements.Evaluate(json, _options);
 #if DEBUG
