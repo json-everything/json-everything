@@ -10,4 +10,6 @@ namespace Json.Schema.Tests;
 [JsonSerializable(typeof(System.Drawing.Point))]
 [JsonSerializable(typeof(DeserializationTests.Foo))]
 [JsonSerializable(typeof(DeserializationTests.FooWithSchema))]
+[JsonSerializable(typeof(JsonSchema))]
+[JsonSerializable(typeof(EvaluationResults))]
 internal partial class TestSerializerContext : JsonSerializerContext;

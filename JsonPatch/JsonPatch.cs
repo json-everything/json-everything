@@ -110,6 +110,6 @@ public class PatchJsonConverter : WeaklyTypedJsonConverter<JsonPatch>
 	[UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public override void Write(Utf8JsonWriter writer, JsonPatch value, JsonSerializerOptions options)
 	{
-		JsonSerializer.Serialize(writer, value.Operations, options);
+		JsonSerializer.Serialize(writer, value.Operations, JsonPatchSerializerContext.Default.IReadOnlyListPatchOperation);
 	}
 }

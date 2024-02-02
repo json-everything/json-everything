@@ -11,7 +11,7 @@ public class TestEnvironment
 		new JsonSerializerOptions
 		{
 			TypeInfoResolverChain = { TestSerializerContext.Default },
-		}.WithJsonSchema();
+		};
 
 	public static readonly JsonSerializerOptions TestOutputSerializerOptions =
 		new JsonSerializerOptions
@@ -19,14 +19,14 @@ public class TestEnvironment
 			TypeInfoResolverChain = { TestSerializerContext.Default },
 			WriteIndented = true,
 			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-		}.WithJsonSchema();
+		};
 
 	public static readonly JsonSerializerOptions TestSuiteSerializationOptions =
 		new JsonSerializerOptions
 		{
 			TypeInfoResolverChain = { TestSerializerContext.Default },
 			PropertyNameCaseInsensitive = true
-		}.WithJsonSchema();
+		};
 
 
 	[OneTimeSetUp]

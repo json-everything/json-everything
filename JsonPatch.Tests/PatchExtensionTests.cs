@@ -93,13 +93,11 @@ public class PatchExtensionTests
 	}
 
 	private static readonly JsonSerializerOptions _ignoreWritingNullSerializerOptions =
-		new JsonSerializerOptions
-			{
+		new()
+		{
 				DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
 				TypeInfoResolverChain = { TestSerializerContext.Default }
-			}
-			.WithJsonPatch()
-			.WithJsonSchema();
+			};
 
 	[Test]
 	public void Add()
@@ -338,7 +336,7 @@ public class PatchExtensionTests
 		{
 			TypeInfoResolverChain = { TestSerializerContext.Default },
 			PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-		}.WithJsonSchema().WithJsonPatch();
+		};
 		var final = patch.Apply(model, options);
 
 		Assert.AreEqual(5, final?.Numbers?[0]);
@@ -372,13 +370,12 @@ public class PatchExtensionTests
 		Assert.AreEqual(patchExpected, patchJson);
 	}
 
-	private static readonly JsonSerializerOptions _indentedSerializerOptions = new JsonSerializerOptions
+	private static readonly JsonSerializerOptions _indentedSerializerOptions =
+		new()
 		{
 			TypeInfoResolverChain = { TestSerializerContext.Default },
 			WriteIndented = true
-		}
-		.WithJsonSchema()
-		.WithJsonPatch();
+		};
 
 
 	private static void OutputPatch(JsonPatch patch)

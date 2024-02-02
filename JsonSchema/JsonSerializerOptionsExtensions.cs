@@ -65,7 +65,6 @@ public static class JsonSerializerOptionsExtensions
 	/// </remarks>
 	public static JsonSerializerOptions WithJsonSchema(this JsonSerializerOptions options)
 	{
-		options.WithJsonPointer();
 		options.TypeInfoResolverChain.Add(JsonSchemaSerializerContext.Default);
 		return options;
 	}

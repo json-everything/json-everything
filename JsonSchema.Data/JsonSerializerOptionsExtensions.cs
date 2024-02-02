@@ -24,14 +24,10 @@ public static class JsonSerializerOptionsExtensions
 	/// </remarks>
 	public static JsonSerializerOptions WithDataVocab(this JsonSerializerOptions options)
 	{
-		options.WithJsonPath();
 		options.WithJsonSchema();
 		options.TypeInfoResolverChain.Add(JsonSchemaDataSerializerContext.Default);
 		return options;
 	}
-
-	internal static readonly JsonSerializerOptions DefaultSerializerOptions =
-		new JsonSerializerOptions().WithDataVocab();
 }
 
 [JsonSerializable(typeof(DataKeyword))]

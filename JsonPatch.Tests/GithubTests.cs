@@ -6,7 +6,6 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using Json.More;
 using Json.Pointer;
-using Json.Schema;
 using NUnit.Framework;
 
 namespace Json.Patch.Tests;
@@ -24,7 +23,7 @@ public class GithubTests
 		var patchOperations = pathsToPatch.Select(path => PatchOperation.Replace(JsonPointer.Parse(path), maskJson));
 		var patchConfig = new JsonPatch(patchOperations);
 
-		Console.WriteLine(JsonSerializer.Serialize(patchConfig, TestEnvironment.SerializerOptions));
+		Console.WriteLine(JsonSerializer.Serialize(patchConfig, TestSerializerContext.Default.JsonPatch));
 
 		const string singleObjectJson = "{" +
 										"\"_id\":\"640729d45434f90313d25c78\"," +
@@ -35,7 +34,7 @@ public class GithubTests
 
 		var singleObject = JsonNode.Parse(singleObjectJson);
 		var patchedSingleObject = patchConfig.Apply(singleObject).Result;
-		Console.WriteLine(JsonSerializer.Serialize(patchedSingleObject, TestEnvironment.SerializerOptions));
+		Console.WriteLine(JsonSerializer.Serialize(patchedSingleObject, TestSerializerContext.Default.JsonNode!));
 
 		const string arrayObjectJson = "[" +
 									   "{" +
@@ -56,7 +55,7 @@ public class GithubTests
 		// Way 1: patch whole array
 		var patchedArray = patchConfig.Apply(arrayObject).Result; // <- does nothing
 
-		Console.WriteLine(JsonSerializer.Serialize(patchedArray, TestEnvironment.SerializerOptions));
+		Console.WriteLine(JsonSerializer.Serialize(patchedArray, TestSerializerContext.Default.JsonNode!));
 	}
 
 	[Test]
@@ -181,7 +180,7 @@ public class GithubTests
 			TypeInfoResolverChain = { TestSerializerContext.Default },
 			WriteIndented = true,
 			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-		}.WithJsonPatch().WithJsonSchema();
+		};
 		Console.WriteLine(JsonSerializer.Serialize(result, serializerOptions));
 		Assert.IsNotNull(patchConfig.Apply(singleObject).Error);
 	}

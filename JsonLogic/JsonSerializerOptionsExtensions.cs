@@ -1,26 +1,8 @@
-﻿using System.Text.Json;
-using System.Text.Json.Nodes;
+﻿using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.Logic.Rules;
 
 namespace Json.Logic;
-
-/// <summary>
-/// Extension methods for <see cref="JsonSerializerOptions"/>.
-/// </summary>
-public static class JsonSerializerOptionsExtensions
-{
-	/// <summary>
-	/// Adds serializer context information to the type resolver chain.
-	/// </summary>
-	/// <param name="options">The options.</param>
-	/// <returns>The same options.</returns>
-	public static JsonSerializerOptions WithJsonLogic(this JsonSerializerOptions options)
-	{
-		options.TypeInfoResolverChain.Add(JsonLogicSerializerContext.Default);
-		return options;
-	}
-}
 
 [JsonSerializable(typeof(AddRule))]
 [JsonSerializable(typeof(AllRule))]
