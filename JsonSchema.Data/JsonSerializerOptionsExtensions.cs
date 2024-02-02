@@ -12,12 +12,8 @@ public static class JsonSerializerOptionsExtensions
 {
 	public static JsonSerializerOptions WithDataVocab(this JsonSerializerOptions options)
 	{
-		if (!options.TryGetTypeInfo(typeof(JsonPath), out _))
-			options.WithJsonPath();
-
-		if (!options.TryGetTypeInfo(typeof(JsonSchema), out _))
-			options.WithJsonSchema();
-
+		options.WithJsonPath();
+		options.WithJsonSchema();
 		options.TypeInfoResolverChain.Add(JsonSchemaDataSerializerContext.Default);
 		return options;
 	}

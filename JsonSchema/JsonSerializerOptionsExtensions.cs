@@ -54,9 +54,7 @@ public static class JsonSerializerOptionsExtensions
 
 	public static JsonSerializerOptions WithJsonSchema(this JsonSerializerOptions options)
 	{
-		if (!options.TryGetTypeInfo(typeof(JsonPointer), out _))
-			options.WithJsonPointer();
-
+		options.WithJsonPointer();
 		options.TypeInfoResolverChain.Add(JsonSchemaSerializerContext.Default);
 		return options;
 	}

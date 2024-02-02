@@ -10,9 +10,7 @@ public static class JsonSerializerOptionsExtensions
 {
 	public static JsonSerializerOptions WithJsonPatch(this JsonSerializerOptions options)
 	{
-		if (!options.TryGetTypeInfo(typeof(JsonPointer), out _))
-			options.WithJsonPointer();
-
+		options.WithJsonPointer();
 		options.TypeInfoResolverChain.Add(JsonPatchSerializerContext.Default);
 		return options;
 	}

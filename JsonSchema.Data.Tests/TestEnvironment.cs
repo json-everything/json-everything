@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Json.Schema.Data.Tests.Suite;
@@ -10,7 +11,9 @@ public class TestEnvironment
 	public static readonly JsonSerializerOptions SerializerOptions =
 		new JsonSerializerOptions
 		{
-			TypeInfoResolverChain = { DataTestsSerializerContext.Default }
+			TypeInfoResolverChain = { DataTestsSerializerContext.Default },
+			WriteIndented = true,
+			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
 		}.WithDataVocab();
 }
 

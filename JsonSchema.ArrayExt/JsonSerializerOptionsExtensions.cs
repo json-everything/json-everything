@@ -9,9 +9,7 @@ public static class JsonSerializerOptionsExtensions
 {
 	public static JsonSerializerOptions WithArrayExtVocab(this JsonSerializerOptions options)
 	{
-		if (!options.TryGetTypeInfo(typeof(JsonSchema), out _))
-			options.WithJsonSchema();
-
+		options.WithJsonSchema();
 		options.TypeInfoResolverChain.Add(JsonSchemaArrayExtSerializerContext.Default);
 		return options;
 	}
