@@ -81,7 +81,7 @@ public class AllOfKeyword : IJsonSchemaKeyword, ISchemaCollector
 /// <summary>
 /// JSON converter for <see cref="AllOfKeyword"/>.
 /// </summary>
-public sealed class AllOfKeywordJsonConverter : AotCompatibleJsonConverter<AllOfKeyword>
+public sealed class AllOfKeywordJsonConverter : WeaklyTypedJsonConverter<AllOfKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="AllOfKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

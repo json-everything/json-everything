@@ -141,7 +141,7 @@ public class DataKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="DataKeyword"/>.
 /// </summary>
-public sealed class DataKeywordJsonConverter : AotCompatibleJsonConverter<DataKeyword>
+public sealed class DataKeywordJsonConverter : WeaklyTypedJsonConverter<DataKeyword>
 {
 	private static readonly string[] _coreKeywords =
 		Schema.Vocabularies.Core202012.Keywords

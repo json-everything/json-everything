@@ -84,7 +84,7 @@ public class MissingSomeRule : Rule
 	}
 }
 
-internal class MissingSomeRuleJsonConverter : AotCompatibleJsonConverter<MissingSomeRule>
+internal class MissingSomeRuleJsonConverter : WeaklyTypedJsonConverter<MissingSomeRule>
 {
 	public override MissingSomeRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

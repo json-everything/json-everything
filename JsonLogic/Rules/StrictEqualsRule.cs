@@ -49,7 +49,7 @@ public class StrictEqualsRule : Rule
 	}
 }
 
-internal class StrictEqualsRuleJsonConverter : AotCompatibleJsonConverter<StrictEqualsRule>
+internal class StrictEqualsRuleJsonConverter : WeaklyTypedJsonConverter<StrictEqualsRule>
 {
 	public override StrictEqualsRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

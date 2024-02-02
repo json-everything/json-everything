@@ -88,7 +88,7 @@ public class DiscriminatorKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="DiscriminatorKeyword"/>.
 /// </summary>
-public sealed partial class DiscriminatorKeywordJsonConverter : AotCompatibleJsonConverter<DiscriminatorKeyword>
+public sealed partial class DiscriminatorKeywordJsonConverter : WeaklyTypedJsonConverter<DiscriminatorKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="DiscriminatorKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

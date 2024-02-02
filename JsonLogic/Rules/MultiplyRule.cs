@@ -59,7 +59,7 @@ public class MultiplyRule : Rule
 	}
 }
 
-internal class MultiplyRuleJsonConverter : AotCompatibleJsonConverter<MultiplyRule>
+internal class MultiplyRuleJsonConverter : WeaklyTypedJsonConverter<MultiplyRule>
 {
 	public override MultiplyRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

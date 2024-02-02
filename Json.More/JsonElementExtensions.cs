@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 
 namespace Json.More;
 
@@ -135,11 +136,9 @@ public static class JsonElementExtensions
 	/// <remarks>
 	/// See https://github.com/dotnet/runtime/issues/42502
 	/// </remarks>
-	[RequiresUnreferencedCode("Calls System.Text.Json.JsonSerializer.Serialize<T>(T)")]
-	[RequiresDynamicCode("Calls System.Text.Json.JsonSerializer.Serialize<T>(T)")]
 	public static string ToJsonString(this JsonElement element)
 	{
-		return JsonSerializer.Serialize(element);
+		return JsonSerializer.Serialize(element, MoreSerializerContext.Default.JsonElement);
 	}
 
 	/// <summary>
@@ -232,11 +231,9 @@ public static class JsonElementExtensions
 	/// <param name="value">The value to convert.</param>
 	/// <returns>A <see cref="JsonElement"/> representing the value.</returns>
 	/// <remarks>This is a workaround for lack of native support in the System.Text.Json namespace.</remarks>
-	[RequiresDynamicCode("Calls System.Text.Json.JsonSerializer.Serialize<T>(T)")]
-	[RequiresUnreferencedCode("Calls System.Text.Json.JsonSerializer.Serialize<T>(T)")]
 	public static JsonElement AsJsonElement(this string? value)
 	{
-		using var doc = JsonDocument.Parse(JsonSerializer.Serialize(value));
+		using var doc = JsonDocument.Parse(JsonSerializer.Serialize(value, MoreSerializerContext.Default.String!));
 		return doc.RootElement.Clone();
 	}
 
@@ -246,8 +243,6 @@ public static class JsonElementExtensions
 	/// <param name="values">The array of values to convert.</param>
 	/// <returns>A <see cref="JsonElement"/> representing the value.</returns>
 	/// <remarks>This is a workaround for lack of native support in the System.Text.Json namespace.</remarks>
-	[RequiresDynamicCode("Calls Json.More.JsonElementExtensions.ToJsonString(JsonElement)")]
-	[RequiresUnreferencedCode("Calls Json.More.JsonElementExtensions.ToJsonString(JsonElement)")]
 	public static JsonElement AsJsonElement(this IEnumerable<JsonElement> values)
 	{
 		using var doc = JsonDocument.Parse($"[{string.Join(",", values.Select(v => v.ToJsonString()))}]");
@@ -260,11 +255,9 @@ public static class JsonElementExtensions
 	/// <param name="values">The value to convert.</param>
 	/// <returns>A <see cref="JsonElement"/> representing the value.</returns>
 	/// <remarks>This is a workaround for lack of native support in the System.Text.Json namespace.</remarks>
-	[RequiresDynamicCode("Calls Json.More.JsonElementExtensions.ToJsonString(JsonElement)")]
-	[RequiresUnreferencedCode("Calls Json.More.JsonElementExtensions.ToJsonString(JsonElement)")]
 	public static JsonElement AsJsonElement(this IDictionary<string, JsonElement> values)
 	{
-		using var doc = JsonDocument.Parse($"{{{string.Join(",", values.Select(v => $"{JsonSerializer.Serialize(v.Key)}:{v.Value.ToJsonString()}"))}}}");
+		using var doc = JsonDocument.Parse($"{{{string.Join(",", values.Select(v => $"{JsonSerializer.Serialize(v.Key, MoreSerializerContext.Default.String)}:{v.Value.ToJsonString()}"))}}}");
 		return doc.RootElement.Clone();
 	}
 
@@ -292,3 +285,7 @@ public static class JsonElementExtensions
 		return enumerator.Current.Deserialize<T>(options) ?? throw new JsonException("Expected value");
 	}
 }
+
+[JsonSerializable(typeof(JsonElement))]
+[JsonSerializable(typeof(string))]
+internal partial class MoreSerializerContext : JsonSerializerContext;

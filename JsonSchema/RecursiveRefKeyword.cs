@@ -116,7 +116,7 @@ public class RecursiveRefKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="RecursiveRefKeyword"/>.
 /// </summary>
-public sealed class RecursiveRefKeywordJsonConverter : AotCompatibleJsonConverter<RecursiveRefKeyword>
+public sealed class RecursiveRefKeywordJsonConverter : WeaklyTypedJsonConverter<RecursiveRefKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="RecursiveRefKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

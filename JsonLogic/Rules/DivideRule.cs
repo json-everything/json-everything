@@ -59,7 +59,7 @@ public class DivideRule : Rule
 	}
 }
 
-internal class DivideRuleJsonConverter : AotCompatibleJsonConverter<DivideRule>
+internal class DivideRuleJsonConverter : WeaklyTypedJsonConverter<DivideRule>
 {
 	public override DivideRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

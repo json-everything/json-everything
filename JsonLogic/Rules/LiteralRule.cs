@@ -38,7 +38,7 @@ public class LiteralRule : Rule
 	}
 }
 
-internal class LiteralRuleJsonConverter : AotCompatibleJsonConverter<LiteralRule>
+internal class LiteralRuleJsonConverter : WeaklyTypedJsonConverter<LiteralRule>
 {
 	public override LiteralRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

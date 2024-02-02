@@ -57,7 +57,7 @@ public class VariableRule : Rule
 	}
 }
 
-internal class VariableRuleJsonConverter : AotCompatibleJsonConverter<VariableRule>
+internal class VariableRuleJsonConverter : WeaklyTypedJsonConverter<VariableRule>
 {
 	public override VariableRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

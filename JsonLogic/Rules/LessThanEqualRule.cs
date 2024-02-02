@@ -112,7 +112,7 @@ public class LessThanEqualRule : Rule
 	}
 }
 
-internal class LessThanEqualRuleJsonConverter : AotCompatibleJsonConverter<LessThanEqualRule>
+internal class LessThanEqualRuleJsonConverter : WeaklyTypedJsonConverter<LessThanEqualRule>
 {
 	public override LessThanEqualRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

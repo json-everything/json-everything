@@ -55,7 +55,7 @@ public class SomeRule : Rule
 	}
 }
 
-internal class SomeRuleJsonConverter : AotCompatibleJsonConverter<SomeRule>
+internal class SomeRuleJsonConverter : WeaklyTypedJsonConverter<SomeRule>
 {
 	public override SomeRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

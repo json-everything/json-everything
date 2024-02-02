@@ -118,7 +118,7 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 /// <summary>
 /// JSON converter for <see cref="DependenciesKeyword"/>.
 /// </summary>
-public sealed class DependenciesKeywordJsonConverter : AotCompatibleJsonConverter<DependenciesKeyword>
+public sealed class DependenciesKeywordJsonConverter : WeaklyTypedJsonConverter<DependenciesKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="DependenciesKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -211,7 +211,7 @@ public class SchemaOrPropertyList
 /// <summary>
 /// JSON converter for <see cref="SchemaOrPropertyList"/>.
 /// </summary>
-public sealed class SchemaOrPropertyListJsonConverter : AotCompatibleJsonConverter<SchemaOrPropertyList>
+public sealed class SchemaOrPropertyListJsonConverter : WeaklyTypedJsonConverter<SchemaOrPropertyList>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="SchemaOrPropertyList"/>.</summary>
 	/// <param name="reader">The reader.</param>

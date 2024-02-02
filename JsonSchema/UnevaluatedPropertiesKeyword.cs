@@ -117,7 +117,7 @@ public class UnevaluatedPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer
 /// <summary>
 /// JSON converter for <see cref="UnevaluatedPropertiesKeyword"/>.
 /// </summary>
-public sealed class UnevaluatedPropertiesKeywordJsonConverter : AotCompatibleJsonConverter<UnevaluatedPropertiesKeyword>
+public sealed class UnevaluatedPropertiesKeywordJsonConverter : WeaklyTypedJsonConverter<UnevaluatedPropertiesKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="UnevaluatedPropertiesKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

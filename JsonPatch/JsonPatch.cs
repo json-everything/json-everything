@@ -88,7 +88,7 @@ public class JsonPatch : IEquatable<JsonPatch>
 /// <summary>
 /// Provides JSON conversion logic for <see cref="JsonPatch"/>.
 /// </summary>
-public class PatchJsonConverter : AotCompatibleJsonConverter<JsonPatch>
+public class PatchJsonConverter : WeaklyTypedJsonConverter<JsonPatch>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="JsonPatch"/>.</summary>
 	/// <param name="reader">The reader.</param>

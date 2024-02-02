@@ -151,7 +151,7 @@ public class ItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, ISchemaCollect
 /// <summary>
 /// JSON converter for <see cref="ItemsKeyword"/>.
 /// </summary>
-public sealed class ItemsKeywordJsonConverter : AotCompatibleJsonConverter<ItemsKeyword>
+public sealed class ItemsKeywordJsonConverter : WeaklyTypedJsonConverter<ItemsKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="ItemsKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

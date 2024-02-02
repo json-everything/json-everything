@@ -88,7 +88,7 @@ public class UniqueItemsKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="UniqueItemsKeyword"/>.
 /// </summary>
-public sealed class UniqueItemsKeywordJsonConverter : AotCompatibleJsonConverter<UniqueItemsKeyword>
+public sealed class UniqueItemsKeywordJsonConverter : WeaklyTypedJsonConverter<UniqueItemsKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="UniqueItemsKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

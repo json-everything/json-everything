@@ -40,7 +40,7 @@ public class LogRule : Rule
 	}
 }
 
-internal class LogRuleJsonConverter : AotCompatibleJsonConverter<LogRule>
+internal class LogRuleJsonConverter : WeaklyTypedJsonConverter<LogRule>
 {
 	public override LogRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

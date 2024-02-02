@@ -63,7 +63,7 @@ public class MissingRule : Rule
 	}
 }
 
-internal class MissingRuleJsonConverter : AotCompatibleJsonConverter<MissingRule>
+internal class MissingRuleJsonConverter : WeaklyTypedJsonConverter<MissingRule>
 {
 	public override MissingRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

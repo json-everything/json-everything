@@ -59,7 +59,7 @@ public class DeprecatedKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="DeprecatedKeyword"/>.
 /// </summary>
-public sealed class DeprecatedKeywordJsonConverter : AotCompatibleJsonConverter<DeprecatedKeyword>
+public sealed class DeprecatedKeywordJsonConverter : WeaklyTypedJsonConverter<DeprecatedKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="DeprecatedKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

@@ -47,7 +47,7 @@ public class MergeRule : Rule
 	}
 }
 
-internal class MergeRuleJsonConverter : AotCompatibleJsonConverter<MergeRule>
+internal class MergeRuleJsonConverter : WeaklyTypedJsonConverter<MergeRule>
 {
 	public override MergeRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

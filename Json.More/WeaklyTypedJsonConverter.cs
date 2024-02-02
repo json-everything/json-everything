@@ -9,7 +9,7 @@ namespace Json.More
 	/// Interface to enable JsonConverter implementations to call other JsonConverter's Read methods
 	/// without statically being aware of their type parameters.
 	/// </summary>
-	public interface IJsonConverterReadWrite
+	public interface IWeaklyTypedJsonConverter
 	{
 		/// <summary>Reads and converts the JSON to object?.</summary>
 		/// <param name="reader">The reader.</param>
@@ -30,14 +30,14 @@ namespace Json.More
 	/// Abstract base class of JsonConverter<typeparamref name="T"/> that helps external code call 
 	/// a JsonConverter<typeparamref name="T"/> without statically knowing about T.
 	/// </summary>
-	public abstract class AotCompatibleJsonConverter<T> : JsonConverter<T>, IJsonConverterReadWrite
+	public abstract class WeaklyTypedJsonConverter<T> : JsonConverter<T>, IWeaklyTypedJsonConverter
 	{
-		object? IJsonConverterReadWrite.Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		object? IWeaklyTypedJsonConverter.Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
 			return Read(ref reader, typeToConvert, options);
 		}
 
-		void IJsonConverterReadWrite.Write(Utf8JsonWriter writer, object value, JsonSerializerOptions options, JsonTypeInfo? typeInfo)
+		void IWeaklyTypedJsonConverter.Write(Utf8JsonWriter writer, object value, JsonSerializerOptions options, JsonTypeInfo? typeInfo)
 		{
 			if (typeInfo is null)
 				Write(writer, (T)value, options);

@@ -52,7 +52,7 @@ public class MinRule : Rule
 	}
 }
 
-internal class MinRuleJsonConverter : AotCompatibleJsonConverter<MinRule>
+internal class MinRuleJsonConverter : WeaklyTypedJsonConverter<MinRule>
 {
 	public override MinRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

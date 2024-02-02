@@ -726,7 +726,7 @@ public class JsonSchema : IBaseDocument
 /// <summary>
 /// JSON converter for <see cref="JsonSchema"/>.
 /// </summary>
-public sealed class SchemaJsonConverter : AotCompatibleJsonConverter<JsonSchema>
+public sealed class SchemaJsonConverter : WeaklyTypedJsonConverter<JsonSchema>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="JsonSchema"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -813,7 +813,7 @@ public sealed class SchemaJsonConverter : AotCompatibleJsonConverter<JsonSchema>
 
 			var keywordType = keyword.GetType();
 			var typeInfo = SchemaKeywordRegistry.GetTypeInfo(keywordType);
-			((IJsonConverterReadWrite)typeInfo.Converter).Write(writer, keyword, options);
+			((IWeaklyTypedJsonConverter)typeInfo.Converter).Write(writer, keyword, options);
 		}
 
 		writer.WriteEndObject();

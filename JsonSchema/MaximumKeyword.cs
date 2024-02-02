@@ -78,7 +78,7 @@ public class MaximumKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="MaximumKeyword"/>.
 /// </summary>
-public sealed class MaximumKeywordJsonConverter : AotCompatibleJsonConverter<MaximumKeyword>
+public sealed class MaximumKeywordJsonConverter : WeaklyTypedJsonConverter<MaximumKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="MaximumKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

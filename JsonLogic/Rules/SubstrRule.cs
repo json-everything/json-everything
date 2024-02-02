@@ -88,7 +88,7 @@ public class SubstrRule : Rule
 	}
 }
 
-internal class SubstrRuleJsonConverter : AotCompatibleJsonConverter<SubstrRule>
+internal class SubstrRuleJsonConverter : WeaklyTypedJsonConverter<SubstrRule>
 {
 	public override SubstrRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

@@ -55,7 +55,7 @@ public class MapRule : Rule
 	}
 }
 
-internal class MapRuleJsonConverter : AotCompatibleJsonConverter<MapRule>
+internal class MapRuleJsonConverter : WeaklyTypedJsonConverter<MapRule>
 {
 	public override MapRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

@@ -45,7 +45,7 @@ public partial class VocabularyTests
 		}
 	}
 
-	public class MinDateJsonConverter : AotCompatibleJsonConverter<MinDateKeyword>
+	public class MinDateJsonConverter : WeaklyTypedJsonConverter<MinDateKeyword>
 	{
 		public override MinDateKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
@@ -95,7 +95,7 @@ public partial class VocabularyTests
 		}
 	}
 
-	public class NonVocabMinDateJsonConverter : AotCompatibleJsonConverter<NonVocabMinDateKeyword>
+	public class NonVocabMinDateJsonConverter : WeaklyTypedJsonConverter<NonVocabMinDateKeyword>
 	{
 		public override NonVocabMinDateKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
@@ -136,7 +136,7 @@ public partial class VocabularyTests
 		}
 	}
 
-	public class MaxDateJsonConverter : AotCompatibleJsonConverter<MaxDateKeyword>
+	public class MaxDateJsonConverter : WeaklyTypedJsonConverter<MaxDateKeyword>
 	{
 		public override MaxDateKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
@@ -421,7 +421,7 @@ public partial class VocabularyTests
 		}
 	}
 
-	public class Draft4ExclusiveMinimumJsonConverter : AotCompatibleJsonConverter<Draft4ExclusiveMinimumKeyword>
+	public class Draft4ExclusiveMinimumJsonConverter : WeaklyTypedJsonConverter<Draft4ExclusiveMinimumKeyword>
 	{
 		public override Draft4ExclusiveMinimumKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{

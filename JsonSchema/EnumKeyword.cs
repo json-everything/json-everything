@@ -103,7 +103,7 @@ public class EnumKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="EnumKeyword"/>.
 /// </summary>
-public sealed class EnumKeywordJsonConverter : AotCompatibleJsonConverter<EnumKeyword>
+public sealed class EnumKeywordJsonConverter : WeaklyTypedJsonConverter<EnumKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="EnumKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

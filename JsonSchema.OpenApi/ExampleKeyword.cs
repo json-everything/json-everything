@@ -53,7 +53,7 @@ public class ExampleKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="ExampleKeyword"/>.
 /// </summary>
-public sealed class ExampleKeywordJsonConverter : AotCompatibleJsonConverter<ExampleKeyword>
+public sealed class ExampleKeywordJsonConverter : WeaklyTypedJsonConverter<ExampleKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="ExampleKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

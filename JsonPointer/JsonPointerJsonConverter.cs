@@ -8,7 +8,7 @@ namespace Json.Pointer;
 /// <summary>
 /// Converter for <see cref="JsonPointer"/>.
 /// </summary>
-public sealed class JsonPointerJsonConverter : AotCompatibleJsonConverter<JsonPointer?>
+public sealed class JsonPointerJsonConverter : WeaklyTypedJsonConverter<JsonPointer?>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="JsonPointer"/>.</summary>
 	/// <param name="reader">The reader.</param>

@@ -119,7 +119,7 @@ public class XmlKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="XmlKeyword"/>.
 /// </summary>
-public sealed class XmlKeywordJsonConverter : AotCompatibleJsonConverter<XmlKeyword>
+public sealed class XmlKeywordJsonConverter : WeaklyTypedJsonConverter<XmlKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="XmlKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

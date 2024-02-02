@@ -105,7 +105,7 @@ public class PropertyDependenciesKeyword : IJsonSchemaKeyword, ICustomSchemaColl
 /// <summary>
 /// JSON converter for <see cref="PropertyDependenciesKeyword"/>.
 /// </summary>
-public sealed class PropertyDependenciesKeywordJsonConverter : AotCompatibleJsonConverter<PropertyDependenciesKeyword>
+public sealed class PropertyDependenciesKeywordJsonConverter : WeaklyTypedJsonConverter<PropertyDependenciesKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="PropertyDependenciesKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

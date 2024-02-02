@@ -87,7 +87,7 @@ public class OptionalDataKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="DataKeyword"/>.
 /// </summary>
-public sealed class OptionalDataKeywordJsonConverter : AotCompatibleJsonConverter<OptionalDataKeyword>
+public sealed class OptionalDataKeywordJsonConverter : WeaklyTypedJsonConverter<OptionalDataKeyword>
 {
 	private static readonly string[] _coreKeywords =
 		Schema.Vocabularies.Core202012.Keywords

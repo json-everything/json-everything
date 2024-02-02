@@ -43,7 +43,7 @@ public class BooleanCastRule : Rule
 	}
 }
 
-internal class BooleanCastRuleJsonConverter : AotCompatibleJsonConverter<BooleanCastRule>
+internal class BooleanCastRuleJsonConverter : WeaklyTypedJsonConverter<BooleanCastRule>
 {
 	public override BooleanCastRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

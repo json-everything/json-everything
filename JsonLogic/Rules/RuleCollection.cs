@@ -38,7 +38,7 @@ public class RuleCollection : Rule
 	}
 }
 
-internal class RuleCollectionJsonConverter : AotCompatibleJsonConverter<RuleCollection>
+internal class RuleCollectionJsonConverter : WeaklyTypedJsonConverter<RuleCollection>
 {
 	public override RuleCollection? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

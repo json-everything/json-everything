@@ -66,7 +66,7 @@ public class InRule : Rule
 	}
 }
 
-internal class InRuleJsonConverter : AotCompatibleJsonConverter<InRule>
+internal class InRuleJsonConverter : WeaklyTypedJsonConverter<InRule>
 {
 	public override InRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

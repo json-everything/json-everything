@@ -81,7 +81,7 @@ public class AnyOfKeyword : IJsonSchemaKeyword, ISchemaCollector
 /// <summary>
 /// JSON converter for <see cref="AnyOfKeyword"/>.
 /// </summary>
-public sealed class AnyOfKeywordJsonConverter : AotCompatibleJsonConverter<AnyOfKeyword>
+public sealed class AnyOfKeywordJsonConverter : WeaklyTypedJsonConverter<AnyOfKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="AnyOfKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

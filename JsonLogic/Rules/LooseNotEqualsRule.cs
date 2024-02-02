@@ -52,7 +52,7 @@ public class LooseNotEqualsRule : Rule
 	}
 }
 
-internal class LooseNotEqualsRuleJsonConverter : AotCompatibleJsonConverter<LooseNotEqualsRule>
+internal class LooseNotEqualsRuleJsonConverter : WeaklyTypedJsonConverter<LooseNotEqualsRule>
 {
 	public override LooseNotEqualsRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

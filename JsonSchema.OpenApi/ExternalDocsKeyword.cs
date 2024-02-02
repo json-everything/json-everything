@@ -84,7 +84,7 @@ public class ExternalDocsKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="ExternalDocsKeyword"/>.
 /// </summary>
-public sealed class ExternalDocsKeywordJsonConverter : AotCompatibleJsonConverter<ExternalDocsKeyword>
+public sealed class ExternalDocsKeywordJsonConverter : WeaklyTypedJsonConverter<ExternalDocsKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="ExternalDocsKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

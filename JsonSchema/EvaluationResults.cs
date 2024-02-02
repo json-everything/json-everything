@@ -293,7 +293,7 @@ public class EvaluationResults
 	}
 }
 
-internal class EvaluationResultsJsonConverter : AotCompatibleJsonConverter<EvaluationResults>
+internal class EvaluationResultsJsonConverter : WeaklyTypedJsonConverter<EvaluationResults>
 {
 	public override EvaluationResults Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
@@ -364,7 +364,7 @@ internal class EvaluationResultsJsonConverter : AotCompatibleJsonConverter<Evalu
 /// <summary>
 /// Produces output formats specified by 2019-09 and 2020-12.
 /// </summary>
-public class Pre202012EvaluationResultsJsonConverter : AotCompatibleJsonConverter<EvaluationResults>
+public class Pre202012EvaluationResultsJsonConverter : WeaklyTypedJsonConverter<EvaluationResults>
 {
 	/// <summary>
 	/// Holder for an annotation value.

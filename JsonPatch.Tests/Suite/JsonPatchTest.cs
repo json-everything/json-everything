@@ -84,7 +84,7 @@ public class JsonPatchTest
 	public bool HasExpectedValue { get; set; }
 }
 
-public class JsonPatchTestJsonConverter : AotCompatibleJsonConverter<JsonPatchTest?>
+public class JsonPatchTestJsonConverter : WeaklyTypedJsonConverter<JsonPatchTest?>
 {
 	internal class Model
 	{

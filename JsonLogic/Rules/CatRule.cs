@@ -57,7 +57,7 @@ public class CatRule : Rule
 	}
 }
 
-internal class CatRuleJsonConverter : AotCompatibleJsonConverter<CatRule>
+internal class CatRuleJsonConverter : WeaklyTypedJsonConverter<CatRule>
 {
 	public override CatRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

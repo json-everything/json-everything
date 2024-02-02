@@ -103,7 +103,7 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollecto
 /// <summary>
 /// JSON converter for <see cref="PatternPropertiesKeyword"/>.
 /// </summary>
-public sealed class PatternPropertiesKeywordJsonConverter : AotCompatibleJsonConverter<PatternPropertiesKeyword>
+public sealed class PatternPropertiesKeywordJsonConverter : WeaklyTypedJsonConverter<PatternPropertiesKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="PatternPropertiesKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

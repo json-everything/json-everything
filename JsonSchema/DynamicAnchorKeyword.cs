@@ -57,7 +57,7 @@ public class DynamicAnchorKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="DynamicAnchorKeyword"/>.
 /// </summary>
-public sealed class DynamicAnchorKeywordJsonConverter : AotCompatibleJsonConverter<DynamicAnchorKeyword>
+public sealed class DynamicAnchorKeywordJsonConverter : WeaklyTypedJsonConverter<DynamicAnchorKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="DynamicAnchorKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

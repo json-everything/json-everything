@@ -62,7 +62,7 @@ public class UnrecognizedKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="UnrecognizedKeyword"/>.
 /// </summary>
-public sealed class UnrecognizedKeywordJsonConverter : AotCompatibleJsonConverter<UnrecognizedKeyword>
+public sealed class UnrecognizedKeywordJsonConverter : WeaklyTypedJsonConverter<UnrecognizedKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="UnrecognizedKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

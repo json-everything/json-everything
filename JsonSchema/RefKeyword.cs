@@ -113,7 +113,7 @@ public class RefKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="RefKeyword"/>.
 /// </summary>
-public sealed class RefKeywordJsonConverter : AotCompatibleJsonConverter<RefKeyword>
+public sealed class RefKeywordJsonConverter : WeaklyTypedJsonConverter<RefKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="RefKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

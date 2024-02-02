@@ -46,7 +46,7 @@ public static class JsonSerializerOptionsExtensions
 		var converter = typeInfo.Converter;
 
 		// Try using the AOT-friendly interface first.
-		if (converter is IJsonConverterReadWrite converterReadWrite)
+		if (converter is IWeaklyTypedJsonConverter converterReadWrite)
 			return converterReadWrite.Read(ref reader, arbitraryType, options);
 
 		// The converter is just a JsonConverter<T> so we need to go through reflection to get it.

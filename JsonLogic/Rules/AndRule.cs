@@ -54,7 +54,7 @@ public class AndRule : Rule
 	}
 }
 
-internal class AndRuleJsonConverter : AotCompatibleJsonConverter<AndRule>
+internal class AndRuleJsonConverter : WeaklyTypedJsonConverter<AndRule>
 {
 	public override AndRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

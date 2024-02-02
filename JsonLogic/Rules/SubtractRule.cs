@@ -68,7 +68,7 @@ public class SubtractRule : Rule
 	}
 }
 
-internal class SubtractRuleJsonConverter : AotCompatibleJsonConverter<SubtractRule>
+internal class SubtractRuleJsonConverter : WeaklyTypedJsonConverter<SubtractRule>
 {
 	public override SubtractRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

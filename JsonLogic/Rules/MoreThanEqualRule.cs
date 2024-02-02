@@ -65,7 +65,7 @@ public class MoreThanEqualRule : Rule
 	}
 }
 
-internal class MoreThanEqualRuleJsonConverter : AotCompatibleJsonConverter<MoreThanEqualRule>
+internal class MoreThanEqualRuleJsonConverter : WeaklyTypedJsonConverter<MoreThanEqualRule>
 {
 	public override MoreThanEqualRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

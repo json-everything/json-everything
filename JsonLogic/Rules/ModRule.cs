@@ -59,7 +59,7 @@ public class ModRule : Rule
 	}
 }
 
-internal class ModRuleJsonConverter : AotCompatibleJsonConverter<ModRule>
+internal class ModRuleJsonConverter : WeaklyTypedJsonConverter<ModRule>
 {
 	public override ModRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

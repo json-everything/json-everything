@@ -83,7 +83,7 @@ public class IfRule : Rule
 	}
 }
 
-internal class IfRuleJsonConverter : AotCompatibleJsonConverter<IfRule>
+internal class IfRuleJsonConverter : WeaklyTypedJsonConverter<IfRule>
 {
 	public override IfRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

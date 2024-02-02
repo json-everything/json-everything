@@ -154,7 +154,7 @@ public class OrderingKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="OrderingKeyword"/>.
 /// </summary>
-public sealed class OrderingKeywordJsonConverter : AotCompatibleJsonConverter<OrderingKeyword>
+public sealed class OrderingKeywordJsonConverter : WeaklyTypedJsonConverter<OrderingKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="OrderingKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

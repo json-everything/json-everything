@@ -54,7 +54,7 @@ public class MaxRule : Rule
 	}
 }
 
-internal class MaxRuleJsonConverter : AotCompatibleJsonConverter<MaxRule>
+internal class MaxRuleJsonConverter : WeaklyTypedJsonConverter<MaxRule>
 {
 	public override MaxRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

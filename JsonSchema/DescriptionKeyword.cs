@@ -61,7 +61,7 @@ public class DescriptionKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="DescriptionKeyword"/>.
 /// </summary>
-public sealed class DescriptionKeywordJsonConverter : AotCompatibleJsonConverter<DescriptionKeyword>
+public sealed class DescriptionKeywordJsonConverter : WeaklyTypedJsonConverter<DescriptionKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="DescriptionKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

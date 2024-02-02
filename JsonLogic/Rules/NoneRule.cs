@@ -55,7 +55,7 @@ public class NoneRule : Rule
 	}
 }
 
-internal class NoneRuleJsonConverter : AotCompatibleJsonConverter<NoneRule>
+internal class NoneRuleJsonConverter : WeaklyTypedJsonConverter<NoneRule>
 {
 	public override NoneRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

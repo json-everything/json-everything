@@ -87,7 +87,7 @@ public class DependentRequiredKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="DependentRequiredKeyword"/>.
 /// </summary>
-public sealed class DependentRequiredKeywordJsonConverter : AotCompatibleJsonConverter<DependentRequiredKeyword>
+public sealed class DependentRequiredKeywordJsonConverter : WeaklyTypedJsonConverter<DependentRequiredKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="DependentRequiredKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

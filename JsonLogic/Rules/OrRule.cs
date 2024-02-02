@@ -54,7 +54,7 @@ public class OrRule : Rule
 	}
 }
 
-internal class OrRuleJsonConverter : AotCompatibleJsonConverter<OrRule>
+internal class OrRuleJsonConverter : WeaklyTypedJsonConverter<OrRule>
 {
 	public override OrRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{

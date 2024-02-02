@@ -100,7 +100,7 @@ public class TypeKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="TypeKeyword"/>.
 /// </summary>
-public sealed class TypeKeywordJsonConverter : AotCompatibleJsonConverter<TypeKeyword>
+public sealed class TypeKeywordJsonConverter : WeaklyTypedJsonConverter<TypeKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="TypeKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
