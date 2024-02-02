@@ -8,13 +8,13 @@ namespace Json.Schema.Tests;
 public class TestEnvironment
 {
 	public static readonly JsonSerializerOptions SerializerOptions =
-		new JsonSerializerOptions
+		new()
 		{
 			TypeInfoResolverChain = { TestSerializerContext.Default },
 		};
 
 	public static readonly JsonSerializerOptions TestOutputSerializerOptions =
-		new JsonSerializerOptions
+		new()
 		{
 			TypeInfoResolverChain = { TestSerializerContext.Default },
 			WriteIndented = true,
@@ -22,7 +22,7 @@ public class TestEnvironment
 		};
 
 	public static readonly JsonSerializerOptions TestSuiteSerializationOptions =
-		new JsonSerializerOptions
+		new()
 		{
 			TypeInfoResolverChain = { TestSerializerContext.Default },
 			PropertyNameCaseInsensitive = true

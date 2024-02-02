@@ -120,6 +120,6 @@ public sealed class PropertyDependencyJsonConverter : WeaklyTypedJsonConverter<P
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, PropertyDependency value, JsonSerializerOptions options)
 	{
-		options.Write(writer, value.Schemas, JsonSchemaSerializerContext.Default.IReadOnlyDictionaryStringJsonSchema);
+		options.WriteDictionary(writer, value.Schemas, JsonSchemaSerializerContext.Default.JsonSchema);
 	}
 }
