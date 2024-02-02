@@ -813,7 +813,7 @@ public sealed class SchemaJsonConverter : AotCompatibleJsonConverter<JsonSchema>
 
 			var keywordType = keyword.GetType();
 			var typeInfo = SchemaKeywordRegistry.GetTypeInfo(keywordType);
-			options.Write(writer, keyword, typeInfo);
+			((IJsonConverterReadWrite)typeInfo.Converter).Write(writer, keyword, options);
 		}
 
 		writer.WriteEndObject();

@@ -26,6 +26,7 @@ public static class JsonSerializerOptionsExtensions
 [JsonSerializable(typeof(OperationType))]
 [JsonSerializable(typeof(PatchResult))]
 [JsonSerializable(typeof(JsonNode))]
+[JsonSerializable(typeof(JsonPointer))]
 [JsonSerializable(typeof(List<PatchOperation>))]
 [JsonSerializable(typeof(IReadOnlyList<PatchOperation>))]
 internal partial class JsonPatchSerializerContext : JsonSerializerContext;

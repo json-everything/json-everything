@@ -97,4 +97,5 @@ namespace Json.Schema;
 [JsonSerializable(typeof(string[]))]
 [JsonSerializable(typeof(uint))]
 [JsonSerializable(typeof(Uri))]
+[JsonSerializable(typeof(Json.Pointer.JsonPointer))]
 internal partial class JsonSchemaSerializerContext : JsonSerializerContext;
