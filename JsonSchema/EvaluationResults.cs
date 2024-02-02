@@ -313,7 +313,7 @@ internal class EvaluationResultsJsonConverter : AotCompatibleJsonConverter<Evalu
 		if (value.Format == OutputFormat.Hierarchical || value.Parent != null)
 		{
 			writer.WritePropertyName("evaluationPath");
-			JsonSerializer.Serialize(writer, value.EvaluationPath, options);
+			options.Write(writer, value.EvaluationPath, JsonSchemaSerializerContext.Default.JsonPointer);
 
 			// this can still be null if the root schema is a boolean
 			if (value.SchemaLocation != null!)
@@ -326,7 +326,7 @@ internal class EvaluationResultsJsonConverter : AotCompatibleJsonConverter<Evalu
 			}
 
 			writer.WritePropertyName("instanceLocation");
-			JsonSerializer.Serialize(writer, value.InstanceLocation, options);
+			options.Write(writer, value.InstanceLocation, JsonSchemaSerializerContext.Default.JsonPointer);
 		}
 
 		if (value.IsValid)
