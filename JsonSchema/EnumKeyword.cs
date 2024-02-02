@@ -112,9 +112,9 @@ public sealed class EnumKeywordJsonConverter : WeaklyTypedJsonConverter<EnumKeyw
 	/// <returns>The converted value.</returns>
 	public override EnumKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var array = options.Read(ref reader,  JsonSchemaSerializerContext.Default.JsonArray);
+		var array = options.Read(ref reader,  JsonSchemaSerializerContext.Default.JsonNode) as JsonArray;
 		if (array is null)
-			throw new JsonException("Expected an array, but received null");
+			throw new JsonException("Expected an array");
 
 		return new EnumKeyword((IEnumerable<JsonNode?>)array);
 	}

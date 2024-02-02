@@ -80,8 +80,9 @@ public sealed class ExamplesKeywordJsonConverter : WeaklyTypedJsonConverter<Exam
 	/// <returns>The converted value.</returns>
 	public override ExamplesKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var array = options.Read(ref reader, JsonSchemaSerializerContext.Default.JsonArray) ??
-		            throw new JsonException("Expected an array, but received null");
+		var array = options.Read(ref reader, JsonSchemaSerializerContext.Default.JsonNode) as JsonArray;
+		if (array == null)
+			throw new JsonException("Expected an array");
 
 		return new ExamplesKeyword((IEnumerable<JsonNode>)array!);
 	}
