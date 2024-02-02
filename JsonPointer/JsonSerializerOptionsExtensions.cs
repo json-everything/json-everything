@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Json.Path;
+namespace Json.Pointer;
 
 /// <summary>
 /// Extension methods for <see cref="JsonSerializerOptions"/>.
@@ -13,12 +13,13 @@ public static class JsonSerializerOptionsExtensions
 	/// </summary>
 	/// <param name="options">The options.</param>
 	/// <returns>The same options.</returns>
-	public static JsonSerializerOptions WithJsonPath(this JsonSerializerOptions options)
+	public static JsonSerializerOptions WithJsonPointer(this JsonSerializerOptions options)
 	{
-		options.TypeInfoResolverChain.Add(JsonPathSerializerContext.Default);
+		options.TypeInfoResolverChain.Add(JsonPointerSerializerContext.Default);
 		return options;
 	}
 }
 
-[JsonSerializable(typeof(JsonPath))]
-internal partial class JsonPathSerializerContext : JsonSerializerContext;
+[JsonSerializable(typeof(JsonPointer))]
+[JsonSerializable(typeof(RelativeJsonPointer))]
+internal partial class JsonPointerSerializerContext : JsonSerializerContext;

@@ -9,6 +9,9 @@ using Json.Pointer;
 
 namespace Json.Schema;
 
+/// <summary>
+/// Extension methods for <see cref="JsonSerializerOptions"/>.
+/// </summary>
 public static class JsonSerializerOptionsExtensions
 {
 	private abstract class ArbitraryDeserializer
@@ -52,6 +55,14 @@ public static class JsonSerializerOptionsExtensions
 		return deserializer.Read(ref reader, options);
 	}
 
+	/// <summary>
+	/// Adds serializer context information to the type resolver chain.
+	/// </summary>
+	/// <param name="options">The options.</param>
+	/// <returns>The same options.</returns>
+	/// <remarks>
+	/// Also adds the context for <see cref="JsonPointer"/>.
+	/// </remarks>
 	public static JsonSerializerOptions WithJsonSchema(this JsonSerializerOptions options)
 	{
 		options.WithJsonPointer();

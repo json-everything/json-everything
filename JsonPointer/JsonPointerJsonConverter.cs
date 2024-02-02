@@ -38,19 +38,3 @@ public sealed class JsonPointerJsonConverter : AotCompatibleJsonConverter<JsonPo
 			writer.WriteStringValue(value.ToString());
 	}
 }
-
-/// <summary>
-/// A serializer context for this library.
-/// </summary>
-[JsonSerializable(typeof(JsonPointer))]
-[JsonSerializable(typeof(RelativeJsonPointer))]
-internal partial class JsonPointerSerializerContext : JsonSerializerContext;
-
-public static class JsonSerializerOptionsExtensions
-{
-	public static JsonSerializerOptions WithJsonPointer(this JsonSerializerOptions options)
-	{
-		options.TypeInfoResolverChain.Add(JsonPointerSerializerContext.Default);
-		return options;
-	}
-}

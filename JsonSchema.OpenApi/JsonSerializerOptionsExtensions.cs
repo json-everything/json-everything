@@ -5,8 +5,16 @@ using System.Text.Json.Serialization;
 
 namespace Json.Schema.OpenApi;
 
+/// <summary>
+/// Extension methods for <see cref="JsonSerializerOptions"/>.
+/// </summary>
 public static class JsonSerializerOptionsExtensions
 {
+	/// <summary>
+	/// Adds serializer context information to the type resolver chain.
+	/// </summary>
+	/// <param name="options">The options.</param>
+	/// <returns>The same options.</returns>
 	public static JsonSerializerOptions WithOpenApiVocab(this JsonSerializerOptions options)
 	{
 		options.TypeInfoResolverChain.Add(JsonSchemaOpenApiSerializerContext.Default);

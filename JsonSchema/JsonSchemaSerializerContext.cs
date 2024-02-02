@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.Pointer;
 
 namespace Json.Schema;
 
@@ -97,5 +98,5 @@ namespace Json.Schema;
 [JsonSerializable(typeof(string[]))]
 [JsonSerializable(typeof(uint))]
 [JsonSerializable(typeof(Uri))]
-[JsonSerializable(typeof(Json.Pointer.JsonPointer))]
+[JsonSerializable(typeof(JsonPointer))]
 internal partial class JsonSchemaSerializerContext : JsonSerializerContext;
