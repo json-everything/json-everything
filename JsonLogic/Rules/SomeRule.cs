@@ -59,7 +59,7 @@ internal class SomeRuleJsonConverter : WeaklyTypedJsonConverter<SomeRule>
 {
 	public override SomeRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = options.Read(ref reader, JsonLogicSerializerContext.Default.RuleArray);
+		var parameters = options.ReadArray(ref reader, JsonLogicSerializerContext.Default.Rule);
 
 		if (parameters is not { Length: 2 })
 			throw new JsonException("The some rule needs an array with 2 parameters.");
@@ -74,8 +74,8 @@ internal class SomeRuleJsonConverter : WeaklyTypedJsonConverter<SomeRule>
 		writer.WriteStartObject();
 		writer.WritePropertyName("some");
 		writer.WriteStartArray();
-		writer.WriteRule(value.Input, options);
-		writer.WriteRule(value.Rule, options);
+		options.Write(writer, value.Input, JsonLogicSerializerContext.Default.Rule);
+		options.Write(writer, value.Rule, JsonLogicSerializerContext.Default.Rule);
 		writer.WriteEndArray();
 		writer.WriteEndObject();
 	}

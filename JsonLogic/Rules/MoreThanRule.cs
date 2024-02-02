@@ -69,7 +69,7 @@ internal class MoreThanRuleJsonConverter : WeaklyTypedJsonConverter<MoreThanRule
 {
 	public override MoreThanRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = options.Read(ref reader, JsonLogicSerializerContext.Default.RuleArray);
+		var parameters = options.ReadArray(ref reader, JsonLogicSerializerContext.Default.Rule);
 
 		if (parameters is not { Length: 2 })
 			throw new JsonException("The > rule needs an array with 2 parameters.");
@@ -84,8 +84,8 @@ internal class MoreThanRuleJsonConverter : WeaklyTypedJsonConverter<MoreThanRule
 		writer.WriteStartObject();
 		writer.WritePropertyName(">");
 		writer.WriteStartArray();
-		writer.WriteRule(value.A, options);
-		writer.WriteRule(value.B, options);
+		options.Write(writer, value.A, JsonLogicSerializerContext.Default.Rule);
+		options.Write(writer, value.B, JsonLogicSerializerContext.Default.Rule);
 		writer.WriteEndArray();
 		writer.WriteEndObject();
 	}

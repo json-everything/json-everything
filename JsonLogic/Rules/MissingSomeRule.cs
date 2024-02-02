@@ -88,7 +88,7 @@ internal class MissingSomeRuleJsonConverter : WeaklyTypedJsonConverter<MissingSo
 {
 	public override MissingSomeRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = options.Read(ref reader, JsonLogicSerializerContext.Default.RuleArray);
+		var parameters = options.ReadArray(ref reader, JsonLogicSerializerContext.Default.Rule);
 
 		if (parameters is not { Length: 2 })
 			throw new JsonException("The missing_some rule needs an array with 2 parameters.");
@@ -103,8 +103,8 @@ internal class MissingSomeRuleJsonConverter : WeaklyTypedJsonConverter<MissingSo
 		writer.WriteStartObject();
 		writer.WritePropertyName("missing_some");
 		writer.WriteStartArray();
-		writer.WriteRule(value.RequiredCount, options);
-		writer.WriteRule(value.Components, options);
+		options.Write(writer, value.RequiredCount, JsonLogicSerializerContext.Default.Rule);
+		options.Write(writer, value.Components, JsonLogicSerializerContext.Default.Rule);
 		writer.WriteEndArray();
 		writer.WriteEndObject();
 	}

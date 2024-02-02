@@ -4,6 +4,7 @@ using Json.Logic.Rules;
 
 namespace Json.Logic;
 
+[JsonSerializable(typeof(Rule))]
 [JsonSerializable(typeof(AddRule))]
 [JsonSerializable(typeof(AllRule))]
 [JsonSerializable(typeof(AndRule))]
@@ -41,7 +42,6 @@ namespace Json.Logic;
 [JsonSerializable(typeof(SubtractRule))]
 [JsonSerializable(typeof(VariableRule))]
 [JsonSerializable(typeof(JsonNode))]
-[JsonSerializable(typeof(Rule[]))]
 [JsonSerializable(typeof(int))]
 [JsonSerializable(typeof(float))]
 [JsonSerializable(typeof(double))]

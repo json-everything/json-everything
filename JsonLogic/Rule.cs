@@ -120,7 +120,7 @@ public class LogicComponentConverter : JsonConverter<Rule>
 		}
 		else if (node is JsonArray)
 		{
-			var data = node.Deserialize(JsonLogicSerializerContext.Default.RuleArray)!;
+			var data = node.AsArray().Select(x => x.Deserialize(JsonLogicSerializerContext.Default.Rule)!).ToArray();
 			rule = new RuleCollection(data);
 		}
 		else
@@ -145,6 +145,9 @@ public class LogicComponentConverter : JsonConverter<Rule>
 			return;
 		}
 
-		writer.WriteRule(value, options);
+		var ruleType = value.GetType();
+		var typeInfo = RuleRegistry.GetTypeInfo(ruleType)!;
+		var converter = (IWeaklyTypedJsonConverter)typeInfo.Converter;
+		converter.Write(writer, value, options, typeInfo);
 	}
 }

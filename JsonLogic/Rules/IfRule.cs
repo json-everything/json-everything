@@ -87,7 +87,7 @@ internal class IfRuleJsonConverter : WeaklyTypedJsonConverter<IfRule>
 {
 	public override IfRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = options.Read(ref reader, JsonLogicSerializerContext.Default.RuleArray);
+		var parameters = options.ReadArray(ref reader, JsonLogicSerializerContext.Default.Rule);
 
 		if (parameters == null) return new IfRule();
 
@@ -100,7 +100,7 @@ internal class IfRuleJsonConverter : WeaklyTypedJsonConverter<IfRule>
 	{
 		writer.WriteStartObject();
 		writer.WritePropertyName("if");
-		writer.WriteRules(value.Components, options);
+		options.WriteList(writer, value.Components, JsonLogicSerializerContext.Default.Rule);
 		writer.WriteEndObject();
 	}
 }

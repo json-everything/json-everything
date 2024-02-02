@@ -49,14 +49,14 @@ public class Spelling
 	public void Run(Test test)
 	{
 		var node = JsonNode.Parse(test.Logic);
-		var rule = JsonSerializer.Deserialize(test.Logic, JsonLogicSerializerContext.Default.Rule);
+		var rule = JsonSerializer.Deserialize(test.Logic, TestSerializerContext.Default.Rule);
 
-		var serialized = JsonSerializer.SerializeToNode(rule, JsonLogicSerializerContext.Default.Rule!);
+		var serialized = JsonSerializer.SerializeToNode(rule, TestSerializerContext.Default.Rule!);
 
 		if (node.IsEquivalentTo(serialized)) return;
 
-		Console.WriteLine($"Expected: {node.AsJsonString(JsonLogicSerializerContext.Default.Options)}");
-		Console.WriteLine($"Actual:   {serialized.AsJsonString(JsonLogicSerializerContext.Default.Options)}");
+		Console.WriteLine($"Expected: {node.AsJsonString(TestSerializerContext.Default.Options)}");
+		Console.WriteLine($"Actual:   {serialized.AsJsonString(TestSerializerContext.Default.Options)}");
 		Assert.Inconclusive();
 	}
 }

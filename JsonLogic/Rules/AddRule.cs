@@ -64,7 +64,7 @@ internal class AddRuleJsonConverter : WeaklyTypedJsonConverter<AddRule>
 	public override AddRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		var parameters = reader.TokenType == JsonTokenType.StartArray
-			? options.Read(ref reader, JsonLogicSerializerContext.Default.RuleArray)
+			? options.ReadArray(ref reader, JsonLogicSerializerContext.Default.Rule)
 			: new[] { options.Read(ref reader, JsonLogicSerializerContext.Default.Rule)! };
 
 		if (parameters == null || parameters.Length == 0)
@@ -79,7 +79,7 @@ internal class AddRuleJsonConverter : WeaklyTypedJsonConverter<AddRule>
 	{
 		writer.WriteStartObject();
 		writer.WritePropertyName("+");
-		writer.WriteRules(value.Items, options);
+		options.WriteList(writer, value.Items, JsonLogicSerializerContext.Default.Rule);
 		writer.WriteEndObject();
 	}
 }

@@ -50,7 +50,7 @@ internal class NotRuleJsonConverter : WeaklyTypedJsonConverter<NotRule>
 	public override NotRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		var parameters = reader.TokenType == JsonTokenType.StartArray
-			? options.Read(ref reader, JsonLogicSerializerContext.Default.RuleArray)
+			? options.ReadArray(ref reader, JsonLogicSerializerContext.Default.Rule)
 			: new[] { options.Read(ref reader, JsonLogicSerializerContext.Default.Rule)! };
 
 		if (parameters is not { Length: 1 })
@@ -65,7 +65,7 @@ internal class NotRuleJsonConverter : WeaklyTypedJsonConverter<NotRule>
 	{
 		writer.WriteStartObject();
 		writer.WritePropertyName("!");
-		writer.WriteRule(value.Value, options);
+		options.Write(writer, value.Value, JsonLogicSerializerContext.Default.Rule);
 		writer.WriteEndObject();
 	}
 }

@@ -68,7 +68,7 @@ internal class MissingRuleJsonConverter : WeaklyTypedJsonConverter<MissingRule>
 	public override MissingRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		var parameters = reader.TokenType == JsonTokenType.StartArray
-			? options.Read(ref reader, JsonLogicSerializerContext.Default.RuleArray)
+			? options.ReadArray(ref reader, JsonLogicSerializerContext.Default.Rule)
 			: new[] { options.Read(ref reader, JsonLogicSerializerContext.Default.Rule)! };
 
 		if (parameters == null) return new MissingRule();
@@ -82,7 +82,7 @@ internal class MissingRuleJsonConverter : WeaklyTypedJsonConverter<MissingRule>
 	{
 		writer.WriteStartObject();
 		writer.WritePropertyName("missing");
-		writer.WriteRules(value.Components, options);
+		options.WriteList(writer, value.Components, JsonLogicSerializerContext.Default.Rule);
 		writer.WriteEndObject();
 	}
 }

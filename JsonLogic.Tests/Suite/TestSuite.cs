@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Text.Json;
-using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.More;
 
@@ -34,9 +33,3 @@ public class TestSuiteConverter : JsonConverter<TestSuite?>
 		throw new NotImplementedException();
 	}
 }
-
-[JsonSerializable(typeof(TestSuite))]
-[JsonSerializable(typeof(Test))]
-[JsonSerializable(typeof(Test[]))]
-[JsonSerializable(typeof(string))]
-internal partial class TestSerializerContext : JsonSerializerContext;

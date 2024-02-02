@@ -45,7 +45,7 @@ internal class LogRuleJsonConverter : WeaklyTypedJsonConverter<LogRule>
 	public override LogRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		var parameters = reader.TokenType == JsonTokenType.StartArray
-			? options.Read(ref reader, JsonLogicSerializerContext.Default.RuleArray)
+			? options.ReadArray(ref reader, JsonLogicSerializerContext.Default.Rule)
 			: new[] { options.Read(ref reader, JsonLogicSerializerContext.Default.Rule)! };
 
 		return new LogRule(parameters!.Length == 0
@@ -59,7 +59,7 @@ internal class LogRuleJsonConverter : WeaklyTypedJsonConverter<LogRule>
 	{
 		writer.WriteStartObject();
 		writer.WritePropertyName("log");
-		writer.WriteRule(value.Log, options);
+		options.Write(writer, value.Log, JsonLogicSerializerContext.Default.Rule);
 		writer.WriteEndObject();
 	}
 }

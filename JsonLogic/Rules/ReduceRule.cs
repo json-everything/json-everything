@@ -77,7 +77,7 @@ internal class ReduceRuleJsonConverter : WeaklyTypedJsonConverter<ReduceRule>
 {
 	public override ReduceRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = options.Read(ref reader, JsonLogicSerializerContext.Default.RuleArray);
+		var parameters = options.ReadArray(ref reader, JsonLogicSerializerContext.Default.Rule);
 
 		if (parameters is not { Length: 3 })
 			throw new JsonException("The reduce rule needs an array with 3 parameters.");
@@ -92,9 +92,9 @@ internal class ReduceRuleJsonConverter : WeaklyTypedJsonConverter<ReduceRule>
 		writer.WriteStartObject();
 		writer.WritePropertyName("reduce");
 		writer.WriteStartArray();
-		writer.WriteRule(value.Input, options);
-		writer.WriteRule(value.Rule, options);
-		writer.WriteRule(value.Initial, options);
+		options.Write(writer, value.Input, JsonLogicSerializerContext.Default.Rule);
+		options.Write(writer, value.Rule, JsonLogicSerializerContext.Default.Rule);
+		options.Write(writer, value.Initial, JsonLogicSerializerContext.Default.Rule);
 		writer.WriteEndArray();
 		writer.WriteEndObject();
 	}

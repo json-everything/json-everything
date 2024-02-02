@@ -52,7 +52,7 @@ internal class MergeRuleJsonConverter : WeaklyTypedJsonConverter<MergeRule>
 	public override MergeRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		var parameters = reader.TokenType == JsonTokenType.StartArray
-			? options.Read(ref reader, JsonLogicSerializerContext.Default.RuleArray)
+			? options.ReadArray(ref reader, JsonLogicSerializerContext.Default.Rule)
 			: new[] { options.Read(ref reader, JsonLogicSerializerContext.Default.Rule)! };
 
 		if (parameters == null) return new MergeRule();
@@ -66,7 +66,7 @@ internal class MergeRuleJsonConverter : WeaklyTypedJsonConverter<MergeRule>
 	{
 		writer.WriteStartObject();
 		writer.WritePropertyName("merge");
-		writer.WriteRules(value.Items, options, false);
+		options.WriteList(writer, value.Items, JsonLogicSerializerContext.Default.Rule);
 		writer.WriteEndObject();
 	}
 }

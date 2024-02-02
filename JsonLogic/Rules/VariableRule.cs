@@ -62,7 +62,7 @@ internal class VariableRuleJsonConverter : WeaklyTypedJsonConverter<VariableRule
 	public override VariableRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		var parameters = reader.TokenType == JsonTokenType.StartArray
-			? options.Read(ref reader, JsonLogicSerializerContext.Default.RuleArray)
+			? options.ReadArray(ref reader, JsonLogicSerializerContext.Default.Rule)
 			: new[] { options.Read(ref reader, JsonLogicSerializerContext.Default.Rule)! };
 
 		if (parameters is not ({ Length: 0 } or { Length: 1 } or { Length: 2 }))
@@ -85,12 +85,12 @@ internal class VariableRuleJsonConverter : WeaklyTypedJsonConverter<VariableRule
 		if (value.DefaultValue != null)
 		{
 			writer.WriteStartArray();
-			writer.WriteRule(value.Path, options);
-			writer.WriteRule(value.DefaultValue, options);
+			options.Write(writer, value.Path, JsonLogicSerializerContext.Default.Rule!);
+			options.Write(writer, value.DefaultValue, JsonLogicSerializerContext.Default.Rule);
 			writer.WriteEndArray();
 		}
 		else
-			writer.WriteRule(value.Path, options);
+			options.Write(writer, value.Path, JsonLogicSerializerContext.Default.Rule!);
 
 		writer.WriteEndObject();
 	}

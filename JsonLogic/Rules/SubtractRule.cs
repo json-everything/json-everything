@@ -72,7 +72,7 @@ internal class SubtractRuleJsonConverter : WeaklyTypedJsonConverter<SubtractRule
 {
 	public override SubtractRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = options.Read(ref reader, JsonLogicSerializerContext.Default.RuleArray);
+		var parameters = options.ReadArray(ref reader, JsonLogicSerializerContext.Default.Rule);
 
 		if (parameters == null || parameters.Length == 0)
 			throw new JsonException("The - rule needs an array of parameters.");
@@ -86,7 +86,7 @@ internal class SubtractRuleJsonConverter : WeaklyTypedJsonConverter<SubtractRule
 	{
 		writer.WriteStartObject();
 		writer.WritePropertyName("-");
-		writer.WriteRules(value.Items, options);
+		options.WriteList(writer, value.Items, JsonLogicSerializerContext.Default.Rule);
 		writer.WriteEndObject();
 	}
 }

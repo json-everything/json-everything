@@ -50,6 +50,6 @@ internal class RuleCollectionJsonConverter : WeaklyTypedJsonConverter<RuleCollec
 	[UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public override void Write(Utf8JsonWriter writer, RuleCollection value, JsonSerializerOptions options)
 	{
-		writer.WriteRules(value.Rules, options);
+		options.WriteList(writer, value.Rules, JsonLogicSerializerContext.Default.Rule);
 	}
 }

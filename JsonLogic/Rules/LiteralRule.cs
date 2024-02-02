@@ -48,6 +48,9 @@ internal class LiteralRuleJsonConverter : WeaklyTypedJsonConverter<LiteralRule>
 
 	public override void Write(Utf8JsonWriter writer, LiteralRule value, JsonSerializerOptions options)
 	{
-		JsonSerializer.Serialize(writer, value.Value, JsonLogicSerializerContext.Default.JsonNode!);
+		if (value.Value is null) 
+			writer.WriteNullValue();
+		else
+			JsonSerializer.Serialize(writer, value.Value, JsonLogicSerializerContext.Default.JsonNode!);
 	}
 }

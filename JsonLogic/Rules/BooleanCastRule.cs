@@ -47,7 +47,7 @@ internal class BooleanCastRuleJsonConverter : WeaklyTypedJsonConverter<BooleanCa
 {
 	public override BooleanCastRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = options.Read(ref reader, JsonLogicSerializerContext.Default.RuleArray);
+		var parameters = options.ReadArray(ref reader, JsonLogicSerializerContext.Default.Rule);
 
 		if (parameters is not { Length: 1 })
 			throw new JsonException("The !! rule needs an array with a single parameter.");
@@ -62,7 +62,7 @@ internal class BooleanCastRuleJsonConverter : WeaklyTypedJsonConverter<BooleanCa
 		writer.WriteStartObject();
 		writer.WritePropertyName("!!");
 		writer.WriteStartArray();
-		writer.WriteRule(value.Value, options);
+		options.Write(writer, value.Value, JsonLogicSerializerContext.Default.Rule);
 		writer.WriteEndArray();
 		writer.WriteEndObject();
 	}
