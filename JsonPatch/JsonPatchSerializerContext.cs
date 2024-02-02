@@ -10,6 +10,7 @@ namespace Json.Patch;
 /// </summary>
 [JsonSerializable(typeof(JsonPatch))]
 [JsonSerializable(typeof(PatchOperation))]
+[JsonSerializable(typeof(PatchOperationJsonConverter.Model))]
 [JsonSerializable(typeof(OperationType))]
 [JsonSerializable(typeof(PatchResult))]
 [JsonSerializable(typeof(JsonNode))]

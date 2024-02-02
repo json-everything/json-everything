@@ -147,7 +147,7 @@ public class PatchOperation : IEquatable<PatchOperation>
 	}
 }
 
-internal partial class PatchOperationJsonConverter : JsonConverter<PatchOperation>
+internal class PatchOperationJsonConverter : JsonConverter<PatchOperation>
 {
 	internal class Model
 	{
@@ -161,12 +161,9 @@ internal partial class PatchOperationJsonConverter : JsonConverter<PatchOperatio
 		public JsonElement Value { get; set; }
 	}
 
-	[JsonSerializable(typeof(Model))]
-	internal partial class InternalPatchOperationContext : JsonSerializerContext;
-
 	public override PatchOperation Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var model = JsonSerializer.Deserialize(ref reader, InternalPatchOperationContext.Default.Model)!;
+		var model = options.Read(ref reader, JsonPatchSerializerContext.Default.Model)!;
 
 		if (model.Path == null)
 			throw new JsonException($"`{model.Op}` operation requires `path`");
@@ -206,34 +203,34 @@ internal partial class PatchOperationJsonConverter : JsonConverter<PatchOperatio
 		writer.WriteStartObject();
 
 		writer.WritePropertyName("op");
-		JsonSerializer.Serialize(writer, value.Op, JsonPatchSerializerContext.Default.OperationType);
+		options.Write(writer, value.Op, JsonPatchSerializerContext.Default.OperationType);
 
 		writer.WritePropertyName("path");
-		JsonSerializer.Serialize(writer, value.Path, JsonPatchSerializerContext.Default.JsonPointer);
+		options.Write(writer, value.Path, JsonPatchSerializerContext.Default.JsonPointer);
 
 		switch (value.Op)
 		{
 			case OperationType.Add:
 				writer.WritePropertyName("value");
-				JsonSerializer.Serialize(writer, value.Value, JsonPatchSerializerContext.Default.JsonNode!);
+				options.Write(writer, value.Value, JsonPatchSerializerContext.Default.JsonNode!);
 				break;
 			case OperationType.Remove:
 				break;
 			case OperationType.Replace:
 				writer.WritePropertyName("value");
-				JsonSerializer.Serialize(writer, value.Value, JsonPatchSerializerContext.Default.JsonNode!);
+				options.Write(writer, value.Value, JsonPatchSerializerContext.Default.JsonNode!);
 				break;
 			case OperationType.Move:
 				writer.WritePropertyName("from");
-				JsonSerializer.Serialize(writer, value.From, JsonPatchSerializerContext.Default.JsonPointer);
+				options.Write(writer, value.From, JsonPatchSerializerContext.Default.JsonPointer);
 				break;
 			case OperationType.Copy:
 				writer.WritePropertyName("from");
-				JsonSerializer.Serialize(writer, value.From, JsonPatchSerializerContext.Default.JsonPointer);
+				options.Write(writer, value.From, JsonPatchSerializerContext.Default.JsonPointer);
 				break;
 			case OperationType.Test:
 				writer.WritePropertyName("value");
-				JsonSerializer.Serialize(writer, value.Value, JsonPatchSerializerContext.Default.JsonNode!);
+				options.Write(writer, value.Value, JsonPatchSerializerContext.Default.JsonNode!);
 				break;
 			case OperationType.Unknown:
 			default:
