@@ -89,7 +89,7 @@ public sealed class PropertiesKeywordJsonConverter : WeaklyTypedJsonConverter<Pr
 		if (reader.TokenType != JsonTokenType.StartObject)
 			throw new JsonException("Expected object");
 
-		var schema = options.Read(ref reader, JsonSchemaSerializerContext.Default.DictionaryStringJsonSchema)!;
+		var schema = options.ReadDictionary(ref reader, JsonSchemaSerializerContext.Default.JsonSchema)!;
 		return new PropertiesKeyword(schema);
 	}
 

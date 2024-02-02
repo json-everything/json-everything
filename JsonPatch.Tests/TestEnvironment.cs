@@ -16,8 +16,7 @@ public class TestEnvironment
 		new JsonSerializerOptions
 			{
 				TypeInfoResolverChain = { TestSerializerContext.Default }
-			}
-			.WithJsonSchema();
+			};
 }
 
 [JsonSerializable(typeof(PatchExtensionTests.TestModel))]
@@ -38,4 +37,5 @@ public class TestEnvironment
 [JsonSerializable(typeof(JsonNode))]
 [JsonSerializable(typeof(JsonPatch))]
 [JsonSerializable(typeof(PatchResult))]
+[JsonSerializable(typeof(EvaluationResults))]
 internal partial class TestSerializerContext : JsonSerializerContext;

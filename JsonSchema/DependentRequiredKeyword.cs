@@ -99,7 +99,7 @@ public sealed class DependentRequiredKeywordJsonConverter : WeaklyTypedJsonConve
 		if (reader.TokenType != JsonTokenType.StartObject)
 			throw new JsonException("Expected object");
 
-		var requirements = options.Read(ref reader, JsonSchemaSerializerContext.Default.DictionaryStringListString);
+		var requirements = options.ReadDictionaryList(ref reader, JsonSchemaSerializerContext.Default.String);
 		return new DependentRequiredKeyword(requirements!.ToDictionary(x => x.Key, x => (IReadOnlyList<string>)x.Value));
 	}
 
@@ -113,7 +113,7 @@ public sealed class DependentRequiredKeywordJsonConverter : WeaklyTypedJsonConve
 		foreach (var kvp in value.Requirements)
 		{
 			writer.WritePropertyName(kvp.Key);
-			options.Write(writer, kvp.Value, JsonSchemaSerializerContext.Default.IReadOnlyListString);
+			options.WriteList(writer, kvp.Value, JsonSchemaSerializerContext.Default.String);
 		}
 		writer.WriteEndObject();
 	}

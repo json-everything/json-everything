@@ -92,7 +92,7 @@ public sealed class RequiredKeywordJsonConverter : WeaklyTypedJsonConverter<Requ
 	/// <returns>The converted value.</returns>
 	public override RequiredKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		return new RequiredKeyword(options.Read(ref reader, JsonSchemaSerializerContext.Default.StringArray) ??
+		return new RequiredKeyword(options.ReadArray(ref reader, JsonSchemaSerializerContext.Default.String) ??
 		                           throw new JsonException("Expected array"));
 	}
 

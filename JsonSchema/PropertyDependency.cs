@@ -109,7 +109,7 @@ public sealed class PropertyDependencyJsonConverter : WeaklyTypedJsonConverter<P
 	/// <returns>The converted value.</returns>
 	public override PropertyDependency Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var schemas = options.Read(ref reader, JsonSchemaSerializerContext.Default.DictionaryStringJsonSchema);
+		var schemas = options.ReadDictionary(ref reader, JsonSchemaSerializerContext.Default.JsonSchema);
 
 		return new PropertyDependency(schemas!);
 	}

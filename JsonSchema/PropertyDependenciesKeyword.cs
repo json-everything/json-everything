@@ -114,7 +114,7 @@ public sealed class PropertyDependenciesKeywordJsonConverter : WeaklyTypedJsonCo
 	/// <returns>The converted value.</returns>
 	public override PropertyDependenciesKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var dependencies = options.Read(ref reader, JsonSchemaSerializerContext.Default.DictionaryStringPropertyDependency);
+		var dependencies = options.ReadDictionary(ref reader, JsonSchemaSerializerContext.Default.PropertyDependency);
 
 		return new PropertyDependenciesKeyword(dependencies!);
 	}

@@ -293,15 +293,14 @@ public class EvaluationResults
 	}
 }
 
-internal class EvaluationResultsJsonConverter : WeaklyTypedJsonConverter<EvaluationResults>
+///
+public class EvaluationResultsJsonConverter : WeaklyTypedJsonConverter<EvaluationResults>
 {
 	public override EvaluationResults Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		throw new NotImplementedException();
 	}
 
-	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
-	[UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public override void Write(Utf8JsonWriter writer, EvaluationResults value, JsonSerializerOptions options)
 	{
 		if (value.Exclude) return;
@@ -334,7 +333,7 @@ internal class EvaluationResultsJsonConverter : WeaklyTypedJsonConverter<Evaluat
 			if (value.AnnotationsToSerialize != null)
 			{
 				writer.WritePropertyName("annotations");
-				options.Write(writer, value.AnnotationsToSerialize!, JsonSchemaSerializerContext.Default.IReadOnlyDictionaryStringJsonNode);
+				options.WriteDictionary(writer, value.AnnotationsToSerialize!, JsonSchemaSerializerContext.Default.JsonNode);
 			}
 		}
 		else
@@ -342,19 +341,19 @@ internal class EvaluationResultsJsonConverter : WeaklyTypedJsonConverter<Evaluat
 			if (value.HasErrors)
 			{
 				writer.WritePropertyName("errors");
-				options.Write(writer, value.Errors!, JsonSchemaSerializerContext.Default.IReadOnlyDictionaryStringString);
+				options.WriteDictionary(writer, value.Errors!, JsonSchemaSerializerContext.Default.String);
 			}
 			if (value is { IncludeDroppedAnnotations: true, AnnotationsToSerialize: not null })
 			{
 				writer.WritePropertyName("droppedAnnotations");
-				options.Write(writer, value.AnnotationsToSerialize!, JsonSchemaSerializerContext.Default.IReadOnlyDictionaryStringJsonNode);
+				options.WriteDictionary(writer, value.AnnotationsToSerialize!, JsonSchemaSerializerContext.Default.JsonNode);
 			}
 		}
 
 		if (value.HasDetails)
 		{
 			writer.WritePropertyName("details");
-			options.Write(writer, value.Details, JsonSchemaSerializerContext.Default.IReadOnlyListEvaluationResults);
+			options.WriteList(writer, value.Details, JsonSchemaSerializerContext.Default.EvaluationResults);
 		}
 
 		writer.WriteEndObject();
