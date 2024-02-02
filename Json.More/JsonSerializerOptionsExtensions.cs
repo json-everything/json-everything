@@ -10,6 +10,10 @@ namespace Json.More;
 /// <summary>
 /// Provides extension functionality for <see cref="JsonSerializerOptions"/>.
 /// </summary>
+/// <remarks>
+/// Most (if not all) of these extension methods are workarounds for
+/// https://github.com/dotnet/runtime/issues/50205.
+/// </remarks>
 public static class JsonSerializerOptionsExtensions
 {
 	/// <summary>
