@@ -109,13 +109,7 @@ public sealed class DependentRequiredKeywordJsonConverter : WeaklyTypedJsonConve
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, DependentRequiredKeyword value, JsonSerializerOptions options)
 	{
-		writer.WriteStartObject();
-		foreach (var kvp in value.Requirements)
-		{
-			writer.WritePropertyName(kvp.Key);
-			options.WriteList(writer, kvp.Value, JsonSchemaSerializerContext.Default.String);
-		}
-		writer.WriteEndObject();
+		options.WriteDictionaryList(writer, value.Requirements, JsonSchemaSerializerContext.Default.String);
 	}
 }
 

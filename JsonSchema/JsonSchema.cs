@@ -813,7 +813,8 @@ public sealed class SchemaJsonConverter : WeaklyTypedJsonConverter<JsonSchema>
 
 			var keywordType = keyword.GetType();
 			var typeInfo = SchemaKeywordRegistry.GetTypeInfo(keywordType);
-			((IWeaklyTypedJsonConverter)typeInfo.Converter).Write(writer, keyword, options);
+			var converter = (IWeaklyTypedJsonConverter)typeInfo.Converter;
+			converter.Write(writer, keyword, options, typeInfo);
 		}
 
 		writer.WriteEndObject();

@@ -111,8 +111,8 @@ public class ClientTests
 		var simpleValueSettingsSchema1 = new JsonSchemaBuilder().FromType<SimpleValueWidgetSettings>().AdditionalProperties(false).Build();
 		var simpleValueSettingsSchema2 = new JsonSchemaBuilder().FromType<SimpleValueWidgetSettings>().AdditionalProperties(false).Build();
 
-		Console.WriteLine(JsonSerializer.Serialize(simpleValueSettingsSchema1, TestEnvironment.SerializerOptions));
-		Console.WriteLine(JsonSerializer.Serialize(simpleValueSettingsSchema2, TestEnvironment.SerializerOptions));
+		Console.WriteLine(JsonSerializer.Serialize(simpleValueSettingsSchema1, TestSerializerContext.Default.JsonSchema));
+		Console.WriteLine(JsonSerializer.Serialize(simpleValueSettingsSchema2, TestSerializerContext.Default.JsonSchema));
 		AssertEqual(simpleValueSettingsSchema1, simpleValueSettingsSchema2);
 	}
 
@@ -263,7 +263,7 @@ public class ClientTests
 			.FromType<MyType450>()
 			.Build();
 
-		Console.WriteLine(JsonSerializer.Serialize(schema, TestEnvironment.SerializerOptions));
+		Console.WriteLine(JsonSerializer.Serialize(schema, TestSerializerContext.Default.JsonSchema));
 	}
 
 	private class Issue512_Type
@@ -278,7 +278,7 @@ public class ClientTests
 			.FromType<Issue512_Type>()
 			.Build();
 
-		Console.WriteLine(JsonSerializer.Serialize(schema, TestEnvironment.SerializerOptions));
+		Console.WriteLine(JsonSerializer.Serialize(schema, TestSerializerContext.Default.JsonSchema));
 	}
 
 	private class Type544_ObsoleteProperties
@@ -299,7 +299,7 @@ public class ClientTests
 		builder.FromType<Type544_ObsoleteProperties>();
 
 		var schema = builder.Build();
-		var schemaJson = JsonSerializer.Serialize(schema, TestEnvironment.SerializerOptions);
+		var schemaJson = JsonSerializer.Serialize(schema, TestSerializerContext.Default.JsonSchema);
 		Console.WriteLine(schemaJson);
 
 		Assert.AreEqual(1, schema.GetProperties()!["BBB"].Keywords!.Count);
@@ -317,7 +317,7 @@ public class ClientTests
 	public void Issue551_MinMaxItemsOnStringProperty()
 	{
 		JsonSchema schema = new JsonSchemaBuilder().FromType<Type551_MinItemsOnString>();
-		var schemaJson = JsonSerializer.Serialize(schema, TestEnvironment.SerializerOptions);
+		var schemaJson = JsonSerializer.Serialize(schema, TestSerializerContext.Default.JsonSchema);
 		Console.WriteLine(schemaJson);
 
 		Assert.AreEqual(1, schema.GetProperties()!["Value"].Keywords!.Count);

@@ -11,23 +11,23 @@ internal static class AssertionExtensions
 	public static void AssertEqual(JsonSchema expected, JsonSchema actual)
 	{
 		Console.WriteLine("Expected");
-		var expectedAsNode = JsonSerializer.SerializeToNode(expected, TestEnvironment.SerializerOptions);
+		var expectedAsNode = JsonSerializer.SerializeToNode(expected, TestSerializerContext.Default.JsonSchema);
 		Console.WriteLine(expectedAsNode);
 		Console.WriteLine();
 		Console.WriteLine("Actual");
-		var actualAsNode = JsonSerializer.SerializeToNode(actual, TestEnvironment.SerializerOptions);
+		var actualAsNode = JsonSerializer.SerializeToNode(actual, TestSerializerContext.Default.JsonSchema);
 		Console.WriteLine(actualAsNode);
 		Assert.That(() => actualAsNode.IsEquivalentTo(expectedAsNode));
 	}
 
-	public static void AssertEqual(IJsonSchemaKeyword expected, IJsonSchemaKeyword actual)
+	public static void AssertEqual(PropertiesKeyword expected, PropertiesKeyword actual)
 	{
 		Console.WriteLine("Expected");
-		var expectedAsNode = JsonSerializer.SerializeToNode<object?>(expected, TestEnvironment.SerializerOptions);
+		var expectedAsNode = JsonSerializer.SerializeToNode(expected, TestSerializerContext.Default.PropertiesKeyword);
 		Console.WriteLine(expectedAsNode);
 		Console.WriteLine();
 		Console.WriteLine("Actual");
-		var actualAsNode = JsonSerializer.SerializeToNode<object?>(actual, TestEnvironment.SerializerOptions);
+		var actualAsNode = JsonSerializer.SerializeToNode(actual, TestSerializerContext.Default.PropertiesKeyword);
 		Console.WriteLine(actualAsNode);
 		Assert.That(() => actualAsNode.IsEquivalentTo(expectedAsNode));
 	}
