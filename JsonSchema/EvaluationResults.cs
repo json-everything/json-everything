@@ -381,26 +381,11 @@ public class Pre202012EvaluationResultsJsonConverter : WeaklyTypedJsonConverter<
 	/// </summary>
 	private class Annotation
 	{
-		/// <summary>
-		/// The keyword that created the annotation (acts as a key for lookup).
-		/// </summary>
 		public string Owner { get; }
-		/// <summary>
-		/// The annotation value.
-		/// </summary>
-		public object? Value { get; }
-		/// <summary>
-		/// The pointer to the keyword that created the annotation.
-		/// </summary>
+		public JsonNode? Value { get; }
 		public JsonPointer Source { get; }
-
-		/// <summary>
-		/// Creates a new <see cref="Annotation"/>.
-		/// </summary>
-		/// <param name="owner">The keyword that created the annotation (acts as a key for lookup).</param>
-		/// <param name="value">The annotation value.</param>
-		/// <param name="source">The pointer to the keyword that created the annotation.</param>
-		public Annotation(string owner, object? value, in JsonPointer source)
+	
+		public Annotation(string owner, JsonNode? value, in JsonPointer source)
 		{
 			Owner = owner;
 			Value = value;
@@ -580,7 +565,7 @@ public class Pre202012EvaluationResultsJsonConverter : WeaklyTypedJsonConverter<
 		writer.WriteBoolean("valid", value.IsValid);
 
 		writer.WritePropertyName("keywordLocation");
-		JsonSerializer.Serialize(writer, value.EvaluationPath.Combine(keyword), options);
+		options.Write(writer, value.EvaluationPath.Combine(keyword), JsonSchemaSerializerContext.Default.JsonPointer);
 
 		writer.WritePropertyName("absoluteKeywordLocation");
 		if (value.SchemaLocation.OriginalString.Contains('#'))
@@ -589,7 +574,7 @@ public class Pre202012EvaluationResultsJsonConverter : WeaklyTypedJsonConverter<
 			options.Write(writer, value.SchemaLocation.OriginalString + $"#/{keyword}", JsonSchemaSerializerContext.Default.String);
 
 		writer.WritePropertyName("instanceLocation");
-		JsonSerializer.Serialize(writer, value.InstanceLocation, options);
+		options.Write(writer, value.InstanceLocation, JsonSchemaSerializerContext.Default.JsonPointer);
 
 		writer.WritePropertyName("error");
 		options.Write(writer, error, JsonSchemaSerializerContext.Default.String);
@@ -606,7 +591,7 @@ public class Pre202012EvaluationResultsJsonConverter : WeaklyTypedJsonConverter<
 		writer.WriteBoolean("valid", value.IsValid);
 
 		writer.WritePropertyName("keywordLocation");
-		JsonSerializer.Serialize(writer, annotation.Source, options);
+		options.Write(writer, annotation.Source, JsonSchemaSerializerContext.Default.JsonPointer);
 
 		writer.WritePropertyName("absoluteKeywordLocation");
 		if (value.SchemaLocation.OriginalString.Contains('#'))
@@ -615,10 +600,10 @@ public class Pre202012EvaluationResultsJsonConverter : WeaklyTypedJsonConverter<
 			options.Write(writer, value.SchemaLocation.OriginalString + $"#/{annotation.Owner}", JsonSchemaSerializerContext.Default.String);
 
 		writer.WritePropertyName("instanceLocation");
-		JsonSerializer.Serialize(writer, value.InstanceLocation, options);
+		options.Write(writer, value.InstanceLocation, JsonSchemaSerializerContext.Default.JsonPointer);
 
 		writer.WritePropertyName("annotation");
-		JsonSerializer.Serialize(writer, annotation.Value, options);
+		options.Write(writer, annotation.Value, JsonSchemaSerializerContext.Default.JsonNode!);
 
 		writer.WriteEndObject();
 	}
