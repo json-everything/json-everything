@@ -162,7 +162,7 @@ public sealed class ItemsKeywordJsonConverter : WeaklyTypedJsonConverter<ItemsKe
 	{
 		if (reader.TokenType == JsonTokenType.StartArray)
 		{
-			var schemas = options.Read(ref reader, JsonSchemaSerializerContext.Default.ListJsonSchema)!;
+			var schemas = options.ReadList(ref reader, JsonSchemaSerializerContext.Default.JsonSchema)!;
 			return new ItemsKeyword(schemas);
 		}
 

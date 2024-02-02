@@ -93,7 +93,7 @@ public sealed class AllOfKeywordJsonConverter : WeaklyTypedJsonConverter<AllOfKe
 		if (reader.TokenType != JsonTokenType.StartArray)
 			throw new JsonException("Expected array");
 
-		var schemas = options.Read(ref reader, JsonSchemaSerializerContext.Default.ListJsonSchema)!;
+		var schemas = options.ReadList(ref reader, JsonSchemaSerializerContext.Default.JsonSchema)!;
 		return new AllOfKeyword(schemas);
 	}
 

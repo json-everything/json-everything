@@ -115,7 +115,7 @@ public sealed class PatternPropertiesKeywordJsonConverter : WeaklyTypedJsonConve
 		if (reader.TokenType != JsonTokenType.StartObject)
 			throw new JsonException("Expected object");
 
-		var patternProps = options.Read(ref reader, JsonSchemaSerializerContext.Default.DictionaryStringJsonSchema)!;
+		var patternProps = options.ReadDictionary(ref reader, JsonSchemaSerializerContext.Default.JsonSchema)!;
 		var schemas = new Dictionary<Regex, JsonSchema>();
 		var invalidProps = new List<string>();
 		foreach (var prop in patternProps)
