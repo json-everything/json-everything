@@ -15,5 +15,4 @@ namespace Json.Patch;
 [JsonSerializable(typeof(JsonNode))]
 [JsonSerializable(typeof(JsonPointer))]
 [JsonSerializable(typeof(List<PatchOperation>))]
-[JsonSerializable(typeof(IReadOnlyList<PatchOperation>))]
 internal partial class JsonPatchSerializerContext : JsonSerializerContext;

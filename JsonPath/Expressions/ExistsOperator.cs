@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace Json.Path.Expressions;
+﻿namespace Json.Path.Expressions;
 
 internal class ExistsOperator : IUnaryComparativeOperator
 {

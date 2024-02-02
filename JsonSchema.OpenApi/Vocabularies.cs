@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Text.Json.Nodes;
-using System.Text.Json.Serialization;
-
-namespace Json.Schema.OpenApi;
+﻿namespace Json.Schema.OpenApi;
 
 /// <summary>
 /// Declares the vocabularies of the supported drafts.

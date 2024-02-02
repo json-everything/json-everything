@@ -1,8 +1,4 @@
-﻿using System;
-using System.Text.Json;
-using NUnit.Framework;
-
-namespace Json.Path.Tests;
+﻿namespace Json.Path.Tests;
 
 //public class ReferenceResolutionTests
 //{

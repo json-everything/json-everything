@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text.Json.Nodes;
-using System.Text.Json.Serialization;
-
-namespace Json.Schema.Data;
+﻿namespace Json.Schema.Data;
 
 /// <summary>
 /// Declares the vocabularies of the supported drafts.
