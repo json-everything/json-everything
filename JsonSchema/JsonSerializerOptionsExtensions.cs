@@ -53,4 +53,21 @@ public static class JsonSerializerOptionsExtensions
 		var deserializer = ArbitraryDeserializer.GetConverter(arbitraryType);
 		return deserializer.Read(ref reader, options);
 	}
+
+	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We won't use dynamic code if the JsonSerializerOptions come from the source generator.")]
+	[UnconditionalSuppressMessage("AOT", "IL3050:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We won't use dynamic code if the JsonSerializerOptions come from the source generator.")]
+	internal static void Write(this JsonSerializerOptions options, Utf8JsonWriter writer, object? value, Type arbitraryType, JsonTypeInfo typeInfo)
+	{
+		var converter = typeInfo.Converter;
+
+		// Try using the AOT-friendly interface first.
+		if (converter is IWeaklyTypedJsonConverter converterReadWrite)
+		{
+			converterReadWrite.Write(writer, value!, options, typeInfo);
+			return;
+		}
+
+		// AOT-aware callers should not have gotten this far.
+		options.Write(writer, value, arbitraryType);
+	}
 }
