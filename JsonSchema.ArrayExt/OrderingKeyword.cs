@@ -166,7 +166,7 @@ public sealed class OrderingKeywordJsonConverter : WeaklyTypedJsonConverter<Orde
 		if (reader.TokenType != JsonTokenType.StartArray)
 			throw new JsonException("Expected array");
 
-		var references = options.Read(ref reader, JsonSchemaArrayExtSerializerContext.Default.ListOrderingSpecifier)!;
+		var references = options.ReadList(ref reader, JsonSchemaArrayExtSerializerContext.Default.OrderingSpecifier)!;
 		return new OrderingKeyword(references);
 	}
 
@@ -177,6 +177,6 @@ public sealed class OrderingKeywordJsonConverter : WeaklyTypedJsonConverter<Orde
 	public override void Write(Utf8JsonWriter writer, OrderingKeyword value, JsonSerializerOptions options)
 	{
 		writer.WritePropertyName(OrderingKeyword.Name);
-		options.Write(writer, value.Specifiers, JsonSchemaArrayExtSerializerContext.Default.IEnumerableOrderingSpecifier);
+		options.WriteList(writer, value.Specifiers, JsonSchemaArrayExtSerializerContext.Default.OrderingSpecifier);
 	}
 }

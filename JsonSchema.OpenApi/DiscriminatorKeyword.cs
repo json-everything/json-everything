@@ -88,7 +88,7 @@ public class DiscriminatorKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="DiscriminatorKeyword"/>.
 /// </summary>
-public sealed partial class DiscriminatorKeywordJsonConverter : WeaklyTypedJsonConverter<DiscriminatorKeyword>
+public sealed class DiscriminatorKeywordJsonConverter : WeaklyTypedJsonConverter<DiscriminatorKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="DiscriminatorKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -121,7 +121,7 @@ public sealed partial class DiscriminatorKeywordJsonConverter : WeaklyTypedJsonC
 		if (value.Mapping != null)
 		{
 			writer.WritePropertyName("mapping");
-			options.Write(writer, value.Mapping, JsonSchemaOpenApiSerializerContext.Default.IReadOnlyDictionaryStringString);
+			options.WriteDictionary(writer, value.Mapping, JsonSchemaOpenApiSerializerContext.Default.String);
 		}
 
 		if (value.Extensions != null)
@@ -130,7 +130,7 @@ public sealed partial class DiscriminatorKeywordJsonConverter : WeaklyTypedJsonC
 			{
 				writer.WritePropertyName(extension.Key);
 				options.Write(writer, extension.Value, JsonSchemaOpenApiSerializerContext.Default.JsonNode!);
-;			}
+			}
 		}
 		writer.WriteEndObject();
 	}
