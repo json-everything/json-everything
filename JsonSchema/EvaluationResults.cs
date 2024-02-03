@@ -420,13 +420,13 @@ public class Pre202012EvaluationResultsJsonConverter : WeaklyTypedJsonConverter<
 		if (value.Format == OutputFormat.Hierarchical || value.Parent != null)
 		{
 			writer.WritePropertyName("keywordLocation");
-			JsonSerializer.Serialize(writer, value.EvaluationPath, options);
+			options.Write(writer, value.EvaluationPath, JsonSchemaSerializerContext.Default.JsonPointer);
 
 			writer.WritePropertyName("absoluteKeywordLocation");
 			options.Write(writer, value.SchemaLocation, JsonSchemaSerializerContext.Default.Uri);
 
 			writer.WritePropertyName("instanceLocation");
-			JsonSerializer.Serialize(writer, value.InstanceLocation, options);
+			options.Write(writer, value.InstanceLocation, JsonSchemaSerializerContext.Default.JsonPointer);
 		}
 
 		bool skipCloseObject = false;
