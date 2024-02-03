@@ -2,15 +2,15 @@ using System.Collections.Generic;
 using NUnit.Framework;
 
 using static Json.Schema.Generation.Tests.AssertionExtensions;
+// ReSharper disable ClassNeverInstantiated.Local
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
 namespace Json.Schema.Generation.Tests;
 
 public class AdditionalItemsTests
 {
 	[AdditionalItems(true)]
-	private class AdditionalItemsTrue : List<int>
-	{
-	}
+	private class AdditionalItemsTrue : List<int>;
 
 	[Test]
 	public void TrueIsAdded()
@@ -26,9 +26,7 @@ public class AdditionalItemsTests
 	}
 
 	[AdditionalItems(false)]
-	private class AdditionalItemsFalse : List<int>
-	{
-	}
+	private class AdditionalItemsFalse : List<int>;
 
 	[Test]
 	public void FalseIsAdded()
@@ -44,9 +42,7 @@ public class AdditionalItemsTests
 	}
 
 	[AdditionalItems(typeof(string))]
-	private class AdditionalItemsString : List<int>
-	{
-	}
+	private class AdditionalItemsString : List<int>;
 
 	[Test]
 	public void TypeIsAdded()

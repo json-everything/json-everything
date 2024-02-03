@@ -101,9 +101,9 @@ public class BundlingTests
 		options.SchemaRegistry.Register(bar);
 		var actual = foo.Bundle(options);
 
-		Console.WriteLine(JsonSerializer.Serialize(foo, TestEnvironment.SerializerOptions));
-		Console.WriteLine(JsonSerializer.Serialize(bar, TestEnvironment.SerializerOptions));
-		Console.WriteLine(JsonSerializer.Serialize(actual, TestEnvironment.SerializerOptions));
+		Console.WriteLine(JsonSerializer.Serialize(foo, TestEnvironment.TestOutputSerializerOptions));
+		Console.WriteLine(JsonSerializer.Serialize(bar, TestEnvironment.TestOutputSerializerOptions));
+		Console.WriteLine(JsonSerializer.Serialize(actual, TestEnvironment.TestOutputSerializerOptions));
 
 		Assert.That(() => actual.GetDefs()!.Values.Any(x => x.GetId()!.OriginalString == "https://json-everything/foo"));
 		Assert.That(() => actual.GetDefs()!.Values.Any(x => x.GetId()!.OriginalString == "https://json-everything/bar"));
@@ -167,9 +167,9 @@ public class BundlingTests
 		options.SchemaRegistry.Register(bar);
 		var actual = foo.Bundle(options);
 
-		Console.WriteLine(JsonSerializer.Serialize(foo, TestEnvironment.SerializerOptions));
-		Console.WriteLine(JsonSerializer.Serialize(bar, TestEnvironment.SerializerOptions));
-		Console.WriteLine(JsonSerializer.Serialize(actual, TestEnvironment.SerializerOptions));
+		Console.WriteLine(JsonSerializer.Serialize(foo, TestEnvironment.TestOutputSerializerOptions));
+		Console.WriteLine(JsonSerializer.Serialize(bar, TestEnvironment.TestOutputSerializerOptions));
+		Console.WriteLine(JsonSerializer.Serialize(actual, TestEnvironment.TestOutputSerializerOptions));
 
 		Assert.That(() => actual.GetDefs()!.Values.Any(x => x.GetId()!.OriginalString == "https://json-everything/foo"));
 		Assert.That(() => actual.GetDefs()!.Values.Any(x => x.GetId()!.OriginalString == "https://json-everything/bar"));
@@ -235,10 +235,10 @@ public class BundlingTests
 		options.SchemaRegistry.Register(baz);
 		var actual = foo.Bundle(options);
 
-		Console.WriteLine(JsonSerializer.Serialize(foo, TestEnvironment.SerializerOptions));
-		Console.WriteLine(JsonSerializer.Serialize(bar, TestEnvironment.SerializerOptions));
-		Console.WriteLine(JsonSerializer.Serialize(baz, TestEnvironment.SerializerOptions));
-		Console.WriteLine(JsonSerializer.Serialize(actual, TestEnvironment.SerializerOptions));
+		Console.WriteLine(JsonSerializer.Serialize(foo, TestEnvironment.TestOutputSerializerOptions));
+		Console.WriteLine(JsonSerializer.Serialize(bar, TestEnvironment.TestOutputSerializerOptions));
+		Console.WriteLine(JsonSerializer.Serialize(baz, TestEnvironment.TestOutputSerializerOptions));
+		Console.WriteLine(JsonSerializer.Serialize(actual, TestEnvironment.TestOutputSerializerOptions));
 
 		Assert.That(() => actual.GetDefs()!.Values.Any(x => x.GetId()!.OriginalString == "https://json-everything/foo"));
 		Assert.That(() => actual.GetDefs()!.Values.Any(x => x.GetId()!.OriginalString == "https://json-everything/bar"));
@@ -262,7 +262,7 @@ public class BundlingTests
 
 		var actual = linkedListNode.Bundle(options);
 
-		Console.WriteLine(JsonSerializer.Serialize(actual, TestEnvironment.SerializerOptions));
+		Console.WriteLine(JsonSerializer.Serialize(actual, TestEnvironment.TestOutputSerializerOptions));
 
 		Assert.That(() => actual.GetDefs()!.Values.Any(x => x.GetId()!.OriginalString == "https://json-everything/linked-list"));
 	}
@@ -320,7 +320,7 @@ public class BundlingTests
 
 		var actual = a.Bundle(options);
 
-		Console.WriteLine(JsonSerializer.Serialize(actual, TestEnvironment.SerializerOptions));
+		Console.WriteLine(JsonSerializer.Serialize(actual, TestEnvironment.TestOutputSerializerOptions));
 
 		Assert.That(() => actual.GetDefs()!.Values.Any(x => x.GetId()!.OriginalString == "https://json-everything/a"));
 		Assert.That(() => actual.GetDefs()!.Values.Any(x => x.GetId()!.OriginalString == "https://json-everything/b"));

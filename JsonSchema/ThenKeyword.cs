@@ -19,7 +19,7 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Applicator201909Id)]
 [Vocabulary(Vocabularies.Applicator202012Id)]
 [Vocabulary(Vocabularies.ApplicatorNextId)]
-[DependsOnAnnotationsFrom(typeof(IfKeyword))]
+[DependsOnAnnotationsFrom<IfKeyword>]
 [JsonConverter(typeof(ThenKeywordJsonConverter))]
 public class ThenKeyword : IJsonSchemaKeyword, ISchemaContainer
 {
@@ -62,8 +62,8 @@ public class ThenKeyword : IJsonSchemaKeyword, ISchemaContainer
 
 		return new KeywordConstraint(Name, Evaluator)
 		{
-			SiblingDependencies = new[] { ifConstraint },
-			ChildDependencies = new[] { subschemaConstraint }
+			SiblingDependencies = [ifConstraint],
+			ChildDependencies = [subschemaConstraint]
 		};
 	}
 
@@ -84,7 +84,7 @@ public class ThenKeyword : IJsonSchemaKeyword, ISchemaContainer
 /// <summary>
 /// JSON converter for <see cref="ThenKeyword"/>.
 /// </summary>
-public sealed class ThenKeywordJsonConverter : JsonConverter<ThenKeyword>
+public sealed class ThenKeywordJsonConverter : WeaklyTypedJsonConverter<ThenKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="ThenKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -93,7 +93,7 @@ public sealed class ThenKeywordJsonConverter : JsonConverter<ThenKeyword>
 	/// <returns>The converted value.</returns>
 	public override ThenKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var schema = options.Read<JsonSchema>(ref reader)!;
+		var schema = options.Read(ref reader, JsonSchemaSerializerContext.Default.JsonSchema)!;
 
 		return new ThenKeyword(schema);
 	}
@@ -104,7 +104,6 @@ public sealed class ThenKeywordJsonConverter : JsonConverter<ThenKeyword>
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, ThenKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(ThenKeyword.Name);
-		JsonSerializer.Serialize(writer, value.Schema, options);
+		options.Write(writer, value.Schema, JsonSchemaSerializerContext.Default.JsonSchema);
 	}
 }

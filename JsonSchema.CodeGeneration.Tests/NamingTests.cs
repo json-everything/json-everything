@@ -36,7 +36,7 @@ public class NamingTests
   ""just-a-letter"": 45
 }";
 
-		VerifyDeserialization(code, json);
+		VerifyDeserialization(code, json, isReflectionAllowed: true);
 	}
 
 	[Test]

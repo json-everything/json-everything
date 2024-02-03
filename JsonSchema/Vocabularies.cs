@@ -10,12 +10,7 @@ public static partial class Vocabularies
 {
 	static Vocabularies()
 	{
-		var keywords = typeof(IJsonSchemaKeyword)
-			.Assembly
-			.DefinedTypes
-			.Where(t => typeof(IJsonSchemaKeyword).IsAssignableFrom(t) &&
-						!t.IsAbstract &&
-						!t.IsInterface)
+		var keywords = SchemaKeywordRegistry.KeywordTypes
 			.Select(t => new
 			{
 				Type = t,

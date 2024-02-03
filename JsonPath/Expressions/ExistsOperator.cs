@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace Json.Path.Expressions;
+﻿namespace Json.Path.Expressions;
 
 internal class ExistsOperator : IUnaryComparativeOperator
 {
@@ -11,7 +9,7 @@ internal class ExistsOperator : IUnaryComparativeOperator
 		return value switch
 		{
 			JsonPathValue j => j.Value != null,
-			NodeListPathValue n => n.Value.Any(),
+			NodeListPathValue n => n.Value.Count != 0,
 			LogicalPathValue l => l.Value,
 			_ => false
 		};

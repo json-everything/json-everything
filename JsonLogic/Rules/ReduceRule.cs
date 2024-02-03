@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
@@ -13,14 +14,6 @@ namespace Json.Logic.Rules;
 [JsonConverter(typeof(ReduceRuleJsonConverter))]
 public class ReduceRule : Rule
 {
-	private class Intermediary
-	{
-		public JsonNode? Current { get; set; }
-		public JsonNode? Accumulator { get; set; }
-	}
-
-	private static readonly JsonSerializerOptions _options = new() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
-
 	/// <summary>
 	/// A sequence of values to reduce.
 	/// </summary>
@@ -65,27 +58,26 @@ public class ReduceRule : Rule
 
 		foreach (var element in arr)
 		{
-			var intermediary = new Intermediary
+			var intermediary = new JsonObject
 			{
-				Current = element,
-				Accumulator = accumulator
+				["current"] = element?.DeepClone(),
+				["accumulator"] = accumulator?.DeepClone()
 			};
-			var item = JsonSerializer.SerializeToNode(intermediary, _options);
 
-			accumulator = Rule.Apply(data, item);
+			accumulator = Rule.Apply(data, intermediary);
 
-			if (accumulator == JsonNull.SignalNode) break;
+			if (accumulator == null) break;
 		}
 
 		return accumulator;
 	}
 }
 
-internal class ReduceRuleJsonConverter : JsonConverter<ReduceRule>
+internal class ReduceRuleJsonConverter : WeaklyTypedJsonConverter<ReduceRule>
 {
 	public override ReduceRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = JsonSerializer.Deserialize<Rule[]>(ref reader, options);
+		var parameters = options.ReadArray(ref reader, JsonLogicSerializerContext.Default.Rule);
 
 		if (parameters is not { Length: 3 })
 			throw new JsonException("The reduce rule needs an array with 3 parameters.");
@@ -98,9 +90,9 @@ internal class ReduceRuleJsonConverter : JsonConverter<ReduceRule>
 		writer.WriteStartObject();
 		writer.WritePropertyName("reduce");
 		writer.WriteStartArray();
-		writer.WriteRule(value.Input, options);
-		writer.WriteRule(value.Rule, options);
-		writer.WriteRule(value.Initial, options);
+		options.Write(writer, value.Input, JsonLogicSerializerContext.Default.Rule);
+		options.Write(writer, value.Rule, JsonLogicSerializerContext.Default.Rule);
+		options.Write(writer, value.Initial, JsonLogicSerializerContext.Default.Rule);
 		writer.WriteEndArray();
 		writer.WriteEndObject();
 	}

@@ -18,10 +18,10 @@ public class BaseDocumentTests
 		{
 			["prop1"] = "foo",
 			["prop2"] = new JsonArray
-			{
+			(
 				"bar",
-				JsonSerializer.SerializeToNode(targetSchema)
-			}
+				JsonSerializer.SerializeToNode(targetSchema, TestEnvironment.SerializerOptions)
+			)
 		};
 
 		var options = new EvaluationOptions
@@ -52,10 +52,10 @@ public class BaseDocumentTests
 		{
 			["prop1"] = "foo",
 			["prop2"] = new JsonArray
-			{
+			(
 				"bar",
-				JsonSerializer.SerializeToNode(targetSchema)
-			}
+				JsonSerializer.SerializeToNode(targetSchema, TestEnvironment.SerializerOptions)
+			)
 		};
 
 		var options = new EvaluationOptions
@@ -83,13 +83,13 @@ public class BaseDocumentTests
 		{
 			["prop1"] = "foo",
 			["prop2"] = new JsonArray
-			{
+			(
 				"bar",
 				new JsonObject
 				{
 					["type"] = "integer"
 				}
-			},
+			),
 			["prop3"] = new JsonObject
 			{
 				["$ref"] = "#/prop2/1"
@@ -121,13 +121,13 @@ public class BaseDocumentTests
 		{
 			["prop1"] = "foo",
 			["prop2"] = new JsonArray
-			{
+			(
 				"bar",
 				new JsonObject
 				{
 					["type"] = "integer"
 				}
-			},
+			),
 			["prop3"] = new JsonObject
 			{
 				["properties"] = new JsonObject

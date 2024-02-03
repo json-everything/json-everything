@@ -24,7 +24,7 @@ internal class NumberGenerator : IDataGenerator
 
 		var availableRanges = context.NumberRanges.Ranges.ToList();
 
-		while (availableRanges.Any())
+		while (availableRanges.Count != 0)
 		{
 			var selectedIndex = JsonSchemaExtensions.Randomizer.Int(0, availableRanges.Count - 1);
 			var selectedRange = availableRanges[selectedIndex];
@@ -34,7 +34,7 @@ internal class NumberGenerator : IDataGenerator
 			var maxValue = selectedRange.Maximum.Value;
 			var isInclusiveMax = selectedRange.Maximum.Inclusive;
 			decimal? multipleOf = null;
-			if (context.Multiples != null && context.Multiples.Any())
+			if (context.Multiples != null && context.Multiples.Count != 0)
 			{
 				if (context.Multiples.Count == 1)
 					multipleOf = context.Multiples.Single();

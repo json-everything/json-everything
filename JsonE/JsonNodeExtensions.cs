@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
@@ -86,5 +87,47 @@ internal static class JsonNodeExtensions
 					break;
 			}
 		}
+	}
+
+	public static JsonNode? Clone(this JsonNode? source)
+	{
+		JsonNode CopyObject(JsonObject obj)
+		{
+			var newObj = new JsonObject(obj.Options);
+			foreach (var kvp in obj)
+			{
+				newObj[kvp.Key] = kvp.Value.Clone();
+			}
+
+			return newObj;
+		}
+
+		JsonNode CopyArray(JsonArray arr)
+		{
+			var newArr = new JsonArray(arr.Options);
+			foreach (var item in arr)
+			{
+				newArr.Add(item.Clone());
+			}
+
+			return newArr;
+		}
+
+		JsonNode? CopyValue(JsonValue val)
+		{
+			if (val.TryGetValue(out FunctionDefinition? func))
+				return JsonValue.Create(func, JsonESerializerContext.Default.FunctionDefinition);
+
+			return val.DeepClone();
+		}
+
+		return source switch
+		{
+			null => null,
+			JsonObject obj => CopyObject(obj),
+			JsonArray arr => CopyArray(arr),
+			JsonValue val => CopyValue(val),
+			_ => throw new ArgumentOutOfRangeException(nameof(source))
+		};
 	}
 }

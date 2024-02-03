@@ -50,7 +50,7 @@ public class DocXmlReader
 	/// </param>
 	public DocXmlReader(Func<Assembly, string?> assemblyXmlPathFunction)
 	{
-		_assemblyNavigators = new Dictionary<Assembly, XPathNavigator?>();
+		_assemblyNavigators = [];
 		_unIndentText = true;
 		_assemblyXmlPathFunction = assemblyXmlPathFunction;
 	}
@@ -258,7 +258,7 @@ public class DocXmlReader
 		// ReSharper disable once EmptyEmbeddedStatement
 		for (; start >= 0 && outerText[start] != '\r' && outerText[start] != '\n'; start--) ;
 		if (start < 0 || end <= start) return "";
-		return outerText.Substring(start, end - start);
+		return outerText[start..end];
 	}
 
 

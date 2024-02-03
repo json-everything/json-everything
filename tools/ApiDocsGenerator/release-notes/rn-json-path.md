@@ -4,6 +4,19 @@ title: JsonPath.Net
 icon: fas fa-tag
 order: "09.08"
 ---
+# [0.8.0](https://github.com/gregsdennis/json-everything/pull/619) {#release-path-0.8.0}
+
+Updated for multi-framework support with .Net Standard 2.0 and .Net 8 with Native AOT support, including updating _System.Text.Json_ from v6 to v8.
+
+## Breaking changes
+
+- Dropping support for .Net Standard 3.1 - May still be used, but exact behavior cannot be guaranteed. 
+- `JsonNodeExtensions.TryGetSingleValue(this JsonNode?)` and `.TryGetSingleValue(this NodeList?)` updated to the `bool Try...(out ...)` pattern.
+
+## Additions
+
+`JsonPath.TypeInfoResolver` to expose all of the type resolvers contained in the library.  Can be used to create a combined `SerializationOptions` by using a `Json.More.TypeResolverOptionsManager` in your `JsonSerializerContext`.
+
 # [0.7.0](https://github.com/gregsdennis/json-everything/pull/591) {#release-path-0.7.0}
 
 [#583](https://github.com/gregsdennis/json-everything/issues/583) - Updated `NodeList` to implement `IEnumerable<T>` instead of `IReadOnlyList<T>`, which enables follow-on Linq queries, making the entire JSON Path evaluation a deferred execution query.  Thanks to [@qt-kaneko](https://github.com/qt-kaneko) for explaining a use case that led to this change.

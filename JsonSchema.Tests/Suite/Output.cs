@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
@@ -23,10 +22,10 @@ public class Output
 	private static readonly JsonConverter<EvaluationResults> _legacyResultsConverter = new Pre202012EvaluationResultsJsonConverter();
 
 	private static readonly SpecVersion[] _unsupportedVersions =
-	{
+	[
 		SpecVersion.Draft201909,
 		SpecVersion.Draft202012
-	};
+	];
 
 	public static IEnumerable<TestCaseData> TestCases()
 	{
@@ -79,10 +78,7 @@ public class Output
 											  shortFileName != "uri-template";
 
 			var contents = File.ReadAllText(fileName);
-			var collections = JsonSerializer.Deserialize<List<TestCollection>>(contents, new JsonSerializerOptions
-			{
-				PropertyNameCaseInsensitive = true
-			});
+			var collections = JsonSerializer.Deserialize<List<TestCollection>>(contents, TestEnvironment.TestSuiteSerializationOptions);
 
 			foreach (var collection in collections!)
 			{
@@ -106,19 +102,13 @@ public class Output
 	[TestCaseSource(nameof(TestCases))]
 	public void Test(TestCollection collection, TestCase test, string format, string fileName, EvaluationOptions options)
 	{
-		var serializerOptions = new JsonSerializerOptions
-		{
-			WriteIndented = true,
-			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-		};
-
 		Console.WriteLine();
 		Console.WriteLine();
 		Console.WriteLine(fileName);
 		Console.WriteLine(collection.Description);
 		Console.WriteLine(test.Description);
 		Console.WriteLine();
-		Console.WriteLine(JsonSerializer.Serialize(collection.Schema, serializerOptions));
+		Console.WriteLine(JsonSerializer.Serialize(collection.Schema, TestEnvironment.TestOutputSerializerOptions));
 		Console.WriteLine();
 		Console.WriteLine(test.Data.AsJsonString());
 		Console.WriteLine();
@@ -138,11 +128,13 @@ public class Output
 		};
 		options.OutputFormat = outputFormat;
 		var result = collection.Schema.Evaluate(test.Data, options);
-		var serializedResult = JsonSerializer.SerializeToNode(result, new JsonSerializerOptions
+		var optionsWithConverters = new JsonSerializerOptions
 		{
+			TypeInfoResolverChain = { TestSerializerContext.Default },
 			Converters = { converter }
-		});
-		Console.WriteLine(JsonSerializer.Serialize(serializedResult, serializerOptions));
+		};
+		var serializedResult = JsonSerializer.SerializeToNode(result, optionsWithConverters);
+		Console.WriteLine(JsonSerializer.Serialize(serializedResult, TestEnvironment.TestOutputSerializerOptions));
 		Console.WriteLine();
 
 
@@ -154,7 +146,7 @@ public class Output
 
 		if (_unsupportedVersions.Contains(options.EvaluateAs))
 		{
-			Console.WriteLine(JsonSerializer.Serialize(result, serializerOptions));
+			Console.WriteLine(JsonSerializer.Serialize(result, TestEnvironment.TestOutputSerializerOptions));
 
 			if (!result.IsValid)
 				Assert.Inconclusive("not fully supported");

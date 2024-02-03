@@ -10,8 +10,8 @@ indent_size = 2
 tab_width = 2
 
 [*.{appxmanifest,axaml,axml,build,config,csproj,dbml,discomap,dtd,jsproj,lsproj,njsproj,nuspec,paml,proj,props,resjson,resw,resx,StyleCop,targets,tasks,vbproj,xaml,xamlx,xml,xoml,xsd}]
-indent_style = tab
-indent_size = tab
+indent_style = space
+indent_size = 2
 tab_width = 2
 
 [*]

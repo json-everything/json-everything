@@ -12,17 +12,17 @@
     <tags>json-schema validation schema json</tags>
     <repository type="git" url="https://github.com/gregsdennis/json-everything" />
     <dependencies>
-      <group targetFramework=".NETStandard2.0">
-        <dependency id="Json.More.Net" version="1.9.0" exclude="Build,Analyzers" />
-        <dependency id="JsonPointer.Net" version="3.0.3" exclude="Build,Analyzers" />
-        <dependency id="JetBrains.Annotations" version="2021.2.0" exclude="Build,Analyzers" />
-      </group>
+      <dependency id="Json.More.Net" version="2.0.0" exclude="Build,Analyzers" />
+      <dependency id="JsonPointer.Net" version="4.0.0" exclude="Build,Analyzers" />
     </dependencies>
   </metadata>
   <files>
     <file src="..\JsonSchema.Net.dll" target="lib\netstandard2.0" />
     <file src="..\JsonSchema.Net.xml" target="lib\netstandard2.0" />
     <file src="..\JsonSchema.Net.pdb" target="lib\netstandard2.0" />
+    <file src="..\..\net8.0\JsonSchema.Net.dll" target="lib\net8.0" />
+    <file src="..\..\net8.0\JsonSchema.Net.xml" target="lib\net8.0" />
+    <file src="..\..\net8.0\JsonSchema.Net.pdb" target="lib\net8.0" />
     <file src="..\json-logo-256.png" target="json-logo-256.png" />
   </files>
 </package>

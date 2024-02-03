@@ -67,16 +67,18 @@ public class MinimumKeyword : IJsonSchemaKeyword
 			return;
 		}
 
-		var number = evaluation.LocalInstance!.AsValue().GetNumber();
+		var number = evaluation.LocalInstance!.AsValue().GetNumber()!.Value;
 		if (Value > number)
-			evaluation.Results.Fail(Name, ErrorMessages.GetMinimum(context.Options.Culture), ("received", number), ("limit", Value));
+			evaluation.Results.Fail(Name, ErrorMessages.GetMinimum(context.Options.Culture)
+				.ReplaceToken("received", number)
+				.ReplaceToken("limit", Value));
 	}
 }
 
 /// <summary>
 /// JSON converter for <see cref="MinItemsKeyword"/>.
 /// </summary>
-public sealed class MinimumKeywordJsonConverter : JsonConverter<MinimumKeyword>
+public sealed class MinimumKeywordJsonConverter : WeaklyTypedJsonConverter<MinimumKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="MinItemsKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -99,7 +101,7 @@ public sealed class MinimumKeywordJsonConverter : JsonConverter<MinimumKeyword>
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, MinimumKeyword value, JsonSerializerOptions options)
 	{
-		writer.WriteNumber(MinimumKeyword.Name, value.Value);
+		writer.WriteNumberValue(value.Value);
 	}
 }
 

@@ -1,7 +1,5 @@
-using System.Text.Json;
 using System.Text.Json.Nodes;
 using Json.Logic.Rules;
-using Json.More;
 using NUnit.Framework;
 
 namespace Json.Logic.Tests;
@@ -59,7 +57,7 @@ public class InTests
 	[Test]
 	public void InArrayContainsFirstReturnsTrue()
 	{
-		var array = new JsonArray { 1, 2, 3 };
+		var array = new JsonArray(1, 2, 3);
 		var rule = new InRule(2, array);
 
 		JsonAssert.IsTrue(rule.Apply());
@@ -68,7 +66,7 @@ public class InTests
 	[Test]
 	public void InArrayDoesNotContainFirstReturnsFalse()
 	{
-		var array = new JsonArray { 1, 2, 3 };
+		var array = new JsonArray(1, 2, 3);
 		var rule = new InRule(5, array);
 
 		JsonAssert.IsFalse(rule.Apply());

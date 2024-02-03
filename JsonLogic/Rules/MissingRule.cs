@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -62,15 +63,13 @@ public class MissingRule : Rule
 	}
 }
 
-internal class MissingRuleJsonConverter : JsonConverter<MissingRule>
+internal class MissingRuleJsonConverter : WeaklyTypedJsonConverter<MissingRule>
 {
 	public override MissingRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var node = JsonSerializer.Deserialize<JsonNode?>(ref reader, options);
-
-		var parameters = node is JsonArray
-			? node.Deserialize<Rule[]>()
-			: new[] { node.Deserialize<Rule>()! };
+		var parameters = reader.TokenType == JsonTokenType.StartArray
+			? options.ReadArray(ref reader, JsonLogicSerializerContext.Default.Rule)
+			: new[] { options.Read(ref reader, JsonLogicSerializerContext.Default.Rule)! };
 
 		if (parameters == null) return new MissingRule();
 
@@ -81,7 +80,7 @@ internal class MissingRuleJsonConverter : JsonConverter<MissingRule>
 	{
 		writer.WriteStartObject();
 		writer.WritePropertyName("missing");
-		writer.WriteRules(value.Components, options);
+		options.WriteList(writer, value.Components, JsonLogicSerializerContext.Default.Rule);
 		writer.WriteEndObject();
 	}
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Schema;
 
@@ -58,7 +59,7 @@ public class ReadOnlyKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="ReadOnlyKeyword"/>.
 /// </summary>
-public sealed class ReadOnlyKeywordJsonConverter : JsonConverter<ReadOnlyKeyword>
+public sealed class ReadOnlyKeywordJsonConverter : WeaklyTypedJsonConverter<ReadOnlyKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="ReadOnlyKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -81,6 +82,6 @@ public sealed class ReadOnlyKeywordJsonConverter : JsonConverter<ReadOnlyKeyword
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, ReadOnlyKeyword value, JsonSerializerOptions options)
 	{
-		writer.WriteBoolean(ReadOnlyKeyword.Name, value.Value);
+		writer.WriteBooleanValue(value.Value);
 	}
 }

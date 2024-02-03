@@ -24,14 +24,14 @@ public class SpecExampleTests
 	public void ConformanceTest()
 	{
 		var onlineSchemaJson = new HttpClient().GetStringAsync(MetaSchemas.OpenApiDocumentSchemaId).Result;
-		var onlineSchema = JsonSerializer.Deserialize<JsonSchema>(onlineSchemaJson);
+		var onlineSchema = JsonSerializer.Deserialize<JsonSchema>(onlineSchemaJson, TestEnvironment.SerializerOptions);
 
-		var options = new JsonSerializerOptions { WriteIndented = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping };
+		var options = new JsonSerializerOptions(TestEnvironment.SerializerOptions) { WriteIndented = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping };
 		Console.WriteLine(JsonSerializer.Serialize(onlineSchema, options));
 		Console.WriteLine(JsonSerializer.Serialize(MetaSchemas.DocumentSchema, options));
 
-		var asNode = JsonSerializer.SerializeToNode(MetaSchemas.DocumentSchema);
-		var onlineAsNode = JsonSerializer.SerializeToNode(onlineSchema);
+		var asNode = JsonSerializer.SerializeToNode(MetaSchemas.DocumentSchema, TestEnvironment.SerializerOptions);
+		var onlineAsNode = JsonSerializer.SerializeToNode(onlineSchema, TestEnvironment.SerializerOptions);
 		Assert.That(() => asNode.IsEquivalentTo(onlineAsNode));
 	}
 

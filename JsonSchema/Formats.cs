@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Reflection;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 
@@ -26,6 +25,9 @@ public static class Formats
 		"HH':'mm':'ssK",
 		"HH':'mm':'ss"
 	};
+	
+	//from built from https://regex101.com/r/qH0sU7/1, edited to support all date+time examples in https://ijmacd.github.io/rfc3339-iso8601/
+	private static readonly Regex _dateTimeRegex = new Regex(@"^((?:(\d{4}-\d{2}-\d{2})([Tt_]| )(\d{2}:\d{2}:\d{2}(?:\.\d+)?))([Zz]|[\+-]\d{2}:\d{2}))$");
 
 	/// <summary>
 	/// Defines the `date` format.
@@ -110,11 +112,27 @@ public static class Formats
 
 	static Formats()
 	{
-		_registry = new ConcurrentDictionary<string, Format>(
-			typeof(Formats)
-				.GetFields(BindingFlags.Static | BindingFlags.Public)
-				.Select(f => (Format)f.GetValue(null))
-				.ToDictionary(f => f.Key));
+		_registry = new ConcurrentDictionary<string, Format>(new Dictionary<string, Format>() {
+			{ Date.Key, Date },
+			{ DateTime.Key, DateTime },
+			{ Duration.Key, Duration },
+			{ Email.Key, Email },
+			{ Hostname.Key, Hostname },
+			{ IdnEmail.Key, IdnEmail },
+			{ IdnHostname.Key, IdnHostname },
+			{ Ipv4.Key, Ipv4 },
+			{ Ipv6.Key, Ipv6 },
+			{ Iri.Key, Iri },
+			{ IriReference.Key, IriReference },
+			{ JsonPointer.Key, JsonPointer },
+			{ Regex.Key, Regex },
+			{ RelativeJsonPointer.Key, RelativeJsonPointer },
+			{ Time.Key, Time },
+			{ Uri.Key, Uri },
+			{ UriReference.Key, UriReference },
+			{ UriTemplate.Key, UriTemplate },
+			{ Uuid.Key, Uuid }
+		});
 	}
 
 	/// <summary>
@@ -271,9 +289,7 @@ public static class Formats
 		//date-times with very high precision don't get matched by TryParseExact but are still actually parsable.
 		//We use a fallback to catch these cases
 
-		//from built from https://regex101.com/r/qH0sU7/1, edited to support all date+time examples in https://ijmacd.github.io/rfc3339-iso8601/
-		var regex = new Regex(@"^((?:(\d{4}-\d{2}-\d{2})([Tt_]| )(\d{2}:\d{2}:\d{2}(?:\.\d+)?))([Zz]|[\+-]\d{2}:\d{2}))$");
-		var match = regex.Match(dateString);
+		var match = _dateTimeRegex.Match(dateString);
 		return match.Success;
 
 	}
@@ -319,7 +335,7 @@ public static class Formats
 
 		try
 		{
-			var _ = new Regex(node!.GetValue<string>());
+			_ = new Regex(node!.GetValue<string>());
 			return true;
 		}
 		catch

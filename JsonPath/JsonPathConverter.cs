@@ -26,6 +26,6 @@ public class JsonPathConverter : JsonConverter<JsonPath>
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, JsonPath value, JsonSerializerOptions options)
 	{
-		JsonSerializer.Serialize(writer, value.ToString(), options);
+		writer.WriteStringValue(value.ToString());
 	}
 }

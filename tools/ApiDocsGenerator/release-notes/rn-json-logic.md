@@ -4,6 +4,23 @@ title: JsonLogic.Net
 icon: fas fa-tag
 order: "09.11"
 ---
+# [5.0.0](https://github.com/gregsdennis/json-everything/pull/619) {#release-logic-5.0.0}
+
+Updated for multi-framework support with .Net Standard 2.0 and .Net 8 with Native AOT support, including updating _System.Text.Json_ from v6 to v8.
+
+Most of the changes to support Native AOT involve either updating internal implementation or creating overloads that do.  Whatever could not be updated was marked as requiring reflection, which will generate warnings when building Native AOT applications.
+
+## Breaking changes
+
+- Dropping support for .Net Standard 3.1 - May still be used, but exact behavior cannot be guaranteed. 
+- `RuleRegistry.AddRule<T>()` marked as AOT-incompatible.  Replaced by `.AddRule<T>(JsonSerializerContext)`.
+- Rules that returned `JsonNull.SignalNode` should now return null, as `JsonNull` has been removed from _Json.More.Net_.
+- `JsonWriterExtensions` removed in favor of the new `JsonSerializerOptionsExtensions` methods in _Json.More.Net_.
+
+## Additions
+
+`Rule.TypeInfoResolver` to expose all of the type resolvers contained in the library.  Can be used to create a combined `SerializationOptions` by using a `Json.More.TypeResolverOptionsManager` in your `JsonSerializerContext`.
+
 # [4.0.4](https://github.com/gregsdennis/json-everything/pull/422) {#release-logic-4.0.4}
 
 [#420](https://github.com/gregsdennis/json-everything/issues/404) - `<=` not working for the "between" case.  Thanks to [@alexkharuk](https://github.com/alexkharuk) for finding and fixing this issue.

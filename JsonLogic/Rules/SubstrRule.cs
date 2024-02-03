@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
@@ -87,11 +88,11 @@ public class SubstrRule : Rule
 	}
 }
 
-internal class SubstrRuleJsonConverter : JsonConverter<SubstrRule>
+internal class SubstrRuleJsonConverter : WeaklyTypedJsonConverter<SubstrRule>
 {
 	public override SubstrRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = JsonSerializer.Deserialize<Rule[]>(ref reader, options);
+		var parameters = options.ReadArray(ref reader, JsonLogicSerializerContext.Default.Rule);
 
 		if (parameters is not ({ Length: 2 } or { Length: 3 }))
 			throw new JsonException("The substr rule needs an array with either 2 or 3 parameters.");
@@ -106,10 +107,10 @@ internal class SubstrRuleJsonConverter : JsonConverter<SubstrRule>
 		writer.WriteStartObject();
 		writer.WritePropertyName("substr");
 		writer.WriteStartArray();
-		writer.WriteRule(value.Input, options);
-		writer.WriteRule(value.Start, options);
+		options.Write(writer, value.Input, JsonLogicSerializerContext.Default.Rule);
+		options.Write(writer, value.Start, JsonLogicSerializerContext.Default.Rule);
 		if (value.Count != null)
-			writer.WriteRule(value.Count, options);
+			options.Write(writer, value.Count, JsonLogicSerializerContext.Default.Rule);
 		writer.WriteEndArray();
 		writer.WriteEndObject();
 	}

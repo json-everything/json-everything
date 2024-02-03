@@ -14,12 +14,11 @@ Ensure the options are as desired and click ""Run"".
 All of the `json-everything` vocabulary extensions are also available.  Use these URIs for your
 `$schema` value to enable them:
 
-- [Data](https://docs.json-everything.net/schema/vocabs/data-2022/) - `https://json-everything.net/meta/data-2022`
+- [Data](https://docs.json-everything.net/schema/vocabs/data-2023/) - `https://json-everything.net/meta/data-2023`
 - [OpenAPI v3.1](https://docs.json-everything.net/schema/vocabs/openapi/) - `https://spec.openapis.org/oas/3.1/meta/base`
 - [ArrayExt](https://docs.json-everything.net/schema/vocabs/array-ext/) - `https://json-everything.net/meta/vocab/array-ext`
-- [UniqueKeys](https://docs.json-everything.net/schema/vocabs/uniquekeys/)\* - `https://gregsdennis.github.io/json-everything/meta/unique-keys`
 
-\* _The UniqueKeys vocabulary is being replaced by the ArrayExt._";
+\* _The UniqueKeys vocabulary has been replaced by ArrayExt.  It and Data 2022 are still supported._";
 
 	public const string SchemaGenerateSchema = @"
 ## Generating a Schema
@@ -45,7 +44,12 @@ receive an error that says ""compilation error.""
 
 ***NOTE** The playground will output the compilation error to the console, including the
 serialized details. I haven't yet figured out how to interpret these details to provide any
-insight into what in particular is wrong.  If you know, please feel free to raise an issue.*";
+insight into what in particular is wrong.  If you know, please feel free to raise an issue.*
+
+## AOT Support
+
+_JsonSchem.Net.Generation_ supports AOT in that it is properly marked as requiring reflection.
+However, due to that requirement, it likely will not work as expected in an AOT context.";
 
 	public const string SchemaGenerateCode = @"
 ## Generating C# Code

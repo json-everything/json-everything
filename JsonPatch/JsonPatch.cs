@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -45,7 +46,7 @@ public class JsonPatch : IEquatable<JsonPatch>
 	/// <returns>A result object containing the output JSON and a possible error message.</returns>
 	public PatchResult Apply(JsonNode? source)
 	{
-		var context = new PatchContext(source.Copy());
+		var context = new PatchContext(source?.DeepClone());
 
 		foreach (var operation in Operations)
 		{
@@ -62,7 +63,7 @@ public class JsonPatch : IEquatable<JsonPatch>
 	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
 	public bool Equals(JsonPatch? other)
 	{
-		if (ReferenceEquals(null, other)) return false;
+		if (other is null) return false;
 		if (ReferenceEquals(this, other)) return true;
 		return Operations.SequenceEqual(other.Operations);
 	}
@@ -70,7 +71,7 @@ public class JsonPatch : IEquatable<JsonPatch>
 	/// <summary>Determines whether the specified object is equal to the current object.</summary>
 	/// <param name="obj">The object to compare with the current object.</param>
 	/// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
-	public override bool Equals(object obj)
+	public override bool Equals(object? obj)
 	{
 		return Equals(obj as JsonPatch);
 	}
@@ -86,7 +87,7 @@ public class JsonPatch : IEquatable<JsonPatch>
 /// <summary>
 /// Provides JSON conversion logic for <see cref="JsonPatch"/>.
 /// </summary>
-public class PatchJsonConverter : JsonConverter<JsonPatch>
+public class PatchJsonConverter : WeaklyTypedJsonConverter<JsonPatch>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="JsonPatch"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -95,7 +96,7 @@ public class PatchJsonConverter : JsonConverter<JsonPatch>
 	/// <returns>The converted value.</returns>
 	public override JsonPatch Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var operations = JsonSerializer.Deserialize<List<PatchOperation>>(ref reader, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase })!;
+		var operations = JsonSerializer.Deserialize(ref reader, JsonPatchSerializerContext.Default.ListPatchOperation)!;
 
 		return new JsonPatch(operations);
 	}
@@ -106,6 +107,6 @@ public class PatchJsonConverter : JsonConverter<JsonPatch>
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, JsonPatch value, JsonSerializerOptions options)
 	{
-		JsonSerializer.Serialize(writer, value.Operations);
+		options.WriteList(writer, value.Operations, JsonPatchSerializerContext.Default.PatchOperation);
 	}
 }

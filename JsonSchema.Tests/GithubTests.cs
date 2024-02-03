@@ -4,9 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using System.Threading;
 using System.Threading.Tasks;
-using Json.More;
 using Json.Pointer;
 using NUnit.Framework;
 
@@ -206,7 +204,7 @@ public class GithubTests
     ""dependentRequired"": {
         ""abc"": [ ""d9"" ]
     }
-}")!;
+}", TestEnvironment.SerializerOptions)!;
 		var opts = new EvaluationOptions
 		{
 			EvaluateAs = version,
@@ -278,7 +276,7 @@ public class GithubTests
     }
   }
 }";
-		var schema = JsonSerializer.Deserialize<JsonSchema>(schemaStr)!;
+		var schema = JsonSerializer.Deserialize<JsonSchema>(schemaStr, TestEnvironment.SerializerOptions)!;
 		var json = JsonNode.Parse(jsonStr);
 		var validation = schema.Evaluate(json, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
 
@@ -308,8 +306,8 @@ public class GithubTests
   ""$ref"": ""schema1.json""
 }";
 		var jsonStr = @"{ ""abc"": ""s"" }";
-		var schema1 = JsonSerializer.Deserialize<JsonSchema>(schema1Str)!;
-		var schema2 = JsonSerializer.Deserialize<JsonSchema>(schema2Str)!;
+		var schema1 = JsonSerializer.Deserialize<JsonSchema>(schema1Str, TestEnvironment.SerializerOptions)!;
+		var schema2 = JsonSerializer.Deserialize<JsonSchema>(schema2Str, TestEnvironment.SerializerOptions)!;
 		var json = JsonNode.Parse(jsonStr);
 		var uri1 = new Uri("https://json-everything.net/schema1.json");
 		var uri2 = new Uri("https://json-everything.net/schema2.json");
@@ -372,7 +370,7 @@ public class GithubTests
   }
 }";
 
-		var schema = JsonSerializer.Deserialize<JsonSchema>(schemaText);
+		var schema = JsonSerializer.Deserialize<JsonSchema>(schemaText, TestEnvironment.SerializerOptions);
 		var passing = JsonNode.Parse(passingText);
 		var failing = JsonNode.Parse(failingText);
 
@@ -563,7 +561,7 @@ public class GithubTests
 
 		result.AssertInvalid();
 		var nodes = new List<EvaluationResults> { result };
-		while (nodes.Any())
+		while (nodes.Count != 0)
 		{
 			var node = nodes.First();
 			nodes.Remove(node);
@@ -639,7 +637,7 @@ public class GithubTests
 		var jsonMessages = new List<JsonNode?>();
 		for (int j = 0; j < numberOfMessages; j++)
 		{
-			jsonMessages.Add(instance.Copy());
+			jsonMessages.Add(instance?.DeepClone());
 		}
 		Parallel.ForEach(jsonMessages, json =>
 		{
@@ -846,13 +844,13 @@ public class GithubTests
 		var schema = JsonSchema.FromFile(file);
 
 		var instance = new JsonArray
-		{
+		(
 			new JsonObject
 			{
 				["field1"] = "foo",
 				["field2"] = "bar"
 			}
-		};
+		);
 
 		var result = schema.Evaluate(instance, new EvaluationOptions{OutputFormat = OutputFormat.List});
 
@@ -872,7 +870,7 @@ public class GithubTests
 				)
 			).Build();
 
-		var pointer = Pointer.JsonPointer.Parse("/additionalProperties");
+		var pointer = JsonPointer.Parse("/additionalProperties");
 		var subSchema = schema.FindSubschema(pointer, EvaluationOptions.Default);
 
 		Assert.IsNotNull(subSchema);
@@ -888,7 +886,7 @@ public class GithubTests
 
 		var text = "{\"foo\":null,\"bar\":null}";
 
-		Assert.AreEqual(text, JsonSerializer.Serialize(actual));
+		Assert.AreEqual(text, JsonSerializer.Serialize(actual, TestEnvironment.SerializerOptions));
 	}
 
 	[TestCase(@"{""additionalItems"":""not-a-schema""}", 0, 33)]
@@ -914,11 +912,11 @@ public class GithubTests
 	public void Issue517_IncorrectJsonExceptionLineAndBytePosition(string schemaStr, int expectedLineNumber, int expectedBytePositionInLine)
 	{
 		// Reminder: per the JsonException documentation, expectedLineNumber & expectedBytePositionInLine are 0-based
-		var exception = Assert.Throws<JsonException>(() => JsonSerializer.Deserialize<JsonSchema>(schemaStr));
+		var exception = Assert.Throws<JsonException>(() => JsonSerializer.Deserialize<JsonSchema>(schemaStr, TestEnvironment.SerializerOptions));
 		Assert.IsNotNull(exception);
 		TestContext.Out.WriteLine("Expected error");
 		TestContext.Out.WriteLine(schemaStr.Split('\n')[expectedLineNumber]);
-		TestContext.Out.WriteLine(new string('-', (int)expectedBytePositionInLine - 1) + '^');
+		TestContext.Out.WriteLine(new string('-', expectedBytePositionInLine - 1) + '^');
 		Assert.AreEqual(expectedLineNumber, exception?.LineNumber);
 		Assert.AreEqual(expectedBytePositionInLine, exception?.BytePositionInLine);
 	}

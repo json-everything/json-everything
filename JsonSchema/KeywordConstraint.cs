@@ -38,12 +38,12 @@ public class KeywordConstraint
 	/// Gets or sets the collection of keyword constraints (i.e. sibling keywords) that this keyword is dependent upon.
 	/// The evaluations of these constraints will be available when this keyword is evaluated.
 	/// </summary>
-	public KeywordConstraint[] SiblingDependencies { get; set; } = Array.Empty<KeywordConstraint>();
+	public KeywordConstraint[] SiblingDependencies { get; set; } = [];
 	/// <summary>
 	/// Gets or sets the collection of schema constraints (i.e. subschemas) that this keyword is dependent upon.
 	/// The evaluations of these constraints will be available when this keyword is evaluated.
 	/// </summary>
-	public SchemaConstraint[] ChildDependencies { get; set; } = Array.Empty<SchemaConstraint>();
+	public SchemaConstraint[] ChildDependencies { get; set; } = [];
 
 	/// <summary>
 	/// Creates a new keyword constraint.
@@ -81,7 +81,7 @@ public class KeywordConstraint
 			}
 		}
 		else
-			evaluation.SiblingEvaluations = Array.Empty<KeywordEvaluation>();
+			evaluation.SiblingEvaluations = [];
 
 		if (ChildDependencies.Length != 0)
 		{
@@ -112,10 +112,10 @@ public class KeywordConstraint
 					subschemaEvaluations.Add(localEvaluation);
 				}
 			}
-			evaluation.ChildEvaluations = subschemaEvaluations.ToArray();
+			evaluation.ChildEvaluations = [.. subschemaEvaluations];
 		}
 		else
-			evaluation.ChildEvaluations = Array.Empty<SchemaEvaluation>();
+			evaluation.ChildEvaluations = [];
 
 		return evaluation;
 	}

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Schema;
 
@@ -69,14 +70,16 @@ public class MinLengthKeyword : IJsonSchemaKeyword
 		var str = evaluation.LocalInstance!.GetValue<string>();
 		var length = new StringInfo(str).LengthInTextElements;
 		if (Value > length)
-			evaluation.Results.Fail(Name, ErrorMessages.GetMinLength(context.Options.Culture), ("received", length), ("limit", Value));
+			evaluation.Results.Fail(Name, ErrorMessages.GetMinLength(context.Options.Culture)
+				.ReplaceToken("received", length)
+				.ReplaceToken("limit", Value));
 	}
 }
 
 /// <summary>
 /// JSON converter for <see cref="MinLengthKeyword"/>.
 /// </summary>
-public sealed class MinLengthKeywordJsonConverter : JsonConverter<MinLengthKeyword>
+public sealed class MinLengthKeywordJsonConverter : WeaklyTypedJsonConverter<MinLengthKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="MinLengthKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -103,7 +106,7 @@ public sealed class MinLengthKeywordJsonConverter : JsonConverter<MinLengthKeywo
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, MinLengthKeyword value, JsonSerializerOptions options)
 	{
-		writer.WriteNumber(MinLengthKeyword.Name, value.Value);
+		writer.WriteNumberValue(value.Value);
 	}
 }
 

@@ -26,7 +26,7 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: 6.0.x
+          dotnet-version: 8.0.x
       # Publish
       - name: Install dependencies
         run: dotnet restore
@@ -42,7 +42,9 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: build-output
-          path: JsonSchema/bin/Release/netstandard2.0/**/*
+          path: |
+            JsonSchema/bin/Release/**/*
+            JsonSchema/nuspec
     outputs:
       matrix: ${{ steps.get-localized-nuspecs.outputs.NUSPEC_FILES }}
       version: ${{ steps.get-version.outputs.version }}
@@ -66,7 +68,7 @@ jobs:
           NUSPEC_NAME=JsonSchema.Net.nuspec
           VERSION=${{ needs.build.outputs.version }}
           echo $VERSION
-          nuget pack artifacts/nuspec/${NUSPEC_NAME} -OutputDirectory nupkg/ -Symbols -SymbolPackageFormat snupkg -Version ${VERSION}
+          nuget pack artifacts/netstandard2.0/nuspec/${NUSPEC_NAME} -OutputDirectory nupkg/ -Symbols -SymbolPackageFormat snupkg -Version ${VERSION}
       - name: push
         run: |
           NUSPEC_NAME=JsonSchema.Net.nuspec
@@ -104,7 +106,8 @@ jobs:
           nuget-version: '6.x'
       - name: pack
         run: |
-          # includes "JsonSchema/nuspec/"
+          # matrix var includes "JsonSchema/nuspec/"
+          ls -lR artifacts/JsonSchema
           NUSPEC_NAME=${{ matrix.nuspec }}
           nuget pack artifacts/${NUSPEC_NAME} -OutputDirectory nupkg/
       - name: push

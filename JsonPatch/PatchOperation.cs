@@ -38,7 +38,7 @@ public class PatchOperation : IEquatable<PatchOperation>
 		Op = op;
 		From = from;
 		Path = path;
-		Value = value.Copy();
+		Value = value?.DeepClone();
 	}
 
 	/// <summary>
@@ -114,8 +114,10 @@ public class PatchOperation : IEquatable<PatchOperation>
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
 	/// <param name="other">An object to compare with this object.</param>
 	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-	public bool Equals(PatchOperation other)
+	public bool Equals(PatchOperation? other)
 	{
+		if (other is null) return false;
+
 		return Op == other.Op &&
 			   From.Equals(other.From) &&
 			   Path.Equals(other.Path) &&
@@ -125,9 +127,9 @@ public class PatchOperation : IEquatable<PatchOperation>
 	/// <summary>Indicates whether this instance and a specified object are equal.</summary>
 	/// <param name="obj">The object to compare with the current instance.</param>
 	/// <returns>true if <paramref name="obj">obj</paramref> and this instance are the same type and represent the same value; otherwise, false.</returns>
-	public override bool Equals(object obj)
+	public override bool Equals(object? obj)
 	{
-		return obj is PatchOperation other && Equals(other);
+		return Equals(obj as PatchOperation);
 	}
 
 	/// <summary>Returns the hash code for this instance.</summary>
@@ -147,17 +149,21 @@ public class PatchOperation : IEquatable<PatchOperation>
 
 internal class PatchOperationJsonConverter : JsonConverter<PatchOperation>
 {
-	private class Model
+	internal class Model
 	{
+		[JsonPropertyName("op")]
 		public OperationType Op { get; set; }
+		[JsonPropertyName("from")]
 		public JsonPointer? From { get; set; }
+		[JsonPropertyName("path")]
 		public JsonPointer? Path { get; set; }
+		[JsonPropertyName("value")]
 		public JsonElement Value { get; set; }
 	}
 
 	public override PatchOperation Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var model = JsonSerializer.Deserialize<Model>(ref reader, options)!;
+		var model = options.Read(ref reader, JsonPatchSerializerContext.Default.Model)!;
 
 		if (model.Path == null)
 			throw new JsonException($"`{model.Op}` operation requires `path`");
@@ -197,38 +203,38 @@ internal class PatchOperationJsonConverter : JsonConverter<PatchOperation>
 		writer.WriteStartObject();
 
 		writer.WritePropertyName("op");
-		JsonSerializer.Serialize(writer, value.Op);
+		options.Write(writer, value.Op, JsonPatchSerializerContext.Default.OperationType);
 
 		writer.WritePropertyName("path");
-		JsonSerializer.Serialize(writer, value.Path);
+		options.Write(writer, value.Path, JsonPatchSerializerContext.Default.JsonPointer);
 
 		switch (value.Op)
 		{
 			case OperationType.Add:
 				writer.WritePropertyName("value");
-				JsonSerializer.Serialize(writer, value.Value);
+				options.Write(writer, value.Value, JsonPatchSerializerContext.Default.JsonNode!);
 				break;
 			case OperationType.Remove:
 				break;
 			case OperationType.Replace:
 				writer.WritePropertyName("value");
-				JsonSerializer.Serialize(writer, value.Value);
+				options.Write(writer, value.Value, JsonPatchSerializerContext.Default.JsonNode!);
 				break;
 			case OperationType.Move:
 				writer.WritePropertyName("from");
-				JsonSerializer.Serialize(writer, value.From);
+				options.Write(writer, value.From, JsonPatchSerializerContext.Default.JsonPointer);
 				break;
 			case OperationType.Copy:
 				writer.WritePropertyName("from");
-				JsonSerializer.Serialize(writer, value.From);
+				options.Write(writer, value.From, JsonPatchSerializerContext.Default.JsonPointer);
 				break;
 			case OperationType.Test:
 				writer.WritePropertyName("value");
-				JsonSerializer.Serialize(writer, value.Value);
+				options.Write(writer, value.Value, JsonPatchSerializerContext.Default.JsonNode!);
 				break;
 			case OperationType.Unknown:
 			default:
-				throw new ArgumentOutOfRangeException();
+				throw new ArgumentOutOfRangeException("value.Op");
 		}
 
 		writer.WriteEndObject();

@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Schema;
 
@@ -68,14 +69,16 @@ public class MinPropertiesKeyword : IJsonSchemaKeyword
 
 		var number = obj.Count;
 		if (Value > number)
-			evaluation.Results.Fail(Name, ErrorMessages.GetMinProperties(context.Options.Culture), ("received", number), ("limit", Value));
+			evaluation.Results.Fail(Name, ErrorMessages.GetMinProperties(context.Options.Culture)
+				.ReplaceToken("received", number)
+				.ReplaceToken("limit", Value));
 	}
 }
 
 /// <summary>
 /// JSON converter for <see cref="MinPropertiesKeyword"/>.
 /// </summary>
-public sealed class MinPropertiesKeywordJsonConverter : JsonConverter<MinPropertiesKeyword>
+public sealed class MinPropertiesKeywordJsonConverter : WeaklyTypedJsonConverter<MinPropertiesKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="MinPropertiesKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -102,7 +105,7 @@ public sealed class MinPropertiesKeywordJsonConverter : JsonConverter<MinPropert
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, MinPropertiesKeyword value, JsonSerializerOptions options)
 	{
-		writer.WriteNumber(MinPropertiesKeyword.Name, value.Value);
+		writer.WriteNumberValue(value.Value);
 	}
 }
 

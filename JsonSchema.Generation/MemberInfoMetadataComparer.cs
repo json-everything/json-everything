@@ -22,7 +22,7 @@ internal class MemberInfoMetadataTokenComparer<T> : Comparer<MemberInfo>
 
 		} while (type != null!);
 
-		_typeOrder = typeStack.ToArray();
+		_typeOrder = [.. typeStack];
 	}
 
 	public override int Compare(MemberInfo? x, MemberInfo? y)

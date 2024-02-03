@@ -29,11 +29,11 @@ public static class Vocabularies
 		schemaRegistry ??= SchemaRegistry.Global;
 
 		vocabRegistry.Register(OpenApi);
-		SchemaKeywordRegistry.Register<ExampleKeyword>();
+		SchemaKeywordRegistry.Register<ExampleKeyword>(JsonSchemaOpenApiSerializerContext.Default);
 		SchemaKeywordRegistry.RegisterNullValue(new ExampleKeyword(null));
-		SchemaKeywordRegistry.Register<DiscriminatorKeyword>();
-		SchemaKeywordRegistry.Register<ExternalDocsKeyword>();
-		SchemaKeywordRegistry.Register<XmlKeyword>();
+		SchemaKeywordRegistry.Register<DiscriminatorKeyword>(JsonSchemaOpenApiSerializerContext.Default);
+		SchemaKeywordRegistry.Register<ExternalDocsKeyword>(JsonSchemaOpenApiSerializerContext.Default);
+		SchemaKeywordRegistry.Register<XmlKeyword>(JsonSchemaOpenApiSerializerContext.Default);
 		schemaRegistry.Register(MetaSchemas.OpenApiMeta);
 	}
 }

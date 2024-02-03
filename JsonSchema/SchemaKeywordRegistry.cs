@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
+using Json.More;
 
 namespace Json.Schema;
 
@@ -19,19 +23,86 @@ public static class SchemaKeywordRegistry
 {
 	private static readonly ConcurrentDictionary<string, Type> _keywords;
 	private static readonly ConcurrentDictionary<Type, IJsonSchemaKeyword> _nullKeywords;
+	// This maps external types to their TypeInfoResolvers. Built-in keywords don't need this as we already have them
+	// in our default JsonSerializerContext.
+	private static readonly ConcurrentDictionary<Type, JsonSerializerContext> _keywordTypeInfoResolvers;
+
+	// ReSharper disable once CoVariantArrayConversion
+	internal static IJsonTypeInfoResolver[] ExternalTypeInfoResolvers => _keywordTypeInfoResolvers.Values.Distinct().ToArray();
 
 	internal static IEnumerable<Type> KeywordTypes => _keywords.Values;
 
 	static SchemaKeywordRegistry()
 	{
-		_keywords = new ConcurrentDictionary<string, Type>(
-			typeof(SchemaKeywordRegistry)
-				.Assembly
-				.GetTypes()
-				.Where(t => typeof(IJsonSchemaKeyword).IsAssignableFrom(t) &&
-							t.GetCustomAttribute<SchemaKeywordAttribute>() != null)
-				.Select(t => new { Type = t, Keyword = t.GetCustomAttribute<SchemaKeywordAttribute>().Name })
-				.ToDictionary(k => k.Keyword, k => k.Type));
+		var keywordData = new (Type, string)[]
+		{
+			( typeof(AdditionalItemsKeyword), AdditionalItemsKeyword.Name),
+			( typeof(AdditionalPropertiesKeyword), AdditionalPropertiesKeyword.Name),
+			( typeof(AllOfKeyword), AllOfKeyword.Name),
+			( typeof(AnchorKeyword), AnchorKeyword.Name),
+			( typeof(AnyOfKeyword), AnyOfKeyword.Name),
+			( typeof(CommentKeyword), CommentKeyword.Name),
+			( typeof(ConstKeyword), ConstKeyword.Name),
+			( typeof(ContainsKeyword), ContainsKeyword.Name),
+			( typeof(ContentEncodingKeyword), ContentEncodingKeyword.Name),
+			( typeof(ContentMediaTypeKeyword), ContentMediaTypeKeyword.Name),
+			( typeof(ContentSchemaKeyword), ContentSchemaKeyword.Name),
+			( typeof(DefaultKeyword), DefaultKeyword.Name),
+			( typeof(DefinitionsKeyword), DefinitionsKeyword.Name),
+			( typeof(DefsKeyword), DefsKeyword.Name),
+			( typeof(DependenciesKeyword), DependenciesKeyword.Name),
+			( typeof(DependentRequiredKeyword), DependentRequiredKeyword.Name),
+			( typeof(DependentSchemasKeyword), DependentSchemasKeyword.Name),
+			( typeof(DeprecatedKeyword), DeprecatedKeyword.Name),
+			( typeof(DescriptionKeyword), DescriptionKeyword.Name),
+			( typeof(DynamicAnchorKeyword), DynamicAnchorKeyword.Name),
+			( typeof(DynamicRefKeyword), DynamicRefKeyword.Name),
+			( typeof(ElseKeyword), ElseKeyword.Name),
+			( typeof(EnumKeyword), EnumKeyword.Name),
+			( typeof(ExamplesKeyword), ExamplesKeyword.Name),
+			( typeof(ExclusiveMaximumKeyword), ExclusiveMaximumKeyword.Name),
+			( typeof(ExclusiveMinimumKeyword), ExclusiveMinimumKeyword.Name),
+			( typeof(FormatKeyword), FormatKeyword.Name),
+			( typeof(IdKeyword), IdKeyword.Name),
+			( typeof(IfKeyword), IfKeyword.Name),
+			( typeof(ItemsKeyword), ItemsKeyword.Name),
+			( typeof(MaxContainsKeyword), MaxContainsKeyword.Name),
+			( typeof(MaximumKeyword), MaximumKeyword.Name),
+			( typeof(MaxItemsKeyword), MaxItemsKeyword.Name),
+			( typeof(MaxLengthKeyword), MaxLengthKeyword.Name),
+			( typeof(MaxPropertiesKeyword), MaxPropertiesKeyword.Name),
+			( typeof(MinContainsKeyword), MinContainsKeyword.Name),
+			( typeof(MinimumKeyword), MinimumKeyword.Name),
+			( typeof(MinItemsKeyword), MinItemsKeyword.Name),
+			( typeof(MinLengthKeyword), MinLengthKeyword.Name),
+			( typeof(MinPropertiesKeyword), MinPropertiesKeyword.Name),
+			( typeof(MultipleOfKeyword), MultipleOfKeyword.Name),
+			( typeof(NotKeyword), NotKeyword.Name),
+			( typeof(OneOfKeyword), OneOfKeyword.Name),
+			( typeof(PatternKeyword), PatternKeyword.Name),
+			( typeof(PatternPropertiesKeyword), PatternPropertiesKeyword.Name),
+			( typeof(PrefixItemsKeyword), PrefixItemsKeyword.Name),
+			( typeof(PropertiesKeyword), PropertiesKeyword.Name),
+			( typeof(PropertyDependenciesKeyword), PropertyDependenciesKeyword.Name),
+			( typeof(PropertyNamesKeyword), PropertyNamesKeyword.Name),
+			( typeof(ReadOnlyKeyword), ReadOnlyKeyword.Name),
+			( typeof(RecursiveAnchorKeyword), RecursiveAnchorKeyword.Name),
+			( typeof(RecursiveRefKeyword), RecursiveRefKeyword.Name),
+			( typeof(RefKeyword), RefKeyword.Name),
+			( typeof(RequiredKeyword), RequiredKeyword.Name),
+			( typeof(SchemaKeyword), SchemaKeyword.Name),
+			( typeof(ThenKeyword), ThenKeyword.Name),
+			( typeof(TitleKeyword), TitleKeyword.Name),
+			( typeof(TypeKeyword), TypeKeyword.Name),
+			( typeof(UnevaluatedItemsKeyword), UnevaluatedItemsKeyword.Name),
+			( typeof(UnevaluatedPropertiesKeyword), UnevaluatedPropertiesKeyword.Name),
+			( typeof(UniqueItemsKeyword), UniqueItemsKeyword.Name),
+			( typeof(VocabularyKeyword), VocabularyKeyword.Name),
+			( typeof(WriteOnlyKeyword), WriteOnlyKeyword.Name),
+		};
+
+		_keywords = new ConcurrentDictionary<string, Type>(keywordData.ToDictionary(x => x.Item2, x => x.Item1));
+		_keywordTypeInfoResolvers = new ConcurrentDictionary<Type, JsonSerializerContext>(keywordData.ToDictionary(x => x.Item1, _ => (JsonSerializerContext)JsonSchemaSerializerContext.Default));
 
 		using var document = JsonDocument.Parse("null");
 		_nullKeywords = new ConcurrentDictionary<Type, IJsonSchemaKeyword>
@@ -45,6 +116,7 @@ public static class SchemaKeywordRegistry
 	/// Registers a new keyword type.
 	/// </summary>
 	/// <typeparam name="T">The keyword type.</typeparam>
+	[RequiresDynamicCode("For AOT support, use Register<T> that takes a JsonTypeInfo. Using this method requires reflection later.")]
 	public static void Register<T>()
 		where T : IJsonSchemaKeyword
 	{
@@ -52,6 +124,26 @@ public static class SchemaKeywordRegistry
 		              throw new ArgumentException($"Keyword implementation `{typeof(T).Name}` does not carry `{nameof(SchemaKeywordAttribute)}`");
 
 		_keywords[keyword.Name] = typeof(T);
+	}
+
+	/// <summary>
+	/// Registers a new keyword type.
+	/// </summary>
+	/// <typeparam name="T">The keyword type.</typeparam>
+	/// <param name="typeContext">JsonTypeInfo for the keyword type</param>
+	public static void Register<T>(JsonSerializerContext typeContext)
+		where T : IJsonSchemaKeyword
+	{
+		var keyword = typeof(T).GetCustomAttribute<SchemaKeywordAttribute>() ??
+					  throw new ArgumentException($"Keyword implementation `{typeof(T).Name}` does not carry `{nameof(SchemaKeywordAttribute)}`");
+
+		var typeInfo = typeContext.GetTypeInfo(typeof(T)) ??
+					   throw new ArgumentException($"Keyword implementation `{typeof(T).Name}` does not have a JsonTypeInfo");
+		_ = typeInfo.Converter as IWeaklyTypedJsonConverter ??
+			throw new ArgumentException("Keyword Converter must implement IJsonConverterReadWrite or AotCompatibleJsonConverter to be AOT compatible");
+
+		_keywords[keyword.Name] = typeof(T);
+		_keywordTypeInfoResolvers[typeof(T)] = typeContext;
 	}
 
 	/// <summary>
@@ -65,6 +157,7 @@ public static class SchemaKeywordRegistry
 		              throw new ArgumentException($"Keyword implementation `{typeof(T).Name}` does not carry `{nameof(SchemaKeywordAttribute)}`");
 
 		_keywords.TryRemove(keyword.Name, out _);
+		_keywordTypeInfoResolvers.TryRemove(typeof(T), out _);
 	}
 
 	/// <summary>
@@ -77,6 +170,13 @@ public static class SchemaKeywordRegistry
 		return _keywords.TryGetValue(keyword, out var implementationType)
 			? implementationType
 			: null;
+	}
+
+	internal static JsonTypeInfo GetTypeInfo(Type ruleType)
+	{
+		return _keywordTypeInfoResolvers.TryGetValue(ruleType, out var context)
+			? context.GetTypeInfo(ruleType)!
+			: JsonSchemaSerializerContext.Default.GetTypeInfo(typeof(UnrecognizedKeyword))!;
 	}
 
 	/// <summary>

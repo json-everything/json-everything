@@ -19,6 +19,7 @@ internal class EvalOperator : IOperator
 
 		var expression = ExpressionParser.Parse(source.AsSpan());
 
-		return expression.Evaluate(context);
+		var jsonNode = expression.Evaluate(context);
+		return jsonNode;
 	}
 }

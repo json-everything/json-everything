@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Logic.Rules;
 
@@ -26,8 +28,7 @@ public class CatRule : Rule
 	/// <param name="more">A sequence of values to concatenate to the first value.</param>
 	protected internal CatRule(Rule a, params Rule[] more)
 	{
-		Items = new List<Rule> { a };
-		Items.AddRange(more);
+		Items = [a, .. more];
 	}
 
 	/// <summary>
@@ -56,15 +57,13 @@ public class CatRule : Rule
 	}
 }
 
-internal class CatRuleJsonConverter : JsonConverter<CatRule>
+internal class CatRuleJsonConverter : WeaklyTypedJsonConverter<CatRule>
 {
 	public override CatRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var node = JsonSerializer.Deserialize<JsonNode?>(ref reader, options);
-
-		var parameters = node is JsonArray
-			? node.Deserialize<Rule[]>()
-			: new[] { node.Deserialize<Rule>()! };
+		var parameters = reader.TokenType == JsonTokenType.StartArray
+			? options.ReadArray(ref reader, JsonLogicSerializerContext.Default.Rule)
+			: new[] { options.Read(ref reader, JsonLogicSerializerContext.Default.Rule)! };
 
 		if (parameters == null || parameters.Length == 0)
 			throw new JsonException("The cat rule needs an array of parameters.");
@@ -76,7 +75,7 @@ internal class CatRuleJsonConverter : JsonConverter<CatRule>
 	{
 		writer.WriteStartObject();
 		writer.WritePropertyName("cat");
-		writer.WriteRules(value.Items, options);
+		options.WriteList(writer, value.Items, JsonLogicSerializerContext.Default.Rule);
 		writer.WriteEndObject();
 	}
 }

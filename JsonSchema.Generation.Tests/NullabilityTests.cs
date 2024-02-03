@@ -4,6 +4,9 @@ using System.Linq;
 using NUnit.Framework;
 
 using static Json.Schema.Generation.Tests.AssertionExtensions;
+// ReSharper disable ClassNeverInstantiated.Local
+// ReSharper disable InconsistentNaming
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
 namespace Json.Schema.Generation.Tests;
 
@@ -61,8 +64,6 @@ public class NullabilityTests
 		[Nullable(false)]
 		public int Property { get; set; }
 	}
-	// ReSharper restore UnusedMember.Global
-	// ReSharper restore MemberCanBePrivate.Global
 
 	private static readonly Nullability Disabled = Nullability.Disabled;
 	private static readonly Nullability AllowForReferenceTypes = Nullability.AllowForReferenceTypes;

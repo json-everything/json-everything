@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Logic.Rules;
 
@@ -26,8 +28,7 @@ public class AndRule : Rule
 	/// <param name="more">Sequence of values to And against.</param>
 	protected internal AndRule(Rule a, params Rule[] more)
 	{
-		Items = new List<Rule> { a };
-		Items.AddRange(more);
+		Items = [a, .. more];
 	}
 
 	/// <summary>
@@ -53,11 +54,11 @@ public class AndRule : Rule
 	}
 }
 
-internal class AndRuleJsonConverter : JsonConverter<AndRule>
+internal class AndRuleJsonConverter : WeaklyTypedJsonConverter<AndRule>
 {
 	public override AndRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = JsonSerializer.Deserialize<Rule[]>(ref reader, options);
+		var parameters = options.ReadArray(ref reader, JsonLogicSerializerContext.Default.Rule);
 
 		if (parameters == null || parameters.Length == 0)
 			throw new JsonException("The and rule needs an array of parameters.");
@@ -69,7 +70,7 @@ internal class AndRuleJsonConverter : JsonConverter<AndRule>
 	{
 		writer.WriteStartObject();
 		writer.WritePropertyName("and");
-		writer.WriteRules(value.Items, options);
+		options.WriteList(writer, value.Items, JsonLogicSerializerContext.Default.Rule);
 		writer.WriteEndObject();
 	}
 }

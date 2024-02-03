@@ -97,7 +97,7 @@ public class PrefixItemsKeyword : IJsonSchemaKeyword, ISchemaCollector
 /// <summary>
 /// JSON converter for <see cref="PrefixItemsKeyword"/>.
 /// </summary>
-public sealed class PrefixItemsKeywordJsonConverter : JsonConverter<PrefixItemsKeyword>
+public sealed class PrefixItemsKeywordJsonConverter : WeaklyTypedJsonConverter<PrefixItemsKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="PrefixItemsKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -109,7 +109,7 @@ public sealed class PrefixItemsKeywordJsonConverter : JsonConverter<PrefixItemsK
 		if (reader.TokenType != JsonTokenType.StartArray)
 			throw new JsonException("Expected array");
 
-		var schemas = options.Read<List<JsonSchema>>(ref reader)!;
+		var schemas = options.ReadList(ref reader, JsonSchemaSerializerContext.Default.JsonSchema)!;
 		return new PrefixItemsKeyword(schemas);
 	}
 
@@ -119,11 +119,10 @@ public sealed class PrefixItemsKeywordJsonConverter : JsonConverter<PrefixItemsK
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, PrefixItemsKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(PrefixItemsKeyword.Name);
 		writer.WriteStartArray();
 		foreach (var schema in value.ArraySchemas)
 		{
-			JsonSerializer.Serialize(writer, schema, options);
+			options.Write(writer, schema, JsonSchemaSerializerContext.Default.JsonSchema);
 		}
 		writer.WriteEndArray();
 	}

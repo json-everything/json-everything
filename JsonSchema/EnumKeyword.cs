@@ -94,14 +94,16 @@ public class EnumKeyword : IJsonSchemaKeyword
 	private void Evaluator(KeywordEvaluation evaluation, EvaluationContext context)
 	{
 		if (!Values.Contains(evaluation.LocalInstance, JsonNodeEqualityComparer.Instance))
-			evaluation.Results.Fail(Name, ErrorMessages.GetEnum(context.Options.Culture), ("received", evaluation.LocalInstance), ("values", Values));
+			evaluation.Results.Fail(Name, ErrorMessages.GetEnum(context.Options.Culture)
+				.ReplaceToken("received", evaluation.LocalInstance, JsonSchemaSerializerContext.Default.JsonNode)
+				.ReplaceToken("values", Values, JsonSchemaSerializerContext.Default.IReadOnlyCollectionJsonNode!));
 	}
 }
 
 /// <summary>
 /// JSON converter for <see cref="EnumKeyword"/>.
 /// </summary>
-public sealed class EnumKeywordJsonConverter : JsonConverter<EnumKeyword>
+public sealed class EnumKeywordJsonConverter : WeaklyTypedJsonConverter<EnumKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="EnumKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -110,11 +112,11 @@ public sealed class EnumKeywordJsonConverter : JsonConverter<EnumKeyword>
 	/// <returns>The converted value.</returns>
 	public override EnumKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var array = options.Read<JsonArray>(ref reader);
+		var array = options.Read(ref reader,  JsonSchemaSerializerContext.Default.JsonNode) as JsonArray;
 		if (array is null)
-			throw new JsonException("Expected an array, but received null");
+			throw new JsonException("Expected an array");
 
-		return new EnumKeyword((IEnumerable<JsonNode>)array!);
+		return new EnumKeyword((IEnumerable<JsonNode?>)array);
 	}
 
 	/// <summary>Writes a specified value as JSON.</summary>
@@ -123,11 +125,10 @@ public sealed class EnumKeywordJsonConverter : JsonConverter<EnumKeyword>
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, EnumKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(EnumKeyword.Name);
 		writer.WriteStartArray();
 		foreach (var node in value.Values)
 		{
-			JsonSerializer.Serialize(writer, node, options);
+			options.Write(writer, node!, JsonSchemaSerializerContext.Default.JsonNode);
 		}
 		writer.WriteEndArray();
 	}

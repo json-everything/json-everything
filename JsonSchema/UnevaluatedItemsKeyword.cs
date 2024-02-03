@@ -19,11 +19,11 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Applicator201909Id)]
 [Vocabulary(Vocabularies.Applicator202012Id)]
 [Vocabulary(Vocabularies.ApplicatorNextId)]
-[DependsOnAnnotationsFrom(typeof(PrefixItemsKeyword))]
-[DependsOnAnnotationsFrom(typeof(ItemsKeyword))]
-[DependsOnAnnotationsFrom(typeof(AdditionalItemsKeyword))]
-[DependsOnAnnotationsFrom(typeof(ContainsKeyword))]
-[DependsOnAnnotationsFrom(typeof(UnevaluatedItemsKeyword))]
+[DependsOnAnnotationsFrom<PrefixItemsKeyword>]
+[DependsOnAnnotationsFrom<ItemsKeyword>]
+[DependsOnAnnotationsFrom<AdditionalItemsKeyword>]
+[DependsOnAnnotationsFrom<ContainsKeyword>]
+[DependsOnAnnotationsFrom<UnevaluatedItemsKeyword>]
 [JsonConverter(typeof(UnevaluatedItemsKeywordJsonConverter))]
 public class UnevaluatedItemsKeyword : IJsonSchemaKeyword, ISchemaContainer
 {
@@ -136,7 +136,7 @@ public class UnevaluatedItemsKeyword : IJsonSchemaKeyword, ISchemaContainer
 /// <summary>
 /// JSON converter for <see cref="UnevaluatedItemsKeyword"/>.
 /// </summary>
-public sealed class UnevaluatedItemsKeywordJsonConverter : JsonConverter<UnevaluatedItemsKeyword>
+public sealed class UnevaluatedItemsKeywordJsonConverter : WeaklyTypedJsonConverter<UnevaluatedItemsKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="UnevaluatedItemsKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -145,7 +145,7 @@ public sealed class UnevaluatedItemsKeywordJsonConverter : JsonConverter<Unevalu
 	/// <returns>The converted value.</returns>
 	public override UnevaluatedItemsKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var schema = options.Read<JsonSchema>(ref reader)!;
+		var schema = options.Read(ref reader, JsonSchemaSerializerContext.Default.JsonSchema)!;
 
 		return new UnevaluatedItemsKeyword(schema);
 	}
@@ -156,7 +156,6 @@ public sealed class UnevaluatedItemsKeywordJsonConverter : JsonConverter<Unevalu
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, UnevaluatedItemsKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(UnevaluatedItemsKeyword.Name);
-		JsonSerializer.Serialize(writer, value.Schema, options);
+		options.Write(writer, value.Schema, JsonSchemaSerializerContext.Default.JsonSchema);
 	}
 }

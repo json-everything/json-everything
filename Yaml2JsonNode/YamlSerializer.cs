@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -20,6 +21,8 @@ public static class YamlSerializer
 	/// <param name="options">(optional) JSON serializer options.</param>
 	/// <param name="configure">(optional) YAML serializer configuration method.</param>
 	/// <returns>The YAML string.</returns>
+	[RequiresDynamicCode("Calls JsonSerializer.Serialize. Make sure the options object contains all relevant JsonTypeInfos before suppressing this warning.")]
+	[RequiresUnreferencedCode("Calls JsonSerializer.Serialize. Make sure the options object contains all relevant JsonTypeInfos before suppressing this warning.")]
 	public static string Serialize<T>(T obj, JsonSerializerOptions? options = null, Action<SerializerBuilder>? configure = null)
 	{
 		var json = JsonSerializer.SerializeToNode(obj, options);
@@ -81,6 +84,8 @@ public static class YamlSerializer
 	/// <param name="yamlText">The YAML text.</param>
 	/// <param name="options"></param>
 	/// <returns>The object or null.</returns>
+	[RequiresDynamicCode("Calls JsonSerializer.Deserialize. Make sure the options object contains all relevant JsonTypeInfos before suppressing this warning.")]
+	[RequiresUnreferencedCode("Calls JsonSerializer.Deserialize. Make sure the options object contains all relevant JsonTypeInfos before suppressing this warning.")]
 	public static T? Deserialize<T>(string yamlText, JsonSerializerOptions? options = null)
 	{
 		var yaml = Parse(yamlText).First();

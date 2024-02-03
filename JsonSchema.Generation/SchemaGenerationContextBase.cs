@@ -11,9 +11,9 @@ namespace Json.Schema.Generation;
 /// </summary>
 public abstract class SchemaGenerationContextBase
 {
-	internal class TrueType { }
+	internal class TrueType;
 
-	internal class FalseType { }
+	internal class FalseType;
 
 	private IComparer<MemberInfo>? _memberInfoComparer;
 
@@ -39,7 +39,7 @@ public abstract class SchemaGenerationContextBase
 	/// <summary>
 	/// The keyword intents required for this type.
 	/// </summary>
-	public List<ISchemaKeywordIntent> Intents { get; } = new();
+	public List<ISchemaKeywordIntent> Intents { get; } = [];
 
 	/// <summary>
 	/// A calculated hash value that represents and identifies this context.
@@ -75,7 +75,7 @@ public abstract class SchemaGenerationContextBase
 		if (ReferenceEquals(this, True)) return true;
 		if (ReferenceEquals(this, False)) return false;
 
-		if (!Intents.Any()) return true;
+		if (Intents.Count == 0) return true;
 
 		builder ??= new JsonSchemaBuilder();
 

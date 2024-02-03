@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -27,8 +28,7 @@ public class SubtractRule : Rule
 	/// <param name="more">Sequence of values to subtract from the first value.</param>
 	protected internal SubtractRule(Rule a, params Rule[] more)
 	{
-		Items = new List<Rule> { a };
-		Items.AddRange(more);
+		Items = [a, .. more];
 	}
 
 	/// <summary>
@@ -47,7 +47,7 @@ public class SubtractRule : Rule
 		var value = Items[0].Apply(data, contextData);
 		var number = value.Numberify();
 
-		if (number == null) return JsonNull.SignalNode;
+		if (number == null) return null;
 
 		var result = number.Value;
 
@@ -59,7 +59,7 @@ public class SubtractRule : Rule
 
 			number = value.Numberify();
 
-			if (number == null) return JsonNull.SignalNode;
+			if (number == null) return null;
 
 			result -= number.Value;
 		}
@@ -68,11 +68,11 @@ public class SubtractRule : Rule
 	}
 }
 
-internal class SubtractRuleJsonConverter : JsonConverter<SubtractRule>
+internal class SubtractRuleJsonConverter : WeaklyTypedJsonConverter<SubtractRule>
 {
 	public override SubtractRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = JsonSerializer.Deserialize<Rule[]>(ref reader, options);
+		var parameters = options.ReadArray(ref reader, JsonLogicSerializerContext.Default.Rule);
 
 		if (parameters == null || parameters.Length == 0)
 			throw new JsonException("The - rule needs an array of parameters.");
@@ -84,7 +84,7 @@ internal class SubtractRuleJsonConverter : JsonConverter<SubtractRule>
 	{
 		writer.WriteStartObject();
 		writer.WritePropertyName("-");
-		writer.WriteRules(value.Items, options);
+		options.WriteList(writer, value.Items, JsonLogicSerializerContext.Default.Rule);
 		writer.WriteEndObject();
 	}
 }

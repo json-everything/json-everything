@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 using Json.JsonE.Expressions;
 using Json.JsonE.Operators;
 using Json.More;
@@ -60,7 +62,7 @@ public static class JsonE
 						? json.Expression.Evaluate(context)
 						: Evaluate(kvp.Value, context);
 					if (!ReferenceEquals(local, DeleteMarker))
-						result[HandleEscapedKey(kvp.Key)] = local.Copy();
+						result[HandleEscapedKey(kvp.Key)] = local.Clone();
 				}
 
 				return result;
@@ -75,7 +77,10 @@ public static class JsonE
 						? json.Expression.Evaluate(context)
 						: Evaluate(item, context);
 					if (!ReferenceEquals(local, DeleteMarker))
-						result.Add(local.Copy());
+					{
+						var copy = local.Clone();
+						result.Add(copy);
+					}
 				}
 
 				return result;
@@ -197,3 +202,11 @@ public static class JsonE
 	}
 
 }
+
+[JsonSerializable(typeof(FunctionDefinition))]
+[JsonSerializable(typeof(SortedDictionary<string, JsonNode>))]
+[JsonSerializable(typeof(JsonExpression))]
+[JsonSerializable(typeof(decimal))]
+[JsonSerializable(typeof(string))]
+[JsonSerializable(typeof(JsonNode))]
+internal partial class JsonESerializerContext : JsonSerializerContext;

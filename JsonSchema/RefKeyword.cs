@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Json.More;
 using Json.Pointer;
 
 namespace Json.Schema;
@@ -76,7 +77,7 @@ public class RefKeyword : IJsonSchemaKeyword
 		}
 		else
 		{
-			var anchorFragment = fragment.Substring(1);
+			var anchorFragment = fragment[1..];
 			if (!AnchorKeyword.AnchorPattern.IsMatch(anchorFragment))
 				throw new JsonSchemaException($"Unrecognized fragment type `{newUri}`");
 
@@ -96,7 +97,7 @@ public class RefKeyword : IJsonSchemaKeyword
 
 		return new KeywordConstraint(Name, Evaluator)
 		{
-			ChildDependencies = new[] { subschemaConstraint }
+			ChildDependencies = [subschemaConstraint]
 		};
 	}
 
@@ -112,7 +113,7 @@ public class RefKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="RefKeyword"/>.
 /// </summary>
-public sealed class RefKeywordJsonConverter : JsonConverter<RefKeyword>
+public sealed class RefKeywordJsonConverter : WeaklyTypedJsonConverter<RefKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="RefKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -133,7 +134,6 @@ public sealed class RefKeywordJsonConverter : JsonConverter<RefKeyword>
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, RefKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(RefKeyword.Name);
-		JsonSerializer.Serialize(writer, value.Reference, options);
+		options.Write(writer, value.Reference, JsonSchemaSerializerContext.Default.Uri);
 	}
 }

@@ -18,11 +18,6 @@ internal static class UtilityExtensions
 		return range.Start.Value <= value && value < range.End.Value;
 	}
 
-	public static bool In(this int value, Range range)
-	{
-		return range.Start.Value <= value && value < range.End.Value;
-	}
-
 	public static IEnumerable<T> Yield<T>(this T item)
 	{
 		yield return item;

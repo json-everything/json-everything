@@ -21,6 +21,6 @@ public class ValueFunction : ValueFunctionDefinition
 	{
 		if (nodeList.Count == 1) return nodeList[0].Value;
 
-		return null;
+		return Nothing;
 	}
 }

@@ -4,6 +4,33 @@ title: Json.More.Net
 icon: fas fa-tag
 order: "09.13"
 ---
+# [2.0.0](https://github.com/gregsdennis/json-everything/pull/619) {#release-more-2.0.0}
+
+Updated for multi-framework support with .Net Standard 2.0 and .Net 8 with Native AOT support, including updating _System.Text.Json_ from v6 to v8.
+
+Most of the changes to support Native AOT involve either updating internal implementation or creating overloads that do.  Whatever could not be updated was marked as requiring reflection, which will generate warnings when building Native AOT applications.
+
+## Breaking changes
+
+- Dropping support for .Net Standard 3.1 - May still be used, but exact behavior cannot be guaranteed. 
+- `JsonNull` removed in favor of using the `bool Try...(out ...)` pattern.
+- `JsonNodeExtensions.Copy()` removed in favor of the built-in `.DeepClone()`.
+- `JsonSerializerOptionsExtensions.GetConverter<T>()` and `.Read<T>()` updated to take a `JsonTypeInfo`.
+
+## Additions
+
+- Interface `IWeaklyTypedJsonConverter` and `WeaklyTypedJsonConverter<T>` - provides non-generic read/write methods that help calling without knowing about `T`.  (Used by _JsonSchema.Net_ v6 to support custom keywords.)
+- `JsonNodeExtensions.GetString()` and `.GetBool()` which consider that a `JsonNode` may be backed by a `JsonElement` that subsequently contains the appropriate value.
+- Various `JsonSerializerOptionsExtensions.Read...()` and `.Write...()` methods that support AOT-compatible serialization.
+
+# [1.10.1](https://github.com/gregsdennis/json-everything/pull/615) {#release-more-1.10.1}
+
+Continuation of v1.10.0: performance improvements for `JsonArrayTupleConverter`.
+
+# [1.10.0](https://github.com/gregsdennis/json-everything/pull/613) {#release-more-1.10.0}
+
+[dotnet/runtime #70352](https://github.com/dotnet/runtime/issues/70352) - Adds `JsonArrayTupleConverter`.
+
 # [1.9.3](https://github.com/gregsdennis/json-everything/pull/563) {#release-more-1.9.3}
 
 [#598](https://github.com/gregsdennis/json-everything/pull/598) - `sbyte` should be recognized as an integer type for `.IsInteger()` extension on `Type`.  Thanks to [@grbell-ms](https://github.com/grbell-ms) for submitting this fix.

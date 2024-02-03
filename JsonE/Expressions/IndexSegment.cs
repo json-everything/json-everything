@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Globalization;
 using System.Text.Json.Nodes;
 
 namespace Json.JsonE.Expressions;
@@ -43,11 +43,13 @@ internal class IndexSegment : IContextAccessorSegment
 		
 		if (contextValue is JsonValue val && val.TryGetValue(out string? str))
 		{
+			var stringInfo = new StringInfo(str);
+
 			if (index < 0)
 			{
 				if (-index < str.Length)
 				{
-					value = str[str.Length + index];
+					value = stringInfo.SubstringByTextElements(stringInfo.LengthInTextElements + index, 1);
 					return true;
 				}
 		
@@ -56,7 +58,7 @@ internal class IndexSegment : IContextAccessorSegment
 			
 			if (index < str.Length)
 			{
-				value = str[index];
+				value = stringInfo.SubstringByTextElements(index, 1);
 				return true;
 			}
 		

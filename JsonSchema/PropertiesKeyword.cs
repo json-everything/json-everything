@@ -77,7 +77,7 @@ public class PropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 /// <summary>
 /// JSON converter for <see cref="PropertiesKeyword"/>.
 /// </summary>
-public sealed class PropertiesKeywordJsonConverter : JsonConverter<PropertiesKeyword>
+public sealed class PropertiesKeywordJsonConverter : WeaklyTypedJsonConverter<PropertiesKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="PropertiesKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -89,7 +89,7 @@ public sealed class PropertiesKeywordJsonConverter : JsonConverter<PropertiesKey
 		if (reader.TokenType != JsonTokenType.StartObject)
 			throw new JsonException("Expected object");
 
-		var schema = options.Read<Dictionary<string, JsonSchema>>(ref reader)!;
+		var schema = options.ReadDictionary(ref reader, JsonSchemaSerializerContext.Default.JsonSchema)!;
 		return new PropertiesKeyword(schema);
 	}
 
@@ -99,12 +99,11 @@ public sealed class PropertiesKeywordJsonConverter : JsonConverter<PropertiesKey
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, PropertiesKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(PropertiesKeyword.Name);
 		writer.WriteStartObject();
 		foreach (var kvp in value.Properties)
 		{
 			writer.WritePropertyName(kvp.Key);
-			JsonSerializer.Serialize(writer, kvp.Value, options);
+			options.Write(writer, kvp.Value, JsonSchemaSerializerContext.Default.JsonSchema);
 		}
 		writer.WriteEndObject();
 	}

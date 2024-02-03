@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using JetBrains.Annotations;
 using Json.Schema.Generation.Generators;
 
 namespace Json.Schema.Generation;
@@ -22,9 +21,9 @@ public class SchemaGeneratorConfiguration
 		public override bool IsDefined(Type attributeType, bool inherit) => false;
 
 		public override Type DeclaringType { get; } = typeof(DummyInfo);
-		public override MemberTypes MemberType { get; } = MemberTypes.Property;
+		public override MemberTypes MemberType => MemberTypes.Property;
 		public override string Name { get; }
-		public override Type? ReflectedType { get; } = null;
+		public override Type? ReflectedType => null;
 
 		public DummyInfo(string name)
 		{
@@ -35,34 +34,15 @@ public class SchemaGeneratorConfiguration
 	/// <summary>
 	/// A collection of refiners.
 	/// </summary>
-	[UsedImplicitly]
-	public List<ISchemaRefiner> Refiners { get; } = new();
+	public List<ISchemaRefiner> Refiners { get; } = [];
 	/// <summary>
 	/// A collection of generators in addition to the global set.
 	/// </summary>
-	[UsedImplicitly]
-	public List<ISchemaGenerator> Generators { get; } = new();
+	public List<ISchemaGenerator> Generators { get; } = [];
 	/// <summary>
 	/// Gets or sets the order in which properties will be listed in the schema.
 	/// </summary>
 	public PropertyOrder PropertyOrder { get; set; }
-
-	/// <summary>
-	/// Gets or sets the property naming method.  Default is <see cref="PropertyNamingMethods.AsDeclared"/>.
-	/// </summary>
-	/// <remarks>
-	/// This can be replaced with any `Func&lt;string, string&gt;`.
-	/// </remarks>
-	[Obsolete($"Use {nameof(PropertyNameResolver)} instead.")]
-	public PropertyNamingMethod? PropertyNamingMethod
-	{
-		get => x => PropertyNameResolver!(new DummyInfo(x));
-		set
-		{
-			var method = value ?? PropertyNamingMethods.AsDeclared;
-			PropertyNameResolver = x => method(x.Name);
-		}
-	}
 
 	/// <summary>
 	/// Gets or sets the property name resolving method. Default is <see cref="PropertyNameResolvers.AsDeclared"/>.

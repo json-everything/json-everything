@@ -63,16 +63,18 @@ public class ExclusiveMaximumKeyword : IJsonSchemaKeyword
 		var schemaValueType = evaluation.LocalInstance.GetSchemaValueType();
 		if (schemaValueType is not (SchemaValueType.Number or SchemaValueType.Integer)) return;
 
-		var number = evaluation.LocalInstance!.AsValue().GetNumber();
+		var number = evaluation.LocalInstance!.AsValue().GetNumber()!.Value;
 		if (Value <= number)
-			evaluation.Results.Fail(Name, ErrorMessages.GetExclusiveMaximum(context.Options.Culture), ("received", number), ("limit", Value));
+			evaluation.Results.Fail(Name, ErrorMessages.GetExclusiveMaximum(context.Options.Culture)
+				.ReplaceToken("received", number)
+				.ReplaceToken("limit", Value));
 	}
 }
 
 /// <summary>
 /// JSON converter for <see cref="ExclusiveMaximumKeyword"/>.
 /// </summary>
-public sealed class ExclusiveMaximumKeywordJsonConverter : JsonConverter<ExclusiveMaximumKeyword>
+public sealed class ExclusiveMaximumKeywordJsonConverter : WeaklyTypedJsonConverter<ExclusiveMaximumKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="ExclusiveMaximumKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -95,7 +97,7 @@ public sealed class ExclusiveMaximumKeywordJsonConverter : JsonConverter<Exclusi
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, ExclusiveMaximumKeyword value, JsonSerializerOptions options)
 	{
-		writer.WriteNumber(ExclusiveMaximumKeyword.Name, value.Value);
+		writer.WriteNumberValue(value.Value);
 	}
 }
 

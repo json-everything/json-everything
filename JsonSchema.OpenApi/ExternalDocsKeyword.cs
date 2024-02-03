@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Schema.OpenApi;
 
@@ -51,7 +53,7 @@ public class ExternalDocsKeyword : IJsonSchemaKeyword
 		Description = description;
 		Extensions = extensions;
 
-		_json = JsonSerializer.SerializeToNode(this);
+		_json = JsonSerializer.SerializeToNode(this, JsonSchemaOpenApiSerializerContext.Default.JsonNode);
 	}
 	internal ExternalDocsKeyword(Uri url, string? description, IReadOnlyDictionary<string, JsonNode?>? extensions, JsonNode? json)
 		: this(url, description, extensions)
@@ -80,20 +82,8 @@ public class ExternalDocsKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="ExternalDocsKeyword"/>.
 /// </summary>
-public sealed class ExternalDocsKeywordJsonConverter : JsonConverter<ExternalDocsKeyword>
+public sealed class ExternalDocsKeywordJsonConverter : WeaklyTypedJsonConverter<ExternalDocsKeyword>
 {
-	private class Model
-	{
-#pragma warning disable CS8618
-		// ReSharper disable UnusedAutoPropertyAccessor.Local
-		[JsonPropertyName("url")]
-		public Uri Url { get; set; }
-		[JsonPropertyName("description")]
-		public string? Description { get; set; }
-#pragma warning restore CS8618
-		// ReSharper restore UnusedAutoPropertyAccessor.Local
-	}
-
 	/// <summary>Reads and converts the JSON to type <see cref="ExternalDocsKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
 	/// <param name="typeToConvert">The type to convert.</param>
@@ -101,14 +91,15 @@ public sealed class ExternalDocsKeywordJsonConverter : JsonConverter<ExternalDoc
 	/// <returns>The converted value.</returns>
 	public override ExternalDocsKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var node = JsonSerializer.Deserialize<JsonNode>(ref reader, options);
+		var node = options.Read(ref reader, JsonSchemaOpenApiSerializerContext.Default.JsonNode)!;
 
-		var model = node.Deserialize<Model>(options);
-
+		var url = new Uri(node["url"]?.GetValue<string>() ??
+		                  throw new JsonException("'url' is required for the 'externalDocs' keyword."));
+		var description = node["description"]?.GetValue<string>();
 		var extensionData = node!.AsObject().Where(x => x.Key.StartsWith("x-"))
 			.ToDictionary(x => x.Key, x => x.Value);
 
-		return new ExternalDocsKeyword(model!.Url, model.Description, extensionData, node);
+		return new ExternalDocsKeyword(url, description, extensionData, node);
 	}
 
 	/// <summary>Writes a specified value as JSON.</summary>
@@ -117,7 +108,6 @@ public sealed class ExternalDocsKeywordJsonConverter : JsonConverter<ExternalDoc
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, ExternalDocsKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(DiscriminatorKeyword.Name);
 		writer.WriteStartObject();
 		writer.WriteString("propertyName", value.Url.OriginalString);
 		if (value.Description != null)
@@ -128,7 +118,7 @@ public sealed class ExternalDocsKeywordJsonConverter : JsonConverter<ExternalDoc
 			foreach (var extension in value.Extensions)
 			{
 				writer.WritePropertyName(extension.Key);
-				JsonSerializer.Serialize(writer, extension.Value, options);
+				options.Write(writer, extension.Value, JsonSchemaOpenApiSerializerContext.Default.JsonNode!);
 			}
 		}
 	}

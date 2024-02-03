@@ -100,7 +100,7 @@ public class FormatTests
 		var results = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
 
 		results.AssertValid();
-		var serialized = JsonSerializer.Serialize(results);
+		var serialized = JsonSerializer.Serialize(results, TestEnvironment.SerializerOptions);
 		Assert.IsTrue(serialized.Contains("something-dumb"));
 	}
 
@@ -125,7 +125,7 @@ public class FormatTests
 		var results = schema.Evaluate(instance, options);
 
 		results.AssertInvalid();
-		var serialized = JsonSerializer.Serialize(results);
+		var serialized = JsonSerializer.Serialize(results, TestEnvironment.SerializerOptions);
 		Assert.IsTrue(serialized.Contains("something-dumb"));
 	}
 
@@ -148,7 +148,7 @@ public class FormatTests
 		});
 
 		results.AssertInvalid();
-		var serialized = JsonSerializer.Serialize(results);
+		var serialized = JsonSerializer.Serialize(results, TestEnvironment.SerializerOptions);
 		Assert.IsTrue(serialized.Contains("something-dumb"));
 	}
 
@@ -177,7 +177,7 @@ public class FormatTests
 			RequireFormatValidation = true
 		});
 
-		Console.WriteLine(JsonSerializer.Serialize(results, new JsonSerializerOptions { WriteIndented = true }));
+		Console.WriteLine(JsonSerializer.Serialize(results, TestEnvironment.TestOutputSerializerOptions));
 		Assert.AreEqual(isValid, results.IsValid);
 	}
 }

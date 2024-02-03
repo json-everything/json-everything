@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Json.More;
@@ -73,10 +72,7 @@ public class Validation
 											  shortFileName != "uri-template";
 
 			var contents = File.ReadAllText(fileName);
-			var collections = JsonSerializer.Deserialize<List<TestCollection>>(contents, new JsonSerializerOptions
-			{
-				PropertyNameCaseInsensitive = true
-			});
+			var collections = JsonSerializer.Deserialize<List<TestCollection>>(contents, TestEnvironment.TestSuiteSerializationOptions);
 
 			foreach (var collection in collections!)
 			{
@@ -115,12 +111,6 @@ public class Validation
 	[TestCaseSource(nameof(TestCases))]
 	public void Test(TestCollection collection, TestCase test, string fileName, EvaluationOptions options)
 	{
-		var serializerOptions = new JsonSerializerOptions
-		{
-			WriteIndented = true,
-			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-		};
-
 		Console.WriteLine();
 		Console.WriteLine();
 		Console.WriteLine(fileName);
@@ -128,7 +118,7 @@ public class Validation
 		Console.WriteLine(test.Description);
 		Console.WriteLine(test.Valid ? "valid" : "invalid");
 		Console.WriteLine();
-		Console.WriteLine(JsonSerializer.Serialize(collection.Schema, serializerOptions));
+		Console.WriteLine(JsonSerializer.Serialize(collection.Schema, TestEnvironment.TestOutputSerializerOptions));
 		Console.WriteLine();
 		Console.WriteLine(test.Data.AsJsonString());
 		Console.WriteLine();
@@ -138,7 +128,7 @@ public class Validation
 
 		var result = collection.Schema.Evaluate(test.Data, options);
 		//result.ToBasic();
-		Console.WriteLine(JsonSerializer.Serialize(result, serializerOptions));
+		Console.WriteLine(JsonSerializer.Serialize(result, TestEnvironment.TestOutputSerializerOptions));
 
 		if (collection.IsOptional && result.IsValid != test.Valid)
 			Assert.Inconclusive("Test optional");

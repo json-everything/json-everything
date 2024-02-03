@@ -8,10 +8,14 @@ internal class EqualToOperator : IBinaryComparativeOperator
 
 	public bool Evaluate(PathValue? left, PathValue? right)
 	{
-		var lValue = left?.TryGetJson();
-		var rValue = right?.TryGetJson();
+		if (left is null) return right is null;
+		if (right is null) return false;
 
-		return lValue.IsEquivalentTo(rValue);
+		if (!left.TryGetJson(out var lNode) ||
+		    !right.TryGetJson(out var rNode))
+			return false;
+
+		return lNode.IsEquivalentTo(rNode);
 	}
 
 	public override string ToString()

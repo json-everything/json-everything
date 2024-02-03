@@ -6,6 +6,4 @@
 /// <remarks>
 /// Currently that number is zero.
 /// </remarks>
-public class PathEvaluationOptions
-{
-}
+public class PathEvaluationOptions;

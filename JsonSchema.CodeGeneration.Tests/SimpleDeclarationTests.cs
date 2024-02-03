@@ -96,7 +96,7 @@ public class SimpleDeclarationTests
 
 		var json = "1";
 
-		VerifyDeserialization(code, json);
+		VerifyDeserialization(code, json, isReflectionAllowed: true);
 	}
 
 	[Test]
@@ -127,7 +127,7 @@ public class SimpleDeclarationTests
 
 		var json = "[\"one\", \"two\", \"three\"]";
 
-		VerifyDeserialization(code, json);
+		VerifyDeserialization(code, json, isReflectionAllowed: true);
 	}
 
 	[Test]
@@ -153,7 +153,7 @@ public class SimpleDeclarationTests
 
 		var json = "{\"Alpha\": 4.2, \"Beta\": 42, \"Gamma\": true }";
 
-		VerifyDeserialization(code, json);
+		VerifyDeserialization(code, json, isReflectionAllowed: true);
 	}
 
 	[Test]
@@ -180,7 +180,7 @@ public class SimpleDeclarationTests
 
 		var json = "{\"Alpha\": 4.2, \"Beta\": 42, \"Gamma\": true }";
 
-		VerifyDeserialization(code, json);
+		VerifyDeserialization(code, json, isReflectionAllowed: true);
 	}
 
 	[Test]
@@ -253,6 +253,6 @@ public class SimpleDeclarationTests
 
 		var json = "{\"Alpha\": 4.2, \"Beta\": 42, \"Gamma\": 4.5 }";
 
-		VerifyDeserialization(code, json);
+		VerifyDeserialization(code, json, isReflectionAllowed: true);
 	}
 }

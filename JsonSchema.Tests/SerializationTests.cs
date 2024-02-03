@@ -100,7 +100,7 @@ public class SerializationTests
 	{
 		var schema = JsonSchema.FromText(text);
 
-		var returnToText = JsonSerializer.Serialize(schema);
+		var returnToText = JsonSerializer.Serialize(schema, TestEnvironment.SerializerOptions);
 
 		Assert.AreEqual(text, returnToText);
 	}

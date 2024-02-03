@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Schema;
 
@@ -68,14 +69,16 @@ public class MaxItemsKeyword : IJsonSchemaKeyword
 
 		var number = array.Count;
 		if (Value < number)
-			evaluation.Results.Fail(Name, ErrorMessages.GetMaxItems(context.Options.Culture), ("received", number), ("limit", Value));
+			evaluation.Results.Fail(Name, ErrorMessages.GetMaxItems(context.Options.Culture)
+				.ReplaceToken("received", number)
+				.ReplaceToken("limit", Value));
 	}
 }
 
 /// <summary>
 /// JSON converter for <see cref="MaxItemsKeyword"/>.
 /// </summary>
-public sealed class MaxItemsKeywordJsonConverter : JsonConverter<MaxItemsKeyword>
+public sealed class MaxItemsKeywordJsonConverter : WeaklyTypedJsonConverter<MaxItemsKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="MaxItemsKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -102,7 +105,7 @@ public sealed class MaxItemsKeywordJsonConverter : JsonConverter<MaxItemsKeyword
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, MaxItemsKeyword value, JsonSerializerOptions options)
 	{
-		writer.WriteNumber(MaxItemsKeyword.Name, value.Value);
+		writer.WriteNumberValue(value.Value);
 	}
 }
 

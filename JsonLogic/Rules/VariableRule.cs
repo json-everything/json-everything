@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 using Json.Pointer;
 
 namespace Json.Logic.Rules;
@@ -55,15 +57,13 @@ public class VariableRule : Rule
 	}
 }
 
-internal class VariableRuleJsonConverter : JsonConverter<VariableRule>
+internal class VariableRuleJsonConverter : WeaklyTypedJsonConverter<VariableRule>
 {
 	public override VariableRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var node = JsonSerializer.Deserialize<JsonNode?>(ref reader, options);
-
-		var parameters = node is JsonArray
-			? node.Deserialize<Rule[]>()
-			: new[] { node.Deserialize<Rule>()! };
+		var parameters = reader.TokenType == JsonTokenType.StartArray
+			? options.ReadArray(ref reader, JsonLogicSerializerContext.Default.Rule)
+			: new[] { options.Read(ref reader, JsonLogicSerializerContext.Default.Rule)! };
 
 		if (parameters is not ({ Length: 0 } or { Length: 1 } or { Length: 2 }))
 			throw new JsonException("The var rule needs an array with 0, 1, or 2 parameters.");
@@ -83,12 +83,12 @@ internal class VariableRuleJsonConverter : JsonConverter<VariableRule>
 		if (value.DefaultValue != null)
 		{
 			writer.WriteStartArray();
-			writer.WriteRule(value.Path, options);
-			writer.WriteRule(value.DefaultValue, options);
+			options.Write(writer, value.Path, JsonLogicSerializerContext.Default.Rule!);
+			options.Write(writer, value.DefaultValue, JsonLogicSerializerContext.Default.Rule);
 			writer.WriteEndArray();
 		}
 		else
-			writer.WriteRule(value.Path, options);
+			options.Write(writer, value.Path, JsonLogicSerializerContext.Default.Rule!);
 
 		writer.WriteEndObject();
 	}

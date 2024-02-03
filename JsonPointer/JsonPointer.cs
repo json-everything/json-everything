@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
@@ -26,7 +27,7 @@ public class JsonPointer : IEquatable<JsonPointer>
 	public static readonly JsonPointer Empty =
 		new()
 		{
-			Segments = Array.Empty<PointerSegment>()
+			Segments = []
 		};
 
 	private string? _uriEncoded;
@@ -81,7 +82,7 @@ public class JsonPointer : IEquatable<JsonPointer>
 	/// <param name="pointer">The resulting pointer.</param>
 	/// <returns>`true` if the parse was successful; `false` otherwise.</returns>
 	/// <exception cref="ArgumentNullException"><paramref name="source"/> is null.</exception>
-	public static bool TryParse(string source, out JsonPointer? pointer)
+	public static bool TryParse(string source, [NotNullWhen(true)] out JsonPointer? pointer)
 	{
 		if (source == null) throw new ArgumentNullException(nameof(source));
 		if (source == string.Empty)
@@ -176,7 +177,7 @@ public class JsonPointer : IEquatable<JsonPointer>
 		}
 
 		// adapted from https://stackoverflow.com/a/2616980/878701
-		object GetValue(Expression? member)
+		object? GetValue(Expression? member)
 		{
 			if (member == null) return "null";
 
@@ -206,8 +207,8 @@ public class JsonPointer : IEquatable<JsonPointer>
 					 mce1.Arguments[0].Type == typeof(int))
 			{
 				var arg = mce1.Arguments[0];
-				var value = GetValue(arg);
-				segments.Insert(0, PointerSegment.Create(value.ToString()));
+				var value = GetValue(arg) ?? throw new NotSupportedException("Method in expression must return a non-null expression");
+				segments.Insert(0, PointerSegment.Create(value.ToString()!));
 				body = mce1.Object;
 			}
 			else if (body is MethodCallExpression { Method: { IsStatic: true, Name: nameof(Enumerable.Last) } } mce2 &&
@@ -220,7 +221,7 @@ public class JsonPointer : IEquatable<JsonPointer>
 					 and { NodeType: ExpressionType.ArrayIndex })
 			{
 				// Array index
-				segments.Insert(0, PointerSegment.Create(arrayIndexExpression.Value.ToString()));
+				segments.Insert(0, PointerSegment.Create(arrayIndexExpression.Value!.ToString()!));
 				body = binaryExpression.Left;
 			}
 			else if (body is ParameterExpression) break; // this is the param of the expression itself.
@@ -376,7 +377,7 @@ public class JsonPointer : IEquatable<JsonPointer>
 		{
 			foreach (var segment in Segments)
 			{
-				sb.Append("/");
+				sb.Append('/');
 				sb.Append(segment.ToString(pointerStyle));
 			}
 

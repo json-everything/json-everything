@@ -76,10 +76,11 @@ public class UniqueItemsKeyword : IJsonSchemaKeyword
 				duplicates.Add((i, j));
 		}
 
-		if (duplicates.Any())
+		if (duplicates.Count != 0)
 		{
 			var pairs = string.Join(", ", duplicates.Select(d => $"({d.Item1}, {d.Item2})"));
-			evaluation.Results.Fail(Name, ErrorMessages.GetUniqueItems(context.Options.Culture), ("duplicates", pairs));
+			evaluation.Results.Fail(Name, ErrorMessages.GetUniqueItems(context.Options.Culture)
+				.ReplaceToken("duplicates", pairs));
 		}
 	}
 }
@@ -87,7 +88,7 @@ public class UniqueItemsKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="UniqueItemsKeyword"/>.
 /// </summary>
-public sealed class UniqueItemsKeywordJsonConverter : JsonConverter<UniqueItemsKeyword>
+public sealed class UniqueItemsKeywordJsonConverter : WeaklyTypedJsonConverter<UniqueItemsKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="UniqueItemsKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -110,7 +111,7 @@ public sealed class UniqueItemsKeywordJsonConverter : JsonConverter<UniqueItemsK
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, UniqueItemsKeyword value, JsonSerializerOptions options)
 	{
-		writer.WriteBoolean(UniqueItemsKeyword.Name, value.Value);
+		writer.WriteBooleanValue(value.Value);
 	}
 }
 
