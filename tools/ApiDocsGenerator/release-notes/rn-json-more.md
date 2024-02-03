@@ -19,9 +19,9 @@ Most of the changes to support Native AOT involve either updating internal imple
 
 ## Additions
 
-- Interface `IJsonConverterReadWrite` and `AotCompatibleJsonConverter<T>` - provides non-generic read/write methods that help calling without knowing about `T`.  (Used by _JsonSchema.Net_ v6.)
+- Interface `IWeaklyTypedJsonConverter` and `WeaklyTypedJsonConverter<T>` - provides non-generic read/write methods that help calling without knowing about `T`.  (Used by _JsonSchema.Net_ v6 to support custom keywords.)
 - `JsonNodeExtensions.GetString()` and `.GetBool()` which consider that a `JsonNode` may be backed by a `JsonElement` that subsequently contains the appropriate value.
-- `JsonSerializerOptionsExtensions.Write()` and `.Write<T>()`.
+- Various `JsonSerializerOptionsExtensions.Read...()` and `.Write...()` methods that support AOT-compatible serialization.
 
 # [1.10.1](https://github.com/gregsdennis/json-everything/pull/615) {#release-more-1.10.1}
 
