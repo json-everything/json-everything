@@ -107,6 +107,7 @@ jobs:
       - name: pack
         run: |
           # matrix var includes "JsonSchema/nuspec/"
+          ls -lR artifacts/JsonSchema
           NUSPEC_NAME=${{ matrix.nuspec }}
           nuget pack artifacts/${NUSPEC_NAME} -OutputDirectory nupkg/
       - name: push
