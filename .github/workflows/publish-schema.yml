@@ -42,7 +42,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: build-output
-          path: JsonSchema/bin/Release/netstandard2.0/**/*
+          path: JsonSchema/bin/Release/**/*
     outputs:
       matrix: ${{ steps.get-localized-nuspecs.outputs.NUSPEC_FILES }}
       version: ${{ steps.get-version.outputs.version }}
