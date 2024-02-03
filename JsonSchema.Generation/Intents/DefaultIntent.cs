@@ -10,13 +10,13 @@ public class DefaultIntent : ISchemaKeywordIntent
 	/// <summary>
 	/// The expected value.
 	/// </summary>
-	public object? Value { get; }
+	public JsonNode? Value { get; }
 
 	/// <summary>
 	/// Creates a new <see cref="DefaultIntent"/> instance.
 	/// </summary>
 	/// <param name="value">The value.</param>
-	public DefaultIntent(object? value)
+	public DefaultIntent(JsonNode? value)
 	{
 		Value = value;
 	}
@@ -27,6 +27,6 @@ public class DefaultIntent : ISchemaKeywordIntent
 	/// <param name="builder">The builder.</param>
 	public void Apply(JsonSchemaBuilder builder)
 	{
-		builder.Default(JsonValue.Create(Value));
+		builder.Default(Value);
 	}
 }

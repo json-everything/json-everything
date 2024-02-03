@@ -184,7 +184,10 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 				var values = Enum.GetValues(memberType);
 				foreach (var value in values)
 				{
-					yield return (new IfAttribute(ifEnumAttribute.PropertyName, ifEnumAttribute.UseNumbers ? value : value.ToString(), value), member);
+					if (ifEnumAttribute.UseNumbers)
+						yield return (new IfAttribute(ifEnumAttribute.PropertyName, (int)value, value), member);
+					else
+						yield return (new IfAttribute(ifEnumAttribute.PropertyName, value.ToString(), value), member);
 				}
 
 				yield break;
