@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@v3
       - id: get-localized-nuspecs
         run: |
-          NUSPEC_FILES=$(echo -n '[' ; ls JsonSchema/nuspec/JsonSchema.Net.*.nuspec --format=commas|sed -e 's/^/\"/'|sed -e 's/,$/\",/'|sed -e 's/\([^,]\)$/\1\"\]/'|sed -e 's/, /\",\"/g')
+          NUSPEC_FILES=$(echo -n '[' ; ls JsonSchema/netstandard2.0/nuspec/JsonSchema.Net.*.nuspec --format=commas|sed -e 's/^/\"/'|sed -e 's/,$/\",/'|sed -e 's/\([^,]\)$/\1\"\]/'|sed -e 's/, /\",\"/g')
           echo $NUSPEC_FILES
           DELIMITER="$(openssl rand -hex 8)"
           echo "NUSPEC_FILES<<$DELIMITER" >> $GITHUB_OUTPUT
@@ -104,9 +104,8 @@ jobs:
           nuget-version: '6.x'
       - name: pack
         run: |
-          # includes "JsonSchema/nuspec/"
+          # includes "JsonSchema/netstandard2.0/nuspec/"
           NUSPEC_NAME=${{ matrix.nuspec }}
-          ls -lR artifacts/JsonSchema
           nuget pack artifacts/${NUSPEC_NAME} -OutputDirectory nupkg/
       - name: push
         run: |
