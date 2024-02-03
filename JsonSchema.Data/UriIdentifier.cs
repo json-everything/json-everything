@@ -32,8 +32,6 @@ public class UriIdentifier : IDataResourceIdentifier
 	/// <param name="registry">The schema registry.</param>
 	/// <param name="value">The value, if <paramref name="evaluation"/> was resolvable.</param>
 	/// <returns>True if resolution was successful; false otherwise.</returns>
-	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
-	[UnconditionalSuppressMessage("AOT", "IL3050:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public bool TryResolve(KeywordEvaluation evaluation, SchemaRegistry registry, out JsonNode? value)
 	{
 		var parts = Target.OriginalString.Split(new[] { '#' }, StringSplitOptions.None);

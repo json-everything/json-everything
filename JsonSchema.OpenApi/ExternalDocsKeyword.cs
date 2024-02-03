@@ -47,8 +47,6 @@ public class ExternalDocsKeyword : IJsonSchemaKeyword
 	/// `x-internal-id`. Field names beginning `x-oai-` and `x-oas-` are reserved for uses defined by the OpenAPI Initiative.
 	/// The value can be null, a primitive, an array or an object.
 	/// </param>
-	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
-	[UnconditionalSuppressMessage("AOT", "IL3050:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public ExternalDocsKeyword(Uri url, string? description, IReadOnlyDictionary<string, JsonNode?>? extensions)
 	{
 		Url = url;
@@ -91,8 +89,6 @@ public sealed class ExternalDocsKeywordJsonConverter : WeaklyTypedJsonConverter<
 	/// <param name="typeToConvert">The type to convert.</param>
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	/// <returns>The converted value.</returns>
-	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
-	[UnconditionalSuppressMessage("AOT", "IL3050:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public override ExternalDocsKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		var node = options.Read(ref reader, JsonSchemaOpenApiSerializerContext.Default.JsonNode)!;

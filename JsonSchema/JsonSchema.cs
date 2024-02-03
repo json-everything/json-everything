@@ -393,8 +393,6 @@ public class JsonSchema : IBaseDocument
 		return scopedConstraint;
 	}
 
-	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
-	[UnconditionalSuppressMessage("AOT", "IL3050:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	private void PopulateConstraint(SchemaConstraint constraint, EvaluationContext context)
 	{
 		if (constraint.Constraints.Length != 0) return;
@@ -593,8 +591,6 @@ public class JsonSchema : IBaseDocument
 		}
 	}
 
-	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
-	[UnconditionalSuppressMessage("AOT", "IL3050:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	JsonSchema? IBaseDocument.FindSubschema(JsonPointer pointer, EvaluationOptions options)
 	{
 		object? ExtractSchemaFromData(JsonPointer localPointer, JsonNode? data, JsonSchema hostSchema)
@@ -790,8 +786,6 @@ public sealed class SchemaJsonConverter : WeaklyTypedJsonConverter<JsonSchema>
 	/// <param name="writer">The writer to write to.</param>
 	/// <param name="value">The value to convert to JSON.</param>
 	/// <param name="options">An object that specifies serialization options to use.</param>
-	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
-	[UnconditionalSuppressMessage("AOT", "IL3050:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public override void Write(Utf8JsonWriter writer, JsonSchema value, JsonSerializerOptions options)
 	{
 		if (value.BoolValue == true)

@@ -407,8 +407,6 @@ public class Pre202012EvaluationResultsJsonConverter : WeaklyTypedJsonConverter<
 	/// <param name="writer">The writer to write to.</param>
 	/// <param name="value">The value to convert to JSON.</param>
 	/// <param name="options">An object that specifies serialization options to use.</param>
-	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
-	[UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public override void Write(Utf8JsonWriter writer, EvaluationResults value, JsonSerializerOptions options)
 	{
 		if (value.Exclude) return;
@@ -556,8 +554,6 @@ public class Pre202012EvaluationResultsJsonConverter : WeaklyTypedJsonConverter<
 			writer.WriteEndObject();
 	}
 
-	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
-	[UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	private static void WriteError(Utf8JsonWriter writer, EvaluationResults value, string keyword, string error, JsonSerializerOptions options)
 	{
 		writer.WriteStartObject();
@@ -582,8 +578,6 @@ public class Pre202012EvaluationResultsJsonConverter : WeaklyTypedJsonConverter<
 		writer.WriteEndObject();
 	}
 
-	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
-	[UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	private static void WriteAnnotation(Utf8JsonWriter writer, EvaluationResults value, Annotation annotation, JsonSerializerOptions options)
 	{
 		writer.WriteStartObject();

@@ -67,8 +67,6 @@ internal class NoneRuleJsonConverter : WeaklyTypedJsonConverter<NoneRule>
 		return new NoneRule(parameters[0], parameters[1]);
 	}
 
-	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
-	[UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public override void Write(Utf8JsonWriter writer, NoneRule value, JsonSerializerOptions options)
 	{
 		writer.WriteStartObject();
