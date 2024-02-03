@@ -44,7 +44,12 @@ receive an error that says ""compilation error.""
 
 ***NOTE** The playground will output the compilation error to the console, including the
 serialized details. I haven't yet figured out how to interpret these details to provide any
-insight into what in particular is wrong.  If you know, please feel free to raise an issue.*";
+insight into what in particular is wrong.  If you know, please feel free to raise an issue.*
+
+## AOT Support
+
+_JsonSchem.Net.Generation_ supports AOT in that it is properly marked as requiring reflection.
+However, due to that requirement, it likely will not work as expected in an AOT context.";
 
 	public const string SchemaGenerateCode = @"
 ## Generating C# Code
