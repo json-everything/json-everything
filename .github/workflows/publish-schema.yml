@@ -66,7 +66,7 @@ jobs:
           NUSPEC_NAME=JsonSchema.Net.nuspec
           VERSION=${{ needs.build.outputs.version }}
           echo $VERSION
-          nuget pack artifacts/nuspec/netstandard2.0/${NUSPEC_NAME} -OutputDirectory nupkg/ -Symbols -SymbolPackageFormat snupkg -Version ${VERSION}
+          nuget pack artifacts/netstandard2.0/nuspec/${NUSPEC_NAME} -OutputDirectory nupkg/ -Symbols -SymbolPackageFormat snupkg -Version ${VERSION}
       - name: push
         run: |
           NUSPEC_NAME=JsonSchema.Net.nuspec
