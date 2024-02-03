@@ -73,7 +73,7 @@ public static class RuleRegistry
 	/// <returns>The <see cref="System.Type"/> of the rule.</returns>
 	public static Type? GetRule(string identifier)
 	{
-		return _rules.GetValueOrDefault(identifier);
+		return _rules.TryGetValue(identifier, out var type) ? type : null;
 	}
 
 	/// <summary>
