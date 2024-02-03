@@ -35,7 +35,7 @@ public class JsonSchema : IBaseDocument
 	private readonly Dictionary<string, IJsonSchemaKeyword>? _keywords;
 	private readonly List<(DynamicScope Scope, SchemaConstraint Constraint)> _constraints = [];
 	
-	private (EvaluationOptions, OptionsDerivedValues)? _optionsDerivedValuesCache;
+	private OptionsDerivedValuesCache? _optionsDerivedValuesCache;
 
 	/// <summary>
 	/// The empty schema `{}`.  Functionally equivalent to <see cref="True"/>.
@@ -285,12 +285,12 @@ public class JsonSchema : IBaseDocument
 	{
 		var actualOptions = options ?? EvaluationOptions.Default;
 		
-		if (!_optionsDerivedValuesCache.HasValue || _optionsDerivedValuesCache.Value.Item1 != actualOptions)
+		if (_optionsDerivedValuesCache is null || !_optionsDerivedValuesCache.IsValidFor(actualOptions))
 		{
-			_optionsDerivedValuesCache = (actualOptions, GetOptionsDerivedValues(actualOptions));
+			_optionsDerivedValuesCache = GetOptionsDerivedValuesCache(actualOptions);
 		}
 
-		var optionsDerivedValues = _optionsDerivedValuesCache!.Value.Item2;
+		var optionsDerivedValues = _optionsDerivedValuesCache.OptionsDerivedValues;
 		var cachedOptions = optionsDerivedValues.EvaluationOptions;
 		var cachedConstraint = optionsDerivedValues.SchemaConstraint;
 		var cachedContext = optionsDerivedValues.EvaluationContext;
@@ -719,21 +719,21 @@ public class JsonSchema : IBaseDocument
 		return idKeyword?.Id.OriginalString ?? BaseUri.OriginalString;
 	}
 
-	private OptionsDerivedValues GetOptionsDerivedValues(EvaluationOptions options)
+	private OptionsDerivedValuesCache GetOptionsDerivedValuesCache(EvaluationOptions options)
 	{
-		options = EvaluationOptions.From(options);
+		var optionsCopy = EvaluationOptions.From(options);
 		// BaseUri may change if $id is present
 		// TODO: remove options.EvaluatingAs
-		var evaluatingAs = DetermineSpecVersion(this, options.SchemaRegistry, options.EvaluateAs);
-		PopulateBaseUris(this, this, BaseUri, options.SchemaRegistry, evaluatingAs, true);
+		var evaluatingAs = DetermineSpecVersion(this, optionsCopy.SchemaRegistry, optionsCopy.EvaluateAs);
+		PopulateBaseUris(this, this, BaseUri, optionsCopy.SchemaRegistry, evaluatingAs, true);
 
 
-		var context = new EvaluationContext(options, evaluatingAs, BaseUri);
+		var context = new EvaluationContext(optionsCopy, evaluatingAs, BaseUri);
 		var constraint = BuildConstraint(JsonPointer.Empty, JsonPointer.Empty, JsonPointer.Empty, context.Scope);
 		if (!BoolValue.HasValue)
 			PopulateConstraint(constraint, context);
 
-		return new OptionsDerivedValues(options, constraint, context);
+		return new OptionsDerivedValuesCache(options, new OptionsDerivedValues(optionsCopy, constraint, context));
 	}
 
 	private sealed class OptionsDerivedValues
@@ -747,6 +747,61 @@ public class JsonSchema : IBaseDocument
 			EvaluationOptions = evaluationOptions;
 			SchemaConstraint = schemaConstraint;
 			EvaluationContext = evaluationContext;
+		}
+	}
+
+	private sealed class OptionsDerivedValuesCache
+	{
+		private readonly EvaluationOptions _derivedFrom;
+
+		public OptionsDerivedValuesCache(EvaluationOptions derivedFrom, OptionsDerivedValues optionsDerivedValues)
+		{
+			_derivedFrom = derivedFrom;
+			OptionsDerivedValues = optionsDerivedValues;
+			
+		}
+
+		public OptionsDerivedValues OptionsDerivedValues { get; }
+
+		public bool IsValidFor(EvaluationOptions evaluationOptions)
+		{
+			if (ReferenceEquals(_derivedFrom, evaluationOptions)) return true;
+
+			if (_derivedFrom.EvaluateAs != evaluationOptions.EvaluateAs) return false;
+			
+			if (_derivedFrom.ValidateAgainstMetaSchema != evaluationOptions.ValidateAgainstMetaSchema) return false;
+			
+			if (_derivedFrom.OutputFormat != evaluationOptions.OutputFormat) return false;
+			
+			if (_derivedFrom.SchemaRegistry != evaluationOptions.SchemaRegistry) return false;
+			
+			if (_derivedFrom.VocabularyRegistry != evaluationOptions.VocabularyRegistry) return false;
+			
+			if (_derivedFrom.RequireFormatValidation != evaluationOptions.RequireFormatValidation) return false;
+			
+			if (_derivedFrom.OnlyKnownFormats != evaluationOptions.OnlyKnownFormats) return false;
+			
+			if (_derivedFrom.ProcessCustomKeywords != evaluationOptions.ProcessCustomKeywords) return false;
+			
+			if (_derivedFrom.PreserveDroppedAnnotations != evaluationOptions.PreserveDroppedAnnotations) return false;
+			
+			if (_derivedFrom.AddAnnotationForUnknownKeywords != evaluationOptions.AddAnnotationForUnknownKeywords) return false;
+
+			switch (_derivedFrom.IgnoredAnnotations, evaluationOptions.IgnoredAnnotations)
+			{
+				case (null, null):
+					break;
+				case (not null, not null):
+					if (!_derivedFrom.IgnoredAnnotations.SequenceEqual(evaluationOptions.IgnoredAnnotations)) return false;
+					
+					break;
+				default:
+					return false;
+			}
+			
+			if (!Equals(_derivedFrom.Culture, evaluationOptions.Culture)) return false;
+			
+			return true;
 		}
 	}
 }
