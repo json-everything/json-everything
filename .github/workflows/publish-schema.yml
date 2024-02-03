@@ -106,7 +106,7 @@ jobs:
         run: |
           # includes "JsonSchema/nuspec/"
           NUSPEC_NAME=${{ matrix.nuspec }}
-          nuget pack artifacts/${NUSPEC_NAME} -OutputDirectory nupkg/
+          nuget pack artifacts/netstandard2.0/${NUSPEC_NAME} -OutputDirectory nupkg/
       - name: push
         run: |
           PKG_NAME=*.nupkg
