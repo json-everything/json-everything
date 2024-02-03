@@ -96,7 +96,7 @@ There are actually multiple boxes.  Each piece of functionality has been broken 
 </tr>
 <tr>
 <td>JsonLogic<br><a href="https://www.nuget.org/packages/JsonLogic/"><img alt="NuGet version" src="https://img.shields.io/nuget/vpre/JsonLogic.svg?svg=true"></img><img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonLogic.svg?svg=true"></img></a></td>
-<td>JsonLogic (<a href="https://jsonlogic.com">Website</a>) (.Net Standard 2.1)</td>
+<td>JsonLogic (<a href="https://jsonlogic.com">Website</a>)</td>
 </tr>
 <tr>
 <td>JsonE.Net<br><a href="https://www.nuget.org/packages/JsonE.Net/"><img alt="NuGet version" src="https://img.shields.io/nuget/vpre/JsonE.Net.svg?svg=true"></img><img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonE.Net.svg?svg=true"></img></a></td>
