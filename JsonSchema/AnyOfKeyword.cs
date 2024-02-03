@@ -81,7 +81,7 @@ public class AnyOfKeyword : IJsonSchemaKeyword, ISchemaCollector
 /// <summary>
 /// JSON converter for <see cref="AnyOfKeyword"/>.
 /// </summary>
-public sealed class AnyOfKeywordJsonConverter : AotCompatibleJsonConverter<AnyOfKeyword>
+public sealed class AnyOfKeywordJsonConverter : WeaklyTypedJsonConverter<AnyOfKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="AnyOfKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -93,7 +93,7 @@ public sealed class AnyOfKeywordJsonConverter : AotCompatibleJsonConverter<AnyOf
 		if (reader.TokenType != JsonTokenType.StartArray)
 			throw new JsonException("Expected array");
 
-		var schemas = options.Read(ref reader, JsonSchemaSerializerContext.Default.ListJsonSchema)!;
+		var schemas = options.ReadList(ref reader, JsonSchemaSerializerContext.Default.JsonSchema)!;
 		return new AnyOfKeyword(schemas);
 	}
 

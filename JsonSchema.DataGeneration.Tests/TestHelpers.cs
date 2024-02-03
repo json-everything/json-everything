@@ -9,10 +9,13 @@ namespace Json.Schema.DataGeneration.Tests;
 
 public static class TestHelpers
 {
-	public static readonly JsonSerializerOptions SerializerOptions = new()
-	{
-		TypeInfoResolverChain = { DataGenerationTestsSerializerContext.Default, JsonSchema.TypeInfoResolver },
-	};
+	public static readonly JsonSerializerOptions SerializerOptions =
+		new()
+		{
+			WriteIndented = true,
+			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+			TypeInfoResolverChain = { DataGenerationTestsSerializerContext.Default }
+		};
 
 	public static void Run(JsonSchema schema, EvaluationOptions? options = null)
 	{
@@ -21,19 +24,9 @@ public static class TestHelpers
 		options ??= EvaluationOptions.Default;
 
 		Assert.IsTrue(result.IsSuccess, "failed generation");
-		Console.WriteLine(JsonSerializer.Serialize(result.Result,
-			new JsonSerializerOptions(SerializerOptions)
-			{
-				WriteIndented = true,
-				Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-			}));
+		Console.WriteLine(JsonSerializer.Serialize(result.Result, SerializerOptions));
 		var validation = schema.Evaluate(result.Result, options);
-		Console.WriteLine(JsonSerializer.Serialize(validation,
-			new JsonSerializerOptions(SerializerOptions)
-			{
-				WriteIndented = true,
-				Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-			}));
+		Console.WriteLine(JsonSerializer.Serialize(validation, SerializerOptions));
 		Assert.IsTrue(validation.IsValid, "failed validation");
 	}
 
@@ -43,12 +36,7 @@ public static class TestHelpers
 
 		Console.WriteLine(result.ErrorMessage);
 		if (result.IsSuccess)
-			Console.WriteLine(JsonSerializer.Serialize(result.Result,
-				new JsonSerializerOptions(SerializerOptions)
-				{
-					WriteIndented = true,
-					Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-				}));
+			Console.WriteLine(JsonSerializer.Serialize(result.Result, SerializerOptions));
 		Assert.IsFalse(result.IsSuccess, "generation succeeded");
 	}
 
@@ -65,4 +53,6 @@ public static class TestHelpers
 }
 
 [JsonSerializable(typeof(GenerationResult))]
+[JsonSerializable(typeof(JsonSchema))]
+[JsonSerializable(typeof(EvaluationResults))]
 internal partial class DataGenerationTestsSerializerContext : JsonSerializerContext;

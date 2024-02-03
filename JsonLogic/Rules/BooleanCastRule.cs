@@ -43,11 +43,11 @@ public class BooleanCastRule : Rule
 	}
 }
 
-internal class BooleanCastRuleJsonConverter : AotCompatibleJsonConverter<BooleanCastRule>
+internal class BooleanCastRuleJsonConverter : WeaklyTypedJsonConverter<BooleanCastRule>
 {
 	public override BooleanCastRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = options.Read(ref reader, LogicSerializerContext.Default.RuleArray);
+		var parameters = options.ReadArray(ref reader, JsonLogicSerializerContext.Default.Rule);
 
 		if (parameters is not { Length: 1 })
 			throw new JsonException("The !! rule needs an array with a single parameter.");
@@ -55,14 +55,12 @@ internal class BooleanCastRuleJsonConverter : AotCompatibleJsonConverter<Boolean
 		return new BooleanCastRule(parameters[0]);
 	}
 
-	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
-	[UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public override void Write(Utf8JsonWriter writer, BooleanCastRule value, JsonSerializerOptions options)
 	{
 		writer.WriteStartObject();
 		writer.WritePropertyName("!!");
 		writer.WriteStartArray();
-		writer.WriteRule(value.Value, options);
+		options.Write(writer, value.Value, JsonLogicSerializerContext.Default.Rule);
 		writer.WriteEndArray();
 		writer.WriteEndObject();
 	}

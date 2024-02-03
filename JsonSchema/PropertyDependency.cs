@@ -100,7 +100,7 @@ public class PropertyDependency : IKeyedSchemaCollector, IEquatable<PropertyDepe
 /// <summary>
 /// JSON converter for <see cref="PropertyDependency"/>.
 /// </summary>
-public sealed class PropertyDependencyJsonConverter : AotCompatibleJsonConverter<PropertyDependency>
+public sealed class PropertyDependencyJsonConverter : WeaklyTypedJsonConverter<PropertyDependency>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="PropertyDependency"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -109,7 +109,7 @@ public sealed class PropertyDependencyJsonConverter : AotCompatibleJsonConverter
 	/// <returns>The converted value.</returns>
 	public override PropertyDependency Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var schemas = options.Read(ref reader, JsonSchemaSerializerContext.Default.DictionaryStringJsonSchema);
+		var schemas = options.ReadDictionary(ref reader, JsonSchemaSerializerContext.Default.JsonSchema);
 
 		return new PropertyDependency(schemas!);
 	}
@@ -120,6 +120,6 @@ public sealed class PropertyDependencyJsonConverter : AotCompatibleJsonConverter
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, PropertyDependency value, JsonSerializerOptions options)
 	{
-		options.Write(writer, value.Schemas, JsonSchemaSerializerContext.Default.IReadOnlyDictionaryStringJsonSchema);
+		options.WriteDictionary(writer, value.Schemas, JsonSchemaSerializerContext.Default.JsonSchema);
 	}
 }

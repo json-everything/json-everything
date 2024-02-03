@@ -61,7 +61,7 @@ public class DefsKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 /// <summary>
 /// JSON converter for <see cref="DefsKeyword"/>.
 /// </summary>
-public sealed class DefsKeywordJsonConverter : AotCompatibleJsonConverter<DefsKeyword>
+public sealed class DefsKeywordJsonConverter : WeaklyTypedJsonConverter<DefsKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="DefsKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -73,7 +73,7 @@ public sealed class DefsKeywordJsonConverter : AotCompatibleJsonConverter<DefsKe
 		if (reader.TokenType != JsonTokenType.StartObject)
 			throw new JsonException("Expected object");
 
-		var schema = options.Read(ref reader, JsonSchemaSerializerContext.Default.DictionaryStringJsonSchema)!;
+		var schema = options.ReadDictionary(ref reader, JsonSchemaSerializerContext.Default.JsonSchema)!;
 		return new DefsKeyword(schema);
 	}
 

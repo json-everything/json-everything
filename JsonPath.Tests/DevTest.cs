@@ -1,8 +1,4 @@
-﻿using System;
-using System.Text.Encodings.Web;
-using System.Text.Json;
-using System.Text.Json.Nodes;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace Json.Path.Tests;
 

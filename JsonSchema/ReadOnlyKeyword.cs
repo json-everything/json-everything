@@ -59,7 +59,7 @@ public class ReadOnlyKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="ReadOnlyKeyword"/>.
 /// </summary>
-public sealed class ReadOnlyKeywordJsonConverter : AotCompatibleJsonConverter<ReadOnlyKeyword>
+public sealed class ReadOnlyKeywordJsonConverter : WeaklyTypedJsonConverter<ReadOnlyKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="ReadOnlyKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
-using System.Text.Json.Nodes;
-using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using Json.More;
 using Json.Pointer;
@@ -233,7 +231,7 @@ internal static class ModelGenerator
 		generated = new GenerationCacheItem(schema);
 		cache.Add(generated);
 
-		var json = JsonSerializer.SerializeToNode(schema, CodeGenerationSerializerContext.OptionsManager.SerializerOptions);
+		var json = JsonSerializer.SerializeToNode(schema, CodeGenSerializerContext.Default.JsonSchema);
 
 		var supportedResults = _supportedRequirements.Evaluate(json, _options);
 #if DEBUG
@@ -353,7 +351,7 @@ internal static class ModelGenerator
 			if (targetBase == null)
 				throw new JsonSchemaException($"Cannot resolve base schema from `{newUri}`");
 
-			targetSchema = targetBase.FindSubschema(pointerFragment!, options);
+			targetSchema = targetBase.FindSubschema(pointerFragment, options);
 		}
 		else
 		{
@@ -394,19 +392,5 @@ internal class GenerationCache : List<GenerationCacheItem>
 		{
 			item.Model.FillPlaceholders(this);
 		}
-	}
-}
-
-[JsonSerializable(typeof(JsonSchema))]
-internal partial class CodeGenerationSerializerContext : JsonSerializerContext
-{
-	public static TypeResolverOptionsManager OptionsManager { get; }
-
-	static CodeGenerationSerializerContext()
-	{
-		OptionsManager = new(
-			Default,
-			Json.Schema.JsonSchema.TypeInfoResolver
-		);
 	}
 }

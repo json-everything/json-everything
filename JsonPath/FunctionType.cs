@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Json.Path;
+﻿namespace Json.Path;
 
 /// <summary>
 /// Indicates the return type of a filter expression function.

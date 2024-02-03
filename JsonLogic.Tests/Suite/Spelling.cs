@@ -40,7 +40,7 @@ public class Spelling
 
 		}).Result;
 
-		var testSuite = JsonSerializer.Deserialize<TestSuite>(text, TestSerializerContext.OptionsManager.SerializerOptions);
+		var testSuite = JsonSerializer.Deserialize(text, TestSerializerContext.Default.TestSuite);
 
 		return testSuite!.Tests.Select(t => new TestCaseData(t) { TestName = $"{t.Logic}  |  {t.Data.AsJsonString()}  |  {t.Expected.AsJsonString()}" });
 	}
@@ -49,14 +49,14 @@ public class Spelling
 	public void Run(Test test)
 	{
 		var node = JsonNode.Parse(test.Logic);
-		var rule = JsonSerializer.Deserialize<Rule>(test.Logic, TestSerializerContext.OptionsManager.SerializerOptions);
+		var rule = JsonSerializer.Deserialize(test.Logic, TestSerializerContext.Default.Rule);
 
-		var serialized = JsonSerializer.SerializeToNode(rule, TestSerializerContext.OptionsManager.SerializerOptions);
+		var serialized = JsonSerializer.SerializeToNode(rule, TestSerializerContext.Default.Rule!);
 
 		if (node.IsEquivalentTo(serialized)) return;
 
-		Console.WriteLine($"Expected: {node.AsJsonString(TestSerializerContext.OptionsManager.SerializerOptions)}");
-		Console.WriteLine($"Actual:   {serialized.AsJsonString(TestSerializerContext.OptionsManager.SerializerOptions)}");
+		Console.WriteLine($"Expected: {node.AsJsonString(TestSerializerContext.Default.Options)}");
+		Console.WriteLine($"Actual:   {serialized.AsJsonString(TestSerializerContext.Default.Options)}");
 		Assert.Inconclusive();
 	}
 }

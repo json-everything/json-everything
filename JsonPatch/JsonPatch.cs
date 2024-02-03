@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
-using System.Text.Json.Serialization.Metadata;
 using Json.More;
 using Json.Pointer;
 
@@ -17,12 +16,6 @@ namespace Json.Patch;
 [JsonConverter(typeof(PatchJsonConverter))]
 public class JsonPatch : IEquatable<JsonPatch>
 {
-	/// <summary>
-	/// A TypeInfoResolver that can be used for serializing <see cref="JsonPointer"/> objects. Add to your custom
-	/// JsonSerializerOptions's TypeInfoResolver or TypeInfoResolveChain.
-	/// </summary>
-	public static IJsonTypeInfoResolver TypeInfoResolver => PatchSerializerContext.OptionsManager.TypeInfoResolver;
-
 	/// <summary>
 	/// Gets the collection of operations.
 	/// </summary>
@@ -94,7 +87,7 @@ public class JsonPatch : IEquatable<JsonPatch>
 /// <summary>
 /// Provides JSON conversion logic for <see cref="JsonPatch"/>.
 /// </summary>
-public class PatchJsonConverter : AotCompatibleJsonConverter<JsonPatch>
+public class PatchJsonConverter : WeaklyTypedJsonConverter<JsonPatch>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="JsonPatch"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -103,7 +96,7 @@ public class PatchJsonConverter : AotCompatibleJsonConverter<JsonPatch>
 	/// <returns>The converted value.</returns>
 	public override JsonPatch Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var operations = JsonSerializer.Deserialize(ref reader, PatchSerializerContext.Default.ListPatchOperation)!;
+		var operations = JsonSerializer.Deserialize(ref reader, JsonPatchSerializerContext.Default.ListPatchOperation)!;
 
 		return new JsonPatch(operations);
 	}
@@ -112,31 +105,8 @@ public class PatchJsonConverter : AotCompatibleJsonConverter<JsonPatch>
 	/// <param name="writer">The writer to write to.</param>
 	/// <param name="value">The value to convert to JSON.</param>
 	/// <param name="options">An object that specifies serialization options to use.</param>
-	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
-	[UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public override void Write(Utf8JsonWriter writer, JsonPatch value, JsonSerializerOptions options)
 	{
-		JsonSerializer.Serialize(writer, value.Operations, options);
-	}
-}
-
-[JsonSerializable(typeof(JsonPatch))]
-[JsonSerializable(typeof(PatchOperation))]
-[JsonSerializable(typeof(OperationType))]
-[JsonSerializable(typeof(PatchResult))]
-[JsonSerializable(typeof(JsonPointer))]
-[JsonSerializable(typeof(JsonNode))]
-[JsonSerializable(typeof(List<PatchOperation>))]
-[JsonSerializable(typeof(IReadOnlyList<PatchOperation>))]
-[JsonSerializable(typeof(PatchOperationJsonConverter.Model))]
-internal partial class PatchSerializerContext : JsonSerializerContext
-{
-	public static TypeResolverOptionsManager OptionsManager { get; }
-
-	static PatchSerializerContext()
-	{
-		OptionsManager = new TypeResolverOptionsManager(
-			Default
-		);
+		options.WriteList(writer, value.Operations, JsonPatchSerializerContext.Default.PatchOperation);
 	}
 }

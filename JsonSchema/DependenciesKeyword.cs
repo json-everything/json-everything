@@ -118,7 +118,7 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 /// <summary>
 /// JSON converter for <see cref="DependenciesKeyword"/>.
 /// </summary>
-public sealed class DependenciesKeywordJsonConverter : AotCompatibleJsonConverter<DependenciesKeyword>
+public sealed class DependenciesKeywordJsonConverter : WeaklyTypedJsonConverter<DependenciesKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="DependenciesKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -130,7 +130,7 @@ public sealed class DependenciesKeywordJsonConverter : AotCompatibleJsonConverte
 		if (reader.TokenType != JsonTokenType.StartObject)
 			throw new JsonException("Expected object");
 
-		var dependencies = options.Read(ref reader, JsonSchemaSerializerContext.Default.DictionaryStringSchemaOrPropertyList)!;
+		var dependencies = options.ReadDictionary(ref reader, JsonSchemaSerializerContext.Default.SchemaOrPropertyList)!;
 		return new DependenciesKeyword(dependencies);
 	}
 
@@ -140,13 +140,7 @@ public sealed class DependenciesKeywordJsonConverter : AotCompatibleJsonConverte
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, DependenciesKeyword value, JsonSerializerOptions options)
 	{
-		writer.WriteStartObject();
-		foreach (var kvp in value.Requirements)
-		{
-			writer.WritePropertyName(kvp.Key);
-			options.Write(writer, kvp.Value, JsonSchemaSerializerContext.Default.SchemaOrPropertyList);
-		}
-		writer.WriteEndObject();
+		options.WriteDictionary(writer, value.Requirements, JsonSchemaSerializerContext.Default.SchemaOrPropertyList);
 	}
 }
 
@@ -211,7 +205,7 @@ public class SchemaOrPropertyList
 /// <summary>
 /// JSON converter for <see cref="SchemaOrPropertyList"/>.
 /// </summary>
-public sealed class SchemaOrPropertyListJsonConverter : AotCompatibleJsonConverter<SchemaOrPropertyList>
+public sealed class SchemaOrPropertyListJsonConverter : WeaklyTypedJsonConverter<SchemaOrPropertyList>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="SchemaOrPropertyList"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -221,7 +215,7 @@ public sealed class SchemaOrPropertyListJsonConverter : AotCompatibleJsonConvert
 	public override SchemaOrPropertyList Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		if (reader.TokenType == JsonTokenType.StartArray)
-			return new SchemaOrPropertyList(options.Read(ref reader, JsonSchemaSerializerContext.Default.ListString)!);
+			return new SchemaOrPropertyList(options.ReadList(ref reader, JsonSchemaSerializerContext.Default.String)!);
 
 		return new SchemaOrPropertyList(options.Read(ref reader, JsonSchemaSerializerContext.Default.JsonSchema)!);
 	}
@@ -235,6 +229,6 @@ public sealed class SchemaOrPropertyListJsonConverter : AotCompatibleJsonConvert
 		if (value.Schema != null)
 			options.Write(writer, value.Schema, JsonSchemaSerializerContext.Default.JsonSchema);
 		else
-			options.Write(writer, value.Requirements, JsonSchemaSerializerContext.Default.ListString);
+			options.WriteList(writer, value.Requirements!, JsonSchemaSerializerContext.Default.String);
 	}
 }

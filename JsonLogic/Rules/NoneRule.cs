@@ -55,11 +55,11 @@ public class NoneRule : Rule
 	}
 }
 
-internal class NoneRuleJsonConverter : AotCompatibleJsonConverter<NoneRule>
+internal class NoneRuleJsonConverter : WeaklyTypedJsonConverter<NoneRule>
 {
 	public override NoneRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = options.Read(ref reader, LogicSerializerContext.Default.RuleArray);
+		var parameters = options.ReadArray(ref reader, JsonLogicSerializerContext.Default.Rule);
 
 		if (parameters is not { Length: 2 })
 			throw new JsonException("The none rule needs an array with 2 parameters.");
@@ -67,15 +67,13 @@ internal class NoneRuleJsonConverter : AotCompatibleJsonConverter<NoneRule>
 		return new NoneRule(parameters[0], parameters[1]);
 	}
 
-	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
-	[UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public override void Write(Utf8JsonWriter writer, NoneRule value, JsonSerializerOptions options)
 	{
 		writer.WriteStartObject();
 		writer.WritePropertyName("none");
 		writer.WriteStartArray();
-		writer.WriteRule(value.Input, options);
-		writer.WriteRule(value.Rule, options);
+		options.Write(writer, value.Input, JsonLogicSerializerContext.Default.Rule);
+		options.Write(writer, value.Rule, JsonLogicSerializerContext.Default.Rule);
 		writer.WriteEndArray();
 		writer.WriteEndObject();
 	}

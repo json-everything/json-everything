@@ -203,7 +203,6 @@ public static class JsonE
 
 }
 
-
 [JsonSerializable(typeof(FunctionDefinition))]
 [JsonSerializable(typeof(SortedDictionary<string, JsonNode>))]
 [JsonSerializable(typeof(JsonExpression))]

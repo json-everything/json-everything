@@ -82,7 +82,7 @@ public class OrderingKeyword : IJsonSchemaKeyword
 				{
 					evaluation.Results.Fail(Name, "Item at index [[index]] does not have a value at [[pointer]]"
 							.ReplaceToken("index", i-1)
-							.ReplaceToken("pointer", specifier.By, ArrayExtSerializerContext.Default.JsonPointer)
+							.ReplaceToken("pointer", specifier.By, JsonSchemaArrayExtSerializerContext.Default.JsonPointer)
 						);
 					return;
 				}
@@ -91,7 +91,7 @@ public class OrderingKeyword : IJsonSchemaKeyword
 				{
 					evaluation.Results.Fail(Name, "Item at index [[index]] does not have a value at [[pointer]]"
 							.ReplaceToken("index", i)
-							.ReplaceToken("pointer", specifier.By, ArrayExtSerializerContext.Default.JsonPointer)
+							.ReplaceToken("pointer", specifier.By, JsonSchemaArrayExtSerializerContext.Default.JsonPointer)
 						);
 					return;
 				}
@@ -154,7 +154,7 @@ public class OrderingKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="OrderingKeyword"/>.
 /// </summary>
-public sealed class OrderingKeywordJsonConverter : AotCompatibleJsonConverter<OrderingKeyword>
+public sealed class OrderingKeywordJsonConverter : WeaklyTypedJsonConverter<OrderingKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="OrderingKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -166,7 +166,7 @@ public sealed class OrderingKeywordJsonConverter : AotCompatibleJsonConverter<Or
 		if (reader.TokenType != JsonTokenType.StartArray)
 			throw new JsonException("Expected array");
 
-		var references = options.Read(ref reader, ArrayExtSerializerContext.Default.ListOrderingSpecifier)!;
+		var references = options.ReadList(ref reader, JsonSchemaArrayExtSerializerContext.Default.OrderingSpecifier)!;
 		return new OrderingKeyword(references);
 	}
 
@@ -177,6 +177,6 @@ public sealed class OrderingKeywordJsonConverter : AotCompatibleJsonConverter<Or
 	public override void Write(Utf8JsonWriter writer, OrderingKeyword value, JsonSerializerOptions options)
 	{
 		writer.WritePropertyName(OrderingKeyword.Name);
-		options.Write(writer, value.Specifiers, ArrayExtSerializerContext.Default.IEnumerableOrderingSpecifier);
+		options.WriteList(writer, value.Specifiers, JsonSchemaArrayExtSerializerContext.Default.OrderingSpecifier);
 	}
 }

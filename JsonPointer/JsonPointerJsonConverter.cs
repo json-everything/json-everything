@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using Json.More;
 
 namespace Json.Pointer;
@@ -8,7 +7,7 @@ namespace Json.Pointer;
 /// <summary>
 /// Converter for <see cref="JsonPointer"/>.
 /// </summary>
-public sealed class JsonPointerJsonConverter : AotCompatibleJsonConverter<JsonPointer?>
+public sealed class JsonPointerJsonConverter : WeaklyTypedJsonConverter<JsonPointer?>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="JsonPointer"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -37,10 +36,4 @@ public sealed class JsonPointerJsonConverter : AotCompatibleJsonConverter<JsonPo
 		else
 			writer.WriteStringValue(value.ToString());
 	}
-}
-
-[JsonSerializable(typeof(JsonPointer))]
-internal partial class JsonPointerSerializerContext : JsonSerializerContext
-{
-
 }

@@ -57,13 +57,13 @@ public class VariableRule : Rule
 	}
 }
 
-internal class VariableRuleJsonConverter : AotCompatibleJsonConverter<VariableRule>
+internal class VariableRuleJsonConverter : WeaklyTypedJsonConverter<VariableRule>
 {
 	public override VariableRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		var parameters = reader.TokenType == JsonTokenType.StartArray
-			? options.Read(ref reader, LogicSerializerContext.Default.RuleArray)
-			: new[] { options.Read(ref reader, LogicSerializerContext.Default.Rule)! };
+			? options.ReadArray(ref reader, JsonLogicSerializerContext.Default.Rule)
+			: new[] { options.Read(ref reader, JsonLogicSerializerContext.Default.Rule)! };
 
 		if (parameters is not ({ Length: 0 } or { Length: 1 } or { Length: 2 }))
 			throw new JsonException("The var rule needs an array with 0, 1, or 2 parameters.");
@@ -76,8 +76,6 @@ internal class VariableRuleJsonConverter : AotCompatibleJsonConverter<VariableRu
 		};
 	}
 
-	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
-	[UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public override void Write(Utf8JsonWriter writer, VariableRule value, JsonSerializerOptions options)
 	{
 		writer.WriteStartObject();
@@ -85,12 +83,12 @@ internal class VariableRuleJsonConverter : AotCompatibleJsonConverter<VariableRu
 		if (value.DefaultValue != null)
 		{
 			writer.WriteStartArray();
-			writer.WriteRule(value.Path, options);
-			writer.WriteRule(value.DefaultValue, options);
+			options.Write(writer, value.Path, JsonLogicSerializerContext.Default.Rule!);
+			options.Write(writer, value.DefaultValue, JsonLogicSerializerContext.Default.Rule);
 			writer.WriteEndArray();
 		}
 		else
-			writer.WriteRule(value.Path, options);
+			options.Write(writer, value.Path, JsonLogicSerializerContext.Default.Rule!);
 
 		writer.WriteEndObject();
 	}

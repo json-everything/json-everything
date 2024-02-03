@@ -121,7 +121,7 @@ public class DynamicRefKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="DynamicRefKeyword"/>.
 /// </summary>
-public sealed class DynamicRefKeywordJsonConverter : AotCompatibleJsonConverter<DynamicRefKeyword>
+public sealed class DynamicRefKeywordJsonConverter : WeaklyTypedJsonConverter<DynamicRefKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="DynamicRefKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

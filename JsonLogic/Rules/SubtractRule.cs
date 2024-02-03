@@ -68,11 +68,11 @@ public class SubtractRule : Rule
 	}
 }
 
-internal class SubtractRuleJsonConverter : AotCompatibleJsonConverter<SubtractRule>
+internal class SubtractRuleJsonConverter : WeaklyTypedJsonConverter<SubtractRule>
 {
 	public override SubtractRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = options.Read(ref reader, LogicSerializerContext.Default.RuleArray);
+		var parameters = options.ReadArray(ref reader, JsonLogicSerializerContext.Default.Rule);
 
 		if (parameters == null || parameters.Length == 0)
 			throw new JsonException("The - rule needs an array of parameters.");
@@ -80,13 +80,11 @@ internal class SubtractRuleJsonConverter : AotCompatibleJsonConverter<SubtractRu
 		return new SubtractRule(parameters[0], parameters.Skip(1).ToArray());
 	}
 
-	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
-	[UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public override void Write(Utf8JsonWriter writer, SubtractRule value, JsonSerializerOptions options)
 	{
 		writer.WriteStartObject();
 		writer.WritePropertyName("-");
-		writer.WriteRules(value.Items, options);
+		options.WriteList(writer, value.Items, JsonLogicSerializerContext.Default.Rule);
 		writer.WriteEndObject();
 	}
 }

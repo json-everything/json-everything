@@ -51,8 +51,9 @@ public class DeserializationTests
 			)
 			.AdditionalProperties(false);
 
-	private static readonly JsonSerializerOptions _options = new(TestEnvironment.SerializerOptions)
+	private static readonly JsonSerializerOptions _options = new()
 	{
+		TypeInfoResolverChain = { TestSerializerContext.Default },
 		WriteIndented = true,
 		Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
 		Converters = { new ValidatingJsonConverter { OutputFormat = OutputFormat.List } }
@@ -289,8 +290,9 @@ public class DeserializationTests
 
 			for (int i = 0; i < 10; i++)
 			{
-				var options = new JsonSerializerOptions(TestEnvironment.SerializerOptions)
+				var options = new JsonSerializerOptions
 				{
+					TypeInfoResolverChain = { TestSerializerContext.Default },
 					WriteIndented = true,
 					Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
 					Converters = { new ValidatingJsonConverter { OutputFormat = OutputFormat.List } }
@@ -318,8 +320,9 @@ public class DeserializationTests
   ""Y"": 5
 }";
 
-			var options = new JsonSerializerOptions(TestEnvironment.SerializerOptions)
+			var options = new JsonSerializerOptions
 			{
+				TypeInfoResolverChain = { TestSerializerContext.Default },
 				WriteIndented = true,
 				Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
 				Converters = { new ValidatingJsonConverter { OutputFormat = OutputFormat.List } }
@@ -348,8 +351,9 @@ public class DeserializationTests
   ""Y"": 5
 }";
 
-					var options = new JsonSerializerOptions(TestEnvironment.SerializerOptions)
+					var options = new JsonSerializerOptions
 					{
+						TypeInfoResolverChain = { TestSerializerContext.Default },
 						WriteIndented = true,
 						Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
 						Converters = { new ValidatingJsonConverter { OutputFormat = OutputFormat.List } }

@@ -10,13 +10,13 @@ public class ConstIntent : ISchemaKeywordIntent
 	/// <summary>
 	/// The expected value.
 	/// </summary>
-	public object? Value { get; }
+	public JsonNode? Value { get; }
 
 	/// <summary>
 	/// Creates a new <see cref="ConstIntent"/> instance.
 	/// </summary>
 	/// <param name="value">The value.</param>
-	public ConstIntent(object? value)
+	public ConstIntent(JsonNode? value)
 	{
 		Value = value;
 	}
@@ -27,6 +27,6 @@ public class ConstIntent : ISchemaKeywordIntent
 	/// <param name="builder">The builder.</param>
 	public void Apply(JsonSchemaBuilder builder)
 	{
-		builder.Const(JsonValue.Create(Value));
+		builder.Const(Value);
 	}
 }

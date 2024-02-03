@@ -49,20 +49,18 @@ public class ContentSchemaKeyword : IJsonSchemaKeyword, ISchemaContainer
 	/// </param>
 	/// <param name="context">The <see cref="EvaluationContext"/>.</param>
 	/// <returns>A constraint object.</returns>
-	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
-	[UnconditionalSuppressMessage("AOT", "IL3050:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		EvaluationContext context)
 	{
-		return KeywordConstraint.SimpleAnnotation(Name, JsonSerializer.SerializeToNode(Schema, JsonSchemaSerializerContext.OptionsManager.SerializerOptions));
+		return KeywordConstraint.SimpleAnnotation(Name, JsonSerializer.SerializeToNode(Schema, JsonSchemaSerializerContext.Default.JsonSchema));
 	}
 }
 
 /// <summary>
 /// JSON converter for <see cref="ContentSchemaKeyword"/>.
 /// </summary>
-public sealed class ContentSchemaKeywordJsonConverter : AotCompatibleJsonConverter<ContentSchemaKeyword>
+public sealed class ContentSchemaKeywordJsonConverter : WeaklyTypedJsonConverter<ContentSchemaKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="ContentSchemaKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

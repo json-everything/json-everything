@@ -108,11 +108,13 @@ public class UnrecognizedKeywordTests
 
 		var result = schema.Evaluate(instance, options);
 
-		Console.WriteLine(JsonSerializer.Serialize(result, new JsonSerializerOptions(TestEnvironment.SerializerOptions)
+		var serializerOptions = new JsonSerializerOptions()
 		{
+			TypeInfoResolverChain = { TestSerializerContext.Default },
 			WriteIndented = true,
 			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-		}));
+		};
+		Console.WriteLine(JsonSerializer.Serialize(result, serializerOptions));
 
 		Assert.IsTrue(result.IsValid);
 		Assert.AreEqual(1, result.Annotations!.Count);

@@ -9,7 +9,7 @@ namespace Json.Schema.CodeGeneration;
 /// <summary>
 /// Generates code from a <see cref="JsonSchema"/>.
 /// </summary>
-public static class CodeGenExtensions
+public static partial class CodeGenExtensions
 {
 	/// <summary>
 	/// Generates code from a <see cref="JsonSchema"/>.

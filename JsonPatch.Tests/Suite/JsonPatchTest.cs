@@ -84,7 +84,7 @@ public class JsonPatchTest
 	public bool HasExpectedValue { get; set; }
 }
 
-public class JsonPatchTestJsonConverter : AotCompatibleJsonConverter<JsonPatchTest?>
+public class JsonPatchTestJsonConverter : WeaklyTypedJsonConverter<JsonPatchTest?>
 {
 	internal class Model
 	{
@@ -128,7 +128,7 @@ public class JsonPatchTestJsonConverter : AotCompatibleJsonConverter<JsonPatchTe
 				};
 			}
 
-			Console.WriteLine(JsonSerializer.Serialize(results, TestSerializerContext.OptionsManager.SerializerOptions));
+			Console.WriteLine(JsonSerializer.Serialize(results, TestEnvironment.SerializerOptions));
 			return null;
 		}
 		catch (Exception e) when(e is JsonException or ArgumentException)
@@ -150,7 +150,7 @@ public class JsonPatchTestJsonConverter : AotCompatibleJsonConverter<JsonPatchTe
 		if (value.HasExpectedValue)
 		{
 			writer.WritePropertyName("expected");
-			options.Write(writer, value.ExpectedValue, TestSerializerContext.Default.JsonNode);
+			JsonSerializer.Serialize(writer, value.ExpectedValue, options);
 		}
 		if (value.Error != null)
 			writer.WriteString("error", value.Error);
@@ -159,7 +159,7 @@ public class JsonPatchTestJsonConverter : AotCompatibleJsonConverter<JsonPatchTe
 		if (value.Patch != null)
 		{
 			writer.WritePropertyName("patch");
-			options.Write(writer, value.Patch, TestSerializerContext.Default.JsonPatch);
+			JsonSerializer.Serialize(writer, value.Patch, options);
 		}
 		if (value.Disabled)
 			writer.WriteBoolean("disabled", value.Disabled);

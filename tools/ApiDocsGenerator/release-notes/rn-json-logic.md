@@ -15,6 +15,7 @@ Most of the changes to support Native AOT involve either updating internal imple
 - Dropping support for .Net Standard 3.1 - May still be used, but exact behavior cannot be guaranteed. 
 - `RuleRegistry.AddRule<T>()` marked as AOT-incompatible.  Replaced by `.AddRule<T>(JsonSerializerContext)`.
 - Rules that returned `JsonNull.SignalNode` should now return null, as `JsonNull` has been removed from _Json.More.Net_.
+- `JsonWriterExtensions` removed in favor of the new `JsonSerializerOptionsExtensions` methods in _Json.More.Net_.
 
 ## Additions
 

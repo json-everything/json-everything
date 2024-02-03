@@ -61,7 +61,7 @@ public class IdKeyword : IIdKeyword
 /// <summary>
 /// JSON converter for <see cref="IdKeyword"/>.
 /// </summary>
-public sealed class IdKeywordJsonConverter : AotCompatibleJsonConverter<IdKeyword>
+public sealed class IdKeywordJsonConverter : WeaklyTypedJsonConverter<IdKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="IdKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

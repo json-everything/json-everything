@@ -79,7 +79,7 @@ public class MinLengthKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="MinLengthKeyword"/>.
 /// </summary>
-public sealed class MinLengthKeywordJsonConverter : AotCompatibleJsonConverter<MinLengthKeyword>
+public sealed class MinLengthKeywordJsonConverter : WeaklyTypedJsonConverter<MinLengthKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="MinLengthKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

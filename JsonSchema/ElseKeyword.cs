@@ -84,7 +84,7 @@ public class ElseKeyword : IJsonSchemaKeyword, ISchemaContainer
 /// <summary>
 /// JSON converter for <see cref="ElseKeyword"/>.
 /// </summary>
-public sealed class ElseKeywordJsonConverter : AotCompatibleJsonConverter<ElseKeyword>
+public sealed class ElseKeywordJsonConverter : WeaklyTypedJsonConverter<ElseKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="ElseKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

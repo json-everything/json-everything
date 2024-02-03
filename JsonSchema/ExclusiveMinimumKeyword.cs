@@ -74,7 +74,7 @@ public class ExclusiveMinimumKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="ExclusiveMinimumKeyword"/>.
 /// </summary>
-public sealed class ExclusiveMinimumKeywordJsonConverter : AotCompatibleJsonConverter<ExclusiveMinimumKeyword>
+public sealed class ExclusiveMinimumKeywordJsonConverter : WeaklyTypedJsonConverter<ExclusiveMinimumKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="ExclusiveMinimumKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

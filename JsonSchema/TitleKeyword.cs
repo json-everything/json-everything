@@ -59,7 +59,7 @@ public class TitleKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="TitleKeyword"/>.
 /// </summary>
-public sealed class TitleKeywordJsonConverter : AotCompatibleJsonConverter<TitleKeyword>
+public sealed class TitleKeywordJsonConverter : WeaklyTypedJsonConverter<TitleKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="TitleKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

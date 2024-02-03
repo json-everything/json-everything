@@ -151,7 +151,7 @@ public class ItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, ISchemaCollect
 /// <summary>
 /// JSON converter for <see cref="ItemsKeyword"/>.
 /// </summary>
-public sealed class ItemsKeywordJsonConverter : AotCompatibleJsonConverter<ItemsKeyword>
+public sealed class ItemsKeywordJsonConverter : WeaklyTypedJsonConverter<ItemsKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="ItemsKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -162,7 +162,7 @@ public sealed class ItemsKeywordJsonConverter : AotCompatibleJsonConverter<Items
 	{
 		if (reader.TokenType == JsonTokenType.StartArray)
 		{
-			var schemas = options.Read(ref reader, JsonSchemaSerializerContext.Default.ListJsonSchema)!;
+			var schemas = options.ReadList(ref reader, JsonSchemaSerializerContext.Default.JsonSchema)!;
 			return new ItemsKeyword(schemas);
 		}
 

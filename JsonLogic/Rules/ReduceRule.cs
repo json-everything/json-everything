@@ -14,14 +14,6 @@ namespace Json.Logic.Rules;
 [JsonConverter(typeof(ReduceRuleJsonConverter))]
 public class ReduceRule : Rule
 {
-	internal class Intermediary
-	{
-		[JsonPropertyName("current")]
-		public JsonNode? Current { get; set; }
-		[JsonPropertyName("accumulator")]
-		public JsonNode? Accumulator { get; set; }
-	}
-
 	/// <summary>
 	/// A sequence of values to reduce.
 	/// </summary>
@@ -66,14 +58,13 @@ public class ReduceRule : Rule
 
 		foreach (var element in arr)
 		{
-			var intermediary = new Intermediary
+			var intermediary = new JsonObject
 			{
-				Current = element,
-				Accumulator = accumulator
+				["current"] = element?.DeepClone(),
+				["accumulator"] = accumulator?.DeepClone()
 			};
-			var item = JsonSerializer.SerializeToNode(intermediary, LogicSerializerContext.Default.Intermediary);
 
-			accumulator = Rule.Apply(data, item);
+			accumulator = Rule.Apply(data, intermediary);
 
 			if (accumulator == null) break;
 		}
@@ -82,11 +73,11 @@ public class ReduceRule : Rule
 	}
 }
 
-internal class ReduceRuleJsonConverter : AotCompatibleJsonConverter<ReduceRule>
+internal class ReduceRuleJsonConverter : WeaklyTypedJsonConverter<ReduceRule>
 {
 	public override ReduceRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = options.Read(ref reader, LogicSerializerContext.Default.RuleArray);
+		var parameters = options.ReadArray(ref reader, JsonLogicSerializerContext.Default.Rule);
 
 		if (parameters is not { Length: 3 })
 			throw new JsonException("The reduce rule needs an array with 3 parameters.");
@@ -94,16 +85,14 @@ internal class ReduceRuleJsonConverter : AotCompatibleJsonConverter<ReduceRule>
 		return new ReduceRule(parameters[0], parameters[1], parameters[2]);
 	}
 
-	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
-	[UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public override void Write(Utf8JsonWriter writer, ReduceRule value, JsonSerializerOptions options)
 	{
 		writer.WriteStartObject();
 		writer.WritePropertyName("reduce");
 		writer.WriteStartArray();
-		writer.WriteRule(value.Input, options);
-		writer.WriteRule(value.Rule, options);
-		writer.WriteRule(value.Initial, options);
+		options.Write(writer, value.Input, JsonLogicSerializerContext.Default.Rule);
+		options.Write(writer, value.Rule, JsonLogicSerializerContext.Default.Rule);
+		options.Write(writer, value.Initial, JsonLogicSerializerContext.Default.Rule);
 		writer.WriteEndArray();
 		writer.WriteEndObject();
 	}

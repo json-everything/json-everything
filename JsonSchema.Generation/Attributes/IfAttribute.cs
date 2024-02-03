@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json.Nodes;
 
 namespace Json.Schema.Generation;
 
@@ -19,15 +20,106 @@ public class IfAttribute : ConditionalAttribute, IConditionAttribute
 	/// The compiler will allow any compile-time constant, however only JSON-compatible
 	/// values will work.
 	/// </remarks>
-	public object? Value { get; set; }
+	public JsonNode? Value { get; set; }
 
 	/// <summary>
 	/// Creates a new <see cref="IfAttribute"/> instance.
 	/// </summary>
 	/// <param name="propertyName">The name of the property.</param>
-	/// <param name="value">The expected value for the property (should be JSON-compatible).</param>
+	/// <param name="value">The expected value for the property.</param>
 	/// <param name="group">The condition group.</param>
-	public IfAttribute(string propertyName, object? value, object? group)
+	public IfAttribute(string propertyName, int value, object? group)
+	{
+		PropertyName = propertyName;
+		Value = value;
+		ConditionGroup = group;
+	}
+
+	/// <summary>
+	/// Creates a new <see cref="IfAttribute"/> instance.
+	/// </summary>
+	/// <param name="propertyName">The name of the property.</param>
+	/// <param name="value">The expected value for the property.</param>
+	/// <param name="group">The condition group.</param>
+	public IfAttribute(string propertyName, uint value, object? group)
+	{
+		PropertyName = propertyName;
+		Value = value;
+		ConditionGroup = group;
+	}
+
+	/// <summary>
+	/// Creates a new <see cref="IfAttribute"/> instance.
+	/// </summary>
+	/// <param name="propertyName">The name of the property.</param>
+	/// <param name="value">The expected value for the property.</param>
+	/// <param name="group">The condition group.</param>
+	public IfAttribute(string propertyName, long value, object? group)
+	{
+		PropertyName = propertyName;
+		Value = value;
+		ConditionGroup = group;
+	}
+
+	/// <summary>
+	/// Creates a new <see cref="IfAttribute"/> instance.
+	/// </summary>
+	/// <param name="propertyName">The name of the property.</param>
+	/// <param name="value">The expected value for the property.</param>
+	/// <param name="group">The condition group.</param>
+	public IfAttribute(string propertyName, ulong value, object? group)
+	{
+		PropertyName = propertyName;
+		Value = value;
+		ConditionGroup = group;
+	}
+
+	/// <summary>
+	/// Creates a new <see cref="IfAttribute"/> instance.
+	/// </summary>
+	/// <param name="propertyName">The name of the property.</param>
+	/// <param name="value">The expected value for the property.</param>
+	/// <param name="group">The condition group.</param>
+	public IfAttribute(string propertyName, float value, object? group)
+	{
+		PropertyName = propertyName;
+		Value = value;
+		ConditionGroup = group;
+	}
+
+	/// <summary>
+	/// Creates a new <see cref="IfAttribute"/> instance.
+	/// </summary>
+	/// <param name="propertyName">The name of the property.</param>
+	/// <param name="value">The expected value for the property.</param>
+	/// <param name="group">The condition group.</param>
+	public IfAttribute(string propertyName, double value, object? group)
+	{
+		PropertyName = propertyName;
+		Value = value;
+		ConditionGroup = group;
+	}
+
+	/// <summary>
+	/// Creates a new <see cref="IfAttribute"/> instance.
+	/// </summary>
+	/// <param name="propertyName">The name of the property.</param>
+	/// <param name="value">The expected value for the property.</param>
+	/// <param name="group">The condition group.</param>
+	public IfAttribute(string propertyName, bool value, object? group)
+	{
+		PropertyName = propertyName;
+		Value = value;
+		ConditionGroup = group;
+	}
+
+	/// <summary>
+	/// Creates a new <see cref="IfAttribute"/> instance.
+	/// </summary>
+	/// <param name="propertyName">The name of the property.</param>
+	/// <param name="value">The expected value for the property.</param>
+	/// <param name="group">The condition group.</param>
+	public IfAttribute(string propertyName, string? value, object? group)
 	{
 		PropertyName = propertyName;
 		Value = value;

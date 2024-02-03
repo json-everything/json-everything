@@ -67,7 +67,7 @@ public class GithubTests
 	public void Issue183_RuleEvaluatesWrong2_Falsy()
 	{
 		var jsonRule = "{\"and\":[{\"if\":[{\"var\":\"data.r.0\"},{\"in\":[{\"var\":\"data.r.0.tg\"},[\"140539006\"]]},true]},{\"if\":[{\"var\":\"data.t.0\"},{\"in\":[{\"var\":\"data.t.0.tg\"},[\"140539006\"]]},true]},{\"if\":[{\"var\":\"data.v.0\"},{\"in\":[{\"var\":\"data.v.0.tg\"},[\"140539006\"]]},true]}]}";
-		var rule = JsonSerializer.Deserialize<Rule>(jsonRule, LogicSerializerContext.OptionsManager.SerializerOptions);
+		var rule = JsonSerializer.Deserialize(jsonRule, TestSerializerContext.Default.Rule);
 
 		var data = JsonNode.Parse("{\"data\":{\"r\":[{\"tg\":\"140539006\"}],\"t\":[{\"tg\":\"140539006\"}],\"v\":[{\"tg\":\"Test\"}]}}");
 
@@ -80,7 +80,7 @@ public class GithubTests
 	public void Issue183_RuleEvaluatesWrong3_Falsy()
 	{
 		var jsonRule = "{\"===\":[{\"reduce\":[[{\"var\":\"data.r\"},{\"var\":\"data.t\"},{\"var\":\"data.v\"}],{\"\\u002B\":[{\"var\":\"accumulator\"},{\"if\":[{\"var\":\"current.0\"},1,0]}]},0]},1]}";
-		var rule = JsonSerializer.Deserialize<Rule>(jsonRule, LogicSerializerContext.OptionsManager.SerializerOptions);
+		var rule = JsonSerializer.Deserialize(jsonRule, TestSerializerContext.Default.Rule);
 
 
 		var data = JsonNode.Parse("{\"data\":{\"r\":[{\"tg\":\"140539006\"},{\"tg\":\"140539006\"}]}}");
@@ -110,7 +110,7 @@ public class GithubTests
 	[Test]
 	public void Issue286_InShouldReturnFalseForNonArray()
 	{
-		var rule = JsonSerializer.Deserialize<Rule>("{ \"in\" : [ {\"var\": \"item\"}, {\"var\": \"list\"} ] }", LogicSerializerContext.OptionsManager.SerializerOptions);
+		var rule = JsonSerializer.Deserialize("{ \"in\" : [ {\"var\": \"item\"}, {\"var\": \"list\"} ] }", TestSerializerContext.Default.Rule);
 		var result = rule!.Apply(new JsonObject { ["some_item"] = 123 });
 
 		JsonAssert.IsFalse(result);
@@ -119,7 +119,7 @@ public class GithubTests
 	[Test]
 	public void Pull303_CustomConverters()
 	{
-		var rule = JsonSerializer.Deserialize<Rule>("{ \"+\" : [ 1, 2 ] }", LogicSerializerContext.OptionsManager.SerializerOptions);
+		var rule = JsonSerializer.Deserialize("{ \"+\" : [ 1, 2 ] }", TestSerializerContext.Default.Rule);
 
 		Assert.IsInstanceOf<AddRule>(rule);
 		Assert.IsTrue(rule!.Apply().IsEquivalentTo(3));
@@ -135,7 +135,7 @@ public class GithubTests
   ]
 }");
 
-		var rule = node.Deserialize<Rule>(LogicSerializerContext.OptionsManager.SerializerOptions);
+		var rule = node.Deserialize(TestSerializerContext.Default.Rule);
 		var result = rule!.Apply(JsonNode.Parse("{\"value\": null}"));
 
 		Assert.IsTrue(result.IsEquivalentTo(true));

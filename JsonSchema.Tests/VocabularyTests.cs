@@ -45,7 +45,7 @@ public partial class VocabularyTests
 		}
 	}
 
-	public class MinDateJsonConverter : AotCompatibleJsonConverter<MinDateKeyword>
+	public class MinDateJsonConverter : WeaklyTypedJsonConverter<MinDateKeyword>
 	{
 		public override MinDateKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
@@ -95,7 +95,7 @@ public partial class VocabularyTests
 		}
 	}
 
-	public class NonVocabMinDateJsonConverter : AotCompatibleJsonConverter<NonVocabMinDateKeyword>
+	public class NonVocabMinDateJsonConverter : WeaklyTypedJsonConverter<NonVocabMinDateKeyword>
 	{
 		public override NonVocabMinDateKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
@@ -136,7 +136,7 @@ public partial class VocabularyTests
 		}
 	}
 
-	public class MaxDateJsonConverter : AotCompatibleJsonConverter<MaxDateKeyword>
+	public class MaxDateJsonConverter : WeaklyTypedJsonConverter<MaxDateKeyword>
 	{
 		public override MaxDateKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
@@ -154,16 +154,19 @@ public partial class VocabularyTests
 		}
 	}
 
-	private static readonly JsonSerializerOptions _basicOptions = new(TestEnvironment.SerializerOptions)
-	{
-		TypeInfoResolverChain = { VocabularySerializerContext.Default },
-	};
+	private static readonly JsonSerializerOptions _basicOptions =
+		new()
+		{
+			TypeInfoResolverChain = { VocabularySerializerContext.Default, TestSerializerContext.Default }
+		};
 
-	private static readonly JsonSerializerOptions _serializerOptions = new(_basicOptions)
-	{
-		WriteIndented = true,
-		Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-	};
+	private static readonly JsonSerializerOptions _serializerOptions =
+		new()
+		{
+			TypeInfoResolverChain = { VocabularySerializerContext.Default, TestSerializerContext.Default },
+			WriteIndented = true,
+			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+		};
 
 	public static readonly Vocabulary DatesVocabulary =
 		new("http://mydates.com/vocabulary", typeof(MinDateKeyword), typeof(MaxDateKeyword));
@@ -410,7 +413,7 @@ public partial class VocabularyTests
 						e.Results.Fail(Name, "minimum is exclusive");
 				});
 				if (minimumConstraint != null)
-					constraint.SiblingDependencies = new[] { minimumConstraint };
+					constraint.SiblingDependencies = [minimumConstraint];
 				return constraint;
 			}
 
@@ -418,7 +421,7 @@ public partial class VocabularyTests
 		}
 	}
 
-	public class Draft4ExclusiveMinimumJsonConverter : AotCompatibleJsonConverter<Draft4ExclusiveMinimumKeyword>
+	public class Draft4ExclusiveMinimumJsonConverter : WeaklyTypedJsonConverter<Draft4ExclusiveMinimumKeyword>
 	{
 		public override Draft4ExclusiveMinimumKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
@@ -500,8 +503,5 @@ public partial class VocabularyTests
 	[JsonSerializable(typeof(NonVocabMinDateKeyword))]
 	[JsonSerializable(typeof(MaxDateKeyword))]
 	[JsonSerializable(typeof(DateTime))]
-	internal partial class VocabularySerializerContext : JsonSerializerContext
-	{
-
-	}
+	internal partial class VocabularySerializerContext : JsonSerializerContext;
 }

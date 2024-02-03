@@ -1,24 +1,20 @@
-﻿using System.Text.Json;
+﻿using System.Text.Encodings.Web;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Json.Schema.Generation.Tests
+namespace Json.Schema.Generation.Tests;
+
+internal static class TestEnvironment
 {
-	internal static class TestEnvironment
-	{
-		public static readonly JsonSerializerOptions SerializerOptions = new()
+	public static readonly JsonSerializerOptions SerializerOptions =
+		new()
 		{
-			TypeInfoResolverChain = { GenerationTestsJsonSerializerContext.Default, JsonSchema.TypeInfoResolver },
+			TypeInfoResolverChain = { TestSerializerContext.Default },
+			WriteIndented = true,
+			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
 		};
-
-		public static readonly JsonSerializerOptions SerializerOptionsWriteIndented = new(SerializerOptions)
-		{
-			WriteIndented = true
-		};
-	}
-
-	[JsonSerializable(typeof(IJsonSchemaKeyword))]
-	internal partial class  GenerationTestsJsonSerializerContext : JsonSerializerContext
-	{
-		
-	}
 }
+
+[JsonSerializable(typeof(JsonSchema))]
+[JsonSerializable(typeof(PropertiesKeyword))]
+public partial class TestSerializerContext : JsonSerializerContext;

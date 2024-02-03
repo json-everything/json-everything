@@ -20,7 +20,11 @@ public class CreationTests
 	[Test]
 	public void FromTextIgnoringComments()
 	{
-		var options = new JsonSerializerOptions(TestEnvironment.SerializerOptions) { ReadCommentHandling = JsonCommentHandling.Skip };
+		var options = new JsonSerializerOptions
+		{
+			TypeInfoResolverChain = { TestSerializerContext.Default },
+			ReadCommentHandling = JsonCommentHandling.Skip
+		};
 		var schema = JsonSchema.FromText(@"{
   ""$id"":""http://my.schema/test1"",
   // comment here, just passing through

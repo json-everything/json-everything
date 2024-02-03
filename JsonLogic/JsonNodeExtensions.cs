@@ -70,7 +70,7 @@ public static class JsonNodeExtensions
 				return string.Join(",", arr.Select(Stringify));
 			case JsonValue value:
 				if (value.TryGetValue(out string? s)) return s;
-				return JsonSerializer.Serialize(node, LogicSerializerContext.Default.JsonNode);
+				return JsonSerializer.Serialize(node, JsonLogicSerializerContext.Default.JsonNode);
 			default:
 				return null;
 		}

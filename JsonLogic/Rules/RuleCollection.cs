@@ -38,7 +38,7 @@ public class RuleCollection : Rule
 	}
 }
 
-internal class RuleCollectionJsonConverter : AotCompatibleJsonConverter<RuleCollection>
+internal class RuleCollectionJsonConverter : WeaklyTypedJsonConverter<RuleCollection>
 {
 	public override RuleCollection? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
@@ -46,10 +46,8 @@ internal class RuleCollectionJsonConverter : AotCompatibleJsonConverter<RuleColl
 		throw new NotImplementedException();
 	}
 
-	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
-	[UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public override void Write(Utf8JsonWriter writer, RuleCollection value, JsonSerializerOptions options)
 	{
-		writer.WriteRules(value.Rules, options);
+		options.WriteList(writer, value.Rules, JsonLogicSerializerContext.Default.Rule);
 	}
 }

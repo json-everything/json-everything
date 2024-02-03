@@ -103,7 +103,7 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollecto
 /// <summary>
 /// JSON converter for <see cref="PatternPropertiesKeyword"/>.
 /// </summary>
-public sealed class PatternPropertiesKeywordJsonConverter : AotCompatibleJsonConverter<PatternPropertiesKeyword>
+public sealed class PatternPropertiesKeywordJsonConverter : WeaklyTypedJsonConverter<PatternPropertiesKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="PatternPropertiesKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -115,7 +115,7 @@ public sealed class PatternPropertiesKeywordJsonConverter : AotCompatibleJsonCon
 		if (reader.TokenType != JsonTokenType.StartObject)
 			throw new JsonException("Expected object");
 
-		var patternProps = options.Read(ref reader, JsonSchemaSerializerContext.Default.DictionaryStringJsonSchema)!;
+		var patternProps = options.ReadDictionary(ref reader, JsonSchemaSerializerContext.Default.JsonSchema)!;
 		var schemas = new Dictionary<Regex, JsonSchema>();
 		var invalidProps = new List<string>();
 		foreach (var prop in patternProps)

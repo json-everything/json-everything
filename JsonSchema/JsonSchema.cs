@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
-using System.Text.Json.Serialization.Metadata;
 using System.Threading.Tasks;
 using Json.More;
 using Json.Pointer;
@@ -91,12 +90,6 @@ public class JsonSchema : IBaseDocument
 	internal Dictionary<string, (JsonSchema Schema, bool IsDynamic)> Anchors { get; } = [];
 	internal JsonSchema? RecursiveAnchor { get; set; }
 
-	/// <summary>
-	/// A TypeInfoResolver that can be used for serializing JsonSchema objects. Add to your custom
-	/// JsonSerializerOptions's TypeInfoResolver or TypeInfoResolveChain.
-	/// </summary>
-	public static IJsonTypeInfoResolver TypeInfoResolver => JsonSchemaSerializerContext.OptionsManager.TypeInfoResolver;
-
 	private JsonSchema(bool value)
 	{
 		BoolValue = value;
@@ -171,11 +164,9 @@ public class JsonSchema : IBaseDocument
 	/// <param name="jsonText">The text to parse.</param>
 	/// <returns>A new <see cref="JsonSchema"/>.</returns>
 	/// <exception cref="JsonException">Could not deserialize a portion of the schema.</exception>
-	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
-	[UnconditionalSuppressMessage("AOT", "IL3050:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public static JsonSchema FromText(string jsonText)
 	{
-		return JsonSerializer.Deserialize<JsonSchema>(jsonText, JsonSchemaSerializerContext.OptionsManager.SerializerOptions)!;
+		return JsonSerializer.Deserialize(jsonText, JsonSchemaSerializerContext.Default.JsonSchema)!;
 	}
 
 	/// <summary>
@@ -402,8 +393,6 @@ public class JsonSchema : IBaseDocument
 		return scopedConstraint;
 	}
 
-	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
-	[UnconditionalSuppressMessage("AOT", "IL3050:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	private void PopulateConstraint(SchemaConstraint constraint, EvaluationContext context)
 	{
 		if (constraint.Constraints.Length != 0) return;
@@ -447,7 +436,8 @@ public class JsonSchema : IBaseDocument
 
 			foreach (var keyword in unrecognizedButSupported)
 			{
-				var jsonText = JsonSerializer.Serialize(keyword, keyword.GetType(), JsonSchemaSerializerContext.OptionsManager.SerializerOptions);
+				var typeInfo = SchemaKeywordRegistry.GetTypeInfo(keyword.GetType());
+				var jsonText = JsonSerializer.Serialize(keyword, typeInfo);
 				var json = JsonNode.Parse(jsonText);
 				var keywordConstraint = KeywordConstraint.SimpleAnnotation(keyword.Keyword(), json);
 				localConstraints.Add(keywordConstraint);
@@ -601,8 +591,6 @@ public class JsonSchema : IBaseDocument
 		}
 	}
 
-	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
-	[UnconditionalSuppressMessage("AOT", "IL3050:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	JsonSchema? IBaseDocument.FindSubschema(JsonPointer pointer, EvaluationOptions options)
 	{
 		object? ExtractSchemaFromData(JsonPointer localPointer, JsonNode? data, JsonSchema hostSchema)
@@ -666,7 +654,8 @@ public class JsonSchema : IBaseDocument
 					newResolvable = k;
 					break;
 				default: // non-applicator keyword
-					var serialized = JsonSerializer.Serialize(localResolvable, localResolvable.GetType(), JsonSchemaSerializerContext.OptionsManager.SerializerOptions);
+					var typeInfo = SchemaKeywordRegistry.GetTypeInfo(localResolvable.GetType());
+					var serialized = JsonSerializer.Serialize(localResolvable, typeInfo);
 					var json = JsonNode.Parse(serialized);
 					var newPointer = JsonPointer.Create(pointer.Segments.Skip(i));
 					i += newPointer.Segments.Length - 1;
@@ -733,7 +722,7 @@ public class JsonSchema : IBaseDocument
 /// <summary>
 /// JSON converter for <see cref="JsonSchema"/>.
 /// </summary>
-public sealed class SchemaJsonConverter : AotCompatibleJsonConverter<JsonSchema>
+public sealed class SchemaJsonConverter : WeaklyTypedJsonConverter<JsonSchema>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="JsonSchema"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -776,8 +765,11 @@ public sealed class SchemaJsonConverter : AotCompatibleJsonConverter<JsonSchema>
 						implementation = SchemaKeywordRegistry.GetNullValuedKeyword(keywordType) ??
 										 throw new InvalidOperationException($"No null instance registered for keyword `{keyword}`");
 					else
-						implementation = options.Read(ref reader, keywordType) as IJsonSchemaKeyword ??
-								throw new InvalidOperationException($"Could not deserialize expected keyword `{keyword}`");
+					{
+						var typeInfo = SchemaKeywordRegistry.GetTypeInfo(keywordType);
+						implementation = options.Read(ref reader, keywordType, typeInfo) as IJsonSchemaKeyword ??
+					                  throw new InvalidOperationException($"Could not deserialize expected keyword `{keyword}`");
+					}
 					keywords.Add(implementation);
 					break;
 				case JsonTokenType.EndObject:
@@ -794,8 +786,6 @@ public sealed class SchemaJsonConverter : AotCompatibleJsonConverter<JsonSchema>
 	/// <param name="writer">The writer to write to.</param>
 	/// <param name="value">The value to convert to JSON.</param>
 	/// <param name="options">An object that specifies serialization options to use.</param>
-	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
-	[UnconditionalSuppressMessage("AOT", "IL3050:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public override void Write(Utf8JsonWriter writer, JsonSchema value, JsonSerializerOptions options)
 	{
 		if (value.BoolValue == true)
@@ -814,7 +804,10 @@ public sealed class SchemaJsonConverter : AotCompatibleJsonConverter<JsonSchema>
 		foreach (var keyword in value.Keywords!)
 		{
 			writer.WritePropertyName(keyword.Keyword());
-			options.Write(writer, keyword, keyword.GetType());
+
+			var keywordType = keyword.GetType();
+			var typeInfo = SchemaKeywordRegistry.GetTypeInfo(keywordType);
+			options.Write(writer, keyword, keywordType, typeInfo);
 		}
 
 		writer.WriteEndObject();

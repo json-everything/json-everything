@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Text.Json;
-using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.More;
 
@@ -32,23 +31,5 @@ public class TestSuiteConverter : JsonConverter<TestSuite?>
 	public override void Write(Utf8JsonWriter writer, TestSuite? value, JsonSerializerOptions options)
 	{
 		throw new NotImplementedException();
-	}
-}
-
-[JsonSerializable(typeof(TestSuite))]
-[JsonSerializable(typeof(Test))]
-[JsonSerializable(typeof(Test[]))]
-[JsonSerializable(typeof(JsonNode))]
-[JsonSerializable(typeof(string))]
-internal partial class TestSerializerContext : JsonSerializerContext
-{
-	public static TypeResolverOptionsManager OptionsManager { get; }
-
-	static TestSerializerContext()
-	{
-		OptionsManager = new TypeResolverOptionsManager(
-			Default,
-			[Rule.JsonTypeResolver, ..RuleRegistry.ExternalTypeInfoResolvers]
-		);
 	}
 }

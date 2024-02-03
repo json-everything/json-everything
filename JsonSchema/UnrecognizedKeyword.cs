@@ -62,7 +62,7 @@ public class UnrecognizedKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="UnrecognizedKeyword"/>.
 /// </summary>
-public sealed class UnrecognizedKeywordJsonConverter : AotCompatibleJsonConverter<UnrecognizedKeyword>
+public sealed class UnrecognizedKeywordJsonConverter : WeaklyTypedJsonConverter<UnrecognizedKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="UnrecognizedKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -80,6 +80,6 @@ public sealed class UnrecognizedKeywordJsonConverter : AotCompatibleJsonConverte
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, UnrecognizedKeyword value, JsonSerializerOptions options)
 	{
-		options.Write(writer, value.Value, JsonSchemaSerializerContext.Default.JsonNode);
+		options.Write(writer, value.Value!, JsonSchemaSerializerContext.Default.JsonNode);
 	}
 }

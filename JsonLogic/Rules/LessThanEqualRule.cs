@@ -112,11 +112,11 @@ public class LessThanEqualRule : Rule
 	}
 }
 
-internal class LessThanEqualRuleJsonConverter : AotCompatibleJsonConverter<LessThanEqualRule>
+internal class LessThanEqualRuleJsonConverter : WeaklyTypedJsonConverter<LessThanEqualRule>
 {
 	public override LessThanEqualRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = options.Read(ref reader, LogicSerializerContext.Default.RuleArray);
+		var parameters = options.ReadArray(ref reader, JsonLogicSerializerContext.Default.Rule);
 
 		if (parameters is not ({ Length: 2 } or { Length: 3 }))
 			throw new JsonException("The <= rule needs an array with either 2 or 3 parameters.");
@@ -126,17 +126,15 @@ internal class LessThanEqualRuleJsonConverter : AotCompatibleJsonConverter<LessT
 		return new LessThanEqualRule(parameters[0], parameters[1], parameters[2]);
 	}
 
-	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
-	[UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public override void Write(Utf8JsonWriter writer, LessThanEqualRule value, JsonSerializerOptions options)
 	{
 		writer.WriteStartObject();
 		writer.WritePropertyName("<=");
 		writer.WriteStartArray();
-		writer.WriteRule(value.A, options);
-		writer.WriteRule(value.B, options);
+		options.Write(writer, value.A, JsonLogicSerializerContext.Default.Rule);
+		options.Write(writer, value.B, JsonLogicSerializerContext.Default.Rule);
 		if (value.C != null)
-			writer.WriteRule(value.C, options);
+			options.Write(writer, value.C, JsonLogicSerializerContext.Default.Rule);
 		writer.WriteEndArray();
 		writer.WriteEndObject();
 	}

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Json.Schema.Tests;
@@ -164,11 +163,7 @@ public class GithubTests
 		var options = new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical };
 		var result = schema.Evaluate(json, options);
 
-		Console.WriteLine(JsonSerializer.Serialize(schema, new JsonSerializerOptions(TestEnvironment.SerializerOptions)
-		{
-			WriteIndented = true,
-			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-		}));
+		Console.WriteLine(JsonSerializer.Serialize(schema, TestEnvironment.SerializerOptions));
 
 		result.AssertInvalid();
 	}

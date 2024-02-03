@@ -53,7 +53,7 @@ public class ExampleKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="ExampleKeyword"/>.
 /// </summary>
-public sealed class ExampleKeywordJsonConverter : AotCompatibleJsonConverter<ExampleKeyword>
+public sealed class ExampleKeywordJsonConverter : WeaklyTypedJsonConverter<ExampleKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="ExampleKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -62,7 +62,7 @@ public sealed class ExampleKeywordJsonConverter : AotCompatibleJsonConverter<Exa
 	/// <returns>The converted value.</returns>
 	public override ExampleKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var node = options.Read(ref reader, OpenApiSerializerContext.Default.JsonNode);
+		var node = options.Read(ref reader, JsonSchemaOpenApiSerializerContext.Default.JsonNode);
 
 		return new ExampleKeyword(node);
 	}
@@ -73,6 +73,6 @@ public sealed class ExampleKeywordJsonConverter : AotCompatibleJsonConverter<Exa
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, ExampleKeyword value, JsonSerializerOptions options)
 	{
-		options.Write(writer, value.Value, OpenApiSerializerContext.Default.JsonNode);
+		options.Write(writer, value.Value, JsonSchemaOpenApiSerializerContext.Default.JsonNode!);
 	}
 }

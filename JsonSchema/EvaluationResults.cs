@@ -293,13 +293,25 @@ public class EvaluationResults
 	}
 }
 
-internal class EvaluationResultsJsonConverter : AotCompatibleJsonConverter<EvaluationResults>
+/// <summary>
+/// Default converter for <see cref="EvaluationResults"/>.
+/// </summary>
+public class EvaluationResultsJsonConverter : WeaklyTypedJsonConverter<EvaluationResults>
 {
+	/// <summary>Reads and converts the JSON to type <see cref="EvaluationResults" />.</summary>
+	/// <param name="reader">The reader.</param>
+	/// <param name="typeToConvert">The type to convert.</param>
+	/// <param name="options">An object that specifies serialization options to use.</param>
+	/// <returns>The converted value.</returns>
 	public override EvaluationResults Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		throw new NotImplementedException();
 	}
 
+	/// <summary>Writes a specified value as JSON.</summary>
+	/// <param name="writer">The writer to write to.</param>
+	/// <param name="value">The value to convert to JSON.</param>
+	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, EvaluationResults value, JsonSerializerOptions options)
 	{
 		if (value.Exclude) return;
@@ -332,7 +344,7 @@ internal class EvaluationResultsJsonConverter : AotCompatibleJsonConverter<Evalu
 			if (value.AnnotationsToSerialize != null)
 			{
 				writer.WritePropertyName("annotations");
-				options.Write(writer, value.AnnotationsToSerialize!, JsonSchemaSerializerContext.Default.IReadOnlyDictionaryStringJsonNode);
+				options.WriteDictionary(writer, value.AnnotationsToSerialize!, JsonSchemaSerializerContext.Default.JsonNode);
 			}
 		}
 		else
@@ -340,20 +352,20 @@ internal class EvaluationResultsJsonConverter : AotCompatibleJsonConverter<Evalu
 			if (value.HasErrors)
 			{
 				writer.WritePropertyName("errors");
-				options.Write(writer, value.Errors, JsonSchemaSerializerContext.Default.IReadOnlyDictionaryStringString);
+				options.WriteDictionary(writer, value.Errors!, JsonSchemaSerializerContext.Default.String);
 			}
 			if (value is { IncludeDroppedAnnotations: true, AnnotationsToSerialize: not null })
 			{
 				writer.WritePropertyName("droppedAnnotations");
-				options.Write(writer, value.AnnotationsToSerialize!, JsonSchemaSerializerContext.Default.IReadOnlyDictionaryStringJsonNode);
+				options.WriteDictionary(writer, value.AnnotationsToSerialize!, JsonSchemaSerializerContext.Default.JsonNode);
 			}
 		}
 
 		if (value.HasDetails)
 		{
 			writer.WritePropertyName("details");
-			options.Write(writer, value.Details, JsonSchemaSerializerContext.Default.IReadOnlyListEvaluationResults);
-}
+			options.WriteList(writer, value.Details, JsonSchemaSerializerContext.Default.EvaluationResults);
+		}
 
 		writer.WriteEndObject();
 	}
@@ -362,33 +374,18 @@ internal class EvaluationResultsJsonConverter : AotCompatibleJsonConverter<Evalu
 /// <summary>
 /// Produces output formats specified by 2019-09 and 2020-12.
 /// </summary>
-public class Pre202012EvaluationResultsJsonConverter : AotCompatibleJsonConverter<EvaluationResults>
+public class Pre202012EvaluationResultsJsonConverter : WeaklyTypedJsonConverter<EvaluationResults>
 {
 	/// <summary>
 	/// Holder for an annotation value.
 	/// </summary>
 	private class Annotation
 	{
-		/// <summary>
-		/// The keyword that created the annotation (acts as a key for lookup).
-		/// </summary>
 		public string Owner { get; }
-		/// <summary>
-		/// The annotation value.
-		/// </summary>
-		public object? Value { get; }
-		/// <summary>
-		/// The pointer to the keyword that created the annotation.
-		/// </summary>
+		public JsonNode? Value { get; }
 		public JsonPointer Source { get; }
-
-		/// <summary>
-		/// Creates a new <see cref="Annotation"/>.
-		/// </summary>
-		/// <param name="owner">The keyword that created the annotation (acts as a key for lookup).</param>
-		/// <param name="value">The annotation value.</param>
-		/// <param name="source">The pointer to the keyword that created the annotation.</param>
-		public Annotation(string owner, object? value, in JsonPointer source)
+	
+		public Annotation(string owner, JsonNode? value, in JsonPointer source)
 		{
 			Owner = owner;
 			Value = value;
@@ -581,8 +578,6 @@ public class Pre202012EvaluationResultsJsonConverter : AotCompatibleJsonConverte
 		writer.WriteEndObject();
 	}
 
-	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
-	[UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	private static void WriteAnnotation(Utf8JsonWriter writer, EvaluationResults value, Annotation annotation, JsonSerializerOptions options)
 	{
 		writer.WriteStartObject();
@@ -602,7 +597,7 @@ public class Pre202012EvaluationResultsJsonConverter : AotCompatibleJsonConverte
 		options.Write(writer, value.InstanceLocation, JsonSchemaSerializerContext.Default.JsonPointer);
 
 		writer.WritePropertyName("annotation");
-		JsonSerializer.Serialize(writer, annotation.Value, options);
+		options.Write(writer, annotation.Value, JsonSchemaSerializerContext.Default.JsonNode!);
 
 		writer.WriteEndObject();
 	}

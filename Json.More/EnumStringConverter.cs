@@ -38,7 +38,7 @@ namespace Json.More;
 /// }
 /// ```
 /// </example>
-public class EnumStringConverter<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T> : AotCompatibleJsonConverter<T>
+public class EnumStringConverter<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T> : WeaklyTypedJsonConverter<T>
 	where T : Enum
 {
 	private static Dictionary<string, T>? _readValues;

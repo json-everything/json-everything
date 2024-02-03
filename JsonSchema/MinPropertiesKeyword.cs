@@ -78,7 +78,7 @@ public class MinPropertiesKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="MinPropertiesKeyword"/>.
 /// </summary>
-public sealed class MinPropertiesKeywordJsonConverter : AotCompatibleJsonConverter<MinPropertiesKeyword>
+public sealed class MinPropertiesKeywordJsonConverter : WeaklyTypedJsonConverter<MinPropertiesKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="MinPropertiesKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

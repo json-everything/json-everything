@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
-using System.Text.Json.Serialization.Metadata;
 using Json.Logic.Rules;
 using Json.More;
 
@@ -17,12 +15,6 @@ namespace Json.Logic;
 [JsonConverter(typeof(LogicComponentConverter))]
 public abstract class Rule
 {
-	/// <summary>
-	/// A TypeInfoResolver that can be used for serializing <see cref="Rule"/> objects. Add to your custom
-	/// JsonSerializerOptions's TypeInfoResolver or TypeInfoResolveChain.
-	/// </summary>
-	public static IJsonTypeInfoResolver JsonTypeResolver => LogicSerializerContext.Default;
-
 	internal JsonNode? Source { get; set; }
 
 	/// <summary>
@@ -102,7 +94,7 @@ public class LogicComponentConverter : JsonConverter<Rule>
 	/// <returns>The converted value.</returns>
 	public override Rule Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var node = options.Read(ref reader, LogicSerializerContext.Default.JsonNode);
+		var node = options.Read(ref reader, JsonLogicSerializerContext.Default.JsonNode);
 		Rule rule;
 
 		if (node is JsonObject)
@@ -115,18 +107,20 @@ public class LogicComponentConverter : JsonConverter<Rule>
 			{
 				var (op, args) = data.First();
 
-				var ruleType = RuleRegistry.GetRule(op);
-				if (ruleType == null)
-					throw new JsonException($"Cannot identify rule for {op}");
+				var ruleType = RuleRegistry.GetRule(op) ??
+				               throw new JsonException($"Cannot identify rule for {op}");
+				var typeInfo = RuleRegistry.GetTypeInfo(ruleType) ??
+				               options.GetTypeInfo(ruleType) ??
+				               throw new JsonException($"Cannot get JsonTypeInfo for rule type {ruleType}");
 
 				rule = args is null
-					? (Rule)JsonSerializer.Deserialize("[]", ruleType, LogicSerializerContext.Default)!
-					: (Rule)args.Deserialize(ruleType, LogicSerializerContext.Default)!;
+					? (Rule)JsonSerializer.Deserialize("[]", typeInfo)!
+					: (Rule)args.Deserialize(typeInfo)!;
 			}
 		}
 		else if (node is JsonArray)
 		{
-			var data = node.Deserialize(LogicSerializerContext.Default.RuleArray)!;
+			var data = node.AsArray().Select(x => x.Deserialize(JsonLogicSerializerContext.Default.Rule)!).ToArray();
 			rule = new RuleCollection(data);
 		}
 		else
@@ -141,105 +135,17 @@ public class LogicComponentConverter : JsonConverter<Rule>
 	/// <param name="writer">The writer to write to.</param>
 	/// <param name="value">The value to convert to JSON.</param>
 	/// <param name="options">An object that specifies serialization options to use.</param>
-	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
-	[UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public override void Write(Utf8JsonWriter writer, Rule value, JsonSerializerOptions options)
 	{
 		if (value.Source != null)
 		{
-			options.Write(writer, value.Source, LogicSerializerContext.Default.JsonNode);
+			options.Write(writer, value.Source, JsonLogicSerializerContext.Default.JsonNode);
 			return;
 		}
 
-		writer.WriteRule(value, options);
-	}
-}
-
-[JsonConverter(typeof(ArgumentCollectionConverter))]
-internal class ArgumentCollection : List<Rule>
-{
-	public ArgumentCollection(Rule? single)
-	{
-		Add(single!);
-	}
-
-	public ArgumentCollection(IEnumerable<Rule> components)
-		: base(components)
-	{
-	}
-}
-
-internal class ArgumentCollectionConverter : JsonConverter<ArgumentCollection>
-{
-	public override ArgumentCollection Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-	{
-		if (reader.TokenType == JsonTokenType.StartArray)
-			return new ArgumentCollection(options.Read(ref reader, LogicSerializerContext.Default.RuleArray)!);
-
-		return new ArgumentCollection(options.Read(ref reader, LogicSerializerContext.Default.Rule));
-	}
-
-	public override void Write(Utf8JsonWriter writer, ArgumentCollection value, JsonSerializerOptions options)
-	{
-		throw new NotImplementedException();
-	}
-}
-
-[JsonSerializable(typeof(AddRule))]
-[JsonSerializable(typeof(AllRule))]
-[JsonSerializable(typeof(AndRule))]
-[JsonSerializable(typeof(BooleanCastRule))]
-[JsonSerializable(typeof(CatRule))]
-[JsonSerializable(typeof(DivideRule))]
-[JsonSerializable(typeof(FilterRule))]
-[JsonSerializable(typeof(IfRule))]
-[JsonSerializable(typeof(InRule))]
-[JsonSerializable(typeof(LessThanEqualRule))]
-[JsonSerializable(typeof(LessThanRule))]
-[JsonSerializable(typeof(LiteralRule))]
-[JsonSerializable(typeof(LogRule))]
-[JsonSerializable(typeof(LooseEqualsRule))]
-[JsonSerializable(typeof(LooseNotEqualsRule))]
-[JsonSerializable(typeof(MapRule))]
-[JsonSerializable(typeof(MaxRule))]
-[JsonSerializable(typeof(MergeRule))]
-[JsonSerializable(typeof(MinRule))]
-[JsonSerializable(typeof(MissingRule))]
-[JsonSerializable(typeof(MissingSomeRule))]
-[JsonSerializable(typeof(ModRule))]
-[JsonSerializable(typeof(MoreThanEqualRule))]
-[JsonSerializable(typeof(MoreThanRule))]
-[JsonSerializable(typeof(MultiplyRule))]
-[JsonSerializable(typeof(NoneRule))]
-[JsonSerializable(typeof(NotRule))]
-[JsonSerializable(typeof(OrRule))]
-[JsonSerializable(typeof(ReduceRule))]
-[JsonSerializable(typeof(RuleCollection))]
-[JsonSerializable(typeof(SomeRule))]
-[JsonSerializable(typeof(StrictEqualsRule))]
-[JsonSerializable(typeof(StrictNotEqualsRule))]
-[JsonSerializable(typeof(SubstrRule))]
-[JsonSerializable(typeof(SubtractRule))]
-[JsonSerializable(typeof(VariableRule))]
-[JsonSerializable(typeof(JsonNode))]
-[JsonSerializable(typeof(Rule[]))]
-[JsonSerializable(typeof(ReduceRule.Intermediary))]
-[JsonSerializable(typeof(ArgumentCollection))]
-[JsonSerializable(typeof(int))]
-[JsonSerializable(typeof(float))]
-[JsonSerializable(typeof(double))]
-[JsonSerializable(typeof(decimal))]
-[JsonSerializable(typeof(bool))]
-[JsonSerializable(typeof(string))]
-internal partial class LogicSerializerContext : JsonSerializerContext
-{
-	public static TypeResolverOptionsManager OptionsManager { get; }
-
-	static LogicSerializerContext()
-	{
-		OptionsManager = new TypeResolverOptionsManager(
-			Default,
-			RuleRegistry.ExternalTypeInfoResolvers
-		);
+		var ruleType = value.GetType();
+		var typeInfo = RuleRegistry.GetTypeInfo(ruleType)!;
+		var converter = (IWeaklyTypedJsonConverter)typeInfo.Converter;
+		converter.Write(writer, value, options, typeInfo);
 	}
 }

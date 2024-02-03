@@ -1,9 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Text.Json.Nodes;
-using System.Text.Json.Serialization;
-using Json.More;
-
-namespace Json.Schema.OpenApi;
+﻿namespace Json.Schema.OpenApi;
 
 /// <summary>
 /// Declares the vocabularies of the supported drafts.
@@ -34,33 +29,11 @@ public static class Vocabularies
 		schemaRegistry ??= SchemaRegistry.Global;
 
 		vocabRegistry.Register(OpenApi);
-		SchemaKeywordRegistry.Register<ExampleKeyword>(OpenApiSerializerContext.Default);
+		SchemaKeywordRegistry.Register<ExampleKeyword>(JsonSchemaOpenApiSerializerContext.Default);
 		SchemaKeywordRegistry.RegisterNullValue(new ExampleKeyword(null));
-		SchemaKeywordRegistry.Register<DiscriminatorKeyword>(OpenApiSerializerContext.Default);
-		SchemaKeywordRegistry.Register<ExternalDocsKeyword>(OpenApiSerializerContext.Default);
-		SchemaKeywordRegistry.Register<XmlKeyword>(OpenApiSerializerContext.Default);
+		SchemaKeywordRegistry.Register<DiscriminatorKeyword>(JsonSchemaOpenApiSerializerContext.Default);
+		SchemaKeywordRegistry.Register<ExternalDocsKeyword>(JsonSchemaOpenApiSerializerContext.Default);
+		SchemaKeywordRegistry.Register<XmlKeyword>(JsonSchemaOpenApiSerializerContext.Default);
 		schemaRegistry.Register(MetaSchemas.OpenApiMeta);
-	}
-}
-
-[JsonSerializable(typeof(ExampleKeyword))]
-[JsonSerializable(typeof(DiscriminatorKeyword))]
-[JsonSerializable(typeof(DiscriminatorKeywordJsonConverter.Model), TypeInfoPropertyName = "DiscriminatorModel")]
-[JsonSerializable(typeof(ExternalDocsKeyword))]
-[JsonSerializable(typeof(ExternalDocsKeywordJsonConverter.Model), TypeInfoPropertyName = "ExternalDocsModel")]
-[JsonSerializable(typeof(XmlKeyword))]
-[JsonSerializable(typeof(XmlKeywordJsonConverter.Model), TypeInfoPropertyName = "XmlModel")]
-[JsonSerializable(typeof(JsonNode))]
-[JsonSerializable(typeof(IReadOnlyDictionary<string, string>))]
-internal partial class OpenApiSerializerContext : JsonSerializerContext
-{
-	public static TypeResolverOptionsManager OptionsManager { get; }
-
-	static OpenApiSerializerContext()
-	{
-		OptionsManager = new(
-			Default,
-			JsonSchema.TypeInfoResolver
-		);
 	}
 }

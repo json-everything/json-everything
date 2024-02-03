@@ -103,7 +103,7 @@ public class EnumKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="EnumKeyword"/>.
 /// </summary>
-public sealed class EnumKeywordJsonConverter : AotCompatibleJsonConverter<EnumKeyword>
+public sealed class EnumKeywordJsonConverter : WeaklyTypedJsonConverter<EnumKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="EnumKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -112,11 +112,11 @@ public sealed class EnumKeywordJsonConverter : AotCompatibleJsonConverter<EnumKe
 	/// <returns>The converted value.</returns>
 	public override EnumKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var array = options.Read(ref reader,  JsonSchemaSerializerContext.Default.JsonArray);
+		var array = options.Read(ref reader,  JsonSchemaSerializerContext.Default.JsonNode) as JsonArray;
 		if (array is null)
-			throw new JsonException("Expected an array, but received null");
+			throw new JsonException("Expected an array");
 
-		return new EnumKeyword((IEnumerable<JsonNode>)array!);
+		return new EnumKeyword((IEnumerable<JsonNode?>)array);
 	}
 
 	/// <summary>Writes a specified value as JSON.</summary>
@@ -128,7 +128,7 @@ public sealed class EnumKeywordJsonConverter : AotCompatibleJsonConverter<EnumKe
 		writer.WriteStartArray();
 		foreach (var node in value.Values)
 		{
-			options.Write(writer, node, JsonSchemaSerializerContext.Default.JsonNode);
+			options.Write(writer, node!, JsonSchemaSerializerContext.Default.JsonNode);
 		}
 		writer.WriteEndArray();
 	}

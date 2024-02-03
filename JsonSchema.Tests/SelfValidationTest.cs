@@ -4,7 +4,6 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Sockets;
-using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Json.More;
@@ -55,7 +54,7 @@ public class SelfValidationTest
 	{
 		try
 		{
-			var localSchemaJson = JsonSerializer.Serialize(schema, new JsonSerializerOptions(TestEnvironment.SerializerOptions) { WriteIndented = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping });
+			var localSchemaJson = JsonSerializer.Serialize(schema, TestEnvironment.TestOutputSerializerOptions);
 
 			var onlineSchemaJson = new HttpClient().GetStringAsync(schema.Keywords!.OfType<IdKeyword>().Single().Id).Result;
 			var onlineSchema = JsonSerializer.Deserialize<JsonSchema>(onlineSchemaJson, TestEnvironment.SerializerOptions);
@@ -105,7 +104,7 @@ public class SelfValidationTest
 	[TestCaseSource(nameof(TestData))]
 	public void RoundTrip(JsonSchema schema)
 	{
-		var json = JsonSerializer.Serialize(schema, new JsonSerializerOptions(TestEnvironment.SerializerOptions) { WriteIndented = true });
+		var json = JsonSerializer.Serialize(schema, TestEnvironment.TestOutputSerializerOptions);
 		Console.WriteLine(json);
 		var returnTrip = JsonSerializer.Deserialize<JsonSchema>(json, TestEnvironment.SerializerOptions);
 

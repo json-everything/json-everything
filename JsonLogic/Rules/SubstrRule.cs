@@ -88,11 +88,11 @@ public class SubstrRule : Rule
 	}
 }
 
-internal class SubstrRuleJsonConverter : AotCompatibleJsonConverter<SubstrRule>
+internal class SubstrRuleJsonConverter : WeaklyTypedJsonConverter<SubstrRule>
 {
 	public override SubstrRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = options.Read(ref reader, LogicSerializerContext.Default.RuleArray);
+		var parameters = options.ReadArray(ref reader, JsonLogicSerializerContext.Default.Rule);
 
 		if (parameters is not ({ Length: 2 } or { Length: 3 }))
 			throw new JsonException("The substr rule needs an array with either 2 or 3 parameters.");
@@ -102,17 +102,15 @@ internal class SubstrRuleJsonConverter : AotCompatibleJsonConverter<SubstrRule>
 		return new SubstrRule(parameters[0], parameters[1], parameters[2]);
 	}
 
-	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
-	[UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public override void Write(Utf8JsonWriter writer, SubstrRule value, JsonSerializerOptions options)
 	{
 		writer.WriteStartObject();
 		writer.WritePropertyName("substr");
 		writer.WriteStartArray();
-		writer.WriteRule(value.Input, options);
-		writer.WriteRule(value.Start, options);
+		options.Write(writer, value.Input, JsonLogicSerializerContext.Default.Rule);
+		options.Write(writer, value.Start, JsonLogicSerializerContext.Default.Rule);
 		if (value.Count != null)
-			writer.WriteRule(value.Count, options);
+			options.Write(writer, value.Count, JsonLogicSerializerContext.Default.Rule);
 		writer.WriteEndArray();
 		writer.WriteEndObject();
 	}

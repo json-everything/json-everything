@@ -82,7 +82,7 @@ public class PropertyNamesKeyword : IJsonSchemaKeyword, ISchemaContainer
 /// <summary>
 /// JSON converter for <see cref="PropertyNamesKeyword"/>.
 /// </summary>
-public sealed class PropertyNamesKeywordJsonConverter : AotCompatibleJsonConverter<PropertyNamesKeyword>
+public sealed class PropertyNamesKeywordJsonConverter : WeaklyTypedJsonConverter<PropertyNamesKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="PropertyNamesKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

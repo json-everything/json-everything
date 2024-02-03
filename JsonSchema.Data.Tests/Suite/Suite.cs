@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Humanizer;
@@ -43,10 +42,7 @@ public class Suite
 		{
 			var shortFileName = System.IO.Path.GetFileNameWithoutExtension(fileName);
 			var contents = File.ReadAllText(fileName);
-			var collections = JsonSerializer.Deserialize<List<TestCollection>>(contents, new JsonSerializerOptions(DataTestsSerializerContext.OptionsManager.SerializerOptions)
-			{
-				PropertyNameCaseInsensitive = true
-			});
+			var collections = JsonSerializer.Deserialize<List<TestCollection>>(contents, TestEnvironment.SerializerOptions);
 
 			foreach (var collection in collections!)
 			{
@@ -90,12 +86,6 @@ public class Suite
 	[TestCaseSource(nameof(TestCases))]
 	public void Test(TestCollection collection, TestCase test, string fileName, EvaluationOptions options)
 	{
-		var serializerOptions = new JsonSerializerOptions(DataTestsSerializerContext.OptionsManager.SerializerOptions)
-		{
-			WriteIndented = true,
-			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-		};
-
 		Console.WriteLine();
 		Console.WriteLine();
 		Console.WriteLine(fileName);
@@ -106,9 +96,9 @@ public class Suite
 		else
 			Console.WriteLine(test.Valid ? "valid" : "invalid");
 		Console.WriteLine();
-		Console.WriteLine(JsonSerializer.Serialize(collection.Schema, serializerOptions));
+		Console.WriteLine(JsonSerializer.Serialize(collection.Schema, TestEnvironment.SerializerOptions));
 		Console.WriteLine();
-		Console.WriteLine(test.Data.AsJsonString(DataTestsSerializerContext.OptionsManager.SerializerOptions));
+		Console.WriteLine(test.Data.AsJsonString(TestEnvironment.SerializerOptions));
 		Console.WriteLine();
 
 		if (test.Error)
@@ -119,7 +109,7 @@ public class Suite
 
 		var result = collection.Schema.Evaluate(test.Data, options);
 		//result.ToBasic();
-		Console.WriteLine(JsonSerializer.Serialize(result, serializerOptions));
+		Console.WriteLine(JsonSerializer.Serialize(result, TestEnvironment.SerializerOptions));
 
 		if (collection.IsOptional && result.IsValid != test.Valid)
 			Assert.Inconclusive("Test optional");
@@ -153,7 +143,7 @@ public class Suite
 	[TestCaseSource(nameof(CoreTestCases))]
 	public void CoreKeywordsAreInvalid(string schemaText)
 	{
-		Assert.Throws<JsonException>(() => JsonSerializer.Deserialize<JsonSchema>(schemaText, DataTestsSerializerContext.OptionsManager.SerializerOptions));
+		Assert.Throws<JsonException>(() => JsonSerializer.Deserialize<JsonSchema>(schemaText, TestEnvironment.SerializerOptions));
 	}
 
 	[Test]

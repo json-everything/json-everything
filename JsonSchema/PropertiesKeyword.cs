@@ -77,7 +77,7 @@ public class PropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 /// <summary>
 /// JSON converter for <see cref="PropertiesKeyword"/>.
 /// </summary>
-public sealed class PropertiesKeywordJsonConverter : AotCompatibleJsonConverter<PropertiesKeyword>
+public sealed class PropertiesKeywordJsonConverter : WeaklyTypedJsonConverter<PropertiesKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="PropertiesKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -89,7 +89,7 @@ public sealed class PropertiesKeywordJsonConverter : AotCompatibleJsonConverter<
 		if (reader.TokenType != JsonTokenType.StartObject)
 			throw new JsonException("Expected object");
 
-		var schema = options.Read(ref reader, JsonSchemaSerializerContext.Default.DictionaryStringJsonSchema)!;
+		var schema = options.ReadDictionary(ref reader, JsonSchemaSerializerContext.Default.JsonSchema)!;
 		return new PropertiesKeyword(schema);
 	}
 

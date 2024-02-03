@@ -1,5 +1,4 @@
 ﻿using System.Text.Json.Serialization;
-using Json.More;
 using NUnit.Framework;
 // ReSharper disable NonReadonlyMemberInGetHashCode
 #pragma warning disable CS8618
@@ -104,7 +103,7 @@ public class SerializerTests
 
 		var expected = File.ReadAllText(path);
 
-		var actual = YamlSerializer.Serialize(foo, TestSerializerContext.OptionsManager.SerializerOptions);
+		var actual = YamlSerializer.Serialize(foo, TestSerializerContext.Default.Options);
 
 		Assert.AreEqual(expected, actual);
 	}
@@ -136,7 +135,7 @@ public class SerializerTests
 			}
 		};
 
-		var actual = YamlSerializer.Deserialize<Foo>(text, TestSerializerContext.OptionsManager.SerializerOptions);
+		var actual = YamlSerializer.Deserialize<Foo>(text, TestSerializerContext.Default.Options);
 
 		Assert.AreEqual(expected, actual);
 	}
@@ -144,14 +143,4 @@ public class SerializerTests
 
 [JsonSerializable(typeof(SerializerTests.Foo))]
 [JsonSerializable(typeof(SerializerTests.Bar))]
-internal partial class TestSerializerContext : JsonSerializerContext
-{
-	public static TypeResolverOptionsManager OptionsManager { get; }
-
-	static TestSerializerContext()
-	{
-		OptionsManager = new TypeResolverOptionsManager(
-			Default
-		);
-	}
-}
+internal partial class TestSerializerContext : JsonSerializerContext;

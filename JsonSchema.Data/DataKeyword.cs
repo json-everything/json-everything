@@ -82,8 +82,6 @@ public class DataKeyword : IJsonSchemaKeyword
 		return new KeywordConstraint(Name, Evaluator);
 	}
 
-	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
-	[UnconditionalSuppressMessage("AOT", "IL3050:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	private void Evaluator(KeywordEvaluation evaluation, EvaluationContext context)
 	{
 		var data = new Dictionary<string, JsonNode>();
@@ -99,8 +97,8 @@ public class DataKeyword : IJsonSchemaKeyword
 		if (failedReferences.Count != 0)
 			throw new RefResolutionException(failedReferences.Select(x => x.ToString())!);
 
-		var json = JsonSerializer.Serialize(data, DataExtSerializerContext.OptionsManager.SerializerOptions);
-		var subschema = JsonSerializer.Deserialize<JsonSchema>(json, DataExtSerializerContext.OptionsManager.SerializerOptions)!;
+		var json = JsonSerializer.Serialize(data, JsonSchemaDataSerializerContext.Default.DictionaryStringJsonNode);
+		var subschema = JsonSerializer.Deserialize(json, JsonSchemaDataSerializerContext.Default.JsonSchema)!;
 
 		var schemaEvaluation = subschema
 			.GetConstraint(JsonPointer.Create(Name), evaluation.Results.InstanceLocation, evaluation.Results.InstanceLocation, context)
@@ -141,7 +139,7 @@ public class DataKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="DataKeyword"/>.
 /// </summary>
-public sealed class DataKeywordJsonConverter : AotCompatibleJsonConverter<DataKeyword>
+public sealed class DataKeywordJsonConverter : WeaklyTypedJsonConverter<DataKeyword>
 {
 	private static readonly string[] _coreKeywords =
 		Schema.Vocabularies.Core202012.Keywords
@@ -159,7 +157,7 @@ public sealed class DataKeywordJsonConverter : AotCompatibleJsonConverter<DataKe
 		if (reader.TokenType != JsonTokenType.StartObject)
 			throw new JsonException("Expected object");
 
-		var references = options.Read(ref reader, DataExtSerializerContext.Default.DictionaryStringString)!
+		var references = options.ReadDictionary(ref reader, JsonSchemaDataSerializerContext.Default.String)!
 			.ToDictionary(kvp => kvp.Key, kvp => JsonSchemaBuilderExtensions.CreateResourceIdentifier(kvp.Value));
 
 		if (references.Keys.Intersect(_coreKeywords).Any())
@@ -181,13 +179,13 @@ public sealed class DataKeywordJsonConverter : AotCompatibleJsonConverter<DataKe
 			switch (kvp.Value)
 			{
 				case JsonPointerIdentifier jp:
-					options.Write(writer, jp.Target, DataExtSerializerContext.Default.JsonPointer);
+					options.Write(writer, jp.Target, JsonSchemaDataSerializerContext.Default.JsonPointer);
 					break;
 				case RelativeJsonPointerIdentifier rjp:
-					options.Write(writer, rjp.Target, DataExtSerializerContext.Default.RelativeJsonPointer);
+					options.Write(writer, rjp.Target, JsonSchemaDataSerializerContext.Default.RelativeJsonPointer);
 					break;
 				case UriIdentifier uri:
-					options.Write(writer, uri.Target, DataExtSerializerContext.Default.Uri);
+					options.Write(writer, uri.Target, JsonSchemaDataSerializerContext.Default.Uri);
 					break;
 			}
 		}

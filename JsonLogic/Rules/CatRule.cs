@@ -57,13 +57,13 @@ public class CatRule : Rule
 	}
 }
 
-internal class CatRuleJsonConverter : AotCompatibleJsonConverter<CatRule>
+internal class CatRuleJsonConverter : WeaklyTypedJsonConverter<CatRule>
 {
 	public override CatRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		var parameters = reader.TokenType == JsonTokenType.StartArray
-			? options.Read(ref reader, LogicSerializerContext.Default.RuleArray)
-			: new[] { options.Read(ref reader, LogicSerializerContext.Default.Rule)! };
+			? options.ReadArray(ref reader, JsonLogicSerializerContext.Default.Rule)
+			: new[] { options.Read(ref reader, JsonLogicSerializerContext.Default.Rule)! };
 
 		if (parameters == null || parameters.Length == 0)
 			throw new JsonException("The cat rule needs an array of parameters.");
@@ -71,13 +71,11 @@ internal class CatRuleJsonConverter : AotCompatibleJsonConverter<CatRule>
 		return new CatRule(parameters[0], parameters.Skip(1).ToArray());
 	}
 
-	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
-	[UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public override void Write(Utf8JsonWriter writer, CatRule value, JsonSerializerOptions options)
 	{
 		writer.WriteStartObject();
 		writer.WritePropertyName("cat");
-		writer.WriteRules(value.Items, options);
+		options.WriteList(writer, value.Items, JsonLogicSerializerContext.Default.Rule);
 		writer.WriteEndObject();
 	}
 }

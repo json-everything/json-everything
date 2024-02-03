@@ -40,26 +40,24 @@ public class LogRule : Rule
 	}
 }
 
-internal class LogRuleJsonConverter : AotCompatibleJsonConverter<LogRule>
+internal class LogRuleJsonConverter : WeaklyTypedJsonConverter<LogRule>
 {
 	public override LogRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		var parameters = reader.TokenType == JsonTokenType.StartArray
-			? options.Read(ref reader, LogicSerializerContext.Default.RuleArray)
-			: new[] { options.Read(ref reader, LogicSerializerContext.Default.Rule)! };
+			? options.ReadArray(ref reader, JsonLogicSerializerContext.Default.Rule)
+			: new[] { options.Read(ref reader, JsonLogicSerializerContext.Default.Rule)! };
 
 		return new LogRule(parameters!.Length == 0
 			? new LiteralRule("")
 			: parameters[0]);
 	}
 
-	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
-	[UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public override void Write(Utf8JsonWriter writer, LogRule value, JsonSerializerOptions options)
 	{
 		writer.WriteStartObject();
 		writer.WritePropertyName("log");
-		writer.WriteRule(value.Log, options);
+		options.Write(writer, value.Log, JsonLogicSerializerContext.Default.Rule);
 		writer.WriteEndObject();
 	}
 }

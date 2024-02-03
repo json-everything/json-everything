@@ -78,7 +78,7 @@ public class MultipleOfKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="MultipleOfKeyword"/>.
 /// </summary>
-public sealed class MultipleOfKeywordJsonConverter : AotCompatibleJsonConverter<MultipleOfKeyword>
+public sealed class MultipleOfKeywordJsonConverter : WeaklyTypedJsonConverter<MultipleOfKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="MultipleOfKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

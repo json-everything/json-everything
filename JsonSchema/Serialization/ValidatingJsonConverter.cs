@@ -12,6 +12,7 @@ namespace Json.Schema.Serialization;
 /// <summary>
 /// Adds schema validation for types decorated with the <see cref="JsonSchemaAttribute"/>.
 /// </summary>
+[RequiresDynamicCode("JSON serialization and deserialization might require types that cannot be statically analyzed and might need runtime code generation. Use System.Text.Json source generation for native AOT applications.")]
 public class ValidatingJsonConverter : JsonConverterFactory
 {
 	private static readonly ConcurrentDictionary<Type, JsonConverter?> _cache = new();
@@ -35,8 +36,6 @@ public class ValidatingJsonConverter : JsonConverterFactory
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
 	/// <param name="schema"></param>
-	[RequiresDynamicCode("Uses reflection")]
-	[RequiresUnreferencedCode("Uses reflection")]
 	public static void MapType<T>(JsonSchema schema)
 	{
 		_instance.CreateConverter(typeof(T), schema);
@@ -64,10 +63,6 @@ public class ValidatingJsonConverter : JsonConverterFactory
 	/// An instance of a <see cref="JsonConverter{T}"/> where `T` is compatible with <paramref name="typeToConvert"/>.
 	/// If <see langword="null"/> is returned, a <see cref="NotSupportedException"/> will be thrown.
 	/// </returns>
-	[RequiresDynamicCode("Uses reflection")]
-	[RequiresUnreferencedCode("Uses reflection")]
-	[SuppressMessage("Trimming", "IL2046:'RequiresUnreferencedCodeAttribute' annotations must match across all interface implementations or overrides.", Justification = "Only this overload requires reflection")]
-	[SuppressMessage("AOT", "IL3051:'RequiresDynamicCodeAttribute' annotations must match across all interface implementations or overrides.", Justification = "Only this overload requires reflection")]
 	public override JsonConverter? CreateConverter(Type typeToConvert, JsonSerializerOptions options)
 	{
 		// at this point, we know that we should have a converter, so we don't need to check for null
@@ -79,7 +74,6 @@ public class ValidatingJsonConverter : JsonConverterFactory
 		return CreateConverter(typeToConvert, schema);
 	}
 
-	[RequiresDynamicCode("Uses reflection")]
 	private JsonConverter? CreateConverter(Type typeToConvert, JsonSchema schema)
 	{
 		var converterType = typeof(ValidatingJsonConverter<>).MakeGenericType(typeToConvert);
@@ -113,7 +107,7 @@ internal interface IValidatingJsonConverter
 	public bool RequireFormatValidation { get; set; }
 }
 
-internal class ValidatingJsonConverter<T> : AotCompatibleJsonConverter<T>, IValidatingJsonConverter
+internal class ValidatingJsonConverter<T> : WeaklyTypedJsonConverter<T>, IValidatingJsonConverter
 {
 	private readonly JsonSchema _schema;
 	private readonly Func<JsonSerializerOptions, JsonSerializerOptions> _optionsFactory;

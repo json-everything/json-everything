@@ -60,7 +60,7 @@ public class CommentKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="CommentKeyword"/>.
 /// </summary>
-public sealed class CommentKeywordJsonConverter : AotCompatibleJsonConverter<CommentKeyword>
+public sealed class CommentKeywordJsonConverter : WeaklyTypedJsonConverter<CommentKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="CommentKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>

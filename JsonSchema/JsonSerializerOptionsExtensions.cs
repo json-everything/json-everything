@@ -8,7 +8,10 @@ using Json.More;
 
 namespace Json.Schema;
 
-internal static class JsonSerializerOptionsExtensions
+/// <summary>
+/// Extension methods for <see cref="JsonSerializerOptions"/>.
+/// </summary>
+public static class JsonSerializerOptionsExtensions
 {
 	private abstract class ArbitraryDeserializer
 	{
@@ -37,20 +40,34 @@ internal static class JsonSerializerOptionsExtensions
 
 	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We won't use dynamic code if the JsonSerializerOptions come from the source generator.")]
 	[UnconditionalSuppressMessage("AOT", "IL3050:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We won't use dynamic code if the JsonSerializerOptions come from the source generator.")]
-	internal static object? Read(this JsonSerializerOptions options, ref Utf8JsonReader reader, Type arbitraryType, JsonTypeInfo? typeInfo = null)
+	internal static object? Read(this JsonSerializerOptions options, ref Utf8JsonReader reader, Type arbitraryType, JsonTypeInfo typeInfo)
 	{
-		typeInfo ??= options.GetTypeInfo(arbitraryType);
 		var converter = typeInfo.Converter;
 
 		// Try using the AOT-friendly interface first.
-		if (converter is IJsonConverterReadWrite converterReadWrite)
-		{
+		if (converter is IWeaklyTypedJsonConverter converterReadWrite)
 			return converterReadWrite.Read(ref reader, arbitraryType, options);
-		}
 
 		// The converter is just a JsonConverter<T> so we need to go through reflection to get it.
 		// AOT-aware callers should not have gotten this far.
 		var deserializer = ArbitraryDeserializer.GetConverter(arbitraryType);
 		return deserializer.Read(ref reader, options);
+	}
+
+	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We won't use dynamic code if the JsonSerializerOptions come from the source generator.")]
+	[UnconditionalSuppressMessage("AOT", "IL3050:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We won't use dynamic code if the JsonSerializerOptions come from the source generator.")]
+	internal static void Write(this JsonSerializerOptions options, Utf8JsonWriter writer, object? value, Type arbitraryType, JsonTypeInfo typeInfo)
+	{
+		var converter = typeInfo.Converter;
+
+		// Try using the AOT-friendly interface first.
+		if (converter is IWeaklyTypedJsonConverter converterReadWrite)
+		{
+			converterReadWrite.Write(writer, value!, options, typeInfo);
+			return;
+		}
+
+		// AOT-aware callers should not have gotten this far.
+		options.Write(writer, value, arbitraryType);
 	}
 }

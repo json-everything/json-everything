@@ -70,7 +70,7 @@ public class ConstKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="ConstKeyword"/>.
 /// </summary>
-public sealed class ConstKeywordJsonConverter : AotCompatibleJsonConverter<ConstKeyword>
+public sealed class ConstKeywordJsonConverter : WeaklyTypedJsonConverter<ConstKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="ConstKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -90,7 +90,7 @@ public sealed class ConstKeywordJsonConverter : AotCompatibleJsonConverter<Const
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, ConstKeyword value, JsonSerializerOptions options)
 	{
-		options.Write(writer, value.Value, JsonSchemaSerializerContext.Default.JsonNode);
+		options.Write(writer, value.Value!, JsonSchemaSerializerContext.Default.JsonNode);
 	}
 }
 

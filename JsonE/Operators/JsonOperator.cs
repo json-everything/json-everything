@@ -10,8 +10,9 @@ namespace Json.JsonE.Operators;
 internal class JsonOperator : IOperator
 {
 	private static readonly JsonSerializerOptions _serializerOptions =
-		new(JsonESerializerContext.Default.Options)
+		new()
 		{
+			TypeInfoResolverChain = { JsonESerializerContext.Default },
 			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
 		};
 

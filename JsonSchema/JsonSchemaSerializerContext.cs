@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
-using Json.More;
 using Json.Pointer;
 
 namespace Json.Schema;
 
+/// <summary>
+/// A serializer context for this library.
+/// </summary>
 [JsonSerializable(typeof(JsonSchema))]
 [JsonSerializable(typeof(AdditionalItemsKeyword))]
 [JsonSerializable(typeof(AdditionalPropertiesKeyword))]
@@ -72,40 +74,19 @@ namespace Json.Schema;
 [JsonSerializable(typeof(UnrecognizedKeyword))]
 [JsonSerializable(typeof(VocabularyKeyword))]
 [JsonSerializable(typeof(WriteOnlyKeyword))]
-[JsonSerializable(typeof(decimal))]
-[JsonSerializable(typeof(Dictionary<string, bool>))]
-[JsonSerializable(typeof(Dictionary<string, JsonSchema>))]
-[JsonSerializable(typeof(Dictionary<string, List<string>>))]
-[JsonSerializable(typeof(Dictionary<string, PropertyDependency>))]
-[JsonSerializable(typeof(Dictionary<string, SchemaOrPropertyList>))]
-[JsonSerializable(typeof(Dictionary<string, string[]>))]
-[JsonSerializable(typeof(IReadOnlyCollection<JsonNode?>))]
-[JsonSerializable(typeof(IReadOnlyDictionary<string, JsonNode?>))]
-[JsonSerializable(typeof(IReadOnlyDictionary<string, JsonSchema>))]
-[JsonSerializable(typeof(IReadOnlyDictionary<string, string>))]
-[JsonSerializable(typeof(IReadOnlyDictionary<string, PropertyDependency>))]
-[JsonSerializable(typeof(IReadOnlyList<EvaluationResults>))]
-[JsonSerializable(typeof(IReadOnlyList<string>))]
-[JsonSerializable(typeof(int[]))]
-[JsonSerializable(typeof(JsonArray))]
-[JsonSerializable(typeof(JsonNode))]
-[JsonSerializable(typeof(JsonNode[]))]
-[JsonSerializable(typeof(JsonPointer))]
-[JsonSerializable(typeof(List<JsonSchema>))]
-[JsonSerializable(typeof(List<string>))]
+[JsonSerializable(typeof(SchemaOrPropertyList))]
+[JsonSerializable(typeof(PropertyDependency))]
 [JsonSerializable(typeof(SchemaValueType))]
-[JsonSerializable(typeof(string[]))]
+[JsonSerializable(typeof(EvaluationResults))]
+[JsonSerializable(typeof(JsonPointer))]
+[JsonSerializable(typeof(JsonNode))]
+[JsonSerializable(typeof(IReadOnlyCollection<JsonNode>))]
 [JsonSerializable(typeof(uint))]
+[JsonSerializable(typeof(decimal))]
+[JsonSerializable(typeof(string))]
+[JsonSerializable(typeof(string[]))]
+[JsonSerializable(typeof(Dictionary<string, string[]>))]
+[JsonSerializable(typeof(bool))]
+[JsonSerializable(typeof(int[]))]
 [JsonSerializable(typeof(Uri))]
-internal partial class JsonSchemaSerializerContext : JsonSerializerContext
-{
-	public static TypeResolverOptionsManager OptionsManager { get; }
-
-	static JsonSchemaSerializerContext()
-	{
-		OptionsManager = new TypeResolverOptionsManager(
-			Default,
-			SchemaKeywordRegistry.ExternalTypeInfoResolvers
-		);
-	}
-}
+internal partial class JsonSchemaSerializerContext : JsonSerializerContext;

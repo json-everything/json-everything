@@ -113,7 +113,7 @@ public class FormatKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="FormatKeyword"/>.
 /// </summary>
-public sealed class FormatKeywordJsonConverter : AotCompatibleJsonConverter<FormatKeyword>
+public sealed class FormatKeywordJsonConverter : WeaklyTypedJsonConverter<FormatKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="FormatKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
