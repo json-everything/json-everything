@@ -17,6 +17,16 @@ public class Tests
 			)
 		);
 
+	private static readonly JsonSchema _instanceRefOptional = new JsonSchemaBuilder()
+		.Schema(MetaSchemas.Data_202012Id)
+		.Type(SchemaValueType.Object)
+		.Properties(
+			("foo", new JsonSchemaBuilder()
+				.Type(SchemaValueType.Integer)
+				.OptionalData(("minimum", "/minValue"))
+			)
+		);
+
 	private static readonly JsonSchema _instanceRelativeRef = new JsonSchemaBuilder()
 		.Schema(MetaSchemas.Data_202012Id)
 		.Type(SchemaValueType.Object)
@@ -110,6 +120,17 @@ public class Tests
 		var instance = JsonNode.Parse(instanceData);
 
 		Assert.Throws<RefResolutionException>(() => _instanceRef.Evaluate(instance));
+	}
+
+	[Test]
+	public void InstanceRefOptional_Unresolvable()
+	{
+		var instanceData = "{\"minValu\":5,\"foo\":10}";
+		var instance = JsonNode.Parse(instanceData);
+
+		var result = _instanceRefOptional.Evaluate(instance);
+
+		result.AssertValid();
 	}
 
 	[Test]

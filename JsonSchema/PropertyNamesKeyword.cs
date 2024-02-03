@@ -68,7 +68,7 @@ public class PropertyNamesKeyword : IJsonSchemaKeyword, ISchemaContainer
 
 		return new KeywordConstraint(Name, Evaluator)
 		{
-			ChildDependencies = new[] { subschemaConstraint }
+			ChildDependencies = [subschemaConstraint]
 		};
 	}
 
@@ -82,7 +82,7 @@ public class PropertyNamesKeyword : IJsonSchemaKeyword, ISchemaContainer
 /// <summary>
 /// JSON converter for <see cref="PropertyNamesKeyword"/>.
 /// </summary>
-public sealed class PropertyNamesKeywordJsonConverter : JsonConverter<PropertyNamesKeyword>
+public sealed class PropertyNamesKeywordJsonConverter : WeaklyTypedJsonConverter<PropertyNamesKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="PropertyNamesKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -91,7 +91,7 @@ public sealed class PropertyNamesKeywordJsonConverter : JsonConverter<PropertyNa
 	/// <returns>The converted value.</returns>
 	public override PropertyNamesKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var schema = options.Read<JsonSchema>(ref reader)!;
+		var schema = options.Read(ref reader, JsonSchemaSerializerContext.Default.JsonSchema)!;
 
 		return new PropertyNamesKeyword(schema);
 	}
@@ -102,7 +102,6 @@ public sealed class PropertyNamesKeywordJsonConverter : JsonConverter<PropertyNa
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, PropertyNamesKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(PropertyNamesKeyword.Name);
-		JsonSerializer.Serialize(writer, value.Schema, options);
+		options.Write(writer, value.Schema, JsonSchemaSerializerContext.Default.JsonSchema);
 	}
 }

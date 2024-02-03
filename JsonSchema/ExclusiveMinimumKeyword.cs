@@ -63,16 +63,18 @@ public class ExclusiveMinimumKeyword : IJsonSchemaKeyword
 		var schemaValueType = evaluation.LocalInstance.GetSchemaValueType();
 		if (schemaValueType is not (SchemaValueType.Number or SchemaValueType.Integer)) return;
 
-		var number = evaluation.LocalInstance!.AsValue().GetNumber();
+		var number = evaluation.LocalInstance!.AsValue().GetNumber()!.Value;
 		if (Value >= number)
-			evaluation.Results.Fail(Name, ErrorMessages.GetExclusiveMinimum(context.Options.Culture), ("received", number), ("limit", Value));
+			evaluation.Results.Fail(Name, ErrorMessages.GetExclusiveMinimum(context.Options.Culture)
+				.ReplaceToken("received", number)
+				.ReplaceToken("limit", Value));
 	}
 }
 
 /// <summary>
 /// JSON converter for <see cref="ExclusiveMinimumKeyword"/>.
 /// </summary>
-public sealed class ExclusiveMinimumKeywordJsonConverter : JsonConverter<ExclusiveMinimumKeyword>
+public sealed class ExclusiveMinimumKeywordJsonConverter : WeaklyTypedJsonConverter<ExclusiveMinimumKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="ExclusiveMinimumKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -95,7 +97,7 @@ public sealed class ExclusiveMinimumKeywordJsonConverter : JsonConverter<Exclusi
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, ExclusiveMinimumKeyword value, JsonSerializerOptions options)
 	{
-		writer.WriteNumber(ExclusiveMinimumKeyword.Name, value.Value);
+		writer.WriteNumberValue(value.Value);
 	}
 }
 

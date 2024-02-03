@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Logic.Rules;
 
@@ -50,16 +52,16 @@ public class AllRule : Rule
 		if (input is not JsonArray arr) return false;
 
 		var results = arr.Select(value => Rule.Apply(contextData, value)).ToList();
-		return (results.Any() &&
+		return (results.Count != 0 &&
 				results.All(result => result.IsTruthy()));
 	}
 }
 
-internal class AllRuleJsonConverter : JsonConverter<AllRule>
+internal class AllRuleJsonConverter : WeaklyTypedJsonConverter<AllRule>
 {
 	public override AllRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = JsonSerializer.Deserialize<Rule[]>(ref reader, options);
+		var parameters = options.ReadArray(ref reader, JsonLogicSerializerContext.Default.Rule);
 
 		if (parameters is not { Length:2})
 			throw new JsonException("The all rule needs an array with 2 parameters.");
@@ -72,8 +74,8 @@ internal class AllRuleJsonConverter : JsonConverter<AllRule>
 		writer.WriteStartObject();
 		writer.WritePropertyName("all");
 		writer.WriteStartArray();
-		writer.WriteRule(value.Input, options);
-		writer.WriteRule(value.Rule, options);
+		options.Write(writer, value.Input, JsonLogicSerializerContext.Default.Rule);
+		options.Write(writer, value.Rule, JsonLogicSerializerContext.Default.Rule);
 		writer.WriteEndArray();
 		writer.WriteEndObject();
 	}

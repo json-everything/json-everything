@@ -524,9 +524,9 @@ namespace JsonEverythingTemp
 			if (!emitResult.Success)
 			{
 				Console.WriteLine("You may expect a list of what compilation errors there are, but unfortunately " +
-										"Roslyn doesn't seem to be giving that information out (or I don't know how to " +
-										"interpret it).  So instead, here are the errors in raw form.  Good luck.  If you " +
-										"know what these mean, please drop a line in a GitHub issue.");
+				                  "Roslyn doesn't seem to be giving that information out (or I don't know how to " +
+				                  "interpret it).  So instead, here are the errors in raw form.  Good luck.  If you " +
+				                  "know what these mean, please drop a line in a GitHub issue.");
 				await _outputEditor.SetValue("Compilation error");
 				//var errors = string.Join("\n", emitResult.Diagnostics.Where(x => x.Severity == DiagnosticSeverity.Error)
 				//	.Select(x => GetErrorDetails(source, x)));
@@ -535,8 +535,9 @@ namespace JsonEverythingTemp
 			}
 
 			var assembly = Assembly.Load(dllStream.ToArray());
-			var type = assembly.DefinedTypes.First();
+			var type = assembly.DefinedTypes.First(x => x.Namespace == "JsonEverythingTemp");
 
+			Console.WriteLine($"Generating schema for type '{type.Name}'");
 			JsonSchema schema = new JsonSchemaBuilder().FromType(type);
 
 			await _outputEditor.SetValue(JsonSerializer.Serialize(schema, new JsonSerializerOptions { WriteIndented = true }));

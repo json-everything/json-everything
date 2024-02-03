@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -21,10 +22,6 @@ public class RuleCollection : Rule
 	{
 		Rules = rules;
 	}
-	internal RuleCollection(IEnumerable<Rule> rules)
-	{
-		Rules = rules;
-	}
 
 	/// <summary>
 	/// Applies the rule to the input data.
@@ -41,7 +38,7 @@ public class RuleCollection : Rule
 	}
 }
 
-internal class RuleCollectionJsonConverter : JsonConverter<RuleCollection>
+internal class RuleCollectionJsonConverter : WeaklyTypedJsonConverter<RuleCollection>
 {
 	public override RuleCollection? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
@@ -51,6 +48,6 @@ internal class RuleCollectionJsonConverter : JsonConverter<RuleCollection>
 
 	public override void Write(Utf8JsonWriter writer, RuleCollection value, JsonSerializerOptions options)
 	{
-		writer.WriteRules(value.Rules, options);
+		options.WriteList(writer, value.Rules, JsonLogicSerializerContext.Default.Rule);
 	}
 }

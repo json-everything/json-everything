@@ -90,14 +90,15 @@ public class VocabularyKeyword : IJsonSchemaKeyword
 		}
 
 		if (!overallResult)
-			evaluation.Results.Fail(Name, ErrorMessages.GetUnknownVocabularies(context.Options.Culture), ("vocabs", $"[{string.Join(", ", violations)}]"));
+			evaluation.Results.Fail(Name, ErrorMessages.GetUnknownVocabularies(context.Options.Culture)
+				.ReplaceToken("vocabs", $"[{string.Join(", ", violations)}]"));
 	}
 }
 
 /// <summary>
 /// JSON converter for <see cref="VocabularyKeyword"/>.
 /// </summary>
-public sealed class VocabularyKeywordJsonConverter : JsonConverter<VocabularyKeyword>
+public sealed class VocabularyKeywordJsonConverter : WeaklyTypedJsonConverter<VocabularyKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="VocabularyKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -109,7 +110,7 @@ public sealed class VocabularyKeywordJsonConverter : JsonConverter<VocabularyKey
 		if (reader.TokenType != JsonTokenType.StartObject)
 			throw new JsonException("Expected object");
 
-		var schema = options.Read<Dictionary<string, bool>>(ref reader);
+		var schema = options.ReadDictionary(ref reader, JsonSchemaSerializerContext.Default.Boolean);
 		var withUris = schema!.ToDictionary(kvp => new Uri(kvp.Key), kvp => kvp.Value);
 		return new VocabularyKeyword(withUris);
 	}
@@ -120,7 +121,6 @@ public sealed class VocabularyKeywordJsonConverter : JsonConverter<VocabularyKey
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, VocabularyKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(VocabularyKeyword.Name);
 		writer.WriteStartObject();
 		foreach (var kvp in value.Vocabulary)
 		{

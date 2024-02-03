@@ -188,8 +188,7 @@ public class ArrayGenerationTests
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Array)
-			.PrefixItems(new JsonSchema[]
-			{
+			.PrefixItems(
 				new JsonSchemaBuilder()
 					.Type(SchemaValueType.Integer)
 					.Minimum(10)
@@ -200,7 +199,7 @@ public class ArrayGenerationTests
 					.MaxLength(20),
 				new JsonSchemaBuilder()
 					.Type(SchemaValueType.Boolean)
-			})
+			)
 			.MinItems(3)
 			.MaxItems(3);
 
@@ -212,8 +211,7 @@ public class ArrayGenerationTests
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Array)
-			.PrefixItems(new JsonSchema[]
-			{
+			.PrefixItems(
 				new JsonSchemaBuilder()
 					.Type(SchemaValueType.Integer)
 					.Minimum(10)
@@ -224,7 +222,7 @@ public class ArrayGenerationTests
 					.MaxLength(20),
 				new JsonSchemaBuilder()
 					.Type(SchemaValueType.Boolean)
-			})
+			)
 			.MinItems(5)
 			.MaxItems(10);
 
@@ -236,8 +234,7 @@ public class ArrayGenerationTests
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Array)
-			.PrefixItems(new JsonSchema[]
-			{
+			.PrefixItems(
 				new JsonSchemaBuilder()
 					.Type(SchemaValueType.Integer)
 					.Minimum(10)
@@ -248,7 +245,7 @@ public class ArrayGenerationTests
 					.MaxLength(20),
 				new JsonSchemaBuilder()
 					.Type(SchemaValueType.Boolean)
-			})
+			)
 			.MinItems(5)
 			.MaxItems(10)
 			.Items(new JsonSchemaBuilder()
@@ -265,8 +262,7 @@ public class ArrayGenerationTests
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Array)
-			.PrefixItems(new JsonSchema[]
-			{
+			.PrefixItems(
 				new JsonSchemaBuilder()
 					.Type(SchemaValueType.Integer)
 					.Minimum(10)
@@ -277,7 +273,7 @@ public class ArrayGenerationTests
 					.MaxLength(20),
 				new JsonSchemaBuilder()
 					.Type(SchemaValueType.Boolean)
-			})
+			)
 			.MaxItems(2);
 
 		Run(schema);
@@ -288,8 +284,7 @@ public class ArrayGenerationTests
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Array)
-			.PrefixItems(new JsonSchema[]
-			{
+			.PrefixItems(
 				new JsonSchemaBuilder()
 					.Type(SchemaValueType.Integer)
 					.Minimum(10)
@@ -300,7 +295,7 @@ public class ArrayGenerationTests
 					.MaxLength(20),
 				new JsonSchemaBuilder()
 					.Type(SchemaValueType.Boolean)
-			})
+			)
 			.MinItems(5)
 			.MaxItems(10)
 			.Contains(new JsonSchemaBuilder()
@@ -317,8 +312,7 @@ public class ArrayGenerationTests
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Array)
-			.PrefixItems(new JsonSchema[]
-			{
+			.PrefixItems(
 				new JsonSchemaBuilder()
 					.Type(SchemaValueType.Integer)
 					.Minimum(10)
@@ -329,7 +323,7 @@ public class ArrayGenerationTests
 					.MaxLength(20),
 				new JsonSchemaBuilder()
 					.Type(SchemaValueType.Boolean)
-			})
+			)
 			.Items(false);
 
 		Run(schema);
@@ -340,8 +334,7 @@ public class ArrayGenerationTests
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Array)
-			.PrefixItems(new JsonSchema[]
-			{
+			.PrefixItems(
 				new JsonSchemaBuilder()
 					.Type(SchemaValueType.Integer)
 					.Minimum(10)
@@ -352,7 +345,7 @@ public class ArrayGenerationTests
 					.MaxLength(20),
 				new JsonSchemaBuilder()
 					.Type(SchemaValueType.Boolean)
-			})
+			)
 			.MinItems(3)
 			.Items(false);
 
@@ -364,8 +357,7 @@ public class ArrayGenerationTests
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Array)
-			.PrefixItems(new JsonSchema[]
-			{
+			.PrefixItems(
 				new JsonSchemaBuilder()
 					.Type(SchemaValueType.Integer)
 					.Minimum(10)
@@ -376,7 +368,7 @@ public class ArrayGenerationTests
 					.MaxLength(20),
 				new JsonSchemaBuilder()
 					.Type(SchemaValueType.Boolean)
-			})
+			)
 			.MinItems(4)
 			.Items(false);
 

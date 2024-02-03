@@ -1,10 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.Logic.Rules;
+using Json.More;
 
 namespace Json.Logic;
 
@@ -93,7 +94,7 @@ public class LogicComponentConverter : JsonConverter<Rule>
 	/// <returns>The converted value.</returns>
 	public override Rule Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var node = JsonSerializer.Deserialize<JsonNode?>(ref reader, options);
+		var node = options.Read(ref reader, JsonLogicSerializerContext.Default.JsonNode);
 		Rule rule;
 
 		if (node is JsonObject)
@@ -106,18 +107,20 @@ public class LogicComponentConverter : JsonConverter<Rule>
 			{
 				var (op, args) = data.First();
 
-				var ruleType = RuleRegistry.GetRule(op);
-				if (ruleType == null)
-					throw new JsonException($"Cannot identify rule for {op}");
+				var ruleType = RuleRegistry.GetRule(op) ??
+				               throw new JsonException($"Cannot identify rule for {op}");
+				var typeInfo = RuleRegistry.GetTypeInfo(ruleType) ??
+				               options.GetTypeInfo(ruleType) ??
+				               throw new JsonException($"Cannot get JsonTypeInfo for rule type {ruleType}");
 
 				rule = args is null
-					? (Rule)JsonSerializer.Deserialize("[]", ruleType, options)!
-					: (Rule)args.Deserialize(ruleType, options)!;
+					? (Rule)JsonSerializer.Deserialize("[]", typeInfo)!
+					: (Rule)args.Deserialize(typeInfo)!;
 			}
 		}
 		else if (node is JsonArray)
 		{
-			var data = node.Deserialize<List<Rule>>(options)!;
+			var data = node.AsArray().Select(x => x.Deserialize(JsonLogicSerializerContext.Default.Rule)!).ToArray();
 			rule = new RuleCollection(data);
 		}
 		else
@@ -136,40 +139,13 @@ public class LogicComponentConverter : JsonConverter<Rule>
 	{
 		if (value.Source != null)
 		{
-			JsonSerializer.Serialize(writer, value.Source, options);
+			options.Write(writer, value.Source, JsonLogicSerializerContext.Default.JsonNode);
 			return;
 		}
 
-		writer.WriteRule(value, options);
-	}
-}
-
-[JsonConverter(typeof(ArgumentCollectionConverter))]
-internal class ArgumentCollection : List<Rule>
-{
-	public ArgumentCollection(Rule? single)
-	{
-		Add(single!);
-	}
-
-	public ArgumentCollection(IEnumerable<Rule> components)
-		: base(components)
-	{
-	}
-}
-
-internal class ArgumentCollectionConverter : JsonConverter<ArgumentCollection>
-{
-	public override ArgumentCollection Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-	{
-		if (reader.TokenType == JsonTokenType.StartArray)
-			return new ArgumentCollection(JsonSerializer.Deserialize<List<Rule>>(ref reader, options)!);
-
-		return new ArgumentCollection(JsonSerializer.Deserialize<Rule>(ref reader, options));
-	}
-
-	public override void Write(Utf8JsonWriter writer, ArgumentCollection value, JsonSerializerOptions options)
-	{
-		throw new NotImplementedException();
+		var ruleType = value.GetType();
+		var typeInfo = RuleRegistry.GetTypeInfo(ruleType)!;
+		var converter = (IWeaklyTypedJsonConverter)typeInfo.Converter;
+		converter.Write(writer, value, options, typeInfo);
 	}
 }

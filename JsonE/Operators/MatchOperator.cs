@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Text.Json.Nodes;
 using Json.JsonE.Expressions;
-using Json.More;
 
 namespace Json.JsonE.Operators;
 
@@ -29,7 +28,7 @@ internal class MatchOperator : IOperator
 			if (result is not JsonValue val || !val.TryGetValue(out bool b))
 				throw new InterpreterException("$match keys must evaluate to a boolean");
 
-			if (b) array.Add(kvp.Value.Copy());
+			if (b) array.Add(kvp.Value.Clone());
 		}
 
 		return array;

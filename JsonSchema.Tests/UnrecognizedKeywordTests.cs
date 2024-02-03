@@ -16,7 +16,7 @@ public class UnrecognizedKeywordTests
 	{
 		var schemaText = "{\"foo\": \"bar\"}";
 
-		var schema = JsonSerializer.Deserialize<JsonSchema>(schemaText);
+		var schema = JsonSerializer.Deserialize<JsonSchema>(schemaText, TestEnvironment.SerializerOptions);
 
 		Assert.AreEqual(1, schema!.Keywords!.Count);
 		Assert.IsInstanceOf<UnrecognizedKeyword>(schema.Keywords.First());
@@ -27,7 +27,7 @@ public class UnrecognizedKeywordTests
 	{
 		var schemaText = "{\"foo\": \"bar\"}";
 
-		var schema = JsonSerializer.Deserialize<JsonSchema>(schemaText);
+		var schema = JsonSerializer.Deserialize<JsonSchema>(schemaText, TestEnvironment.SerializerOptions);
 
 		var result = schema!.Evaluate(new JsonObject(), new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
 
@@ -41,7 +41,7 @@ public class UnrecognizedKeywordTests
 	{
 		var schemaText = "{\"foo\": \"bar\"}";
 
-		var schema = JsonSerializer.Deserialize<JsonSchema>(schemaText);
+		var schema = JsonSerializer.Deserialize<JsonSchema>(schemaText, TestEnvironment.SerializerOptions);
 
 		var result = schema!.Evaluate(new JsonObject(), new EvaluationOptions
 		{
@@ -51,7 +51,7 @@ public class UnrecognizedKeywordTests
 
 		Assert.IsTrue(result.IsValid);
 		Assert.AreEqual(2, result.Annotations!.Count);
-		Assert.IsTrue(new JsonArray{"foo"}.IsEquivalentTo(result.Annotations["$unknownKeywords"]));
+		Assert.IsTrue(new JsonArray("foo").IsEquivalentTo(result.Annotations["$unknownKeywords"]));
 	}
 
 	[Test]
@@ -74,7 +74,7 @@ public class UnrecognizedKeywordTests
 		Assert.IsTrue(result.IsValid);
 		Assert.AreEqual(2, result.Annotations!.Count);
 		Assert.IsTrue(new JsonObject { ["foo"] = false }.IsEquivalentTo(result.Annotations["dependencies"]));
-		Assert.IsTrue(new JsonArray{"dependencies"}.IsEquivalentTo(result.Annotations["$unknownKeywords"]));
+		Assert.IsTrue(new JsonArray("dependencies").IsEquivalentTo(result.Annotations["$unknownKeywords"]));
 	}
 
 	[Test]
@@ -108,11 +108,13 @@ public class UnrecognizedKeywordTests
 
 		var result = schema.Evaluate(instance, options);
 
-		Console.WriteLine(JsonSerializer.Serialize(result, new JsonSerializerOptions
+		var serializerOptions = new JsonSerializerOptions()
 		{
+			TypeInfoResolverChain = { TestSerializerContext.Default },
 			WriteIndented = true,
 			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-		}));
+		};
+		Console.WriteLine(JsonSerializer.Serialize(result, serializerOptions));
 
 		Assert.IsTrue(result.IsValid);
 		Assert.AreEqual(1, result.Annotations!.Count);
@@ -124,10 +126,10 @@ public class UnrecognizedKeywordTests
 	{
 		var schemaText = "{\"foo\":\"bar\"}";
 
-		var schema = JsonSerializer.Deserialize<JsonSchema>(schemaText);
+		var schema = JsonSerializer.Deserialize<JsonSchema>(schemaText, TestEnvironment.SerializerOptions);
 
-		var reText = JsonSerializer.Serialize(schema);
+		var reText = JsonSerializer.Serialize(schema, TestEnvironment.SerializerOptions);
 
-		Assert.AreEqual(schemaText, reText);
+		Assert.AreEqual(schemaText, reText);	
 	}
 }

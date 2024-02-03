@@ -91,14 +91,16 @@ public class TypeKeyword : IJsonSchemaKeyword
 		}
 
 		var expected = expectedType.ToString().ToLower();
-		evaluation.Results.Fail(Name, ErrorMessages.GetType(context.Options.Culture), ("received", instanceType), ("expected", expected));
+		evaluation.Results.Fail(Name, ErrorMessages.GetType(context.Options.Culture).
+			ReplaceToken("received", instanceType, JsonSchemaSerializerContext.Default.SchemaValueType).
+			ReplaceToken("expected", expected));
 	}
 }
 
 /// <summary>
 /// JSON converter for <see cref="TypeKeyword"/>.
 /// </summary>
-public sealed class TypeKeywordJsonConverter : JsonConverter<TypeKeyword>
+public sealed class TypeKeywordJsonConverter : WeaklyTypedJsonConverter<TypeKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="TypeKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -107,7 +109,7 @@ public sealed class TypeKeywordJsonConverter : JsonConverter<TypeKeyword>
 	/// <returns>The converted value.</returns>
 	public override TypeKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var type = options.Read<SchemaValueType>(ref reader);
+		var type = options.Read(ref reader, JsonSchemaSerializerContext.Default.SchemaValueType);
 
 		return new TypeKeyword(type);
 	}
@@ -118,8 +120,7 @@ public sealed class TypeKeywordJsonConverter : JsonConverter<TypeKeyword>
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, TypeKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(TypeKeyword.Name);
-		JsonSerializer.Serialize(writer, value.Type, options);
+		options.Write(writer, value.Type, JsonSchemaSerializerContext.Default.SchemaValueType);
 	}
 }
 

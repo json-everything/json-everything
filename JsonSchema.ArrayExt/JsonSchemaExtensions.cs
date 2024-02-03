@@ -13,6 +13,13 @@ public static class JsonSchemaExtensions
 	/// </summary>
 	public static IEnumerable<JsonPointer>? GetUniqueKeys(this JsonSchema schema)
 	{
-		return schema.TryGetKeyword<UniqueKeysKeyword>(UniqueKeysKeyword.Name, out var k) ? k!.Keys : null;
+		return schema.TryGetKeyword<UniqueKeysKeyword>(UniqueKeysKeyword.Name, out var k) ? k.Keys : null;
+	}
+	/// <summary>
+	/// Gets the values in `uniqueKeys` if the keyword exists.
+	/// </summary>
+	public static IEnumerable<OrderingSpecifier>? GetOrdering(this JsonSchema schema)
+	{
+		return schema.TryGetKeyword<OrderingKeyword>(OrderingKeyword.Name, out var k) ? k.Specifiers : null;
 	}
 }

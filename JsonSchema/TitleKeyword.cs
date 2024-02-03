@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Schema;
 
@@ -58,7 +59,7 @@ public class TitleKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="TitleKeyword"/>.
 /// </summary>
-public sealed class TitleKeywordJsonConverter : JsonConverter<TitleKeyword>
+public sealed class TitleKeywordJsonConverter : WeaklyTypedJsonConverter<TitleKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="TitleKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -81,6 +82,6 @@ public sealed class TitleKeywordJsonConverter : JsonConverter<TitleKeyword>
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, TitleKeyword value, JsonSerializerOptions options)
 	{
-		writer.WriteString(TitleKeyword.Name, value.Value);
+		writer.WriteStringValue(value.Value);
 	}
 }

@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 
 using static Json.Schema.Generation.Tests.AssertionExtensions;
+// ReSharper disable ClassNeverInstantiated.Local
 
 namespace Json.Schema.Generation.Tests;
 

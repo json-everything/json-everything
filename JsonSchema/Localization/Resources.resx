@@ -126,9 +126,6 @@
   <data name="Error_ContainsTooMany" xml:space="preserve">
     <value>Value should contain no more than [[maximum]] matching items</value>
   </data>
-  <data name="Error_Dependencies" xml:space="preserve">
-    <value>Some properties failed their requirements: [[properties]]</value>
-  </data>
   <data name="Error_DependentRequired" xml:space="preserve">
     <value>Some required property dependencies are missing: [[missing]]</value>
   </data>
@@ -152,12 +149,6 @@
   </data>
   <data name="Error_FormatWithDetail" xml:space="preserve">
     <value>Value does not match format [[format]]: [[detail]]</value>
-  </data>
-  <data name="Error_InvalidItemsForm" xml:space="preserve">
-    <value>Array form of "items" is invalid for draft 2020-12 and later</value>
-  </data>
-  <data name="Error_InvalidPattern" xml:space="preserve">
-    <value>The regular expression [[pattern]] is either invalid or not supported</value>
   </data>
   <data name="Error_Maximum" xml:space="preserve">
     <value>[[received]] should be at most [[limit]]</value>

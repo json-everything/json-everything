@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Logic.Rules;
 
@@ -20,7 +22,7 @@ public class NotRule : Rule
 	/// <summary>
 	/// Creates a new instance of <see cref="NotRule"/> when '!' operator is detected within json logic.
 	/// </summary>
-	/// <param name="value">The value to to test.</param>
+	/// <param name="value">The value to test.</param>
 	protected internal NotRule(Rule value)
 	{
 		Value = value;
@@ -43,15 +45,13 @@ public class NotRule : Rule
 	}
 }
 
-internal class NotRuleJsonConverter : JsonConverter<NotRule>
+internal class NotRuleJsonConverter : WeaklyTypedJsonConverter<NotRule>
 {
 	public override NotRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var node = JsonSerializer.Deserialize<JsonNode?>(ref reader, options);
-	
-		var parameters = node is JsonArray
-			? node.Deserialize<Rule[]>()
-			: new[] { node.Deserialize<Rule>()! };
+		var parameters = reader.TokenType == JsonTokenType.StartArray
+			? options.ReadArray(ref reader, JsonLogicSerializerContext.Default.Rule)
+			: new[] { options.Read(ref reader, JsonLogicSerializerContext.Default.Rule)! };
 
 		if (parameters is not { Length: 1 })
 			throw new JsonException("The ! rule needs an array with a single parameter.");
@@ -63,7 +63,7 @@ internal class NotRuleJsonConverter : JsonConverter<NotRule>
 	{
 		writer.WriteStartObject();
 		writer.WritePropertyName("!");
-		writer.WriteRule(value.Value, options);
+		options.Write(writer, value.Value, JsonLogicSerializerContext.Default.Rule);
 		writer.WriteEndObject();
 	}
 }

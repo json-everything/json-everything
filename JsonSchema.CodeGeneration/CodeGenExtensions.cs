@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using Json.Schema.CodeGeneration.Language;
 using Json.Schema.CodeGeneration.Model;
@@ -10,7 +9,7 @@ namespace Json.Schema.CodeGeneration;
 /// <summary>
 /// Generates code from a <see cref="JsonSchema"/>.
 /// </summary>
-public static class CodeGenExtensions
+public static partial class CodeGenExtensions
 {
 	/// <summary>
 	/// Generates code from a <see cref="JsonSchema"/>.

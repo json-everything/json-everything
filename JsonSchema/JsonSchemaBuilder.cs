@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 
 namespace Json.Schema;
 
@@ -10,7 +9,7 @@ namespace Json.Schema;
 /// </summary>
 public class JsonSchemaBuilder
 {
-	private readonly Dictionary<string, IJsonSchemaKeyword> _keywords = new();
+	private readonly Dictionary<string, IJsonSchemaKeyword> _keywords = [];
 	private Uri? _baseUri;
 
 	internal void TrySetBaseUri(Uri uri)

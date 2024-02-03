@@ -24,7 +24,6 @@ public static class JsonNodeExtensions
 		if (node is JsonValue value)
 		{
 			var obj = value.GetValue<object>();
-			if (obj is JsonNull) return SchemaValueType.Null;
 			if (obj is JsonElement element) return GetSchemaValueType(element);
 			var objType = obj.GetType();
 			if (objType.IsInteger()) return SchemaValueType.Integer;
@@ -50,20 +49,4 @@ public static class JsonNodeExtensions
 			JsonValueKind.Null => SchemaValueType.Null,
 			_ => throw new ArgumentOutOfRangeException(nameof(element.ValueKind), element.ValueKind, null)
 		};
-
-	/// <summary>
-	/// Verifies that a <see cref="JsonObject"/> doesn't have any duplicate keys and can
-	/// therefore be processed.
-	/// </summary>
-	/// <param name="obj">The object.</param>
-	/// <returns>true if the the object can be processed; false otherwise.</returns>
-	/// <remarks>See https://github.com/dotnet/runtime/issues/70604 for more information.</remarks>
-	public static bool VerifyJsonObject(this JsonObject obj)
-	{
-		// Basically try to get any value and see if it throws an exception.
-		if (!obj.TryGetValue("_", out _, out var e) && e != null)
-			throw new JsonException("This object has a duplicate key and cannot be processed.", e);
-
-		return true;
-	}
 }

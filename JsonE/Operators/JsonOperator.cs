@@ -10,7 +10,11 @@ namespace Json.JsonE.Operators;
 internal class JsonOperator : IOperator
 {
 	private static readonly JsonSerializerOptions _serializerOptions =
-		new() { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping };
+		new()
+		{
+			TypeInfoResolverChain = { JsonESerializerContext.Default },
+			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+		};
 
 	public const string Name = "$json";
 
@@ -36,7 +40,7 @@ internal class JsonOperator : IOperator
 		{
 			dict[kvp.Key] = Sort(kvp.Value);
 		}
-
-		return JsonSerializer.SerializeToNode(dict);
+		
+		return JsonSerializer.SerializeToNode(dict!, JsonESerializerContext.Default.SortedDictionaryStringJsonNode);
 	}
 }

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+	<TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
     <LangVersion>latest</LangVersion>
     <RootNamespace>Json.Schema</RootNamespace>
     <PackageId>JsonSchema.Net</PackageId>
@@ -16,9 +16,9 @@
     <PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
     <RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>
     <PackageTags>json-schema validation schema json</PackageTags>
-    <Version>5.5.1</Version>
-    <FileVersion>5.5.1.0</FileVersion>
-    <AssemblyVersion>5.0.0.0</AssemblyVersion>
+    <Version>6.0.0</Version>
+    <FileVersion>6.0.0.0</FileVersion>
+    <AssemblyVersion>6.0.0.0</AssemblyVersion>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <AssemblyName>JsonSchema.Net</AssemblyName>
     <PackageIcon>json-logo-256.png</PackageIcon>
@@ -32,7 +32,10 @@
     <AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
     <Nullable>enable</Nullable>
     <Configurations>Debug;Release;Localization</Configurations>
-    <DefineConstants>$(DefineConstants)TRACE;JETBRAINS_ANNOTATIONS</DefineConstants>
+    <DefineConstants>$(DefineConstants)TRACE</DefineConstants>
+    <NoWarn>IDE0290</NoWarn>
+    <IsAotCompatible Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net7.0'))">true</IsAotCompatible>	  
+    <PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
@@ -40,7 +43,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="JetBrains.Annotations" Version="2021.2.0" />
+    <PackageReference Include="PolySharp" Version="1.14.1" PrivateAssets="all" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
   </ItemGroup>
 

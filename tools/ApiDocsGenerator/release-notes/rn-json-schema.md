@@ -4,29 +4,60 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "09.01"
 ---
-# [5.5.1](https://github.com/gregsdennis/json-everything/pull/616) {#release-pointer-5.5.1}
+# [6.0.0](https://github.com/gregsdennis/json-everything/pull/619) {#release-schema-6.0.0}
+
+Updated for multi-framework support with .Net Standard 2.0 and .Net 8 with Native AOT support, including updating _System.Text.Json_ from v6 to v8.
+
+Most of the changes to support Native AOT involve either updating internal implementation or creating overloads that do.  Whatever could not be updated was marked as requiring reflection, which will generate warnings when building Native AOT applications.
+
+## Breaking changes
+
+- Dropping support for .Net Standard 3.1 - May still be used, but exact behavior cannot be guaranteed. 
+- Keyword converters are no longer responsible for writing their property name when serializing.  This is now handled by `JsonSchema`'s converter.
+- `ErrorMessages.Dependencies` removed.  Was previously marked obsolete.  Use `.DependentSchemas` and `.DependentRequired` when customizing the message for `dependencies`.
+- `ErrorMessages.InvalidItemsForm` removed.  Invalid form of `items` results in an exception.
+- `ErrorMessages.InvalidPattern` removed.  Invalid patterns result in an exception.
+- `JsonSchemaBuilderExtensions.Validate()` removed.  Was previously marked obsolete.
+- `JsonSchemaExtensions.Validate()` and overloads removed.  Were previously marked obsolete.
+- `JsonNodeExtensions.VerifyJsonObject()` removed.  Duplicate keys throws an exception.
+
+## Additions
+
+- `JsonSchema.TypeInfoResolver` to expose all of the type resolvers contained in the library.  Can be used to create a combined `SerializationOptions` by using a `Json.More.TypeResolverOptionsManager` in your `JsonSerializerContext`.
+- `DependsOnAnnotationsFromAttribute<T>` (non-generic version still exists)
+
+## Other chanages
+
+- `JsonSchema.FromFile(string, JsonSerializerOptions?)` marked AOT-incompatible; added `.FromFile(string)`.
+- `JsonSchema.FromText(string, JsonSerializerOptions?)` marked AOT-incompatible; added `.FromText(string)`.
+- `JsonSchema.FromStream(string, JsonSerializerOptions?)` marked AOT-incompatible; added `.FromStream(string)`.
+- `SchemaKeywordRegistry.Register<T>()` marked AOT-incompatible, usages to be replaced with `.Register<T>(JsonSerializerContext)`.
+- `[JsonSchema]` attribute marked AOT-incompatible.
+- Methods in `ValidatingConverter` marked AOT-incompatible.
+
+# [5.5.1](https://github.com/gregsdennis/json-everything/pull/616) {#release-schema-5.5.1}
 
 Fix typo in `minProperties` error message.  Thanks to [@ArmaanMcleod](https://github.com/ArmaanMcleod) for submitting this fix.
 
-# [5.5.0](https://github.com/gregsdennis/json-everything/pull/606) {#release-pointer-5.5.0}
+# [5.5.0](https://github.com/gregsdennis/json-everything/pull/606) {#release-schema-5.5.0}
 
 [#604](https://github.com/gregsdennis/json-everything/pull/604) - Performance improvements.  Thanks to [@danielstarck](https://github.com/danielstarck) for contributing these.
 
 [#605](https://github.com/gregsdennis/json-everything/pull/605) - Support external types for validating JSON converter.
 
-# [5.4.3](https://github.com/gregsdennis/json-everything/pull/601) {#release-pointer-5.4.3}
+# [5.4.3](https://github.com/gregsdennis/json-everything/pull/601) {#release-schema-5.4.3}
 
 [#600](https://github.com/gregsdennis/json-everything/issues/600) - Reported schema location not correct for JSON Schemas embedded within non-schema JSON documents (e.g. OpenAPI).  Thanks to [@Fresa](https://github.com/Fresa) for reporting.
 
-# [5.4.2](https://github.com/gregsdennis/json-everything/pull/575) {#release-pointer-5.4.2}
+# [5.4.2](https://github.com/gregsdennis/json-everything/pull/575) {#release-schema-5.4.2}
 
 [#574](https://github.com/gregsdennis/json-everything/issues/574) - Bundling multi-schema recursion throws an exception.  Thanks to [@Tommyknocker1982](https://github.com/Tommyknocker1982) for reporting.
 
-# [5.4.1](https://github.com/gregsdennis/json-everything/pull/572) {#release-pointer-5.4.1}
+# [5.4.1](https://github.com/gregsdennis/json-everything/pull/572) {#release-schema-5.4.1}
 
 [#570](https://github.com/gregsdennis/json-everything/issues/570) - RFC 3339 date/times require the time zone offset.  Thanks to [@danielstarck](https://github.com/danielstarck) for identifying and fixing this issue.
 
-# [5.4.0](https://github.com/gregsdennis/json-everything/pull/565) {#release-pointer-5.4.0}
+# [5.4.0](https://github.com/gregsdennis/json-everything/pull/565) {#release-schema-5.4.0}
 
 [#549](https://github.com/gregsdennis/json-everything/issues/549) - Expose JSON converters for all types to support JSON source generation.
 

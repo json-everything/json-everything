@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Logic.Rules;
 
@@ -38,15 +40,13 @@ public class LogRule : Rule
 	}
 }
 
-internal class LogRuleJsonConverter : JsonConverter<LogRule>
+internal class LogRuleJsonConverter : WeaklyTypedJsonConverter<LogRule>
 {
 	public override LogRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var node = JsonSerializer.Deserialize<JsonNode?>(ref reader, options);
-
-		var parameters = node is JsonArray
-			? node.Deserialize<Rule[]>()
-			: new[] { node.Deserialize<Rule>()! };
+		var parameters = reader.TokenType == JsonTokenType.StartArray
+			? options.ReadArray(ref reader, JsonLogicSerializerContext.Default.Rule)
+			: new[] { options.Read(ref reader, JsonLogicSerializerContext.Default.Rule)! };
 
 		return new LogRule(parameters!.Length == 0
 			? new LiteralRule("")
@@ -57,7 +57,7 @@ internal class LogRuleJsonConverter : JsonConverter<LogRule>
 	{
 		writer.WriteStartObject();
 		writer.WritePropertyName("log");
-		writer.WriteRule(value.Log, options);
+		options.Write(writer, value.Log, JsonLogicSerializerContext.Default.Rule);
 		writer.WriteEndObject();
 	}
 }

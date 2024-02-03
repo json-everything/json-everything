@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Json.Schema.Generation.Intents;
 
 namespace Json.Schema.Generation.Refiners;

@@ -272,7 +272,7 @@ public static class XmlDocId
 	{
 		return info.DeclaringType!.IsGenericType
 			? info.DeclaringType.GetGenericArguments().Select(t => t.Name).ToArray()
-			: Array.Empty<string>();
+			: [];
 	}
 
 	private static string GenericParamPrefix(Type type, string[]? genericClassParams)

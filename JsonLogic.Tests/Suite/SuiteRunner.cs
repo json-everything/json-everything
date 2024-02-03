@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Text.Encodings.Web;
 using System.Text.Json;
-using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using Json.More;
 using NUnit.Framework;
@@ -16,11 +14,11 @@ public class SuiteRunner
 {
 	public static IEnumerable<TestCaseData> Suite()
 	{
-		return Task.Run(async () =>
+		var text = Task.Run(async () =>
 		{
 			var testsPath = Path.Combine(TestContext.CurrentContext.WorkDirectory, "Files\\tests.json").AdjustForPlatform();
 
-			string content = null!;
+			string? content = null;
 			try
 			{
 				using var client = new HttpClient();
@@ -37,18 +35,19 @@ public class SuiteRunner
 
 				Console.WriteLine(e);
 			}
+			return content;
 
-
-			var testSuite = JsonSerializer.Deserialize<TestSuite>(content);
-
-			return testSuite!.Tests.Select(t => new TestCaseData(t) { TestName = $"{t.Logic}  |  {t.Data.AsJsonString()}  |  {t.Expected.AsJsonString()}" });
 		}).Result;
+
+		var testSuite = JsonSerializer.Deserialize(text, TestSerializerContext.Default.TestSuite);
+
+		return testSuite!.Tests.Select(t => new TestCaseData(t) { TestName = $"{t.Logic}  |  {t.Data.AsJsonString()}  |  {t.Expected.AsJsonString()}" });
 	}
 
 	[TestCaseSource(nameof(Suite))]
 	public void Run(Test test)
 	{
-		var rule = JsonSerializer.Deserialize<Rule>(test.Logic);
+		var rule = JsonSerializer.Deserialize(test.Logic, TestSerializerContext.Default.Rule);
 
 		if (rule == null)
 		{
@@ -58,28 +57,4 @@ public class SuiteRunner
 
 		JsonAssert.AreEquivalent(test.Expected, rule.Apply(test.Data));
 	}
-
-	private static readonly JsonSerializerOptions _spellingTestSerializerOptions =
-		new()
-		{
-			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-			Converters = { new LogicComponentConverter { SaveSource = false } }
-		};
-
-	[TestCaseSource(nameof(Suite))]
-	public void SpellingTest(Test test)
-	{
-		var node = JsonNode.Parse(test.Logic);
-		var rule = JsonSerializer.Deserialize<Rule>(test.Logic, _spellingTestSerializerOptions);
-
-		var serialized = JsonSerializer.SerializeToNode(rule);
-
-		if (node.IsEquivalentTo(serialized)) return;
-
-		Console.WriteLine($"Expected: {node.AsJsonString(_spellingTestSerializerOptions)}");
-		Console.WriteLine($"Actual:   {serialized.AsJsonString(_spellingTestSerializerOptions)}");
-		Assert.Inconclusive();
-	}
-
-
 }

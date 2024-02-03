@@ -19,11 +19,11 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Applicator201909Id)]
 [Vocabulary(Vocabularies.Applicator202012Id)]
 [Vocabulary(Vocabularies.ApplicatorNextId)]
-[DependsOnAnnotationsFrom(typeof(PropertiesKeyword))]
-[DependsOnAnnotationsFrom(typeof(PatternPropertiesKeyword))]
-[DependsOnAnnotationsFrom(typeof(AdditionalPropertiesKeyword))]
-[DependsOnAnnotationsFrom(typeof(ContainsKeyword))]
-[DependsOnAnnotationsFrom(typeof(UnevaluatedPropertiesKeyword))]
+[DependsOnAnnotationsFrom<PropertiesKeyword>]
+[DependsOnAnnotationsFrom<PatternPropertiesKeyword>]
+[DependsOnAnnotationsFrom<AdditionalPropertiesKeyword>]
+[DependsOnAnnotationsFrom<ContainsKeyword>]
+[DependsOnAnnotationsFrom<UnevaluatedPropertiesKeyword>]
 [JsonConverter(typeof(UnevaluatedPropertiesKeywordJsonConverter))]
 public class UnevaluatedPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer
 {
@@ -117,7 +117,7 @@ public class UnevaluatedPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer
 /// <summary>
 /// JSON converter for <see cref="UnevaluatedPropertiesKeyword"/>.
 /// </summary>
-public sealed class UnevaluatedPropertiesKeywordJsonConverter : JsonConverter<UnevaluatedPropertiesKeyword>
+public sealed class UnevaluatedPropertiesKeywordJsonConverter : WeaklyTypedJsonConverter<UnevaluatedPropertiesKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="UnevaluatedPropertiesKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -126,7 +126,7 @@ public sealed class UnevaluatedPropertiesKeywordJsonConverter : JsonConverter<Un
 	/// <returns>The converted value.</returns>
 	public override UnevaluatedPropertiesKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var schema = options.Read<JsonSchema>(ref reader)!;
+		var schema = options.Read(ref reader, JsonSchemaSerializerContext.Default.JsonSchema)!;
 
 		return new UnevaluatedPropertiesKeyword(schema);
 	}
@@ -137,7 +137,6 @@ public sealed class UnevaluatedPropertiesKeywordJsonConverter : JsonConverter<Un
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, UnevaluatedPropertiesKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(UnevaluatedPropertiesKeyword.Name);
-		JsonSerializer.Serialize(writer, value.Schema, options);
+		options.Write(writer, value.Schema, JsonSchemaSerializerContext.Default.JsonSchema);
 	}
 }

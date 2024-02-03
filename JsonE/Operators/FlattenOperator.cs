@@ -10,18 +10,6 @@ internal class FlattenOperator : IOperator
 { 
 	public const string Name = "$flatten";
 
-	public void Validate(JsonNode? template)
-	{
-		var obj = template!.AsObject();
-
-		obj.VerifyNoUndefinedProperties(Name);
-
-		var parameter = obj[Name];
-		if (parameter.IsTemplateOr<JsonArray>()) return;
-
-		throw new TemplateException(IncorrectValueType(Name, "an array"));
-	}
-
 	public JsonNode? Evaluate(JsonNode? template, EvaluationContext context)
 	{
 		var obj = template!.AsObject();

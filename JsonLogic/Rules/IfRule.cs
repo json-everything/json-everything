@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Logic.Rules;
 
@@ -81,11 +83,11 @@ public class IfRule : Rule
 	}
 }
 
-internal class IfRuleJsonConverter : JsonConverter<IfRule>
+internal class IfRuleJsonConverter : WeaklyTypedJsonConverter<IfRule>
 {
 	public override IfRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = JsonSerializer.Deserialize<Rule[]>(ref reader, options);
+		var parameters = options.ReadArray(ref reader, JsonLogicSerializerContext.Default.Rule);
 
 		if (parameters == null) return new IfRule();
 
@@ -96,7 +98,7 @@ internal class IfRuleJsonConverter : JsonConverter<IfRule>
 	{
 		writer.WriteStartObject();
 		writer.WritePropertyName("if");
-		writer.WriteRules(value.Components, options);
+		options.WriteList(writer, value.Components, JsonLogicSerializerContext.Default.Rule);
 		writer.WriteEndObject();
 	}
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Json.Pointer;
@@ -65,7 +66,7 @@ public class UriIdentifier : IDataResourceIdentifier
 			}
 
 			var rootSchema = (JsonSchema?) registry.Get(root.SchemaLocation);
-			data = JsonSerializer.SerializeToNode(rootSchema);
+			data = JsonSerializer.SerializeToNode(rootSchema, JsonSchemaDataSerializerContext.Default.JsonSchema!);
 		}
 
 		if (!string.IsNullOrEmpty(fragment))
@@ -87,7 +88,7 @@ public class UriIdentifier : IDataResourceIdentifier
 	{
 		if (DataKeyword.ExternalDataRegistry.TryGetValue(uri, out node))
 			// protect against the off-hand that someone registered a null.
-			return node != null;
+			return node != null!;
 
 		if (DataKeyword.Fetch == null)
 		{

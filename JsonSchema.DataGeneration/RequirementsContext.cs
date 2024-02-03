@@ -67,9 +67,9 @@ internal class RequirementsContext
 		if (other.NumberRanges != null)
 			NumberRanges = new NumberRangeSet(other.NumberRanges);
 		if (other.Multiples != null)
-			Multiples = other.Multiples.ToList();
+			Multiples = [.. other.Multiples];
 		if (other.AntiMultiples != null)
-			AntiMultiples = other.AntiMultiples.ToList();
+			AntiMultiples = [.. other.AntiMultiples];
 
 		if (other.StringLengths != null)
 			StringLengths = new NumberRangeSet(other.StringLengths);
@@ -99,9 +99,9 @@ internal class RequirementsContext
 		if (other.PropertyCounts != null)
 			PropertyCounts = other.PropertyCounts;
 		if (other.RequiredProperties != null)
-			RequiredProperties = other.RequiredProperties.ToList();
+			RequiredProperties = [.. other.RequiredProperties];
 		if (other.AvoidProperties != null)
-			AvoidProperties = other.AvoidProperties.ToList();
+			AvoidProperties = [.. other.AvoidProperties];
 	}
 
 	public IEnumerable<RequirementsContext> GetAllVariations()
@@ -204,7 +204,7 @@ internal class RequirementsContext
 			if (Properties != null)
 			{
 				context.Properties = Properties.ToDictionary(x => x.Key, x => x.Value.Break());
-				context.RequiredProperties ??= new List<string>();
+				context.RequiredProperties ??= [];
 				context.RequiredProperties.AddRange(context.Properties.Keys);
 				broken = true;
 			}

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json.Nodes;
 using Json.Schema.Generation.Intents;
 
 namespace Json.Schema.Generation;
@@ -14,13 +15,76 @@ public class DefaultAttribute : ConditionalAttribute, IAttributeHandler
 	/// <summary>
 	/// The value.
 	/// </summary>
-	public object? Value { get; }
+	public JsonNode? Value { get; }
 
 	/// <summary>
 	/// Creates a new <see cref="DefaultAttribute"/> instance.
 	/// </summary>
 	/// <param name="value">The value.</param>
-	public DefaultAttribute(object? value)
+	public DefaultAttribute(int value)
+	{
+		Value = value;
+	}
+
+	/// <summary>
+	/// Creates a new <see cref="DefaultAttribute"/> instance.
+	/// </summary>
+	/// <param name="value">The value.</param>
+	public DefaultAttribute(uint value)
+	{
+		Value = value;
+	}
+
+	/// <summary>
+	/// Creates a new <see cref="DefaultAttribute"/> instance.
+	/// </summary>
+	/// <param name="value">The value.</param>
+	public DefaultAttribute(long value)
+	{
+		Value = value;
+	}
+
+	/// <summary>
+	/// Creates a new <see cref="DefaultAttribute"/> instance.
+	/// </summary>
+	/// <param name="value">The value.</param>
+	public DefaultAttribute(ulong value)
+	{
+		Value = value;
+	}
+
+	/// <summary>
+	/// Creates a new <see cref="DefaultAttribute"/> instance.
+	/// </summary>
+	/// <param name="value">The value.</param>
+	public DefaultAttribute(float value)
+	{
+		Value = value;
+	}
+
+	/// <summary>
+	/// Creates a new <see cref="DefaultAttribute"/> instance.
+	/// </summary>
+	/// <param name="value">The value.</param>
+	public DefaultAttribute(double value)
+	{
+		Value = value;
+	}
+
+	/// <summary>
+	/// Creates a new <see cref="DefaultAttribute"/> instance.
+	/// </summary>
+	/// <param name="value">The value.</param>
+	public DefaultAttribute(string? value)
+	{
+		Value = value;
+	}
+
+	/// <summary>
+	/// Creates a new <see cref="DefaultAttribute"/> instance.
+	/// </summary>
+	/// <param name="value">The value.</param>
+	public DefaultAttribute(bool value)
 	{
 		Value = value;
 	}

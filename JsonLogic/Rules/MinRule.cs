@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -29,8 +30,7 @@ public class MinRule : Rule
 	/// <param name="more">A sequence of numbers.</param>
 	protected internal MinRule(Rule a, params Rule[] more)
 	{
-		Items = new List<Rule> { a };
-		Items.AddRange(more);
+		Items = [a, .. more];
 	}
 
 	/// <summary>
@@ -46,17 +46,17 @@ public class MinRule : Rule
 	{
 		var items = Items.Select(i => i.Apply(data, contextData)).Select(e => new { Type = e.JsonType(), Value = e.Numberify() }).ToList();
 		var nulls = items.Where(i => i.Value == null);
-		if (nulls.Any()) return JsonNull.SignalNode;
+		if (nulls.Any()) return null;
 
 		return items.Min(i => i.Value!.Value);
 	}
 }
 
-internal class MinRuleJsonConverter : JsonConverter<MinRule>
+internal class MinRuleJsonConverter : WeaklyTypedJsonConverter<MinRule>
 {
 	public override MinRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = JsonSerializer.Deserialize<Rule[]>(ref reader, options);
+		var parameters = options.ReadArray(ref reader, JsonLogicSerializerContext.Default.Rule);
 
 		if (parameters == null || parameters.Length == 0)
 			throw new JsonException("The min rule needs an array of parameters.");
@@ -68,7 +68,7 @@ internal class MinRuleJsonConverter : JsonConverter<MinRule>
 	{
 		writer.WriteStartObject();
 		writer.WritePropertyName("min");
-		writer.WriteRules(value.Items, options);
+		options.WriteList(writer, value.Items, JsonLogicSerializerContext.Default.Rule);
 		writer.WriteEndObject();
 	}
 }

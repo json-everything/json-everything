@@ -1,10 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using JetBrains.Annotations;
+﻿using System.Linq;
 
 namespace Json.Schema.DataGeneration.Requirements;
 
-[UsedImplicitly]
 internal class ConditionalRequirementsGatherer : IRequirementsGatherer
 {
 	public void AddRequirements(RequirementsContext context, JsonSchema schema)
@@ -42,7 +39,7 @@ internal class ConditionalRequirementsGatherer : IRequirementsGatherer
 					context.Options.Add(ifelse);
 				}
 				else
-					context.Options = new List<RequirementsContext> { ifthen, ifelse };
+					context.Options = [ifthen, ifelse];
 			}
 		}
 	}

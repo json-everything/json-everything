@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Logic.Rules;
 
@@ -50,11 +52,11 @@ public class LooseNotEqualsRule : Rule
 	}
 }
 
-internal class LooseNotEqualsRuleJsonConverter : JsonConverter<LooseNotEqualsRule>
+internal class LooseNotEqualsRuleJsonConverter : WeaklyTypedJsonConverter<LooseNotEqualsRule>
 {
 	public override LooseNotEqualsRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = JsonSerializer.Deserialize<Rule[]>(ref reader, options);
+		var parameters = options.ReadArray(ref reader, JsonLogicSerializerContext.Default.Rule);
 
 		if (parameters is not { Length: 2 })
 			throw new JsonException("The != rule needs an array with 2 parameters.");
@@ -67,8 +69,8 @@ internal class LooseNotEqualsRuleJsonConverter : JsonConverter<LooseNotEqualsRul
 		writer.WriteStartObject();
 		writer.WritePropertyName("!=");
 		writer.WriteStartArray();
-		writer.WriteRule(value.A, options);
-		writer.WriteRule(value.B, options);
+		options.Write(writer, value.A, JsonLogicSerializerContext.Default.Rule);
+		options.Write(writer, value.B, JsonLogicSerializerContext.Default.Rule);
 		writer.WriteEndArray();
 		writer.WriteEndObject();
 	}

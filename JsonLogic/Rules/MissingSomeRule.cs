@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -50,7 +51,7 @@ public class MissingSomeRule : Rule
 		var requiredCount = RequiredCount.Apply(data, contextData).Numberify() ?? 1;
 		var components = Components.Apply(data, contextData);
 		if (components is not JsonArray arr)
-			arr = new JsonArray(components.Copy());
+			arr = new JsonArray(components?.DeepClone());
 
 		var expected = arr.SelectMany(e => e.Flatten()).ToList();
 
@@ -83,11 +84,11 @@ public class MissingSomeRule : Rule
 	}
 }
 
-internal class MissingSomeRuleJsonConverter : JsonConverter<MissingSomeRule>
+internal class MissingSomeRuleJsonConverter : WeaklyTypedJsonConverter<MissingSomeRule>
 {
 	public override MissingSomeRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = JsonSerializer.Deserialize<Rule[]>(ref reader, options);
+		var parameters = options.ReadArray(ref reader, JsonLogicSerializerContext.Default.Rule);
 
 		if (parameters is not { Length: 2 })
 			throw new JsonException("The missing_some rule needs an array with 2 parameters.");
@@ -100,8 +101,8 @@ internal class MissingSomeRuleJsonConverter : JsonConverter<MissingSomeRule>
 		writer.WriteStartObject();
 		writer.WritePropertyName("missing_some");
 		writer.WriteStartArray();
-		writer.WriteRule(value.RequiredCount, options);
-		writer.WriteRule(value.Components, options);
+		options.Write(writer, value.RequiredCount, JsonLogicSerializerContext.Default.Rule);
+		options.Write(writer, value.Components, JsonLogicSerializerContext.Default.Rule);
 		writer.WriteEndArray();
 		writer.WriteEndObject();
 	}

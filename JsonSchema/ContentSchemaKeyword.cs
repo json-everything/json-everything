@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Json.More;
@@ -52,14 +53,14 @@ public class ContentSchemaKeyword : IJsonSchemaKeyword, ISchemaContainer
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		EvaluationContext context)
 	{
-		return KeywordConstraint.SimpleAnnotation(Name, JsonSerializer.SerializeToNode(Schema));
+		return KeywordConstraint.SimpleAnnotation(Name, JsonSerializer.SerializeToNode(Schema, JsonSchemaSerializerContext.Default.JsonSchema));
 	}
 }
 
 /// <summary>
 /// JSON converter for <see cref="ContentSchemaKeyword"/>.
 /// </summary>
-public sealed class ContentSchemaKeywordJsonConverter : JsonConverter<ContentSchemaKeyword>
+public sealed class ContentSchemaKeywordJsonConverter : WeaklyTypedJsonConverter<ContentSchemaKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="ContentSchemaKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -68,7 +69,7 @@ public sealed class ContentSchemaKeywordJsonConverter : JsonConverter<ContentSch
 	/// <returns>The converted value.</returns>
 	public override ContentSchemaKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var schema = options.Read<JsonSchema>(ref reader)!;
+		var schema = options.Read(ref reader, JsonSchemaSerializerContext.Default.JsonSchema)!;
 
 		return new ContentSchemaKeyword(schema);
 	}
@@ -79,7 +80,6 @@ public sealed class ContentSchemaKeywordJsonConverter : JsonConverter<ContentSch
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, ContentSchemaKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(ContentSchemaKeyword.Name);
-		JsonSerializer.Serialize(writer, value.Schema, options);
+		options.Write(writer, value.Schema, JsonSchemaSerializerContext.Default.JsonSchema);
 	}
 }

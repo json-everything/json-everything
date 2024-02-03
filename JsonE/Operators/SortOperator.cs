@@ -11,7 +11,6 @@ namespace Json.JsonE.Operators;
 internal class SortOperator : IOperator
 {
 	private static readonly Regex _byForm = new(@"^by\(\s*(?<var>[a-zA-Z_][a-zA-Z0-9_]*)\s*\)");
-	//private static readonly ExpressionNode _defaultAccessorExpression = ExpressionParser.Parse("x".AsSpan());
 
 	public const string Name = "$sort";
 
@@ -42,7 +41,7 @@ internal class SortOperator : IOperator
 
 		var itemContext = new JsonObject
 		{
-			[variableName] = value[0].Copy()
+			[variableName] = value[0].Clone()
 		};
 		context.Push(itemContext);
 		var firstSortValue = sortExpression.Evaluate(context);
@@ -58,7 +57,7 @@ internal class SortOperator : IOperator
 		{
 			var sorted = value.OrderBy(x =>
 			{
-				itemContext[variableName] = x.Copy();
+				itemContext[variableName] = x.Clone();
 				return sortExpression.Evaluate(context);
 			}, comparer!).ToJsonArray();
 
@@ -80,7 +79,7 @@ internal class JsonNodeCharComparer : IComparer<JsonNode>
 
 	private JsonNodeCharComparer(){}
 
-	public int Compare(JsonNode x, JsonNode y)
+	public int Compare(JsonNode? x, JsonNode? y)
 	{
 		var sX = (x as JsonValue)?.GetValue<char>() ?? throw new TemplateException(CommonErrors.SortSameType());
 		var sY = (y as JsonValue)?.GetValue<char>() ?? throw new TemplateException(CommonErrors.SortSameType());
@@ -95,7 +94,7 @@ internal class JsonNodeStringComparer : IComparer<JsonNode>
 
 	private JsonNodeStringComparer(){}
 
-	public int Compare(JsonNode x, JsonNode y)
+	public int Compare(JsonNode? x, JsonNode? y)
 	{
 		var sX = (x as JsonValue)?.GetValue<string>() ?? throw new TemplateException(CommonErrors.SortSameType());
 		var sY = (y as JsonValue)?.GetValue<string>() ?? throw new TemplateException(CommonErrors.SortSameType());
@@ -110,7 +109,7 @@ internal class JsonNodeNumberComparer : IComparer<JsonNode>
 
 	private JsonNodeNumberComparer(){}
 
-	public int Compare(JsonNode x, JsonNode y)
+	public int Compare(JsonNode? x, JsonNode? y)
 	{
 		var nX = (x as JsonValue)?.GetNumber() ?? throw new TemplateException(CommonErrors.SortSameType());
 		var nY = (y as JsonValue)?.GetNumber() ?? throw new TemplateException(CommonErrors.SortSameType());

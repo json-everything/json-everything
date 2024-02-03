@@ -67,16 +67,18 @@ public class MultipleOfKeyword : IJsonSchemaKeyword
 			return;
 		}
 
-		var number = evaluation.LocalInstance!.AsValue().GetNumber();
+		var number = evaluation.LocalInstance!.AsValue().GetNumber()!.Value;
 		if (number % Value != 0)
-			evaluation.Results.Fail(Name, ErrorMessages.GetMultipleOf(context.Options.Culture), ("received", number), ("divisor", Value));
+			evaluation.Results.Fail(Name, ErrorMessages.GetMultipleOf(context.Options.Culture)
+				.ReplaceToken("received", number)
+				.ReplaceToken("divisor", Value));
 	}
 }
 
 /// <summary>
 /// JSON converter for <see cref="MultipleOfKeyword"/>.
 /// </summary>
-public sealed class MultipleOfKeywordJsonConverter : JsonConverter<MultipleOfKeyword>
+public sealed class MultipleOfKeywordJsonConverter : WeaklyTypedJsonConverter<MultipleOfKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="MultipleOfKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -99,7 +101,7 @@ public sealed class MultipleOfKeywordJsonConverter : JsonConverter<MultipleOfKey
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, MultipleOfKeyword value, JsonSerializerOptions options)
 	{
-		writer.WriteNumber(MultipleOfKeyword.Name, value.Value);
+		writer.WriteNumberValue(value.Value);
 	}
 }
 

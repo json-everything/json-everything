@@ -13,7 +13,7 @@ public static class Vocabularies
 	/// <summary>
 	/// The data vocabulary.
 	/// </summary>
-	public static readonly Vocabulary Data = new(DataId, typeof(DataKeyword));
+	public static readonly Vocabulary Data = new(DataId, typeof(DataKeyword), typeof(OptionalDataKeyword));
 
 	/// <summary>
 	/// Registers the all components required to use the data vocabulary.
@@ -24,7 +24,7 @@ public static class Vocabularies
 		schemaRegistry ??= SchemaRegistry.Global;
 
 		vocabRegistry.Register(Data);
-		SchemaKeywordRegistry.Register<DataKeyword>();
+		SchemaKeywordRegistry.Register<DataKeyword>(JsonSchemaDataSerializerContext.Default);
 		schemaRegistry.Register(MetaSchemas.Data);
 		schemaRegistry.Register(MetaSchemas.Data_202012);
 	}

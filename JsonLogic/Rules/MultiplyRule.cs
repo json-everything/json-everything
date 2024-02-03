@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -27,8 +28,7 @@ public class MultiplyRule : Rule
 	/// <param name="more">Sequence of values to multiply by.</param>
 	protected internal MultiplyRule(Rule a, params Rule[] more)
 	{
-		Items = new List<Rule> { a };
-		Items.AddRange(more);
+		Items = [a, .. more];
 	}
 
 	/// <summary>
@@ -50,7 +50,7 @@ public class MultiplyRule : Rule
 
 			var number = value.Numberify();
 
-			if (number == null) return JsonNull.SignalNode;
+			if (number == null) return null;
 
 			result *= number.Value;
 		}
@@ -59,11 +59,11 @@ public class MultiplyRule : Rule
 	}
 }
 
-internal class MultiplyRuleJsonConverter : JsonConverter<MultiplyRule>
+internal class MultiplyRuleJsonConverter : WeaklyTypedJsonConverter<MultiplyRule>
 {
 	public override MultiplyRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = JsonSerializer.Deserialize<Rule[]>(ref reader, options);
+		var parameters = options.ReadArray(ref reader, JsonLogicSerializerContext.Default.Rule);
 
 		if (parameters == null || parameters.Length == 0)
 			throw new JsonException("The * rule needs an array of parameters.");
@@ -75,7 +75,7 @@ internal class MultiplyRuleJsonConverter : JsonConverter<MultiplyRule>
 	{
 		writer.WriteStartObject();
 		writer.WritePropertyName("*");
-		writer.WriteRules(value.Items, options);
+		options.WriteList(writer, value.Items, JsonLogicSerializerContext.Default.Rule);
 		writer.WriteEndObject();
 	}
 }

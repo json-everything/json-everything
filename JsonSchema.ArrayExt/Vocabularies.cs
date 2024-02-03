@@ -24,8 +24,8 @@ public static class Vocabularies
 		schemaRegistry ??= SchemaRegistry.Global;
 
 		vocabRegistry.Register(ArrayExt);
-		SchemaKeywordRegistry.Register<UniqueKeysKeyword>();
-		SchemaKeywordRegistry.Register<OrderingKeyword>();
+		SchemaKeywordRegistry.Register<UniqueKeysKeyword>(JsonSchemaArrayExtSerializerContext.Default);
+		SchemaKeywordRegistry.Register<OrderingKeyword>(JsonSchemaArrayExtSerializerContext.Default);
 		schemaRegistry.Register(MetaSchemas.ArrayExt);
 		schemaRegistry.Register(MetaSchemas.ArrayExt_202012);
 	}

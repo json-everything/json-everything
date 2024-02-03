@@ -62,7 +62,7 @@ public class DefaultKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="DefaultKeyword"/>.
 /// </summary>
-public sealed class DefaultKeywordJsonConverter : JsonConverter<DefaultKeyword>
+public sealed class DefaultKeywordJsonConverter : WeaklyTypedJsonConverter<DefaultKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="DefaultKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -71,7 +71,7 @@ public sealed class DefaultKeywordJsonConverter : JsonConverter<DefaultKeyword>
 	/// <returns>The converted value.</returns>
 	public override DefaultKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var node = options.Read<JsonNode>(ref reader);
+		var node = options.Read(ref reader, JsonSchemaSerializerContext.Default.JsonNode);
 
 		return new DefaultKeyword(node);
 	}
@@ -82,7 +82,6 @@ public sealed class DefaultKeywordJsonConverter : JsonConverter<DefaultKeyword>
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, DefaultKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(DefaultKeyword.Name);
-		JsonSerializer.Serialize(writer, value.Value, options);
+		options.Write(writer, value.Value!, JsonSchemaSerializerContext.Default.JsonNode);
 	}
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -65,11 +66,11 @@ public class InRule : Rule
 	}
 }
 
-internal class InRuleJsonConverter : JsonConverter<InRule>
+internal class InRuleJsonConverter : WeaklyTypedJsonConverter<InRule>
 {
 	public override InRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = JsonSerializer.Deserialize<Rule[]>(ref reader, options);
+		var parameters = options.ReadArray(ref reader, JsonLogicSerializerContext.Default.Rule);
 
 		if (parameters is not { Length: 2 })
 			throw new JsonException("The in rule needs an array with 2 parameters.");
@@ -82,8 +83,8 @@ internal class InRuleJsonConverter : JsonConverter<InRule>
 		writer.WriteStartObject();
 		writer.WritePropertyName("in");
 		writer.WriteStartArray();
-		writer.WriteRule(value.Test, options);
-		writer.WriteRule(value.Value, options);
+		options.Write(writer, value.Test, JsonLogicSerializerContext.Default.Rule);
+		options.Write(writer, value.Value, JsonLogicSerializerContext.Default.Rule);
 		writer.WriteEndArray();
 		writer.WriteEndObject();
 	}

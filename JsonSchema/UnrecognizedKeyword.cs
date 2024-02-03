@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Schema;
 
@@ -61,7 +62,7 @@ public class UnrecognizedKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="UnrecognizedKeyword"/>.
 /// </summary>
-public sealed class UnrecognizedKeywordJsonConverter : JsonConverter<UnrecognizedKeyword>
+public sealed class UnrecognizedKeywordJsonConverter : WeaklyTypedJsonConverter<UnrecognizedKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="UnrecognizedKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -79,7 +80,6 @@ public sealed class UnrecognizedKeywordJsonConverter : JsonConverter<Unrecognize
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, UnrecognizedKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(value.Name);
-		JsonSerializer.Serialize(writer, value.Value, options);
+		options.Write(writer, value.Value!, JsonSchemaSerializerContext.Default.JsonNode);
 	}
 }

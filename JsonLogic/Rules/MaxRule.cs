@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -29,8 +30,7 @@ public class MaxRule : Rule
 	/// <param name="more">A sequence of numbers.</param>
 	protected internal MaxRule(Rule a, params Rule[] more)
 	{
-		Items = new List<Rule> { a };
-		Items.AddRange(more);
+		Items = [a, .. more];
 	}
 
 	/// <summary>
@@ -48,17 +48,17 @@ public class MaxRule : Rule
 			.Select(e => new { Type = e.JsonType(), Value = e.Numberify() })
 			.ToList();
 		var nulls = items.Where(i => i.Value == null);
-		if (nulls.Any()) return JsonNull.SignalNode;
+		if (nulls.Any()) return null;
 
 		return items.Max(i => i.Value!.Value);
 	}
 }
 
-internal class MaxRuleJsonConverter : JsonConverter<MaxRule>
+internal class MaxRuleJsonConverter : WeaklyTypedJsonConverter<MaxRule>
 {
 	public override MaxRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = JsonSerializer.Deserialize<Rule[]>(ref reader, options);
+		var parameters = options.ReadArray(ref reader, JsonLogicSerializerContext.Default.Rule);
 
 		if (parameters == null || parameters.Length == 0)
 			throw new JsonException("The max rule needs an array of parameters.");
@@ -70,7 +70,7 @@ internal class MaxRuleJsonConverter : JsonConverter<MaxRule>
 	{
 		writer.WriteStartObject();
 		writer.WritePropertyName("max");
-		writer.WriteRules(value.Items, options);
+		options.WriteList(writer, value.Items, JsonLogicSerializerContext.Default.Rule);
 		writer.WriteEndObject();
 	}
 }

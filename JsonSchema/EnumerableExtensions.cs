@@ -33,7 +33,7 @@ public static class EnumerableExtensions
 			}))
 			return false;
 
-		return !otherCopy.Any();
+		return otherCopy.Count == 0;
 	}
 
 	/// <summary>
@@ -60,7 +60,7 @@ public static class EnumerableExtensions
 			}))
 			return false;
 
-		return !otherCopy.Any();
+		return otherCopy.Count == 0;
 	}
 
 	/// <summary>

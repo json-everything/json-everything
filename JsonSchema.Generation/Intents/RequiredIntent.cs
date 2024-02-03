@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Json.Pointer;
 
 namespace Json.Schema.Generation.Intents;
 

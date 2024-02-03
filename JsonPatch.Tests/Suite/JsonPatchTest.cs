@@ -84,15 +84,21 @@ public class JsonPatchTest
 	public bool HasExpectedValue { get; set; }
 }
 
-public class JsonPatchTestJsonConverter : JsonConverter<JsonPatchTest?>
+public class JsonPatchTestJsonConverter : WeaklyTypedJsonConverter<JsonPatchTest?>
 {
-	private class Model
+	internal class Model
 	{
+		[JsonPropertyName("doc")]
 		public JsonNode? Doc { get; set; }
+		[JsonPropertyName("expected")]
 		public JsonElement Expected { get; set; }
+		[JsonPropertyName("error")]
 		public string? Error { get; set; }
+		[JsonPropertyName("comment")]
 		public string? Comment { get; set; }
+		[JsonPropertyName("patch")]
 		public JsonPatch Patch { get; set; }
+		[JsonPropertyName("disabled")]
 		public bool Disabled { get; set; }
 	}
 
@@ -122,7 +128,7 @@ public class JsonPatchTestJsonConverter : JsonConverter<JsonPatchTest?>
 				};
 			}
 
-			Console.WriteLine(JsonSerializer.Serialize(results, new JsonSerializerOptions { WriteIndented = true }));
+			Console.WriteLine(JsonSerializer.Serialize(results, TestEnvironment.SerializerOptions));
 			return null;
 		}
 		catch (Exception e) when(e is JsonException or ArgumentException)

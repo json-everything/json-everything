@@ -1,7 +1,9 @@
 using System.Collections.Generic;
-using JetBrains.Annotations;
 using NUnit.Framework;
+
 using static Json.Schema.Generation.Tests.AssertionExtensions;
+// ReSharper disable ClassNeverInstantiated.Local
+// ReSharper disable UnusedMember.Local
 
 namespace Json.Schema.Generation.Tests;
 
@@ -21,11 +23,9 @@ public class ArrayGenerationTests
 		AssertEqual(expected, actual);
 	}
 
-	[UsedImplicitly]
 	private class MinItemsList
 	{
 		[MinItems(5)]
-		[UsedImplicitly]
 		public List<int> List { get; set; }
 	}
 
@@ -49,11 +49,9 @@ public class ArrayGenerationTests
 		AssertEqual(expected, actual);
 	}
 
-	[UsedImplicitly]
 	private class MinValueList
 	{
 		[Minimum(5)]
-		[UsedImplicitly]
 		public List<int> List { get; set; }
 	}
 
@@ -77,13 +75,10 @@ public class ArrayGenerationTests
 		AssertEqual(expected, actual);
 	}
 
-	[UsedImplicitly]
 	private class MinValueListWithBasicList
 	{
 		[Minimum(5)]
-		[UsedImplicitly]
 		public List<int> List { get; set; }
-		[UsedImplicitly]
 		public List<int> BasicList { get; set; }
 	}
 

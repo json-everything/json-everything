@@ -50,7 +50,7 @@ internal static class FunctionExpressionParser
 		i++;
 
 		// parse list of arguments - all expressions
-		arguments = new List<ExpressionNode>();
+		arguments = [];
 		var done = false;
 
 		var parameterTypeList = ((IReflectiveFunctionDefinition)function).Evaluator.ArgTypes;

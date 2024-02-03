@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Logic.Rules;
 
@@ -41,11 +43,11 @@ public class BooleanCastRule : Rule
 	}
 }
 
-internal class BooleanCastRuleJsonConverter : JsonConverter<BooleanCastRule>
+internal class BooleanCastRuleJsonConverter : WeaklyTypedJsonConverter<BooleanCastRule>
 {
 	public override BooleanCastRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = JsonSerializer.Deserialize<Rule[]>(ref reader, options);
+		var parameters = options.ReadArray(ref reader, JsonLogicSerializerContext.Default.Rule);
 
 		if (parameters is not { Length: 1 })
 			throw new JsonException("The !! rule needs an array with a single parameter.");
@@ -58,7 +60,7 @@ internal class BooleanCastRuleJsonConverter : JsonConverter<BooleanCastRule>
 		writer.WriteStartObject();
 		writer.WritePropertyName("!!");
 		writer.WriteStartArray();
-		writer.WriteRule(value.Value, options);
+		options.Write(writer, value.Value, JsonLogicSerializerContext.Default.Rule);
 		writer.WriteEndArray();
 		writer.WriteEndObject();
 	}

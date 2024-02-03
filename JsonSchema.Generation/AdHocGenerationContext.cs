@@ -1,5 +1,3 @@
 ﻿namespace Json.Schema.Generation;
 
-internal class AdHocGenerationContext : SchemaGenerationContextBase
-{
-}
+internal class AdHocGenerationContext : SchemaGenerationContextBase;

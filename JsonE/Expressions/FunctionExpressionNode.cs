@@ -9,7 +9,6 @@ namespace Json.JsonE.Expressions;
 
 internal class FunctionExpressionNode : ExpressionNode
 {
-	// TODO: this needs to be an expression
 	public ExpressionNode FunctionExpression { get; }
 	public ExpressionNode[] Parameters { get; }
 
@@ -81,7 +80,7 @@ internal static class FunctionArgumentParser
 		i++;
 
 		// parse list of arguments - all expressions
-		arguments = new List<ExpressionNode>();
+		arguments = [];
 		var done = false;
 
 		while (i < source.Length && !done)

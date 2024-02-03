@@ -81,7 +81,7 @@ public class AllOfKeyword : IJsonSchemaKeyword, ISchemaCollector
 /// <summary>
 /// JSON converter for <see cref="AllOfKeyword"/>.
 /// </summary>
-public sealed class AllOfKeywordJsonConverter : JsonConverter<AllOfKeyword>
+public sealed class AllOfKeywordJsonConverter : WeaklyTypedJsonConverter<AllOfKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="AllOfKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -93,7 +93,7 @@ public sealed class AllOfKeywordJsonConverter : JsonConverter<AllOfKeyword>
 		if (reader.TokenType != JsonTokenType.StartArray)
 			throw new JsonException("Expected array");
 
-		var schemas = options.Read<List<JsonSchema>>(ref reader)!;
+		var schemas = options.ReadList(ref reader, JsonSchemaSerializerContext.Default.JsonSchema)!;
 		return new AllOfKeyword(schemas);
 	}
 
@@ -103,11 +103,10 @@ public sealed class AllOfKeywordJsonConverter : JsonConverter<AllOfKeyword>
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, AllOfKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(AllOfKeyword.Name);
 		writer.WriteStartArray();
 		foreach (var schema in value.Schemas)
 		{
-			JsonSerializer.Serialize(writer, schema, options);
+			options.Write(writer, schema, JsonSchemaSerializerContext.Default.JsonSchema);
 		}
 		writer.WriteEndArray();
 	}

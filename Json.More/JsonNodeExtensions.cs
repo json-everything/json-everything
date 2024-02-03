@@ -25,6 +25,11 @@ public static class JsonNodeExtensions
 	/// <param name="a">The first element.</param>
 	/// <param name="b">The second element.</param>
 	/// <returns>`true` if the element are equivalent; `false` otherwise.</returns>
+	/// <remarks>
+	/// <see cref="JsonNode.DeepEquals(JsonNode,JsonNode)"/> has trouble testing numeric
+	/// equality when `decimal` is involved.  As such, it is still advised to use this
+	/// method instead.  See https://github.com/dotnet/runtime/issues/97490.
+	/// </remarks>
 	public static bool IsEquivalentTo(this JsonNode? a, JsonNode? b)
 	{
 		switch (a, b)
@@ -43,17 +48,26 @@ public static class JsonNodeExtensions
 				var zipped = arrayA.Zip(arrayB, (ae, be) => (ae, be));
 				return zipped.All(p => p.ae.IsEquivalentTo(p.be));
 			case (JsonValue aValue, JsonValue bValue):
-				if (aValue.GetValue<object>() is JsonElement aElement &&
-					bValue.GetValue<object>() is JsonElement bElement)
-					return aElement.IsEquivalentTo(bElement);
-
 				var aNumber = aValue.GetNumber();
 				var bNumber = bValue.GetNumber();
 				if (aNumber != null) return aNumber == bNumber;
 
-				return a.ToJsonString() == b.ToJsonString();
+				var aString = aValue.GetString();
+				var bString = bValue.GetString();
+				if (aString != null) return aString == bString;
+
+				var aBool = aValue.GetBool();
+				var bBool = bValue.GetBool();
+				if (aBool.HasValue) return aBool == bBool;
+
+				var aObj = aValue.GetValue<object>();
+				var bObj = bValue.GetValue<object>();
+				if (aObj is JsonElement aElement && bObj is JsonElement bElement)
+					return aElement.IsEquivalentTo(bElement);
+
+				return aObj.Equals(bObj);
 			default:
-				return a?.ToJsonString() == b?.ToJsonString();
+				return false;
 		}
 	}
 
@@ -81,7 +95,6 @@ public static class JsonNodeExtensions
 			}
 		}
 
-		// ReSharper disable once InconsistentNaming
 		void ComputeHashCode(JsonNode? target, ref int current, int depth)
 		{
 			if (target == null) return;
@@ -190,51 +203,50 @@ public static class JsonNodeExtensions
 	}
 
 	/// <summary>
-	/// Creates a deep copy of a node.
+	/// Gets a node's underlying string value.
 	/// </summary>
-	/// <param name="source">A node.</param>
-	/// <returns>A duplicate of the node.</returns>
+	/// <param name="value">A JSON value.</param>
+	/// <returns>Gets the underlying string value, or null.</returns>
 	/// <remarks>
-	///	`JsonNode` may only be part of a single JSON tree, i.e. have a single parent.
-	/// Copying a node allows its value to be saved to another JSON tree.
+	/// JsonNode may use a <see cref="JsonElement"/> under the hood which subsequently contains a string.
+	/// This means that `JsonNode.GetValue&lt;string&gt;()` will not work as expected.
 	/// </remarks>
-	public static JsonNode? Copy(this JsonNode? source)
+	public static string? GetString(this JsonValue value)
 	{
-		JsonNode CopyObject(JsonObject obj)
+		if (value.TryGetValue(out JsonElement e))
 		{
-			var newObj = new JsonObject(obj.Options);
-			foreach (var kvp in obj)
-			{
-				newObj[kvp.Key] = kvp.Value.Copy();
-			}
-
-			return newObj;
+			if (e.ValueKind != JsonValueKind.String) return null;
+			return e.GetString();
 		}
 
-		JsonNode CopyArray(JsonArray arr)
-		{
-			var newArr = new JsonArray(arr.Options);
-			foreach (var item in arr)
-			{
-				newArr.Add(item.Copy());
-			}
+		if (value.TryGetValue(out string? s)) return s;
+		if (value.TryGetValue(out char c)) return c.ToString();
 
-			return newArr;
+		return null;
+	}
+
+	/// <summary>
+	/// Gets a node's underlying boolean value.
+	/// </summary>
+	/// <param name="value">A JSON value.</param>
+	/// <returns>Gets the underlying boolean value, or null.</returns>
+	/// <remarks>
+	/// JsonNode may use a <see cref="JsonElement"/> under the hood which subsequently contains a boolean.
+	/// This means that `JsonNode.GetValue&lt;bool&gt;()` will not work as expected.
+	/// </remarks>
+	public static bool? GetBool(this JsonValue value)
+	{
+		if (value.TryGetValue(out JsonElement e))
+		{
+			if (e.ValueKind == JsonValueKind.True) return true;
+			if (e.ValueKind == JsonValueKind.False) return false;
+
+			return null;
 		}
 
-		JsonNode? CopyValue(JsonValue val)
-		{
-			return JsonValue.Create(val.GetValue<object>());
-		}
+		if (value.TryGetValue(out bool b)) return b;
 
-		return source switch
-		{
-			null => null,
-			JsonObject obj => CopyObject(obj),
-			JsonArray arr => CopyArray(arr),
-			JsonValue val => CopyValue(val),
-			_ => throw new ArgumentOutOfRangeException(nameof(source))
-		};
+		return null;
 	}
 
 	/// <summary>
@@ -267,13 +279,17 @@ public static class JsonNodeExtensions
 	}
 
 	/// <summary>
-	/// Creates a new <see cref="JsonArray"/> from an enumerable of nodes.
+	/// Creates a new <see cref="JsonArray"/> by copying from an enumerable of nodes.
 	/// </summary>
 	/// <param name="nodes">The nodes.</param>
 	/// <returns>A JSON array.</returns>
+	/// <remarks>
+	///	`JsonNode` may only be part of a single JSON tree, i.e. have a single parent.
+	/// Copying a node allows its value to be saved to another JSON tree.
+	/// </remarks>
 	public static JsonArray ToJsonArray(this IEnumerable<JsonNode?> nodes)
 	{
-		return new JsonArray(nodes.Select(x => x.Copy()).ToArray());
+		return new JsonArray(nodes.Select(x => x?.DeepClone()).ToArray());
 	}
 
 	///  <summary>
@@ -293,9 +309,9 @@ public static class JsonNodeExtensions
 		var segments = GetSegments(current);
 
 		var sb = new StringBuilder();
-		sb.Append("$");
+		sb.Append('$');
 		segments.Pop();  // first is always null - the root
-		while (segments.Any())
+		while (segments.Count != 0)
 		{
 			var segment = segments.Pop();
 			var index = segment?.GetNumber();
@@ -315,7 +331,9 @@ public static class JsonNodeExtensions
 				null => null,
 				JsonObject obj => GetKey(obj, current),
 				JsonArray arr => GetIndex(arr, current),
+#pragma warning disable CA2208
 				_ => throw new ArgumentOutOfRangeException("parent", "this shouldn't happen")
+#pragma warning restore CA2208
 			};
 			segments.Push(segment);
 			current = current.Parent;
@@ -334,10 +352,12 @@ public static class JsonNodeExtensions
 		return JsonValue.Create(arr.IndexOf(current));
 	}
 
+	private static readonly Regex _pathSegmentTestPattern = new("^[a-z][a-z_]*$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
 	private static string GetNamedSegmentForPath(JsonValue segment, bool useShorthand)
 	{
 		var value = segment.GetValue<string>();
-		if (useShorthand && Regex.IsMatch(value, "^[a-z][a-z_]*$"))  return $".{value}";
+		if (useShorthand && _pathSegmentTestPattern.IsMatch(value))  return $".{value}";
 
 		return $"['{PrepForJsonPath(segment.AsJsonString(_unfriendlyCharSerialization))}']";
 	}
@@ -346,7 +366,7 @@ public static class JsonNodeExtensions
 	// just need to replace the quotes.
 	private static string PrepForJsonPath(string jsonString)
 	{
-		var content = jsonString.Substring(1, jsonString.Length-2);
+		var content = jsonString[1..^1];
 		var escaped = content.Replace("\\\"", "\"")
 			.Replace("'", "\\'");
 		return escaped;
@@ -369,7 +389,7 @@ public static class JsonNodeExtensions
 
 		var sb = new StringBuilder();
 		segments.Pop();  // first is always null - the root
-		while (segments.Any())
+		while (segments.Count != 0)
 		{
 			var segment = segments.Pop();
 			var index = segment?.GetNumber();

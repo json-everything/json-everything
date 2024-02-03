@@ -26,6 +26,6 @@ internal class SplitFunction : FunctionDefinition
 		if (split is null) return source;
 		if (split == string.Empty) return source.Select(x => (JsonNode?)x).ToJsonArray();
 
-		return source.Split(new []{split}, StringSplitOptions.None).Select(x => (JsonNode?)x).ToJsonArray();
+		return source.Split(new []{split!}, StringSplitOptions.None).Select(x => (JsonNode?)x).ToJsonArray();
 	}
 }

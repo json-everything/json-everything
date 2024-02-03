@@ -23,6 +23,9 @@ public class PatchResult
 	/// <summary>
 	/// Gets whether there was an error.
 	/// </summary>
+	#if NET5_0_OR_GREATER
+	[System.Diagnostics.CodeAnalysis.MemberNotNullWhen(false, nameof(Error))]
+	#endif
 	public bool IsSuccess => Error == null;
 
 	internal PatchResult(PatchContext context)

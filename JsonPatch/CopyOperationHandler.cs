@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using System.Text.Json.Nodes;
-using Json.More;
 
 namespace Json.Patch;
 
@@ -36,7 +35,7 @@ internal class CopyOperationHandler : IPatchOperationHandler
 		var lastPathSegment = operation.Path.Segments.Last().Value;
 		if (target is JsonObject objTarget)
 		{
-			objTarget[lastPathSegment] = data.Copy();
+			objTarget[lastPathSegment] = data?.DeepClone();
 			return;
 		}
 
@@ -44,9 +43,9 @@ internal class CopyOperationHandler : IPatchOperationHandler
 		{
 			var index = lastPathSegment == "-" ? arrTarget.Count : int.Parse(lastPathSegment);
 			if (0 < index || index < arrTarget.Count)
-				arrTarget[index] = data.Copy();
+				arrTarget[index] = data?.DeepClone();
 			else if (index == arrTarget.Count)
-				arrTarget.Add(data.Copy());
+				arrTarget.Add(data?.DeepClone());
 		}
 	}
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 using Json.Path.Expressions;
 
 namespace Json.Path;
@@ -26,14 +27,20 @@ internal interface IReflectiveFunctionDefinition
 /// <summary>
 /// Base class for defining an expression function which returns `ValueType`.
 /// </summary>
-public abstract class ValueFunctionDefinition : IReflectiveFunctionDefinition, IPathFunctionDefinition
+public abstract partial class ValueFunctionDefinition : IReflectiveFunctionDefinition, IPathFunctionDefinition
 {
-	private class NothingValue{}
+	private class NothingValue;
+
+	[JsonSerializable(typeof(NothingValue))]
+	private partial class NothingValueContext : JsonSerializerContext
+	{
+
+	}
 
 	/// <summary>
 	/// Represents the absence of a JSON value and is distinct from any JSON value, including null.
 	/// </summary>
-	public static JsonValue Nothing { get; } = JsonValue.Create(new NothingValue())!;
+	public static JsonValue Nothing { get; } = JsonValue.Create(new NothingValue(), NothingValueContext.Default.NothingValue)!;
 
 	/// <summary>
 	/// Gets the function name.

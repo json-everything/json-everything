@@ -71,7 +71,7 @@ public class NotKeyword : IJsonSchemaKeyword, ISchemaContainer
 /// <summary>
 /// JSON converter for <see cref="NotKeyword"/>.
 /// </summary>
-public sealed class NotKeywordJsonConverter : JsonConverter<NotKeyword>
+public sealed class NotKeywordJsonConverter : WeaklyTypedJsonConverter<NotKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="NotKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -80,7 +80,7 @@ public sealed class NotKeywordJsonConverter : JsonConverter<NotKeyword>
 	/// <returns>The converted value.</returns>
 	public override NotKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var schema = options.Read<JsonSchema>(ref reader)!;
+		var schema = options.Read(ref reader, JsonSchemaSerializerContext.Default.JsonSchema)!;
 
 		return new NotKeyword(schema);
 	}
@@ -91,7 +91,6 @@ public sealed class NotKeywordJsonConverter : JsonConverter<NotKeyword>
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, NotKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(NotKeyword.Name);
-		JsonSerializer.Serialize(writer, value.Schema, options);
+		options.Write(writer, value.Schema, JsonSchemaSerializerContext.Default.JsonSchema);
 	}
 }

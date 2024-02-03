@@ -11,7 +11,7 @@ namespace Json.Schema.Tests.Serialization;
 
 public class DeserializationTests
 {
-	private class Foo
+	internal class Foo
 	{
 		[MinLength(5)]
 		public string? Bar { get; set; }
@@ -21,7 +21,7 @@ public class DeserializationTests
 	}
 
 	[JsonSchema(typeof(DeserializationTests), nameof(FooSchema))]
-	private class FooWithSchema
+	internal class FooWithSchema
 	{
 		public string? Bar { get; set; }
 		public int Value { get; set; }
@@ -53,6 +53,7 @@ public class DeserializationTests
 
 	private static readonly JsonSerializerOptions _options = new()
 	{
+		TypeInfoResolverChain = { TestSerializerContext.Default },
 		WriteIndented = true,
 		Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
 		Converters = { new ValidatingJsonConverter { OutputFormat = OutputFormat.List } }
@@ -291,6 +292,7 @@ public class DeserializationTests
 			{
 				var options = new JsonSerializerOptions
 				{
+					TypeInfoResolverChain = { TestSerializerContext.Default },
 					WriteIndented = true,
 					Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
 					Converters = { new ValidatingJsonConverter { OutputFormat = OutputFormat.List } }
@@ -320,6 +322,7 @@ public class DeserializationTests
 
 			var options = new JsonSerializerOptions
 			{
+				TypeInfoResolverChain = { TestSerializerContext.Default },
 				WriteIndented = true,
 				Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
 				Converters = { new ValidatingJsonConverter { OutputFormat = OutputFormat.List } }
@@ -350,6 +353,7 @@ public class DeserializationTests
 
 					var options = new JsonSerializerOptions
 					{
+						TypeInfoResolverChain = { TestSerializerContext.Default },
 						WriteIndented = true,
 						Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
 						Converters = { new ValidatingJsonConverter { OutputFormat = OutputFormat.List } }

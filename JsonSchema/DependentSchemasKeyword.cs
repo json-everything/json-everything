@@ -86,14 +86,15 @@ public class DependentSchemasKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 		evaluation.Results.SetAnnotation(Name, evaluation.ChildEvaluations.Select(x => (JsonNode)x.Results.EvaluationPath.Segments.Last().Value!).ToJsonArray());
 		
 		if (failedProperties.Length != 0)
-			evaluation.Results.Fail(Name, ErrorMessages.GetDependentSchemas(context.Options.Culture), ("failed", failedProperties));
+			evaluation.Results.Fail(Name, ErrorMessages.GetDependentSchemas(context.Options.Culture)
+				.ReplaceToken("failed", failedProperties));
 	}
 }
 
 /// <summary>
 /// JSON converter for <see cref="DependentSchemasKeyword"/>.
 /// </summary>
-public sealed class DependentSchemasKeywordJsonConverter : JsonConverter<DependentSchemasKeyword>
+public sealed class DependentSchemasKeywordJsonConverter : WeaklyTypedJsonConverter<DependentSchemasKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="DependentSchemasKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -105,7 +106,7 @@ public sealed class DependentSchemasKeywordJsonConverter : JsonConverter<Depende
 		if (reader.TokenType != JsonTokenType.StartObject)
 			throw new JsonException("Expected object");
 
-		var schema = options.Read<Dictionary<string, JsonSchema>>(ref reader)!;
+		var schema = options.ReadDictionary(ref reader, JsonSchemaSerializerContext.Default.JsonSchema)!;
 		return new DependentSchemasKeyword(schema);
 	}
 
@@ -115,12 +116,11 @@ public sealed class DependentSchemasKeywordJsonConverter : JsonConverter<Depende
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, DependentSchemasKeyword value, JsonSerializerOptions options)
 	{
-		writer.WritePropertyName(DependentSchemasKeyword.Name);
 		writer.WriteStartObject();
 		foreach (var kvp in value.Schemas)
 		{
 			writer.WritePropertyName(kvp.Key);
-			JsonSerializer.Serialize(writer, kvp.Value, options);
+			options.Write(writer, kvp.Value, JsonSchemaSerializerContext.Default.JsonSchema);
 		}
 		writer.WriteEndObject();
 	}

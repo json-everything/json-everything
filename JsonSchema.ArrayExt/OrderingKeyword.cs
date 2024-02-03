@@ -81,20 +81,18 @@ public class OrderingKeyword : IJsonSchemaKeyword
 				if (!specifier.By.TryEvaluate(basisItem, out var basisValue))
 				{
 					evaluation.Results.Fail(Name, "Item at index [[index]] does not have a value at [[pointer]]"
-						.ReplaceTokens(
-							("index", i-1),
-							("pointer", specifier.By)
-						));
+							.ReplaceToken("index", i-1)
+							.ReplaceToken("pointer", specifier.By, JsonSchemaArrayExtSerializerContext.Default.JsonPointer)
+						);
 					return;
 				}
 
 				if (!specifier.By.TryEvaluate(currentItem, out var currentValue))
 				{
 					evaluation.Results.Fail(Name, "Item at index [[index]] does not have a value at [[pointer]]"
-						.ReplaceTokens(
-							("index", i),
-							("pointer", specifier.By)
-						));
+							.ReplaceToken("index", i)
+							.ReplaceToken("pointer", specifier.By, JsonSchemaArrayExtSerializerContext.Default.JsonPointer)
+						);
 					return;
 				}
 
@@ -105,7 +103,7 @@ public class OrderingKeyword : IJsonSchemaKeyword
 				{
 					// basis should be after current
 					evaluation.Results.Fail(Name, "Item at index [[index]] is not in order"
-						.ReplaceTokens(							("index", i)));
+						.ReplaceToken("index", i));
 					return;
 				}
 			}
@@ -156,7 +154,7 @@ public class OrderingKeyword : IJsonSchemaKeyword
 /// <summary>
 /// JSON converter for <see cref="OrderingKeyword"/>.
 /// </summary>
-public sealed class OrderingKeywordJsonConverter : JsonConverter<OrderingKeyword>
+public sealed class OrderingKeywordJsonConverter : WeaklyTypedJsonConverter<OrderingKeyword>
 {
 	/// <summary>Reads and converts the JSON to type <see cref="OrderingKeyword"/>.</summary>
 	/// <param name="reader">The reader.</param>
@@ -168,7 +166,7 @@ public sealed class OrderingKeywordJsonConverter : JsonConverter<OrderingKeyword
 		if (reader.TokenType != JsonTokenType.StartArray)
 			throw new JsonException("Expected array");
 
-		var references = JsonSerializer.Deserialize<List<OrderingSpecifier>>(ref reader, options)!;
+		var references = options.ReadList(ref reader, JsonSchemaArrayExtSerializerContext.Default.OrderingSpecifier)!;
 		return new OrderingKeyword(references);
 	}
 
@@ -179,6 +177,6 @@ public sealed class OrderingKeywordJsonConverter : JsonConverter<OrderingKeyword
 	public override void Write(Utf8JsonWriter writer, OrderingKeyword value, JsonSerializerOptions options)
 	{
 		writer.WritePropertyName(OrderingKeyword.Name);
-		JsonSerializer.Serialize(writer, value.Specifiers, options);
+		options.WriteList(writer, value.Specifiers, JsonSchemaArrayExtSerializerContext.Default.OrderingSpecifier);
 	}
 }

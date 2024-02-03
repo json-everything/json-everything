@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Logic.Rules;
 
@@ -63,11 +65,11 @@ public class MoreThanEqualRule : Rule
 	}
 }
 
-internal class MoreThanEqualRuleJsonConverter : JsonConverter<MoreThanEqualRule>
+internal class MoreThanEqualRuleJsonConverter : WeaklyTypedJsonConverter<MoreThanEqualRule>
 {
 	public override MoreThanEqualRule? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var parameters = JsonSerializer.Deserialize<Rule[]>(ref reader, options);
+		var parameters = options.ReadArray(ref reader, JsonLogicSerializerContext.Default.Rule);
 
 		if (parameters is not { Length: 2 })
 			throw new JsonException("The >= rule needs an array with 2 parameters.");
@@ -80,8 +82,8 @@ internal class MoreThanEqualRuleJsonConverter : JsonConverter<MoreThanEqualRule>
 		writer.WriteStartObject();
 		writer.WritePropertyName(">=");
 		writer.WriteStartArray();
-		writer.WriteRule(value.A, options);
-		writer.WriteRule(value.B, options);
+		options.Write(writer, value.A, JsonLogicSerializerContext.Default.Rule);
+		options.Write(writer, value.B, JsonLogicSerializerContext.Default.Rule);
 		writer.WriteEndArray();
 		writer.WriteEndObject();
 	}

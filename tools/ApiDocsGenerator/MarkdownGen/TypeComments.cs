@@ -12,7 +12,7 @@ public class TypeComments : CommonComments
 	///     Item1 is the "param" item "name" attribute and
 	///     Item2 is the body of the comment
 	/// </summary>
-	public List<(string Name, string Text)> Parameters { get; set; } = new();
+	public List<(string Name, string Text)> Parameters { get; set; } = [];
 
 	/// <summary>
 	///     "returns" comment of the method.
