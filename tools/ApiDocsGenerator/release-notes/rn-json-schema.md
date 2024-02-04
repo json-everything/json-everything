@@ -6,7 +6,7 @@ order: "09.01"
 ---
 # [6.0.0 & 6.0.1](https://github.com/gregsdennis/json-everything/pull/619) {#release-schema-6.0.0}
 
-> v6.0.0 is missing an explicit .Net 8 DLL.  The packages was repaired and republished as v6.0.1.
+> v6.0.0 is missing an explicit .Net 8 DLL.  The package was repaired and republished as v6.0.1.
 
 Updated for multi-framework support with .Net Standard 2.0 and .Net 8 with Native AOT support, including updating _System.Text.Json_ from v6 to v8.
 
