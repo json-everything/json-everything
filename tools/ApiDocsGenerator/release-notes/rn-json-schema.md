@@ -22,6 +22,7 @@ Most of the changes to support Native AOT involve either updating internal imple
 - `JsonSchemaBuilderExtensions.Validate()` removed.  Was previously marked obsolete.
 - `JsonSchemaExtensions.Validate()` and overloads removed.  Were previously marked obsolete.
 - `JsonNodeExtensions.VerifyJsonObject()` removed.  Duplicate keys throws an exception.
+- Custom keywords MUST now implement `IWeaklyTypedJsonConverter` (or derive from `WeaklyTypedJsonConverter<T>` from _Json.More.Net_).
 
 ## Additions
 
