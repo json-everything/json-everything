@@ -4,6 +4,13 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "09.01"
 ---
+# [6.0.2](https://github.com/gregsdennis/json-everything/pull/619) {#release-schema-6.0.2}
+
+Reverted usages of `DependsOnAnnotationsFromAttribute<T>` to non-generic form in order to support .Net Framework, which doesn't support generic attributes.
+
+> The generic attribute is still defined and usable, but only do so if you're not targeting .Net Framework.
+{: .prompt-info }
+
 # [6.0.0 & 6.0.1](https://github.com/gregsdennis/json-everything/pull/619) {#release-schema-6.0.0}
 
 > v6.0.0 is missing an explicit .Net 8 DLL.  The package was repaired and republished as v6.0.1.
