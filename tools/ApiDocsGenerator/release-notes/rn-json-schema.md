@@ -4,7 +4,7 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "09.01"
 ---
-# [6.0.2](https://github.com/gregsdennis/json-everything/pull/619) {#release-schema-6.0.2}
+# [6.0.2](https://github.com/gregsdennis/json-everything/pull/651) {#release-schema-6.0.2}
 
 Reverted usages of `DependsOnAnnotationsFromAttribute<T>` to non-generic form in order to support .Net Framework, which doesn't support generic attributes.
 
