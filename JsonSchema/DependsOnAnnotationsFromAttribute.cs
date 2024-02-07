@@ -5,9 +5,9 @@ namespace Json.Schema;
 /// <summary>
 /// Indicates a keyword from which the decorated keyword requires annotations.
 /// </summary>
-/// <summary>
+/// <remarks>
 /// Apply this attribute to your schema keyword to indicate a dependency on another keyword.
-/// </summary>
+/// </remarks>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, AllowMultiple = true)]
 public class DependsOnAnnotationsFromAttribute : Attribute
 {
@@ -29,9 +29,12 @@ public class DependsOnAnnotationsFromAttribute : Attribute
 /// <summary>
 /// Indicates a keyword from which the decorated keyword requires annotations.
 /// </summary>
-/// <summary>
+/// <remarks>
 /// Apply this attribute to your schema keyword to indicate a dependency on another keyword.
-/// </summary>
+///
+/// **Warning**: Generic attributes are not supported in .Net Framework.  If your target
+/// includes .Net Framework, use the non-generic form of this attribute.
+/// </remarks>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, AllowMultiple = true)]
 public class DependsOnAnnotationsFromAttribute<T> : DependsOnAnnotationsFromAttribute
 	where T : IJsonSchemaKeyword

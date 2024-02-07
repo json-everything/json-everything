@@ -19,7 +19,7 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Applicator201909Id)]
 [Vocabulary(Vocabularies.Applicator202012Id)]
 [Vocabulary(Vocabularies.ApplicatorNextId)]
-[DependsOnAnnotationsFrom<IfKeyword>]
+[DependsOnAnnotationsFrom(typeof(IfKeyword))]
 [JsonConverter(typeof(ThenKeywordJsonConverter))]
 public class ThenKeyword : IJsonSchemaKeyword, ISchemaContainer
 {

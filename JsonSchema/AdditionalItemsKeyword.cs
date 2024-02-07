@@ -17,7 +17,7 @@ namespace Json.Schema;
 [SchemaSpecVersion(SpecVersion.Draft7)]
 [SchemaSpecVersion(SpecVersion.Draft201909)]
 [Vocabulary(Vocabularies.Applicator201909Id)]
-[DependsOnAnnotationsFrom<ItemsKeyword>]
+[DependsOnAnnotationsFrom(typeof(ItemsKeyword))]
 [JsonConverter(typeof(AdditionalItemsKeywordJsonConverter))]
 public class AdditionalItemsKeyword : IJsonSchemaKeyword, ISchemaContainer
 {
