@@ -59,7 +59,7 @@ internal class FunctionValueExpressionNode : ValueExpressionNode
 
 	public override string ToString()
 	{
-		return $"{Function.Name}({string.Join(',', (IEnumerable<ValueExpressionNode>)_parameters)})";
+		return $"{Function.Name}({string.Join(",", (IEnumerable<ValueExpressionNode>)_parameters)})";
 	}
 }
 

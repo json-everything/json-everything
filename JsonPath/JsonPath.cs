@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -70,7 +71,7 @@ public class JsonPath
 			source = source.Trim();
 
 		int index = 0;
-		return PathParser.Parse(source, ref index, options, !options.AllowRelativePathStart);
+		return PathParser.Parse(source.AsSpan(), ref index, options, !options.AllowRelativePathStart);
 	}
 
 	/// <summary>
@@ -98,7 +99,7 @@ public class JsonPath
 		source = source.Trim();
 
 		int index = 0;
-		if (!PathParser.TryParse(source, ref index, out path, options, true)) return false;
+		if (!PathParser.TryParse(source.AsSpan(), ref index, out path, options, true)) return false;
 		if (index != source.Length)
 		{
 			path = null;
