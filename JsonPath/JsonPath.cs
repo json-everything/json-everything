@@ -70,7 +70,7 @@ public class JsonPath
 			source = source.Trim();
 
 		int index = 0;
-		return PathParser.Parse(source, ref index, options, !options.AllowRelativePathStart);
+		return PathParser.Parse(source.ToCharArray(), ref index, options, !options.AllowRelativePathStart);
 	}
 
 	/// <summary>
@@ -98,7 +98,7 @@ public class JsonPath
 		source = source.Trim();
 
 		int index = 0;
-		if (!PathParser.TryParse(source, ref index, out path, options, true)) return false;
+		if (!PathParser.TryParse(source.ToCharArray(), ref index, out path, options, true)) return false;
 		if (index != source.Length)
 		{
 			path = null;
