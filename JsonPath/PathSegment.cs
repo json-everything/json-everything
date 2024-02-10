@@ -88,7 +88,6 @@ public class PathSegment
 		if (IsShorthand)
 			return $"{((IHaveShorthand)Selectors[0]).ToShorthandString()}";
 		
-
 		return $"[{string.Join(",", Selectors.Select(x => x.ToString()))}]";
 	}
 
