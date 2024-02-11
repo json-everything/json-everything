@@ -74,7 +74,7 @@ public class PathSegment
 	/// <returns>A string that represents the current object.</returns>
 	public override string ToString()
 	{
-		string GetNormalized() => $"[{string.Join(',', Selectors.Select(x => x.ToString()))}]";
+		string GetNormalized() => $"[{string.Join(",", Selectors.Select(x => x.ToString()))}]";
 		string GetShorthand() => $"{((IHaveShorthand)Selectors[0]).ToShorthandString()}";
 
 		if (IsRecursive)
@@ -88,7 +88,7 @@ public class PathSegment
 		if (IsShorthand)
 			return $"{((IHaveShorthand)Selectors[0]).ToShorthandString()}";
 		
-		return $"[{string.Join(',', Selectors.Select(x => x.ToString()))}]";
+		return $"[{string.Join(",", Selectors.Select(x => x.ToString()))}]";
 	}
 
 	/// <summary>

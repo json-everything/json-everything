@@ -136,7 +136,7 @@ public class CburgmerFeatureValidationTests
 	{
 		get
 		{
-			static bool TryMatch(string line, Regex pattern, [NotNullWhen(true)] out string? value)
+			static bool TryMatch(string line, Regex pattern, out string? value)
 			{
 				var match = pattern.Match(line);
 				if (!match.Success)

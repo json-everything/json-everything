@@ -83,37 +83,37 @@ internal static class BinaryComparativeOperatorParser
 
 		var portion = source[index..(index + 2)];
 
-		if (portion.Equals("==", StringComparison.Ordinal))
+		if (portion.Equals(OperatorSymbols.EqualTo, StringComparison.Ordinal))
 		{
 			op = Operators.EqualTo;
 			index += 2;
 		}
-		else if (portion.Equals("!=", StringComparison.Ordinal))
+		else if (portion.Equals(OperatorSymbols.NotEqualTo, StringComparison.Ordinal))
 		{
 			op = Operators.NotEqualTo;
 			index += 2;
 		}
-		else if (portion.Equals("<=", StringComparison.Ordinal))
+		else if (portion.Equals(OperatorSymbols.LessThanOrEqualTo, StringComparison.Ordinal))
 		{
 			op = Operators.LessThanOrEqualTo;
 			index += 2;
 		}
-		else if (portion.Equals(">=", StringComparison.Ordinal))
+		else if (portion.Equals(OperatorSymbols.GreaterThanOrEqualTo, StringComparison.Ordinal))
 		{
 			op = Operators.GreaterThanOrEqualTo;
 			index += 2;
 		}
-		else if (source[index] == '<')
+		else if (source[index] == OperatorSymbols.LessThan)
 		{
 			op = Operators.LessThan;
 			index++;
 		}
-		else if (source[index] == '>')
+		else if (source[index] == OperatorSymbols.GreaterThan)
 		{
 			op = Operators.GreaterThan;
 			index++;
 		}
-		else if (portion.Equals("in", StringComparison.Ordinal))
+		else if (portion.Equals(OperatorSymbols.In, StringComparison.Ordinal))
 		{
 			op = Operators.In;
 			index += 2;
@@ -125,6 +125,23 @@ internal static class BinaryComparativeOperatorParser
 		}
 
 		return true;
+	}
+
+	private static class OperatorSymbols
+	{
+		internal static char[] EqualTo { get; } = "==".ToCharArray();
+
+		internal static char[] NotEqualTo { get; } = "!=".ToCharArray();
+
+		internal static char[] LessThanOrEqualTo { get; } = "<=".ToCharArray();
+
+		internal static char[] GreaterThanOrEqualTo { get; } = ">=".ToCharArray();
+
+		internal static char LessThan => '<';
+
+		internal static char GreaterThan => '>';
+
+		internal static char[] In { get; } = "in".ToCharArray();
 	}
 }
 
@@ -146,12 +163,12 @@ internal static class BinaryLogicalOperatorParser
 
 		var portion = source[index..(index + 2)];
 
-		if (portion.Equals("&&", StringComparison.Ordinal))
+		if (portion.Equals("&&".AsSpan(), StringComparison.Ordinal))
 		{
 			op = Operators.And;
 			index += 2;
 		}
-		else if (portion.Equals("||", StringComparison.Ordinal))
+		else if (portion.Equals("||".AsSpan(), StringComparison.Ordinal))
 		{
 			op = Operators.Or;
 			index += 2;

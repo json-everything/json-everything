@@ -53,7 +53,7 @@ internal class FunctionBooleanExpressionNode : LogicalExpressionNode
 
 	public override string ToString()
 	{
-		return $"{Function.Name}({string.Join(',', (IEnumerable<ValueExpressionNode>)Parameters)})";
+		return $"{Function.Name}({string.Join(",", (IEnumerable<ValueExpressionNode>)Parameters)})";
 	}
 }
 
