@@ -13,8 +13,6 @@
 @using System.Reflection
 @using System.Text.Json.Nodes
 @using Json.Schema.ArrayExt
-@using Json.Schema.CodeGeneration
-@using Json.Schema.CodeGeneration.Language
 @using Json.Schema.OpenApi
 @using Yaml2JsonNode
 
@@ -201,7 +199,6 @@
 		LibraryVersion.GetFor<UniqueKeysKeyword>(),
 		LibraryVersion.GetFor<DiscriminatorKeyword>(),
 		LibraryVersion.GetFor<ISchemaRefiner>(),
-		LibraryVersion.GetFor<ICodeWriter>(),
 		LibraryVersion.GetFor<Bound>()
 	};
 
@@ -214,7 +211,6 @@
 	{
 		Evaluate,
 		GenerateSchema,
-		GenerateCode,
 		GenerateData
 	}
 
@@ -249,9 +245,6 @@
 				case SchemaOperations.GenerateSchema:
 					ConfigureForSchemaGen();
 					break;
-				case SchemaOperations.GenerateCode:
-					ConfigureForCodeGen();
-					break;
 				case SchemaOperations.GenerateData:
 					ConfigureForDataGen();
 					break;
@@ -285,7 +278,6 @@
 	{
 		SchemaOperations.Evaluate => "Evaluate JSON",
 		SchemaOperations.GenerateSchema => "Generate a Schema",
-		SchemaOperations.GenerateCode => "Generate Code",
 		SchemaOperations.GenerateData => "Generate Data",
 		_ => "Evaluate JSON"
 	};
@@ -304,22 +296,6 @@
 		HelpSummary = HelpContent.SchemaEvaluate;
 
 		EvaluationOptionsVisibility = "";
-	}
-
-	private void ConfigureForCodeGen()
-	{
-		_schemaEditor.UpdateOptions(new GlobalEditorOptions { TabSize = 2 });
-		Task.Run(async () =>
-		{
-			await _schemaEditor.DetectLanguage();
-			await DataManager.Set("schema-input-language", "json");
-		});
-			
-		SchemaEditorLabel = "Schema";
-
-		HelpSummary = HelpContent.SchemaGenerateCode;
-
-		EvaluationOptionsVisibility = "d-none";
 	}
 
 	private void ConfigureForSchemaGen()
@@ -363,9 +339,6 @@
 				break;
 			case SchemaOperations.GenerateSchema:
 				await GenerateSchema();
-				break;
-			case SchemaOperations.GenerateCode:
-				await GenerateCode();
 				break;
 			case SchemaOperations.GenerateData:
 				await GenerateData();
@@ -454,36 +427,6 @@
 		else
 		{
 			await _outputEditor.SetValue(generationResults.ErrorMessage);
-		}
-	}
-
-	private async Task GenerateCode()
-	{
-		await _outputEditor.SetLanguageAsync("csharp");
-		await _outputEditor.SetValue(string.Empty);
-
-		JsonSchema schema;
-		try
-		{
-			schema = YamlSerializer.Deserialize<JsonSchema>(await _schemaEditor.GetValue())!;
-		}
-		catch (Exception e)
-		{
-			await _outputEditor.SetLanguageAsync("text");
-			await _outputEditor.SetValue($"Schema is invalid\n\n{e.Message}");
-			return;
-		}
-
-		try
-		{
-			var generatedCode = schema.GenerateCode(CodeWriters.CSharp);
-
-			await _outputEditor.SetValue(generatedCode);
-		}
-		catch (Exception e)
-		{
-			await _outputEditor.SetLanguageAsync("text");
-			await _outputEditor.SetValue(e.Message);
 		}
 	}
 

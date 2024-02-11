@@ -51,20 +51,6 @@ insight into what in particular is wrong.  If you know, please feel free to rais
 _JsonSchem.Net.Generation_ supports AOT in that it is properly marked as requiring reflection.
 However, due to that requirement, it likely will not work as expected in an AOT context.";
 
-	public const string SchemaGenerateCode = @"
-## Generating C# Code
-
-The schema for which you want to generate code will be placed in the editor on the left.
-
-The editor on the right is unused.
-
-Click ""Run"".
-
-Your code (or an error message) will be output in the bottom editor.
-
-Please be sure to read the [documentation](https://docs.json-everything.net/schema/codegen/schema-codegen/)
-to see what is supported.";
-
 	public const string SchemaGenerateData = @"
 ## Generating Random Data
 

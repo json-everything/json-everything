@@ -2,7 +2,7 @@
 layout: page
 title: Yaml2JsonNode
 icon: fas fa-tag
-order: "09.14"
+order: "09.13"
 ---
 # [2.0.0](https://github.com/gregsdennis/json-everything/pull/619) {#release-yaml-2.0.0}
 

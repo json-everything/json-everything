@@ -2,10 +2,14 @@
 layout: page
 title: JsonSchema.Net.UniqueKeys
 icon: fas fa-tag
-order: "09.14"
+order: "09.15"
 ---
-> This library has been deprecated and replaced by JsonSchema.Net.ArrayExt.
-{: .prompt-warning }
+> **DEPRECATION NOTICE**
+>
+> This library is no longer being developed and has been superceded by _JsonSchema.Net.ArrayExt_.
+> 
+> Please see https://blog.json-everything.net/posts/updating-vocabs/ for more information.
+{: .prompt-danger }
 
 # [3.1.0](https://github.com/gregsdennis/json-everything/pull/565) {#release-pointer-3.1.0}
 

@@ -2,7 +2,7 @@
 layout: page
 title: JsonSchema.Net.DataGeneration
 icon: fas fa-tag
-order: "09.04"
+order: "09.06"
 ---
 # [2.0.0](https://github.com/gregsdennis/json-everything/pull/619) {#release-schemadatagen-2.0.0}
 

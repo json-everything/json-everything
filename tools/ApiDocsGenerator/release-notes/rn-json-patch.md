@@ -2,7 +2,7 @@
 layout: page
 title: JsonPatch.Net
 icon: fas fa-tag
-order: "09.09"
+order: "09.08"
 ---
 # [3.0.0](https://github.com/gregsdennis/json-everything/pull/619) {#release-patch-3.0.0}
 

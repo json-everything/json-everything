@@ -2,7 +2,7 @@
 layout: page
 title: JsonLogic.Net
 icon: fas fa-tag
-order: "09.11"
+order: "09.10"
 ---
 # [5.0.0](https://github.com/gregsdennis/json-everything/pull/619) {#release-logic-5.0.0}
 

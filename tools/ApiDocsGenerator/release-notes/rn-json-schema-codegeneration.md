@@ -2,8 +2,15 @@
 layout: page
 title: JsonSchema.Net.CodeGeneration
 icon: fas fa-tag
-order: "09.03"
+order: "09.14"
 ---
+> **DEPRECATION NOTICE**
+>
+> This library is no longer being developed.
+> 
+> Please see https://blog.json-everything.net/posts/dropping-codegen/ for more information.
+{: .prompt-danger }
+
 # [0.2.0](https://github.com/gregsdennis/json-everything/pull/619) {#release-schemacodegen-0.2.0}
 
 Updated for multi-framework support with .Net Standard 2.0 and .Net 8 with Native AOT support, including updating _System.Text.Json_ from v6 to v8.

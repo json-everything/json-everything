@@ -29,14 +29,14 @@ namespace ApiDocsGenerator
 			await GenerateAndSaveDocs<DiscriminatorKeyword>("10.04", outputDir, "api");
 			await GenerateAndSaveDocs<ISchemaGenerator>("10.05", outputDir, "api");
 			await GenerateAndSaveDocs<NumberRange>("10.06", outputDir, "api");
-			await GenerateAndSaveDocs(typeof(CodeGenExtensions), "10.07", outputDir, "api");
-			await GenerateAndSaveDocs<JsonPath>("10.08", outputDir, "api");
-			await GenerateAndSaveDocs<JsonPatch>("10.09", outputDir, "api");
-			await GenerateAndSaveDocs<JsonPointer>("10.10", outputDir, "api");
-			await GenerateAndSaveDocs(typeof(JsonLogic), "10.11", outputDir, "api");
-			await GenerateAndSaveDocs(typeof(JsonE), "10.12", outputDir, "api");
-			await GenerateAndSaveDocs(typeof(EnumStringConverter<>), "10.13", outputDir, "api");
-			await GenerateAndSaveDocs(typeof(YamlConverter), "10.14", outputDir, "api");
+			await GenerateAndSaveDocs<JsonPath>("10.07", outputDir, "api");
+			await GenerateAndSaveDocs<JsonPatch>("10.08", outputDir, "api");
+			await GenerateAndSaveDocs<JsonPointer>("10.09", outputDir, "api");
+			await GenerateAndSaveDocs(typeof(JsonLogic), "10.10", outputDir, "api");
+			await GenerateAndSaveDocs(typeof(JsonE), "10.11", outputDir, "api");
+			await GenerateAndSaveDocs(typeof(EnumStringConverter<>), "10.12", outputDir, "api");
+			await GenerateAndSaveDocs(typeof(YamlConverter), "10.13", outputDir, "api");
+			await GenerateAndSaveDocs(typeof(CodeGenExtensions), "10.14", outputDir, "api");
 		}
 
 		private static void CopyReleaseNotes(params string[] outputDir)

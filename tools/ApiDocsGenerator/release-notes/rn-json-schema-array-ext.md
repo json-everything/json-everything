@@ -2,7 +2,7 @@
 layout: page
 title: JsonSchema.Net.ArrayExt
 icon: fas fa-tag
-order: "09.06"
+order: "09.03"
 ---
 # [2.0.0](https://github.com/gregsdennis/json-everything/pull/619) {#release-schemaarrayext-2.0.0}
 
