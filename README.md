@@ -65,10 +65,6 @@ All libraries are built to .Net Standard 2.0 and .Net 8.
 <td>Generation of schemas from .Net types</td>
 </tr>
 <tr>
-<td>JsonSchema.Net.CodeGeneration<br><a href="https://www.nuget.org/packages/JsonSchema.Net.CodeGeneration/"><img alt="NuGet version" src="https://img.shields.io/nuget/vpre/JsonSchema.Net.CodeGeneration.svg?svg=true"></img><img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonSchema.Net.CodeGeneration.svg?svg=true"></img></a></td>
-<td>Generation of C# code from schemas (more languages to follow)</td>
-</tr>
-<tr>
 <td>JsonSchema.Net.DataGeneration<br><a href="https://www.nuget.org/packages/JsonSchema.Net.DataGeneration/"><img alt="NuGet version" src="https://img.shields.io/nuget/vpre/JsonSchema.Net.DataGeneration.svg?svg=true"></img><img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonSchema.Net.DataGeneration.svg?svg=true"></img></a></td>
 <td>Random instance data generation (powered by <a href="https://github.com/bchavez/Bogus">Bogus</a>)</td>
 </tr>
@@ -128,9 +124,24 @@ Error message translations for _JsonSchema.Net_ available in:
 
 You can also view JSON Schema Test Suite results on [Bowtie](https://bowtie-json-schema.github.io/bowtie), which runs the test suite against multiple implementations across different platforms.
 
-***DISCLAIMER** My library, JsonSchema.Net, is not related to or associated with the website https://jsonschema.net, except that they are both excellent JSON Schema tools.*
+***DISCLAIMER** My library, _JsonSchema.Net_, is not related to or associated with the website https://jsonschema.net, except that they are both excellent JSON Schema tools.*
 
-## System.Text.Json support by other projects
+### Deprecated packages
+
+These packages have also been a part of this suite but are no longer supported.
+
+<table>
+<tbody>
+<tr>
+<td>JsonSchema.Net.CodeGeneration<br><a href="https://www.nuget.org/packages/JsonSchema.Net.CodeGeneration/"><img alt="NuGet version" src="https://img.shields.io/nuget/vpre/JsonSchema.Net.CodeGeneration.svg?svg=true"></img><img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonSchema.Net.CodeGeneration.svg?svg=true"></img></a></td>
+<td>Generation of C# code from schemas</td>
+<td>Deprecated in favor of <a href="https://github.com/corvus-dotnet/Corvus.JsonSchema">Corvus.JsonSchema</a></td>
+</tr>
+</tbody>
+</table>
+
+
+## _System.Text.Json_ support by other projects
 
 If you don't find what you're looking for here, please try one of these excellent projects:
 
@@ -141,12 +152,12 @@ If you don't find what you're looking for here, please try one of these excellen
   - JSON Path
   - JMES Path
 - [Corvus.JsonSchema](https://github.com/corvus-dotnet/Corvus.JsonSchema) by [@mwadams](https://github.com/mwadams)
-  - JSON Schema with a C# code generation focus
+  - JSON Schema validation with a C# code generation focus
 - (more to come)
 
 If you use JSON to do something that is not covered by a library in this suite or one of the above projects, feel free to [create a feature issue](https://github.com/gregsdennis/json-everything/issues/new?assignees=&labels=feature&projects=&template=New_function.yml).
 
-If you have or know of another project that extends System.Text.Json to do cool things, I'd like to list it here, so please [create a general issue](https://github.com/gregsdennis/json-everything/issues/new) to let me know about it.
+If you maintain or know of another project that extends _System.Text.Json_ to do cool things, I'd like to list it here, so please [create a general issue](https://github.com/gregsdennis/json-everything/issues/new) to let me know about it.
 
 ## Contributors
 
