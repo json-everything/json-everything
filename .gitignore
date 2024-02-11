@@ -12,7 +12,9 @@
 Json*.xml
 Yaml*.xml
 /JsonSchema/nuspec/*/*.dll
-doc-tool/
+doc-tool/*
+!doc-tool/xml
+doc-tool/xml/*
 !doc-tool/xml/JsonSchema.Net.CodeGeneration.xml
 
 # User-specific files (MonoDevelop/Xamarin Studio)
