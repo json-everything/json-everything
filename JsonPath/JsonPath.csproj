@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.1;net8.0</TargetFrameworks>
+		<TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
 		<LangVersion>latest</LangVersion>
 		<RootNamespace>Json.Path</RootNamespace>
 		<AssemblyName>JsonPath.Net</AssemblyName>
@@ -20,8 +20,8 @@
 		<PackageIcon>json-logo-256.png</PackageIcon>
 		<PackageTags>json-path jsonpath query path json</PackageTags>
 		<PackageReleaseNotes>Release notes can be found at https://docs.json-everything.net/rn-json-path/</PackageReleaseNotes>
-		<Version>0.8.0</Version>
-		<FileVersion>0.8.0.0</FileVersion>
+		<Version>0.8.1</Version>
+		<FileVersion>0.8.1.0</FileVersion>
 		<AssemblyVersion>0.8.0.0</AssemblyVersion>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<DocumentationFile>JsonPath.Net.xml</DocumentationFile>
