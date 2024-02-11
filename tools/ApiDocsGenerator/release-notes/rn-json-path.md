@@ -4,6 +4,10 @@ title: JsonPath.Net
 icon: fas fa-tag
 order: "09.08"
 ---
+# [0.8.1](https://github.com/gregsdennis/json-everything/pull/655) {#release-path-0.8.0}
+
+[#653](https://github.com/gregsdennis/json-everything/pull/653) - [@Emcrank](https://github.com/Emcrank) applied modifications to support .Net Standard 2.0.
+
 # [0.8.0](https://github.com/gregsdennis/json-everything/pull/619) {#release-path-0.8.0}
 
 Updated for multi-framework support with .Net Standard 2.0 and .Net 8 with Native AOT support, including updating _System.Text.Json_ from v6 to v8.
