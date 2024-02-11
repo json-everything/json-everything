@@ -12,11 +12,6 @@ namespace Json.Path;
 /// </summary>
 public static class FunctionRepository
 {
-	private class FunctionRegistration
-	{
-
-	}
-
 	private static readonly Dictionary<string, IPathFunctionDefinition> _functions = [];
 
 	static FunctionRepository()

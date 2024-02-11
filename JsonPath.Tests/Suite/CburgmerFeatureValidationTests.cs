@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text.Encodings.Web;
@@ -23,10 +22,10 @@ namespace Json.Path.Tests.Suite;
 public class CburgmerFeatureValidationTests
 {
 	private const string _regressionResultsFile = @"../../../../ref-repos/json-path-comparison/regression_suite/regression_suite.yaml";
-	private static readonly Regex _idPattern = new Regex(@"  - id: (?<value>.*)");
-	private static readonly Regex _selectorPattern = new Regex(@"    selector: (?<value>.*)");
-	private static readonly Regex _documentPattern = new Regex(@"    document: (?<value>.*)");
-	private static readonly Regex _consensusPattern = new Regex(@"    consensus: (?<value>.*)");
+	private static readonly Regex _idPattern = new(@"  - id: (?<value>.*)");
+	private static readonly Regex _selectorPattern = new(@"    selector: (?<value>.*)");
+	private static readonly Regex _documentPattern = new(@"    document: (?<value>.*)");
+	private static readonly Regex _consensusPattern = new(@"    consensus: (?<value>.*)");
 	private static readonly string[] _notSupported =
 	{
 		// dashes are not allowed in shorthand property names
@@ -162,11 +161,11 @@ public class CburgmerFeatureValidationTests
 				}
 				else if (TryMatch(line, _selectorPattern, out value))
 				{
-					currentTestCase!.PathString = JsonNode.Parse(value)!.GetValue<string>();
+					currentTestCase!.PathString = JsonNode.Parse(value!)!.GetValue<string>();
 				}
 				else if (TryMatch(line, _documentPattern, out value))
 				{
-					currentTestCase!.JsonString = value;
+					currentTestCase!.JsonString = value!;
 				}
 				else if (TryMatch(line, _consensusPattern, out value))
 				{
