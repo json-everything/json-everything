@@ -47,7 +47,7 @@ internal class RequirementsContext
 	public NumberRangeSet? PropertyCounts { get; set; }
 	public List<string>? RequiredProperties { get; set; }
 	public List<string>? AvoidProperties { get; set; }
-	// TODO: unevaluatedItems
+	// TODO: unevaluatedProperties
 
 	public JsonNode? Const { get; set; }
 	public bool ConstIsSet { get; set; }
@@ -59,7 +59,7 @@ internal class RequirementsContext
 
 	public RequirementsContext() { }
 
-	public RequirementsContext(RequirementsContext other)
+	public RequirementsContext(RequirementsContext other, bool copyOptions = true)
 	{
 		Type = other.Type;
 		InferredType = other.InferredType;
@@ -85,7 +85,7 @@ internal class RequirementsContext
 		if (other.RemainingItems != null)
 			RemainingItems = new RequirementsContext(other.RemainingItems);
 
-		if (other.Options != null)
+		if (copyOptions && other.Options != null)
 			Options = other.Options.Select(x => new RequirementsContext(x)).ToList();
 
 		Const = other.Const;
@@ -108,7 +108,7 @@ internal class RequirementsContext
 	{
 		RequirementsContext CreateVariation(RequirementsContext option)
 		{
-			var variation = new RequirementsContext(this);
+			var variation = new RequirementsContext(this, copyOptions: false);
 			variation.And(option);
 			return variation;
 		}
@@ -137,6 +137,23 @@ internal class RequirementsContext
 	// Only need to break one requirement for this to work, not all
 	public RequirementsContext Break()
 	{
+		bool BreakBoolean(RequirementsContext context)
+		{
+			if (IsTrue())
+			{
+				context.IsFalse = true;
+				return true;
+			}
+
+			if (IsFalse)
+			{
+				context.IsFalse = false;
+				return true;
+			}
+
+			return false;
+		}
+
 		bool BreakType(RequirementsContext context)
 		{
 			if (Type == null) return false;
@@ -205,7 +222,7 @@ internal class RequirementsContext
 			{
 				context.Properties = Properties.ToDictionary(x => x.Key, x => x.Value.Break());
 				context.RequiredProperties ??= [];
-				context.RequiredProperties.AddRange(context.Properties.Keys);
+				context.RequiredProperties.AddRange(context.Properties.Where(x => !x.Value.IsFalse).Select(x => x.Key));
 				broken = true;
 			}
 
@@ -251,6 +268,7 @@ internal class RequirementsContext
 
 		var allBreakers = new[]
 		{
+			BreakBoolean,
 			BreakType,
 			BreakNumberRange,
 			BreakMultiples,
@@ -377,5 +395,33 @@ internal class RequirementsContext
 			ContainsCounts = other.ContainsCounts;
 		else if (other.ContainsCounts != null)
 			ContainsCounts *= other.ContainsCounts;
+	}
+
+	private bool IsTrue()
+	{
+		return !IsFalse &&
+		       Type == null &&
+		       NumberRanges == null &&
+		       Multiples == null &&
+		       AntiMultiples == null &&
+		       StringLengths == null &&
+		       //Patterns == null &&
+		       //AntiPatterns == null &&
+		       Pattern == null &&
+		       Format == null &&
+		       SequentialItems == null &&
+		       RemainingItems == null &&
+		       ItemCounts == null &&
+		       Contains == null &&
+		       ContainsCounts == null &&
+		       Properties == null &&
+		       RemainingProperties == null &&
+		       PropertyCounts == null &&
+		       RequiredProperties == null &&
+		       AvoidProperties == null &&
+		       Const == null &&
+		       !ConstIsSet &&
+		       EnumOptions == null &&
+		       Options == null;
 	}
 }

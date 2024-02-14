@@ -74,7 +74,6 @@ internal class GithubTests
 						("B", new JsonSchemaBuilder())
 					)
 			)
-			.UnevaluatedProperties(false)
 			.Build();
 
 		var generationResult = schema.GenerateData();
@@ -102,7 +101,6 @@ internal class GithubTests
 						("B", new JsonSchemaBuilder())
 					)
 			)
-			.UnevaluatedProperties(false)
 			.Build();
 
 		var generationResult = schema.GenerateData();
