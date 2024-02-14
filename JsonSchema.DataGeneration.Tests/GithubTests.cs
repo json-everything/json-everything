@@ -112,6 +112,33 @@ internal class GithubTests
 	}
 
 	[Test]
+	public void Issue646_EitherPropertyButNotBoth_WithIntegerAndFalse()
+	{
+		var schema = new JsonSchemaBuilder()
+			.Schema(MetaSchemas.Draft202012Id)
+			.OneOf(
+				new JsonSchemaBuilder()
+					.Properties(
+						("A", new JsonSchemaBuilder().Type(SchemaValueType.Integer)),
+						("B", false)
+					),
+				new JsonSchemaBuilder()
+					.Properties(
+						("A", false),
+						("B", new JsonSchemaBuilder().Type(SchemaValueType.Integer))
+					)
+			)
+			.Build();
+
+		var generationResult = schema.GenerateData();
+		Console.WriteLine(JsonSerializer.Serialize(generationResult.Result, TestHelpers.SerializerOptions));
+
+		var result = schema.Evaluate(generationResult.Result);
+
+		result.AssertValid();
+	}
+
+	[Test]
 	public void Issue646_PropertyWithFalse()
 	{
 		var schema = new JsonSchemaBuilder()

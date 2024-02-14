@@ -211,11 +211,10 @@ internal class RequirementsContext
 
 		bool BreakProperties(RequirementsContext context)
 		{
-			var broken = false;
 			if (RemainingProperties != null)
 			{
 				context.RemainingProperties = RemainingProperties.Break();
-				broken = true;
+				return true;
 			}
 
 			if (Properties != null)
@@ -223,10 +222,10 @@ internal class RequirementsContext
 				context.Properties = Properties.ToDictionary(x => x.Key, x => x.Value.Break());
 				context.RequiredProperties ??= [];
 				context.RequiredProperties.AddRange(context.Properties.Where(x => !x.Value.IsFalse).Select(x => x.Key));
-				broken = true;
+				return true;
 			}
 
-			return broken;
+			return false;
 		}
 
 		bool BreakRequired(RequirementsContext context)
@@ -368,7 +367,22 @@ internal class RequirementsContext
 		else if (other.PropertyCounts != null)
 			PropertyCounts *= other.PropertyCounts;
 
-		// properties?
+		if (Properties == null)
+			Properties = other.Properties;
+		else if (other.Properties != null)
+		{
+			var allKeys = Properties.Keys.Union(other.Properties.Keys);
+			foreach (var key in allKeys)
+			{
+				Properties.TryGetValue(key, out var thisProperty);
+				other.Properties.TryGetValue(key, out var otherProperty);
+
+				if (thisProperty == null)
+					Properties[key] = otherProperty!;
+				else if (otherProperty != null)
+					thisProperty.And(otherProperty);
+			}
+		}
 
 		if (RemainingProperties == null)
 			RemainingProperties = other.RemainingProperties;
