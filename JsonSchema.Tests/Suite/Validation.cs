@@ -14,7 +14,7 @@ public class Validation
 	private const string _testCasesPath = @"../../../../ref-repos/JSON-Schema-Test-Suite/tests";
 	private const string _remoteSchemasPath = @"../../../../ref-repos/JSON-Schema-Test-Suite/remotes";
 
-	private const bool _useExternal = false;
+	private const bool _useExternal = true;
 	private const bool _runDraftNext = true;
 	private const string _externalTestCasesPath = @"../../../../../JSON-Schema-Test-Suite/tests";
 	private const string _externalRemoteSchemasPath = @"../../../../../JSON-Schema-Test-Suite/remotes";

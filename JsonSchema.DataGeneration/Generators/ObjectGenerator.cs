@@ -122,7 +122,9 @@ internal class ObjectGenerator : IDataGenerator
 				currentContainsIndex++;
 			}
 
-			propertyGenerationResults[propertyName] = propertyRequirement!.GenerateData();
+			var propertyGenerationResult = propertyRequirement!.GenerateData();
+			if (propertyGenerationResult.IsSuccess)
+				propertyGenerationResults[propertyName] = propertyGenerationResult;
 		}
 
 		return propertyGenerationResults.All(x => x.Value.IsSuccess)
