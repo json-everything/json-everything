@@ -63,6 +63,7 @@ internal class RequirementsContext
 	{
 		Type = other.Type;
 		InferredType = other.InferredType;
+		IsFalse = other.IsFalse;
 
 		if (other.NumberRanges != null)
 			NumberRanges = new NumberRangeSet(other.NumberRanges);

@@ -71,7 +71,6 @@ public class ConditionalGenerationTests
 	}
 
 	[Test]
-	//[Ignore("This is just an extension of " + nameof(TypeInConditionalResult) + ". Included for reference.")]
 	public void TypeInConditionalResult2()
 	{
 		var schema = new JsonSchemaBuilder()
@@ -80,9 +79,11 @@ public class ConditionalGenerationTests
 				("people", new JsonSchemaBuilder()
 					.Type(SchemaValueType.Array)
 					.Items(new JsonSchemaBuilder()
-						.If(new JsonSchemaBuilder().Properties(
+						.If(new JsonSchemaBuilder()
+							.Properties(
 								("id", new JsonSchemaBuilder().Const("uLqeBv"))
 							)
+							.Required("id")
 						)
 						.Then(new JsonSchemaBuilder()
 							.Type(SchemaValueType.Object)
@@ -92,7 +93,6 @@ public class ConditionalGenerationTests
 							)
 							.Required("id", "relationshipStatus")
 						)
-						.Else(true)
 					)
 				)
 			)

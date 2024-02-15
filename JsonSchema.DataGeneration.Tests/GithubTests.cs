@@ -158,4 +158,32 @@ internal class GithubTests
 
 		result.AssertValid();
 	}
+
+	[Test]
+	public void Issue647_EitherPropertyButNotBoth_WithUnevaluatedProperties()
+	{
+		var schema = new JsonSchemaBuilder()
+			.Schema(MetaSchemas.Draft202012Id)
+			.OneOf(
+				new JsonSchemaBuilder()
+					.Properties(
+						("A", new JsonSchemaBuilder()),
+						("B", false)
+					),
+				new JsonSchemaBuilder()
+					.Properties(
+						("A", false),
+						("B", new JsonSchemaBuilder())
+					)
+			)
+			.UnevaluatedProperties(false)
+			.Build();
+
+		var generationResult = schema.GenerateData();
+		Console.WriteLine(JsonSerializer.Serialize(generationResult.Result, TestHelpers.SerializerOptions));
+
+		var result = schema.Evaluate(generationResult.Result);
+
+		result.AssertValid();
+	}
 }
