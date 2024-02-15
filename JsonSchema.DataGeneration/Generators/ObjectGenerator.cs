@@ -122,11 +122,13 @@ internal class ObjectGenerator : IDataGenerator
 				currentContainsIndex++;
 			}
 
-			propertyGenerationResults[propertyName] = propertyRequirement!.GenerateData();
+			var propertyGenerationResult = propertyRequirement!.GenerateData();
+			if (propertyGenerationResult.IsSuccess)
+				propertyGenerationResults[propertyName] = propertyGenerationResult;
 		}
 
 		return propertyGenerationResults.All(x => x.Value.IsSuccess)
-			? GenerationResult.Success(new JsonObject(propertyGenerationResults.ToDictionary(x => x.Key, x => x.Value.Result)))
+			? GenerationResult.Success(new JsonObject(propertyGenerationResults.ToDictionary(x => x.Key, x => x.Value.Result?.DeepClone())))
 			: GenerationResult.Fail(propertyGenerationResults.Values);
 	}
 }

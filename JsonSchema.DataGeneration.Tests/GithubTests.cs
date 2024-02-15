@@ -56,4 +56,134 @@ internal class GithubTests
 			Console.WriteLine(JsonSerializer.Serialize(generationResult, TestHelpers.SerializerOptions));
 		}
 	}
+
+	[Test]
+	public void Issue646_EitherPropertyButNotBoth_WithNot()
+	{
+		var schema = new JsonSchemaBuilder()
+			.Schema(MetaSchemas.Draft202012Id)
+			.OneOf(
+				new JsonSchemaBuilder()
+					.Properties(
+						("A", new JsonSchemaBuilder()),
+						("B", new JsonSchemaBuilder().Not(new JsonSchemaBuilder()))
+					),
+				new JsonSchemaBuilder()
+					.Properties(
+						("A", new JsonSchemaBuilder().Not(new JsonSchemaBuilder())),
+						("B", new JsonSchemaBuilder())
+					)
+			)
+			.Build();
+
+		var generationResult = schema.GenerateData();
+		Console.WriteLine(JsonSerializer.Serialize(generationResult.Result, TestHelpers.SerializerOptions));
+
+		var result = schema.Evaluate(generationResult.Result);
+
+		result.AssertValid();
+	}
+
+	[Test]
+	public void Issue646_EitherPropertyButNotBoth_WithFalse()
+	{
+		var schema = new JsonSchemaBuilder()
+			.Schema(MetaSchemas.Draft202012Id)
+			.OneOf(
+				new JsonSchemaBuilder()
+					.Properties(
+						("A", new JsonSchemaBuilder()),
+						("B", false)
+					),
+				new JsonSchemaBuilder()
+					.Properties(
+						("A", false),
+						("B", new JsonSchemaBuilder())
+					)
+			)
+			.Build();
+
+		var generationResult = schema.GenerateData();
+		Console.WriteLine(JsonSerializer.Serialize(generationResult.Result, TestHelpers.SerializerOptions));
+
+		var result = schema.Evaluate(generationResult.Result);
+
+		result.AssertValid();
+	}
+
+	[Test]
+	public void Issue646_EitherPropertyButNotBoth_WithIntegerAndFalse()
+	{
+		var schema = new JsonSchemaBuilder()
+			.Schema(MetaSchemas.Draft202012Id)
+			.OneOf(
+				new JsonSchemaBuilder()
+					.Properties(
+						("A", new JsonSchemaBuilder().Type(SchemaValueType.Integer)),
+						("B", false)
+					),
+				new JsonSchemaBuilder()
+					.Properties(
+						("A", false),
+						("B", new JsonSchemaBuilder().Type(SchemaValueType.Integer))
+					)
+			)
+			.Build();
+
+		var generationResult = schema.GenerateData();
+		Console.WriteLine(JsonSerializer.Serialize(generationResult.Result, TestHelpers.SerializerOptions));
+
+		var result = schema.Evaluate(generationResult.Result);
+
+		result.AssertValid();
+	}
+
+	[Test]
+	public void Issue646_PropertyWithFalse()
+	{
+		var schema = new JsonSchemaBuilder()
+			.Schema(MetaSchemas.Draft202012Id)
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("A", new JsonSchemaBuilder()),
+				("B", false)
+			)
+			.MinProperties(4)
+			.Build();
+
+		var generationResult = schema.GenerateData();
+		Console.WriteLine(JsonSerializer.Serialize(generationResult.Result, TestHelpers.SerializerOptions));
+
+		var result = schema.Evaluate(generationResult.Result);
+
+		result.AssertValid();
+	}
+
+	[Test]
+	public void Issue647_EitherPropertyButNotBoth_WithUnevaluatedProperties()
+	{
+		var schema = new JsonSchemaBuilder()
+			.Schema(MetaSchemas.Draft202012Id)
+			.OneOf(
+				new JsonSchemaBuilder()
+					.Properties(
+						("A", new JsonSchemaBuilder()),
+						("B", false)
+					),
+				new JsonSchemaBuilder()
+					.Properties(
+						("A", false),
+						("B", new JsonSchemaBuilder())
+					)
+			)
+			.UnevaluatedProperties(false)
+			.Build();
+
+		var generationResult = schema.GenerateData();
+		Console.WriteLine(JsonSerializer.Serialize(generationResult.Result, TestHelpers.SerializerOptions));
+
+		var result = schema.Evaluate(generationResult.Result);
+
+		result.AssertValid();
+	}
 }
