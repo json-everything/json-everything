@@ -19,8 +19,8 @@
 		<PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>
 		<PackageTags>json-schema schema json generation</PackageTags>
-		<Version>2.0.0</Version>
-		<FileVersion>2.0.0.0</FileVersion>
+		<Version>2.0.1</Version>
+		<FileVersion>2.0.1.0</FileVersion>
 		<AssemblyVersion>2.0.0.0</AssemblyVersion>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageIcon>json-logo-256.png</PackageIcon>
