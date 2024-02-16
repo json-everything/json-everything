@@ -21,8 +21,23 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Validation202012Id)]
 [Vocabulary(Vocabularies.ValidationNextId)]
 [JsonConverter(typeof(MaxItemsKeywordJsonConverter))]
-public class MaxItemsKeyword : IJsonSchemaKeyword
+public class MaxItemsKeyword : IJsonSchemaKeyword, IKeywordHandler
 {
+	public static MaxItemsKeyword Handler { get; } = new(0);
+
+	bool IKeywordHandler.Evaluate(FunctionalEvaluationContext context)
+	{
+		if (!context.LocalSchema.AsObject().TryGetValue(Name, out var requirement, out _)) return true;
+
+		decimal? reqNumber;
+		if (requirement is not JsonValue reqValue || (reqNumber = reqValue.GetInteger()) is null || reqNumber < 0)
+			throw new Exception("maxItems must be a non-negative integer");
+
+		if (context.LocalInstance is not JsonArray array) return true;
+
+		return array.Count <= reqNumber;
+	}
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>

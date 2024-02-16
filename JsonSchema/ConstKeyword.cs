@@ -21,8 +21,17 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Validation202012Id)]
 [Vocabulary(Vocabularies.ValidationNextId)]
 [JsonConverter(typeof(ConstKeywordJsonConverter))]
-public class ConstKeyword : IJsonSchemaKeyword
+public class ConstKeyword : IJsonSchemaKeyword, IKeywordHandler
 {
+	public static ConstKeyword Handler { get; } = new(0);
+
+	bool IKeywordHandler.Evaluate(FunctionalEvaluationContext context)
+	{
+		if (!context.LocalSchema.AsObject().TryGetValue(Name, out var requirement, out _)) return true;
+
+		return context.LocalInstance.IsEquivalentTo(requirement);
+	}
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>

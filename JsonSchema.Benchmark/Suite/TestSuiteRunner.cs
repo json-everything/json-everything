@@ -92,9 +92,16 @@ public class TestSuiteRunner
 	{
 		if (!InstanceIsDeserializable(test.Data)) return;
 
-		for (int i = 0; i < n; i++)
+		try
 		{
-			_ = JsonSchema.Evaluate(collection.Schema, test.Data);
+			for (int i = 0; i < n; i++)
+			{
+				_ = JsonSchema.Evaluate(collection.Schema, test.Data);
+			}
+		}
+		catch
+		{
+			//Console.WriteLine($"Exception on '{collection.Description} - {test.Description}'");
 		}
 	}
 

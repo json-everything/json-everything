@@ -21,8 +21,23 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Validation202012Id)]
 [Vocabulary(Vocabularies.ValidationNextId)]
 [JsonConverter(typeof(MinPropertiesKeywordJsonConverter))]
-public class MinPropertiesKeyword : IJsonSchemaKeyword
+public class MinPropertiesKeyword : IJsonSchemaKeyword, IKeywordHandler
 {
+	public static MinPropertiesKeyword Handler { get; } = new(0);
+
+	bool IKeywordHandler.Evaluate(FunctionalEvaluationContext context)
+	{
+		if (!context.LocalSchema.AsObject().TryGetValue(Name, out var requirement, out _)) return true;
+
+		decimal? reqNumber;
+		if (requirement is not JsonValue reqValue || (reqNumber = reqValue.GetInteger()) is null || reqNumber < 0)
+			throw new Exception("minItems must be a non-negative integer");
+
+		if (context.LocalInstance is not JsonObject obj) return true;
+
+		return obj.Count >= reqNumber;
+	}
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>

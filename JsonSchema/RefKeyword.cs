@@ -43,7 +43,8 @@ public class RefKeyword : IJsonSchemaKeyword, IKeywordHandler
 		//	throw new JsonSchemaException($"Encountered circular reference at schema location `{newUri}` and instance location `{schemaConstraint.RelativeInstanceLocation}`");
 
 		var newBaseUri = new Uri(newUri.GetLeftPart(UriPartial.Query));
-		var targetBase = context.SchemaRegistry.GetUntyped(newBaseUri);
+		var targetBase = context.SchemaRegistry.GetUntyped(newBaseUri) ??
+		                 throw new JsonSchemaException($"Cannot resolve base schema `{newBaseUri}`");
 		JsonNode? targetSchema;
 
 		if (string.IsNullOrEmpty(fragment))

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.More;
 
@@ -20,8 +21,27 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Validation202012Id)]
 [Vocabulary(Vocabularies.ValidationNextId)]
 [JsonConverter(typeof(MinLengthKeywordJsonConverter))]
-public class MinLengthKeyword : IJsonSchemaKeyword
+public class MinLengthKeyword : IJsonSchemaKeyword, IKeywordHandler
 {
+	public static MinLengthKeyword Handler { get; } = new(0);
+
+	bool IKeywordHandler.Evaluate(FunctionalEvaluationContext context)
+	{
+		if (!context.LocalSchema.AsObject().TryGetValue(Name, out var requirement, out _)) return true;
+
+		decimal? reqNumber;
+		if (requirement is not JsonValue reqValue || (reqNumber = reqValue.GetInteger()) is null || reqNumber < 0)
+			throw new Exception("maxLength must be a non-negative integer");
+
+		if (context.LocalInstance is not JsonValue value) return true;
+
+		var str = value.GetString();
+		if (str is null) return true;
+
+		var length = new StringInfo(str).LengthInTextElements;
+		return length >= reqNumber;
+	}
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
