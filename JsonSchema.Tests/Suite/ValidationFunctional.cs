@@ -102,9 +102,10 @@ public class ValidationFunctional
 
 		foreach (var fileName in fileNames)
 		{
-			var schema = JsonSchema.FromFile(fileName);
+			var text = File.ReadAllText(fileName);
+			var schema = JsonNode.Parse(text);
 			var uri = new Uri(fileName.Replace(remotesPath, "http://localhost:1234").Replace('\\', '/'));
-			SchemaRegistry.Global.Register(uri, schema);
+			SchemaRegistry.Global.RegisterUntyped(uri, schema!);
 		}
 	}
 

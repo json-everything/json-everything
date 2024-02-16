@@ -60,7 +60,8 @@ public class RefKeyword : IJsonSchemaKeyword, IKeywordHandler
 			if (!AnchorKeyword.AnchorPattern.IsMatch(anchorFragment))
 				throw new JsonSchemaException($"Unrecognized fragment type `{newUri}`");
 
-			throw new NotImplementedException("anchors not yet supported");
+			targetSchema = context.SchemaRegistry.GetUntyped(newBaseUri, anchor: anchorFragment) ??
+			               throw new JsonSchemaException($"could not find location #{anchorFragment} within base schema {newBaseUri}");
 		}
 
 		var refContext = context;

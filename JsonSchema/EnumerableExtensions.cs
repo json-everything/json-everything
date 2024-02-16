@@ -159,4 +159,9 @@ public static class EnumerableExtensions
 	{
 		return values as IReadOnlyList<T> ?? values.ToArray();
 	}
+
+	internal static TValue? GetValueOrDefault<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key)
+	{
+		return dictionary.TryGetValue(key, out var value) ? value : default;
+	}
 }

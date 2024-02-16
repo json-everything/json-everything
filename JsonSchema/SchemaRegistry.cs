@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json.Nodes;
+using Json.More;
+using Json.Pointer;
 
 namespace Json.Schema;
 
@@ -100,30 +103,183 @@ public class SchemaRegistry
 			_registered[uri] = new Registration{Root = document};
 	}
 
-	private readonly ConcurrentDictionary<string, JsonNode?> _untyped = new();
-
-	public void RegisterUntyped(Uri uri, JsonNode? value)
+	private class UntypedRegistration
 	{
-		if (!uri.IsAbsoluteUri)
-			throw new ArgumentException("uri must be absolute for retrieval");
-
-		var baseUri = uri.GetLeftPart(UriPartial.Query);
-
-		_untyped[baseUri] = value;
+		public JsonNode Root { get; set; }
+		public Dictionary<string, JsonNode>? Anchors { get; set; }
+		public Dictionary<string, JsonNode>? DynamicAnchors { get; set; }
 	}
 
-	public JsonNode? GetUntyped(Uri uri)
+	private readonly ConcurrentDictionary<string, UntypedRegistration> _untyped = new();
+
+	public void RegisterUntyped(Uri uri, JsonNode value)
 	{
 		if (!uri.IsAbsoluteUri)
 			throw new ArgumentException("uri must be absolute for retrieval");
 
 		var baseUri = uri.GetLeftPart(UriPartial.Query);
 
-		return _untyped.TryGetValue(baseUri, out var value)
+		var (anchors, dynamicAnchors) = Scan(uri, value);
+		var registration = new UntypedRegistration
+		{
+			Root = value,
+			Anchors = anchors,
+			DynamicAnchors = dynamicAnchors
+		};
+
+		_untyped[baseUri] = registration;
+	}
+
+	public JsonNode? GetUntyped(Uri uri, string? anchor = null, string? dynamicAnchor = null)
+	{
+		if (!uri.IsAbsoluteUri)
+			throw new ArgumentException("uri must be absolute for retrieval");
+
+		var baseUri = uri.GetLeftPart(UriPartial.Query);
+
+		var registration = _untyped.TryGetValue(baseUri, out var value)
 			? value
 			: Global._untyped.TryGetValue(baseUri, out value)
 				? value
 				: null;
+
+		if (registration is null) return null;
+
+		if (anchor != null)
+			return registration.Anchors?.GetValueOrDefault(anchor);
+		
+		if (dynamicAnchor != null)
+			return registration.DynamicAnchors?.GetValueOrDefault(dynamicAnchor);
+
+		return registration.Root;
+	}
+
+	private readonly List<(JsonPointer Pointer, bool IsContainer)> _schemaLocations =
+	[
+		(JsonPointer.Create(AdditionalItemsKeyword.Name), false),
+		(JsonPointer.Create(AdditionalPropertiesKeyword.Name), false),
+		(JsonPointer.Create(AllOfKeyword.Name), true),
+		(JsonPointer.Create(AnyOfKeyword.Name), true),
+		(JsonPointer.Create(ContainsKeyword.Name), false),
+		(JsonPointer.Create(DefinitionsKeyword.Name), true),
+		(JsonPointer.Create(DefsKeyword.Name), true),
+		(JsonPointer.Create(ElseKeyword.Name), false),
+		(JsonPointer.Create(IfKeyword.Name), false),
+		(JsonPointer.Create(ItemsKeyword.Name), false),
+		(JsonPointer.Create(ItemsKeyword.Name), true),
+		(JsonPointer.Create(NotKeyword.Name), false),
+		(JsonPointer.Create(OneOfKeyword.Name), true),
+		(JsonPointer.Create(PatternPropertiesKeyword.Name), true),
+		(JsonPointer.Create(PropertiesKeyword.Name), true),
+		(JsonPointer.Create(PropertyNamesKeyword.Name), false),
+		(JsonPointer.Create(ThenKeyword.Name), false),
+		(JsonPointer.Create(UnevaluatedItemsKeyword.Name), false),
+		(JsonPointer.Create(UnevaluatedPropertiesKeyword.Name), false)
+	];
+
+	public void RegisterSchemaLocation(JsonPointer pointer, bool isContainer)
+	{
+		_schemaLocations.Add((pointer, isContainer));
+	}
+
+	private (Dictionary<string, JsonNode>, Dictionary<string, JsonNode>) Scan(Uri baseUri, JsonNode root)
+	{
+		if (root is not JsonObject objRoot) return default;
+
+		var subschemasToScan = new Queue<JsonObject>();
+		subschemasToScan.Enqueue(objRoot);
+
+		var nestedResources = new List<JsonObject>();
+		var anchors = new Dictionary<string, JsonNode>();
+		var dynamicAnchors = new Dictionary<string, JsonNode>();
+
+		void ScanTarget(JsonNode? target)
+		{
+			if (target is JsonObject obj)
+			{
+				if (obj.TryGetValue(IdKeyword.Name, out var idNode, out _) && idNode is JsonValue idValue &&
+				    Uri.TryCreate(idValue.GetString(), UriKind.RelativeOrAbsolute, out _))
+					nestedResources.Add(obj);
+				else
+					subschemasToScan.Enqueue(obj);
+			}
+			//else if (target is not JsonValue value || value.GetBool() is null)
+			//	throw new ArgumentException("Schema must be a boolean or object");
+		}
+
+		while (subschemasToScan.Any())
+		{
+			var subschema = subschemasToScan.Dequeue();
+
+			if (subschema.TryGetValue(IdKeyword.Name, out var anchor, out _))
+			{
+				string? anchorString;
+				if (anchor is JsonValue anchorValue && (anchorString = anchorValue.GetString()) is not null &&
+				    AnchorKeyword.AnchorPattern.IsMatch(anchorString))
+					anchors.Add(anchorString, subschema);
+			}
+
+			if (subschema.TryGetValue(AnchorKeyword.Name, out anchor, out _))
+			{
+				string? anchorString;
+				if (anchor is not JsonValue anchorValue || (anchorString = anchorValue.GetString()) is null ||
+				    !AnchorKeyword.AnchorPattern.IsMatch(anchorString))
+					throw new ArgumentException("$anchor must be a valid URI anchor string");
+				anchors.Add(anchorString, subschema);
+			}
+
+			if (subschema.TryGetValue(DynamicAnchorKeyword.Name, out anchor, out _))
+			{
+				string? anchorString;
+				if (anchor is not JsonValue anchorValue || (anchorString = anchorValue.GetString()) is null ||
+				    !AnchorKeyword.AnchorPattern.IsMatch(anchorString))
+					throw new ArgumentException("$anchor must be a valid URI anchor string");
+				dynamicAnchors.Add(anchorString, subschema);
+			}
+
+			foreach (var (pointer, isContainer) in _schemaLocations)
+			{
+				if (!pointer.TryEvaluate(subschema, out var target)) continue;
+
+				if (isContainer)
+				{
+					if (target is JsonObject obj)
+					{
+						foreach (var kvp in obj)
+						{
+							ScanTarget(kvp.Value);
+						}
+					}
+					else if (target is JsonArray array)
+					{
+						foreach (var node in array)
+						{
+							ScanTarget(node);
+						}
+					}
+				}
+				else
+				{
+					ScanTarget(target);
+				}
+			}
+		}
+
+		foreach (var resource in nestedResources)
+		{
+			var idNode = resource[IdKeyword.Name];
+			string? idString;
+			if (idNode is not JsonValue idValue || (idString = idValue.GetString()) is null ||
+			    !Uri.TryCreate(idString, UriKind.RelativeOrAbsolute, out var id))
+				throw new ArgumentException("$id must be a valid URI string");
+
+			if (!id.IsAbsoluteUri)
+				id = new Uri(baseUri, id);
+
+			RegisterUntyped(id, resource);
+		}
+
+		return (anchors, dynamicAnchors);
 	}
 
 	/// <summary>

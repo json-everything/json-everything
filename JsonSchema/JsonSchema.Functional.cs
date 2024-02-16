@@ -15,7 +15,7 @@ public partial class JsonSchema
 			return boolSchema.Value;
 
 		if (schema is not JsonObject obj)
-			throw new ArgumentException("schema must be a boolean or object");
+			throw new ArgumentException("Schema must be a boolean or object");
 
 		string? idString;
 		var id = obj.TryGetValue(IdKeyword.Name, out var idNode, out _) &&
@@ -51,7 +51,7 @@ public partial class JsonSchema
 		// shouldn't ever happen, but custom keywords might do dumb things
 		// also catches null
 		if (context.LocalSchema is not JsonObject)
-			throw new ArgumentException("schema must be a boolean or object");
+			throw new ArgumentException("Schema must be a boolean or object");
 
 		context.Annotations = new();
 		var result = true;
