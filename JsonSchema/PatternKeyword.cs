@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using Json.More;
@@ -21,8 +22,26 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Validation202012Id)]
 [Vocabulary(Vocabularies.ValidationNextId)]
 [JsonConverter(typeof(PatternKeywordJsonConverter))]
-public class PatternKeyword : IJsonSchemaKeyword
+public class PatternKeyword : IJsonSchemaKeyword, IKeywordHandler
 {
+	public static PatternKeyword Handler { get; } = new(string.Empty);
+
+	bool IKeywordHandler.Evaluate(FunctionalEvaluationContext context)
+	{
+		if (!context.LocalSchema.AsObject().TryGetValue(Name, out var requirement, out _)) return true;
+
+		string? pattern;
+		if (requirement is not JsonValue reqValue || (pattern = reqValue.GetString()) is null)
+			throw new Exception("maxLength must be a string");
+
+		if (context.LocalInstance is not JsonValue value) return true;
+
+		var str = value.GetString();
+		if (str is null) return true;
+
+		return Regex.IsMatch(str, pattern);
+	}
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>

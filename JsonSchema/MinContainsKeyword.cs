@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.More;
 
@@ -17,8 +18,22 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Validation202012Id)]
 [Vocabulary(Vocabularies.ValidationNextId)]
 [JsonConverter(typeof(MinContainsKeywordJsonConverter))]
-public class MinContainsKeyword : IJsonSchemaKeyword
+public class MinContainsKeyword : IJsonSchemaKeyword, IKeywordHandler
 {
+	public static MinContainsKeyword Handler { get; } = new(0);
+
+	bool IKeywordHandler.Evaluate(FunctionalEvaluationContext context)
+	{
+		if (!context.LocalSchema.AsObject().TryGetValue(Name, out var requirement, out _)) return true;
+
+		int? min;
+		if (requirement is not JsonValue value || (min = (int?)value.GetInteger()) is null || min < 0)
+			throw new ArgumentException("minContains must be a non-negative integer");
+
+		context.Annotations[Name] = requirement;
+		return true;
+	}
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>

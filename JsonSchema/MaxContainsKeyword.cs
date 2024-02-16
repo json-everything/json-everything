@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.More;
 
@@ -17,8 +18,22 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Validation202012Id)]
 [Vocabulary(Vocabularies.ValidationNextId)]
 [JsonConverter(typeof(MaxContainsKeywordJsonConverter))]
-public class MaxContainsKeyword : IJsonSchemaKeyword
+public class MaxContainsKeyword : IJsonSchemaKeyword, IKeywordHandler
 {
+	public static MaxContainsKeyword Handler { get; } = new(0);
+
+	bool IKeywordHandler.Evaluate(FunctionalEvaluationContext context)
+	{
+		if (!context.LocalSchema.AsObject().TryGetValue(Name, out var requirement, out _)) return true;
+
+		int? max;
+		if (requirement is not JsonValue value || (max = (int?) value.GetInteger()) is null || max < 0)
+			throw new ArgumentException("maxContains must be a non-negative integer");
+
+		context.Annotations[Name] = requirement;
+		return true;
+	}
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>

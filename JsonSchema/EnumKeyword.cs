@@ -22,8 +22,20 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Validation202012Id)]
 [Vocabulary(Vocabularies.ValidationNextId)]
 [JsonConverter(typeof(EnumKeywordJsonConverter))]
-public class EnumKeyword : IJsonSchemaKeyword
+public class EnumKeyword : IJsonSchemaKeyword, IKeywordHandler
 {
+	public static EnumKeyword Handler { get; } = new(0);
+
+	bool IKeywordHandler.Evaluate(FunctionalEvaluationContext context)
+	{
+		if (!context.LocalSchema.AsObject().TryGetValue(Name, out var requirement, out _)) return true;
+
+		if (requirement is not JsonArray array)
+			throw new ArgumentException("enum must be an array");
+
+		return array.Contains(context.LocalInstance, JsonNodeEqualityComparer.Instance);
+	}
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>

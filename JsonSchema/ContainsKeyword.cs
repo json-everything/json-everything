@@ -25,8 +25,35 @@ namespace Json.Schema;
 [DependsOnAnnotationsFrom(typeof(MinContainsKeyword))]
 [DependsOnAnnotationsFrom(typeof(MaxContainsKeyword))]
 [JsonConverter(typeof(ContainsKeywordJsonConverter))]
-public class ContainsKeyword : IJsonSchemaKeyword, ISchemaContainer
+public class ContainsKeyword : IJsonSchemaKeyword, ISchemaContainer, IKeywordHandler
 {
+	public static ContainsKeyword Handler { get; } = new(true);
+
+	bool IKeywordHandler.Evaluate(FunctionalEvaluationContext context)
+	{
+		if (!context.LocalSchema.AsObject().TryGetValue(Name, out var requirement, out _)) return true;
+
+		if (context.LocalInstance is not JsonArray array) return true;
+
+		var min = 1;
+		int? max = null;
+		if (context.Annotations.TryGetValue(MinContainsKeyword.Name, out var annotation))
+			min = (int) annotation.AsValue().GetInteger()!;
+		if (context.Annotations.TryGetValue(MaxContainsKeyword.Name, out annotation))
+			max = (int) annotation.AsValue().GetInteger()!;
+
+		var count = array.Count(x =>
+		{
+			var localContext = context;
+			localContext.LocalInstance = x;
+			localContext.LocalSchema = requirement!;
+
+			return JsonSchema.Evaluate(localContext);
+		});
+
+		return min <= count && (!max.HasValue || count <= max);
+	}
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>

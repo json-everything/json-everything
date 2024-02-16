@@ -22,8 +22,31 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Validation202012Id)]
 [Vocabulary(Vocabularies.ValidationNextId)]
 [JsonConverter(typeof(RequiredKeywordJsonConverter))]
-public class RequiredKeyword : IJsonSchemaKeyword
+public class RequiredKeyword : IJsonSchemaKeyword, IKeywordHandler
 {
+	public static RequiredKeyword Handler { get; } = new();
+
+	bool IKeywordHandler.Evaluate(FunctionalEvaluationContext context)
+	{
+		if (!context.LocalSchema.AsObject().TryGetValue(Name, out var requirement, out _)) return true;
+
+		if (requirement is not JsonArray array)
+			throw new ArgumentException("required must be an array of strings");
+
+		var properties = array.Select(x =>
+		{
+			string? prop = null;
+			if (x is JsonValue value)
+				prop = value.GetString();
+
+			return prop ?? throw new ArgumentException("required must be an array of strings");
+		});
+
+		if (context.LocalInstance is not JsonObject obj) return true;
+
+		return !properties.Except(obj.Select(x => x.Key)).Any();
+	}
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
