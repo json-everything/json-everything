@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.More;
 
@@ -129,5 +130,28 @@ public static partial class ErrorMessages
 	public static string GetMaximum(CultureInfo? culture)
 	{
 		return Maximum ?? Get(culture);
+	}
+}
+
+public class MaximumKeywordHandler : IKeywordHandler
+{
+	public static MaximumKeywordHandler Instance { get; } = new();
+
+	public MaximumKeywordHandler() { }
+
+	public bool Evaluate(FunctionalEvaluationContext context)
+	{
+		if (!context.LocalSchema.TryGetValue("maximum", out var requirement, out _)) return true;
+
+		decimal? reqNumber;
+		if (requirement is not JsonValue reqValue || (reqNumber = reqValue.GetNumber()) is null)
+			throw new Exception("maximum must be a number");
+
+		if (context.LocalInstance is not JsonValue value) return true;
+
+		var number = value.GetNumber();
+		if (number is null) return true;
+
+		return number <= reqNumber;
 	}
 }

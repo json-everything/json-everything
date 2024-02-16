@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.More;
 
@@ -125,5 +126,28 @@ public static partial class ErrorMessages
 	public static string GetExclusiveMaximum(CultureInfo? culture)
 	{
 		return ExclusiveMaximum ?? Get(culture);
+	}
+}
+
+public class ExclusiveMaximumKeywordHandler : IKeywordHandler
+{
+	public static ExclusiveMaximumKeywordHandler Instance { get; } = new();
+
+	public ExclusiveMaximumKeywordHandler() { }
+
+	public bool Evaluate(FunctionalEvaluationContext context)
+	{
+		if (!context.LocalSchema.TryGetValue("exclusiveMaximum", out var requirement, out _)) return true;
+
+		decimal? reqNumber;
+		if (requirement is not JsonValue reqValue || (reqNumber = reqValue.GetNumber()) is null)
+			throw new Exception("exclusiveMaximum must be a number");
+
+		if (context.LocalInstance is not JsonValue value) return true;
+
+		var number = value.GetNumber();
+		if (number is null) return true;
+
+		return number < reqNumber;
 	}
 }

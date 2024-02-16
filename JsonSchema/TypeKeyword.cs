@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.More;
 
@@ -148,5 +149,52 @@ public static partial class ErrorMessages
 	public static string GetType(CultureInfo? culture)
 	{
 		return Type ?? Get(culture);
+	}
+}
+
+public class TypeKeywordHandler : IKeywordHandler
+{
+	public static TypeKeywordHandler Instance { get; } = new();
+
+	private TypeKeywordHandler(){}
+
+	public bool Evaluate(FunctionalEvaluationContext context)
+	{
+		if (!context.LocalSchema.TryGetValue("type", out var requirement, out _)) return true;
+
+		switch (requirement)
+		{
+			case JsonValue reqValue:
+				var type = reqValue.GetString();  // this is allocating a string every time
+				return ValidateType(type, context.LocalInstance);
+			case JsonArray reqArr:
+				return ValidateTypeOptions(reqArr, context.LocalInstance);
+		}
+
+		throw new ArgumentException("type must be either a string or an array of strings");
+	}
+
+	private static bool ValidateType(string? type, JsonNode? instance)
+	{
+		return type switch
+		{
+			"null" => instance is null,
+			"boolean" => instance is JsonValue v && v.GetBool().HasValue,
+			"string" => instance is JsonValue v && v.GetString() is not null,
+			"number" => instance is JsonValue v && v.GetNumber().HasValue,
+			"integer" => instance is JsonValue v && v.GetInteger().HasValue,
+			"array" => instance is JsonArray,
+			"object" => instance is JsonObject,
+			_ => throw new ArgumentException("type must be one of [\"null\", \"boolean\", \"string\", \"number\", \"integer\", \"array\", \"object\"]")
+		};
+	}
+
+	private static bool ValidateTypeOptions(JsonArray reqArr, JsonNode? instance)
+	{
+		return reqArr.Aggregate(false, (current, node) =>
+		{
+			var type = (node as JsonValue)?.GetString();  // this is allocating a string every time
+			return current | ValidateType(type, instance);  // the single | ensures all values in the array are also schema-validated
+		});
 	}
 }

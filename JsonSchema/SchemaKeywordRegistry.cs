@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
-using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
 using Json.More;
@@ -21,14 +20,12 @@ namespace Json.Schema;
 /// </remarks>
 public static class SchemaKeywordRegistry
 {
+	internal static IKeywordHandler[] KeywordHandlers { get; }
 	private static readonly ConcurrentDictionary<string, Type> _keywords;
 	private static readonly ConcurrentDictionary<Type, IJsonSchemaKeyword> _nullKeywords;
 	// This maps external types to their TypeInfoResolvers. Built-in keywords don't need this as we already have them
 	// in our default JsonSerializerContext.
 	private static readonly ConcurrentDictionary<Type, JsonSerializerContext> _keywordTypeInfoResolvers;
-
-	// ReSharper disable once CoVariantArrayConversion
-	internal static IJsonTypeInfoResolver[] ExternalTypeInfoResolvers => _keywordTypeInfoResolvers.Values.Distinct().ToArray();
 
 	internal static IEnumerable<Type> KeywordTypes => _keywords.Values;
 
@@ -104,7 +101,15 @@ public static class SchemaKeywordRegistry
 		_keywords = new ConcurrentDictionary<string, Type>(keywordData.ToDictionary(x => x.Item2, x => x.Item1));
 		_keywordTypeInfoResolvers = new ConcurrentDictionary<Type, JsonSerializerContext>(keywordData.ToDictionary(x => x.Item1, _ => (JsonSerializerContext)JsonSchemaSerializerContext.Default));
 
-		using var document = JsonDocument.Parse("null");
+		KeywordHandlers =
+		[
+			ExclusiveMaximumKeywordHandler.Instance,
+			ExclusiveMinimumKeywordHandler.Instance,
+			MaximumKeywordHandler.Instance,
+			MinimumKeywordHandler.Instance,
+			TypeKeywordHandler.Instance
+		];
+
 		_nullKeywords = new ConcurrentDictionary<Type, IJsonSchemaKeyword>
 		{
 			[typeof(ConstKeyword)] = new ConstKeyword(null),

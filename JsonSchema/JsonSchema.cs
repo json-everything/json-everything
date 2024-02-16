@@ -19,7 +19,7 @@ namespace Json.Schema;
 /// </summary>
 [JsonConverter(typeof(SchemaJsonConverter))]
 [DebuggerDisplay("{ToDebugString()}")]
-public class JsonSchema : IBaseDocument
+public partial class JsonSchema : IBaseDocument
 {
 	private const string _unknownKeywordsAnnotationKey = "$unknownKeywords";
 

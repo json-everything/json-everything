@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using BenchmarkDotNet.Attributes;
@@ -13,81 +11,8 @@ namespace Json.Schema.Benchmark.Suite;
 public class TestSuiteRunner
 {
 	private const string _benchmarkOffset = @"../../../../";
-	private const string _testCasesPath = @"../../../../ref-repos/JSON-Schema-Test-Suite/tests";
 	private const string _remoteSchemasPath = @"../../../../ref-repos/JSON-Schema-Test-Suite/remotes";
-
-	private const bool _runDraftNext = true;
-
-	public static IEnumerable<TestCollection> GetAllTests()
-	{
-		return GetTests("draft6")
-			.Concat(GetTests("draft7"))
-			.Concat(GetTests("draft2019-09"))
-			.Concat(GetTests("draft2020-12"))
-			.Concat(_runDraftNext ? GetTests("draft-next") : Enumerable.Empty<TestCollection>());
-	}
-
-	private static IEnumerable<TestCollection> GetTests(string draftFolder)
-	{
-		// ReSharper disable once HeuristicUnreachableCode
-
-		var testsPath = Path.Combine(Directory.GetCurrentDirectory(), _benchmarkOffset, _testCasesPath, $"{draftFolder}/")
-			.AdjustForPlatform();
-		if (!Directory.Exists(testsPath))
-		{
-			Console.WriteLine("Cannot find directory: " + testsPath);
-			throw new DirectoryNotFoundException(testsPath);
-		}
-
-		var fileNames = Directory.GetFiles(testsPath, "*.json", SearchOption.AllDirectories);
-		var options = new EvaluationOptions
-		{
-			OutputFormat = OutputFormat.List
-		};
-		switch (draftFolder)
-		{
-			case "draft6":
-				options.EvaluateAs = SpecVersion.Draft6;
-				break;
-			case "draft7":
-				options.EvaluateAs = SpecVersion.Draft7;
-				break;
-			case "draft2019-09":
-				options.EvaluateAs = SpecVersion.Draft201909;
-				break;
-			case "draft2020-12":
-				options.EvaluateAs = SpecVersion.Draft202012;
-				break;
-			case "draft-next":
-				// options.ValidateAs = SpecVersion.DraftNext;
-				break;
-		}
-
-		foreach (var fileName in fileNames)
-		{
-			var shortFileName = Path.GetFileNameWithoutExtension(fileName);
-
-			// adjust for format
-			options.RequireFormatValidation = fileName.Contains("format/".AdjustForPlatform()) &&
-											  // uri-template will throw an exception as it's explicitly unsupported
-											  shortFileName != "uri-template";
-
-			var contents = File.ReadAllText(fileName);
-			var collections = JsonSerializer.Deserialize<List<TestCollection>>(contents, new JsonSerializerOptions
-			{
-				PropertyNameCaseInsensitive = true
-			});
-
-			foreach (var collection in collections!)
-			{
-				collection.IsOptional = fileName.Contains("optional");
-				collection.Options = EvaluationOptions.From(options);
-
-				yield return collection;
-			}
-		}
-	}
-
+	
 	private static void LoadRemoteSchemas()
 	{
 		// ReSharper disable once HeuristicUnreachableCode
@@ -109,22 +34,22 @@ public class TestSuiteRunner
 	public void BenchmarkSetup()
 	{
 		LoadRemoteSchemas();
-		_ = GetAllTests();
+		_ = TestSetup<TestCollection>.GetAllTests();
+		_ = TestSetup<TestCollectionFunctional>.GetAllTests();
 	}
 
 	[Benchmark]
 	[Arguments(1)]
-	[Arguments(10)]
-	public int RunSuite_Legacy(int n)
+	public int ObjectOriented(int n)
 	{
 		int i = 0;
-		var collections = GetAllTests();
+		var collections = TestSetup<TestCollection>.GetAllTests();
 
 		foreach (var collection in collections)
 		{
 			foreach (var test in collection.Tests)
 			{
-				Benchmark(collection, test, n);
+				BenchmarkObjectOriented(collection, test, n);
 				i++;
 			}
 		}
@@ -132,13 +57,43 @@ public class TestSuiteRunner
 		return i;
 	}
 
-	private void Benchmark(TestCollection collection, TestCase test, int n)
+	[Benchmark]
+	[Arguments(1)]
+	public int Functional(int n)
+	{
+		int i = 0;
+		var collections = TestSetup<TestCollectionFunctional>.GetAllTests();
+
+		foreach (var collection in collections)
+		{
+			foreach (var test in collection.Tests)
+			{
+				BenchmarkFunctional(collection, test, n);
+				i++;
+			}
+		}
+
+		return i;
+	}
+
+	private static void BenchmarkObjectOriented(TestCollection collection, TestCase test, int n)
 	{
 		if (!InstanceIsDeserializable(test.Data)) return;
 
 		for (int i = 0; i < n; i++)
 		{
 			_ = collection.Schema.Evaluate(test.Data, collection.Options);
+		}
+	}
+
+
+	private static void BenchmarkFunctional(TestCollectionFunctional collection, TestCase test, int n)
+	{
+		if (!InstanceIsDeserializable(test.Data)) return;
+
+		for (int i = 0; i < n; i++)
+		{
+			_ = JsonSchema.Evaluate(collection.Schema, test.Data);
 		}
 	}
 

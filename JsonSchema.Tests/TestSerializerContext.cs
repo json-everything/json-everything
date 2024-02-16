@@ -7,6 +7,8 @@ namespace Json.Schema.Tests;
 
 [JsonSerializable(typeof(TestCollection))]
 [JsonSerializable(typeof(List<TestCollection>))]
+[JsonSerializable(typeof(TestCollectionFunctional))]
+[JsonSerializable(typeof(List<TestCollectionFunctional>))]
 [JsonSerializable(typeof(System.Drawing.Point))]
 [JsonSerializable(typeof(DeserializationTests.Foo))]
 [JsonSerializable(typeof(DeserializationTests.FooWithSchema))]

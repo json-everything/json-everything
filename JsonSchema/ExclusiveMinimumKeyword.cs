@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.More;
 
@@ -125,5 +126,28 @@ public static partial class ErrorMessages
 	public static string GetExclusiveMinimum(CultureInfo? culture)
 	{
 		return ExclusiveMinimum ?? Get(culture);
+	}
+}
+
+public class ExclusiveMinimumKeywordHandler : IKeywordHandler
+{
+	public static ExclusiveMinimumKeywordHandler Instance { get; } = new();
+
+	public ExclusiveMinimumKeywordHandler() { }
+
+	public bool Evaluate(FunctionalEvaluationContext context)
+	{
+		if (!context.LocalSchema.TryGetValue("exclusiveMinimum", out var requirement, out _)) return true;
+
+		decimal? reqNumber;
+		if (requirement is not JsonValue reqValue || (reqNumber = reqValue.GetNumber()) is null)
+			throw new Exception("exclusiveMinimum must be a number");
+
+		if (context.LocalInstance is not JsonValue value) return true;
+
+		var number = value.GetNumber();
+		if (number is null) return true;
+
+		return number > reqNumber;
 	}
 }
