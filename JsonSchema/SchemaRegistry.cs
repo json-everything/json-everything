@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using Json.More;
 using Json.Pointer;
@@ -70,6 +71,37 @@ public class SchemaRegistry
 		JsonSchema.Initialize(MetaSchemas.FormatAnnotationNext, this);
 		JsonSchema.Initialize(MetaSchemas.FormatAssertionNext, this);
 		JsonSchema.Initialize(MetaSchemas.ContentNext, this);
+	}
+
+	internal static void InitializeMetaSchemasAsNodes()
+	{
+		Global.RegisterUntyped(MetaSchemas.Draft6Id ,JsonSerializer.SerializeToNode(MetaSchemas.Draft6, JsonSchemaSerializerContext.Default.JsonSchema)!);
+		Global.RegisterUntyped(MetaSchemas.Draft7Id ,JsonSerializer.SerializeToNode(MetaSchemas.Draft7, JsonSchemaSerializerContext.Default.JsonSchema)!);
+		Global.RegisterUntyped(MetaSchemas.Draft201909Id ,JsonSerializer.SerializeToNode(MetaSchemas.Draft201909, JsonSchemaSerializerContext.Default.JsonSchema)!);
+		Global.RegisterUntyped(MetaSchemas.Core201909Id ,JsonSerializer.SerializeToNode(MetaSchemas.Core201909, JsonSchemaSerializerContext.Default.JsonSchema)!);
+		Global.RegisterUntyped(MetaSchemas.Applicator201909Id ,JsonSerializer.SerializeToNode(MetaSchemas.Applicator201909, JsonSchemaSerializerContext.Default.JsonSchema)!);
+		Global.RegisterUntyped(MetaSchemas.Validation201909Id ,JsonSerializer.SerializeToNode(MetaSchemas.Validation201909, JsonSchemaSerializerContext.Default.JsonSchema)!);
+		Global.RegisterUntyped(MetaSchemas.Metadata201909Id ,JsonSerializer.SerializeToNode(MetaSchemas.Metadata201909, JsonSchemaSerializerContext.Default.JsonSchema)!);
+		Global.RegisterUntyped(MetaSchemas.Format201909Id ,JsonSerializer.SerializeToNode(MetaSchemas.Format201909, JsonSchemaSerializerContext.Default.JsonSchema)!);
+		Global.RegisterUntyped(MetaSchemas.Content201909Id ,JsonSerializer.SerializeToNode(MetaSchemas.Content201909, JsonSchemaSerializerContext.Default.JsonSchema)!);
+		Global.RegisterUntyped(MetaSchemas.Draft202012Id ,JsonSerializer.SerializeToNode(MetaSchemas.Draft202012, JsonSchemaSerializerContext.Default.JsonSchema)!);
+		Global.RegisterUntyped(MetaSchemas.Core202012Id ,JsonSerializer.SerializeToNode(MetaSchemas.Core202012, JsonSchemaSerializerContext.Default.JsonSchema)!);
+		Global.RegisterUntyped(MetaSchemas.Applicator202012Id ,JsonSerializer.SerializeToNode(MetaSchemas.Applicator202012, JsonSchemaSerializerContext.Default.JsonSchema)!);
+		Global.RegisterUntyped(MetaSchemas.Validation202012Id ,JsonSerializer.SerializeToNode(MetaSchemas.Validation202012, JsonSchemaSerializerContext.Default.JsonSchema)!);
+		Global.RegisterUntyped(MetaSchemas.Metadata202012Id ,JsonSerializer.SerializeToNode(MetaSchemas.Metadata202012, JsonSchemaSerializerContext.Default.JsonSchema)!);
+		Global.RegisterUntyped(MetaSchemas.Unevaluated202012Id ,JsonSerializer.SerializeToNode(MetaSchemas.Unevaluated202012, JsonSchemaSerializerContext.Default.JsonSchema)!);
+		Global.RegisterUntyped(MetaSchemas.FormatAnnotation202012Id ,JsonSerializer.SerializeToNode(MetaSchemas.FormatAnnotation202012, JsonSchemaSerializerContext.Default.JsonSchema)!);
+		Global.RegisterUntyped(MetaSchemas.FormatAssertion202012Id ,JsonSerializer.SerializeToNode(MetaSchemas.FormatAssertion202012, JsonSchemaSerializerContext.Default.JsonSchema)!);
+		Global.RegisterUntyped(MetaSchemas.Content202012Id ,JsonSerializer.SerializeToNode(MetaSchemas.Content202012, JsonSchemaSerializerContext.Default.JsonSchema)!);
+		Global.RegisterUntyped(MetaSchemas.DraftNextId ,JsonSerializer.SerializeToNode(MetaSchemas.DraftNext, JsonSchemaSerializerContext.Default.JsonSchema)!);
+		Global.RegisterUntyped(MetaSchemas.CoreNextId ,JsonSerializer.SerializeToNode(MetaSchemas.CoreNext, JsonSchemaSerializerContext.Default.JsonSchema)!);
+		Global.RegisterUntyped(MetaSchemas.ApplicatorNextId ,JsonSerializer.SerializeToNode(MetaSchemas.ApplicatorNext, JsonSchemaSerializerContext.Default.JsonSchema)!);
+		Global.RegisterUntyped(MetaSchemas.ValidationNextId ,JsonSerializer.SerializeToNode(MetaSchemas.ValidationNext, JsonSchemaSerializerContext.Default.JsonSchema)!);
+		Global.RegisterUntyped(MetaSchemas.MetadataNextId ,JsonSerializer.SerializeToNode(MetaSchemas.MetadataNext, JsonSchemaSerializerContext.Default.JsonSchema)!);
+		Global.RegisterUntyped(MetaSchemas.UnevaluatedNextId ,JsonSerializer.SerializeToNode(MetaSchemas.UnevaluatedNext, JsonSchemaSerializerContext.Default.JsonSchema)!);
+		Global.RegisterUntyped(MetaSchemas.FormatAnnotationNextId ,JsonSerializer.SerializeToNode(MetaSchemas.FormatAnnotationNext, JsonSchemaSerializerContext.Default.JsonSchema)!);
+		Global.RegisterUntyped(MetaSchemas.FormatAssertionNextId ,JsonSerializer.SerializeToNode(MetaSchemas.FormatAssertionNext, JsonSchemaSerializerContext.Default.JsonSchema)!);
+		Global.RegisterUntyped(MetaSchemas.ContentNextId ,JsonSerializer.SerializeToNode(MetaSchemas.ContentNext, JsonSchemaSerializerContext.Default.JsonSchema)!);
 	}
 
 	/// <summary>
@@ -154,6 +186,7 @@ public class SchemaRegistry
 		return registration.Root;
 	}
 
+	// TODO: this probably belongs in the keyword registry
 	private readonly List<(JsonPointer Pointer, bool IsContainer)> _schemaLocations =
 	[
 		(JsonPointer.Create(AdditionalItemsKeyword.Name), false),
@@ -163,6 +196,7 @@ public class SchemaRegistry
 		(JsonPointer.Create(ContainsKeyword.Name), false),
 		(JsonPointer.Create(DefinitionsKeyword.Name), true),
 		(JsonPointer.Create(DefsKeyword.Name), true),
+		(JsonPointer.Create(DependentSchemasKeyword.Name), true),
 		(JsonPointer.Create(ElseKeyword.Name), false),
 		(JsonPointer.Create(IfKeyword.Name), false),
 		(JsonPointer.Create(ItemsKeyword.Name), false),

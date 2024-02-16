@@ -109,6 +109,9 @@ public static class SchemaKeywordRegistry
 			AnyOfKeyword.Handler,
 			ConstKeyword.Handler,
 			ContainsKeyword.Handler,
+			DependenciesKeyword.Handler,
+			DependentRequiredKeyword.Handler,
+			DependentSchemasKeyword.Handler,
 			ElseKeyword.Handler,
 			EnumKeyword.Handler,
 			ExclusiveMaximumKeyword.Handler,
@@ -132,10 +135,12 @@ public static class SchemaKeywordRegistry
 			PatternPropertiesKeyword.Handler,
 			PrefixItemsKeyword.Handler,
 			PropertiesKeyword.Handler,
+			PropertyNamesKeyword.Handler,
 			RefKeyword.Handler,
 			RequiredKeyword.Handler,
 			ThenKeyword.Handler,
-			TypeKeyword.Handler
+			TypeKeyword.Handler,
+			UniqueItemsKeyword.Handler
 		];
 
 		_nullKeywords = new ConcurrentDictionary<Type, IJsonSchemaKeyword>

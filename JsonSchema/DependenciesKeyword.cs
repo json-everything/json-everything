@@ -16,8 +16,51 @@ namespace Json.Schema;
 [SchemaSpecVersion(SpecVersion.Draft6)]
 [SchemaSpecVersion(SpecVersion.Draft7)]
 [JsonConverter(typeof(DependenciesKeywordJsonConverter))]
-public class DependenciesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
+public class DependenciesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector, IKeywordHandler
 {
+	public static DependenciesKeyword Handler { get; } = new(new Dictionary<string, SchemaOrPropertyList>());
+
+	bool IKeywordHandler.Evaluate(FunctionalEvaluationContext context)
+	{
+		if (!context.LocalSchema.AsObject().TryGetValue(Name, out var requirement, out _)) return true;
+
+		if (requirement is not JsonObject reqObj)
+			throw new ArgumentException("dependencies must be an array of strings");
+
+		var dependencies = reqObj.Select(x =>
+		{
+			var properties = x.Value as JsonArray;
+
+			return (
+				Property: x.Key,
+				Requirements: properties?.Select(p => (p as JsonValue)?.GetString() ??
+				                                     throw new ArgumentException("dependencies must be an array of strings")),
+				Schema: x.Value
+			);
+		}).ToArray();
+
+		if (context.LocalInstance is not JsonObject obj) return true;
+
+		var result = true;
+		foreach (var dependency in dependencies)
+		{
+			if (obj.ContainsKey(dependency.Property))
+			{
+				if (dependency.Requirements is not null)
+					result &= !dependency.Requirements.Except(obj.Select(x => x.Key)).Any();
+				else
+				{
+					var localContext = context;
+					localContext.LocalSchema = dependency.Schema!;
+
+					result &= JsonSchema.Evaluate(localContext);
+				}
+			}
+		}
+
+		return result;
+	}
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>

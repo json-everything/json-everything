@@ -93,6 +93,8 @@ public class ValidationFunctional
 	[OneTimeSetUp]
 	public void LoadRemoteSchemas()
 	{
+		SchemaRegistry.InitializeMetaSchemasAsNodes();
+
 		// ReSharper disable once HeuristicUnreachableCode
 		var remotesPath = Path.Combine(TestContext.CurrentContext.WorkDirectory, _useExternal ? _externalRemoteSchemasPath : _remoteSchemasPath)
 			.AdjustForPlatform();

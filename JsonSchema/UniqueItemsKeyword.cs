@@ -22,8 +22,31 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Validation202012Id)]
 [Vocabulary(Vocabularies.ValidationNextId)]
 [JsonConverter(typeof(UniqueItemsKeywordJsonConverter))]
-public class UniqueItemsKeyword : IJsonSchemaKeyword
+public class UniqueItemsKeyword : IJsonSchemaKeyword, IKeywordHandler
 {
+	public static UniqueItemsKeyword Handler { get; } = new(false);
+
+	bool IKeywordHandler.Evaluate(FunctionalEvaluationContext context)
+	{
+		if (!context.LocalSchema.AsObject().TryGetValue(Name, out var requirement, out _)) return true;
+
+		bool? reqBool;
+		if (requirement is not JsonValue reqValue || (reqBool = reqValue.GetBool()) is null)
+			throw new Exception("uniqueItems must be a boolean");
+
+		if (reqBool == false || context.LocalInstance is not JsonArray array) return true;
+
+		var duplicates = new List<(int, int)>();
+		for (int i = 0; i < array.Count - 1; i++)
+		for (int j = i + 1; j < array.Count; j++)
+		{
+			if (array[i].IsEquivalentTo(array[j]))
+				duplicates.Add((i, j));
+		}
+
+		return duplicates.Count == 0;
+	}
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>

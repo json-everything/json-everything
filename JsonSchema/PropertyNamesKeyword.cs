@@ -22,8 +22,35 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Applicator202012Id)]
 [Vocabulary(Vocabularies.ApplicatorNextId)]
 [JsonConverter(typeof(PropertyNamesKeywordJsonConverter))]
-public class PropertyNamesKeyword : IJsonSchemaKeyword, ISchemaContainer
+public class PropertyNamesKeyword : IJsonSchemaKeyword, ISchemaContainer, IKeywordHandler
 {
+	public static PropertyNamesKeyword Handler { get; } = new(true);
+
+	bool IKeywordHandler.Evaluate(FunctionalEvaluationContext context)
+	{
+		if (!context.LocalSchema.AsObject().TryGetValue(Name, out var requirement, out _)) return true;
+
+		bool? reqBool;
+		if (requirement is JsonValue reqValue && (reqBool = reqValue.GetBool()) is not null) return reqBool.Value;
+
+		if (requirement is not JsonObject subschema)
+			throw new Exception("propertyNames must be a schema");
+
+		if (context.LocalInstance is not JsonObject obj) return true;
+
+		var result = true;
+		foreach (var property in obj)
+		{
+			var localContext = context;
+			localContext.LocalInstance = property.Key;
+			localContext.LocalSchema = subschema;
+
+			result &= JsonSchema.Evaluate(localContext);
+		}
+
+		return result;
+	}
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>

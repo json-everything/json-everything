@@ -21,8 +21,34 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Applicator202012Id)]
 [Vocabulary(Vocabularies.ApplicatorNextId)]
 [JsonConverter(typeof(DependentSchemasKeywordJsonConverter))]
-public class DependentSchemasKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
+public class DependentSchemasKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector, IKeywordHandler
 {
+	public static DependentSchemasKeyword Handler { get; } = new(new Dictionary<string, JsonSchema>());
+
+	bool IKeywordHandler.Evaluate(FunctionalEvaluationContext context)
+	{
+		if (!context.LocalSchema.AsObject().TryGetValue(Name, out var requirement, out _)) return true;
+
+		if (requirement is not JsonObject reqObj)
+			throw new ArgumentException("dependentSchemas must be an array of schemas");
+
+		if (context.LocalInstance is not JsonObject obj) return true;
+
+		var result = true;
+		foreach (var dependency in reqObj)
+		{
+			if (obj.ContainsKey(dependency.Key))
+			{
+				var localContext = context;
+				localContext.LocalSchema = dependency.Value!;
+
+				result &= JsonSchema.Evaluate(localContext);
+			}
+		}
+
+		return result;
+	}
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>

@@ -50,10 +50,18 @@ public partial class JsonSchema
 
 		// shouldn't ever happen, but custom keywords might do dumb things
 		// also catches null
-		if (context.LocalSchema is not JsonObject)
+		if (context.LocalSchema is not JsonObject obj)
 			throw new ArgumentException("Schema must be a boolean or object");
 
+		string? idString;
+		var id = obj.TryGetValue(IdKeyword.Name, out var idNode, out _) &&
+		         idNode is JsonValue idValue && (idString = idValue.GetString()) is not null
+			? new Uri(context.CurrentUri, idString)
+			: null;
+
+		if (id is not null) context.CurrentUri = id;
 		context.Annotations = new();
+
 		var result = true;
 		foreach (var handler in SchemaKeywordRegistry.KeywordHandlers)
 		{

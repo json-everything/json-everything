@@ -20,8 +20,41 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Validation202012Id)]
 [Vocabulary(Vocabularies.ValidationNextId)]
 [JsonConverter(typeof(DependentRequiredKeywordJsonConverter))]
-public class DependentRequiredKeyword : IJsonSchemaKeyword
+public class DependentRequiredKeyword : IJsonSchemaKeyword, IKeywordHandler
 {
+	public static DependentRequiredKeyword Handler { get; } = new(new Dictionary<string, IReadOnlyList<string>>());
+
+	bool IKeywordHandler.Evaluate(FunctionalEvaluationContext context)
+	{
+		if (!context.LocalSchema.AsObject().TryGetValue(Name, out var requirement, out _)) return true;
+
+		if (requirement is not JsonObject reqObj)
+			throw new ArgumentException("dependentRequired must be an object of string arrays");
+
+		var dependencies = reqObj.Select(x =>
+		{
+			if (x.Value is not JsonArray properties)
+				throw new ArgumentException("dependentRequired must be an object of string arrays");
+
+			return (
+				Property: x.Key,
+				Requirements: properties.Select(p => (p as JsonValue)?.GetString() ??
+				                                     throw new ArgumentException("dependentRequired must be an object of string arrays"))
+			);
+		}).ToArray();
+
+		if (context.LocalInstance is not JsonObject obj) return true;
+
+		var result = true;
+		foreach (var dependency in dependencies)
+		{
+			if (obj.ContainsKey(dependency.Property))
+				result &= !dependency.Requirements.Except(obj.Select(x => x.Key)).Any();
+		}
+
+		return result;
+	}
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
