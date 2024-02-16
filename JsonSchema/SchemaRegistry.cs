@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Text.Json.Nodes;
 
 namespace Json.Schema;
 
@@ -96,6 +98,32 @@ public class SchemaRegistry
 		var registration = CheckRegistry(_registered, uri);
 		if (registration == null)
 			_registered[uri] = new Registration{Root = document};
+	}
+
+	private readonly ConcurrentDictionary<string, JsonNode?> _untyped = new();
+
+	public void RegisterUntyped(Uri uri, JsonNode? value)
+	{
+		if (!uri.IsAbsoluteUri)
+			throw new ArgumentException("uri must be absolute for retrieval");
+
+		var baseUri = uri.GetLeftPart(UriPartial.Query);
+
+		_untyped[baseUri] = value;
+	}
+
+	public JsonNode? GetUntyped(Uri uri)
+	{
+		if (!uri.IsAbsoluteUri)
+			throw new ArgumentException("uri must be absolute for retrieval");
+
+		var baseUri = uri.GetLeftPart(UriPartial.Query);
+
+		return _untyped.TryGetValue(baseUri, out var value)
+			? value
+			: Global._untyped.TryGetValue(baseUri, out value)
+				? value
+				: null;
 	}
 
 	/// <summary>

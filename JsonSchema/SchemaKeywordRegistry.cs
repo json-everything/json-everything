@@ -107,6 +107,8 @@ public static class SchemaKeywordRegistry
 			ExclusiveMinimumKeyword.Handler,
 			MaximumKeyword.Handler,
 			MinimumKeyword.Handler,
+			PropertiesKeyword.Handler,
+			RefKeyword.Handler,
 			TypeKeyword.Handler
 		];
 

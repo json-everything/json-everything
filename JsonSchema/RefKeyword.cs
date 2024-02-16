@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.More;
 using Json.Pointer;
@@ -21,8 +22,53 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Core202012Id)]
 [Vocabulary(Vocabularies.CoreNextId)]
 [JsonConverter(typeof(RefKeywordJsonConverter))]
-public class RefKeyword : IJsonSchemaKeyword
+public class RefKeyword : IJsonSchemaKeyword, IKeywordHandler
 {
+	public static RefKeyword Handler { get; } = new(new Uri("https://json-everything.net/"));
+
+	bool IKeywordHandler.Evaluate(FunctionalEvaluationContext context)
+	{
+		if (!context.LocalSchema.AsObject().TryGetValue(Name, out var requirement, out _)) return true;
+
+		string? reference;
+		if (requirement is not JsonValue reqValue || (reference = reqValue.GetString()) is null ||
+		    !Uri.TryCreate(reference, UriKind.RelativeOrAbsolute, out _))
+			throw new JsonSchemaException("$ref must be a URI string");
+
+		var newUri = new Uri(context.CurrentUri, reference);
+		var fragment = newUri.Fragment;
+
+		//var navigation = (newUri.OriginalString, InstanceLocation: instanceLocation);
+		//if (context.NavigatedReferences.Contains(navigation))
+		//	throw new JsonSchemaException($"Encountered circular reference at schema location `{newUri}` and instance location `{schemaConstraint.RelativeInstanceLocation}`");
+
+		var newBaseUri = new Uri(newUri.GetLeftPart(UriPartial.Query));
+		var targetBase = context.SchemaRegistry.GetUntyped(newBaseUri);
+		JsonNode? targetSchema;
+
+		if (string.IsNullOrEmpty(fragment))
+			targetSchema = targetBase;
+		else if (JsonPointer.TryParse(fragment, out var pointerFragment))
+		{
+			if (!pointerFragment.TryEvaluate(targetBase, out targetSchema))
+				throw new JsonSchemaException($"could not find location {fragment} within base schema {newBaseUri}");
+		}
+		else
+		{
+			var anchorFragment = fragment[1..];
+			if (!AnchorKeyword.AnchorPattern.IsMatch(anchorFragment))
+				throw new JsonSchemaException($"Unrecognized fragment type `{newUri}`");
+
+			throw new NotImplementedException("anchors not yet supported");
+		}
+
+		var refContext = context;
+		refContext.LocalSchema = targetSchema!;
+		refContext.CurrentUri = newBaseUri;
+
+		return JsonSchema.Evaluate(refContext);
+	}
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>

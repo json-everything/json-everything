@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
@@ -22,8 +23,33 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Applicator202012Id)]
 [Vocabulary(Vocabularies.ApplicatorNextId)]
 [JsonConverter(typeof(PropertiesKeywordJsonConverter))]
-public class PropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
+public class PropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector, IKeywordHandler
 {
+	public static PropertiesKeyword Handler { get; } = new(new ConcurrentDictionary<string, JsonSchema>());
+
+	bool IKeywordHandler.Evaluate(FunctionalEvaluationContext context)
+	{
+		if (!context.LocalSchema.AsObject().TryGetValue(Name, out var requirement, out _)) return true;
+
+		if (requirement is not JsonObject properties)
+			throw new Exception("properties must be an object");
+
+		if (context.LocalInstance is not JsonObject obj) return true;
+
+		var result = true;
+		foreach (var property in properties)
+		{
+			if (!obj.TryGetValue(property.Key, out var instanceProp, out _)) continue;
+
+			var localContext = context;
+			localContext.LocalInstance = instanceProp;
+			localContext.LocalSchema = property.Value!;
+			result &= JsonSchema.Evaluate(localContext);
+		}
+
+		return result;
+	}
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>

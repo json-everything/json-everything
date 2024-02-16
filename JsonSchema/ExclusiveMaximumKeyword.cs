@@ -27,7 +27,7 @@ public class ExclusiveMaximumKeyword : IJsonSchemaKeyword, IKeywordHandler
 
 	bool IKeywordHandler.Evaluate(FunctionalEvaluationContext context)
 	{
-		if (!context.LocalSchema.TryGetValue("exclusiveMaximum", out var requirement, out _)) return true;
+		if (!context.LocalSchema.AsObject().TryGetValue(Name, out var requirement, out _)) return true;
 
 		decimal? reqNumber;
 		if (requirement is not JsonValue reqValue || (reqNumber = reqValue.GetNumber()) is null)
