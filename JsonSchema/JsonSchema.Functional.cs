@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json.Nodes;
 using Json.More;
 
@@ -23,17 +25,16 @@ public partial class JsonSchema
 
 		var context = new FunctionalEvaluationContext
 		{
-			RootSchema = obj,
 			LocalSchema = obj,
-			RootInstance = instance,
 			LocalInstance = instance,
+			CurrentUri = id,
 			SchemaRegistry = new(),
-			CurrentUri = id
+			Annotations = new()
 		};
 		context.SchemaRegistry.RegisterUntyped(id, schema);
 
 		var result = true;
-		foreach (var handler in SchemaKeywordRegistry.KeywordHandlers)
+		foreach (var handler in SchemaKeywordRegistry.KeywordHandlers.OrderBy(x => ((IJsonSchemaKeyword)x).Priority()))
 		{
 			result &= handler.Evaluate(context);
 		}
@@ -52,6 +53,7 @@ public partial class JsonSchema
 		if (context.LocalSchema is not JsonObject)
 			throw new ArgumentException("schema must be a boolean or object");
 
+		context.Annotations = new();
 		var result = true;
 		foreach (var handler in SchemaKeywordRegistry.KeywordHandlers)
 		{
@@ -69,10 +71,9 @@ public interface IKeywordHandler
 
 public struct FunctionalEvaluationContext
 {
-	public JsonObject RootSchema { get; set; }
 	public JsonNode LocalSchema { get; set; }
-	public JsonNode? RootInstance { get; set; }
 	public JsonNode? LocalInstance { get; set; }
 	public Uri CurrentUri { get; set; }
 	public SchemaRegistry SchemaRegistry { get; set; } // will probably move to options later
+	public Dictionary<string, JsonNode> Annotations { get; set; }
 }

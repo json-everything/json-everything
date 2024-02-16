@@ -24,8 +24,40 @@ namespace Json.Schema;
 [DependsOnAnnotationsFrom(typeof(PropertiesKeyword))]
 [DependsOnAnnotationsFrom(typeof(PatternPropertiesKeyword))]
 [JsonConverter(typeof(AdditionalPropertiesKeywordJsonConverter))]
-public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer
+public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer, IKeywordHandler
 {
+	public static AdditionalPropertiesKeyword Handler { get; } = new(true);
+
+	bool IKeywordHandler.Evaluate(FunctionalEvaluationContext context)
+	{
+		if (!context.LocalSchema.AsObject().TryGetValue(Name, out var requirement, out _)) return true;
+
+		if (context.LocalInstance is not JsonObject obj) return true;
+
+		var alreadyEvaluated = new List<string>();
+		if (context.Annotations.TryGetValue(PropertiesKeyword.Name, out var annotation))
+			alreadyEvaluated.AddRange(annotation.AsArray().Select(x => x!.AsValue().GetString()!));
+		if (context.Annotations.TryGetValue(PatternPropertiesKeyword.Name, out annotation))
+			alreadyEvaluated.AddRange(annotation.AsArray().Select(x => x!.AsValue().GetString()!));
+
+		var result = true;
+		var evaluated = new List<JsonNode>();
+		foreach (var kvp in obj)
+		{
+			if (alreadyEvaluated.Contains(kvp.Key)) continue;
+
+			var localContext = context;
+			localContext.LocalInstance = kvp.Value;
+			localContext.LocalSchema = requirement!;
+
+			result &= JsonSchema.Evaluate(localContext);
+			evaluated.Add(kvp.Key);
+		}
+
+		context.Annotations[Name] = new JsonArray([.. evaluated]);
+		return result;
+	}
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>

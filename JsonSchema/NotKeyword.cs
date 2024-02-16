@@ -20,8 +20,20 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Applicator202012Id)]
 [Vocabulary(Vocabularies.ApplicatorNextId)]
 [JsonConverter(typeof(NotKeywordJsonConverter))]
-public class NotKeyword : IJsonSchemaKeyword, ISchemaContainer
+public class NotKeyword : IJsonSchemaKeyword, ISchemaContainer, IKeywordHandler
 {
+	public static NotKeyword Handler { get; } = new(true);
+
+	bool IKeywordHandler.Evaluate(FunctionalEvaluationContext context)
+	{
+		if (!context.LocalSchema.AsObject().TryGetValue(Name, out var requirement, out _)) return true;
+
+		var localContext = context;
+		localContext.LocalSchema = requirement!;
+
+		return !JsonSchema.Evaluate(localContext);
+	}
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>

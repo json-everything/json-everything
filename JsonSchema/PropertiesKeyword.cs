@@ -37,6 +37,7 @@ public class PropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector, IKey
 		if (context.LocalInstance is not JsonObject obj) return true;
 
 		var result = true;
+		var evaluated = new List<JsonNode>();
 		foreach (var property in properties)
 		{
 			if (!obj.TryGetValue(property.Key, out var instanceProp, out _)) continue;
@@ -44,9 +45,12 @@ public class PropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector, IKey
 			var localContext = context;
 			localContext.LocalInstance = instanceProp;
 			localContext.LocalSchema = property.Value!;
+
 			result &= JsonSchema.Evaluate(localContext);
+			evaluated.Add(property.Key);
 		}
 
+		context.Annotations[Name] = new JsonArray([.. evaluated]);
 		return result;
 	}
 

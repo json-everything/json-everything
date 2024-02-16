@@ -103,6 +103,9 @@ public static class SchemaKeywordRegistry
 
 		KeywordHandlers =
 		[
+			AdditionalPropertiesKeyword.Handler,
+			AllOfKeyword.Handler,
+			AnyOfKeyword.Handler,
 			ConstKeyword.Handler,
 			ExclusiveMaximumKeyword.Handler,
 			ExclusiveMinimumKeyword.Handler,
@@ -114,6 +117,10 @@ public static class SchemaKeywordRegistry
 			MinItemsKeyword.Handler,
 			MinLengthKeyword.Handler,
 			MinPropertiesKeyword.Handler,
+			MultipleOfKeyword.Handler,
+			NotKeyword.Handler,
+			OneOfKeyword.Handler,
+			PatternPropertiesKeyword.Handler,
 			PropertiesKeyword.Handler,
 			RefKeyword.Handler,
 			TypeKeyword.Handler

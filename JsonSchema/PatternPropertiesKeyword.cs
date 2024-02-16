@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
@@ -23,8 +24,41 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Applicator202012Id)]
 [Vocabulary(Vocabularies.ApplicatorNextId)]
 [JsonConverter(typeof(PatternPropertiesKeywordJsonConverter))]
-public class PatternPropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
+public class PatternPropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector, IKeywordHandler
 {
+	public static PatternPropertiesKeyword Handler { get; } = new(new ConcurrentDictionary<Regex, JsonSchema>());
+
+	bool IKeywordHandler.Evaluate(FunctionalEvaluationContext context)
+	{
+		if (!context.LocalSchema.AsObject().TryGetValue(Name, out var requirement, out _)) return true;
+
+		if (requirement is not JsonObject patternProperties)
+			throw new Exception("patternProperties must be an object");
+
+		if (context.LocalInstance is not JsonObject obj) return true;
+
+		var result = true;
+		var evaluated = new HashSet<string>();
+		foreach (var pattern in patternProperties)
+		{
+			var matches = obj.Where(x => Regex.IsMatch(x.Key, pattern.Key));
+			foreach (var match in matches)
+			{
+				if (!obj.TryGetValue(match.Key, out var instanceProp, out _)) continue;
+
+				var localContext = context;
+				localContext.LocalInstance = instanceProp;
+				localContext.LocalSchema = pattern.Value!;
+
+				result &= JsonSchema.Evaluate(localContext);
+				evaluated.Add(match.Key);
+			}
+		}
+
+		context.Annotations[Name] = new JsonArray([.. evaluated]);
+		return result;
+	}
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>

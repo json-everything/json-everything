@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.More;
 
@@ -20,8 +21,26 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Validation202012Id)]
 [Vocabulary(Vocabularies.ValidationNextId)]
 [JsonConverter(typeof(MultipleOfKeywordJsonConverter))]
-public class MultipleOfKeyword : IJsonSchemaKeyword
+public class MultipleOfKeyword : IJsonSchemaKeyword, IKeywordHandler
 {
+	public static MultipleOfKeyword Handler { get; } = new(0);
+
+	bool IKeywordHandler.Evaluate(FunctionalEvaluationContext context)
+	{
+		if (!context.LocalSchema.AsObject().TryGetValue(Name, out var requirement, out _)) return true;
+
+		decimal? reqNumber;
+		if (requirement is not JsonValue reqValue || (reqNumber = reqValue.GetNumber()) is null)
+			throw new Exception("multipleOf must be a number");
+
+		if (context.LocalInstance is not JsonValue value) return true;
+
+		var number = value.GetNumber();
+		if (number is null) return true;
+
+		return number % reqNumber == 0;
+	}
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>

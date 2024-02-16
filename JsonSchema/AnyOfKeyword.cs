@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.More;
 using Json.Pointer;
@@ -21,8 +22,26 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Applicator202012Id)]
 [Vocabulary(Vocabularies.ApplicatorNextId)]
 [JsonConverter(typeof(AnyOfKeywordJsonConverter))]
-public class AnyOfKeyword : IJsonSchemaKeyword, ISchemaCollector
+public class AnyOfKeyword : IJsonSchemaKeyword, ISchemaCollector, IKeywordHandler
 {
+	public static AnyOfKeyword Handler { get; } = new();
+
+	bool IKeywordHandler.Evaluate(FunctionalEvaluationContext context)
+	{
+		if (!context.LocalSchema.AsObject().TryGetValue(Name, out var requirement, out _)) return true;
+
+		if (requirement is not JsonArray array)
+			throw new ArgumentException("anyOf must be an array of schemas");
+
+		return array.Aggregate(false, (result, subSchema) =>
+		{
+			var localContext = context;
+			localContext.LocalSchema = subSchema!;
+
+			return result | JsonSchema.Evaluate(localContext);
+		});
+	}
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
