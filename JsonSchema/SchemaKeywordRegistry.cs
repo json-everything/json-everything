@@ -103,11 +103,11 @@ public static class SchemaKeywordRegistry
 
 		KeywordHandlers =
 		[
-			ExclusiveMaximumKeywordHandler.Instance,
-			ExclusiveMinimumKeywordHandler.Instance,
-			MaximumKeywordHandler.Instance,
-			MinimumKeywordHandler.Instance,
-			TypeKeywordHandler.Instance
+			ExclusiveMaximumKeyword.Handler,
+			ExclusiveMinimumKeyword.Handler,
+			MaximumKeyword.Handler,
+			MinimumKeyword.Handler,
+			TypeKeyword.Handler
 		];
 
 		_nullKeywords = new ConcurrentDictionary<Type, IJsonSchemaKeyword>

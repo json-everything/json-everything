@@ -21,8 +21,26 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Validation202012Id)]
 [Vocabulary(Vocabularies.ValidationNextId)]
 [JsonConverter(typeof(ExclusiveMinimumKeywordJsonConverter))]
-public class ExclusiveMinimumKeyword : IJsonSchemaKeyword
+public class ExclusiveMinimumKeyword : IJsonSchemaKeyword, IKeywordHandler
 {
+	public static ExclusiveMinimumKeyword Handler { get; } = new(0);
+
+	bool IKeywordHandler.Evaluate(FunctionalEvaluationContext context)
+	{
+		if (!context.LocalSchema.TryGetValue("exclusiveMinimum", out var requirement, out _)) return true;
+
+		decimal? reqNumber;
+		if (requirement is not JsonValue reqValue || (reqNumber = reqValue.GetNumber()) is null)
+			throw new Exception("exclusiveMinimum must be a number");
+
+		if (context.LocalInstance is not JsonValue value) return true;
+
+		var number = value.GetNumber();
+		if (number is null) return true;
+
+		return number > reqNumber;
+	}
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
@@ -126,28 +144,5 @@ public static partial class ErrorMessages
 	public static string GetExclusiveMinimum(CultureInfo? culture)
 	{
 		return ExclusiveMinimum ?? Get(culture);
-	}
-}
-
-public class ExclusiveMinimumKeywordHandler : IKeywordHandler
-{
-	public static ExclusiveMinimumKeywordHandler Instance { get; } = new();
-
-	public ExclusiveMinimumKeywordHandler() { }
-
-	public bool Evaluate(FunctionalEvaluationContext context)
-	{
-		if (!context.LocalSchema.TryGetValue("exclusiveMinimum", out var requirement, out _)) return true;
-
-		decimal? reqNumber;
-		if (requirement is not JsonValue reqValue || (reqNumber = reqValue.GetNumber()) is null)
-			throw new Exception("exclusiveMinimum must be a number");
-
-		if (context.LocalInstance is not JsonValue value) return true;
-
-		var number = value.GetNumber();
-		if (number is null) return true;
-
-		return number > reqNumber;
 	}
 }

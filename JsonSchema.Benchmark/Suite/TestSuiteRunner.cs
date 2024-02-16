@@ -38,9 +38,11 @@ public class TestSuiteRunner
 		_ = TestSetup<TestCollectionFunctional>.GetAllTests();
 	}
 
+	[Params(1, 10)]
+	public int Count { get; set; }
+
 	[Benchmark]
-	[Arguments(1)]
-	public int ObjectOriented(int n)
+	public int ObjectOriented()
 	{
 		int i = 0;
 		var collections = TestSetup<TestCollection>.GetAllTests();
@@ -49,7 +51,7 @@ public class TestSuiteRunner
 		{
 			foreach (var test in collection.Tests)
 			{
-				BenchmarkObjectOriented(collection, test, n);
+				BenchmarkObjectOriented(collection, test, Count);
 				i++;
 			}
 		}
@@ -58,8 +60,7 @@ public class TestSuiteRunner
 	}
 
 	[Benchmark]
-	[Arguments(1)]
-	public int Functional(int n)
+	public int Functional()
 	{
 		int i = 0;
 		var collections = TestSetup<TestCollectionFunctional>.GetAllTests();
@@ -68,7 +69,7 @@ public class TestSuiteRunner
 		{
 			foreach (var test in collection.Tests)
 			{
-				BenchmarkFunctional(collection, test, n);
+				BenchmarkFunctional(collection, test, Count);
 				i++;
 			}
 		}
