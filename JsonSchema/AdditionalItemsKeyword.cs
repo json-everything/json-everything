@@ -19,8 +19,42 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Applicator201909Id)]
 [DependsOnAnnotationsFrom(typeof(ItemsKeyword))]
 [JsonConverter(typeof(AdditionalItemsKeywordJsonConverter))]
-public class AdditionalItemsKeyword : IJsonSchemaKeyword, ISchemaContainer
+public class AdditionalItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, IKeywordHandler
 {
+	public static AdditionalItemsKeyword Handler { get; } = new(true);
+
+	bool IKeywordHandler.Evaluate(FunctionalEvaluationContext context)
+	{
+		if (!context.LocalSchema.AsObject().TryGetValue(Name, out var requirement, out _)) return true;
+		if (!context.LocalSchema.AsObject().TryGetValue(ItemsKeyword.Name, out _, out _)) return true;
+
+		if (context.LocalInstance is not JsonArray array) return true;
+
+		var result = true;
+		var alreadyEvaluated = -1;
+		if (context.Annotations.TryGetValue(ItemsKeyword.Name, out var annotation))
+		{
+			var asBool = annotation.AsValue().GetBool();
+			if (asBool == true) return true;
+
+			alreadyEvaluated = (int)annotation.AsValue().GetInteger()!.Value;
+		}
+
+		if (alreadyEvaluated >= array.Count) return true;
+
+		foreach (var item in array.Skip(alreadyEvaluated + 1))
+		{
+			var localContext = context;
+			localContext.LocalInstance = item;
+			localContext.LocalSchema = requirement!;
+
+			result &= JsonSchema.Evaluate(localContext);
+		}
+
+		context.Annotations[Name] = true;
+		return result;
+	}
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>

@@ -20,8 +20,21 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Applicator202012Id)]
 [Vocabulary(Vocabularies.ApplicatorNextId)]
 [JsonConverter(typeof(IfKeywordJsonConverter))]
-public class IfKeyword : IJsonSchemaKeyword, ISchemaContainer
+public class IfKeyword : IJsonSchemaKeyword, ISchemaContainer, IKeywordHandler
 {
+	public static IfKeyword Handler { get; } = new(true);
+
+	bool IKeywordHandler.Evaluate(FunctionalEvaluationContext context)
+	{
+		if (!context.LocalSchema.AsObject().TryGetValue(Name, out var requirement, out _)) return true;
+
+		var localContext = context;
+		localContext.LocalSchema = requirement!;
+
+		context.Annotations[Name] = JsonSchema.Evaluate(localContext);
+		return true;
+	}
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>

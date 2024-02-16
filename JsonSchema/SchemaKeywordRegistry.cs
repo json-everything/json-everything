@@ -103,12 +103,16 @@ public static class SchemaKeywordRegistry
 
 		KeywordHandlers =
 		[
+			AdditionalItemsKeyword.Handler,
 			AdditionalPropertiesKeyword.Handler,
 			AllOfKeyword.Handler,
 			AnyOfKeyword.Handler,
 			ConstKeyword.Handler,
+			ElseKeyword.Handler,
 			ExclusiveMaximumKeyword.Handler,
 			ExclusiveMinimumKeyword.Handler,
+			IfKeyword.Handler,
+			ItemsKeyword.Handler,
 			MaximumKeyword.Handler,
 			MaxItemsKeyword.Handler,
 			MaxLengthKeyword.Handler,
@@ -121,8 +125,10 @@ public static class SchemaKeywordRegistry
 			NotKeyword.Handler,
 			OneOfKeyword.Handler,
 			PatternPropertiesKeyword.Handler,
+			PrefixItemsKeyword.Handler,
 			PropertiesKeyword.Handler,
 			RefKeyword.Handler,
+			ThenKeyword.Handler,
 			TypeKeyword.Handler
 		];
 

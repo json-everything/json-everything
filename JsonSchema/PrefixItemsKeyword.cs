@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
@@ -18,8 +19,37 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Applicator202012Id)]
 [Vocabulary(Vocabularies.ApplicatorNextId)]
 [JsonConverter(typeof(PrefixItemsKeywordJsonConverter))]
-public class PrefixItemsKeyword : IJsonSchemaKeyword, ISchemaCollector
+public class PrefixItemsKeyword : IJsonSchemaKeyword, ISchemaCollector, IKeywordHandler
 {
+	public static PrefixItemsKeyword Handler { get; } = new();
+
+	bool IKeywordHandler.Evaluate(FunctionalEvaluationContext context)
+	{
+		if (!context.LocalSchema.AsObject().TryGetValue(Name, out var requirement, out _)) return true;
+
+		if (requirement is not JsonArray subschemas)
+			throw new Exception("prefixItems must be an array of schemas");
+
+		if (context.LocalInstance is not JsonArray array) return true;
+
+		var result = true;
+		var evaluated = -1;
+		for (int i = 0; i < subschemas.Count; i++)
+		{
+			if (i == array.Count) break;
+
+			var localContext = context;
+			localContext.LocalInstance = array[i];
+			localContext.LocalSchema = subschemas[i]!;
+
+			result &= JsonSchema.Evaluate(localContext);
+			evaluated = i;
+		}
+
+		context.Annotations[Name] = evaluated == array.Count ? true : evaluated;
+		return result;
+	}
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
