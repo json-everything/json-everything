@@ -39,7 +39,14 @@ public class PatternKeyword : IJsonSchemaKeyword, IKeywordHandler
 		var str = value.GetString();
 		if (str is null) return true;
 
-		return Regex.IsMatch(str, pattern);
+		try
+		{
+			return Regex.IsMatch(str, pattern);
+		}
+		catch
+		{
+			return false;
+		}
 	}
 
 	/// <summary>

@@ -42,7 +42,7 @@ public class TestSuiteRunner
 	public int Count { get; set; }
 
 	[Benchmark]
-	public int ObjectOriented()
+	public int ObjectOriented_LoopOnTest()
 	{
 		int i = 0;
 		var collections = TestSetup<TestCollection>.GetAllTests();
@@ -60,7 +60,7 @@ public class TestSuiteRunner
 	}
 
 	[Benchmark]
-	public int Functional()
+	public int Functional_LoopOnTest()
 	{
 		int i = 0;
 		var collections = TestSetup<TestCollectionFunctional>.GetAllTests();
@@ -71,6 +71,48 @@ public class TestSuiteRunner
 			{
 				BenchmarkFunctional(collection, test, Count);
 				i++;
+			}
+		}
+
+		return i;
+	}
+	
+	//[Benchmark]
+	public int ObjectOriented_LoopOnSuite()
+	{
+		int i = 0;
+		var collections = TestSetup<TestCollection>.GetAllTests();
+
+		for (int j = 0; j < Count; j++)
+		{
+			foreach (var collection in collections)
+			{
+				foreach (var test in collection.Tests)
+				{
+					BenchmarkObjectOriented(collection, test, 1);
+					i++;
+				}
+			}
+		}
+
+		return i;
+	}
+
+	//[Benchmark]
+	public int Functional_LoopOnSuite()
+	{
+		int i = 0;
+		var collections = TestSetup<TestCollectionFunctional>.GetAllTests();
+
+		for (int j = 0; j < Count; j++)
+		{
+			foreach (var collection in collections)
+			{
+				foreach (var test in collection.Tests)
+				{
+					BenchmarkFunctional(collection, test, 1);
+					i++;
+				}
 			}
 		}
 

@@ -30,12 +30,6 @@ public class PropertyNamesKeyword : IJsonSchemaKeyword, ISchemaContainer, IKeywo
 	{
 		if (!context.LocalSchema.AsObject().TryGetValue(Name, out var requirement, out _)) return true;
 
-		bool? reqBool;
-		if (requirement is JsonValue reqValue && (reqBool = reqValue.GetBool()) is not null) return reqBool.Value;
-
-		if (requirement is not JsonObject subschema)
-			throw new Exception("propertyNames must be a schema");
-
 		if (context.LocalInstance is not JsonObject obj) return true;
 
 		var result = true;
@@ -43,7 +37,7 @@ public class PropertyNamesKeyword : IJsonSchemaKeyword, ISchemaContainer, IKeywo
 		{
 			var localContext = context;
 			localContext.LocalInstance = property.Key;
-			localContext.LocalSchema = subschema;
+			localContext.LocalSchema = requirement!;
 
 			result &= JsonSchema.Evaluate(localContext);
 		}

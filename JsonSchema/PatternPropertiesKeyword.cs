@@ -41,7 +41,17 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollecto
 		var evaluated = new HashSet<string>();
 		foreach (var pattern in patternProperties)
 		{
-			var matches = obj.Where(x => Regex.IsMatch(x.Key, pattern.Key));
+			var matches = obj.Where(x =>
+			{
+				try
+				{
+					return Regex.IsMatch(x.Key, pattern.Key);
+				}
+				catch
+				{
+					return false;
+				}
+			});
 			foreach (var match in matches)
 			{
 				if (!obj.TryGetValue(match.Key, out var instanceProp, out _)) continue;
