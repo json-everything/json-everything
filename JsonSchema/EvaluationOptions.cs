@@ -11,6 +11,10 @@ namespace Json.Schema;
 public class EvaluationOptions
 {
 	private HashSet<Type>? _ignoredAnnotationTypes;
+	private SpecVersion _evaluateAs;
+	private bool _requireFormatValidation;
+	private bool _onlyKnownFormats;
+	private bool _processCustomKeywords;
 
 	/// <summary>
 	/// The default settings.
@@ -21,7 +25,17 @@ public class EvaluationOptions
 	/// Indicates which specification version to process as.  This will filter the keywords
 	/// of a schema based on their support.
 	/// </summary>
-	public SpecVersion EvaluateAs { get; set; }
+	public SpecVersion EvaluateAs
+	{
+		get => _evaluateAs;
+		set
+		{
+			if (!Equals(_evaluateAs, value))
+				Changed = true;
+			_evaluateAs = value;
+		}
+	}
+
 	/// <summary>
 	/// Indicates whether the schema should be validated against its `$schema` value.
 	/// this is not typically necessary.
@@ -51,7 +65,16 @@ public class EvaluationOptions
 	/// format-annotation vocabulary requirement in the `$vocabulary` keyword in
 	/// a meta-schema declaring draft 2020-12.
 	/// </summary>
-	public bool RequireFormatValidation { get; set; }
+	public bool RequireFormatValidation
+	{
+		get => _requireFormatValidation;
+		set
+		{
+			if (!Equals(_requireFormatValidation, value))
+				Changed = true;
+			_requireFormatValidation = value;
+		}
+	}
 
 	/// <summary>
 	/// Specifies whether the `format` keyword should fail validations for
@@ -61,7 +84,16 @@ public class EvaluationOptions
 	///	This option is applied whether `format` is using annotation or
 	/// assertion behavior.
 	/// </remarks>
-	public bool OnlyKnownFormats { get; set; }
+	public bool OnlyKnownFormats
+	{
+		get => _onlyKnownFormats;
+		set
+		{
+			if (!Equals(_onlyKnownFormats, value))
+				Changed = true;
+			_onlyKnownFormats = value;
+		}
+	}
 
 	/// <summary>
 	/// Specifies whether custom keywords that aren't defined in vocabularies
@@ -76,7 +108,16 @@ public class EvaluationOptions
 	/// (e.g. draft 2019-09 &amp;amp; 20200-12).
 	/// annotations.
 	/// </remarks>
-	public bool ProcessCustomKeywords { get; set; }
+	public bool ProcessCustomKeywords
+	{
+		get => _processCustomKeywords;
+		set
+		{
+			if (!Equals(_processCustomKeywords, value))
+				Changed = true;
+			_processCustomKeywords = value;
+		}
+	}
 
 	/// <summary>
 	/// If enabled, annotations that are dropped as a result of a failing
@@ -101,6 +142,8 @@ public class EvaluationOptions
 	/// </summary>
 	public CultureInfo? Culture { get; set; }
 
+	internal bool Changed { get; set; }
+
 	static EvaluationOptions()
 	{
 		// It's necessary to call this from here because
@@ -113,7 +156,7 @@ public class EvaluationOptions
 	/// </summary>
 	public EvaluationOptions()
 	{
-		SchemaRegistry = new SchemaRegistry();
+		SchemaRegistry = new SchemaRegistry(this);
 	}
 
 	/// <summary>

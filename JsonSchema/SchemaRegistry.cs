@@ -17,6 +17,7 @@ public class SchemaRegistry
 
 	private Dictionary<Uri, Registration>? _registered;
 	private Func<Uri, IBaseDocument?>? _fetch;
+	private readonly EvaluationOptions? _options;
 
 	/// <summary>
 	/// The global registry.
@@ -30,6 +31,19 @@ public class SchemaRegistry
 	{
 		get => _fetch ??= _ => null;
 		set => _fetch = value;
+	}
+
+	/// <summary>
+	/// Creates a new <see cref="SchemaRegistry"/>.
+	/// </summary>
+	[Obsolete("There should be no reason to create a schema registry.  This is handled internally.")]
+	public SchemaRegistry()
+	{
+	}
+
+	internal SchemaRegistry(EvaluationOptions options)
+	{
+		_options = options;
 	}
 
 	internal void InitializeMetaSchemas()
@@ -87,6 +101,9 @@ public class SchemaRegistry
 
 		if (document is JsonSchema schema)
 			JsonSchema.Initialize(schema, this, uri);
+
+		if (_options != null)
+			_options.Changed = true;
 	}
 
 	internal void RegisterSchema(Uri? uri, IBaseDocument document)

@@ -35,6 +35,8 @@ public class JsonSchema : IBaseDocument
 	private readonly Dictionary<string, IJsonSchemaKeyword>? _keywords;
 	private readonly List<(DynamicScope Scope, SchemaConstraint Constraint)> _constraints = [];
 
+	private EvaluationOptions? _lastCalledOptions;
+
 	/// <summary>
 	/// The empty schema `{}`.  Functionally equivalent to <see cref="True"/>.
 	/// </summary>
@@ -281,10 +283,22 @@ public class JsonSchema : IBaseDocument
 	/// <returns>A <see cref="EvaluationResults"/> that provides the outcome of the evaluation.</returns>
 	public EvaluationResults Evaluate(JsonNode? root, EvaluationOptions? options = null)
 	{
-		options = EvaluationOptions.From(options ?? EvaluationOptions.Default);
+		options ??= EvaluationOptions.Default;
+		if (!ReferenceEquals(options, _lastCalledOptions) || options.Changed)
+		{
+			var subschemas = Keywords?.SelectMany(GetSubschemas) ?? [];
+			foreach (var subschema in subschemas)
+			{
+				subschema._constraints.Clear();
+			}
+			_constraints.Clear();
+		}
+		_lastCalledOptions = options;
+		options.Changed = false;
+
+		options = EvaluationOptions.From(options);
 
 		// BaseUri may change if $id is present
-		// TODO: remove options.EvaluatingAs
 		var evaluatingAs = DetermineSpecVersion(this, options.SchemaRegistry, options.EvaluateAs);
 		PopulateBaseUris(this, this, BaseUri, options.SchemaRegistry, evaluatingAs, true);
 

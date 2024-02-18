@@ -93,7 +93,7 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollecto
 
 	private static void Evaluator(KeywordEvaluation evaluation, EvaluationContext context)
 	{
-		evaluation.Results.SetAnnotation(Name, evaluation.ChildEvaluations.Select(x => (JsonNode)x.RelativeInstanceLocation.Segments[0].Value!).ToJsonArray());
+		evaluation.Results.SetAnnotation(Name, evaluation.ChildEvaluations.Select(x => (JsonNode)x.RelativeInstanceLocation.Segments[0].Value).ToJsonArray());
 		
 		if (!evaluation.ChildEvaluations.All(x => x.Results.IsValid))
 			evaluation.Results.Fail();
@@ -143,7 +143,7 @@ public sealed class PatternPropertiesKeywordJsonConverter : WeaklyTypedJsonConve
 		foreach (var schema in value.Patterns)
 		{
 			writer.WritePropertyName(schema.Key.ToString());
-			options.Write(writer, schema.Value, JsonSchemaSerializerContext.Default.JsonSchema);;
+			options.Write(writer, schema.Value, JsonSchemaSerializerContext.Default.JsonSchema);
 		}
 		writer.WriteEndObject();
 	}

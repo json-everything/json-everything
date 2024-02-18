@@ -35,7 +35,27 @@ public class EvaluationOptionsTests
 		var result = schema.Evaluate(instance);
 		result.AssertValid();
 
-		Assert.Throws<JsonSchemaException>(() => schema.Evaluate(instance, new EvaluationOptions { OnlyKnownFormats = true }));
+		result = schema.Evaluate(instance, new EvaluationOptions { OnlyKnownFormats = true });
+		result.AssertInvalid();
+	}
+
+	[Test]
+	public void FormatThrowsForUnknownOnlyWhenConfigured_SameOptionsObjectButChanged()
+	{
+		var schema = new JsonSchemaBuilder()
+			.Type(SchemaValueType.String)
+			.Format("not-a-format")
+			.Build();
+
+		JsonNode instance = "not a pointer";
+
+		var options = new EvaluationOptions();
+		var result = schema.Evaluate(instance, options);
+		result.AssertValid();
+
+		options.OnlyKnownFormats = true;
+		result = schema.Evaluate(instance, options);
+		result.AssertInvalid();
 	}
 
 	[Test]
@@ -53,7 +73,7 @@ public class EvaluationOptionsTests
 
 		var instance = new JsonArray(1, 2, 3);
 
-		var options = new EvaluationOptions();
+		var options = new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical };
 		options.SchemaRegistry.Register(reffed);
 
 		var result = schema.Evaluate(instance, options);
@@ -64,7 +84,7 @@ public class EvaluationOptionsTests
 			.Type(SchemaValueType.String)
 			.Build();
 
-		options = new EvaluationOptions();
+		options = new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical };
 		options.SchemaRegistry.Register(reffed);
 
 		result = schema.Evaluate(instance, options);
