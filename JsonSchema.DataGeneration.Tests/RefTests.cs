@@ -26,8 +26,7 @@ internal class RefTests
 			            "exclusiveMinimum": 0
 			        }
 			    },
-			    "minItems": 2,
-			    "additionalProperties" : false
+			    "minItems": 2
 			}
 			""");
 
@@ -48,8 +47,7 @@ internal class RefTests
 			            "exclusiveMinimum": 0
 			        }
 			    },
-			    "minItems": 2,
-			    "additionalProperties" : false
+			    "minItems": 2
 			}
 			""");
 

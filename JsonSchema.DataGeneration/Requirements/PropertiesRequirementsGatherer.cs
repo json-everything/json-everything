@@ -4,7 +4,7 @@ namespace Json.Schema.DataGeneration.Requirements;
 
 internal class PropertiesRequirementsGatherer : IRequirementsGatherer
 {
-	public void AddRequirements(RequirementsContext context, JsonSchema schema)
+	public void AddRequirements(RequirementsContext context, JsonSchema schema, EvaluationOptions options)
 	{
 		var supportsObjects = false;
 
@@ -47,9 +47,9 @@ internal class PropertiesRequirementsGatherer : IRequirementsGatherer
 			foreach (var property in properties.Properties)
 			{
 				if (context.Properties.TryGetValue(property.Key, out var subschema))
-					subschema.And(property.Value.GetRequirements());
+					subschema.And(property.Value.GetRequirements(options));
 				else
-					context.Properties.Add(property.Key, property.Value.GetRequirements());
+					context.Properties.Add(property.Key, property.Value.GetRequirements(options));
 			}
 			supportsObjects = true;
 		}
@@ -58,9 +58,9 @@ internal class PropertiesRequirementsGatherer : IRequirementsGatherer
 		if (additionalProperties != null)
 		{
 			if (context.RemainingProperties != null)
-				context.RemainingProperties.And(additionalProperties.GetRequirements());
+				context.RemainingProperties.And(additionalProperties.GetRequirements(options));
 			else
-				context.RemainingProperties = additionalProperties.GetRequirements();
+				context.RemainingProperties = additionalProperties.GetRequirements(options);
 			supportsObjects = true;
 		}
 
@@ -68,9 +68,9 @@ internal class PropertiesRequirementsGatherer : IRequirementsGatherer
 		if (additionalProperties != null)
 		{
 			if (context.RemainingProperties != null)
-				context.RemainingProperties.And(additionalProperties.GetRequirements());
+				context.RemainingProperties.And(additionalProperties.GetRequirements(options));
 			else
-				context.RemainingProperties = additionalProperties.GetRequirements();
+				context.RemainingProperties = additionalProperties.GetRequirements(options);
 			supportsObjects = true;
 		}
 

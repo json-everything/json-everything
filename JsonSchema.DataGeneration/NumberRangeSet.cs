@@ -193,7 +193,7 @@ public class NumberRangeSet
 	/// <summary>
 	/// Applies a ceiling (upper bound).
 	/// </summary>
-	public NumberRangeSet Ceiling(decimal ceiling)
+	public NumberRangeSet Ceiling(Bound ceiling)
 	{
 		return Intersect(new NumberRange(MinRangeValue, ceiling));
 	}
@@ -203,7 +203,7 @@ public class NumberRangeSet
 	/// </summary>
 	/// <param name="floor"></param>
 	/// <returns></returns>
-	public NumberRangeSet Floor(decimal floor)
+	public NumberRangeSet Floor(Bound floor)
 	{
 		return Intersect(new NumberRange(floor, MaxRangeValue));
 	}

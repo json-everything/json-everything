@@ -4,7 +4,7 @@ namespace Json.Schema.DataGeneration.Requirements;
 
 internal class ItemsRequirementsGatherer : IRequirementsGatherer
 {
-	public void AddRequirements(RequirementsContext context, JsonSchema schema)
+	public void AddRequirements(RequirementsContext context, JsonSchema schema, EvaluationOptions options)
 	{
 		var supportsArrays = false;
 
@@ -35,9 +35,9 @@ internal class ItemsRequirementsGatherer : IRequirementsGatherer
 			if (items.SingleSchema != null)
 			{
 				if (context.RemainingItems != null)
-					context.RemainingItems.And(items.SingleSchema.GetRequirements());
+					context.RemainingItems.And(items.SingleSchema.GetRequirements(options));
 				else
-					context.RemainingItems = items.SingleSchema.GetRequirements();
+					context.RemainingItems = items.SingleSchema.GetRequirements(options);
 			}
 			else
 			{
@@ -46,7 +46,7 @@ internal class ItemsRequirementsGatherer : IRequirementsGatherer
 					// need to AND the schemas together sequentially
 				}
 				else
-					context.SequentialItems = items.ArraySchemas!.Select(x => x.GetRequirements()).ToList();
+					context.SequentialItems = items.ArraySchemas!.Select(x => x.GetRequirements(options)).ToList();
 			}
 			supportsArrays = true;
 		}
@@ -59,7 +59,7 @@ internal class ItemsRequirementsGatherer : IRequirementsGatherer
 				// need to AND the schemas together sequentially
 			}
 			else
-				context.SequentialItems = prefixItems.Select(x => x.GetRequirements()).ToList();
+				context.SequentialItems = prefixItems.Select(x => x.GetRequirements(options)).ToList();
 			supportsArrays = true;
 		}
 
@@ -67,9 +67,9 @@ internal class ItemsRequirementsGatherer : IRequirementsGatherer
 		if (additionalItems != null)
 		{
 			if (context.RemainingItems != null)
-				context.RemainingItems.And(additionalItems.GetRequirements());
+				context.RemainingItems.And(additionalItems.GetRequirements(options));
 			else
-				context.RemainingItems = additionalItems.GetRequirements();
+				context.RemainingItems = additionalItems.GetRequirements(options);
 			supportsArrays = true;
 		}
 
@@ -77,9 +77,9 @@ internal class ItemsRequirementsGatherer : IRequirementsGatherer
 		if (additionalItems != null)
 		{
 			if (context.RemainingItems != null)
-				context.RemainingItems.And(additionalItems.GetRequirements());
+				context.RemainingItems.And(additionalItems.GetRequirements(options));
 			else
-				context.RemainingItems = additionalItems.GetRequirements();
+				context.RemainingItems = additionalItems.GetRequirements(options);
 			supportsArrays = true;
 		}
 

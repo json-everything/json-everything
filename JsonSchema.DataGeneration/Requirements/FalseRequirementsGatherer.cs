@@ -2,7 +2,7 @@
 
 internal class FalseRequirementsGatherer : IRequirementsGatherer
 {
-	public void AddRequirements(RequirementsContext context, JsonSchema schema)
+	public void AddRequirements(RequirementsContext context, JsonSchema schema, EvaluationOptions options)
 	{
 		if (schema.BoolValue == false)
 			context.IsFalse = true;

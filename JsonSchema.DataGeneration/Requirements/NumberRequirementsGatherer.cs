@@ -4,7 +4,7 @@ namespace Json.Schema.DataGeneration.Requirements;
 
 internal class NumberRequirementsGatherer : IRequirementsGatherer
 {
-	public void AddRequirements(RequirementsContext context, JsonSchema schema)
+	public void AddRequirements(RequirementsContext context, JsonSchema schema, EvaluationOptions options)
 	{
 		var supportsNumbers = false;
 
@@ -15,10 +15,22 @@ internal class NumberRequirementsGatherer : IRequirementsGatherer
 			range = range.Floor(minimum.Value);
 			supportsNumbers = true;
 		}
+		minimum = schema.Keywords?.OfType<ExclusiveMinimumKeyword>().FirstOrDefault()?.Value;
+		if (minimum != null)
+		{
+			range = range.Floor((minimum.Value, false));
+			supportsNumbers = true;
+		}
 		var maximum = schema.Keywords?.OfType<MaximumKeyword>().FirstOrDefault()?.Value;
 		if (maximum != null)
 		{
 			range = range.Ceiling(maximum.Value);
+			supportsNumbers = true;
+		}
+		maximum = schema.Keywords?.OfType<ExclusiveMaximumKeyword>().FirstOrDefault()?.Value;
+		if (maximum != null)
+		{
+			range = range.Ceiling((maximum.Value, false));
 			supportsNumbers = true;
 		}
 		if (range != NumberRangeSet.Full)
