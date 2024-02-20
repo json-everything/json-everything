@@ -19,8 +19,8 @@
 		<PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>
 		<PackageTags>json-schema schema json generation</PackageTags>
-		<Version>2.0.1</Version>
-		<FileVersion>2.0.1.0</FileVersion>
+		<Version>2.1.0</Version>
+		<FileVersion>2.1.0.0</FileVersion>
 		<AssemblyVersion>2.0.0.0</AssemblyVersion>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageIcon>json-logo-256.png</PackageIcon>
@@ -34,11 +34,13 @@
 		<AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
 		<NoWarn>IDE0290</NoWarn>
 		<IsAotCompatible Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net7.0'))">true</IsAotCompatible>
+		<PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Bogus" Version="34.0.2" />
 		<PackageReference Include="Fare" Version="2.2.1" />
+		<PackageReference Include="PolySharp" Version="1.14.1" PrivateAssets="all" />
 	</ItemGroup>
 
 	<ItemGroup>

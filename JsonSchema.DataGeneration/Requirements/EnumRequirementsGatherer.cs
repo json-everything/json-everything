@@ -4,7 +4,7 @@ namespace Json.Schema.DataGeneration.Requirements;
 
 internal class EnumRequirementsGatherer : IRequirementsGatherer
 {
-	public void AddRequirements(RequirementsContext context, JsonSchema schema)
+	public void AddRequirements(RequirementsContext context, JsonSchema schema, EvaluationOptions options)
 	{
 		var enumKeyword = schema.Keywords?.OfType<EnumKeyword>().FirstOrDefault();
 		if (enumKeyword != null)

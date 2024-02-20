@@ -4,13 +4,13 @@ namespace Json.Schema.DataGeneration.Requirements;
 
 internal class OneOfRequirementsGatherer : IRequirementsGatherer
 {
-	public void AddRequirements(RequirementsContext context, JsonSchema schema)
+	public void AddRequirements(RequirementsContext context, JsonSchema schema, EvaluationOptions options)
 	{
 		var keyword = schema.Keywords?.OfType<OneOfKeyword>().FirstOrDefault();
 		if (keyword == null) return;
 
 		context.Options ??= [];
-		var allRequirements = keyword.Schemas.Select(x => x.GetRequirements()).ToList();
+		var allRequirements = keyword.Schemas.Select(x => x.GetRequirements(options)).ToList();
 		var inverted = allRequirements.Select(x => x.Break()).ToList();
 
 		var i = 0;

@@ -4,7 +4,7 @@ namespace Json.Schema.DataGeneration.Requirements;
 
 internal class ConditionalRequirementsGatherer : IRequirementsGatherer
 {
-	public void AddRequirements(RequirementsContext context, JsonSchema schema)
+	public void AddRequirements(RequirementsContext context, JsonSchema schema, EvaluationOptions options)
 	{
 		var ifKeyword = schema.Keywords?.OfType<IfKeyword>().FirstOrDefault();
 		var thenKeyword = schema.Keywords?.OfType<ThenKeyword>().FirstOrDefault();
@@ -15,15 +15,15 @@ internal class ConditionalRequirementsGatherer : IRequirementsGatherer
 			RequirementsContext? ifthen = null;
 			if (thenKeyword != null)
 			{
-				ifthen = ifKeyword.Schema.GetRequirements();
-				ifthen.And(thenKeyword.Schema.GetRequirements());
+				ifthen = ifKeyword.Schema.GetRequirements(options);
+				ifthen.And(thenKeyword.Schema.GetRequirements(options));
 			}
 
 			RequirementsContext? ifelse = null;
 			if (elseKeyword != null)
 			{
-				ifelse = ifKeyword.Schema.GetRequirements().Break();
-				ifelse.And(elseKeyword.Schema.GetRequirements());
+				ifelse = ifKeyword.Schema.GetRequirements(options).Break();
+				ifelse.And(elseKeyword.Schema.GetRequirements(options));
 			}
 
 			if (ifthen == null && ifelse == null) return;

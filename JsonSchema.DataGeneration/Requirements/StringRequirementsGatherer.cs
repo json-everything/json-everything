@@ -4,7 +4,7 @@ namespace Json.Schema.DataGeneration.Requirements;
 
 internal class StringRequirementsGatherer : IRequirementsGatherer
 {
-	public void AddRequirements(RequirementsContext context, JsonSchema schema)
+	public void AddRequirements(RequirementsContext context, JsonSchema schema, EvaluationOptions options)
 	{
 		var supportsStrings = false;
 

@@ -4,12 +4,12 @@ namespace Json.Schema.DataGeneration.Requirements;
 
 internal class NotRequirementsGatherer : IRequirementsGatherer
 {
-	public void AddRequirements(RequirementsContext context, JsonSchema schema)
+	public void AddRequirements(RequirementsContext context, JsonSchema schema, EvaluationOptions options)
 	{
 		var notKeyword = schema.Keywords?.OfType<NotKeyword>().FirstOrDefault();
 		if (notKeyword == null) return;
 
-		var subRequirements = notKeyword.Schema.GetRequirements();
+		var subRequirements = notKeyword.Schema.GetRequirements(options);
 
 		var broken = subRequirements.Break();
 		context.And(broken);

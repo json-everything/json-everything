@@ -4,6 +4,10 @@ title: JsonSchema.Net.DataGeneration
 icon: fas fa-tag
 order: "09.06"
 ---
+# [2.1.0](https://github.com/gregsdennis/json-everything/pull/665) {#release-schemadatagen-2.0.1}
+
+[#617](https://github.com/gregsdennis/json-everything/issues/617) - Added support for `exclusiveMin`, `exclusiveMax`, and `$ref`.  (Note: `$ref` support does not include infinite recursion checking.)
+
 # [2.0.1](https://github.com/gregsdennis/json-everything/pull/658) {#release-schemadatagen-2.0.1}
 
 [#646](https://github.com/gregsdennis/json-everything/issues/646) & [#647](https://github.com/gregsdennis/json-everything/issues/647) - Improved handling of `not`, `oneOf`, and `unevaluatedProperties`.

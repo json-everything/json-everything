@@ -4,15 +4,15 @@ namespace Json.Schema.DataGeneration.Requirements;
 
 internal class ContainsRequirementsGatherer : IRequirementsGatherer
 {
-	public void AddRequirements(RequirementsContext context, JsonSchema schema)
+	public void AddRequirements(RequirementsContext context, JsonSchema schema, EvaluationOptions options)
 	{
 		var contains = schema.Keywords?.OfType<ContainsKeyword>().FirstOrDefault()?.Schema;
 		if (contains != null)
 		{
 			if (context.Contains != null)
-				context.Contains.And(contains.GetRequirements());
+				context.Contains.And(contains.GetRequirements(options));
 			else
-				context.Contains = contains.GetRequirements();
+				context.Contains = contains.GetRequirements(options);
 		}
 
 		var range = NumberRangeSet.Full;
