@@ -19,9 +19,9 @@ public static class TestHelpers
 
 	public static void Run(JsonSchema schema, EvaluationOptions? options = null)
 	{
-		var result = schema.GenerateData();
-
 		options ??= EvaluationOptions.Default;
+
+		var result = schema.GenerateData(options);
 
 		Assert.IsTrue(result.IsSuccess, "failed generation");
 		Console.WriteLine(JsonSerializer.Serialize(result.Result, SerializerOptions));
@@ -30,9 +30,9 @@ public static class TestHelpers
 		Assert.IsTrue(validation.IsValid, "failed validation");
 	}
 
-	public static void RunFailure(JsonSchema schema)
+	public static void RunFailure(JsonSchema schema, EvaluationOptions? options = null)
 	{
-		var result = schema.GenerateData();
+		var result = schema.GenerateData(options);
 
 		Console.WriteLine(result.ErrorMessage);
 		if (result.IsSuccess)

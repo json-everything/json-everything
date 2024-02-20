@@ -26,11 +26,31 @@ public class NumberGenerationTests
 	}
 
 	[Test]
+	public void ExclusiveMinimum()
+	{
+		JsonSchema schema = new JsonSchemaBuilder()
+			.Type(SchemaValueType.Number)
+			.ExclusiveMinimum(0.2m);
+
+		Run(schema);
+	}
+
+	[Test]
 	public void Maximum()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Number)
 			.Maximum(0.8m);
+
+		Run(schema);
+	}
+
+	[Test]
+	public void ExclusiveMaximum()
+	{
+		JsonSchema schema = new JsonSchemaBuilder()
+			.Type(SchemaValueType.Number)
+			.ExclusiveMaximum(0.8m);
 
 		Run(schema);
 	}

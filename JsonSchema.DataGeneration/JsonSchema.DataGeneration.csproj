@@ -34,11 +34,13 @@
 		<AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
 		<NoWarn>IDE0290</NoWarn>
 		<IsAotCompatible Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net7.0'))">true</IsAotCompatible>
+		<PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Bogus" Version="34.0.2" />
 		<PackageReference Include="Fare" Version="2.2.1" />
+		<PackageReference Include="PolySharp" Version="1.14.1" PrivateAssets="all" />
 	</ItemGroup>
 
 	<ItemGroup>

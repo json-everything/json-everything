@@ -36,21 +36,24 @@ internal class RefTests
 	[Test]
 	public void ExternalRef()
 	{
+		var foo = new JsonSchemaBuilder()
+			.Id("https://json-everything.test/foo")
+			.Type(SchemaValueType.Integer)
+			.ExclusiveMinimum(0)
+			.Build();
+
 		var schema = JsonSchema.FromText(
 			"""
 			{
 			    "type": "array",
 			    "items": { "$ref": "https://json-everything.test/foo" },
-			    "$defs": {
-			        "positiveInteger": {
-			            "type": "integer",
-			            "exclusiveMinimum": 0
-			        }
-			    },
 			    "minItems": 2
 			}
 			""");
 
-		Assert.Throws<NotSupportedException>(() => schema.GenerateData());
+		var options = new EvaluationOptions();
+		options.SchemaRegistry.Register(foo);
+
+		Run(schema, options);
 	}
 }
