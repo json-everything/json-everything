@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
 using Json.Pointer;
 
 namespace Json.Schema.DataGeneration.Requirements;
@@ -17,10 +20,7 @@ internal class RefRequirementsGatherer : IRequirementsGatherer
 		var newUri = new Uri(schema.BaseUri, refKeyword.Reference);
 		var fragment = newUri.Fragment;
 
-		//var instanceLocation = schemaConstraint.BaseInstanceLocation.Combine(schemaConstraint.RelativeInstanceLocation);
-		//var navigation = (newUri.OriginalString, InstanceLocation: instanceLocation);
-		//if (context.NavigatedReferences.Contains(navigation))
-		//	throw new JsonSchemaException($"Encountered circular reference at schema location `{newUri}` and instance location `{schemaConstraint.RelativeInstanceLocation}`");
+		// ordinarily, loop detection would go here, but I've decided not to support it.  Stackoverflows will ensue.
 
 		var newBaseUri = new Uri(newUri.GetLeftPart(UriPartial.Query));
 
@@ -41,9 +41,8 @@ internal class RefRequirementsGatherer : IRequirementsGatherer
 			if (!_anchorPattern.IsMatch(anchorFragment))
 				throw new JsonSchemaException($"Unrecognized fragment type `{newUri}`");
 
-			//if (targetBase is JsonSchema targetBaseSchema &&
-			//    targetBaseSchema.Anchors.TryGetValue(anchorFragment, out var anchorDefinition))
-			//	targetSchema = anchorDefinition.Schema;
+			if (targetBase is JsonSchema targetBaseSchema) 
+				targetSchema = FindAnchor(targetBaseSchema, anchorFragment);
 		}
 
 		if (targetSchema == null)
@@ -51,5 +50,49 @@ internal class RefRequirementsGatherer : IRequirementsGatherer
 
 		var referenceRequirements = targetSchema.GetRequirements(options);
 		context.And(referenceRequirements);
+	}
+
+	private static JsonSchema? FindAnchor(JsonSchema root, string anchor)
+	{
+		var queue = new Queue<JsonSchema>();
+		queue.Enqueue(root);
+
+		while (queue.Count != 0)
+		{
+			var subschema = queue.Dequeue();
+			if (subschema.BoolValue.HasValue) continue;
+			if (subschema.GetAnchor() == anchor) return subschema;
+
+			foreach (var keyword in subschema.Keywords!)
+			{
+				switch (keyword)
+				{
+					// ReSharper disable once RedundantAlwaysMatchSubpattern
+					case ISchemaContainer { Schema: { } } container:
+						queue.Enqueue(container.Schema);
+						break;
+					case ISchemaCollector collector:
+						foreach (var schema in collector.Schemas)
+						{
+							queue.Enqueue(schema);
+						}
+						break;
+					case IKeyedSchemaCollector collector:
+						foreach (var schema in collector.Schemas.Values)
+						{
+							queue.Enqueue(schema);
+						}
+						break;
+					case ICustomSchemaCollector collector:
+						foreach (var schema in collector.Schemas)
+						{
+							queue.Enqueue(schema);
+						}
+						break;
+				}
+			}
+		}
+
+		return null;
 	}
 }
