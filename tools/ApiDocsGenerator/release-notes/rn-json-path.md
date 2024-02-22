@@ -4,7 +4,7 @@ title: JsonPath.Net
 icon: fas fa-tag
 order: "09.07"
 ---
-# [1.0.0](https://github.com/gregsdennis/json-everything/pull/655) {#release-path-1.0.0}
+# [1.0.0](https://github.com/gregsdennis/json-everything/commit/550f4d97d52c90644cf033ae235fa6d80b3fbda3) {#release-path-1.0.0}
 
 JSON Path RFC 9535 has been released!  (No functional changes from 0.8.0.)
 
