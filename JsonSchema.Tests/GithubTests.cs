@@ -950,4 +950,39 @@ public class GithubTests
 
 		Assert.AreEqual("http://localhost/v1#/components/schemas/user/properties/last-name", targetSchemaLocation.OriginalString);
 	}
+
+	[Test]
+	public void Issue664_UIntConstNotValidating()
+	{
+		var schema = new JsonSchemaBuilder()
+			.Title("Schema with const UInt")
+			.Properties(("prop", new JsonSchemaBuilder().Const((uint)1)))
+			.AdditionalProperties(false)
+			.Build();
+
+
+		var json = """{"prop":1}""";
+		var jsonDocumentInstance = JsonDocument.Parse(json);
+
+
+		var schemaText = JsonSerializer.Serialize(schema, TestSerializerContext.Default.JsonSchema);
+		var schemaFromString = JsonSchema.FromText(schemaText);
+
+		var directEvaluationResult = schema.Evaluate(jsonDocumentInstance, new EvaluationOptions
+		{
+			OutputFormat = OutputFormat.List,
+			ValidateAgainstMetaSchema = true,
+			RequireFormatValidation = true
+		});
+
+		var evaluationResultFromSchema = schemaFromString.Evaluate(jsonDocumentInstance, new EvaluationOptions
+		{
+			OutputFormat = OutputFormat.List,
+			ValidateAgainstMetaSchema = true,
+			RequireFormatValidation = true
+		});
+
+		directEvaluationResult.AssertValid();
+		evaluationResultFromSchema.AssertValid();
+	}
 }

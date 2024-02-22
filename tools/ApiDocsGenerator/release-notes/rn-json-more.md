@@ -4,6 +4,14 @@ title: Json.More.Net
 icon: fas fa-tag
 order: "09.12"
 ---
+# [2.0.1](https://github.com/gregsdennis/json-everything/pull/669) {#release-more-2.0.1}
+
+Fixes an issue in `JsonNode.GetInteger()` where the underlying value is a `uint`.
+
+Also now throws a `NotSupportedException` when the underlying value is a `ulong` as this can't be reliably cast to the method output of `long`.  It is expected that this would have been erroring in many cases anyway.  This change merely improves the error messaging.
+
+Thanks to [@ZarkoRunjevac](https://github.com/ZarkoRunjevac) for reporting and to [@elgonzo](https://github.com/elgonzo) for investigating and finding the problem.
+
 # [2.0.0](https://github.com/gregsdennis/json-everything/pull/619) {#release-more-2.0.0}
 
 Updated for multi-framework support with .Net Standard 2.0 and .Net 8 with Native AOT support, including updating _System.Text.Json_ from v6 to v8.

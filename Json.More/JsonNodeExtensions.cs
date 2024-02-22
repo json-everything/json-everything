@@ -194,10 +194,11 @@ public static class JsonNodeExtensions
 		if (value.TryGetValue(out short s)) return s;
 		if (value.TryGetValue(out ushort us)) return us;
 		if (value.TryGetValue(out int i)) return i;
-		if (value.TryGetValue(out ushort ui)) return ui;
+		if (value.TryGetValue(out uint ui)) return ui;
 		if (value.TryGetValue(out long l)) return l;
 		// this doesn't feel right... throw?
-		if (value.TryGetValue(out ulong ul)) return (long)ul;
+		if (value.TryGetValue<ulong>(out _))
+			throw new NotSupportedException("Unsigned longs cannot be supported with this method.  A separate check will need to be used.");
 
 		return null;
 	}
