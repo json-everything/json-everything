@@ -10,18 +10,18 @@
 		<Description>
 			JSON Path built on the System.Text.Json namespace.
 
-			This library conforms to the [pending IETF standard](https://github.com/ietf-wg-jsonpath/draft-ietf-jsonpath-jsonpath).
-		
+			This library conforms to the IETF JSON Path specification [RFC 9535](https://www.rfc-editor.org/rfc/rfc9535.html).
+
 			Read the full documentation at https://docs.json-everything.net/path/basics/.
 		</Description>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>
 		<PackageIcon>json-logo-256.png</PackageIcon>
-		<PackageTags>json-path jsonpath query path json</PackageTags>
+		<PackageTags>json-path jsonpath query path json rfc9535</PackageTags>
 		<PackageReleaseNotes>Release notes can be found at https://docs.json-everything.net/rn-json-path/</PackageReleaseNotes>
-		<Version>0.8.1</Version>
-		<FileVersion>0.8.1.0</FileVersion>
+		<Version>1.0.0</Version>
+		<FileVersion>1.0.0.0</FileVersion>
 		<AssemblyVersion>0.8.0.0</AssemblyVersion>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<DocumentationFile>JsonPath.Net.xml</DocumentationFile>
