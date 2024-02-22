@@ -965,7 +965,7 @@ public class GithubTests
 		var jsonDocumentInstance = JsonDocument.Parse(json);
 
 
-		var schemaText = JsonSerializer.Serialize(schema);
+		var schemaText = JsonSerializer.Serialize(schema, TestSerializerContext.Default.JsonSchema);
 		var schemaFromString = JsonSchema.FromText(schemaText);
 
 		var directEvaluationResult = schema.Evaluate(jsonDocumentInstance, new EvaluationOptions
