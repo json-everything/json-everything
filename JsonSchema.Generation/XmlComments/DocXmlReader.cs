@@ -12,6 +12,8 @@ namespace Json.Schema.Generation.XmlComments;
 /// </summary>
 public class DocXmlReader
 {
+	private static readonly Dictionary<Assembly, string> _explicitXmlContent = [];
+	
 	/// <summary>
 	///     Dictionary of XML navigators for multiple assemblies.
 	/// </summary>
@@ -51,11 +53,28 @@ public class DocXmlReader
 	///     If function returns null or if comments file does not exist then all comments for types from that
 	///     assembly would remain empty.
 	/// </param>
-	public DocXmlReader(Func<Assembly, string?> assemblyXmlPathFunction)
+	internal DocXmlReader(Func<Assembly, string?> assemblyXmlPathFunction)
 	{
 		_assemblyNavigators = [];
 		_unIndentText = true;
 		_assemblyXmlPathFunction = assemblyXmlPathFunction;
+	}
+
+	/// <summary>
+	/// Explicitly adds XML comment content for schema generation.
+	/// </summary>
+	/// <param name="assembly"></param>
+	/// <param name=""></param>
+	[Obsolete("Use SchemaGenerationConfiguration.RegisterXmlCommentFile<T>() instead")]
+	public static void ExplicitlyAddAssemblyXml(Assembly assembly, string xmlContent)
+	{
+		_explicitXmlContent[assembly] = xmlContent;
+	}
+
+	[Obsolete("Do not use")]
+	public static void ExplictlyRemoveAssemblyXml(Assembly assembly)
+	{
+		_explicitXmlContent.Remove(assembly);
 	}
 
 	#region Public methods
@@ -69,7 +88,7 @@ public class DocXmlReader
 	/// <param name="methodInfo"></param>
 	/// <param name="nullIfNoComment">Return null if comment for method is not available</param>
 	/// <returns></returns>
-	public MethodComments? GetMethodComments(MethodBase methodInfo, bool nullIfNoComment)
+	internal MethodComments? GetMethodComments(MethodBase methodInfo, bool nullIfNoComment)
 	{
 		var methodNode = GetXmlMemberNode(methodInfo.MethodId(), methodInfo.ReflectedType);
 		if (nullIfNoComment && methodNode == null) return null;
@@ -95,7 +114,7 @@ public class DocXmlReader
 	/// </summary>
 	/// <param name="type"></param>
 	/// <returns>TypeComment</returns>
-	public TypeComments GetTypeComments(Type type)
+	internal TypeComments GetTypeComments(Type type)
 	{
 		var comments = new TypeComments();
 		var node = GetXmlMemberNode(type.TypeId(), type);
@@ -119,7 +138,7 @@ public class DocXmlReader
 	/// </summary>
 	/// <param name="memberInfo"></param>
 	/// <returns></returns>
-	public CommonComments GetMemberComments(MemberInfo memberInfo)
+	internal CommonComments GetMemberComments(MemberInfo memberInfo)
 	{
 		var comments = new CommonComments();
 		var node = GetXmlMemberNode(memberInfo.MemberId(), memberInfo.ReflectedType);
@@ -147,7 +166,7 @@ public class DocXmlReader
 	///     none of the enum values have any summary comments
 	/// </param>
 	/// <returns>EnumComment</returns>
-	public EnumComments GetEnumComments(Type enumType, bool fillValues = false)
+	internal EnumComments GetEnumComments(Type enumType, bool fillValues = false)
 	{
 		if (!enumType.IsEnum) throw new ArgumentException(nameof(enumType));
 
@@ -224,14 +243,17 @@ public class DocXmlReader
 		if (assembly == null) return null;
 		if (_assemblyNavigators.TryGetValue(assembly, out var typeNavigator)) return typeNavigator;
 
-		var commentFileName = _assemblyXmlPathFunction(assembly);
-		if (commentFileName == null)
+		if (!_explicitXmlContent.TryGetValue(assembly, out var response))
 		{
-			_assemblyNavigators.Add(assembly, null);
-			return null;
-		}
+			var commentFileName = _assemblyXmlPathFunction(assembly);
+			if (commentFileName == null)
+			{
+				_assemblyNavigators.Add(assembly, null);
+				return null;
+			}
 
-		var response = File.ReadAllText(commentFileName);
+			response = File.ReadAllText(commentFileName);
+		}
 		var document = new XmlDocument();
 		document.LoadXml(response);
 		var docNavigator = document.CreateNavigator();
@@ -255,7 +277,7 @@ public class DocXmlReader
 	private static string FindIndent(string? outerText)
 	{
 		if (string.IsNullOrEmpty(outerText)) return "";
-		var end = outerText.LastIndexOf("</", StringComparison.Ordinal);
+		var end = outerText!.LastIndexOf("</", StringComparison.Ordinal);
 		if (end < 0) return "";
 		var start = end - 1;
 		// ReSharper disable once EmptyEmbeddedStatement

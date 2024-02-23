@@ -5,7 +5,7 @@ namespace Json.Schema.Generation.XmlComments;
 /// <summary>
 ///     Enum type comments
 /// </summary>
-public class EnumComments : CommonComments
+internal class EnumComments : CommonComments
 {
 	/// <summary>
 	///     "summary" comments of enum values. List contains names, values and

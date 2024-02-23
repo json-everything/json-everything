@@ -10,7 +10,7 @@ namespace Json.Schema.Generation.XmlComments;
 ///     Class that constructs IDs for XML documentation comments.
 ///     IDs uniquely identify comments in the XML documentation file.
 /// </summary>
-public static class XmlDocId
+internal static class XmlDocId
 {
 	/// <summary>
 	///     Type member XML ID prefix.

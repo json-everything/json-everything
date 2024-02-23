@@ -3,7 +3,7 @@ namespace Json.Schema.Generation.XmlComments;
 /// <summary>
 ///     Comment of one enum value
 /// </summary>
-public class EnumValueComment : CommonComments
+internal class EnumValueComment : CommonComments
 {
 	public EnumValueComment(string name, int value)
 	{

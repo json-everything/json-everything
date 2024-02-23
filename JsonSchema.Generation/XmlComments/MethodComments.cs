@@ -5,7 +5,7 @@ namespace Json.Schema.Generation.XmlComments;
 /// <summary>
 ///     Method, operator and constructor comments
 /// </summary>
-public class MethodComments : CommonComments
+internal class MethodComments : CommonComments
 {
 	/// <summary>
 	///     "param" comments of the method. Each item in the list is the tuple

@@ -5,7 +5,7 @@ namespace Json.Schema.Generation.XmlComments;
 /// <summary>
 ///     Class, Struct or  delegate comments
 /// </summary>
-public class TypeComments : CommonComments
+internal class TypeComments : CommonComments
 {
 	/// <summary>
 	///     This list contains descriptions of delegate type parameters.

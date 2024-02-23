@@ -3,7 +3,7 @@ namespace Json.Schema.Generation.XmlComments;
 /// <summary>
 ///     Base class for comments classes
 /// </summary>
-public class CommonComments
+internal class CommonComments
 {
 	/// <summary>
 	///     "summary" comment

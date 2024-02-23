@@ -3,7 +3,7 @@ namespace Json.Schema.Generation.XmlComments;
 /// <summary>
 ///     Inheritdoc tag with optional cref attribute.
 /// </summary>
-public class InheritdocTag
+internal class InheritdocTag
 {
 	public InheritdocTag(string cref)
 	{
