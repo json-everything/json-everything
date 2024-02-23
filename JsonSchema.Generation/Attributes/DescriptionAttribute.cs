@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Json.Schema.Generation.Intents;
 
 namespace Json.Schema.Generation;
@@ -27,6 +28,12 @@ public class DescriptionAttribute : ConditionalAttribute, IAttributeHandler
 
 	void IAttributeHandler.AddConstraints(SchemaGenerationContextBase context, Attribute attribute)
 	{
+		var existingDescription = context.Intents.Where(x => x is DescriptionIntent).ToArray();
+		foreach (var intent in existingDescription)
+		{
+			context.Intents.Remove(intent);
+		}
+
 		context.Intents.Add(new DescriptionIntent(Description));
 	}
 }

@@ -50,6 +50,13 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 								  memberAttributes.OfType<JsonExcludeAttribute>().FirstOrDefault();
 			if (ignoreAttribute != null) continue;
 
+			if (!memberAttributes.OfType<DescriptionAttribute>().Any())
+			{
+				var comments = SchemaGeneratorConfiguration.Current.XmlReader.GetMemberComments(member);
+				if (!string.IsNullOrWhiteSpace(comments.Summary)) 
+					memberAttributes.Add(new DescriptionAttribute(comments.Summary!));
+			}
+
 			var unconditionalAttributes = memberAttributes.Where(x => x is not ConditionalAttribute sga || sga.ConditionGroup == null).ToList();
 			var localConditionalAttributes = memberAttributes.Except(unconditionalAttributes).OfType<ConditionalAttribute>().ToList();
 			foreach (var conditions in localConditionalAttributes.GroupBy(x => x.ConditionGroup))

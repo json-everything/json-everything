@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Json.Schema.Generation.Intents;
 
 namespace Json.Schema.Generation;
 
@@ -49,6 +50,10 @@ public static class SchemaGenerationContextCache
 			else
 			{
 				context = new TypeGenerationContext(type);
+				var comments = SchemaGeneratorConfiguration.Current.XmlReader.GetTypeComments(type);
+				if (!string.IsNullOrWhiteSpace(comments.Summary))
+					context.Intents.Add(new DescriptionIntent(comments.Summary!));
+
 				Cache[hash] = context;
 			}
 
