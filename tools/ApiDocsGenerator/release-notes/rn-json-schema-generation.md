@@ -4,6 +4,10 @@ title: JsonSchema.Net.Generation
 icon: fas fa-tag
 order: "09.05"
 ---
+# [4.1.0](https://github.com/gregsdennis/json-everything/pull/670) {#release-schemagen-4.1.0}
+
+[#667](https://github.com/gregsdennis/json-everything/issues/667) - Add support for `description` keyword creation from XML comments `<Summary>`.  Thanks to [@zlepper](https://github.com/zlepper) for applying pressure on this feature.
+
 # [4.0.0](https://github.com/gregsdennis/json-everything/pull/619) {#release-schemagen-4.0.0}
 
 Updated for multi-framework support with .Net Standard 2.0 and .Net 8, including updating _System.Text.Json_ from v6 to v8.
