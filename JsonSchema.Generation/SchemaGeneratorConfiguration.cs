@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection;
 using Json.Schema.Generation.Generators;
+using Json.Schema.Generation.XmlComments;
 
 namespace Json.Schema.Generation;
 
@@ -10,26 +10,18 @@ namespace Json.Schema.Generation;
 /// </summary>
 public class SchemaGeneratorConfiguration
 {
+	private readonly Dictionary<string, string> _xmlCommentsFiles = [];
 	private PropertyNameResolver? _propertyNameResolver;
 
-	private sealed class DummyInfo : MemberInfo
-	{
-		public override object[] GetCustomAttributes(bool inherit) => Array.Empty<object>();
+	/// <summary>
+	/// Thread-static storage of the current configuration. Only to be used for reading
+	/// the configuration. Setting values on this object will be overwritten when starting
+	/// generation.
+	/// </summary>
+	[field: ThreadStatic]
+	public static SchemaGeneratorConfiguration Current { get; internal set; }
 
-		public override object[] GetCustomAttributes(Type attributeType, bool inherit) => Array.Empty<object>();
-
-		public override bool IsDefined(Type attributeType, bool inherit) => false;
-
-		public override Type DeclaringType { get; } = typeof(DummyInfo);
-		public override MemberTypes MemberType => MemberTypes.Property;
-		public override string Name { get; }
-		public override Type? ReflectedType => null;
-
-		public DummyInfo(string name)
-		{
-			Name = name;
-		}
-	}
+	internal DocXmlReader XmlReader { get; }
 
 	/// <summary>
 	/// A collection of refiners.
@@ -38,6 +30,7 @@ public class SchemaGeneratorConfiguration
 	/// <summary>
 	/// A collection of generators in addition to the global set.
 	/// </summary>
+	// ReSharper disable once CollectionNeverUpdated.Global
 	public List<ISchemaGenerator> Generators { get; } = [];
 	/// <summary>
 	/// Gets or sets the order in which properties will be listed in the schema.
@@ -76,13 +69,24 @@ public class SchemaGeneratorConfiguration
 	/// </summary>
 	public bool StrictConditionals { get; set; }
 
-#pragma warning disable CS8618
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 	/// <summary>
-	/// Thread-static storage of the current configuration. Only to be used for reading
-	/// the configuration. Setting values on this object will be overwritten when starting
-	/// generation.
+	/// Creates a new <see cref="SchemaGeneratorConfiguration"/>.
 	/// </summary>
-	[field: ThreadStatic]
-	public static SchemaGeneratorConfiguration Current { get; internal set; }
-#pragma warning restore CS8618
+	public SchemaGeneratorConfiguration()
+	{
+		XmlReader = new DocXmlReader(assembly => _xmlCommentsFiles.TryGetValue(assembly.FullName, out var path) ? path : null);
+	}
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+
+	/// <summary>
+	/// Registers an assembly's XML comment file.
+	/// </summary>
+	/// <typeparam name="T">Any type in the assembly.</typeparam>
+	/// <param name="filename">The file name of the XML file.</param>
+	public void RegisterXmlCommentFile<T>(string filename)
+	{
+		var assembly = typeof(T).Assembly;
+		_xmlCommentsFiles[assembly.FullName] = filename;
+	}
 }

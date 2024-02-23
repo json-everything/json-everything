@@ -13,6 +13,7 @@
 @using System.Reflection
 @using System.Text.Json.Nodes
 @using Json.Schema.ArrayExt
+@using Json.Schema.Generation.XmlComments
 @using Json.Schema.OpenApi
 @using Yaml2JsonNode
 
@@ -430,11 +431,13 @@
 		}
 	}
 
+#pragma warning disable CS0618 // Type or member is obsolete
 	private async Task GenerateSchema()
 	{
 		await _outputEditor.SetLanguageAsync("json");
 		await _outputEditor.SetValue(string.Empty);
 
+		Assembly? assembly = null;
 		try
 		{
 			var source = await _schemaEditor.GetValue();
@@ -448,10 +451,10 @@ using System.Text.Json.Serialization;
 using Json.Schema;
 using Json.Schema.Generation;
 
-namespace JsonEverythingTemp
-{{
-	{source}
-}}";
+namespace JsonEverythingTemp;
+
+{source}
+";
 
 			var syntaxTree = CSharpSyntaxTree.ParseText(fullSource);
 			var assemblyPath = System.IO.Path.ChangeExtension(System.IO.Path.GetTempFileName(), "dll");
@@ -463,7 +466,8 @@ namespace JsonEverythingTemp
 
 			using var dllStream = new MemoryStream();
 			using var pdbStream = new MemoryStream();
-			var emitResult = compilation.Emit(dllStream, pdbStream);
+			using var xmlStream = new MemoryStream();
+			var emitResult = compilation.Emit(dllStream, pdbStream, xmlStream);
 			if (!emitResult.Success)
 			{
 				Console.WriteLine("You may expect a list of what compilation errors there are, but unfortunately " +
@@ -477,8 +481,14 @@ namespace JsonEverythingTemp
 				return;
 			}
 
-			var assembly = Assembly.Load(dllStream.ToArray());
+			assembly = Assembly.Load(dllStream.ToArray());
 			var type = assembly.DefinedTypes.First(x => x.Namespace == "JsonEverythingTemp");
+
+			xmlStream.Position = 0;
+			using var reader = new StreamReader(xmlStream);
+			var xmlContent = await reader.ReadToEndAsync();
+			DocXmlReader.ExplicitlyAddAssemblyXml(assembly, xmlContent);
+
 
 			Console.WriteLine($"Generating schema for type '{type.Name}'");
 			JsonSchema schema = new JsonSchemaBuilder().FromType(type);
@@ -490,7 +500,13 @@ namespace JsonEverythingTemp
 			await _outputEditor.SetLanguageAsync("text");
 			await _outputEditor.SetValue(e.Message);
 		}
+		finally
+		{
+			if (assembly is not null)
+				DocXmlReader.ExplictlyRemoveAssemblyXml(assembly);
+		}
 	}
+#pragma warning restore CS0618 // Type or member is obsolete
 
 	//private static string GetErrorDetails(string source, Diagnostic diagnostic)
 	//{
