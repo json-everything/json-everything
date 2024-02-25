@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.Schema.Generation.Intents;
 
@@ -204,6 +205,26 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 
 	private static IfIntent GenerateIf(IEnumerable<(IConditionAttribute Attribute, MemberInfo Member)> conditions)
 	{
+		static void AddPotentialValue(SchemaGenerationContextBase context, JsonNode? newValue)
+		{
+			var existingConst = context.Intents.OfType<ConstIntent>().SingleOrDefault();
+			if (existingConst is not null)
+			{
+				context.Intents.Remove(existingConst);
+				context.Intents.Add(new EnumIntent(existingConst.Value, newValue));
+				return;
+			}
+
+			var existingEnum = context.Intents.OfType<EnumIntent>().SingleOrDefault();
+			if (existingEnum is not null)
+			{
+				existingEnum.AddValue(newValue);
+				return;
+			}
+
+			context.Intents.Add(new ConstIntent(newValue));
+		}
+
 		var properties = new Dictionary<string, SchemaGenerationContextBase>();
 		var required = new List<string>();
 		foreach (var condition in conditions)
@@ -214,7 +235,7 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 			switch (condition.Attribute)
 			{
 				case IfAttribute ifAtt:
-					context.Intents.Add(new ConstIntent(ifAtt.Value));
+					AddPotentialValue(context, ifAtt.Value);
 					break;
 				case IfMinAttribute ifMin:
 					var minIntent = ifMin.GetIntent();

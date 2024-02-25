@@ -556,4 +556,59 @@ public class ConditionalTests
 
 		VerifyGeneration<DictionaryLengthRangeConditions>(expected);
 	}
+
+
+	public static class SecretLevels
+	{
+		public const string VerySecret = "verySecret";
+		public const string Secret = "secret";
+		public const string NotSecret = "notSecret";
+	}
+
+	[If(nameof(SecretLevel), SecretLevels.NotSecret, nameof(Age))]
+	[If(nameof(SecretLevel), SecretLevels.Secret, nameof(Age))]
+	public class Author
+	{
+		[Required]
+		public string Name { get; set; }
+
+		[Required(ConditionGroup = nameof(Age))]
+		[Nullable(true)]
+		public string? Age { get; set; }
+
+		[Required]
+		public string SecretLevel { get; set; }
+	}
+
+	[Test]
+	public void MultipleIfsSamePropertyAndSameConditionGroup()
+	{
+		JsonSchema expected = new JsonSchemaBuilder()
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("name", new JsonSchemaBuilder().Type(SchemaValueType.String)),
+				("age", new JsonSchemaBuilder().Type(SchemaValueType.String | SchemaValueType.Null)),
+				("secretLevel", new JsonSchemaBuilder().Type(SchemaValueType.String))
+			)
+			.Required("name", "secretLevel")
+			.If(new JsonSchemaBuilder()
+				.Properties(
+					("secretLevel", new JsonSchemaBuilder()
+						.Enum("notSecret", "secret")
+					)
+				)
+				.Required("secretLevel")
+			)
+			.Then(new JsonSchemaBuilder()
+				.Required("age")
+			);
+
+		var config = new SchemaGeneratorConfiguration
+		{
+			Nullability = Nullability.AllowForNullableValueTypes,
+			PropertyNameResolver = PropertyNameResolvers.CamelCase
+		};
+
+		VerifyGeneration<Author>(expected, config);
+	}
 }
