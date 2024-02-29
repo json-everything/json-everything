@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using Json.More;
 using NUnit.Framework;
 
@@ -81,17 +81,9 @@ public class ComplianceTestSuiteTests
 		if (testCase.InvalidSelector)
 			Assert.Fail($"{testCase.Selector} is not a valid path.");
 
-		var expected = testCase.Result!.ToJsonArray();
-		Assert.IsTrue(expected.IsEquivalentTo(actualValues), "Unexpected results returned");
+		if (testCase.Result is not null)
+			Assert.IsTrue(testCase.Result.IsEquivalentTo(actualValues), "Unexpected results returned");
+		else
+			Assert.That(() => testCase.Results!.Contains(actualValues, JsonNodeEqualityComparer.Instance), "None of the options matched.");
 	}
-}
-
-public static class SerializerOptions
-{
-	public static JsonSerializerOptions Default = new()
-	{
-		AllowTrailingCommas = true,
-		Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-		PropertyNameCaseInsensitive = true
-	};
 }
