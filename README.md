@@ -116,6 +116,7 @@ All of the above libraries offer complete support for their associated specifica
 Error message translations for _JsonSchema.Net_ available in:
 
 - Norwegian `nb-NO`
+- Polish `pl-PL`
 - Russian `ru`
 - Spanish `es`
 - Swedish `sv-SE`
