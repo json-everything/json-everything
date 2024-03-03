@@ -4,6 +4,10 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "09.01"
 ---
+# [6.0.4](https://github.com/gregsdennis/json-everything/pull/678) {#release-schema-6.0.4}
+
+Fixes an issue with repeated evaluations of the same schema with different or changed options.  The solution was to recalculate any static analysis when an options change was detected.
+
 # [6.0.3](https://github.com/gregsdennis/json-everything/pull/660) {#release-schema-6.0.3}
 
 Fixes an issue with repeated evaluations of the same schema with different or changed options.  The solution was to recalculate any static analysis when an options change was detected.
