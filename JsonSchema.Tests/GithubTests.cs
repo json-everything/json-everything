@@ -988,6 +988,9 @@ public class GithubTests
 		evaluationResultFromSchema.AssertValid();
 	}
 
+#if !NET8_0_OR_GREATER
+	// This test requires a non-AOT context, so it only runs in .Net 6
+
 	[SchemaKeyword(Name)]
 	[JsonConverter(typeof(UiPlaceholderKeywordJsonConverter))]
 	public class UiPlaceholderKeyword : IJsonSchemaKeyword
@@ -1039,11 +1042,13 @@ public class GithubTests
 				.Properties(("bar", subschema))
 				.Build();
 
-			Console.WriteLine(JsonSerializer.Serialize(schema, TestEnvironment.TestOutputSerializerOptions));
+			Console.WriteLine(JsonSerializer.Serialize(schema));
 		}
 		finally
 		{
 			SchemaKeywordRegistry.Unregister<UiPlaceholderKeyword>();
 		}
 	}
+
+#endif
 }
