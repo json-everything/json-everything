@@ -2,7 +2,7 @@
   - '### Nuget Package\s*Json\.More\.Net'
 
 "pkg:schema":
-  - '### Nuget Package\s*JsonSchema\.Net\Z'
+  - '### Nuget Package\s*JsonSchema\.Net\s'
 
 "pkg:schema-generation":
   - '### Nuget Package\s*JsonSchema\.Net\.Generation'
@@ -14,7 +14,7 @@
   - '### Nuget Package\s*JsonSchema\.Net\.CodeGeneration'
 
 "pkg:schema-data":
-  - '### Nuget Package\s*JsonSchema\.Net\.Data\Z'
+  - '### Nuget Package\s*JsonSchema\.Net\.Data\s'
 
 "pkg:schema-openapi":
   - '### Nuget Package\s*JsonSchema\.Net\.OpenApi'
