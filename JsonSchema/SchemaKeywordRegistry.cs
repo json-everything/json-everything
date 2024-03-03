@@ -27,9 +27,6 @@ public static class SchemaKeywordRegistry
 	// in our default JsonSerializerContext.
 	private static readonly ConcurrentDictionary<Type, JsonSerializerContext> _keywordTypeInfoResolvers;
 
-	// ReSharper disable once CoVariantArrayConversion
-	internal static IJsonTypeInfoResolver[] ExternalTypeInfoResolvers => _keywordTypeInfoResolvers.Values.Distinct().ToArray();
-
 	internal static IEnumerable<Type> KeywordTypes => _keywords.Values;
 
 	static SchemaKeywordRegistry()
@@ -172,11 +169,15 @@ public static class SchemaKeywordRegistry
 			: null;
 	}
 
-	internal static JsonTypeInfo GetTypeInfo(Type ruleType)
+	internal static JsonTypeInfo? GetTypeInfo(Type keywordType)
 	{
-		return _keywordTypeInfoResolvers.TryGetValue(ruleType, out var context)
-			? context.GetTypeInfo(ruleType)!
-			: JsonSchemaSerializerContext.Default.GetTypeInfo(typeof(UnrecognizedKeyword))!;
+		if (_keywordTypeInfoResolvers.TryGetValue(keywordType, out var context)) return context.GetTypeInfo(keywordType)!;
+
+		// A keyword was registered without a JsonTypeInfo; use reflection
+		if (KeywordTypes.Contains(keywordType)) return null;
+
+		// The keyword is unknown
+		return JsonSchemaSerializerContext.Default.GetTypeInfo(typeof(UnrecognizedKeyword))!;
 	}
 
 	/// <summary>

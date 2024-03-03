@@ -4,7 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Json.More;
 using Json.Pointer;
 using NUnit.Framework;
 
@@ -985,4 +987,68 @@ public class GithubTests
 		directEvaluationResult.AssertValid();
 		evaluationResultFromSchema.AssertValid();
 	}
+
+#if !NET8_0_OR_GREATER
+	// This test requires a non-AOT context, so it only runs in .Net 6
+
+	[SchemaKeyword(Name)]
+	[JsonConverter(typeof(UiPlaceholderKeywordJsonConverter))]
+	public class UiPlaceholderKeyword : IJsonSchemaKeyword
+	{
+		public const string Name = "placeholder";
+		public string Value { get; }
+
+		public UiPlaceholderKeyword(string value)
+		{
+			Value = value ?? throw new ArgumentNullException(nameof(value));
+		}
+
+		public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, EvaluationContext context)
+		{
+			return KeywordConstraint.SimpleAnnotation(Name, Value);
+		}
+	}
+
+	public sealed class UiPlaceholderKeywordJsonConverter : WeaklyTypedJsonConverter<UiPlaceholderKeyword>
+	{
+		public override UiPlaceholderKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		{
+			if (reader.TokenType != JsonTokenType.String)
+				throw new JsonException("Expected string");
+
+			var str = reader.GetString()!;
+
+			return new UiPlaceholderKeyword(str);
+		}
+
+		public override void Write(Utf8JsonWriter writer, UiPlaceholderKeyword value, JsonSerializerOptions options)
+		{
+			writer.WriteStringValue(value.Value);
+		}
+	}
+
+	[Test]
+	public void Issue667_CustomKeywordNonAotSerialization()
+	{
+		try
+		{
+			SchemaKeywordRegistry.Register<UiPlaceholderKeyword>();
+
+			var subschema = new JsonSchemaBuilder().Type(SchemaValueType.String);
+			subschema.Add(new UiPlaceholderKeyword("hello world"));
+
+			var schema = new JsonSchemaBuilder()
+				.Type(SchemaValueType.Object)
+				.Properties(("bar", subschema))
+				.Build();
+
+			Console.WriteLine(JsonSerializer.Serialize(schema));
+		}
+		finally
+		{
+			SchemaKeywordRegistry.Unregister<UiPlaceholderKeyword>();
+		}
+	}
+
+#endif
 }
