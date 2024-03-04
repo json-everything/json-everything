@@ -4,7 +4,7 @@ title: JsonLogic.Net
 icon: fas fa-tag
 order: "09.10"
 ---
-# [5.1.0](https://github.com/gregsdennis/json-everything/pull/619) {#release-logic-5.1.0}
+# [5.1.0](https://github.com/gregsdennis/json-everything/pull/680) {#release-logic-5.1.0}
 
 Added extension methods to rule types to allow readonly access to their internal data.
 

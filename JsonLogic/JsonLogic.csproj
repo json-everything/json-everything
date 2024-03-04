@@ -20,8 +20,8 @@
 		<PackageReleaseNotes>Release notes can be found at https://docs.json-everything.net/rn-json-logic/</PackageReleaseNotes>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<Version>5.1.0</Version>
-		<AssemblyVersion>5.1.0.0</AssemblyVersion>
-		<FileVersion>5.0.0.0</FileVersion>
+		<FileVersion>5.1.0.0</FileVersion>
+		<AssemblyVersion>5.0.0.0</AssemblyVersion>
 		<DocumentationFile>JsonLogic.xml</DocumentationFile>
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
