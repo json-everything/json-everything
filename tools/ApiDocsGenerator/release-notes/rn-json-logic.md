@@ -4,6 +4,10 @@ title: JsonLogic.Net
 icon: fas fa-tag
 order: "09.10"
 ---
+# [5.1.0](https://github.com/gregsdennis/json-everything/pull/619) {#release-logic-5.1.0}
+
+Added extension methods to rule types to allow readonly access to their internal data.
+
 # [5.0.0](https://github.com/gregsdennis/json-everything/pull/619) {#release-logic-5.0.0}
 
 Updated for multi-framework support with .Net Standard 2.0 and .Net 8 with Native AOT support, including updating _System.Text.Json_ from v6 to v8.
