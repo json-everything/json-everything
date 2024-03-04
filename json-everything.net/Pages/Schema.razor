@@ -16,6 +16,7 @@
 @using Json.Schema.Generation.XmlComments
 @using Json.Schema.OpenApi
 @using Yaml2JsonNode
+@using System.Globalization
 
 @inject DataManager DataManager;
 @inject NavigationManager NavigationManager;
@@ -138,6 +139,22 @@
 											</span>
 										</span>
 									</label>
+									<label class="my-2">
+										Error message language
+										<span class="tooltip-icon">
+											ⓘ
+											<span class="tooltip-text">
+												<MarkdownSpan Content="@HelpContent.SchemaLanguages"></MarkdownSpan>
+											</span>
+										</span>
+										<br />
+										<InputSelect @bind-Value="_options.Culture" DisplayName="Spec version" class="form-control">
+											@foreach (Languages lang in Enum.GetValues(typeof(Languages)))
+											{
+												<option value="@lang">@GetDescription(lang)</option>
+											}
+										</InputSelect>
+									</label>
 								</div>
 								<button class="btn btn-primary mt-2" @onclick="Run">Run</button>
 								<hr/>
@@ -220,6 +237,7 @@
 		public OutputFormat OutputFormat { get; set; } = OutputFormat.Hierarchical;
 		public SpecVersion Version { get; set; } = SpecVersion.Draft202012;
 		public SpecVersion OutputStructure { get; set; } = SpecVersion.DraftNext;
+		public Languages Culture { get; set; } = Languages.English;
 		public bool ValidateFormat { get; set; }
 		public bool IncludeDroppedAnnotations { get; set; }
 		public bool AddAnnotationForUnknownKeywords { get; set; }
@@ -230,8 +248,34 @@
 			EvaluateAs = Version,
 			RequireFormatValidation = ValidateFormat,
 			PreserveDroppedAnnotations = IncludeDroppedAnnotations,
-			AddAnnotationForUnknownKeywords = AddAnnotationForUnknownKeywords
+			AddAnnotationForUnknownKeywords = AddAnnotationForUnknownKeywords,
+			Culture = GetCultureInfo(Culture)
 		};
+
+		private static CultureInfo GetCultureInfo(Languages lang) =>
+			CultureInfo.GetCultureInfo(lang switch
+			{
+				Languages.Italian => "it",
+				Languages.Norwegian => "nb-NO",
+				Languages.Polish => "pl-PL",
+				Languages.Russian => "ru",
+				Languages.Spanish => "es",
+				Languages.Swedish => "sv-SE",
+				Languages.Turkish => "tr-TR",
+				_ => "en-US"
+			});
+	}
+
+	public enum Languages
+	{
+		English,
+		Italian,
+		Norwegian,
+		Polish,
+		Russian,
+		Spanish,
+		Swedish,
+		Turkish
 	}
 
 	public SchemaOperations Operation
@@ -273,6 +317,18 @@
 		SpecVersion.Draft202012 => "Draft 2020-12",
 		SpecVersion.DraftNext => "Draft-Next (preview)",
 		_ => "Draft 2020-12"
+	};
+
+	private static string GetDescription(Languages lang) => lang switch
+	{
+		Languages.Italian => "Italian (it)",
+		Languages.Norwegian => "Norwegian (nb-NO)",
+		Languages.Polish => "Polish (pl-PL)",
+		Languages.Russian => "Russian (ru)",
+		Languages.Spanish => "Spanish (es)",
+		Languages.Swedish => "Swedish (sv-SE)",
+		Languages.Turkish => "Turkish (tr-TR)",
+		_ => "English (en-US)"
 	};
 
 	private static string GetDescription(SchemaOperations operation) => operation switch

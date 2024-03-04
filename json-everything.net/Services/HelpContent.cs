@@ -100,6 +100,11 @@ information to provide feedback on the potential feature.";
 Allows you to specify whether the `format` keyword should be asserted.  Typically this is an
 annotation-only keyword, meaning that it will appear in the output, but it will not be validated.";
 
+	public const string SchemaLanguages = @"
+Specifies a language for error messages.  Languages are provided as separate Nuget packages.
+See the [documentation](https://docs.json-everything.net/schema/basics/#schema-error-localization)
+for more information.";
+
 	public const string PathExtraWhitespace = @"
 JSON Path only permits whitespace in specific locations.  This option will allow whitespace everywhere.
 ";
