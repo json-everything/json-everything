@@ -10,6 +10,7 @@ internal static class OperatorRepository
 	private static readonly Dictionary<string, IOperator> _operators = new()
 	{
 		[EvalOperator.Name] = new EvalOperator(),
+		[FindOperator.Name] = new FindOperator(),
 		[FlattenOperator.Name] = new FlattenOperator(),
 		[FlattenDeepOperator.Name] = new FlattenDeepOperator(),
 		[FromNowOperator.Name] = new FromNowOperator(),
