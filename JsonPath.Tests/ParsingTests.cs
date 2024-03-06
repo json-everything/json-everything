@@ -53,6 +53,8 @@ public class ParsingTests
 			new TestCaseData("$[?@.foo]"),
 			new TestCaseData("$[?(@.foo)]"),
 			new TestCaseData("$[?(@.foo && @.bar)]"),
+			new TestCaseData("$[?(@.foo && @.bar || @.baz)]"),
+			new TestCaseData("$[?(@.foo || @.bar && @.baz)]"),
 			new TestCaseData("$[?(!@.foo)]"),
 			new TestCaseData("$[?(@.foo && !@.bar)]"),
 			new TestCaseData("$[?!(@.foo == false)]"),
@@ -75,6 +77,7 @@ public class ParsingTests
 			new TestCaseData("$[?(@.foo==2*(4+5))]"),
 			new TestCaseData("$[?(@.foo==2+(4+5))]"),
 			new TestCaseData("$[?(@.foo==2-(4+5))]"),
+			new TestCaseData("$[?(@.foo==2*4+5)]"),
 		};
 
 	[TestCaseSource(nameof(OptionalMathCases))]

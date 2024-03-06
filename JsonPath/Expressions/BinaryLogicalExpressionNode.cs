@@ -8,7 +8,7 @@ namespace Json.Path.Expressions;
 internal class BinaryLogicalExpressionNode : LogicalExpressionNode
 {
 	public IBinaryLogicalOperator Operator { get; }
-	public BooleanResultExpressionNode Left { get; }
+	public BooleanResultExpressionNode Left { get; set; }
 	public BooleanResultExpressionNode Right { get; set; }
 	public int NestLevel { get; }
 
@@ -121,12 +121,15 @@ internal class BinaryLogicalExpressionParser : ILogicalExpressionParser
 				return false;
 			}
 
-			if (left is BinaryLogicalExpressionNode bin)
+			// this logic necessarily differs from the logic in ValueExpressionParser
+			// because the parser above reads an entire expression as "right",
+			// whereas the ValueExpressionParser only reads the next operand.
+			if (left is BinaryLogicalExpressionNode lBin && lBin.Precedence < Precedence(op))
+				lBin.Right = new BinaryLogicalExpressionNode(op, lBin.Right, right, nestLevel);
+			else if (right is BinaryLogicalExpressionNode rBin && Precedence(op) >= rBin.Precedence)
 			{
-				if (bin.Precedence < Precedence(op))
-					bin.Right = new BinaryLogicalExpressionNode(op, bin.Right, right, nestLevel);
-				else
-					left = new BinaryLogicalExpressionNode(op, left, right, nestLevel);
+				rBin.Left = new BinaryLogicalExpressionNode(op, left, rBin.Left, nestLevel);
+				left = right;
 			}
 			else
 				left = new BinaryLogicalExpressionNode(op, left, right, nestLevel);
