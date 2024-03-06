@@ -112,13 +112,8 @@ internal static class ValueExpressionParser
 				return false;
 			}
 
-			if (left is BinaryValueExpressionNode bin)
-			{
-				if (bin.Precedence < Precedence(op))
-					bin.Right = new BinaryValueExpressionNode(op, bin.Right, right, nestLevel);
-				else
-					left = new BinaryValueExpressionNode(op, left, right, nestLevel);
-			}
+			if (left is BinaryValueExpressionNode bin && bin.Precedence < Precedence(op))
+				bin.Right = new BinaryValueExpressionNode(op, bin.Right, right, nestLevel);
 			else
 				left = new BinaryValueExpressionNode(op, left, right, nestLevel);
 
