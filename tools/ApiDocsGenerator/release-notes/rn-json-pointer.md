@@ -4,6 +4,10 @@ title: JsonPointer.Net
 icon: fas fa-tag
 order: "09.09"
 ---
+# [4.0.1](https://github.com/gregsdennis/json-everything/commit/b065976d62a03166128d8445868e6ab4bc0124d8) {#release-pointer-4.0.1}
+
+Fixed issue with equality operators on `PointerSegment` when dealing with nulls.
+
 # [4.0.0](https://github.com/gregsdennis/json-everything/pull/619) {#release-pointer-4.0.0}
 
 Updated for multi-framework support with .Net Standard 2.0 and .Net 8 with Native AOT support, including updating _System.Text.Json_ from v6 to v8.
