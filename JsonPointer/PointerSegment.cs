@@ -190,8 +190,11 @@ public class PointerSegment : IEquatable<PointerSegment>
 	/// <param name="left">A JSON Pointer.</param>
 	/// <param name="right">A JSON Pointer.</param>
 	/// <returns>`true` if the pointers are equal; `false` otherwise.</returns>
-	public static bool operator ==(PointerSegment left, PointerSegment right)
+	public static bool operator ==(PointerSegment? left, PointerSegment? right)
 	{
+		if (left is null) return right is null;
+		if (ReferenceEquals(left, right)) return true;
+
 		return left.Equals(right);
 	}
 
@@ -201,8 +204,11 @@ public class PointerSegment : IEquatable<PointerSegment>
 	/// <param name="left">A JSON Pointer.</param>
 	/// <param name="right">A JSON Pointer.</param>
 	/// <returns>`false` if the pointers are equal; `true` otherwise.</returns>
-	public static bool operator !=(PointerSegment left, PointerSegment right)
+	public static bool operator !=(PointerSegment? left, PointerSegment? right)
 	{
+		if (left is null) return right is not null;
+		if (ReferenceEquals(left, right)) return false;
+
 		return !left.Equals(right);
 	}
 
