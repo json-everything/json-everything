@@ -14,6 +14,13 @@ public static class ResultsExtensions
 	{
 		Console.WriteLine(JsonSerializer.Serialize(results, TestEnvironment.TestOutputSerializerOptions));
 
+		Console.WriteLine();
+		Console.WriteLine("Root cause analysis:");
+		Console.WriteLine();
+		var rootCause = results.IdentifyRootErrors().ToList();
+		Console.WriteLine(JsonSerializer.Serialize(rootCause, TestEnvironment.TestOutputSerializerOptions));
+		Console.WriteLine();
+
 		Assert.False(results.IsValid);
 		AssertEquivalent(results, expected);
 	}

@@ -127,11 +127,21 @@ public class Validation
 			Assert.Inconclusive("Instance not deserializable");
 
 		var result = collection.Schema.Evaluate(test.Data, options);
-		//result.ToBasic();
 		Console.WriteLine(JsonSerializer.Serialize(result, TestEnvironment.TestOutputSerializerOptions));
+
+		if (!result.IsValid)
+		{
+			Console.WriteLine();
+			Console.WriteLine("Root cause analysis:");
+			Console.WriteLine();
+			var rootCause = result.IdentifyRootErrors().ToList();
+			Console.WriteLine(JsonSerializer.Serialize(rootCause, TestEnvironment.TestOutputSerializerOptions));
+			Console.WriteLine();
+		}
 
 		if (collection.IsOptional && result.IsValid != test.Valid)
 			Assert.Inconclusive("Test optional");
+
 		Assert.AreEqual(test.Valid, result.IsValid);
 	}
 

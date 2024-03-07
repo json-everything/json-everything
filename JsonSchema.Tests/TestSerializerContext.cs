@@ -12,4 +12,5 @@ namespace Json.Schema.Tests;
 [JsonSerializable(typeof(DeserializationTests.FooWithSchema))]
 [JsonSerializable(typeof(JsonSchema))]
 [JsonSerializable(typeof(EvaluationResults))]
+[JsonSerializable(typeof(List<EvaluationResults>))]
 internal partial class TestSerializerContext : JsonSerializerContext;

@@ -111,3 +111,18 @@ public sealed class AnyOfKeywordJsonConverter : WeaklyTypedJsonConverter<AnyOfKe
 		writer.WriteEndArray();
 	}
 }
+
+internal class AnyOfResultsAnalyzer : IRootCauseAnalyzer
+{
+	public EvaluationResultsAnalysis? FindIssues(EvaluationResults root)
+	{
+		if (!root.HasDetails) return null;
+
+		return new FixAny
+		{
+			Issues = root.Details
+				.Where(x => x.EvaluationPath.Segments.Reverse().Skip(1).FirstOrDefault() == AnyOfKeyword.Name && !x.IsValid)
+				.Select(x => new FixThis { Issue = x })
+		};
+	}
+}
