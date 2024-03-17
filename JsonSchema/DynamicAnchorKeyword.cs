@@ -70,7 +70,7 @@ public sealed class DynamicAnchorKeywordJsonConverter : WeaklyTypedJsonConverter
 			throw new JsonException("Expected string");
 
 		var uriString = reader.GetString()!;
-		if (!AnchorKeyword.AnchorPattern.IsMatch(uriString))
+		if (!AnchorKeyword.AnchorPattern202012.IsMatch(uriString))
 			throw new JsonException("Expected anchor format");
 
 		return new DynamicAnchorKeyword(uriString);

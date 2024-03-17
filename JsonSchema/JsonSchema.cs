@@ -536,7 +536,7 @@ public class JsonSchema : IBaseDocument
 			{
 				if (evaluatingAs <= SpecVersion.Draft7 &&
 				    idKeyword.Id.OriginalString[0] == '#' &&
-				    AnchorKeyword.AnchorPattern.IsMatch(idKeyword.Id.OriginalString[1..]))
+				    AnchorKeyword.AnchorPattern201909.IsMatch(idKeyword.Id.OriginalString[1..]))
 				{
 					schema.BaseUri = currentBaseUri;
 					resourceRoot.Anchors[idKeyword.Id.OriginalString[1..]] = (schema, false);

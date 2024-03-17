@@ -157,7 +157,7 @@ public static partial class MetaSchemas
 			.Defs(
 				("anchorString", new JsonSchemaBuilder()
 					.Type(SchemaValueType.String)
-					.Pattern("^[A-Za-z_][-A-Za-z0-9._]*$")),
+					.Pattern(AnchorKeyword.AnchorPattern202012)),
 				("uriString", new JsonSchemaBuilder()
 					.Type(SchemaValueType.String)
 					.Format(Formats.Uri)),

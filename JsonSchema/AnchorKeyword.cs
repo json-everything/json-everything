@@ -24,7 +24,8 @@ public class AnchorKeyword : IJsonSchemaKeyword
 	/// The JSON name of the keyword.
 	/// </summary>
 	public const string Name = "$anchor";
-	internal static readonly Regex AnchorPattern = new("^[A-Za-z][-A-Za-z0-9.:_]*$");
+	internal static readonly Regex AnchorPattern201909 = new("^[A-Za-z][-A-Za-z0-9.:_]*$");
+	internal static readonly Regex AnchorPattern202012 = new("^[A-Za-z_][-A-Za-z0-9._]*$");
 
 	/// <summary>
 	/// The value of the anchor.
@@ -54,6 +55,12 @@ public class AnchorKeyword : IJsonSchemaKeyword
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		EvaluationContext context)
 	{
+		if (context.EvaluatingAs == SpecVersion.Draft201909 && !AnchorPattern201909.IsMatch(Anchor))
+			throw new JsonSchemaException($"{Name} must conform to the regular expression '{AnchorPattern201909}'");
+
+		if (!AnchorPattern201909.IsMatch(Anchor))
+			throw new JsonSchemaException($"{Name} must conform to the regular expression '{AnchorPattern202012}'");
+
 		return KeywordConstraint.Skip;
 	}
 }
@@ -74,7 +81,7 @@ public sealed class AnchorKeywordJsonConverter : WeaklyTypedJsonConverter<Anchor
 			throw new JsonException("Expected string");
 
 		var uriString = reader.GetString()!;
-		if (!AnchorKeyword.AnchorPattern.IsMatch(uriString))
+		if (!AnchorKeyword.AnchorPattern201909.IsMatch(uriString) && !AnchorKeyword.AnchorPattern202012.IsMatch(uriString))
 			throw new JsonException("Expected anchor format");
 
 		return new AnchorKeyword(uriString);
