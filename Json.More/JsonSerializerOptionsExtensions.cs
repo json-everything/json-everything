@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
@@ -25,7 +26,9 @@ public static class JsonSerializerOptionsExtensions
 	/// <returns>An implementation of <see cref="JsonConverter{T}"/> as determined by the provided options</returns>
 	public static JsonConverter<T> GetConverter<T>(this JsonSerializerOptions options, JsonTypeInfo? typeInfo)
 	{
-		return (JsonConverter<T>)(typeInfo ?? options.GetTypeInfo(typeof(T))).Converter;
+		var optionsConverter = (JsonConverter<T>?)options.Converters.FirstOrDefault(x => x is JsonConverter<T>);
+
+		return optionsConverter ?? (JsonConverter<T>)(typeInfo ?? options.GetTypeInfo(typeof(T))).Converter;
 	}
 
 	/// <summary>
@@ -58,7 +61,8 @@ public static class JsonSerializerOptionsExtensions
 	/// <returns>The value that was converted.</returns>
 	public static void Write<T>(this JsonSerializerOptions options, Utf8JsonWriter writer, T value, JsonTypeInfo<T> typeInfo)
 	{
-		((JsonConverter<T>)typeInfo.Converter).Write(writer, value, options);
+		options.GetConverter<T>(typeInfo).Write(writer, value, options);
+		//((JsonConverter<T>)typeInfo.Converter).Write(writer, value, options);
 	}
 
 	/// <summary>

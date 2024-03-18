@@ -18,9 +18,10 @@ public static class ResultsExtensions
 		AssertEquivalent(results, expected);
 	}
 
-	public static void AssertValid(this EvaluationResults results, string? expected = null)
+	public static void AssertValid(this EvaluationResults results, string? expected = null, bool hideIfPassed = false)
 	{
-		Console.WriteLine(JsonSerializer.Serialize(results, TestEnvironment.TestOutputSerializerOptions));
+		if (!hideIfPassed || !results.IsValid)
+			Console.WriteLine(JsonSerializer.Serialize(results, TestEnvironment.TestOutputSerializerOptions));
 
 		Assert.True(results.IsValid);
 		AssertEquivalent(results, expected);
