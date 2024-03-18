@@ -105,7 +105,7 @@ public static partial class MetaSchemas
 				),
 				(AnchorKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.String)
-					.Pattern(AnchorKeyword.AnchorPattern)
+					.Pattern(AnchorKeyword.AnchorPattern201909)
 				),
 				(RefKeyword.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.String)

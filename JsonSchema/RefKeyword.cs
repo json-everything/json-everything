@@ -78,7 +78,8 @@ public class RefKeyword : IJsonSchemaKeyword
 		else
 		{
 			var anchorFragment = fragment[1..];
-			if (!AnchorKeyword.AnchorPattern.IsMatch(anchorFragment))
+			if ((context.EvaluatingAs <= SpecVersion.Draft201909 && !AnchorKeyword.AnchorPattern201909.IsMatch(anchorFragment)) ||
+			    (context.EvaluatingAs >= SpecVersion.Draft202012 && !AnchorKeyword.AnchorPattern202012.IsMatch(anchorFragment)))
 				throw new JsonSchemaException($"Unrecognized fragment type `{newUri}`");
 
 			if (targetBase is JsonSchema targetBaseSchema &&

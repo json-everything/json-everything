@@ -146,15 +146,16 @@ public class Output
 
 		if (_unsupportedVersions.Contains(options.EvaluateAs))
 		{
-			Console.WriteLine(JsonSerializer.Serialize(result, TestEnvironment.TestOutputSerializerOptions));
-
 			if (!result.IsValid)
+			{
+				Console.WriteLine(JsonSerializer.Serialize(result, TestEnvironment.TestOutputSerializerOptions));
 				Assert.Inconclusive("not fully supported");
+			}
 
 			return;
 		}
 
-		result.AssertValid();
+		result.AssertValid(hideIfPassed: true);
 	}
 
 	private static bool InstanceIsDeserializable(in JsonNode? testData)

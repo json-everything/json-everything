@@ -84,7 +84,7 @@ public class RecursiveRefKeyword : IJsonSchemaKeyword
 			else
 			{
 				var anchorFragment = newUri.Fragment[1..];
-				if (!AnchorKeyword.AnchorPattern.IsMatch(anchorFragment))
+				if (!AnchorKeyword.AnchorPattern201909.IsMatch(anchorFragment))
 					throw new JsonSchemaException($"Unrecognized fragment type `{newUri}`");
 
 				if (targetBase is JsonSchema targetBaseSchema &&
