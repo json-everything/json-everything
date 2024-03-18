@@ -55,10 +55,10 @@ public class AnchorKeyword : IJsonSchemaKeyword
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		EvaluationContext context)
 	{
-		if (context.EvaluatingAs == SpecVersion.Draft201909 && !AnchorPattern201909.IsMatch(Anchor))
+		if (context.EvaluatingAs <= SpecVersion.Draft201909 && !AnchorPattern201909.IsMatch(Anchor))
 			throw new JsonSchemaException($"{Name} must conform to the regular expression '{AnchorPattern201909}'");
 
-		if (!AnchorPattern201909.IsMatch(Anchor))
+		if (context.EvaluatingAs >= SpecVersion.Draft202012 && !AnchorPattern202012.IsMatch(Anchor))
 			throw new JsonSchemaException($"{Name} must conform to the regular expression '{AnchorPattern202012}'");
 
 		return KeywordConstraint.Skip;
