@@ -95,20 +95,6 @@
 										</InputSelect>
 									</label>
 									<label class="my-2">
-										Output structure
-										<span class="tooltip-icon">
-											ⓘ
-											<span class="tooltip-text">
-												<MarkdownSpan Content="@HelpContent.SchemaOutputStructure"></MarkdownSpan>
-											</span>
-										</span>
-										<br />
-										<InputSelect @bind-Value="_options.OutputStructure" DisplayName="Spec version" class="form-control">
-											<option value="@SpecVersion.Draft202012">Draft 2020-12</option>
-											<option value="@SpecVersion.DraftNext">Draft-Next (preview)</option>
-										</InputSelect>
-									</label>
-									<label class="my-2">
 										<InputCheckbox @bind-Value="_options.IncludeDroppedAnnotations" DisplayName="Preserve dropped annotations"/>
 										Preserve dropped annotations
 										<span class="tooltip-icon">
@@ -219,7 +205,6 @@
 	{
 		public OutputFormat OutputFormat { get; set; } = OutputFormat.Hierarchical;
 		public SpecVersion Version { get; set; } = SpecVersion.Draft202012;
-		public SpecVersion OutputStructure { get; set; } = SpecVersion.DraftNext;
 		public bool ValidateFormat { get; set; }
 		public bool IncludeDroppedAnnotations { get; set; }
 		public bool AddAnnotationForUnknownKeywords { get; set; }
@@ -387,8 +372,6 @@
 				WriteIndented = true,
 				Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
 			};
-			if (_options.OutputStructure == SpecVersion.Draft202012)
-				serializerOptions.Converters.Add(new Pre202012EvaluationResultsJsonConverter());
 			var resultText = JsonSerializer.Serialize(results, serializerOptions);
 
 			await _outputEditor.SetValue(resultText);
