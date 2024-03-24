@@ -4,7 +4,11 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "09.01"
 ---
-# [6.0.4](https://github.com/gregsdennis/json-everything/pull/678) {#release-schema-6.0.4}
+# [6.0.6](https://github.com/gregsdennis/json-everything/pull/695) {#release-schema-6.0.6}
+
+Marked `Pre202012EvaluationResultsJsonConverter` as obsolete.  The 2019-09/2020-12 output structure isn't very well specified, and making the current `EvaluationResults` architecture serialize to these formats isn't worth the effort.
+
+# [6.0.5](https://github.com/gregsdennis/json-everything/pull/691) {#release-schema-6.0.5}
 
 [#690](https://github.com/gregsdennis/json-everything/issues/690) - Fixes an issue with `$anchor` validation in 2020-12.  Thanks to [@Era-cell](https://github.com/Era-cell) for reporting this.
 
