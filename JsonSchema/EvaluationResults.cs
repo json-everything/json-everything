@@ -374,6 +374,7 @@ public class EvaluationResultsJsonConverter : WeaklyTypedJsonConverter<Evaluatio
 /// <summary>
 /// Produces output formats specified by 2019-09 and 2020-12.
 /// </summary>
+[Obsolete("This doesn't work right, and the architecture of EvaluationResults makes it difficult to fix.  Recommendation is to use the draft-next structure via EvaluationResultsJsonConverter (which is the default).")]
 public class Pre202012EvaluationResultsJsonConverter : WeaklyTypedJsonConverter<EvaluationResults>
 {
 	/// <summary>
