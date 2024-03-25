@@ -40,6 +40,9 @@ public class OneOfKeyword : IJsonSchemaKeyword, ISchemaCollector
 	/// <param name="values">The keywords schema collection.</param>
 	public OneOfKeyword(params JsonSchema[] values)
 	{
+		if (values.Length == 0)
+			throw new ArgumentException($"'{Name}' requires at least one subschema");
+
 		Schemas = values.ToReadOnlyList() ?? throw new ArgumentNullException(nameof(values));
 	}
 
@@ -50,6 +53,9 @@ public class OneOfKeyword : IJsonSchemaKeyword, ISchemaCollector
 	public OneOfKeyword(IEnumerable<JsonSchema> values)
 	{
 		Schemas = values.ToReadOnlyList();
+
+		if (Schemas.Count == 0)
+			throw new ArgumentException($"'{Name}' requires at least one subschema");
 	}
 
 	/// <summary>
