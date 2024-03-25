@@ -52,7 +52,7 @@ public class IfMinAttribute : ConditionalAttribute, IConditionAttribute
 	{
 		if (PropertyType == null) return null;
 
-		if (PropertyType.IsNumber())
+		if (!PropertyType.IsNumber() && !PropertyType.IsNullableNumber())
 		{
 			if (IsExclusive) return new ExclusiveMinimumIntent(Value.ClampToDecimal());
 			return new MinimumIntent(Value.ClampToDecimal());

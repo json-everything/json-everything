@@ -38,7 +38,7 @@ public class ExclusiveMinimumAttribute : ConditionalAttribute, IAttributeHandler
 
 	void IAttributeHandler.AddConstraints(SchemaGenerationContextBase context, Attribute attribute)
 	{
-		if (!context.Type.IsNumber()) return;
+		if (!context.Type.IsNumber() && !context.Type.IsNullableNumber()) return;
 
 		context.Intents.Add(new ExclusiveMinimumIntent(Value));
 	}

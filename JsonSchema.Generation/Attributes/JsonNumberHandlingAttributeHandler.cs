@@ -22,7 +22,7 @@ public class JsonNumberHandlingAttributeHandler : IAttributeHandler<JsonNumberHa
 		var handlingAttribute = attribute as JsonNumberHandlingAttribute;
 		if (handlingAttribute == null) return;
 
-		if (!context.Type.IsNumber()) return;
+		if (!context.Type.IsNumber() && !context.Type.IsNullableNumber()) return;
 
 		var typeIntent = context.Intents.OfType<TypeIntent>().FirstOrDefault();
 
