@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
+using Json.More;
 
 namespace Json.Schema.Generation;
 
@@ -124,5 +125,16 @@ public static class TypeExtensions
 	public static bool IsNullableValueType(this Type type)
 	{
 		return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
+	}
+
+	/// <summary>
+	/// Determines if the type is a nullable value type, i.e. <see cref="Nullable{T}"/>.
+	/// </summary>
+	/// <param name="type">The type</param>
+	/// <returns>True if the type is <see cref="Nullable{T}"/>; false otherwise.</returns>
+	public static bool IsNullableNumber(this Type type)
+	{
+		return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>) &&
+			   type.GetGenericArguments()[0].IsNumber();
 	}
 }

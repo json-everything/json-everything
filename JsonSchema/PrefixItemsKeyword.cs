@@ -42,6 +42,9 @@ public class PrefixItemsKeyword : IJsonSchemaKeyword, ISchemaCollector
 	/// </remarks>
 	public PrefixItemsKeyword(params JsonSchema[] values)
 	{
+		if (values.Length == 0)
+			throw new ArgumentException($"'{Name}' requires at least one subschema");
+
 		ArraySchemas = values.ToReadOnlyList();
 	}
 
@@ -52,6 +55,9 @@ public class PrefixItemsKeyword : IJsonSchemaKeyword, ISchemaCollector
 	public PrefixItemsKeyword(IEnumerable<JsonSchema> values)
 	{
 		ArraySchemas = values.ToReadOnlyList();
+
+		if (ArraySchemas.Count == 0)
+			throw new ArgumentException($"'{Name}' requires at least one subschema");
 	}
 
 	/// <summary>

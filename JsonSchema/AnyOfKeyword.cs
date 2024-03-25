@@ -39,6 +39,9 @@ public class AnyOfKeyword : IJsonSchemaKeyword, ISchemaCollector
 	/// <param name="values">The set of schemas.</param>
 	public AnyOfKeyword(params JsonSchema[] values)
 	{
+		if (values.Length == 0)
+			throw new ArgumentException($"'{Name}' requires at least one subschema");
+
 		Schemas = values.ToReadOnlyList() ?? throw new ArgumentNullException(nameof(values));
 	}
 
@@ -49,6 +52,9 @@ public class AnyOfKeyword : IJsonSchemaKeyword, ISchemaCollector
 	public AnyOfKeyword(IEnumerable<JsonSchema> values)
 	{
 		Schemas = values.ToReadOnlyList() ?? throw new ArgumentNullException(nameof(values));
+
+		if (Schemas.Count == 0)
+			throw new ArgumentException($"'{Name}' requires at least one subschema");
 	}
 
 	/// <summary>
