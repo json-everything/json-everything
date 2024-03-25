@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 using Json.Schema.Generation.Intents;
 using NUnit.Framework;
 
@@ -322,5 +323,35 @@ public class ClientTests
 
 		Assert.AreEqual(1, schema.GetProperties()!["Value"].Keywords!.Count);
 		Assert.AreEqual("type", schema.GetProperties()!["Value"].Keywords!.First().Keyword());
+	}
+
+	private class Issue696_NullableDecimalWithMultipleOf
+	{
+		[Nullable(true)]
+		[MultipleOf(0.1)]
+		public decimal? Apr { get; set; }
+	}
+
+	[Test]
+	public void Issue696_MultipleOfMissingForNullableDecimal()
+	{
+		var expected = JsonNode.Parse(
+			"""
+			{
+			  "type": "object",
+			  "properties": {
+			    "Apr": {
+			      "type": ["number", "null"],
+			      "multipleOf": 0.1
+			    }
+			  }
+			}
+			""");
+
+		JsonSchema schema = new JsonSchemaBuilder().FromType<Issue696_NullableDecimalWithMultipleOf>();
+		var schemaJson = JsonSerializer.SerializeToNode(schema, TestSerializerContext.Default.JsonSchema);
+		Console.WriteLine(schemaJson);
+
+		Assert.IsTrue(schemaJson.IsEquivalentTo(expected));
 	}
 }
