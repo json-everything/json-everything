@@ -4,6 +4,10 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "09.01"
 ---
+# [6.0.7](https://github.com/gregsdennis/json-everything/pull/698) {#release-schema-6.0.7}
+
+[#697](https://github.com/gregsdennis/json-everything/issues/697) - `allOf`, `anyOf`, `oneOf`, and `prefixItems` all require at least one subschema, but deserialization of these keywords didn't enforce this.  Fix will throw `ArgumentException` when attempting to deserialize empty subschema sets.  Thanks to [@Era-cell](https://github.com/Era-cell) for reporting this.
+
 # [6.0.6](https://github.com/gregsdennis/json-everything/pull/695) {#release-schema-6.0.6}
 
 Marked `Pre202012EvaluationResultsJsonConverter` as obsolete.  The 2019-09/2020-12 output structure isn't very well specified, and making the current `EvaluationResults` architecture serialize to these formats isn't worth the effort.

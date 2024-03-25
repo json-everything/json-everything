@@ -4,6 +4,21 @@ title: JsonSchema.Net.Generation
 icon: fas fa-tag
 order: "09.05"
 ---
+# [4.2.0](https://github.com/gregsdennis/json-everything/pull/698) {#release-schema-4.2.0}
+
+[#696](https://github.com/gregsdennis/json-everything/issues/696) - Number-based constraints ignored for nullable number types.  Thanks to [@rhwork](https://github.com/rhwork) for reporting this.
+
+The following have been updated:
+
+- `[Minimum]`
+- `[ExclusiveMinimum]`
+- `[Maximum]`
+- `[ExclusiveMaximum]`
+- `[IfMin]`
+- `[IfMax]`
+
+Added extension method `bool IsNullableNumber(this Type)`.
+
 # [4.1.1](https://github.com/gregsdennis/json-everything/pull/670)
 
 Add support for multiple `[If]` attributes for the same property under the same group creating an `enum` keyword with all of the values.
