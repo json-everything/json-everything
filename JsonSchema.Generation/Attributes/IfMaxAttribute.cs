@@ -52,7 +52,7 @@ public class IfMaxAttribute : ConditionalAttribute, IConditionAttribute
 	{
 		if (PropertyType == null) return null;
 
-		if (!PropertyType.IsNumber() && !PropertyType.IsNullableNumber())
+		if (PropertyType.IsNumber() || PropertyType.IsNullableNumber())
 		{
 			if (IsExclusive) return new ExclusiveMaximumIntent(Value.ClampToDecimal());
 			return new MaximumIntent(Value.ClampToDecimal());
