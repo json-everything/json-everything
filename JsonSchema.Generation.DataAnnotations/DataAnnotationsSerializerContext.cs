@@ -14,5 +14,5 @@ namespace Json.Schema.Generation.DataAnnotations;
 [JsonSerializable(typeof(double))]
 [JsonSerializable(typeof(decimal))]
 [JsonSerializable(typeof(string))]
-[JsonSerializable(typeof(object[]))]
+[JsonSerializable(typeof(bool))]
 internal partial class DataAnnotationsSerializerContext : JsonSerializerContext;

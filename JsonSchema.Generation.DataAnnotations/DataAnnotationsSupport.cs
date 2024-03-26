@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+#pragma warning disable IL2026
 
 namespace Json.Schema.Generation.DataAnnotations;
 
+/// <summary>
+/// Exposes support for the System.ComponentModel.DataAnnotations namespace.
+/// </summary>
 public static class DataAnnotationsSupport
 {
 	private static readonly List<IAttributeHandler> _externalHandlers =
@@ -17,6 +21,9 @@ public static class DataAnnotationsSupport
 			.Cast<IAttributeHandler>()
 			.ToList();
 
+	/// <summary>
+	/// Adds support for the System.ComponentModel.DataAnnotations namespace attributes.
+	/// </summary>
 	public static void AddDataAnnotations()
 	{
 		foreach (var handler in _externalHandlers)

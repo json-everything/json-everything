@@ -8,6 +8,12 @@ using Json.Schema.Generation.Intents;
 
 namespace Json.Schema.Generation.DataAnnotations;
 
+/// <summary>
+/// Adds a `not: {enum}` construct for the indicated values.
+/// </summary>
+/// <remarks>
+/// For NativeAOT scenarios, only primitive JSON types are supported.
+/// </remarks>
 public class DeniedValuesAttributeHandler : IAttributeHandler<DeniedValuesAttribute>
 {
 	public void AddConstraints(SchemaGenerationContextBase context, Attribute attribute)
