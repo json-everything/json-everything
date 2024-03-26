@@ -61,16 +61,17 @@ public class DocXmlReader
 	}
 
 	/// <summary>
-	/// Explicitly adds XML comment content for schema generation.
+	/// 
 	/// </summary>
-	/// <param name="assembly"></param>
-	/// <param name=""></param>
 	[Obsolete("Use SchemaGenerationConfiguration.RegisterXmlCommentFile<T>() instead")]
 	public static void ExplicitlyAddAssemblyXml(Assembly assembly, string xmlContent)
 	{
 		_explicitXmlContent[assembly] = xmlContent;
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	[Obsolete("Do not use")]
 	public static void ExplictlyRemoveAssemblyXml(Assembly assembly)
 	{
