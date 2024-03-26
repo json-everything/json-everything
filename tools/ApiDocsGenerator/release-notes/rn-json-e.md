@@ -2,7 +2,7 @@
 layout: page
 title: JsonE.Net
 icon: fas fa-tag
-order: "09.11"
+order: "09.12"
 ---
 # [2.1.0](https://github.com/gregsdennis/json-everything/pull/681) {#release-e-2.1.0}
 

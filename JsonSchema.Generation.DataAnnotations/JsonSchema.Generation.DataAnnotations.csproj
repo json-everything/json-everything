@@ -6,7 +6,7 @@
 		<RootNamespace>Json.Schema.Generation.DataAnnotations</RootNamespace>
 		<Authors>Greg Dennis</Authors>
 		<Description>
-			Extends JsonSchema.Net.Generation to support the _System.ComponentModel.DataAnnotations_ namespace.
+			Extends JsonSchema.Net.Generation to support the System.ComponentModel.DataAnnotations namespace.
 
 			Read the full documentation at https://docs.json-everything.net/schema/schema-generation/.
 		</Description>
@@ -15,7 +15,7 @@
 		<PackageIcon>json-logo-256.png</PackageIcon>
 		<RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>
 		<PackageTags>json-schema validation schema json generation schema-generation</PackageTags>
-		<PackageReleaseNotes>Release notes can be found at https://docs.json-everything.net/rn-json-schema-generation/</PackageReleaseNotes>
+		<PackageReleaseNotes>Release notes can be found at https://docs.json-everything.net/rn-json-schema-generation-dataannotations/</PackageReleaseNotes>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<DocumentationFile>JsonSchema.Net.Generation.DataAnnotations.xml</DocumentationFile>
 		<LangVersion>latest</LangVersion>

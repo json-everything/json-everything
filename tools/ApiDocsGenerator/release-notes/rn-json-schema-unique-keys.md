@@ -2,7 +2,7 @@
 layout: page
 title: JsonSchema.Net.UniqueKeys
 icon: fas fa-tag
-order: "09.15"
+order: "09.16"
 ---
 > **DEPRECATION NOTICE**
 >
