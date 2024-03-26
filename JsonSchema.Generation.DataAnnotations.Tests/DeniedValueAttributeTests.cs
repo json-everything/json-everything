@@ -7,23 +7,25 @@ using static Json.Schema.Generation.Tests.AssertionExtensions;
 
 namespace Json.Schema.Generation.DataAnnotations.Tests;
 
-public class AllowedValueAttributeTests
+public class DeniedValueAttributeTests
 {
 	private class Target
 	{
-		[AllowedValues(1, 10, "string")]
+		[DeniedValues(1, 10, "string")]
 		[Description("a descriptor")]
 		public object Simple { get; set; }
 	}
 
 	[Test]
-	public void GenerateEnum()
+	public void GenerateNotEnum()
 	{
 		JsonSchema expected = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Object)
 			.Properties(
 				("Simple", new JsonSchemaBuilder()
-					.Enum(1, 10, "string")
+					.Not(new JsonSchemaBuilder()
+						.Enum(1, 10, "string")
+					)
 					.Description("a descriptor")
 				)
 			);

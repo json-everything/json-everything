@@ -7,24 +7,23 @@ using static Json.Schema.Generation.Tests.AssertionExtensions;
 
 namespace Json.Schema.Generation.DataAnnotations.Tests;
 
-public class AllowedValueAttributeTests
+public class LengthAttributeTests
 {
 	private class Target
 	{
-		[AllowedValues(1, 10, "string")]
-		[Description("a descriptor")]
+		[Length(1, 10)]
 		public object Simple { get; set; }
 	}
 
 	[Test]
-	public void GenerateEnum()
+	public void GenerateStringRange()
 	{
 		JsonSchema expected = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Object)
 			.Properties(
 				("Simple", new JsonSchemaBuilder()
-					.Enum(1, 10, "string")
-					.Description("a descriptor")
+					.MinLength(1)
+					.MaxLength(10)
 				)
 			);
 

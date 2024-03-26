@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using NUnit.Framework;
 
 using DARange = System.ComponentModel.DataAnnotations.RangeAttribute;
@@ -13,12 +9,10 @@ namespace Json.Schema.Generation.DataAnnotations.Tests;
 
 public class RangeAttributeTests
 {
-	private class SupportedRangedProperties
+	private class SupportedTarget
 	{
 		[DARange(1, 10)]
-		public int Simple { get; set; }
-		[DARange(2, 20)]
-		public double WithError { get; set; }
+		public object Simple { get; set; }
 	}
 
 	[Test]
@@ -28,25 +22,29 @@ public class RangeAttributeTests
 			.Type(SchemaValueType.Object)
 			.Properties(
 				("Simple", new JsonSchemaBuilder()
-					.Type(SchemaValueType.Integer)
 					.Minimum(1)
 					.Maximum(10)
-				),
-				("WithError", new JsonSchemaBuilder()
-					.Type(SchemaValueType.Number)
-					.Minimum(2)
-					.Maximum(20)
 				)
 			);
 
-		JsonSchema schema = new JsonSchemaBuilder().FromType<SupportedRangedProperties>();
-
-		AssertEqual(expected, schema);
+		VerifyGeneration<SupportedTarget>(expected);
 	}
 
-	private class UnsupportedRangedProperties
+	private class UnsupportedTarget
 	{
 		[DARange(typeof(DateTime), "2020/3/1", "2020/6/1")]
-		public DateTime WithType { get; set; }
+		public object WithType { get; set; }
+	}
+
+	[Test]
+	public void UnsupportedRangeUsages()
+	{
+		JsonSchema expected = new JsonSchemaBuilder()
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("WithType", true)
+			);
+
+		VerifyGeneration<UnsupportedTarget>(expected);
 	}
 }

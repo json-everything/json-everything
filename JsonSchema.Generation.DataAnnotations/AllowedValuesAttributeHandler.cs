@@ -2,6 +2,7 @@
 
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Text.Json;
 using Json.Schema.Generation.Intents;
 
@@ -13,7 +14,7 @@ public class AllowedValuesAttributeHandler : IAttributeHandler<AllowedValuesAttr
 	{
 		var allowedValues = (AllowedValuesAttribute)attribute;
 
-		context.Intents.Add(new EnumIntent(JsonSerializer.Serialize(allowedValues.Values)));
+		context.Intents.Add(new EnumIntent(allowedValues.Values.Select(x => JsonSerializer.SerializeToNode(x, DataAnnotationsSerializerContext.Default.Options)!)));
 	}
 }
 

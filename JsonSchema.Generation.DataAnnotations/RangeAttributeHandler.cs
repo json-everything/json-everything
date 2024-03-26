@@ -9,8 +9,6 @@ public class RangeAttributeHandler : IAttributeHandler<RangeAttribute>
 {
 	public void AddConstraints(SchemaGenerationContextBase context, Attribute attribute)
 	{
-		if (!context.Type.IsNumber() && !context.Type.IsNullableNumber()) return;
-
 		var range = (RangeAttribute)attribute;
 		if (!range.OperandType.IsNumber() && !range.OperandType.IsNullableNumber()) return;
 

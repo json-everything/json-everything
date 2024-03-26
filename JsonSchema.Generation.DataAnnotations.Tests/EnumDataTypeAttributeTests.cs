@@ -1,18 +1,15 @@
-﻿#if NET8_0_OR_GREATER
-
+﻿using System;
 using System.ComponentModel.DataAnnotations;
+using Json.Schema.Generation.Tests;
 using NUnit.Framework;
-
-using static Json.Schema.Generation.Tests.AssertionExtensions;
 
 namespace Json.Schema.Generation.DataAnnotations.Tests;
 
-public class AllowedValueAttributeTests
+public class EnumDataTypeAttributeTests
 {
 	private class Target
 	{
-		[AllowedValues(1, 10, "string")]
-		[Description("a descriptor")]
+		[EnumDataType(typeof(DayOfWeek))]
 		public object Simple { get; set; }
 	}
 
@@ -23,13 +20,10 @@ public class AllowedValueAttributeTests
 			.Type(SchemaValueType.Object)
 			.Properties(
 				("Simple", new JsonSchemaBuilder()
-					.Enum(1, 10, "string")
-					.Description("a descriptor")
+					.Enum(Enum.GetNames(typeof(DayOfWeek)))
 				)
 			);
 
-		VerifyGeneration<Target>(expected);
+		AssertionExtensions.VerifyGeneration<Target>(expected);
 	}
 }
-
-#endif

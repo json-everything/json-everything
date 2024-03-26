@@ -38,10 +38,7 @@ public class JsonNumberHandlingAttributeHandler : IAttributeHandler<JsonNumberHa
 		{
 			var currentSchema = context.Intents.ToList();
 			context.Intents.Clear();
-			context.Intents.Add(new AnyOfIntent(currentSchema,
-					new ISchemaKeywordIntent[] { new EnumIntent("NaN", "Infinity", "-Infinity") }
-				)
-			);
+			context.Intents.Add(new AnyOfIntent(currentSchema, [new EnumIntent("NaN", "Infinity", "-Infinity")]));
 		}
 	}
 }

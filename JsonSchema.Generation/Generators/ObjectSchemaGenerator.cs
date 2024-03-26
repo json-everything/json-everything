@@ -17,6 +17,8 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 
 	public void AddConstraints(SchemaGenerationContextBase context)
 	{
+		if (context.Type == typeof(object)) return;
+
 		context.Intents.Add(new TypeIntent(SchemaValueType.Object));
 
 		var props = new Dictionary<string, SchemaGenerationContextBase>();
@@ -157,11 +159,11 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 					var thenSubschema = GenerateThen(consequences, strictProperties);
 
 					if (thenSubschema != null)
-						allOf.Subschemas.Add(new ISchemaKeywordIntent[]
-						{
+						allOf.Subschemas.Add(
+						[
 							GenerateIf(conditionGroup),
 							thenSubschema
-						});
+						]);
 				}
 			}
 			if (allOf.Subschemas.Count != 0)
