@@ -35,11 +35,19 @@ public class EnumIntent : ISchemaKeywordIntent
 	}
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+	/// <summary>
+	/// Creates a new <see cref="EnumIntent"/> instance.
+	/// </summary>
+	/// <param name="values">The values defined by the enumeration.</param>
 	public EnumIntent(IEnumerable<JsonNode> values)
 	{
 		_values = [.. values];
 	}
 
+	/// <summary>
+	/// Creates a new <see cref="EnumIntent"/> instance.
+	/// </summary>
+	/// <param name="values">The values defined by the enumeration.</param>
 	public EnumIntent(params JsonNode?[] values)
 	{
 		_values = [.. values];

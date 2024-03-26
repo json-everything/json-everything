@@ -2,6 +2,7 @@
 
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
 using Json.Schema.Generation.Intents;
@@ -16,6 +17,19 @@ namespace Json.Schema.Generation.DataAnnotations;
 /// </remarks>
 public class DeniedValuesAttributeHandler : IAttributeHandler<DeniedValuesAttribute>
 {
+	/// <summary>
+	/// Processes the type and any attributes (present on the context), and adds
+	/// intents to the context.
+	/// </summary>
+	/// <param name="context">The generation context.</param>
+	/// <param name="attribute">The attribute.</param>
+	/// <remarks>
+	/// A common pattern is to implement <see cref="IAttributeHandler"/> on the
+	/// attribute itself.  In this case, the <paramref name="attribute"/> parameter
+	/// will be the same instance as the handler and can likely be ignored.
+	/// </remarks>
+	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "<Pending>")]
+	[UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "<Pending>")]
 	public void AddConstraints(SchemaGenerationContextBase context, Attribute attribute)
 	{
 		var allowedValues = (DeniedValuesAttribute)attribute;

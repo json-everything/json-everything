@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 #pragma warning disable IL2026
 
@@ -24,6 +25,7 @@ public static class DataAnnotationsSupport
 	/// <summary>
 	/// Adds support for the System.ComponentModel.DataAnnotations namespace attributes.
 	/// </summary>
+	[RequiresDynamicCode("This method uses reflection to query types and is not suited for AOT scenarios.")]
 	public static void AddDataAnnotations()
 	{
 		foreach (var handler in _externalHandlers)

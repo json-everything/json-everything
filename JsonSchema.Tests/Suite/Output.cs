@@ -19,7 +19,9 @@ public class Output
 	private const string _externalTestCasesPath = @"../../../../../JSON-Schema-Test-Suite/output-tests";
 
 	private static readonly JsonConverter<EvaluationResults> _resultsConverter = new EvaluationResultsJsonConverter();
+#pragma warning disable CS0618 // Type or member is obsolete
 	private static readonly JsonConverter<EvaluationResults> _legacyResultsConverter = new Pre202012EvaluationResultsJsonConverter();
+#pragma warning restore CS0618 // Type or member is obsolete
 
 	private static readonly SpecVersion[] _unsupportedVersions =
 	[
