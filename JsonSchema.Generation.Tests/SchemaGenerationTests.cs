@@ -114,8 +114,7 @@ public class SchemaGenerationTests
 	[Test]
 	public void EmptyObject()
 	{
-		JsonSchema expected = new JsonSchemaBuilder()
-			.Type(SchemaValueType.Object);
+		JsonSchema expected = new JsonSchemaBuilder();
 
 		JsonSchema actual = new JsonSchemaBuilder().FromType<object>();
 
