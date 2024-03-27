@@ -22,7 +22,7 @@ public class EnumIntent : ISchemaKeywordIntent
 	/// <param name="names">The names defined by the enumeration.</param>
 	public EnumIntent(IEnumerable<string> names)
 	{
-		Names = names.ToList();
+		Names = [.. names];
 	}
 
 	/// <summary>
@@ -35,7 +35,20 @@ public class EnumIntent : ISchemaKeywordIntent
 	}
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-	internal EnumIntent(params JsonNode?[] values)
+	/// <summary>
+	/// Creates a new <see cref="EnumIntent"/> instance.
+	/// </summary>
+	/// <param name="values">The values defined by the enumeration.</param>
+	public EnumIntent(IEnumerable<JsonNode> values)
+	{
+		_values = [.. values];
+	}
+
+	/// <summary>
+	/// Creates a new <see cref="EnumIntent"/> instance.
+	/// </summary>
+	/// <param name="values">The values defined by the enumeration.</param>
+	public EnumIntent(params JsonNode?[] values)
 	{
 		_values = [.. values];
 	}

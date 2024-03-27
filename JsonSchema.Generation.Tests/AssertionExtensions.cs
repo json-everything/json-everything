@@ -6,7 +6,7 @@ using Json.More;
 
 namespace Json.Schema.Generation.Tests;
 
-internal static class AssertionExtensions
+public static class AssertionExtensions
 {
 	public static void AssertEqual(JsonSchema expected, JsonSchema actual)
 	{

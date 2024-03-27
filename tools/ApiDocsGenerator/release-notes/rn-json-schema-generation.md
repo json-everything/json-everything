@@ -4,6 +4,11 @@ title: JsonSchema.Net.Generation
 icon: fas fa-tag
 order: "09.05"
 ---
+# [4.3.0](https://github.com/gregsdennis/json-everything/pull/698) {#release-schema-4.3.0}
+
+- Added `EnumIntent` constructors that take `JsonNodes`.
+- Added `NotIntent`.
+
 # [4.2.0](https://github.com/gregsdennis/json-everything/pull/698) {#release-schema-4.2.0}
 
 [#696](https://github.com/gregsdennis/json-everything/issues/696) - Number-based constraints ignored for nullable number types.  Thanks to [@rhwork](https://github.com/rhwork) for reporting this.

@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net6.0;net8.0</TargetFrameworks>
+		<LangVersion>latest</LangVersion>
+		<Nullable>enable</Nullable>
+
+		<IsPackable>false</IsPackable>
+
+		<RootNamespace>Json.Schema.Generation.DataAnnotations.Tests</RootNamespace>
+		<SignAssembly>true</SignAssembly>
+		<AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
+		<NoWarn>IDE1006,CS8618,CS1591</NoWarn>
+		<JsonSerializerIsReflectionEnabledByDefault Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net7.0'))">false</JsonSerializerIsReflectionEnabledByDefault>
+		<DocumentationFile>JsonSchema.Net.Generation.DataAnnotations.Tests.xml</DocumentationFile>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="NUnit" Version="3.14.0" />
+		<PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\JsonSchema.Generation.DataAnnotations\JsonSchema.Generation.DataAnnotations.csproj" />
+		<ProjectReference Include="..\JsonSchema.Generation.Tests\JsonSchema.Generation.Tests.csproj" />
+	</ItemGroup>
+
+</Project>
