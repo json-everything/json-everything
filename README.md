@@ -65,6 +65,10 @@ All libraries are built to .Net Standard 2.0 and .Net 8.
 <td>Generation of schemas from .Net types</td>
 </tr>
 <tr>
+<td>JsonSchema.Net.Generation.DataAnnotations<br><a href="https://www.nuget.org/packages/JsonSchema.Net.Generation.DataAnnotations/"><img alt="NuGet version" src="https://img.shields.io/nuget/vpre/JsonSchema.Net.Generation.DataAnnotations.svg?svg=true"></img><img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonSchema.Net.Generation.DataAnnotations.svg?svg=true"></img></a></td>
+<td>Schema generation support for <em>System.ComponentModel.DataAnnotations</em>.</td>
+</tr>
+<tr>
 <td>JsonSchema.Net.DataGeneration<br><a href="https://www.nuget.org/packages/JsonSchema.Net.DataGeneration/"><img alt="NuGet version" src="https://img.shields.io/nuget/vpre/JsonSchema.Net.DataGeneration.svg?svg=true"></img><img alt="NuGet version" src="https://img.shields.io/nuget/dt/JsonSchema.Net.DataGeneration.svg?svg=true"></img></a></td>
 <td>Random instance data generation (powered by <a href="https://github.com/bchavez/Bogus">Bogus</a>)</td>
 </tr>
