@@ -33,6 +33,7 @@ public class SelfValidationTest
 			new TestCaseData(MetaSchemas.Draft202012) { TestName = nameof(MetaSchemas.Draft202012) },
 			new TestCaseData(MetaSchemas.Core202012) { TestName = nameof(MetaSchemas.Core202012) },
 			new TestCaseData(MetaSchemas.Applicator202012) { TestName = nameof(MetaSchemas.Applicator202012) },
+			new TestCaseData(MetaSchemas.Validation202012) { TestName = nameof(MetaSchemas.Validation202012) },
 			new TestCaseData(MetaSchemas.Metadata202012) { TestName = nameof(MetaSchemas.Metadata202012) },
 			new TestCaseData(MetaSchemas.FormatAnnotation202012) { TestName = nameof(MetaSchemas.FormatAnnotation202012) },
 			new TestCaseData(MetaSchemas.FormatAssertion202012) { TestName = nameof(MetaSchemas.FormatAssertion202012) },

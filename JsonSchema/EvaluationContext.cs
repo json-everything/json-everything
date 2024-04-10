@@ -62,7 +62,7 @@ public class EvaluationContext
 		    !TryGetVocab(schema, out var vocab) ||
 		    vocab == null) return schema.Keywords!;
 
-		var vocabKeywordTypes = vocab.SelectMany(x => x?.Keywords ?? Array.Empty<Type>());
+		var vocabKeywordTypes = vocab.SelectMany(x => x?.Keywords ?? []);
 		return schema.Keywords!.Where(x => vocabKeywordTypes.Contains(x.GetType()));
 	}
 

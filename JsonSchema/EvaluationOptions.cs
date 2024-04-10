@@ -144,13 +144,6 @@ public class EvaluationOptions
 
 	internal bool Changed { get; set; }
 
-	static EvaluationOptions()
-	{
-		// It's necessary to call this from here because
-		// SchemaRegistry.Global is defined to look at the default options.
-		Default.SchemaRegistry.InitializeMetaSchemas();
-	}
-
 	/// <summary>
 	/// Create a new instance of the <see cref="EvaluationOptions"/> class.
 	/// </summary>

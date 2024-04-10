@@ -19,7 +19,7 @@ public class SchemaConstraint
 	/// <summary>
 	/// Gets the schema's base URI.
 	/// </summary>
-	public Uri SchemaBaseUri { get; }
+	public Uri SchemaBaseUri { get; internal set; }
 
 	/// <summary>
 	/// Gets the base location within the instance that is being evaluated.

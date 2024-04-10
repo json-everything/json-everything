@@ -48,53 +48,7 @@ public class RecursiveRefKeyword : IJsonSchemaKeyword
 	/// <returns>A constraint object.</returns>
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, EvaluationContext context)
 	{
-		var newUri = new Uri(context.Scope.LocalScope, Reference);
-		var newBaseUri = new Uri(newUri.GetLeftPart(UriPartial.Query));
-
-		JsonSchema? targetSchema = null;
-		var targetBase = context.Options.SchemaRegistry.Get(newBaseUri) ??
-						 throw new JsonSchemaException($"Cannot resolve base schema from `{newUri}`");
-
-		foreach (var uri in context.Scope.Reverse())
-		{
-			var scopeRoot = context.Options.SchemaRegistry.Get(uri);
-			if (scopeRoot == null)
-				throw new Exception("This shouldn't happen");
-
-			if (scopeRoot is not JsonSchema schemaRoot)
-				throw new Exception("Does OpenAPI use anchors?");
-
-			if (schemaRoot.RecursiveAnchor == null) continue;
-
-			if (targetBase is JsonSchema { RecursiveAnchor: null }) break;
-
-			targetSchema = schemaRoot.RecursiveAnchor;
-			break;
-		}
-
-		if (targetSchema == null)
-		{
-			if (JsonPointer.TryParse(newUri.Fragment, out var pointerFragment))
-			{
-				if (targetBase == null)
-					throw new JsonSchemaException($"Cannot resolve base schema from `{newUri}`");
-
-				targetSchema = targetBase.FindSubschema(pointerFragment!, context.Options);
-			}
-			else
-			{
-				var anchorFragment = newUri.Fragment[1..];
-				if (!AnchorKeyword.AnchorPattern201909.IsMatch(anchorFragment))
-					throw new JsonSchemaException($"Unrecognized fragment type `{newUri}`");
-
-				if (targetBase is JsonSchema targetBaseSchema &&
-					targetBaseSchema.Anchors.TryGetValue(anchorFragment, out var anchorDefinition))
-					targetSchema = anchorDefinition.Schema;
-			}
-
-			if (targetSchema == null)
-				throw new JsonSchemaException($"Cannot resolve schema `{newUri}`");
-		}
+		var targetSchema = context.Options.SchemaRegistry.GetRecursive(context.Scope);
 
 		return new KeywordConstraint(Name, (e, c) => Evaluator(e, c, targetSchema));
 	}

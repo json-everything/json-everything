@@ -64,17 +64,11 @@ public class RefKeyword : IJsonSchemaKeyword
 
 		var newBaseUri = new Uri(newUri.GetLeftPart(UriPartial.Query));
 
-		JsonSchema? targetSchema = null;
-		var targetBase = context.Options.SchemaRegistry.Get(newBaseUri) ??
-						 throw new JsonSchemaException($"Cannot resolve base schema from `{newUri}`");
+		JsonSchema? targetSchema;
+		var targetBase = context.Options.SchemaRegistry.Get(newBaseUri);
 
 		if (JsonPointer.TryParse(fragment, out var pointerFragment))
-		{
-			if (targetBase == null)
-				throw new JsonSchemaException($"Cannot resolve base schema from `{newUri}`");
-
-			targetSchema = targetBase.FindSubschema(pointerFragment!, context.Options);
-		}
+			targetSchema = targetBase.FindSubschema(pointerFragment, context.Options);
 		else
 		{
 			var anchorFragment = fragment[1..];
@@ -82,9 +76,7 @@ public class RefKeyword : IJsonSchemaKeyword
 			    (context.EvaluatingAs >= SpecVersion.Draft202012 && !AnchorKeyword.AnchorPattern202012.IsMatch(anchorFragment)))
 				throw new JsonSchemaException($"Unrecognized fragment type `{newUri}`");
 
-			if (targetBase is JsonSchema targetBaseSchema &&
-				targetBaseSchema.Anchors.TryGetValue(anchorFragment, out var anchorDefinition))
-				targetSchema = anchorDefinition.Schema;
+			targetSchema = (JsonSchema) context.Options.SchemaRegistry.Get(newBaseUri, anchorFragment, context.EvaluatingAs is SpecVersion.Draft6 or SpecVersion.Draft7);
 		}
 
 		if (targetSchema == null)
