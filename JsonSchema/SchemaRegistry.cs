@@ -138,6 +138,17 @@ public class SchemaRegistry
 		}
 	}
 
+	/// <summary>
+	/// Gets a schema by URI ID and/or anchor.
+	/// </summary>
+	/// <param name="baseUri">The URI ID.</param>
+	/// <param name="anchor">An anchor, if applicable.</param>
+	/// <param name="allowLegacy">Specifies whether `$id` is allowed to contain anchors (drafts 6/7 only).</param>
+	/// <returns>
+	/// The schema, if registered in either this or the global registry; otherwise null.
+	/// </returns>
+	// For URI equality see https://docs.microsoft.com/en-us/dotnet/api/system.uri.op_equality?view=netcore-3.1
+	// tl;dr - URI equality doesn't consider fragments
 	public IBaseDocument Get(Uri baseUri, string? anchor = null, bool allowLegacy = false)
 	{
 		return GetAnchor(baseUri, anchor, false, allowLegacy) ?? throw new SchemaRefResolutionException(baseUri, anchor);

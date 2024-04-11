@@ -62,7 +62,6 @@ public static class KeywordExtensions
 	/// <returns>The keyword string.</returns>
 	/// <exception cref="ArgumentNullException"><paramref name="keyword"/> is null.</exception>
 	/// <exception cref="InvalidOperationException">The keyword does not carry the <see cref="SchemaKeywordAttribute"/>.</exception>
-	// TODO: Reflection can be replaced with static members when moving to .Net 7
 	public static string Keyword(this IJsonSchemaKeyword keyword)
 	{
 		if (keyword == null) throw new ArgumentNullException(nameof(keyword));
@@ -88,7 +87,6 @@ public static class KeywordExtensions
 	/// <returns>The keyword string.</returns>
 	/// <exception cref="ArgumentNullException"><paramref name="keywordType"/> is null.</exception>
 	/// <exception cref="InvalidOperationException">The keyword does not carry the <see cref="SchemaKeywordAttribute"/>.</exception>
-	// TODO: Reflection can be replaced with static members when moving to .Net 7
 	public static string Keyword(this Type keywordType)
 	{
 		if (keywordType == null) throw new ArgumentNullException(nameof(keywordType));
@@ -171,6 +169,7 @@ public static class KeywordExtensions
 	/// <returns>The specification versions as a single flags value.</returns>
 	/// <exception cref="ArgumentNullException">Thrown if <paramref name="keyword"/> is null.</exception>
 	/// <exception cref="InvalidOperationException">Thrown if the keyword has no <see cref="SchemaSpecVersionAttribute"/> declarations.</exception>
+	[Obsolete("This method is no longer used and will be removed with the next major version.")]
 	public static SpecVersion VersionsSupported(this IJsonSchemaKeyword keyword)
 	{
 		if (keyword == null) throw new ArgumentNullException(nameof(keyword));

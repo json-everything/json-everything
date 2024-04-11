@@ -71,6 +71,18 @@ public class JsonSchema : IBaseDocument
 	public Uri BaseUri { get; set; } = GenerateBaseUri();
 
 	/// <summary>
+	/// Gets whether the schema defines a new schema resource.  This will only be true if it contains an `$id` keyword.
+	/// </summary>
+	[Obsolete("This property is no longer used and will be removed with the next major version.")]
+	public bool IsResourceRoot { get; private set; }
+
+	/// <summary>
+	/// Gets the specification version as determined by analyzing the `$schema` keyword, if it exists.
+	/// </summary>
+	[Obsolete("This property has been replaced by SpecVersion.")]
+	public SpecVersion DeclaredVersion => SpecVersion;
+
+	/// <summary>
 	/// Gets the specification version as determined by analyzing the `$schema` keyword, if it exists.
 	/// </summary>
 	public SpecVersion SpecVersion { get; internal set; }
@@ -582,6 +594,14 @@ public class JsonSchema : IBaseDocument
 		// last segment of the pointer is an ISchemaContainer.
 		return CheckResolvable(resolvable, ref count, null!, ref currentSchema) as JsonSchema;
 	}
+
+	/// <summary>
+	/// Obsolete - returns null.
+	/// </summary>
+	/// <param name="anchorName">The name of the anchor (excluding the `#`)</param>
+	/// <returns>null</returns>
+	[Obsolete("This property is no longer used and will be removed with the next major version.  Updated to simply return null as the infrastructure required to support it has been removed.")]
+	public JsonSchema? GetAnchor(string anchorName) => null;
 
 	/// <summary>
 	/// Implicitly converts a boolean value into one of the boolean schemas. 
