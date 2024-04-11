@@ -130,5 +130,31 @@ public static partial class Vocabularies
 			keywords.Where(k => k.Vocabularies.Any(v => v.Id.OriginalString == ContentNextId))
 				.Select(k => k.Type),
 			MetaSchemas.ContentNext);
+
+		VocabularyRegistry.Global.Register(Core201909);
+		VocabularyRegistry.Global.Register(Applicator201909);
+		VocabularyRegistry.Global.Register(Validation201909);
+		VocabularyRegistry.Global.Register(Metadata201909);
+		VocabularyRegistry.Global.Register(Format201909);
+		VocabularyRegistry.Global.Register(Content201909);
+		
+		VocabularyRegistry.Global.Register(Core202012);
+		VocabularyRegistry.Global.Register(Applicator202012);
+		VocabularyRegistry.Global.Register(Validation202012);
+		VocabularyRegistry.Global.Register(Metadata202012);
+		VocabularyRegistry.Global.Register(Unevaluated202012);
+		VocabularyRegistry.Global.Register(FormatAnnotation202012);
+		VocabularyRegistry.Global.Register(FormatAssertion202012);
+		VocabularyRegistry.Global.Register(Content202012);
+		
+		VocabularyRegistry.Global.Register(CoreNext);
+		VocabularyRegistry.Global.Register(ApplicatorNext);
+		VocabularyRegistry.Global.Register(ValidationNext);
+		VocabularyRegistry.Global.Register(MetadataNext);
+		VocabularyRegistry.Global.Register(UnevaluatedNext);
+		VocabularyRegistry.Global.Register(FormatAnnotationNext);
+		VocabularyRegistry.Global.Register(FormatAssertionNext);
+		VocabularyRegistry.Global.Register(ContentNext);
+
 	}
 }

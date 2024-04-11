@@ -12,7 +12,11 @@ namespace Json.Schema.Benchmark.Suite;
 [MemoryDiagnoser]
 public class TestSuiteRunner
 {
+#if DEBUG
+	private const string _benchmarkOffset = @"";
+#else
 	private const string _benchmarkOffset = @"../../../../";
+#endif
 	private const string _testCasesPath = @"../../../../ref-repos/JSON-Schema-Test-Suite/tests";
 	private const string _remoteSchemasPath = @"../../../../ref-repos/JSON-Schema-Test-Suite/remotes";
 
@@ -115,7 +119,8 @@ public class TestSuiteRunner
 	[Benchmark]
 	[Arguments(1)]
 	[Arguments(10)]
-	public int RunSuite_Legacy(int n)
+	[Arguments(50)]
+	public int Legacy(int n)
 	{
 		int i = 0;
 		var collections = GetAllTests();

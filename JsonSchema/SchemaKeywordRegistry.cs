@@ -107,6 +107,9 @@ public static class SchemaKeywordRegistry
 			[typeof(ConstKeyword)] = new ConstKeyword(null),
 			[typeof(DefaultKeyword)] = new DefaultKeyword(null)
 		};
+
+		// HACK - need to touch the meta-schemas to initialize the type and register them
+		_ = MetaSchemas.Draft7Id;
 	}
 
 	/// <summary>

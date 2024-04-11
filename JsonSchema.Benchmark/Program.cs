@@ -9,9 +9,9 @@ class Program
 	static void Main(string[] args)
 	{
 #if DEBUG
-		IConfig config = new DebugBuildConfig();
-		config.WithOptions(ConfigOptions.DisableOptimizationsValidator);
-		var summary = BenchmarkRunner.Run<TestSuiteRunner>(config);
+		var runner = new TestSuiteRunner();
+		runner.BenchmarkSetup();
+		runner.Legacy(1);
 #else
 		var summary = BenchmarkRunner.Run<TestSuiteRunner>();
 #endif

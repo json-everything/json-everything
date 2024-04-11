@@ -13,37 +13,7 @@ public class VocabularyRegistry
 	/// <summary>
 	/// The global registry.
 	/// </summary>
-	public static VocabularyRegistry Global { get; }
-
-	static VocabularyRegistry()
-	{
-		Global = new VocabularyRegistry();
-
-		Global.Register(Vocabularies.Core201909);
-		Global.Register(Vocabularies.Applicator201909);
-		Global.Register(Vocabularies.Validation201909);
-		Global.Register(Vocabularies.Metadata201909);
-		Global.Register(Vocabularies.Format201909);
-		Global.Register(Vocabularies.Content201909);
-
-		Global.Register(Vocabularies.Core202012);
-		Global.Register(Vocabularies.Applicator202012);
-		Global.Register(Vocabularies.Validation202012);
-		Global.Register(Vocabularies.Metadata202012);
-		Global.Register(Vocabularies.Unevaluated202012);
-		Global.Register(Vocabularies.FormatAnnotation202012);
-		Global.Register(Vocabularies.FormatAssertion202012);
-		Global.Register(Vocabularies.Content202012);
-
-		Global.Register(Vocabularies.CoreNext);
-		Global.Register(Vocabularies.ApplicatorNext);
-		Global.Register(Vocabularies.ValidationNext);
-		Global.Register(Vocabularies.MetadataNext);
-		Global.Register(Vocabularies.UnevaluatedNext);
-		Global.Register(Vocabularies.FormatAnnotationNext);
-		Global.Register(Vocabularies.FormatAssertionNext);
-		Global.Register(Vocabularies.ContentNext);
-	}
+	public static VocabularyRegistry Global { get; } = new();
 
 	/// <summary>
 	/// Registers a vocabulary.  This does not register the vocabulary's

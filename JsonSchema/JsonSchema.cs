@@ -423,7 +423,7 @@ public class JsonSchema : IBaseDocument
 			}
 			var localConstraints = new List<KeywordConstraint>();
 			var version = SpecVersion == SpecVersion.Unspecified ? context.EvaluatingAs : SpecVersion;
-			var keywords = EvaluationOptions.FilterKeywords(context.GetKeywordsToProcess(this, context.Options), version).ToArray();
+			var keywords = EvaluationOptions.FilterKeywords(context.GetKeywordsToProcess(this), version).ToArray();
 			var unrecognized = Keywords!.OfType<UnrecognizedKeyword>();
 			var unrecognizedButSupported = Keywords!.Except(keywords).ToArray();
 			if (context.Options.AddAnnotationForUnknownKeywords)
