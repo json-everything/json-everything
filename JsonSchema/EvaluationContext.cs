@@ -68,6 +68,12 @@ public class EvaluationContext
 
 	private bool TryGetVocab(JsonSchema schema, out Vocabulary[]? vocab)
 	{
+		if (schema.BaseUri is null)
+		{
+			vocab = null;
+			return false;
+		}
+
 		if (Dialect.TryGetValue(schema.BaseUri, out vocab)) return true;
 
 		Dialect[schema.BaseUri] = null;

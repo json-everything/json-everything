@@ -79,7 +79,7 @@ public class FetchTests
 
 		using var json = JsonDocument.Parse("10");
 
-		Assert.Throws<JsonSchemaException>(() => schema.Evaluate(json.RootElement, options));
+		Assert.Throws<SchemaRefResolutionException>(() => schema.Evaluate(json.RootElement, options));
 	}
 
 	[Test]
@@ -101,7 +101,7 @@ public class FetchTests
 
 			using var json = JsonDocument.Parse("10");
 
-			Assert.Throws<JsonSchemaException>(() => schema.Evaluate(json.RootElement, options));
+			Assert.Throws<SchemaRefResolutionException>(() => schema.Evaluate(json.RootElement, options));
 		}
 		finally
 		{

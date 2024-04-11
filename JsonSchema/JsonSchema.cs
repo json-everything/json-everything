@@ -68,7 +68,7 @@ public class JsonSchema : IBaseDocument
 	/// It may change after the initial evaluation based on whether the schema contains an `$id` keyword
 	/// or is a child of another schema.
 	/// </remarks>
-	public Uri BaseUri { get; set; } = GenerateBaseUri();
+	public Uri BaseUri { get; set; } = SchemaRegistry.GenerateBaseUri();
 
 	/// <summary>
 	/// Gets whether the schema defines a new schema resource.  This will only be true if it contains an `$id` keyword.
@@ -215,8 +215,6 @@ public class JsonSchema : IBaseDocument
 
 		return schema.Evaluate(root, options);
 	}
-
-	private static Uri GenerateBaseUri() => new($"https://json-everything.net/{Guid.NewGuid().ToString("N")[..10]}");
 
 	/// <summary>
 	/// Gets a specified keyword if it exists.
@@ -442,7 +440,7 @@ public class JsonSchema : IBaseDocument
 				constraint.UnknownKeywords = new JsonArray(unrecognizedButSupported.Concat(unrecognized)
 					.Select(x => (JsonNode?)x.Keyword())
 					.ToArray());
-			foreach (var keyword in keywords.OrderBy(x => x.Priority()))
+			foreach (var keyword in keywords.OrderBy(x => x.GetType().GetPriority()))
 			{
 				var keywordConstraint = keyword.GetConstraint(constraint, localConstraints, context);
 				localConstraints.Add(keywordConstraint);

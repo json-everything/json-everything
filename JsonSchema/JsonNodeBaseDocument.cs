@@ -53,8 +53,8 @@ public class JsonNodeBaseDocument : IBaseDocument
 
 			var schema = location.Deserialize(JsonSchemaSerializerContext.Default.JsonSchema);
 			if (schema != null)
-				options.SchemaRegistry.Register(BaseUri, schema);
-
+				options.SchemaRegistry.ForceInitialize(BaseUri, schema);
+			
 			return schema;
 		});
 	}

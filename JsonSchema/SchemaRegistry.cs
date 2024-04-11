@@ -55,7 +55,7 @@ public class SchemaRegistry
 	/// <summary>
 	/// Registers a schema by URI.
 	/// </summary>
-	/// <param name="uri">The URI ID of the schema..</param>
+	/// <param name="uri">The URI ID of the schema.</param>
 	/// <param name="document">The schema.</param>
 	public void Register(Uri? uri, IBaseDocument document)
 	{
@@ -69,7 +69,7 @@ public class SchemaRegistry
 	{
 		uri = MakeAbsolute(uri);
 		var registration = CheckRegistry(_registered, uri);
-		if (registration == null)
+		if (registration is null)
 		{
 			var registrations = Scan(uri, document);
 			foreach (var subschema in registrations)
@@ -79,7 +79,8 @@ public class SchemaRegistry
 
 			if (!_registered.ContainsKey(uri))
 			{
-				var found = _registered.First(x => ReferenceEquals(x.Value.Root, document)).Value;
+				var found = _registered.FirstOrDefault(x => ReferenceEquals(x.Value.Root, document)).Value ??
+				            new Registration { Root = document };
 				_registered[uri] = found;
 			}
 		}
@@ -108,17 +109,19 @@ public class SchemaRegistry
 
 	private static Registration? CheckRegistry(Dictionary<Uri, Registration> lookup, Uri uri)
 	{
-		return lookup.TryGetValue(uri, out var registration) ? registration : null;
+		return lookup.GetValueOrDefault(uri);
 	}
 
 	private static Uri MakeAbsolute(Uri? uri)
 	{
-		if (uri == null) return _empty;
+		if (uri == null) return GenerateBaseUri();
 
 		if (uri.IsAbsoluteUri) return uri;
 
 		return new Uri(_empty, uri);
 	}
+
+	internal static Uri GenerateBaseUri() => new($"{_empty}{Guid.NewGuid().ToString("N")[..10]}");
 
 	internal void CopyFrom(SchemaRegistry other)
 	{
@@ -158,20 +161,19 @@ public class SchemaRegistry
 	{
 		if (requireLocalAnchor)
 		{
-			var registration = _registered.GetValueOrDefault(baseUri) ?? Global._registered.GetValueOrDefault(baseUri);
+			var registration = GetRegistration(baseUri);
 			if (registration == null)
 				throw new InvalidOperationException($"Could not find '{baseUri}'. This shouldn't happen.");
 			if (!registration.DynamicAnchors.ContainsKey(anchor))
 			{
-				var target = GetAnchor(baseUri, anchor, false, false) ?? throw new SchemaRefResolutionException(baseUri, anchor);
+				var target = GetAnchor(baseUri, anchor, false, false) as JsonSchema ?? throw new SchemaRefResolutionException(baseUri, anchor);
 				return target;
 			}
 		}
 
 		foreach (var uri in scope.Reverse())
 		{
-			var target = GetAnchor(uri, anchor, true, false);
-			if (target is not null) return target;
+			if (GetAnchor(uri, anchor, true, false) is JsonSchema target) return target;
 		}
 
 		throw new SchemaRefResolutionException(scope.LocalScope, anchor, true);
@@ -195,21 +197,26 @@ public class SchemaRegistry
 		return resolved ?? throw new NotImplementedException();
 	}
 
-	private JsonSchema? GetAnchor(Uri baseUri, string? anchor, bool isDynamic, bool allowLegacy)
+	private IBaseDocument? GetAnchor(Uri baseUri, string? anchor, bool isDynamic, bool allowLegacy)
 	{
-		return GetAnchorFromRegistry(_registered, baseUri, anchor, isDynamic, allowLegacy) ??
-		       GetAnchorFromRegistry(Global._registered, baseUri, anchor, isDynamic, allowLegacy);
+		return GetAnchorFromRegistry(baseUri, anchor, isDynamic, allowLegacy);
 	}
 
-	private static JsonSchema? GetAnchorFromRegistry(Dictionary<Uri, Registration> registry, Uri baseUri, string? anchor, bool isDynamic, bool allowLegacy)
+	private IBaseDocument? GetAnchorFromRegistry(Uri baseUri, string? anchor, bool isDynamic, bool allowLegacy)
 	{
-		if (!registry.TryGetValue(baseUri, out var registration)) return null;
+		var registration = GetRegistration(baseUri);
+		if (registration is null) return null;
 
-		if (anchor is null) return (JsonSchema?)registration.Root;
+		if (anchor is null) return registration.Root;
 
 		var anchorList = isDynamic ? registration.DynamicAnchors : registration.Anchors;
 
 		return anchorList.GetValueOrDefault(anchor) ?? (allowLegacy ? registration.LegacyAnchors.GetValueOrDefault(anchor) : null);
+	}
+
+	public void ForceInitialize(Uri baseUri, IBaseDocument baseDocument)
+	{
+		_ = Scan(baseUri, baseDocument);
 	}
 
 	private Dictionary<Uri, Registration> Scan(Uri baseUri, IBaseDocument baseDocument)
