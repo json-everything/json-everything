@@ -6,7 +6,7 @@ namespace Json.Schema;
 /// <summary>
 /// Thrown when an attempt to resolve a URI reference fails.
 /// </summary>
-public class SchemaRefResolutionException : Exception
+public class SchemaRefResolutionException : JsonSchemaException
 {
 	/// <summary>
 	/// Gets the base URI.

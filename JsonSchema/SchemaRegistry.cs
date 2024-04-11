@@ -38,6 +38,14 @@ public class SchemaRegistry
 		set => _fetch = value;
 	}
 
+	/// <summary>
+	/// Creates a new <see cref="SchemaRegistry"/>.
+	/// </summary>
+	[Obsolete("There should be no reason to create a schema registry.  This is handled internally.")]
+	public SchemaRegistry()
+	{
+	}
+	
 	internal SchemaRegistry(EvaluationOptions options)
 	{
 		_options = options;
@@ -47,9 +55,10 @@ public class SchemaRegistry
 	/// Registers a schema by URI.
 	/// </summary>
 	/// <param name="document">The schema.</param>
-	public void Register(IBaseDocument document)
+	/// <param name="initialVersion">The schema version to start analysis.  Overridden by the presence of a `$schema` keyword.  Default is unspecified.</param>
+	public void Register(IBaseDocument document, SpecVersion initialVersion = SpecVersion.Unspecified)
 	{
-		Register(document.BaseUri, document);
+		Register(document.BaseUri, document, initialVersion);
 	}
 
 	/// <summary>
@@ -57,21 +66,27 @@ public class SchemaRegistry
 	/// </summary>
 	/// <param name="uri">The URI ID of the schema.</param>
 	/// <param name="document">The schema.</param>
-	public void Register(Uri? uri, IBaseDocument document)
+	/// <param name="initialVersion">The schema version to start analysis.  Overridden by the presence of a `$schema` keyword.  Default is unspecified.</param>
+	public void Register(Uri? uri, IBaseDocument document, SpecVersion initialVersion = SpecVersion.Unspecified)
 	{
-		RegisterSchema(uri, document);
+		RegisterSchema(uri, document, initialVersion);
 
 		if (_options != null)
 			_options.Changed = true;
 	}
 
-	private void RegisterSchema(Uri? uri, IBaseDocument document)
+	internal void SelfRegister(IBaseDocument document, SpecVersion initialVersion)
+	{
+		RegisterSchema(document.BaseUri, document, initialVersion);
+	}
+
+	private void RegisterSchema(Uri? uri, IBaseDocument document, SpecVersion initialVersion = SpecVersion.Unspecified)
 	{
 		uri = MakeAbsolute(uri);
 		var registration = CheckRegistry(_registered, uri);
 		if (registration is null)
 		{
-			var registrations = Scan(uri, document);
+			var registrations = Scan(uri, document, initialVersion);
 			foreach (var subschema in registrations)
 			{
 				_registered[subschema.Key] = subschema.Value;
@@ -93,7 +108,7 @@ public class SchemaRegistry
 		var registration = CheckRegistry(_registered, uri);
 		// if not found, check global
 		if (registration == null && !ReferenceEquals(Global, this))
-			registration = CheckRegistry(Global._registered!, uri);
+			registration = CheckRegistry(Global._registered, uri);
 
 		if (registration == null)
 		{
@@ -101,7 +116,7 @@ public class SchemaRegistry
 			if (schema == null) return null;
 
 			Register(uri, schema);
-			registration = CheckRegistry(_registered!, uri);
+			registration = CheckRegistry(_registered, uri);
 		}
 
 		return registration;
@@ -214,16 +229,25 @@ public class SchemaRegistry
 		return anchorList.GetValueOrDefault(anchor) ?? (allowLegacy ? registration.LegacyAnchors.GetValueOrDefault(anchor) : null);
 	}
 
-	public void ForceInitialize(Uri baseUri, IBaseDocument baseDocument)
+	/// <summary>
+	/// Forces a scan of a document.  For schemas, this sets base URIs and spec versions.
+	/// </summary>
+	/// <param name="baseUri">A preferred base URI for the document.  May be different than what the document declares.</param>
+	/// <param name="baseDocument">The document to scan.</param>
+	/// <param name="initialVersion">The JSON Schema version to start analysis.  Overridden by the presence of a `$schema` keyword.  Default is unspecified.</param>
+	/// <remarks>
+	/// It should not be necessary to call this except for when implementing your own <see cref="IBaseDocument"/>.
+	/// </remarks>
+	public void ForceInitialize(Uri baseUri, IBaseDocument baseDocument, SpecVersion initialVersion = SpecVersion.Unspecified)
 	{
-		_ = Scan(baseUri, baseDocument);
+		_ = Scan(baseUri, baseDocument, initialVersion);
 	}
 
-	private Dictionary<Uri, Registration> Scan(Uri baseUri, IBaseDocument baseDocument)
+	private Dictionary<Uri, Registration> Scan(Uri baseUri, IBaseDocument baseDocument, SpecVersion initialVersion)
 	{
 		var toCheck = new Queue<(Uri, JsonSchema, SpecVersion)>();
 		if (baseDocument is JsonSchema schema)
-			toCheck.Enqueue((baseUri, schema, SpecVersion.Unspecified));
+			toCheck.Enqueue((baseUri, schema, initialVersion));
 
 		var registrations = new Dictionary<Uri, Registration>();
 
@@ -232,19 +256,15 @@ public class SchemaRegistry
 			var (currentUri, currentSchema, currentVersion) = toCheck.Dequeue();
 
 			var id = currentSchema.GetId();
-			if (id is not null && (currentSchema.GetRef() is null || currentVersion is not (SpecVersion.Draft6 or SpecVersion.Draft7)))
-			{
+			var metaschema = currentSchema.GetSchema();
+
+			if (metaschema is not null && (id is not null || ReferenceEquals(currentSchema, baseDocument)))
+				currentSchema.SpecVersion = currentVersion = GetMetaschemaVersion(currentSchema);
+
+			if (id is not null && (currentSchema.GetRef() is null || currentVersion is not (SpecVersion.Draft6 or SpecVersion.Draft7) || ReferenceEquals(currentSchema, baseDocument)))
 				currentUri = new Uri(currentUri, id);
-			}
 
 			currentSchema.BaseUri = currentUri;
-
-			if (id is not null || ReferenceEquals(currentSchema, baseDocument))
-			{
-				var metaschema = currentSchema.GetSchema();
-				if (metaschema is not null)
-					currentSchema.SpecVersion = currentVersion = GetMetaschemaVersion(currentSchema);
-			}
 
 			if (!registrations.TryGetValue(currentUri, out var registration))
 				registrations[currentUri] = registration = new Registration

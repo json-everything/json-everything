@@ -83,7 +83,7 @@ public class JsonSchema : IBaseDocument
 	public SpecVersion DeclaredVersion => SpecVersion;
 
 	/// <summary>
-	/// Gets the specification version as determined by analyzing the `$schema` keyword, if it exists.
+	/// Gets the specification version as determined by analyzing the `$schema` keyword, if it exists, or if it is defined in a parent schema.
 	/// </summary>
 	public SpecVersion SpecVersion { get; internal set; }
 
@@ -292,7 +292,7 @@ public class JsonSchema : IBaseDocument
 		options = EvaluationOptions.From(options);
 
 		// BaseUri may change if $id is present
-		options.SchemaRegistry.Register(this);
+		options.SchemaRegistry.SelfRegister(this, options.EvaluateAs);
 		var evaluatingAs = SpecVersion == SpecVersion.Unspecified ? options.EvaluateAs : SpecVersion;
 
 		var context = new EvaluationContext(options, evaluatingAs, BaseUri);
@@ -409,12 +409,10 @@ public class JsonSchema : IBaseDocument
 
 			if (context.EvaluatingAs is SpecVersion.Draft6 or SpecVersion.Draft7)
 			{
-				// base URI doesn't change for $ref schemas in draft 6/7
 				var refKeyword = (RefKeyword?) Keywords!.FirstOrDefault(x => x is RefKeyword);
 				if (refKeyword != null)
 				{
-					if (Keywords!.Any(x => x is IdKeyword))
-						constraint.SchemaBaseUri = context.Scope.LocalScope;
+					// base URI doesn't change for $ref schemas in draft 6/7 (handled with schema scan)
 					var refConstraint = refKeyword.GetConstraint(constraint, [], context);
 					constraint.Constraints = [refConstraint];
 					return;
@@ -426,10 +424,7 @@ public class JsonSchema : IBaseDocument
 			{
 				dynamicScopeChanged = true;
 				context.Scope.Push(BaseUri);
-				if (SpecVersion == SpecVersion.Unspecified)
-					context.PushEvaluatingAs(context.EvaluatingAs);
-				else
-					context.PushEvaluatingAs(SpecVersion);
+				context.PushEvaluatingAs(SpecVersion == SpecVersion.Unspecified ? context.EvaluatingAs : SpecVersion);
 			}
 			var localConstraints = new List<KeywordConstraint>();
 			var version = SpecVersion == SpecVersion.Unspecified ? context.EvaluatingAs : SpecVersion;

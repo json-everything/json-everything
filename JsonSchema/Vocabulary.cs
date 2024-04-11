@@ -17,6 +17,9 @@ public class Vocabulary
 	/// </summary>
 	public IReadOnlyCollection<Type> Keywords { get; }
 
+	/// <summary>
+	/// Identifies a meta-schema, if there is one for the vocabulary.
+	/// </summary>
 	public JsonSchema? MetaSchema { get; }
 
 	/// <summary>
@@ -35,6 +38,7 @@ public class Vocabulary
 	/// </summary>
 	/// <param name="id">The vocabulary ID.</param>
 	/// <param name="keywords">The types of the keywords that are defined by the vocabulary.</param>
+	/// <param name="metaSchema">The meta-schema, if there is one for the vocabulary</param>
 	public Vocabulary(string id, IEnumerable<Type> keywords, JsonSchema? metaSchema = null)
 	{
 		MetaSchema = metaSchema;

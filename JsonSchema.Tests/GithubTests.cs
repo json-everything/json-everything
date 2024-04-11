@@ -288,31 +288,35 @@ public class GithubTests
 	[Test]
 	public void Issue79_RefsTryingToResolveParent()
 	{
-		var schema1Str = @"
-{
-  ""$schema"": ""http://json-schema.org/draft-07/schema#"",
-  ""$id"": ""schema1.json"",
-  ""definitions"": {
-    ""myDef"": {
-      ""properties"": {
-        ""abc"": { ""type"": ""string"" }
-      }
-    }
-  },
-  ""$ref"": ""#/definitions/myDef""
-}";
-		var schema2Str = @"
-{
-  ""$schema"": ""http://json-schema.org/draft-07/schema#"",
-  ""$id"": ""schema2.json"",
-  ""$ref"": ""schema1.json""
-}";
+		var schema1Str =
+			"""
+			{
+			  "$schema": "http://json-schema.org/draft-07/schema#",
+			  "$id": "schema1.json",
+			  "definitions": {
+			    "myDef": {
+			      "properties": {
+			        "abc": { "type": "string" }
+			      }
+			    }
+			  },
+			  "$ref": "#/definitions/myDef"
+			}
+			""";
+		var schema2Str =
+			"""
+			{
+			  "$schema": "http://json-schema.org/draft-07/schema#",
+			  "$id": "schema2.json",
+			  "$ref": "schema1.json"
+			}
+			""";
 		var jsonStr = @"{ ""abc"": ""s"" }";
 		var schema1 = JsonSerializer.Deserialize<JsonSchema>(schema1Str, TestEnvironment.SerializerOptions)!;
 		var schema2 = JsonSerializer.Deserialize<JsonSchema>(schema2Str, TestEnvironment.SerializerOptions)!;
 		var json = JsonNode.Parse(jsonStr);
-		var uri1 = new Uri("https://json-everything.net/schema1.json");
-		var uri2 = new Uri("https://json-everything.net/schema2.json");
+		var uri1 = new Uri("http://everything.json/schema1.json");
+		var uri2 = new Uri("http://everything.json/schema2.json");
 		var map = new Dictionary<Uri, JsonSchema>
 		{
 			{ uri1, schema1 },
@@ -332,7 +336,7 @@ public class GithubTests
 		};
 		var result = schema2.Evaluate(json, options);
 		result.AssertValid();
-		Assert.AreEqual(result.Details[0].Details[0].SchemaLocation, "https://json-everything.net/schema1.json#");
+		Assert.AreEqual("http://everything.json/schema1.json#/definitions/myDef", result.Details[0].Details[0].SchemaLocation.OriginalString);
 	}
 
 	[Test]
@@ -498,7 +502,7 @@ public class GithubTests
 
 		var instance = JsonNode.Parse("{\"ContentDefinitionId\": \"fa81bc1d-3efe-4192-9e03-31e9898fef90\"}");
 
-		Assert.Throws<JsonSchemaException>(() => schema.Evaluate(instance, new EvaluationOptions
+		Assert.Throws<SchemaRefResolutionException>(() => schema.Evaluate(instance, new EvaluationOptions
 		{
 			ValidateAgainstMetaSchema = true
 		}));

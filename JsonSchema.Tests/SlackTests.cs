@@ -8,33 +8,30 @@ public class SlackTests
 	[Test]
 	public void MultiDraftSelfValidation()
 	{
+		// this should throw because "$id": "http://localhost/C" in /C should be ignored due to the $ref and it being draft 6
 		var json =
-			@"{
-					""$id"": ""http://localhost/"",
-					""$defs"": {
-						""M"": {
-							""$id"": ""http://localhost/M"",
-							""$schema"": ""https://json-schema.org/draft/2020-12/schema"",
-							""$defs"": {
-								""MarkConfig"": { ""type"": ""integer"" }
-							}   
-						},  
-						""C"": {
-							""$id"": ""http://localhost/C"",
-							""$schema"": ""http://json-schema.org/draft-06/schema#"",
-							""$defs"": {
-								""Config"": { ""$ref"": ""http://localhost/M#/$defs/MarkConfig"" }
-							},  
-							""$ref"": ""http://localhost/C#/$defs/Config""
-						}   
-					},  
-					""$ref"": ""/C""
-				}";
+			"""
+			{
+				"$id": "http://localhost/",
+				"$schema": "https://json-schema.org/draft/2020-12/schema",
+				"$defs": {
+					"draft6schema": {
+						"$id": "http://localhost/C",
+						"$schema": "http://json-schema.org/draft-06/schema#",
+						"$defs": {
+							"Config": { "type": "integer" }
+						},
+						"$ref": "http://localhost/C#/$defs/Config"
+					}
+				},
+				"$ref": "/C"
+			}
+			""";
 
 		var schema = JsonSchema.FromText(json);
 		var instance = JsonNode.Parse(json);
 
-		Assert.Throws<JsonSchemaException>(() => schema.Evaluate(instance, new EvaluationOptions
+		Assert.Throws<SchemaRefResolutionException>(() => schema.Evaluate(instance, new EvaluationOptions
 		{
 			OutputFormat = OutputFormat.Hierarchical
 		}));
