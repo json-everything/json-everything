@@ -228,12 +228,16 @@ public class SchemaRegistry
 			if (id is not null && (currentSchema.GetRef() is null || currentVersion is not (SpecVersion.Draft6 or SpecVersion.Draft7)))
 			{
 				currentUri = new Uri(currentUri, id);
+			}
+
+			currentSchema.BaseUri = currentUri;
+
+			if (id is not null || ReferenceEquals(currentSchema, baseDocument))
+			{
 				var metaschema = currentSchema.GetSchema();
 				if (metaschema is not null)
 					currentSchema.SpecVersion = currentVersion = GetMetaschemaVersion(currentSchema);
 			}
-
-			currentSchema.BaseUri = currentUri;
 
 			if (!registrations.TryGetValue(currentUri, out var registration))
 				registrations[currentUri] = registration = new Registration

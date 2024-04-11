@@ -59,7 +59,8 @@ public class DynamicRefKeyword : IJsonSchemaKeyword
 		{
 			var targetBase = context.Options.SchemaRegistry.Get(newBaseUri);
 
-			targetSchema = targetBase.FindSubschema(pointerFragment, context.Options);
+			targetSchema = targetBase.FindSubschema(pointerFragment, context.Options) ??
+			               throw new SchemaRefResolutionException(newBaseUri, pointerFragment);
 		}
 		else
 		{
@@ -69,9 +70,6 @@ public class DynamicRefKeyword : IJsonSchemaKeyword
 
 			targetSchema = context.Options.SchemaRegistry.Get(context.Scope, newBaseUri, anchorFragment, context.EvaluatingAs == SpecVersion.Draft202012);
 		}
-
-		if (targetSchema == null)
-			throw new JsonSchemaException($"Cannot resolve schema `{newUri}`");
 
 		return new KeywordConstraint(Name, (e, c) => Evaluator(e, c, targetSchema));
 	}

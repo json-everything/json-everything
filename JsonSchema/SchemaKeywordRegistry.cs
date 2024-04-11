@@ -108,8 +108,9 @@ public static class SchemaKeywordRegistry
 			[typeof(DefaultKeyword)] = new DefaultKeyword(null)
 		};
 
-		// HACK - need to touch the meta-schemas to initialize the type and register them
-		_ = MetaSchemas.Draft7Id;
+		// HACK - need to touch these to initialize the type and register them
+		_ = MetaSchemas.Draft6Id;
+		_ = Vocabularies.Core201909;
 	}
 
 	/// <summary>

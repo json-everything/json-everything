@@ -3,15 +3,30 @@ using Json.Pointer;
 
 namespace Json.Schema;
 
+/// <summary>
+/// Thrown when an attempt to resolve a URI reference fails.
+/// </summary>
 public class SchemaRefResolutionException : Exception
 {
+	/// <summary>
+	/// Gets the base URI.
+	/// </summary>
 	public Uri BaseUri { get; }
+	/// <summary>
+	/// Gets an anchor fragment, if applicable.
+	/// </summary>
 	public string? Anchor { get; }
+	/// <summary>
+	/// Gets whether the reference was dynamic, i.e. `$dynamicRef`.
+	/// </summary>
 	public bool IsDynamic { get; }
+	/// <summary>
+	/// Gets a JSON Pointer fragment, if applicable.
+	/// </summary>
 	public JsonPointer? Location { get; }
 
 	// isDynamic true and anchor null means recursive
-	public SchemaRefResolutionException(Uri baseUri, string? anchor = null, bool isDynamic = false)
+	internal SchemaRefResolutionException(Uri baseUri, string? anchor = null, bool isDynamic = false)
 		: base($"Could not resolve {Format(baseUri, anchor, isDynamic)}")
 	{
 		BaseUri = baseUri;
@@ -19,7 +34,7 @@ public class SchemaRefResolutionException : Exception
 		IsDynamic = isDynamic;
 	}
 
-	public SchemaRefResolutionException(Uri baseUri, JsonPointer location)
+	internal SchemaRefResolutionException(Uri baseUri, JsonPointer location)
 		: base($"Could not resolve schema '{baseUri}#{location}'")
 	{
 		BaseUri = baseUri;

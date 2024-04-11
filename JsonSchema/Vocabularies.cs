@@ -155,6 +155,5 @@ public static partial class Vocabularies
 		VocabularyRegistry.Global.Register(FormatAnnotationNext);
 		VocabularyRegistry.Global.Register(FormatAssertionNext);
 		VocabularyRegistry.Global.Register(ContentNext);
-
 	}
 }
