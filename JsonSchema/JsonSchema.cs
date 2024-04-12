@@ -93,7 +93,7 @@ public class JsonSchema : IBaseDocument
 	}
 	internal JsonSchema(IEnumerable<IJsonSchemaKeyword> keywords)
 	{
-		_keywords = keywords.ToDictionary(x => x.Keyword());
+		_keywords = keywords.OrderBy(x => x.GetType().GetPriority()).ToDictionary(x => x.Keyword());
 	}
 
 	/// <summary>
@@ -328,9 +328,24 @@ public class JsonSchema : IBaseDocument
 	private bool IsDynamic()
 	{
 		if (BoolValue.HasValue) return false;
-		if (Keywords!.Any(x => x is DynamicRefKeyword or RecursiveRefKeyword)) return true;
 
-		return Keywords!.SelectMany(GetSubschemas).Any(x => x.IsDynamic());
+		var toCheck = new Queue<JsonSchema>();
+		toCheck.Enqueue(this);
+		while (toCheck.Count != 0)
+		{
+			var currentSchema = toCheck.Dequeue();
+			foreach (var keyword in currentSchema.Keywords!)
+			{
+				if (keyword is DynamicRefKeyword or RecursiveRefKeyword) return true;
+				foreach (var subschema in GetSubschemas(keyword))
+				{
+					if (subschema.BoolValue.HasValue) continue;
+					toCheck.Enqueue(subschema);
+				}
+			}
+		}
+
+		return false;
 	}
 
 	/// <summary>
@@ -432,10 +447,10 @@ public class JsonSchema : IBaseDocument
 			var unrecognized = Keywords!.OfType<UnrecognizedKeyword>();
 			var unrecognizedButSupported = Keywords!.Except(keywords).ToArray();
 			if (context.Options.AddAnnotationForUnknownKeywords)
-				constraint.UnknownKeywords = new JsonArray(unrecognizedButSupported.Concat(unrecognized)
+				constraint.UnknownKeywords = unrecognizedButSupported.Concat(unrecognized)
 					.Select(x => (JsonNode?)x.Keyword())
-					.ToArray());
-			foreach (var keyword in keywords.OrderBy(x => x.GetType().GetPriority()))
+					.ToJsonArray();
+			foreach (var keyword in keywords)
 			{
 				var keywordConstraint = keyword.GetConstraint(constraint, localConstraints, context);
 				localConstraints.Add(keywordConstraint);
@@ -459,7 +474,18 @@ public class JsonSchema : IBaseDocument
 		}
 	}
 
-	internal static IEnumerable<JsonSchema> GetSubschemas(JsonSchema schema) => schema.BoolValue.HasValue ? [] : schema.Keywords!.SelectMany(GetSubschemas);
+	internal static IEnumerable<JsonSchema> GetSubschemas(JsonSchema schema)
+	{
+		if (schema.BoolValue.HasValue) yield break;
+
+		foreach (var keyword in schema.Keywords!)
+		{
+			foreach (var subschema in GetSubschemas(keyword))
+			{
+				yield return subschema;
+			}
+		}
+	}
 
 	internal static IEnumerable<JsonSchema> GetSubschemas(IJsonSchemaKeyword keyword)
 	{
@@ -467,26 +493,15 @@ public class JsonSchema : IBaseDocument
 		{
 			// ReSharper disable once RedundantAlwaysMatchSubpattern
 			case ISchemaContainer { Schema: not null } container:
-				yield return container.Schema;
-				break;
+				return [container.Schema];
 			case ISchemaCollector collector:
-				foreach (var schema in collector.Schemas)
-				{
-					yield return schema;
-				}
-				break;
+				return collector.Schemas;
 			case IKeyedSchemaCollector collector:
-				foreach (var schema in collector.Schemas.Values)
-				{
-					yield return schema;
-				}
-				break;
+				return collector.Schemas.Values;
 			case ICustomSchemaCollector collector:
-				foreach (var schema in collector.Schemas)
-				{
-					yield return schema;
-				}
-				break;
+				return collector.Schemas;
+			default:
+				return [];
 		}
 	}
 

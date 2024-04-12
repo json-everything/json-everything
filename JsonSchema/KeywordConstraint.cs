@@ -32,7 +32,7 @@ public class KeywordConstraint
 	/// This method takes a <see cref="KeywordEvaluation"/> which contains the local instance being evaluated
 	/// and the local results object.
 	/// </remarks>
-	public Action<KeywordEvaluation, EvaluationContext> Evaluator { get; }
+	public Action<KeywordEvaluation> Evaluator { get; }
 
 	/// <summary>
 	/// Gets or sets the collection of keyword constraints (i.e. sibling keywords) that this keyword is dependent upon.
@@ -50,7 +50,7 @@ public class KeywordConstraint
 	/// </summary>
 	/// <param name="keyword">The keyword name.</param>
 	/// <param name="evaluator">A method that used to apply the actual constraint behavior.</param>
-	public KeywordConstraint(string keyword, Action<KeywordEvaluation, EvaluationContext> evaluator)
+	public KeywordConstraint(string keyword, Action<KeywordEvaluation> evaluator)
 	{
 		Keyword = keyword;
 		Evaluator = evaluator;

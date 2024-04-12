@@ -217,30 +217,18 @@ public class EvaluationOptions
 
 	internal static IEnumerable<IJsonSchemaKeyword> FilterKeywords(IEnumerable<IJsonSchemaKeyword> keywords, SpecVersion declaredVersion)
 	{
-		if (declaredVersion is SpecVersion.Draft6 or SpecVersion.Draft7)
-			return DisallowSiblingRef(keywords, declaredVersion);
+		if (!Enum.IsDefined(typeof(SpecVersion), declaredVersion) || declaredVersion == SpecVersion.Unspecified)
+		{
+			foreach (var keyword in keywords)
+			{
+				yield return keyword;
+			}
+			yield break;
+		}
 
-		return AllowSiblingRef(keywords, declaredVersion);
-	}
-
-	private static IEnumerable<IJsonSchemaKeyword> DisallowSiblingRef(IEnumerable<IJsonSchemaKeyword> keywords, SpecVersion version)
-	{
-		// ReSharper disable once PossibleMultipleEnumeration
-		var refKeyword = keywords.OfType<RefKeyword>().SingleOrDefault();
-
-		// ReSharper disable once PossibleMultipleEnumeration
-		return refKeyword != null ? new[] { refKeyword } : FilterBySpecVersion(keywords, version);
-	}
-
-	private static IEnumerable<IJsonSchemaKeyword> AllowSiblingRef(IEnumerable<IJsonSchemaKeyword> keywords, SpecVersion version)
-	{
-		return FilterBySpecVersion(keywords, version);
-	}
-
-	private static IEnumerable<IJsonSchemaKeyword> FilterBySpecVersion(IEnumerable<IJsonSchemaKeyword> keywords, SpecVersion version)
-	{
-		if (!Enum.IsDefined(typeof(SpecVersion), version) || version == SpecVersion.Unspecified) return keywords;
-
-		return keywords.Where(k => k.SupportsVersion(version));
+		foreach (var keyword in keywords)
+		{
+			if (keyword.SupportsVersion(declaredVersion)) yield return keyword;
+		}
 	}
 }

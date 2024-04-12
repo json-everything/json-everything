@@ -273,7 +273,7 @@ public class SchemaRegistry
 				};
 
 			var idText = id?.OriginalString;
-			if (!string.IsNullOrEmpty(idText) && idText![0] == '#' && AnchorKeyword.AnchorPattern201909.IsMatch(idText[1..]))
+			if (!string.IsNullOrEmpty(idText) && idText[0] == '#' && AnchorKeyword.AnchorPattern201909.IsMatch(idText[1..]))
 				registration.LegacyAnchors[idText[1..]] = currentSchema;
 
 			var dynamicAnchor = currentSchema.GetDynamicAnchor();
