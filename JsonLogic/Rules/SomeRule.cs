@@ -54,7 +54,7 @@ public class SomeRule : Rule, IRule
 			.Any(result => result.IsTruthy());
 	}
 
-	public JsonNode? Apply(JsonNode? args, EvaluationContext context)
+	JsonNode? IRule.Apply(JsonNode? args, EvaluationContext context)
 	{
 		if (args is not JsonArray { Count: 2 } array)
 			throw new JsonLogicException("The 'some' rule requires an array with two arguments");

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -12,7 +13,7 @@ namespace Json.Logic.Rules;
 /// </summary>
 [Operator("map")]
 [JsonConverter(typeof(MapRuleJsonConverter))]
-public class MapRule : Rule
+public class MapRule : Rule, IRule
 {
 	/// <summary>
 	/// A sequence of values to map over.
@@ -33,6 +34,7 @@ public class MapRule : Rule
 		Input = input;
 		Rule = rule;
 	}
+	internal MapRule(){}
 
 	/// <summary>
 	/// Applies the rule to the input data.
@@ -51,6 +53,29 @@ public class MapRule : Rule
 			return new JsonArray();
 
 		return arr.Select(i => Rule.Apply(data, i)).ToJsonArray();
+	}
+
+	JsonNode? IRule.Apply(JsonNode? args, EvaluationContext context)
+	{
+		if (args is not JsonArray { Count: 2 } array)
+			throw new JsonLogicException("The 'map' rule requires an array with two arguments");
+
+		var input = JsonLogic.Apply(array[0], context);
+		var rule = array[1];
+
+		if (input is not JsonArray items) return new JsonArray();
+
+		var results = new List<JsonNode?>();
+		foreach (var item in items)
+		{
+			context.Push(item);
+			var localResult = JsonLogic.Apply(rule, context);
+			context.Pop();
+
+			results.Add(localResult);
+		}
+
+		return results.ToJsonArray();
 	}
 }
 

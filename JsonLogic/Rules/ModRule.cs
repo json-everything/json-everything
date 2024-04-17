@@ -58,7 +58,7 @@ public class ModRule : Rule, IRule
 		return numberA.Value % numberB.Value;
 	}
 
-	public JsonNode? Apply(JsonNode? args, EvaluationContext context)
+	JsonNode? IRule.Apply(JsonNode? args, EvaluationContext context)
 	{
 		if (args is not JsonArray { Count: 2 } array)
 			throw new JsonLogicException("The '%' rule needs an array with 2 parameters");

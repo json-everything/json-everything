@@ -12,7 +12,7 @@ namespace Json.Logic.Rules;
 /// </summary>
 [Operator("in")]
 [JsonConverter(typeof(InRuleJsonConverter))]
-public class InRule : Rule
+public class InRule : Rule, IRule
 {
 	/// <summary>
 	/// A value to search for.
@@ -33,6 +33,7 @@ public class InRule : Rule
 		Test = test;
 		Value = value;
 	}
+	internal InRule(){}
 
 	/// <summary>
 	/// Applies the rule to the input data.
@@ -47,6 +48,30 @@ public class InRule : Rule
 	{
 		var test = Test.Apply(data, contextData);
 		var source = Value.Apply(data, contextData);
+
+		if (source is JsonValue value && value.TryGetValue(out string? stringSource))
+		{
+			var stringTest = test.Stringify();
+
+			if (stringTest == null || stringSource == null)
+				throw new JsonLogicException($"Cannot check string for {test.JsonType()}.");
+
+			return !string.IsNullOrEmpty(stringTest) && stringSource.Contains(stringTest);
+		}
+
+		if (source is JsonArray arr)
+			return arr.Any(i => i.IsEquivalentTo(test));
+
+		return false;
+	}
+
+	JsonNode? IRule.Apply(JsonNode? args, EvaluationContext context)
+	{
+		if (args is not JsonArray{Count:2} array)
+			throw new JsonLogicException("The 'in' rule requires an array with 2 parameters");
+
+		var test = JsonLogic.Apply(array[0], context);
+		var source = JsonLogic.Apply(array[1], context);
 
 		if (source is JsonValue value && value.TryGetValue(out string? stringSource))
 		{

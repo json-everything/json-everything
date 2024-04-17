@@ -42,7 +42,7 @@ public class BooleanCastRule : Rule, IRule
 		return Value.Apply(data, contextData).IsTruthy();
 	}
 
-	public JsonNode? Apply(JsonNode? args, EvaluationContext context)
+	JsonNode? IRule.Apply(JsonNode? args, EvaluationContext context)
 	{
 		if (args is not JsonArray {Count: 1} array)
 			throw new JsonLogicException("The '!!' rule needs an array with a single parameter");

@@ -53,20 +53,21 @@ public class OrRule : Rule, IRule
 		return first;
 	}
 
-	public JsonNode? Apply(JsonNode? args, EvaluationContext context)
+	JsonNode? IRule.Apply(JsonNode? args, EvaluationContext context)
 	{
 		if (args is not JsonArray array)
 			throw new JsonLogicException("The 'or' rule requires an array of arguments");
 
 		if (array.Count == 0) return false;
 
+		JsonNode? result = false;
 		foreach (var item in array)
 		{
-			var result = item is JsonObject innerRule ? JsonLogic.Apply(innerRule, context) : item;
-			if (result.IsTruthy()) return true;
+			result = item is JsonObject innerRule ? JsonLogic.Apply(innerRule, context) : item;
+			if (result.IsTruthy()) break;
 		}
 
-		return false;
+		return result;
 	}
 }
 

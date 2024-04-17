@@ -58,7 +58,7 @@ public class MultiplyRule : Rule, IRule
 		return result;
 	}
 
-	public JsonNode? Apply(JsonNode? args, EvaluationContext context)
+	JsonNode? IRule.Apply(JsonNode? args, EvaluationContext context)
 	{
 		if (args is not JsonArray { Count: > 0 } array)
 			throw new JsonLogicException("The '*' rule needs an array of parameters");

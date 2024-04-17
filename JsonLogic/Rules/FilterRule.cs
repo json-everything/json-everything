@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -12,7 +13,7 @@ namespace Json.Logic.Rules;
 /// </summary>
 [Operator("filter")]
 [JsonConverter(typeof(FilterRuleJsonConverter))]
-public class FilterRule : Rule
+public class FilterRule : Rule, IRule
 {
 	/// <summary>
 	/// A sequence of values to filter.
@@ -34,6 +35,7 @@ public class FilterRule : Rule
 		Input = input;
 		Rule = rule;
 	}
+	internal FilterRule(){}
 
 	/// <summary>
 	/// Applies the rule to the input data.
@@ -52,6 +54,29 @@ public class FilterRule : Rule
 			return new JsonArray();
 
 		return arr.Where(i => Rule.Apply(data, i).IsTruthy()).ToJsonArray();
+	}
+
+	JsonNode? IRule.Apply(JsonNode? args, EvaluationContext context)
+	{
+		if (args is not JsonArray { Count: 2 } array)
+			throw new JsonLogicException("The 'filter' rule requires an array with two arguments");
+
+		var input = JsonLogic.Apply(array[0], context);
+		var rule = array[1];
+
+		if (input is not JsonArray items) return false;
+
+		var results = new List<JsonNode?>();
+		foreach (var item in items)
+		{
+			context.Push(item);
+			var localResult = JsonLogic.Apply(rule, context).IsTruthy();
+			context.Pop();
+
+			if (localResult) results.Add(item);
+		}
+
+		return results.ToJsonArray();
 	}
 }
 

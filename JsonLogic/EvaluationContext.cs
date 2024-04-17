@@ -11,6 +11,9 @@ public class EvaluationContext
 {
 	private readonly Stack<JsonNode?> _contextStack;
 
+	/// <summary>
+	/// The top-level context value.
+	/// </summary>
 	public JsonNode? CurrentValue => _contextStack.Peek();
 
 	internal EvaluationContext(JsonNode? baseContext)
@@ -37,6 +40,12 @@ public class EvaluationContext
 		return _contextStack.Pop();
 	}
 
+	/// <summary>
+	/// Attempts to resolve a variable path within the entire context.
+	/// </summary>
+	/// <param name="path">The variable path.</param>
+	/// <param name="result">The result, if found; null otherwise..</param>
+	/// <returns>true if the path was found; false otherwise.</returns>
 	public bool TryFind(string path, out JsonNode? result)
 	{
 		var parts = path.Split('.');

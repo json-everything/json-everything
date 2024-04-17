@@ -111,7 +111,7 @@ public class LessThanEqualRule : Rule, IRule
 		       string.Compare(stringB, stringC, StringComparison.Ordinal) <= 0;
 	}
 
-	public JsonNode? Apply(JsonNode? args, EvaluationContext context)
+	JsonNode? IRule.Apply(JsonNode? args, EvaluationContext context)
 	{
 		if (args is not JsonArray {Count: 2 or 3} array)
 			throw new JsonException("The '<=' rule needs an array with either 2 or 3 parameters");

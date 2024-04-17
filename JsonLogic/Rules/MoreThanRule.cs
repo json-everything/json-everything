@@ -64,7 +64,7 @@ public class MoreThanRule : Rule, IRule
 		return string.Compare(stringA, stringB, StringComparison.Ordinal) > 0;
 	}
 
-	public JsonNode? Apply(JsonNode? args, EvaluationContext context)
+	JsonNode? IRule.Apply(JsonNode? args, EvaluationContext context)
 	{
 		if (args is not JsonArray { Count: 2 } array)
 			throw new JsonException("The '>=' rule needs an array with 2 parameters");

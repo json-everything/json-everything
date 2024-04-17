@@ -11,7 +11,7 @@ namespace Json.Logic.Rules;
 /// </summary>
 [Operator("log")]
 [JsonConverter(typeof(LogRuleJsonConverter))]
-public class LogRule : Rule
+public class LogRule : Rule, IRule
 {
 	internal Rule Log { get; }
 
@@ -19,6 +19,7 @@ public class LogRule : Rule
 	{
 		Log = log;
 	}
+	internal LogRule(){}
 
 	/// <summary>
 	/// Applies the rule to the input data.
@@ -32,6 +33,15 @@ public class LogRule : Rule
 	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
 		var log = Log.Apply(data, contextData);
+
+		Console.WriteLine(log);
+
+		return log;
+	}
+
+	JsonNode? IRule.Apply(JsonNode? args, EvaluationContext context)
+	{
+		var log = JsonLogic.Apply(args, context);
 
 		Console.WriteLine(log);
 

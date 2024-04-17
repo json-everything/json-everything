@@ -55,7 +55,7 @@ public class VariableRule : Rule, IRule
 		return DefaultValue?.Apply(data, contextData) ?? null;
 	}
 
-	public JsonNode? Apply(JsonNode? args, EvaluationContext context)
+	JsonNode? IRule.Apply(JsonNode? args, EvaluationContext context)
 	{
 		var pathValue = args;
 		JsonNode? defaultValue = null;

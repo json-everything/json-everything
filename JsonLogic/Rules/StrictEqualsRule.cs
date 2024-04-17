@@ -11,7 +11,7 @@ namespace Json.Logic.Rules;
 /// </summary>
 [Operator("===")]
 [JsonConverter(typeof(StrictEqualsRuleJsonConverter))]
-public class StrictEqualsRule : Rule
+public class StrictEqualsRule : Rule, IRule
 {
 	/// <summary>
 	/// First value to compare.
@@ -32,6 +32,7 @@ public class StrictEqualsRule : Rule
 		A = a;
 		B = b;
 	}
+	internal StrictEqualsRule(){}
 
 	/// <summary>
 	/// Applies the rule to the input data.
@@ -45,6 +46,17 @@ public class StrictEqualsRule : Rule
 	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
 		return A.Apply(data, contextData).IsEquivalentTo(B.Apply(data, contextData));
+	}
+
+	JsonNode? IRule.Apply(JsonNode? args, EvaluationContext context)
+	{
+		if (args is not JsonArray { Count: 2 } array)
+			throw new JsonLogicException("The '/' rule needs an array with 2 parameters");
+
+		var a = JsonLogic.Apply(array[0], context);
+		var b = JsonLogic.Apply(array[1], context);
+
+		return a.IsEquivalentTo(b);
 	}
 }
 

@@ -49,13 +49,8 @@ public class NewSuiteRunner
 	{
 		var rule = JsonNode.Parse(test.Logic);
 
-		if (rule is not JsonObject obj)
-		{
-			Assert.IsNull(test.Expected);
-			return;
-		}
+		var result = JsonLogic.Apply(rule, test.Data);
 
-		var result = JsonLogic.Apply(obj, test.Data);
 		JsonAssert.AreEquivalent(test.Expected, result);
 	}
 }

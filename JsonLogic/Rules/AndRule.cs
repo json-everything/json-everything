@@ -54,7 +54,7 @@ public class AndRule : Rule, IRule
 		return first;
 	}
 
-	public JsonNode? Apply(JsonNode? args, EvaluationContext context)
+	JsonNode? IRule.Apply(JsonNode? args, EvaluationContext context)
 	{
 		if (args is not JsonArray array)
 			throw new JsonLogicException("The 'and' rule requires an array of arguments");

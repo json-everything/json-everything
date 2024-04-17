@@ -148,8 +148,3 @@ public class LogicComponentConverter : JsonConverter<Rule>
 		converter.Write(writer, value, options, typeInfo);
 	}
 }
-
-public interface IRule
-{
-	JsonNode? Apply(JsonNode? args, EvaluationContext context);
-}

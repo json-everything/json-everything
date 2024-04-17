@@ -59,10 +59,10 @@ public class AddRule : Rule, IRule
 		return result;
 	}
 
-	public JsonNode? Apply(JsonNode? args, EvaluationContext context)
+	JsonNode? IRule.Apply(JsonNode? args, EvaluationContext context)
 	{
 		if (args is not JsonArray array)
-			throw new JsonLogicException("The '+' rule requires an array of arguments");
+			return JsonLogic.Apply(args, context).Numberify();
 
 		decimal result = 0;
 		foreach (var item in array)

@@ -15,7 +15,7 @@ namespace Json.Logic.Rules;
 /// </summary>
 [Operator("max")]
 [JsonConverter(typeof(MaxRuleJsonConverter))]
-public class MaxRule : Rule
+public class MaxRule : Rule, IRule
 {
 	/// <summary>
 	/// The sequence of numbers to query for max.
@@ -31,6 +31,7 @@ public class MaxRule : Rule
 	{
 		Items = [a, .. more];
 	}
+	internal MaxRule(){}
 
 	/// <summary>
 	/// Applies the rule to the input data.
@@ -50,6 +51,28 @@ public class MaxRule : Rule
 		if (nulls.Any()) return null;
 
 		return items.Max(i => i.Value!.Value);
+	}
+
+	JsonNode? IRule.Apply(JsonNode? args, EvaluationContext context)
+	{
+		if (args is not JsonArray array)
+			return JsonLogic.Apply(args, context).Numberify();
+
+		if (array.Count == 0) return null;
+
+		var result = array[0].Numberify();
+		if (result is null) return null;
+
+		foreach (var item in array.Skip(1))
+		{
+			var value = JsonLogic.Apply(item, context);
+			var number = value.Numberify();
+			if (number is null) return null;
+
+			result = Math.Max(result.Value, number.Value);
+		}
+
+		return result;
 	}
 }
 

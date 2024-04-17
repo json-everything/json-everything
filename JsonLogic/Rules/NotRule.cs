@@ -44,9 +44,12 @@ public class NotRule : Rule, IRule
 		return !value.IsTruthy();
 	}
 
-	public JsonNode? Apply(JsonNode? args, EvaluationContext context)
+	JsonNode? IRule.Apply(JsonNode? args, EvaluationContext context)
 	{
-		return !JsonLogic.Apply(args, context).IsTruthy();
+		if (args is not JsonArray {Count: 1} array)
+			return !JsonLogic.Apply(args, context).IsTruthy();
+
+		return !JsonLogic.Apply(array[0], context).IsTruthy();
 	}
 }
 

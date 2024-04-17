@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text.Json.Nodes;
 using Json.Logic.Rules;
+using Json.More;
 
 namespace Json.Logic;
 
@@ -19,15 +20,20 @@ public static class JsonLogic
 
 	public static JsonNode? Apply(JsonNode? rule, EvaluationContext context)
 	{
-		if (rule is not JsonObject obj) return rule;
+		switch (rule)
+		{
+			case JsonObject {Count: not 1}:
+				throw new ArgumentException("A rule must be an object with a single value");
+			case JsonObject obj:
+				var (key, value) = obj.Single();
+				var handler = RuleRegistry.GetHandler(key);
 
-		if (obj.Count != 1)
-			throw new ArgumentException("A rules must be an object with a single value");
+				return handler is null ? rule : handler.Apply(value, context);
+			case JsonArray array:
+				return array.Select(x => Apply(x, context)).ToJsonArray();
+		}
 
-		var (key, value) = obj.Single();
-		var handler = RuleRegistry.GetHandler(key);
-
-		return handler is null ? rule : handler.Apply(value, context);
+		return rule;
 	}
 
 	/// <summary>

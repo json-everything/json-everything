@@ -13,7 +13,7 @@ namespace Json.Logic.Rules;
 /// </summary>
 [Operator("merge")]
 [JsonConverter(typeof(MergeRuleJsonConverter))]
-public class MergeRule : Rule
+public class MergeRule : Rule, IRule
 {
 	/// <summary>
 	/// A sequence of arrays to merge into a single array.
@@ -28,6 +28,7 @@ public class MergeRule : Rule
 	{
 		Items = [.. items];
 	}
+	internal MergeRule(){}
 
 	/// <summary>
 	/// Applies the rule to the input data.
@@ -43,6 +44,22 @@ public class MergeRule : Rule
 		var items = Items.Select(i => i.Apply(data, contextData)).SelectMany(e => e.Flatten());
 
 		return items.ToJsonArray();
+	}
+
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="args"></param>
+	/// <param name="context"></param>
+	/// <returns></returns>
+	/// <exception cref="NotImplementedException"></exception>
+	public JsonNode? Apply(JsonNode? args, EvaluationContext context)
+	{
+		if (args is not JsonArray array) return JsonLogic.Apply(new JsonArray(args?.DeepClone()), context);
+
+		return array.Select(x => JsonLogic.Apply(x, context))
+			.SelectMany(x => x.Flatten())
+			.ToJsonArray();
 	}
 }
 

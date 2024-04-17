@@ -57,7 +57,7 @@ public class AllRule : Rule, IRule
 				results.All(result => result.IsTruthy()));
 	}
 
-	public JsonNode? Apply(JsonNode? args, EvaluationContext context)
+	JsonNode? IRule.Apply(JsonNode? args, EvaluationContext context)
 	{
 		if (args is not JsonArray { Count: 2 } array)
 			throw new JsonLogicException("The 'all' rule requires an array with two arguments");
@@ -65,7 +65,7 @@ public class AllRule : Rule, IRule
 		var input = JsonLogic.Apply(array[0], context);
 		var rule = array[1];
 
-		if (input is not JsonArray items) return false;
+		if (input is not JsonArray {Count: > 0} items) return false;
 
 		foreach (var item in items)
 		{
