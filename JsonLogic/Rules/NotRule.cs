@@ -11,7 +11,7 @@ namespace Json.Logic.Rules;
 /// </summary>
 [Operator("!")]
 [JsonConverter(typeof(NotRuleJsonConverter))]
-public class NotRule : Rule
+public class NotRule : Rule, IRule
 {
 	/// <summary>
 	/// The value to test.
@@ -26,6 +26,7 @@ public class NotRule : Rule
 	{
 		Value = value;
 	}
+	internal NotRule(){}
 
 	/// <summary>
 	/// Applies the rule to the input data.
@@ -41,6 +42,11 @@ public class NotRule : Rule
 		var value = Value.Apply(data, contextData);
 
 		return !value.IsTruthy();
+	}
+
+	public JsonNode? Apply(JsonNode? args, EvaluationContext context)
+	{
+		return !JsonLogic.Apply(args, context).IsTruthy();
 	}
 }
 

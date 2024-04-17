@@ -12,7 +12,7 @@ namespace Json.Logic.Rules;
 /// </summary>
 [Operator("<")]
 [JsonConverter(typeof(LessThanRuleJsonConverter))]
-public class LessThanRule : Rule
+public class LessThanRule : Rule, IRule
 {
 	/// <summary>
 	/// The Lower bound.
@@ -50,6 +50,7 @@ public class LessThanRule : Rule
 		B = b;
 		C = c;
 	}
+	internal LessThanRule(){}
 
 	/// <summary>
 	/// Applies the rule to the input data.
@@ -94,6 +95,55 @@ public class LessThanRule : Rule
 		if (av != null && av.TryGetValue(out stringA) &&
 		    bv != null && bv.TryGetValue(out stringB) &&
 		    cv != null && cv.TryGetValue(out string? stringC))
+			return string.Compare(stringA, stringB, StringComparison.Ordinal) < 0 &&
+			       string.Compare(stringB, stringC, StringComparison.Ordinal) < 0;
+
+		var low = a.Numberify();
+		var value = b.Numberify();
+		var high = c.Numberify();
+		if (low != null && value != null && high != null) return low < value && value < high;
+		if (low != null || value != null || high != null) return false;
+
+		stringA = a.Stringify();
+		stringB = b.Stringify();
+		stringC = c.Stringify();
+
+		return string.Compare(stringA, stringB, StringComparison.Ordinal) < 0 &&
+		       string.Compare(stringB, stringC, StringComparison.Ordinal) < 0;
+	}
+
+	public JsonNode? Apply(JsonNode? args, EvaluationContext context)
+	{
+		if (args is not JsonArray { Count: 2 or 3 } array)
+			throw new JsonException("The '<' rule needs an array with either 2 or 3 parameters");
+
+		var a = JsonLogic.Apply(array[0], context) as JsonValue;
+		var b = JsonLogic.Apply(array[1], context) as JsonValue;
+		var c = array.Count == 3 ? JsonLogic.Apply(array[2], context) as JsonValue : null;
+
+		string? stringA, stringB;
+
+		if (c == null)
+		{
+			if (a != null && a.TryGetValue(out stringA) &&
+			    b != null && b.TryGetValue(out stringB))
+				return string.Compare(stringA, stringB, StringComparison.Ordinal) <= 0;
+
+			var numberA = a.Numberify();
+			var numberB = b.Numberify();
+
+			if (numberA != null && numberB != null) return numberA < numberB;
+			if (numberA != null || numberB != null) return false;
+
+			stringA = a.Stringify();
+			stringB = b.Stringify();
+
+			return string.Compare(stringA, stringB, StringComparison.Ordinal) < 0;
+		}
+
+		if (a != null && a.TryGetValue(out stringA) &&
+		    b != null && b.TryGetValue(out stringB) &&
+		    c != null && c.TryGetValue(out string? stringC))
 			return string.Compare(stringA, stringB, StringComparison.Ordinal) < 0 &&
 			       string.Compare(stringB, stringC, StringComparison.Ordinal) < 0;
 

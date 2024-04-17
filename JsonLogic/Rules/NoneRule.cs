@@ -12,7 +12,7 @@ namespace Json.Logic.Rules;
 /// </summary>
 [Operator("none")]
 [JsonConverter(typeof(NoneRuleJsonConverter))]
-public class NoneRule : Rule
+public class NoneRule : Rule, IRule
 {
 	/// <summary>
 	/// The sequence of elements to apply the rule to.
@@ -33,6 +33,7 @@ public class NoneRule : Rule
 		Input = input;
 		Rule = rule;
 	}
+	internal NoneRule(){}
 
 	/// <summary>
 	/// Applies the rule to the input data.
@@ -51,6 +52,28 @@ public class NoneRule : Rule
 
 		return !arr.Select(value => Rule.Apply(contextData, value))
 			.Any(result => result.IsTruthy());
+	}
+
+	public JsonNode? Apply(JsonNode? args, EvaluationContext context)
+	{
+		if (args is not JsonArray { Count: 2 } array)
+			throw new JsonLogicException("The 'none' rule requires an array with two arguments");
+
+		var input = JsonLogic.Apply(array[0], context);
+		var rule = array[1];
+
+		if (input is not JsonArray items) return false;
+
+		foreach (var item in items)
+		{
+			context.Push(item);
+			var localResult = JsonLogic.Apply(rule, context).IsTruthy();
+			context.Pop();
+
+			if (localResult) return false;
+		}
+
+		return true;
 	}
 }
 

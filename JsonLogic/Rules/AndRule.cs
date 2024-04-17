@@ -57,11 +57,11 @@ public class AndRule : Rule, IRule
 	public JsonNode? Apply(JsonNode? args, EvaluationContext context)
 	{
 		if (args is not JsonArray array)
-			throw new JsonLogicException("The 'all' rule requires an array of arguments");
+			throw new JsonLogicException("The 'and' rule requires an array of arguments");
 
 		if (array.Count == 0) return false;
 
-		JsonNode? result = false;
+		JsonNode? result = null;
 		foreach (var item in array)
 		{
 			result = item is JsonObject innerRule ? JsonLogic.Apply(innerRule, context) : item;

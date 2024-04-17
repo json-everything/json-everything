@@ -45,7 +45,7 @@ public class BooleanCastRule : Rule, IRule
 	public JsonNode? Apply(JsonNode? args, EvaluationContext context)
 	{
 		if (args is not JsonArray {Count: 1} array)
-			throw new JsonException("The !! rule needs an array with a single parameter.");
+			throw new JsonLogicException("The '!!' rule needs an array with a single parameter");
 
 		return JsonLogic.Apply(array[0], context).IsTruthy();
 	}

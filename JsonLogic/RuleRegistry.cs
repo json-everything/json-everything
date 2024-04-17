@@ -67,9 +67,22 @@ public static class RuleRegistry
 		_ruleHandlers = new()
 		{
 			["+"] = new AddRule(),
-			["!!"] = new BooleanCastRule(),
 			["all"] = new AllRule(),
 			["and"] = new AndRule(),
+			["!!"] = new BooleanCastRule(),
+			["cat"] = new CatRule(),
+			["/"] = new DivideRule(),
+			["<="] = new LessThanEqualRule(),
+			["<"] = new LessThanRule(),
+			["%"] = new ModRule(),
+			[">="] = new MoreThanEqualRule(),
+			[">"] = new MoreThanRule(),
+			["*"] = new MultiplyRule(),
+			["none"] = new NoneRule(),
+			["!"] = new NotRule(),
+			["or"] = new OrRule(),
+			["some"] = new SomeRule(),
+			["-"] = new SubtractRule(),
 			["var"] = new VariableRule(),
 		};
 		_ruleResolvers = new ConcurrentDictionary<Type, JsonSerializerContext>(_rules.Values.Distinct().ToDictionary(x => x, _ => (JsonSerializerContext)JsonLogicSerializerContext.Default));

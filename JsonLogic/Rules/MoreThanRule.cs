@@ -11,7 +11,7 @@ namespace Json.Logic.Rules;
 /// </summary>
 [Operator(">")]
 [JsonConverter(typeof(MoreThanRuleJsonConverter))]
-public class MoreThanRule : Rule
+public class MoreThanRule : Rule, IRule
 {
 	/// <summary>
 	/// The value to test.
@@ -32,6 +32,7 @@ public class MoreThanRule : Rule
 		A = a;
 		B = b;
 	}
+	internal MoreThanRule(){}
 
 	/// <summary>
 	/// Applies the rule to the input data.
@@ -46,6 +47,30 @@ public class MoreThanRule : Rule
 	{
 		var a = A.Apply(data, contextData);
 		var b = B.Apply(data, contextData);
+
+		if (a is JsonValue av && av.TryGetValue(out string? s1) &&
+		    b is JsonValue bv && bv.TryGetValue(out string? s2))
+			return string.Compare(s1, s2, StringComparison.Ordinal) > 0;
+
+		var numberA = a.Numberify();
+		var numberB = b.Numberify();
+
+		if (numberA != null && numberB != null) return numberA > numberB;
+		if (numberA != null || numberB != null) return false;
+
+		var stringA = a.Stringify();
+		var stringB = b.Stringify();
+
+		return string.Compare(stringA, stringB, StringComparison.Ordinal) > 0;
+	}
+
+	public JsonNode? Apply(JsonNode? args, EvaluationContext context)
+	{
+		if (args is not JsonArray { Count: 2 } array)
+			throw new JsonException("The '>=' rule needs an array with 2 parameters");
+
+		var a = JsonLogic.Apply(array[0], context);
+		var b = JsonLogic.Apply(array[1], context);
 
 		if (a is JsonValue av && av.TryGetValue(out string? s1) &&
 		    b is JsonValue bv && bv.TryGetValue(out string? s2))

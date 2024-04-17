@@ -12,7 +12,7 @@ namespace Json.Logic.Rules;
 /// </summary>
 [Operator("some")]
 [JsonConverter(typeof(SomeRuleJsonConverter))]
-public class SomeRule : Rule
+public class SomeRule : Rule, IRule
 {
 	/// <summary>
 	/// The sequence of elements to apply the rule to.
@@ -33,6 +33,7 @@ public class SomeRule : Rule
 		Input = input;
 		Rule = rule;
 	}
+	internal SomeRule(){}
 
 	/// <summary>
 	/// Applies the rule to the input data.
@@ -51,6 +52,28 @@ public class SomeRule : Rule
 
 		return arr.Select(value => Rule.Apply(contextData, value))
 			.Any(result => result.IsTruthy());
+	}
+
+	public JsonNode? Apply(JsonNode? args, EvaluationContext context)
+	{
+		if (args is not JsonArray { Count: 2 } array)
+			throw new JsonLogicException("The 'some' rule requires an array with two arguments");
+
+		var input = JsonLogic.Apply(array[0], context);
+		var rule = array[1];
+
+		if (input is not JsonArray items) return false;
+
+		foreach (var item in items)
+		{
+			context.Push(item);
+			var localResult = JsonLogic.Apply(rule, context).IsTruthy();
+			context.Pop();
+
+			if (localResult) return true;
+		}
+
+		return false;
 	}
 }
 
