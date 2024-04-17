@@ -1,4 +1,6 @@
-﻿using System.Text.Json.Nodes;
+﻿using System;
+using System.Linq;
+using System.Text.Json.Nodes;
 using Json.Logic.Rules;
 
 namespace Json.Logic;
@@ -8,6 +10,26 @@ namespace Json.Logic;
 /// </summary>
 public static class JsonLogic
 {
+	public static JsonNode? Apply(JsonNode? rule, JsonNode? context = null)
+	{
+		// TODO create a new context
+		var evalContext = new EvaluationContext(context);
+		return Apply(rule, evalContext);
+	}
+
+	public static JsonNode? Apply(JsonNode? rule, EvaluationContext context)
+	{
+		if (rule is not JsonObject obj) return rule;
+
+		if (obj.Count != 1)
+			throw new ArgumentException("A rules must be an object with a single value");
+
+		var (key, value) = obj.Single();
+		var handler = RuleRegistry.GetHandler(key);
+
+		return handler is null ? rule : handler.Apply(value, context);
+	}
+
 	/// <summary>
 	/// Creates an `and` rule.
 	/// </summary>

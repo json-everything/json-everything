@@ -13,7 +13,7 @@ namespace Json.Logic.Rules;
 /// </summary>
 [Operator("+")]
 [JsonConverter(typeof(AddRuleJsonConverter))]
-public class AddRule : Rule
+public class AddRule : Rule, IRule
 {
 	/// <summary>
 	/// The sequence of values to add together.
@@ -29,6 +29,8 @@ public class AddRule : Rule
 	{
 		Items = [a, .. more];
 	}
+
+	internal AddRule(){}
 
 	/// <summary>
 	/// Applies the rule to the input data.
@@ -50,6 +52,24 @@ public class AddRule : Rule
 			var number = value.Numberify();
 
 			if (number == null) return null;
+
+			result += number.Value;
+		}
+
+		return result;
+	}
+
+	public JsonNode? Apply(JsonNode? args, EvaluationContext context)
+	{
+		if (args is not JsonArray array)
+			throw new JsonLogicException("The '+' rule requires an array of arguments");
+
+		decimal result = 0;
+		foreach (var item in array)
+		{
+			var value = JsonLogic.Apply(item, context);
+			var number = value.Numberify();
+			if (number is null) return null;
 
 			result += number.Value;
 		}

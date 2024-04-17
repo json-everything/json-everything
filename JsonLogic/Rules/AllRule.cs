@@ -12,7 +12,7 @@ namespace Json.Logic.Rules;
 /// </summary>
 [Operator("all")]
 [JsonConverter(typeof(AllRuleJsonConverter))]
-public class AllRule : Rule
+public class AllRule : Rule, IRule
 {
 	/// <summary>
 	/// The sequence of elements to apply the rule to.
@@ -35,6 +35,8 @@ public class AllRule : Rule
 		Rule = rule;
 	}
 
+	internal AllRule(){}
+
 	/// <summary>
 	/// Applies the rule to the input data.
 	/// </summary>
@@ -53,6 +55,28 @@ public class AllRule : Rule
 		var results = arr.Select(value => Rule.Apply(contextData, value)).ToList();
 		return (results.Count != 0 &&
 				results.All(result => result.IsTruthy()));
+	}
+
+	public JsonNode? Apply(JsonNode? args, EvaluationContext context)
+	{
+		if (args is not JsonArray { Count: 2 } array)
+			throw new JsonLogicException("The 'all' rule requires an array with two arguments");
+
+		var input = JsonLogic.Apply(array[0], context);
+		var rule = array[1];
+
+		if (input is not JsonArray items) return false;
+
+		foreach (var item in items)
+		{
+			context.Push(item);
+			var localResult = JsonLogic.Apply(rule, context).IsTruthy();
+			context.Pop();
+
+			if (!localResult) return false;
+		}
+
+		return true;
 	}
 }
 

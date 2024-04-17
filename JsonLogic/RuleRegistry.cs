@@ -17,6 +17,7 @@ namespace Json.Logic;
 public static class RuleRegistry
 {
 	private static readonly ConcurrentDictionary<string, Type> _rules;
+	private static readonly ConcurrentDictionary<string, IRule> _ruleHandlers;
 	private static readonly ConcurrentDictionary<Type, JsonSerializerContext> _ruleResolvers;
 
 	// ReSharper disable once CoVariantArrayConversion
@@ -63,6 +64,14 @@ public static class RuleRegistry
 			{ "-", typeof(SubtractRule) },
 			{ "var", typeof(VariableRule) }
 		});
+		_ruleHandlers = new()
+		{
+			["+"] = new AddRule(),
+			["!!"] = new BooleanCastRule(),
+			["all"] = new AllRule(),
+			["and"] = new AndRule(),
+			["var"] = new VariableRule(),
+		};
 		_ruleResolvers = new ConcurrentDictionary<Type, JsonSerializerContext>(_rules.Values.Distinct().ToDictionary(x => x, _ => (JsonSerializerContext)JsonLogicSerializerContext.Default));
 	}
 
@@ -73,7 +82,12 @@ public static class RuleRegistry
 	/// <returns>The <see cref="System.Type"/> of the rule.</returns>
 	public static Type? GetRule(string identifier)
 	{
-		return _rules.TryGetValue(identifier, out var type) ? type : null;
+		return _rules.GetValueOrDefault(identifier);
+	}
+
+	public static IRule? GetHandler(string identifier)
+	{
+		return _ruleHandlers.GetValueOrDefault(identifier);
 	}
 
 	/// <summary>

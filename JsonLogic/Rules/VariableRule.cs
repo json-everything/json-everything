@@ -12,7 +12,7 @@ namespace Json.Logic.Rules;
 /// </summary>
 [Operator("var")]
 [JsonConverter(typeof(VariableRuleJsonConverter))]
-public class VariableRule : Rule
+public class VariableRule : Rule, IRule
 {
 	internal Rule? Path { get; }
 	internal Rule? DefaultValue { get; }
@@ -53,6 +53,28 @@ public class VariableRule : Rule
 			return pathEval;
 
 		return DefaultValue?.Apply(data, contextData) ?? null;
+	}
+
+	public JsonNode? Apply(JsonNode? args, EvaluationContext context)
+	{
+		var pathValue = args;
+		JsonNode? defaultValue = null;
+		if (args is JsonArray array)
+		{
+			if (array.Count > 0)
+				pathValue = array[0];
+			if (array.Count > 1)
+				defaultValue = array[1];
+		}
+		else
+			pathValue = args.Stringify();
+
+		var path = JsonLogic.Apply(pathValue, context).Stringify();
+		if (path == string.Empty) return context.CurrentValue;
+
+		if (context.TryFind(path, out var value)) return value;
+
+		return JsonLogic.Apply(defaultValue, context);
 	}
 }
 
