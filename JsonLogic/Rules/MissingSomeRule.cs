@@ -36,7 +36,10 @@ public class MissingSomeRule : Rule, IRule
 		RequiredCount = requiredCount;
 		Components = components;
 	}
-	internal MissingSomeRule(){}
+	/// <summary>
+	/// Creates a new instance for model-less processing.
+	/// </summary>
+	protected internal MissingSomeRule(){}
 
 	/// <summary>
 	/// Applies the rule to the input data.

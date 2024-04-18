@@ -29,7 +29,10 @@ public class SubtractRule : Rule, IRule
 	{
 		Items = [a, .. more];
 	}
-	internal SubtractRule(){}
+	/// <summary>
+	/// Creates a new instance for model-less processing.
+	/// </summary>
+	protected internal SubtractRule(){}
 
 	/// <summary>
 	/// Applies the rule to the input data.

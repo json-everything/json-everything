@@ -32,7 +32,10 @@ public class MoreThanEqualRule : Rule, IRule
 		A = a;
 		B = b;
 	}
-	internal MoreThanEqualRule(){}
+	/// <summary>
+	/// Creates a new instance for model-less processing.
+	/// </summary>
+	protected internal MoreThanEqualRule(){}
 
 	/// <summary>
 	/// Applies the rule to the input data.

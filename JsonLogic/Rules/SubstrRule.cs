@@ -50,7 +50,10 @@ public class SubstrRule : Rule, IRule
 		Start = start;
 		Count = count;
 	}
-	internal SubstrRule(){}
+	/// <summary>
+	/// Creates a new instance for model-less processing.
+	/// </summary>
+	protected internal SubstrRule(){}
 
 	/// <summary>
 	/// Applies the rule to the input data.

@@ -34,7 +34,10 @@ public class MapRule : Rule, IRule
 		Input = input;
 		Rule = rule;
 	}
-	internal MapRule(){}
+	/// <summary>
+	/// Creates a new instance for model-less processing.
+	/// </summary>
+	protected internal MapRule(){}
 
 	/// <summary>
 	/// Applies the rule to the input data.

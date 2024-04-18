@@ -28,7 +28,10 @@ public class IfRule : Rule, IRule
 	{
 		Components = new List<Rule>(components);
 	}
-	internal IfRule(){}
+	/// <summary>
+	/// Creates a new instance for model-less processing.
+	/// </summary>
+	protected internal IfRule(){}
 
 	/// <summary>
 	/// Applies the rule to the input data.

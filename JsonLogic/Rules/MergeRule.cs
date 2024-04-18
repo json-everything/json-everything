@@ -28,7 +28,10 @@ public class MergeRule : Rule, IRule
 	{
 		Items = [.. items];
 	}
-	internal MergeRule(){}
+	/// <summary>
+	/// Creates a new instance for model-less processing.
+	/// </summary>
+	protected internal MergeRule(){}
 
 	/// <summary>
 	/// Applies the rule to the input data.

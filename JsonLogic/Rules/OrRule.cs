@@ -29,7 +29,10 @@ public class OrRule : Rule, IRule
 	{
 		Items = [a, .. more];
 	}
-	internal OrRule(){}
+	/// <summary>
+	/// Creates a new instance for model-less processing.
+	/// </summary>
+	protected internal OrRule(){}
 
 	/// <summary>
 	/// Applies the rule to the input data.

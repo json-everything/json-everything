@@ -32,7 +32,10 @@ public class MoreThanRule : Rule, IRule
 		A = a;
 		B = b;
 	}
-	internal MoreThanRule(){}
+	/// <summary>
+	/// Creates a new instance for model-less processing.
+	/// </summary>
+	protected internal MoreThanRule(){}
 
 	/// <summary>
 	/// Applies the rule to the input data.
@@ -67,7 +70,7 @@ public class MoreThanRule : Rule, IRule
 	JsonNode? IRule.Apply(JsonNode? args, EvaluationContext context)
 	{
 		if (args is not JsonArray { Count: 2 } array)
-			throw new JsonException("The '>=' rule needs an array with 2 parameters");
+			throw new JsonException("The '>' rule needs an array with 2 parameters");
 
 		var a = JsonLogic.Apply(array[0], context);
 		var b = JsonLogic.Apply(array[1], context);

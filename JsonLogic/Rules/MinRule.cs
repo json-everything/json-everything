@@ -31,7 +31,10 @@ public class MinRule : Rule, IRule
 	{
 		Items = [a, .. more];
 	}
-	internal MinRule(){}
+	/// <summary>
+	/// Creates a new instance for model-less processing.
+	/// </summary>
+	protected internal MinRule(){}
 
 	/// <summary>
 	/// Applies the rule to the input data.

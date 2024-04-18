@@ -26,7 +26,10 @@ public class BooleanCastRule : Rule, IRule
 	{
 		Value = value;
 	}
-	internal BooleanCastRule(){}
+	/// <summary>
+	/// Creates a new instance for model-less processing.
+	/// </summary>
+	protected internal BooleanCastRule(){}
 
 	/// <summary>
 	/// Applies the rule to the input data.

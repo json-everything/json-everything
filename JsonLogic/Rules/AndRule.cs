@@ -30,7 +30,10 @@ public class AndRule : Rule, IRule
 		Items = [a, .. more];
 	}
 
-	internal AndRule(){}
+	/// <summary>
+	/// Creates a new instance for model-less processing.
+	/// </summary>
+	protected internal AndRule(){}
 
 	/// <summary>
 	/// Applies the rule to the input data.

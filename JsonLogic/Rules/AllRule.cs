@@ -34,8 +34,10 @@ public class AllRule : Rule, IRule
 		Input = input;
 		Rule = rule;
 	}
-
-	internal AllRule(){}
+	/// <summary>
+	/// Creates a new instance for model-less processing.
+	/// </summary>
+	protected internal AllRule(){}
 
 	/// <summary>
 	/// Applies the rule to the input data.

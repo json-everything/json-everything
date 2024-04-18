@@ -33,7 +33,10 @@ public class NoneRule : Rule, IRule
 		Input = input;
 		Rule = rule;
 	}
-	internal NoneRule(){}
+	/// <summary>
+	/// Creates a new instance for model-less processing.
+	/// </summary>
+	protected internal NoneRule(){}
 
 	/// <summary>
 	/// Applies the rule to the input data.

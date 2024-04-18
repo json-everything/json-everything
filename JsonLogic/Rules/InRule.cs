@@ -33,7 +33,10 @@ public class InRule : Rule, IRule
 		Test = test;
 		Value = value;
 	}
-	internal InRule(){}
+	/// <summary>
+	/// Creates a new instance for model-less processing.
+	/// </summary>
+	protected internal InRule(){}
 
 	/// <summary>
 	/// Applies the rule to the input data.

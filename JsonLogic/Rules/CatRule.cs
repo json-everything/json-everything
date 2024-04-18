@@ -30,7 +30,10 @@ public class CatRule : Rule, IRule
 	{
 		Items = [a, .. more];
 	}
-	internal CatRule(){}
+	/// <summary>
+	/// Creates a new instance for model-less processing.
+	/// </summary>
+	protected internal CatRule(){}
 
 	/// <summary>
 	/// Applies the rule to the input data.

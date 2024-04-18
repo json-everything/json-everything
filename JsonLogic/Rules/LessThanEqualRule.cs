@@ -49,7 +49,10 @@ public class LessThanEqualRule : Rule, IRule
 		B = b;
 		C = c;
 	}
-	internal LessThanEqualRule(){}
+	/// <summary>
+	/// Creates a new instance for model-less processing.
+	/// </summary>
+	protected internal LessThanEqualRule(){}
 
 	/// <summary>
 	/// Applies the rule to the input data.

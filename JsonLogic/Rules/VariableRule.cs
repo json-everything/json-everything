@@ -17,7 +17,10 @@ public class VariableRule : Rule, IRule
 	internal Rule? Path { get; }
 	internal Rule? DefaultValue { get; }
 
-	internal VariableRule()
+	/// <summary>
+	/// Creates a new instance for model-less processing.
+	/// </summary>
+	protected internal VariableRule()
 	{
 	}
 	internal VariableRule(Rule path)

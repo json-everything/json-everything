@@ -37,7 +37,7 @@ public static class JsonLogic
 				var (key, value) = obj.Single();
 				var handler = RuleRegistry.GetHandler(key);
 
-				return handler is null ? rule : handler.Apply(value, context);
+				return handler?.Apply(value, context) ?? rule;
 			case JsonArray array:
 				return array.Select(x => Apply(x, context)).ToJsonArray();
 		}

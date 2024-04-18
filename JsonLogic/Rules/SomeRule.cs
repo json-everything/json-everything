@@ -33,7 +33,10 @@ public class SomeRule : Rule, IRule
 		Input = input;
 		Rule = rule;
 	}
-	internal SomeRule(){}
+	/// <summary>
+	/// Creates a new instance for model-less processing.
+	/// </summary>
+	protected internal SomeRule(){}
 
 	/// <summary>
 	/// Applies the rule to the input data.

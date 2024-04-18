@@ -35,7 +35,10 @@ public class FilterRule : Rule, IRule
 		Input = input;
 		Rule = rule;
 	}
-	internal FilterRule(){}
+	/// <summary>
+	/// Creates a new instance for model-less processing.
+	/// </summary>
+	protected internal FilterRule(){}
 
 	/// <summary>
 	/// Applies the rule to the input data.

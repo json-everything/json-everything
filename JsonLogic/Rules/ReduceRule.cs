@@ -39,7 +39,10 @@ public class ReduceRule : Rule, IRule
 		Rule = rule;
 		Initial = initial;
 	}
-	internal ReduceRule(){}
+	/// <summary>
+	/// Creates a new instance for model-less processing.
+	/// </summary>
+	protected internal ReduceRule(){}
 
 	/// <summary>
 	/// Applies the rule to the input data.

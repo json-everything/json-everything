@@ -50,7 +50,10 @@ public class LessThanRule : Rule, IRule
 		B = b;
 		C = c;
 	}
-	internal LessThanRule(){}
+	/// <summary>
+	/// Creates a new instance for model-less processing.
+	/// </summary>
+	protected internal LessThanRule(){}
 
 	/// <summary>
 	/// Applies the rule to the input data.

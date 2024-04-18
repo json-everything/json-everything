@@ -19,7 +19,10 @@ public class LogRule : Rule, IRule
 	{
 		Log = log;
 	}
-	internal LogRule(){}
+	/// <summary>
+	/// Creates a new instance for model-less processing.
+	/// </summary>
+	protected internal LogRule(){}
 
 	/// <summary>
 	/// Applies the rule to the input data.

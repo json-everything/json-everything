@@ -32,7 +32,10 @@ public class ModRule : Rule, IRule
 		A = a;
 		B = b;
 	}
-	internal ModRule(){}
+	/// <summary>
+	/// Creates a new instance for model-less processing.
+	/// </summary>
+	protected internal ModRule(){}
 
 	/// <summary>
 	/// Applies the rule to the input data.

@@ -32,7 +32,10 @@ public class DivideRule : Rule, IRule
 		A = a;
 		B = b;
 	}
-	internal DivideRule(){}
+	/// <summary>
+	/// Creates a new instance for model-less processing.
+	/// </summary>
+	protected internal DivideRule(){}
 
 	/// <summary>
 	/// Applies the rule to the input data.

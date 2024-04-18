@@ -29,7 +29,10 @@ public class MultiplyRule : Rule, IRule
 	{
 		Items = [a, .. more];
 	}
-	internal MultiplyRule(){}
+	/// <summary>
+	/// Creates a new instance for model-less processing.
+	/// </summary>
+	protected internal MultiplyRule(){}
 
 	/// <summary>
 	/// Applies the rule to the input data.

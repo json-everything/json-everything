@@ -29,7 +29,10 @@ public class AddRule : Rule, IRule
 	{
 		Items = [a, .. more];
 	}
-	internal AddRule(){}
+	/// <summary>
+	/// Creates a new instance for model-less processing.
+	/// </summary>
+	protected internal AddRule(){}
 
 	/// <summary>
 	/// Applies the rule to the input data.

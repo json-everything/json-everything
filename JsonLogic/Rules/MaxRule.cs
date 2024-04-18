@@ -31,7 +31,10 @@ public class MaxRule : Rule, IRule
 	{
 		Items = [a, .. more];
 	}
-	internal MaxRule(){}
+	/// <summary>
+	/// Creates a new instance for model-less processing.
+	/// </summary>
+	protected internal MaxRule(){}
 
 	/// <summary>
 	/// Applies the rule to the input data.

@@ -29,7 +29,10 @@ public class MissingRule : Rule, IRule
 	{
 		Components = components;
 	}
-	internal MissingRule(){}
+	/// <summary>
+	/// Creates a new instance for model-less processing.
+	/// </summary>
+	protected internal MissingRule(){}
 
 	/// <summary>
 	/// Applies the rule to the input data.

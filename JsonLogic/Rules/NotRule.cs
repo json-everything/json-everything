@@ -26,7 +26,10 @@ public class NotRule : Rule, IRule
 	{
 		Value = value;
 	}
-	internal NotRule(){}
+	/// <summary>
+	/// Creates a new instance for model-less processing.
+	/// </summary>
+	protected internal NotRule(){}
 
 	/// <summary>
 	/// Applies the rule to the input data.

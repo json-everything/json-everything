@@ -32,7 +32,10 @@ public class LooseEqualsRule : Rule, IRule
 		A = a;
 		B = b;
 	}
-	internal LooseEqualsRule(){}
+	/// <summary>
+	/// Creates a new instance for model-less processing.
+	/// </summary>
+	protected internal LooseEqualsRule(){}
 
 	/// <summary>
 	/// Applies the rule to the input data.
@@ -54,7 +57,7 @@ public class LooseEqualsRule : Rule, IRule
 	JsonNode? IRule.Apply(JsonNode? args, EvaluationContext context)
 	{
 		if (args is not JsonArray { Count: 2 } array)
-			throw new JsonLogicException("The '/' rule needs an array with 2 parameters");
+			throw new JsonLogicException("The '==' rule needs an array with 2 parameters");
 
 		var a = JsonLogic.Apply(array[0], context);
 		var b = JsonLogic.Apply(array[1], context);
