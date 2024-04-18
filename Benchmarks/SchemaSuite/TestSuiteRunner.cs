@@ -6,8 +6,9 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using BenchmarkDotNet.Attributes;
 using Json.More;
+using Json.Schema;
 
-namespace Json.Schema.Benchmark.Suite;
+namespace Json.Benchmarks.SchemaSuite;
 
 [MemoryDiagnoser]
 public class TestSuiteRunner

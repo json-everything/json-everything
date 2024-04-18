@@ -2,7 +2,7 @@
 
 #pragma warning disable CS8618
 
-namespace Json.Schema.Benchmark.Suite;
+namespace Json.Benchmarks.SchemaSuite;
 
 public class TestCase
 {

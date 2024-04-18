@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Json.Schema.Benchmark.Suite;
+namespace Json.Benchmarks.SchemaSuite;
 
 public static class PathExtensions
 {
