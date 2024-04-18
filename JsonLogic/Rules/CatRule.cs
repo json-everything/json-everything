@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
@@ -13,7 +14,7 @@ namespace Json.Logic.Rules;
 /// </summary>
 [Operator("cat")]
 [JsonConverter(typeof(CatRuleJsonConverter))]
-public class CatRule : Rule
+public class CatRule : Rule, IRule
 {
 	/// <summary>
 	/// The sequence of values to concatenate together.
@@ -29,6 +30,10 @@ public class CatRule : Rule
 	{
 		Items = [a, .. more];
 	}
+	/// <summary>
+	/// Creates a new instance for model-less processing.
+	/// </summary>
+	protected internal CatRule(){}
 
 	/// <summary>
 	/// Applies the rule to the input data.
@@ -49,10 +54,25 @@ public class CatRule : Rule
 
 			var str = value.Stringify();
 
-			result += str ?? throw new JsonLogicException($"Cannot concatenate {value.JsonType()}.");
+			result += str ?? throw new JsonLogicException($"Cannot concatenate {value.JsonType()}");
 		}
 
 		return result;
+	}
+
+	JsonNode? IRule.Apply(JsonNode? args, EvaluationContext context)
+	{
+		if (args is not JsonArray array) return args;
+
+		var result = new StringBuilder();
+		foreach (var item in array)
+		{
+			var value = JsonLogic.Apply(item, context);
+			var str = value.Stringify() ?? throw new JsonLogicException($"Cannot concatenate {value.JsonType()}.");
+			result.Append(str);
+		}
+
+		return result.ToString();
 	}
 }
 

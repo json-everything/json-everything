@@ -11,7 +11,7 @@ namespace Json.Logic.Rules;
 /// </summary>
 [Operator("!=")]
 [JsonConverter(typeof(LooseNotEqualsRuleJsonConverter))]
-public class LooseNotEqualsRule : Rule
+public class LooseNotEqualsRule : Rule, IRule
 {
 	/// <summary>
 	/// First value to compare.
@@ -32,6 +32,10 @@ public class LooseNotEqualsRule : Rule
 		A = a;
 		B = b;
 	}
+	/// <summary>
+	/// Creates a new instance for model-less processing.
+	/// </summary>
+	protected internal LooseNotEqualsRule(){}
 
 	/// <summary>
 	/// Applies the rule to the input data.
@@ -46,6 +50,17 @@ public class LooseNotEqualsRule : Rule
 	{
 		var a = A.Apply(data, contextData);
 		var b = B.Apply(data, contextData);
+
+		return !a.LooseEquals(b);
+	}
+
+	JsonNode? IRule.Apply(JsonNode? args, EvaluationContext context)
+	{
+		if (args is not JsonArray { Count: 2 } array)
+			throw new JsonLogicException("The '!=' rule needs an array with 2 parameters");
+
+		var a = JsonLogic.Apply(array[0], context);
+		var b = JsonLogic.Apply(array[1], context);
 
 		return !a.LooseEquals(b);
 	}

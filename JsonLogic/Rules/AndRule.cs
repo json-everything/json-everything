@@ -13,7 +13,7 @@ namespace Json.Logic.Rules;
 /// </summary>
 [Operator("and")]
 [JsonConverter(typeof(AndRuleJsonConverter))]
-public class AndRule : Rule
+public class AndRule : Rule, IRule
 {
 	/// <summary>
 	/// The sequence of values to And against.
@@ -29,6 +29,11 @@ public class AndRule : Rule
 	{
 		Items = [a, .. more];
 	}
+
+	/// <summary>
+	/// Creates a new instance for model-less processing.
+	/// </summary>
+	protected internal AndRule(){}
 
 	/// <summary>
 	/// Applies the rule to the input data.
@@ -50,6 +55,23 @@ public class AndRule : Rule
 		}
 
 		return first;
+	}
+
+	JsonNode? IRule.Apply(JsonNode? args, EvaluationContext context)
+	{
+		if (args is not JsonArray array)
+			throw new JsonLogicException("The 'and' rule requires an array of arguments");
+
+		if (array.Count == 0) return false;
+
+		JsonNode? result = null;
+		foreach (var item in array)
+		{
+			result = item is JsonObject innerRule ? JsonLogic.Apply(innerRule, context) : item;
+			if (!result.IsTruthy()) break;
+		}
+
+		return result;
 	}
 }
 

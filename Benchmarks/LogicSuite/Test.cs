@@ -2,9 +2,8 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
-using Json.More;
 
-namespace Json.Logic.Tests.Suite;
+namespace Json.Benchmarks.LogicSuite;
 
 [JsonConverter(typeof(TestConverter))]
 public class Test
@@ -20,10 +19,10 @@ public class TestConverter : JsonConverter<Test?>
 {
 	public override Test? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var node = options.Read(ref reader, TestSerializerContext.Default.JsonNode);
+		var node = JsonSerializer.Deserialize<JsonNode>(ref reader, options);
 		if (node is not JsonArray arr) return null;
 
-		var logic = JsonSerializer.Serialize(arr[0], TestEnvironment.SerializerOptions);
+		var logic = JsonSerializer.Serialize(arr[0], options);
 		var data = arr[1];
 		var expected = arr[2];
 

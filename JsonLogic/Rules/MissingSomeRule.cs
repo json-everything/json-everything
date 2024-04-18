@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
@@ -13,7 +14,7 @@ namespace Json.Logic.Rules;
 /// </summary>
 [Operator("missing_some")]
 [JsonConverter(typeof(MissingSomeRuleJsonConverter))]
-public class MissingSomeRule : Rule
+public class MissingSomeRule : Rule, IRule
 {
 	/// <summary>
 	/// The minimum number of keys that are required.
@@ -35,6 +36,10 @@ public class MissingSomeRule : Rule
 		RequiredCount = requiredCount;
 		Components = components;
 	}
+	/// <summary>
+	/// Creates a new instance for model-less processing.
+	/// </summary>
+	protected internal MissingSomeRule(){}
 
 	/// <summary>
 	/// Applies the rule to the input data.
@@ -74,6 +79,41 @@ public class MissingSomeRule : Rule
 
 		var missing = paths.Where(p => p.Value == null)
 			.Select(k => (JsonNode?)k.Path);
+		var found = paths.Count(p => p.Value != null);
+
+		if (found < requiredCount)
+			return missing.ToJsonArray();
+
+		return new JsonArray();
+	}
+
+	JsonNode? IRule.Apply(JsonNode? args, EvaluationContext context)
+	{
+		if (args is not JsonArray { Count: 2 } array)
+			throw new JsonLogicException("The 'missing_some' rule needs an array with 2 parameters");
+
+		var requiredCount = JsonLogic.Apply(array[0], context).Numberify() ?? 1;
+		var components = JsonLogic.Apply(array[1], context);
+		if (components is not JsonArray arr)
+			arr = new JsonArray(components?.DeepClone());
+
+		var expected = arr.SelectMany(e => e.Flatten()).ToList();
+
+		if (context.CurrentValue is not JsonObject)
+			return expected.ToJsonArray();
+
+		var paths = expected
+			.Select(p =>
+			{
+				string? path = null;
+				(p as JsonValue)?.TryGetValue(out path);
+				context.TryFind(path, out var value);
+				return new { Path = path ?? p, Value = value };
+			})
+			.ToArray();
+
+		var missing = paths.Where(p => p.Value == null)
+			.Select(k => k.Path);
 		var found = paths.Count(p => p.Value != null);
 
 		if (found < requiredCount)

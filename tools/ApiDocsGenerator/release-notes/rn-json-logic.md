@@ -4,6 +4,10 @@ title: JsonLogic.Net
 icon: fas fa-tag
 order: "09.11"
 ---
+# [5.2.0](https://github.com/gregsdennis/json-everything/pull/708) {#release-logic-5.2.0}
+
+Added new implementation that operates on `JsonNode` instead of a dedicated object model.  Cuts memory use and evaluation time in half!
+
 # [5.1.0](https://github.com/gregsdennis/json-everything/pull/680) {#release-logic-5.1.0}
 
 Added extension methods to rule types to allow readonly access to their internal data.

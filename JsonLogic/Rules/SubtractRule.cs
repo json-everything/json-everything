@@ -13,7 +13,7 @@ namespace Json.Logic.Rules;
 /// </summary>
 [Operator("-")]
 [JsonConverter(typeof(SubtractRuleJsonConverter))]
-public class SubtractRule : Rule
+public class SubtractRule : Rule, IRule
 {
 	/// <summary>
 	/// The sequence of values to subtract.
@@ -29,6 +29,10 @@ public class SubtractRule : Rule
 	{
 		Items = [a, .. more];
 	}
+	/// <summary>
+	/// Creates a new instance for model-less processing.
+	/// </summary>
+	protected internal SubtractRule(){}
 
 	/// <summary>
 	/// Applies the rule to the input data.
@@ -61,6 +65,27 @@ public class SubtractRule : Rule
 			if (number == null) return null;
 
 			result -= number.Value;
+		}
+
+		return result;
+	}
+
+	JsonNode? IRule.Apply(JsonNode? args, EvaluationContext context)
+	{
+		if (args is not JsonArray {Count: > 0} array)
+			throw new JsonLogicException("The '-' rule needs an array of parameters");
+
+		var value = JsonLogic.Apply(array[0], context).Numberify();
+		if (value is null) return null;
+		if (array.Count == 1) return -value;
+
+		var result = value;
+		foreach (var item in array.Skip(1))
+		{
+			value = JsonLogic.Apply(item, context).Numberify();
+			if (value is null) return null;
+
+			result -= value;
 		}
 
 		return result;

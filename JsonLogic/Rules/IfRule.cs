@@ -13,7 +13,7 @@ namespace Json.Logic.Rules;
 [Operator("if")]
 [Operator("?:")]
 [JsonConverter(typeof(IfRuleJsonConverter))]
-public class IfRule : Rule
+public class IfRule : Rule, IRule
 {
 	/// <summary>
 	/// A condition, what to do when the condition is true, and what to do when the condition is false. 
@@ -28,6 +28,10 @@ public class IfRule : Rule
 	{
 		Components = new List<Rule>(components);
 	}
+	/// <summary>
+	/// Creates a new instance for model-less processing.
+	/// </summary>
+	protected internal IfRule(){}
 
 	/// <summary>
 	/// Applies the rule to the input data.
@@ -74,6 +78,50 @@ public class IfRule : Rule
 						return currentCondition.Apply(data, contextData);
 
 					currentTrueResult = Components[elseIndex++];
+				}
+				break;
+		}
+
+		throw new NotImplementedException("Something went wrong. This shouldn't happen.");
+	}
+
+	JsonNode? IRule.Apply(JsonNode? args, EvaluationContext context)
+	{
+		if (args is not JsonArray array)
+			throw new JsonLogicException("The 'if' rule requires an array");
+
+		bool condition;
+		switch (array.Count)
+		{
+			case 0:
+				return null;
+			case 1:
+				return JsonLogic.Apply(array[0], context);
+			case 2:
+				condition = JsonLogic.Apply(array[0], context).IsTruthy();
+				return condition
+					? JsonLogic.Apply(array[1], context)
+					: null;
+			default:
+				var currentCondition = array[0];
+				var currentTrueResult = array[1];
+				var elseIndex = 2;
+
+				while (currentCondition != null)
+				{
+					condition = JsonLogic.Apply(currentCondition, context).IsTruthy();
+
+					if (condition)
+						return JsonLogic.Apply(currentTrueResult, context);
+
+					if (elseIndex == array.Count) return null;
+
+					currentCondition = array[elseIndex++];
+
+					if (elseIndex >= array.Count)
+						return JsonLogic.Apply(currentCondition, context);
+
+					currentTrueResult = array[elseIndex++];
 				}
 				break;
 		}

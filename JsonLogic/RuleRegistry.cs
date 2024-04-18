@@ -17,10 +17,8 @@ namespace Json.Logic;
 public static class RuleRegistry
 {
 	private static readonly ConcurrentDictionary<string, Type> _rules;
+	private static readonly ConcurrentDictionary<string, IRule> _ruleHandlers;
 	private static readonly ConcurrentDictionary<Type, JsonSerializerContext> _ruleResolvers;
-
-	// ReSharper disable once CoVariantArrayConversion
-	internal static IJsonTypeInfoResolver[] ExternalTypeInfoResolvers => _ruleResolvers.Values.Distinct().ToArray();
 
 	static RuleRegistry()
 	{
@@ -63,6 +61,44 @@ public static class RuleRegistry
 			{ "-", typeof(SubtractRule) },
 			{ "var", typeof(VariableRule) }
 		});
+		_ruleHandlers = new()
+		{
+			["+"] = new AddRule(),
+			["all"] = new AllRule(),
+			["and"] = new AndRule(),
+			["!!"] = new BooleanCastRule(),
+			["cat"] = new CatRule(),
+			["/"] = new DivideRule(),
+			["filter"] = new FilterRule(),
+			["if"] = new IfRule(),
+			["?:"] = new IfRule(),
+			["in"] = new InRule(),
+			["<="] = new LessThanEqualRule(),
+			["<"] = new LessThanRule(),
+			["log"] = new LogRule(),
+			["=="] = new LooseEqualsRule(),
+			["!="] = new LooseNotEqualsRule(),
+			["max"] = new MaxRule(),
+			["map"] = new MapRule(),
+			["merge"] = new MergeRule(),
+			["min"] = new MinRule(),
+			["missing"] = new MissingRule(),
+			["missing_some"] = new MissingSomeRule(),
+			["%"] = new ModRule(),
+			[">="] = new MoreThanEqualRule(),
+			[">"] = new MoreThanRule(),
+			["*"] = new MultiplyRule(),
+			["none"] = new NoneRule(),
+			["!"] = new NotRule(),
+			["or"] = new OrRule(),
+			["reduce"] = new ReduceRule(),
+			["some"] = new SomeRule(),
+			["substr"] = new SubstrRule(),
+			["==="] = new StrictEqualsRule(),
+			["!=="] = new StrictNotEqualsRule(),
+			["-"] = new SubtractRule(),
+			["var"] = new VariableRule(),
+		};
 		_ruleResolvers = new ConcurrentDictionary<Type, JsonSerializerContext>(_rules.Values.Distinct().ToDictionary(x => x, _ => (JsonSerializerContext)JsonLogicSerializerContext.Default));
 	}
 
@@ -73,7 +109,17 @@ public static class RuleRegistry
 	/// <returns>The <see cref="System.Type"/> of the rule.</returns>
 	public static Type? GetRule(string identifier)
 	{
-		return _rules.TryGetValue(identifier, out var type) ? type : null;
+		return _rules.GetValueOrDefault(identifier);
+	}
+
+	/// <summary>
+	/// Gets an <see cref="IRule"/> handler for model-less rule evaluation.
+	/// </summary>
+	/// <param name="op">The operator that the rule handles.</param>
+	/// <returns>The handler implementation.</returns>
+	public static IRule? GetHandler(string op)
+	{
+		return _ruleHandlers.GetValueOrDefault(op);
 	}
 
 	/// <summary>
@@ -99,6 +145,16 @@ public static class RuleRegistry
 		{
 			_rules[name] = type;
 		}
+	}
+
+	/// <summary>
+	/// Adds a custom <see cref="IRule"/> implementation.
+	/// </summary>
+	/// <param name="op">The operator that the rule handles.</param>
+	/// <param name="rule">The rule implementation.</param>
+	public static void AddRule(string op, IRule rule)
+	{
+		_ruleHandlers[op] = rule;
 	}
 
 	/// <summary>

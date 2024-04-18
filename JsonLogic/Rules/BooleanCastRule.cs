@@ -11,7 +11,7 @@ namespace Json.Logic.Rules;
 /// </summary>
 [Operator("!!")]
 [JsonConverter(typeof(BooleanCastRuleJsonConverter))]
-public class BooleanCastRule : Rule
+public class BooleanCastRule : Rule, IRule
 {
 	/// <summary>
 	/// The value to test.
@@ -26,6 +26,10 @@ public class BooleanCastRule : Rule
 	{
 		Value = value;
 	}
+	/// <summary>
+	/// Creates a new instance for model-less processing.
+	/// </summary>
+	protected internal BooleanCastRule(){}
 
 	/// <summary>
 	/// Applies the rule to the input data.
@@ -39,6 +43,14 @@ public class BooleanCastRule : Rule
 	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
 		return Value.Apply(data, contextData).IsTruthy();
+	}
+
+	JsonNode? IRule.Apply(JsonNode? args, EvaluationContext context)
+	{
+		if (args is not JsonArray {Count: 1} array)
+			throw new JsonLogicException("The '!!' rule needs an array with a single parameter");
+
+		return JsonLogic.Apply(array[0], context).IsTruthy();
 	}
 }
 

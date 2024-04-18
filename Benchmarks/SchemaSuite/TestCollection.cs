@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
+using Json.Schema;
 
 #pragma warning disable CS8618
 
-namespace Json.Schema.Benchmark.Suite;
+namespace Json.Benchmarks.SchemaSuite;
 
 public class TestCollection
 {

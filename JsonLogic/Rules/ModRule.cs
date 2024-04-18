@@ -11,7 +11,7 @@ namespace Json.Logic.Rules;
 /// </summary>
 [Operator("%")]
 [JsonConverter(typeof(ModRuleJsonConverter))]
-public class ModRule : Rule
+public class ModRule : Rule, IRule
 {
 	/// <summary>
 	/// The value to divide.
@@ -32,6 +32,10 @@ public class ModRule : Rule
 		A = a;
 		B = b;
 	}
+	/// <summary>
+	/// Creates a new instance for model-less processing.
+	/// </summary>
+	protected internal ModRule(){}
 
 	/// <summary>
 	/// Applies the rule to the input data.
@@ -55,6 +59,17 @@ public class ModRule : Rule
 		if (numberB == 0) return null;
 
 		return numberA.Value % numberB.Value;
+	}
+
+	JsonNode? IRule.Apply(JsonNode? args, EvaluationContext context)
+	{
+		if (args is not JsonArray { Count: 2 } array)
+			throw new JsonLogicException("The '%' rule needs an array with 2 parameters");
+
+		var a = JsonLogic.Apply(array[0], context).Numberify();
+		var b = JsonLogic.Apply(array[1], context).Numberify();
+
+		return b == 0 ? null : a % b;
 	}
 }
 

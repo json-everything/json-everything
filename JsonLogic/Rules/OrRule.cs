@@ -13,7 +13,7 @@ namespace Json.Logic.Rules;
 /// </summary>
 [Operator("or")]
 [JsonConverter(typeof(OrRuleJsonConverter))]
-public class OrRule : Rule
+public class OrRule : Rule, IRule
 {
 	/// <summary>
 	/// The sequence of items to Or against.
@@ -29,6 +29,10 @@ public class OrRule : Rule
 	{
 		Items = [a, .. more];
 	}
+	/// <summary>
+	/// Creates a new instance for model-less processing.
+	/// </summary>
+	protected internal OrRule(){}
 
 	/// <summary>
 	/// Applies the rule to the input data.
@@ -50,6 +54,23 @@ public class OrRule : Rule
 		}
 
 		return first;
+	}
+
+	JsonNode? IRule.Apply(JsonNode? args, EvaluationContext context)
+	{
+		if (args is not JsonArray array)
+			throw new JsonLogicException("The 'or' rule requires an array of arguments");
+
+		if (array.Count == 0) return false;
+
+		JsonNode? result = false;
+		foreach (var item in array)
+		{
+			result = item is JsonObject innerRule ? JsonLogic.Apply(innerRule, context) : item;
+			if (result.IsTruthy()) break;
+		}
+
+		return result;
 	}
 }
 

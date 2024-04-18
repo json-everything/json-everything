@@ -13,7 +13,7 @@ namespace Json.Logic.Rules;
 /// </summary>
 [Operator("*")]
 [JsonConverter(typeof(MultiplyRuleJsonConverter))]
-public class MultiplyRule : Rule
+public class MultiplyRule : Rule, IRule
 {
 	/// <summary>
 	/// The sequence of numbers to multiple together.
@@ -29,6 +29,10 @@ public class MultiplyRule : Rule
 	{
 		Items = [a, .. more];
 	}
+	/// <summary>
+	/// Creates a new instance for model-less processing.
+	/// </summary>
+	protected internal MultiplyRule(){}
 
 	/// <summary>
 	/// Applies the rule to the input data.
@@ -52,6 +56,23 @@ public class MultiplyRule : Rule
 			if (number == null) return null;
 
 			result *= number.Value;
+		}
+
+		return result;
+	}
+
+	JsonNode? IRule.Apply(JsonNode? args, EvaluationContext context)
+	{
+		if (args is not JsonArray { Count: > 0 } array)
+			throw new JsonLogicException("The '*' rule needs an array of parameters");
+
+		decimal? result = 1;
+		foreach (var item in array)
+		{
+			var value = JsonLogic.Apply(item, context).Numberify();
+			if (value is null) return null;
+
+			result *= value;
 		}
 
 		return result;

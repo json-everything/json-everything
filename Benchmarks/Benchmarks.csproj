@@ -1,9 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
-    <RootNamespace>Json.Schema.Benchmark</RootNamespace>
+    <RootNamespace>Json.Benchmarks</RootNamespace>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
@@ -19,10 +19,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\JsonLogic\JsonLogic.csproj" />
     <ProjectReference Include="..\JsonSchema\JsonSchema.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Files\more-tests.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Files\tests.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="SimplePropsSchema.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

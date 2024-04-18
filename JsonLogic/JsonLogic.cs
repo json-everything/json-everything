@@ -1,5 +1,7 @@
-﻿using System.Text.Json.Nodes;
+﻿using System.Linq;
+using System.Text.Json.Nodes;
 using Json.Logic.Rules;
+using Json.More;
 
 namespace Json.Logic;
 
@@ -8,6 +10,41 @@ namespace Json.Logic;
 /// </summary>
 public static class JsonLogic
 {
+	/// <summary>
+	/// Applies a rule encoded into a <see cref="JsonNode"/> to some data.
+	/// </summary>
+	/// <param name="rule">The rule to apply.</param>
+	/// <param name="context">The context data.</param>
+	/// <returns>The result.</returns>
+	public static JsonNode? Apply(JsonNode? rule, JsonNode? context = null)
+	{
+		var evalContext = new EvaluationContext(context);
+		return Apply(rule, evalContext);
+	}
+
+	/// <summary>
+	/// Applies a nested rule encoded into a <see cref="JsonNode"/> to a context.
+	/// This is to be called from within an <see cref="IRule"/> handler.
+	/// </summary>
+	/// <param name="rule">The rule to apply.</param>
+	/// <param name="context">The context data.</param>
+	/// <returns>The result.</returns>
+	public static JsonNode? Apply(JsonNode? rule, EvaluationContext context)
+	{
+		switch (rule)
+		{
+			case JsonObject { Count: 1 } obj:
+				var (key, value) = obj.Single();
+				var handler = RuleRegistry.GetHandler(key);
+
+				return handler is null ? rule : handler.Apply(value, context);
+			case JsonArray array:
+				return array.Select(x => Apply(x, context)).ToJsonArray();
+		}
+
+		return rule;
+	}
+
 	/// <summary>
 	/// Creates an `and` rule.
 	/// </summary>

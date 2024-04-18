@@ -11,7 +11,7 @@ namespace Json.Logic.Rules;
 /// </summary>
 [Operator("!==")]
 [JsonConverter(typeof(StrictNotEqualsRuleJsonConverter))]
-public class StrictNotEqualsRule : Rule
+public class StrictNotEqualsRule : Rule, IRule
 {
 	/// <summary>
 	/// First value to compare.
@@ -32,6 +32,10 @@ public class StrictNotEqualsRule : Rule
 		A = a;
 		B = b;
 	}
+	/// <summary>
+	/// Creates a new instance for model-less processing.
+	/// </summary>
+	protected internal StrictNotEqualsRule(){}
 
 	/// <summary>
 	/// Applies the rule to the input data.
@@ -45,6 +49,17 @@ public class StrictNotEqualsRule : Rule
 	public override JsonNode? Apply(JsonNode? data, JsonNode? contextData = null)
 	{
 		return !A.Apply(data, contextData).IsEquivalentTo(B.Apply(data, contextData));
+	}
+
+	JsonNode? IRule.Apply(JsonNode? args, EvaluationContext context)
+	{
+		if (args is not JsonArray { Count: 2 } array)
+			throw new JsonLogicException("The '!==' rule needs an array with 2 parameters");
+
+		var a = JsonLogic.Apply(array[0], context);
+		var b = JsonLogic.Apply(array[1], context);
+
+		return !a.IsEquivalentTo(b);
 	}
 }
 
