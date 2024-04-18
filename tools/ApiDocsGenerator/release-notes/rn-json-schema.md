@@ -4,6 +4,10 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "09.01"
 ---
+# [6.1.0](https://github.com/gregsdennis/json-everything/pull/709) {#release-schema-6.1.0}
+
+[#704](https://github.com/gregsdennis/json-everything/issues/704) - Several builder extension return types expanded from `IReadOnlyCollection<T>` to `IReadOnlyList<T>`.  Thanks to [@SGStino](https://github.com/SGStino) for identifying and implementing this.
+
 # [6.0.7](https://github.com/gregsdennis/json-everything/pull/698) {#release-schema-6.0.7}
 
 [#697](https://github.com/gregsdennis/json-everything/issues/697) - `allOf`, `anyOf`, `oneOf`, and `prefixItems` all require at least one subschema, but deserialization of these keywords didn't enforce this.  Fix will throw `ArgumentException` when attempting to deserialize empty subschema sets.  Thanks to [@Era-cell](https://github.com/Era-cell) for reporting this.
