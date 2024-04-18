@@ -1,63 +1,57 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
-		<AssemblyName>JsonSchema.Net.Generation</AssemblyName>
-		<RootNamespace>Json.Schema.Generation</RootNamespace>
-		<Authors>Greg Dennis</Authors>
-		<Description>
-			Extends JsonSchema.Net to provide schema generation functionality.
-		
-			Read the full documentation at https://docs.json-everything.net/schema/schema-generation/.
-		</Description>
-		<PackageLicenseFile>LICENSE</PackageLicenseFile>
-		<PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
-		<PackageIcon>json-logo-256.png</PackageIcon>
-		<RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>
-		<PackageTags>json-schema validation schema json generation schema-generation</PackageTags>
-		<PackageReleaseNotes>Release notes can be found at https://docs.json-everything.net/rn-json-schema-generation/</PackageReleaseNotes>
-		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<DocumentationFile>JsonSchema.Net.Generation.xml</DocumentationFile>
-		<LangVersion>latest</LangVersion>
-		<Version>4.3.0</Version>
-		<FileVersion>4.3.0.0</FileVersion>
-		<AssemblyVersion>4.0.0.0</AssemblyVersion>
-		<IncludeSymbols>true</IncludeSymbols>
-		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
-		<PublishRepositoryUrl>true</PublishRepositoryUrl>
-		<EmbedUntrackedSources>true</EmbedUntrackedSources>
-		<SignAssembly>true</SignAssembly>
-		<AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
-		<Nullable>enable</Nullable>
-		<NoWarn>IDE0290</NoWarn>
-		<IsAotCompatible Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net7.0'))">true</IsAotCompatible>
-		<PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
-	</PropertyGroup>
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <NoWarn>IDE0290</NoWarn>
+    <IsAotCompatible Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net7.0'))">true</IsAotCompatible>
+    <RootNamespace>Json.Schema.Generation</RootNamespace>
+    <AssemblyName>JsonSchema.Net.Generation</AssemblyName>
+    <DocumentationFile>JsonSchema.Net.Generation.xml</DocumentationFile>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
 
-	<ItemGroup>
-		<ProjectReference Include="..\JsonSchema\JsonSchema.csproj" />
-	</ItemGroup>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <Version>4.3.0.1</Version>
+    <FileVersion>4.3.0.1</FileVersion>
+    <AssemblyVersion>4.0.0.0</AssemblyVersion>
+    <Authors>Greg Dennis</Authors>
+    <Description>Extends JsonSchema.Net to provide schema generation functionality</Description>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageIcon>json-logo-256.png</PackageIcon>
+    <PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>
+    <PackageTags>json-schema validation schema json generation schema-generation</PackageTags>
+    <PackageReleaseNotes>Release notes can be found at https://docs.json-everything.net/rn-json-schema-generation/</PackageReleaseNotes>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
 
-	<ItemGroup>
-		<PackageReference Include="Humanizer.Core" Version="2.14.1" />
-		<PackageReference Include="PolySharp" Version="1.14.1" PrivateAssets="all" />
-		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
-	</ItemGroup>
+    <PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
+  </PropertyGroup>
 
-	<ItemGroup>
-		<None Include="..\tools\ApiDocsGenerator\release-notes\rn-json-schema-generation.md" Link="release-notes.md" />
-		<None Include="..\LICENSE">
-			<Pack>True</Pack>
-			<PackagePath></PackagePath>
-		</None>
-		<None Include="..\Resources\json-logo-256.png">
-			<Pack>True</Pack>
-			<PackagePath></PackagePath>
-		</None>
-	</ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Humanizer.Core" Version="2.14.1" />
+    <PackageReference Include="PolySharp" Version="1.14.1" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+  </ItemGroup>
 
-	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-		<Copy SourceFiles="$(TargetDir)$(DocumentationFile)" DestinationFolder="..\doc-tool\xml\" SkipUnchangedFiles="True" OverwriteReadOnlyFiles="True" />
-	</Target>
+  <ItemGroup>
+    <None Include="..\tools\ApiDocsGenerator\release-notes\rn-json-schema-generation.md" Link="release-notes.md" />
+    <None Include="README.md" Pack="true" PackagePath="\" />
+    <None Include="..\LICENSE" Pack="true" PackagePath="\" />
+    <None Include="..\Resources\json-logo-256.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\JsonSchema\JsonSchema.csproj" />
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Copy SourceFiles="$(TargetDir)$(DocumentationFile)" DestinationFolder="..\doc-tool\xml\" SkipUnchangedFiles="True" OverwriteReadOnlyFiles="True" />
+  </Target>
 
 </Project>

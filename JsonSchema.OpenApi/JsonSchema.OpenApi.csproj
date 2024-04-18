@@ -34,24 +34,19 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\JsonSchema\JsonSchema.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="PolySharp" Version="1.14.1" PrivateAssets="All" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="..\tools\ApiDocsGenerator\release-notes\rn-json-schema-openapi.md" Link="release-notes.md" />
-    <None Include="..\LICENSE">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-    <None Include="..\Resources\openapi.png">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+    <None Include="..\LICENSE" Pack="true" PackagePath="\" />
+    <None Include="..\Resources\json-logo-256.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\JsonSchema\JsonSchema.csproj" />
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
