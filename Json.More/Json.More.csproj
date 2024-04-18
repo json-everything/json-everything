@@ -2,35 +2,34 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <NoWarn>CS1570,IDE0290</NoWarn>
+    <IsAotCompatible Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net7.0'))">true</IsAotCompatible>
+    <DocumentationFile>Json.More.xml</DocumentationFile>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
+
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageId>Json.More.Net</PackageId>
-    <Authors>Greg Dennis</Authors>
-    <Version>2.0.1</Version>
+    <Version>2.0.1.1</Version>
+    <FileVersion>2.0.1.1</FileVersion>
     <AssemblyVersion>2.0.0.0</AssemblyVersion>
-    <FileVersion>2.0.1</FileVersion>
-    <Description>
-		Provides extended functionality for the System.Text.Json namespace.
-	
-		Read the full documentation at https://docs.json-everything.net/more/json-more/.
-	</Description>
+    <Authors>Greg Dennis</Authors>
+    <Description>Provides extended functionality for the System.Text.Json namespace.</Description>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageIcon>json-logo-256.png</PackageIcon>
     <PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
     <RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>
     <PackageTags>json system.text.json json.more</PackageTags>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-	<PackageReleaseNotes>Release notes can be found at https://docs.json-everything.net/rn-json-more/</PackageReleaseNotes>
-    <LangVersion>latest</LangVersion>
-    <DocumentationFile>Json.More.xml</DocumentationFile>
-    <PackageIcon>json-logo-256.png</PackageIcon>
-	<IncludeSymbols>true</IncludeSymbols>
-	<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PackageReleaseNotes>Release notes can be found at https://docs.json-everything.net/rn-json-more/</PackageReleaseNotes>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
-	<NoWarn>CS1570,IDE0290</NoWarn>
-	<Nullable>enable</Nullable>
-    <IsAotCompatible Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net7.0'))">true</IsAotCompatible>
-	<PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
+
+    <PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
@@ -39,23 +38,18 @@
 
   <ItemGroup>
     <PackageReference Include="PolySharp" Version="1.14.1" PrivateAssets="all" />
-	<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+  	<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="..\tools\ApiDocsGenerator\release-notes\rn-json-more.md" Link="release-notes.md" />
-    <None Include="..\LICENSE">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-    <None Include="..\Resources\json-logo-256.png">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+    <None Include="..\LICENSE" Pack="true" PackagePath="\" />
+    <None Include="..\Resources\json-logo-256.png" Pack="true" PackagePath="\" />
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-	<Copy SourceFiles="$(TargetDir)$(DocumentationFile)" DestinationFolder="..\doc-tool\xml\" SkipUnchangedFiles="True" OverwriteReadOnlyFiles="True" />
+  <Copy SourceFiles="$(TargetDir)$(DocumentationFile)" DestinationFolder="..\doc-tool\xml\" SkipUnchangedFiles="True" OverwriteReadOnlyFiles="True" />
   </Target>
 
 </Project>

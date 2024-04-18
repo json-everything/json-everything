@@ -1,51 +1,37 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	  <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
     <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <IsAotCompatible Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net7.0'))">true</IsAotCompatible>
     <RootNamespace>Json.Patch</RootNamespace>
-    <Version>3.0.0</Version>
-    <AssemblyVersion>3.0.0.0</AssemblyVersion>
-    <FileVersion>3.0.0.0</FileVersion>
+    <AssemblyName>JsonPatch.Net</AssemblyName>
+    <DocumentationFile>JsonPatch.Net.xml</DocumentationFile>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
+
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageId>JsonPatch.Net</PackageId>
+    <Version>3.0.0.1</Version>
+    <FileVersion>3.0.0.1</FileVersion>
+    <AssemblyVersion>3.0.0.0</AssemblyVersion>
     <Authors>Greg Dennis</Authors>
-    <Company>Greg Dennis</Company>
-	<AssemblyName>JsonPatch.Net</AssemblyName>
-    <Description>
-		[JSON Patch](https://tools.ietf.org/html/rfc6902) built on the System.Text.Json namespace.
-	
-		Read the full documentation at https://docs.json-everything.net/patch/basics/.
-	</Description>
+    <Description>JSON Patch built on the System.Text.Json namespace</Description>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageIcon>json-logo-256.png</PackageIcon>
     <PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
     <RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>
     <PackageTags>json-patch jsonpatch json</PackageTags>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageIcon>json-logo-256.png</PackageIcon>
-	<PackageReleaseNotes>Release notes can be found at https://docs.json-everything.net/rn-json-patch/</PackageReleaseNotes>
-    <DocumentationFile>JsonPatch.Net.xml</DocumentationFile>
-	<IncludeSymbols>true</IncludeSymbols>
-	<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PackageReleaseNotes>Release notes can be found at https://docs.json-everything.net/rn-json-patch/</PackageReleaseNotes>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
-	<SignAssembly>true</SignAssembly>
-	<AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
-	<Nullable>enable</Nullable>
-	<IsAotCompatible Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net7.0'))">true</IsAotCompatible>
-	<PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
-  </PropertyGroup>
 
-	<ItemGroup>
-    <None Include="..\tools\ApiDocsGenerator\release-notes\rn-json-patch.md" Link="release-notes.md" />
-    <None Include="..\LICENSE">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-    <None Include="..\Resources\json-logo-256.png">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-  </ItemGroup>
+    <PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
+  </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="PolySharp" Version="1.14.1" PrivateAssets="all" />
@@ -53,11 +39,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="..\tools\ApiDocsGenerator\release-notes\rn-json-patch.md" Link="release-notes.md" />
+    <None Include="README.md" Pack="true" PackagePath="\" />
+    <None Include="..\LICENSE" Pack="true" PackagePath="\" />
+    <None Include="..\Resources\json-logo-256.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\JsonPointer\JsonPointer.csproj" />
   </ItemGroup>
 
-	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-		<Copy SourceFiles="$(TargetDir)$(DocumentationFile)" DestinationFolder="..\doc-tool\xml\" SkipUnchangedFiles="True" OverwriteReadOnlyFiles="True" />
-	</Target>
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Copy SourceFiles="$(TargetDir)$(DocumentationFile)" DestinationFolder="..\doc-tool\xml\" SkipUnchangedFiles="True" OverwriteReadOnlyFiles="True" />
+  </Target>
 
 </Project>

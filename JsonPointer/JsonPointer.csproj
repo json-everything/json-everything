@@ -1,39 +1,37 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	<TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
     <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <NoWarn>IDE0290</NoWarn>
+    <IsAotCompatible Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net7.0'))">true</IsAotCompatible>
     <RootNamespace>Json.Pointer</RootNamespace>
-    <Version>4.0.1</Version>
+    <AssemblyName>JsonPointer.Net</AssemblyName>
+    <DocumentationFile>JsonPointer.Net.xml</DocumentationFile>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
+
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <Version>4.0.1.1</Version>
+    <FileVersion>4.0.1.1</FileVersion>
     <AssemblyVersion>4.0.0.0</AssemblyVersion>
-    <FileVersion>4.0.1.0</FileVersion>
     <PackageId>JsonPointer.Net</PackageId>
     <Authors>Greg Dennis</Authors>
-    <Product>JsonPointer.Net</Product>
-    <Description>
-		[JSON Pointer](https://tools.ietf.org/html/rfc6901) built on the System.Text.Json namespace.
-	
-		Read the full documentation at https://docs.json-everything.net/pointer/basics/.
-	</Description>
+    <Description>JSON Pointer built on the System.Text.Json namespace</Description>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageIcon>json-logo-256.png</PackageIcon>
     <PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
     <RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>
     <PackageTags>json-pointer json pointer</PackageTags>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <AssemblyName>JsonPointer.Net</AssemblyName>
-    <PackageIcon>json-logo-256.png</PackageIcon>
-	<PackageReleaseNotes>Release notes can be found at https://docs.json-everything.net/rn-json-pointer/</PackageReleaseNotes>
-    <DocumentationFile>JsonPointer.Net.xml</DocumentationFile>
-	<IncludeSymbols>true</IncludeSymbols>
-	<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PackageReleaseNotes>Release notes can be found at https://docs.json-everything.net/rn-json-pointer/</PackageReleaseNotes>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
-	<SignAssembly>true</SignAssembly>
-	<AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
-	<Nullable>enable</Nullable>
-	<NoWarn>IDE0290</NoWarn>
-	<IsAotCompatible Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net7.0'))">true</IsAotCompatible>
-	<PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
+    
+    <PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
   </PropertyGroup>
 
   <ItemGroup>
@@ -43,23 +41,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Json.More\Json.More.csproj" />
+    <None Include="..\tools\ApiDocsGenerator\release-notes\rn-json-pointer.md" Link="release-notes.md" />
+    <None Include="README.md" Pack="true" PackagePath="\" />
+    <None Include="..\LICENSE" Pack="true" PackagePath="\" />
+    <None Include="..\Resources\json-logo-256.png" Pack="true" PackagePath="\" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\tools\ApiDocsGenerator\release-notes\rn-json-pointer.md" Link="release-notes.md" />
-    <None Include="..\LICENSE">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-    <None Include="..\Resources\json-logo-256.png">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
+    <ProjectReference Include="..\Json.More\Json.More.csproj" />
   </ItemGroup>
 
-	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-		<Copy SourceFiles="$(TargetDir)$(DocumentationFile)" DestinationFolder="..\doc-tool\xml\" SkipUnchangedFiles="True" OverwriteReadOnlyFiles="True" />
-	</Target>
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Copy SourceFiles="$(TargetDir)$(DocumentationFile)" DestinationFolder="..\doc-tool\xml\" SkipUnchangedFiles="True" OverwriteReadOnlyFiles="True" />
+  </Target>
 
 </Project>

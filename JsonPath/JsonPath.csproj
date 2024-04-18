@@ -1,64 +1,55 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
-		<LangVersion>latest</LangVersion>
-		<RootNamespace>Json.Path</RootNamespace>
-		<AssemblyName>JsonPath.Net</AssemblyName>
-		<Authors>Greg Dennis</Authors>
-		<Company>Greg Dennis</Company>
-		<Description>
-			JSON Path built on the System.Text.Json namespace.
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <IsAotCompatible Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net7.0'))">true</IsAotCompatible>
+    <RootNamespace>Json.Path</RootNamespace>
+    <AssemblyName>JsonPath.Net</AssemblyName>
+    <DocumentationFile>JsonPath.Net.xml</DocumentationFile>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
 
-			This library conforms to the IETF JSON Path specification [RFC 9535](https://www.rfc-editor.org/rfc/rfc9535.html).
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <Version>1.0.1.1</Version>
+    <FileVersion>1.0.1.1</FileVersion>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <Authors>Greg Dennis</Authors>
+    <Description>JSON Path (RFC 9535) built on the System.Text.Json namespace</Description>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>
+    <PackageIcon>json-logo-256.png</PackageIcon>
+    <PackageTags>json-path jsonpath query path json rfc9535</PackageTags>
+    <PackageReleaseNotes>Release notes can be found at https://docs.json-everything.net/rn-json-path/</PackageReleaseNotes>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
 
-			Read the full documentation at https://docs.json-everything.net/path/basics/.
-		</Description>
-		<PackageLicenseFile>LICENSE</PackageLicenseFile>
-		<PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
-		<RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>
-		<PackageIcon>json-logo-256.png</PackageIcon>
-		<PackageTags>json-path jsonpath query path json rfc9535</PackageTags>
-		<PackageReleaseNotes>Release notes can be found at https://docs.json-everything.net/rn-json-path/</PackageReleaseNotes>
-		<Version>1.0.1</Version>
-		<FileVersion>1.0.1.0</FileVersion>
-		<AssemblyVersion>1.0.0.0</AssemblyVersion>
-		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<DocumentationFile>JsonPath.Net.xml</DocumentationFile>
-		<IncludeSymbols>true</IncludeSymbols>
-		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
-		<PublishRepositoryUrl>true</PublishRepositoryUrl>
-		<EmbedUntrackedSources>true</EmbedUntrackedSources>
-		<SignAssembly>true</SignAssembly>
-		<AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
-		<Nullable>enable</Nullable>
-		<IsAotCompatible Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net7.0'))">true</IsAotCompatible>
-		<PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
-	</PropertyGroup>
+    <PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
+  </PropertyGroup>
 
-	<ItemGroup>
-		<None Include="..\tools\ApiDocsGenerator\release-notes\rn-json-path.md" Link="release-notes.md" />
-		<None Include="..\LICENSE" Link="LICENSE">
-			<PackagePath></PackagePath>
-			<Pack>True</Pack>
-		</None>
-		<None Include="..\Resources\json-logo-256.png">
-			<Pack>True</Pack>
-			<PackagePath></PackagePath>
-		</None>
-	</ItemGroup>
+  <ItemGroup>
+    <None Include="..\tools\ApiDocsGenerator\release-notes\rn-json-path.md" Link="release-notes.md" />
+    <None Include="README.md" Pack="true" PackagePath="\" />
+    <None Include="..\LICENSE" Pack="true" PackagePath="\" />
+    <None Include="..\Resources\json-logo-256.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
 
-	<ItemGroup>
-		<PackageReference Include="PolySharp" Version="1.14.1" PrivateAssets="All" />
-		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
-	</ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="PolySharp" Version="1.14.1" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+  </ItemGroup>
 
-	<ItemGroup>
-	  <ProjectReference Include="..\Json.More\Json.More.csproj" />
-	</ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Json.More\Json.More.csproj" />
+  </ItemGroup>
 
-	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-		<Copy SourceFiles="$(TargetDir)$(DocumentationFile)" DestinationFolder="..\doc-tool\xml\" SkipUnchangedFiles="True" OverwriteReadOnlyFiles="True" />
-	</Target>
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Copy SourceFiles="$(TargetDir)$(DocumentationFile)" DestinationFolder="..\doc-tool\xml\" SkipUnchangedFiles="True" OverwriteReadOnlyFiles="True" />
+  </Target>
 
 </Project>

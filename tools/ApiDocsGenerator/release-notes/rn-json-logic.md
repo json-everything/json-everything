@@ -1,6 +1,6 @@
 ---
 layout: page
-title: JsonLogic.Net
+title: JsonLogic
 icon: fas fa-tag
 order: "09.11"
 ---
