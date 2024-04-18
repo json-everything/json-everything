@@ -53,7 +53,7 @@ public class MergeRule : Rule, IRule
 	/// <param name="context"></param>
 	/// <returns></returns>
 	/// <exception cref="NotImplementedException"></exception>
-	public JsonNode? Apply(JsonNode? args, EvaluationContext context)
+	JsonNode? IRule.Apply(JsonNode? args, EvaluationContext context)
 	{
 		if (args is not JsonArray array) return JsonLogic.Apply(new JsonArray(args?.DeepClone()), context);
 

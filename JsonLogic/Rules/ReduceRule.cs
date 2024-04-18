@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
@@ -11,7 +12,7 @@ namespace Json.Logic.Rules;
 /// </summary>
 [Operator("reduce")]
 [JsonConverter(typeof(ReduceRuleJsonConverter))]
-public class ReduceRule : Rule
+public class ReduceRule : Rule, IRule
 {
 	/// <summary>
 	/// A sequence of values to reduce.
@@ -38,6 +39,7 @@ public class ReduceRule : Rule
 		Rule = rule;
 		Initial = initial;
 	}
+	internal ReduceRule(){}
 
 	/// <summary>
 	/// Applies the rule to the input data.
@@ -64,6 +66,35 @@ public class ReduceRule : Rule
 			};
 
 			accumulator = Rule.Apply(data, intermediary);
+
+			if (accumulator == null) break;
+		}
+
+		return accumulator;
+	}
+
+	JsonNode? IRule.Apply(JsonNode? args, EvaluationContext context)
+	{
+		if (args is not JsonArray{Count:3} array)
+			throw new JsonException("The 'reduce' rule needs an array with 3 parameters.");
+
+		var input = JsonLogic.Apply(array[0], context);
+		var rule = array[1];
+		var accumulator = JsonLogic.Apply(array[2], context);
+
+		if (input is not JsonArray arr) return accumulator;
+
+		foreach (var element in arr)
+		{
+			var intermediary = new JsonObject
+			{
+				["current"] = element?.DeepClone(),
+				["accumulator"] = accumulator?.DeepClone()
+			};
+			
+			context.Push(intermediary);
+			accumulator = JsonLogic.Apply(rule, context);
+			context.Pop();
 
 			if (accumulator == null) break;
 		}

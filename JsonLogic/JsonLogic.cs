@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Text.Json.Nodes;
 using Json.Logic.Rules;
 using Json.More;
@@ -11,20 +10,30 @@ namespace Json.Logic;
 /// </summary>
 public static class JsonLogic
 {
+	/// <summary>
+	/// Applies a rule encoded into a <see cref="JsonNode"/> to some data.
+	/// </summary>
+	/// <param name="rule">The rule to apply.</param>
+	/// <param name="context">The context data.</param>
+	/// <returns>The result.</returns>
 	public static JsonNode? Apply(JsonNode? rule, JsonNode? context = null)
 	{
-		// TODO create a new context
 		var evalContext = new EvaluationContext(context);
 		return Apply(rule, evalContext);
 	}
 
+	/// <summary>
+	/// Applies a nested rule encoded into a <see cref="JsonNode"/> to a context.
+	/// This is to be called from within an <see cref="IRule"/> handler.
+	/// </summary>
+	/// <param name="rule">The rule to apply.</param>
+	/// <param name="context">The context data.</param>
+	/// <returns>The result.</returns>
 	public static JsonNode? Apply(JsonNode? rule, EvaluationContext context)
 	{
 		switch (rule)
 		{
-			case JsonObject {Count: not 1}:
-				throw new ArgumentException("A rule must be an object with a single value");
-			case JsonObject obj:
+			case JsonObject { Count: 1 } obj:
 				var (key, value) = obj.Single();
 				var handler = RuleRegistry.GetHandler(key);
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
@@ -13,7 +14,7 @@ namespace Json.Logic.Rules;
 /// </summary>
 [Operator("missing")]
 [JsonConverter(typeof(MissingRuleJsonConverter))]
-public class MissingRule : Rule
+public class MissingRule : Rule, IRule
 {
 	/// <summary>
 	/// A sequence of keys to search for.
@@ -28,6 +29,7 @@ public class MissingRule : Rule
 	{
 		Components = components;
 	}
+	internal MissingRule(){}
 
 	/// <summary>
 	/// Applies the rule to the input data.
@@ -58,7 +60,30 @@ public class MissingRule : Rule
 		return paths.Where(p => p.Value == null || p.Value.IsEquivalentTo(string.Empty))
 			.Select(k => (JsonNode?)k.Path)
 			.ToJsonArray();
+	}
 
+	JsonNode? IRule.Apply(JsonNode? args, EvaluationContext context)
+	{
+		if (args is not JsonArray array)
+			array = new JsonArray(args?.DeepClone());
+
+		var expected = array.SelectMany(c => JsonLogic.Apply(c, context).Flatten())
+			.OfType<JsonValue>()
+			.Where(v => v.TryGetValue(out string? _));
+
+		if (context.CurrentValue is not JsonObject)
+			return expected.ToJsonArray();
+
+		var paths = expected.Select(e => e.GetValue<string?>()!)
+			.Select(p =>
+			{
+				context.TryFind(p, out var result);
+				return new { Path = p, Value = result };
+			});
+
+		return paths.Where(p => p.Value == null || p.Value.IsEquivalentTo(string.Empty))
+			.Select(k => (JsonNode?)k.Path)
+			.ToJsonArray();
 	}
 }
 

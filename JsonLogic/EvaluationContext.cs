@@ -46,8 +46,14 @@ public class EvaluationContext
 	/// <param name="path">The variable path.</param>
 	/// <param name="result">The result, if found; null otherwise..</param>
 	/// <returns>true if the path was found; false otherwise.</returns>
-	public bool TryFind(string path, out JsonNode? result)
+	public bool TryFind(string? path, out JsonNode? result)
 	{
+		if (path == null)
+		{
+			result = null;
+			return false;
+		}
+
 		var parts = path.Split('.');
 		foreach (var node in _contextStack)
 		{

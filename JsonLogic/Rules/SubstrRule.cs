@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
@@ -11,7 +12,7 @@ namespace Json.Logic.Rules;
 /// </summary>
 [Operator("substr")]
 [JsonConverter(typeof(SubstrRuleJsonConverter))]
-public class SubstrRule : Rule
+public class SubstrRule : Rule, IRule
 {
 	/// <summary>
 	/// The input string.
@@ -49,6 +50,7 @@ public class SubstrRule : Rule
 		Start = start;
 		Count = count;
 	}
+	internal SubstrRule(){}
 
 	/// <summary>
 	/// Applies the rule to the input data.
@@ -76,6 +78,36 @@ public class SubstrRule : Rule
 		if (Count == null) return input[numberStart..];
 
 		var count = Count.Apply(data, contextData).Numberify() ?? 0;
+
+		var integerCount = (int)count;
+		var availableLength = input.Length - numberStart;
+		if (integerCount < 0)
+			integerCount = Math.Max(availableLength + integerCount, 0);
+		integerCount = Math.Min(availableLength, integerCount);
+
+		return input.Substring(numberStart, integerCount);
+	}
+
+	JsonNode? IRule.Apply(JsonNode? args, EvaluationContext context)
+	{
+		if (args is not JsonArray{Count: 2 or 3} array)
+			throw new JsonException("The 'substr' rule needs an array with either 2 or 3 parameters");
+
+		var input = array[0] is null
+			? "null"
+			: JsonLogic.Apply(array[0], context).Stringify() ?? string.Empty;
+		var start = JsonLogic.Apply(array[1], context).Numberify() ?? 0;
+
+		var numberStart = (int)start;
+
+		if (numberStart < -input.Length) return input;
+		if (numberStart < 0)
+			numberStart = Math.Max(input.Length + numberStart, 0);
+		if (numberStart >= input.Length) return string.Empty;
+
+		if (array.Count == 2) return input[numberStart..];
+
+		var count = JsonLogic.Apply(array[2], context).Numberify() ?? 0;
 
 		var integerCount = (int)count;
 		var availableLength = input.Length - numberStart;

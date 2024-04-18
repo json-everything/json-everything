@@ -66,7 +66,7 @@ public class ModRule : Rule, IRule
 		var a = JsonLogic.Apply(array[0], context).Numberify();
 		var b = JsonLogic.Apply(array[1], context).Numberify();
 
-		return a % b;
+		return b == 0 ? null : a % b;
 	}
 }
 

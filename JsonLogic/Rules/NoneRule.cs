@@ -62,7 +62,7 @@ public class NoneRule : Rule, IRule
 		var input = JsonLogic.Apply(array[0], context);
 		var rule = array[1];
 
-		if (input is not JsonArray items) return false;
+		if (input is not JsonArray items) return true;
 
 		foreach (var item in items)
 		{

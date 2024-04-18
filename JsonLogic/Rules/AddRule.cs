@@ -29,7 +29,6 @@ public class AddRule : Rule, IRule
 	{
 		Items = [a, .. more];
 	}
-
 	internal AddRule(){}
 
 	/// <summary>
