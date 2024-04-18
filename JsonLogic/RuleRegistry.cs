@@ -20,9 +20,6 @@ public static class RuleRegistry
 	private static readonly ConcurrentDictionary<string, IRule> _ruleHandlers;
 	private static readonly ConcurrentDictionary<Type, JsonSerializerContext> _ruleResolvers;
 
-	// ReSharper disable once CoVariantArrayConversion
-	internal static IJsonTypeInfoResolver[] ExternalTypeInfoResolvers => _ruleResolvers.Values.Distinct().ToArray();
-
 	static RuleRegistry()
 	{
 		_rules = new ConcurrentDictionary<string, Type>(new Dictionary<string, Type>
@@ -115,9 +112,14 @@ public static class RuleRegistry
 		return _rules.GetValueOrDefault(identifier);
 	}
 
-	public static IRule? GetHandler(string identifier)
+	/// <summary>
+	/// Gets an <see cref="IRule"/> handler for model-less rule evaluation.
+	/// </summary>
+	/// <param name="op">The operator that the rule handles.</param>
+	/// <returns>The handler implementation.</returns>
+	public static IRule? GetHandler(string op)
 	{
-		return _ruleHandlers.GetValueOrDefault(identifier);
+		return _ruleHandlers.GetValueOrDefault(op);
 	}
 
 	/// <summary>
@@ -143,6 +145,16 @@ public static class RuleRegistry
 		{
 			_rules[name] = type;
 		}
+	}
+
+	/// <summary>
+	/// Adds a custom <see cref="IRule"/> implementation.
+	/// </summary>
+	/// <param name="op">The operator that the rule handles.</param>
+	/// <param name="rule">The rule implementation.</param>
+	public static void AddRule(string op, IRule rule)
+	{
+		_ruleHandlers[op] = rule;
 	}
 
 	/// <summary>

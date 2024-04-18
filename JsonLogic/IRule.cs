@@ -3,7 +3,7 @@
 namespace Json.Logic;
 
 /// <summary>
-/// Defines functionality for a modelless approach to evaluating JSON Logic rules.
+/// Defines functionality for a model-less approach to evaluating JSON Logic rules.
 /// </summary>
 public interface IRule
 {
