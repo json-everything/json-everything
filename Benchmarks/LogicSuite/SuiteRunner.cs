@@ -10,6 +10,7 @@ using Json.More;
 
 namespace Json.Benchmarks.LogicSuite;
 
+[MemoryDiagnoser]
 public class SuiteRunner
 {
 #if DEBUG
