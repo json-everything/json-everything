@@ -20,7 +20,6 @@
     <AssemblyVersion>2.0.0.0</AssemblyVersion>
     <Authors>Greg Dennis</Authors>
     <Description>Extends JsonSchema.Net to provide keywords to extend array validation</Description>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageIcon>json-logo-256.png</PackageIcon>
     <PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>

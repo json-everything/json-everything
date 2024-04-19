@@ -22,7 +22,6 @@
     <Authors>Greg Dennis</Authors>
     <Product>JsonSchema.Net</Product>
     <Description>Data generation extension for JsonSchema.Net</Description>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageIcon>json-logo-256.png</PackageIcon>
     <PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
