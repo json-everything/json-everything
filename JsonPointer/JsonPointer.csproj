@@ -16,8 +16,8 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageId>JsonPointer.Net</PackageId>
-    <Version>4.0.1.1</Version>
-    <FileVersion>4.0.1.1</FileVersion>
+    <Version>4.0.1.2</Version>
+    <FileVersion>4.0.1.2</FileVersion>
     <AssemblyVersion>4.0.0.0</AssemblyVersion>
     <Authors>Greg Dennis</Authors>
     <Description>JSON Pointer built on the System.Text.Json namespace</Description>
@@ -41,7 +41,7 @@
 
   <ItemGroup>
     <None Include="..\tools\ApiDocsGenerator\release-notes\rn-json-pointer.md" Link="release-notes.md" />
-    <None Include="README.md" Pack="true" PackagePath="\" />
+    <None Include="README.md" Pack="true" PackagePath="\docs" />
     <None Include="..\LICENSE" Pack="true" PackagePath="\" />
     <None Include="..\Resources\json-logo-256.png" Pack="true" PackagePath="\" />
   </ItemGroup>
