@@ -146,3 +146,13 @@ title:    accessor after function call
 context:  {}
 template: {$eval: 'split("left:right", ":")[1]'}
 result:   right
+---
+title:    if defined check
+context:  {y: 10}
+template: {$if: 'defined("x")', then: {$eval: 'x'}, else: 20}
+result:   20
+---
+title:    switch defined check
+context:  {y: 10}
+template: {$switch: {'defined("x")': {$eval: 'x'}, $default: 20}}
+result:   20
