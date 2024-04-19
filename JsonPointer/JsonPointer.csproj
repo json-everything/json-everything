@@ -15,10 +15,10 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PackageId>JsonPointer.Net</PackageId>
     <Version>4.0.1.1</Version>
     <FileVersion>4.0.1.1</FileVersion>
     <AssemblyVersion>4.0.0.0</AssemblyVersion>
-    <PackageId>JsonPointer.Net</PackageId>
     <Authors>Greg Dennis</Authors>
     <Description>JSON Pointer built on the System.Text.Json namespace</Description>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
