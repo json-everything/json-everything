@@ -4,7 +4,7 @@ title: JsonPointer.Net
 icon: fas fa-tag
 order: "09.10"
 ---
-# [4.0.1.1](https://github.com/gregsdennis/json-everything/pull/712) {#release-pointer-4.0.1.1}
+# [4.0.1.x](https://github.com/gregsdennis/json-everything/pull/712) {#release-pointer-4.0.1.x}
 
 [#711](https://github.com/gregsdennis/json-everything/issues/711) - Nuget package meta-data updates; no function change from previous version.
 

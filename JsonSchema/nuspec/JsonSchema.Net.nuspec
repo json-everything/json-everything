@@ -25,6 +25,6 @@
     <file src="..\..\net8.0\JsonSchema.Net.xml" target="lib\net8.0" />
     <file src="..\..\net8.0\JsonSchema.Net.pdb" target="lib\net8.0" />
     <file src="..\json-logo-256.png" target="json-logo-256.png" />
-    <file src="..\README.md" target="docs\" />
+    <file src="..\README.md" target="\" />
   </files>
 </package>
