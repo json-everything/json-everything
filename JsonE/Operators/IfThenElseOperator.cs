@@ -26,11 +26,8 @@ internal class IfThenElseOperator : IOperator
 		var thenPresent = obj.TryGetValue("then", out var thenValue, out _);
 		var elsePresent = obj.TryGetValue("else", out var elseValue, out _);
 
-		thenValue = JsonE.Evaluate(thenValue, context);
-		elseValue = JsonE.Evaluate(elseValue, context);
-
 		return cond.IsTruthy()
-			? thenPresent ? thenValue : JsonE.DeleteMarker
-			: elsePresent ? elseValue : JsonE.DeleteMarker;
+			? thenPresent ? JsonE.Evaluate(thenValue, context) : JsonE.DeleteMarker
+			: elsePresent ? JsonE.Evaluate(elseValue, context) : JsonE.DeleteMarker;
 	}
 }
