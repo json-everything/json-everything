@@ -4,6 +4,10 @@ title: JsonPath.Net
 icon: fas fa-tag
 order: "09.08"
 ---
+# [1.0.1.1](https://github.com/gregsdennis/json-everything/pull/712) {#release-path-1.0.1.1}
+
+[#711](https://github.com/gregsdennis/json-everything/issues/711) - Nuget package meta-data updates; no function change from previous version.
+
 # [1.0.1](https://github.com/gregsdennis/json-everything/commit/550f4d97d52c90644cf033ae235fa6d80b3fbda3) {#release-path-1.0.1}
 
 Fixed an issue around operator precedence in boolean expressions.
