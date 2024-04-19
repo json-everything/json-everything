@@ -21,6 +21,6 @@
   <files>
     <file src="..\bin\Release\netstandard2.0\tr-TR\JsonSchema.Net.resources.dll" target="lib\netstandard2.0\tr-TR" />
     <file src="..\bin\Release\netstandard2.0\json-logo-256.png" target="json-logo-256.png" />
-    <file src="..\README.tr-TR.md" target="\" />
+    <file src="README.tr-TR.md" target="\" />
   </files>
 </package>

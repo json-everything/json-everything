@@ -21,6 +21,6 @@
   <files>
     <file src="..\bin\Release\netstandard2.0\es\JsonSchema.Net.resources.dll" target="lib\netstandard2.0\es" />
     <file src="..\bin\Release\netstandard2.0\json-logo-256.png" target="json-logo-256.png" />
-    <file src="..\README.es.md" target="\" />
+    <file src="README.es.md" target="\" />
   </files>
 </package>
