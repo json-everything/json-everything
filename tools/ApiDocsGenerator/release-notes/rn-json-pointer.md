@@ -4,6 +4,10 @@ title: JsonPointer.Net
 icon: fas fa-tag
 order: "09.10"
 ---
+# [4.0.1.1](https://github.com/gregsdennis/json-everything/pull/712) {#release-pointer-4.0.1.1}
+
+[#711](https://github.com/gregsdennis/json-everything/issues/711) - Nuget package meta-data updates; no function change from previous version.
+
 # [4.0.1](https://github.com/gregsdennis/json-everything/commit/b065976d62a03166128d8445868e6ab4bc0124d8) {#release-pointer-4.0.1}
 
 Fixed issue with equality operators on `PointerSegment` when dealing with nulls.

@@ -9,6 +9,7 @@
     <projectUrl>https://github.com/gregsdennis/json-everything</projectUrl>
     <description>JSON Schema built on the System.Text.Json namespace.</description>
     <releaseNotes>Release notes can be found at https://json-everything.net/json-schema</releaseNotes>
+    <readme>README.md</readme>
     <tags>json-schema validation schema json</tags>
     <repository type="git" url="https://github.com/gregsdennis/json-everything" />
     <dependencies>
@@ -24,5 +25,6 @@
     <file src="..\..\net8.0\JsonSchema.Net.xml" target="lib\net8.0" />
     <file src="..\..\net8.0\JsonSchema.Net.pdb" target="lib\net8.0" />
     <file src="..\json-logo-256.png" target="json-logo-256.png" />
+    <file src="..\README.md" target="docs\" />
   </files>
 </package>

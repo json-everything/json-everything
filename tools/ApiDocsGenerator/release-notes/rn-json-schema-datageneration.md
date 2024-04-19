@@ -4,6 +4,10 @@ title: JsonSchema.Net.DataGeneration
 icon: fas fa-tag
 order: "09.07"
 ---
+# [2.1.0.1](https://github.com/gregsdennis/json-everything/pull/712) {#release-schemadatagen-2.1.0.1}
+
+[#711](https://github.com/gregsdennis/json-everything/issues/711) - Nuget package meta-data updates; no function change from previous version.
+
 # [2.1.0](https://github.com/gregsdennis/json-everything/pull/665) {#release-schemadatagen-2.0.1}
 
 [#617](https://github.com/gregsdennis/json-everything/issues/617) - Added support for `exclusiveMin`, `exclusiveMax`, and `$ref`.  (Note: `$ref` support does not include infinite recursion checking.)

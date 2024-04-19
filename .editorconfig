@@ -4,7 +4,7 @@ indent_style = tab
 indent_size = tab
 tab_width = 4
 
-[*.{css,json}]
+[*.{css,json,md}]
 indent_style = space
 indent_size = 2
 tab_width = 2
@@ -1913,8 +1913,3 @@ resharper_xaml_xaml_xamarin_forms_data_type_and_binding_context_type_mismatched_
 resharper_xaml_x_key_attribute_disallowed_highlighting = error
 resharper_xml_doc_comment_syntax_problem_highlighting = warning
 resharper_xunit_xunit_test_with_console_output_highlighting = warning
-
-[*.{appxmanifest,asax,ascx,aspx,axaml,axml,build,config,cs,cshtml,csproj,css,dbml,discomap,dtd,htm,html,js,json,jsproj,jsx,lsproj,master,njsproj,nuspec,paml,proj,props,proto,razor,resjson,resw,resx,skin,StyleCop,targets,tasks,ts,tsx,vb,vbproj,xaml,xamlx,xml,xoml,xsd}]
-indent_style = tab
-indent_size = tab
-tab_width = 4

@@ -2,13 +2,15 @@
 <package>
   <metadata minClientVersion="2.12">
     <id>JsonSchema.Net.it</id>
-    <version>1.0.0</version>
+    <version>1.0.0.1</version>
     <title>JsonSchema.Net Locale (it)</title>
     <authors>Greg Dennis</authors>
     <projectUrl>https://github.com/gregsdennis/json-everything</projectUrl>
     <icon>json-logo-256.png</icon>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>JsonSchema.Net Locale Italian (it)</description>
+    <releaseNotes>Release notes can be found at https://json-everything.net/json-schema</releaseNotes>
+    <readme>README.it.md</readme>
     <license type="expression">MIT</license>
     <repository type="git" url="https://github.com/gregsdennis/json-everything" />
     <language>it</language>
@@ -19,5 +21,6 @@
   <files>
     <file src="..\bin\Release\netstandard2.0\it\JsonSchema.Net.resources.dll" target="lib\netstandard2.0\it" />
     <file src="..\bin\Release\netstandard2.0\json-logo-256.png" target="json-logo-256.png" />
+    <file src="..\README.it.md" target="docs\" />
   </files>
 </package>

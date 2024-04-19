@@ -1,64 +1,56 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<TargetFrameworks>netstandard2.1;net8.0</TargetFrameworks>
-		<LangVersion>latest</LangVersion>
-		<AssemblyName>JsonSchema.Net.Data</AssemblyName>
-		<RootNamespace>Json.Schema.Data</RootNamespace>
-		<Authors>Greg Dennis</Authors>
-		<Description>
-			Extends JsonSchema.Net to provide the "data" keyword.
-		
-			Learn about this JSON Schema vocabulary at https://docs.json-everything.net/schema/vocabs/data-2022/.
-		</Description>
-		<PackageLicenseFile>LICENSE</PackageLicenseFile>
-		<PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
-		<PackageIcon>json-logo-256.png</PackageIcon>
-		<RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>
-		<PackageTags>json-schema evaluation validation schema json data schema-data</PackageTags>
-		<PackageReleaseNotes>Release notes can be found at https://docs.json-everything.net/rn-json-schema-data/</PackageReleaseNotes>
-		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<DocumentationFile>JsonSchema.Net.Data.xml</DocumentationFile>
-		<LangVersion>latest</LangVersion>
-		<Version>6.0.0</Version>
-		<FileVersion>6.0.0.0</FileVersion>
-		<AssemblyVersion>6.0.0.0</AssemblyVersion>
-		<IncludeSymbols>true</IncludeSymbols>
-		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
-		<PublishRepositoryUrl>true</PublishRepositoryUrl>
-		<EmbedUntrackedSources>true</EmbedUntrackedSources>
-		<SignAssembly>true</SignAssembly>
-		<AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
-		<NoWarn>IDE0290</NoWarn>
-		<Nullable>enable</Nullable>
-		<IsAotCompatible Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net7.0'))">true</IsAotCompatible>
-		<PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
-	</PropertyGroup>
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.1;net8.0</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <NoWarn>IDE0290</NoWarn>
+    <IsAotCompatible Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net7.0'))">true</IsAotCompatible>
+    <RootNamespace>Json.Schema.Data</RootNamespace>
+    <AssemblyName>JsonSchema.Net.Data</AssemblyName>
+    <DocumentationFile>JsonSchema.Net.Data.xml</DocumentationFile>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
 
-	<ItemGroup>
-		<ProjectReference Include="..\JsonPath\JsonPath.csproj" />
-		<ProjectReference Include="..\JsonSchema\JsonSchema.csproj" />
-	</ItemGroup>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <Version>6.0.0.1</Version>
+    <FileVersion>6.0.0.1</FileVersion>
+    <AssemblyVersion>6.0.0.0</AssemblyVersion>
+    <Authors>Greg Dennis</Authors>
+    <Description>Extends JsonSchema.Net to provide the "data" keyword</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageIcon>json-logo-256.png</PackageIcon>
+    <PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>
+    <PackageTags>json-schema evaluation validation schema json data schema-data</PackageTags>
+    <PackageReleaseNotes>Release notes can be found at https://docs.json-everything.net/rn-json-schema-data/</PackageReleaseNotes>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
 
-	<ItemGroup>
-		<PackageReference Include="PolySharp" Version="1.14.1" PrivateAssets="All" />
-		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
-	</ItemGroup>
+    <PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
+  </PropertyGroup>
 
-	<ItemGroup>
-		<None Include="..\tools\ApiDocsGenerator\release-notes\rn-json-schema-data.md" Link="release-notes.md" />
-		<None Include="..\LICENSE">
-			<Pack>True</Pack>
-			<PackagePath></PackagePath>
-		</None>
-		<None Include="..\Resources\json-logo-256.png">
-			<Pack>True</Pack>
-			<PackagePath></PackagePath>
-		</None>
-	</ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="PolySharp" Version="1.14.1" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+  </ItemGroup>
 
-	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-		<Copy SourceFiles="$(TargetDir)$(DocumentationFile)" DestinationFolder="..\doc-tool\xml\" SkipUnchangedFiles="True" OverwriteReadOnlyFiles="True" />
-	</Target>
+  <ItemGroup>
+    <None Include="..\tools\ApiDocsGenerator\release-notes\rn-json-schema-data.md" Link="release-notes.md" />
+    <None Include="README.md" Pack="true" PackagePath="\" />
+    <None Include="..\LICENSE" Pack="true" PackagePath="\" />
+    <None Include="..\Resources\json-logo-256.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\JsonPath\JsonPath.csproj" />
+    <ProjectReference Include="..\JsonSchema\JsonSchema.csproj" />
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Copy SourceFiles="$(TargetDir)$(DocumentationFile)" DestinationFolder="..\doc-tool\xml\" SkipUnchangedFiles="True" OverwriteReadOnlyFiles="True" />
+  </Target>
 
 </Project>

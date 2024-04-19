@@ -1,40 +1,36 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	<TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
+  	<TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
+    <Configurations>Debug;Release;Localization</Configurations>
+    <DefineConstants>$(DefineConstants)TRACE</DefineConstants>
     <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <NoWarn>IDE0290</NoWarn>
+    <IsAotCompatible Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net7.0'))">true</IsAotCompatible>	  
     <RootNamespace>Json.Schema</RootNamespace>
-    <PackageId>JsonSchema.Net</PackageId>
-    <Authors>Greg Dennis</Authors>
-    <Company />
-    <Product>JsonSchema.Net</Product>
-    <Description>
-		[JSON Schema](https://json-schema.org) built on the System.Text.Json namespace.
+    <AssemblyName>JsonSchema.Net</AssemblyName>
+    <DocumentationFile>JsonSchema.Net.xml</DocumentationFile>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
 
-		Read the full documentation at https://docs.json-everything.net/schema/basics/.
-	</Description>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PackageId>JsonSchema.Net</PackageId>
+    <Version>6.1.0.1</Version>
+    <FileVersion>6.1.0.1</FileVersion>
+    <AssemblyVersion>6.0.0.0</AssemblyVersion>
+    <Authors>Greg Dennis</Authors>
+    <Description>JSON Schema built on the System.Text.Json namespace</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageIcon>json-logo-256.png</PackageIcon>
     <PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
     <RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>
     <PackageTags>json-schema validation schema json</PackageTags>
-    <Version>6.1.0</Version>
-    <FileVersion>6.1.0.0</FileVersion>
-    <AssemblyVersion>6.0.0.0</AssemblyVersion>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <AssemblyName>JsonSchema.Net</AssemblyName>
-    <PackageIcon>json-logo-256.png</PackageIcon>
     <PackageReleaseNotes>Release notes can be found at https://docs.json-everything.net/rn-json-schema/</PackageReleaseNotes>
-    <DocumentationFile>JsonSchema.Net.xml</DocumentationFile>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>../json-everything.snk</AssemblyOriginatorKeyFile>
-    <Nullable>enable</Nullable>
-    <Configurations>Debug;Release;Localization</Configurations>
-    <DefineConstants>$(DefineConstants)TRACE</DefineConstants>
-    <NoWarn>IDE0290</NoWarn>
-    <IsAotCompatible Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net7.0'))">true</IsAotCompatible>	  
+
     <PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
   </PropertyGroup>
 
@@ -48,24 +44,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Json.More\Json.More.csproj" />
-    <ProjectReference Include="..\JsonPointer\JsonPointer.csproj" />
+    <None Include="..\tools\ApiDocsGenerator\release-notes\rn-json-schema.md" Link="release-notes.md" />
+    <None Include="README.md" Pack="true" PackagePath="\" />
+    <None Include="..\LICENSE" Pack="true" PackagePath="\" />
+    <None Include="..\Resources\json-logo-256.png" Pack="true" PackagePath="\" />
+    <None Update="nuspec\**\*" CopyToOutputDirectory="Always" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\tools\ApiDocsGenerator\release-notes\rn-json-schema.md" Link="release-notes.md" />
-    <None Include="..\LICENSE">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-    <None Include="..\Resources\json-logo-256.png">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="nuspec\**\*">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <ProjectReference Include="..\Json.More\Json.More.csproj" />
+    <ProjectReference Include="..\JsonPointer\JsonPointer.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -73,12 +61,6 @@
       <SubType>Designer</SubType>
       <Generator></Generator>
     </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="nuspec\JsonSchema.Net.ru.nuspec">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">

@@ -4,6 +4,10 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "09.01"
 ---
+# [6.1.0.1](https://github.com/gregsdennis/json-everything/pull/712) {#release-schema-6.1.0.1}
+
+[#711](https://github.com/gregsdennis/json-everything/issues/711) - Nuget package meta-data updates; no function change from previous version.
+
 # [6.1.0](https://github.com/gregsdennis/json-everything/pull/709) {#release-schema-6.1.0}
 
 [#704](https://github.com/gregsdennis/json-everything/issues/704) - Several builder extension return types expanded from `IReadOnlyCollection<T>` to `IReadOnlyList<T>`.  Thanks to [@SGStino](https://github.com/SGStino) for identifying and implementing this.

@@ -4,6 +4,10 @@ title: Json.More.Net
 icon: fas fa-tag
 order: "09.13"
 ---
+# [2.0.1.1](https://github.com/gregsdennis/json-everything/pull/712) {#release-more-2.0.1.1}
+
+[#711](https://github.com/gregsdennis/json-everything/issues/711) - Nuget package meta-data updates; no function change from previous version.
+
 # [2.0.1](https://github.com/gregsdennis/json-everything/pull/669) {#release-more-2.0.1}
 
 Fixes an issue in `JsonNode.GetInteger()` where the underlying value is a `uint`.
