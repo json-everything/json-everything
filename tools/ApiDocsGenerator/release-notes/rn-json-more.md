@@ -4,9 +4,9 @@ title: Json.More.Net
 icon: fas fa-tag
 order: "09.13"
 ---
-# [2.0.1.1](https://github.com/gregsdennis/json-everything/pull/712) {#release-more-2.0.1.1}
+# [2.0.1.x](https://github.com/gregsdennis/json-everything/pull/712) {#release-more-2.0.1.x}
 
-[#711](https://github.com/gregsdennis/json-everything/issues/711) - Nuget package meta-data updates; no function change from previous version.
+[#711](https://github.com/gregsdennis/json-everything/issues/711) - Nuget package meta-data updates; no functional changes from previous version.
 
 # [2.0.1](https://github.com/gregsdennis/json-everything/pull/669) {#release-more-2.0.1}
 

@@ -14,12 +14,13 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageId>Yaml2JsonNode</PackageId>
-    <Version>2.0.0.1</Version>
-    <FileVersion>2.0.0.1</FileVersion>
+    <Version>2.0.0.2</Version>
+    <FileVersion>2.0.0.2</FileVersion>
     <AssemblyVersion>2.0.0.0</AssemblyVersion>
     <Authors>Greg Dennis</Authors>
     <Description>Allows conversion of YamlDotNet's YAML models to JsonNodes</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIcon>json-logo-256.png</PackageIcon>
     <PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
     <RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>

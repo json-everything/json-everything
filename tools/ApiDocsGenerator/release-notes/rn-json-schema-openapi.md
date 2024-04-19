@@ -4,9 +4,9 @@ title: JsonSchema.Net.OpenApi
 icon: fas fa-tag
 order: "09.04"
 ---
-# [3.0.0.1](https://github.com/gregsdennis/json-everything/pull/712) {#release-schemaopenapi-3.0.0.1}
+# [3.0.0.x](https://github.com/gregsdennis/json-everything/pull/712) {#release-schemaopenapi-3.0.0.x}
 
-[#711](https://github.com/gregsdennis/json-everything/issues/711) - Nuget package meta-data updates; no function change from previous version.
+[#711](https://github.com/gregsdennis/json-everything/issues/711) - Nuget package meta-data updates; no functional changes from previous version.
 
 # [3.0.0](https://github.com/gregsdennis/json-everything/pull/619) {#release-schemaopenapi-3.0.0}
 

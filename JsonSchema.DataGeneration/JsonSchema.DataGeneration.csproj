@@ -16,13 +16,14 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageId>JsonSchema.Net.DataGeneration</PackageId>
-    <Version>2.1.0.1</Version>
-    <FileVersion>2.1.0.1</FileVersion>
+    <Version>2.1.0.2</Version>
+    <FileVersion>2.1.0.2</FileVersion>
     <AssemblyVersion>2.0.0.0</AssemblyVersion>
     <Authors>Greg Dennis</Authors>
     <Product>JsonSchema.Net</Product>
     <Description>Data generation extension for JsonSchema.Net</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIcon>json-logo-256.png</PackageIcon>
     <PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
     <RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>
