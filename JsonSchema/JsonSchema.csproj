@@ -45,7 +45,7 @@
 
   <ItemGroup>
     <None Include="..\tools\ApiDocsGenerator\release-notes\rn-json-schema.md" Link="release-notes.md" />
-    <None Include="README.md" Pack="true" PackagePath="\" />
+    <None Include="README.md" Pack="true" PackagePath="\" CopyToOutputDirectory="Always" />
     <None Include="..\LICENSE" Pack="true" PackagePath="\" />
     <None Include="..\Resources\json-logo-256.png" Pack="true" PackagePath="\" CopyToOutputDirectory="Always" />
     <None Update="nuspec\**\*" CopyToOutputDirectory="Always" />

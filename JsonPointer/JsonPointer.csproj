@@ -22,6 +22,7 @@
     <Authors>Greg Dennis</Authors>
     <Description>JSON Pointer built on the System.Text.Json namespace</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIcon>json-logo-256.png</PackageIcon>
     <PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
     <RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>
@@ -41,7 +42,7 @@
 
   <ItemGroup>
     <None Include="..\tools\ApiDocsGenerator\release-notes\rn-json-pointer.md" Link="release-notes.md" />
-    <None Include="README.md" Pack="true" PackagePath="\docs" />
+    <None Include="README.md" Pack="true" PackagePath="\" />
     <None Include="..\LICENSE" Pack="true" PackagePath="\" />
     <None Include="..\Resources\json-logo-256.png" Pack="true" PackagePath="\" />
   </ItemGroup>
