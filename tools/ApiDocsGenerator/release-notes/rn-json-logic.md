@@ -4,6 +4,10 @@ title: JsonLogic
 icon: fas fa-tag
 order: "09.11"
 ---
+# [5.2.1](https://github.com/gregsdennis/json-everything/pull/717) {#release-logic-5.2.1}
+
+Fixed an exception message.
+
 # [5.2.0.x](https://github.com/gregsdennis/json-everything/pull/712) {#release-logic-5.2.0.x}
 
 [#711](https://github.com/gregsdennis/json-everything/issues/711) - Nuget package meta-data updates; no functional changes from previous version.
