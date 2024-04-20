@@ -177,7 +177,7 @@ public static class RuleRegistry
 		var typeInfo = typeContext.GetTypeInfo(typeof(T)) ??
 		               throw new ArgumentException($"Rule implementation `{typeof(T).Name}` does not have a JsonTypeInfo");
 		_ = typeInfo.Converter as IWeaklyTypedJsonConverter ??
-		                throw new ArgumentException("Rule Converter must implement IJsonConverterReadWrite or AotCompatibleJsonConverter to be AOT compatible");
+		                throw new ArgumentException("Rule Converter must implement IWeaklyTypedJsonConverter or WeaklyTypedJsonConverter to be AOT compatible");
 		var operators = type.GetCustomAttributes<OperatorAttribute>().Select(a => a.Name);
 		foreach (var name in operators)
 		{
