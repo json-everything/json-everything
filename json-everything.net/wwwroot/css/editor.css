@@ -1,3 +1,33 @@
 .editor-input {
     height: 600px;
 }
+
+.editor-lang-json {
+  float: right;
+  padding: 0px 14px;
+  background: #083f2e;
+  color: white;
+  font-size: 90%;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.editor-lang-yaml {
+  float: right;
+  padding: 0px 14px;
+  background: #043859;
+  color: white;
+  font-size: 90%;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.editor-lang-csharp {
+  float: right;
+  padding: 0px 14px;
+  background: #d73a16;
+  color: white;
+  font-size: 90%;
+  font-weight: bold;
+  text-transform: uppercase;
+}

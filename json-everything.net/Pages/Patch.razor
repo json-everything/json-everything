@@ -62,6 +62,7 @@
 								<div class="col-6">
 									<label class="w-100">
 										@PatchEditorLabel
+										<span class="editor-lang-json">JSON</span>
 										<div class="editor-input">
 											<MonacoEditor @ref="_patchEditor" Id="editor-patch" ConstructionOptions="BasicOptions"
 											              CssClass="h-100"/>
@@ -71,6 +72,7 @@
 								<div class="col-6">
 									<label class="w-100">
 										Data / Target data
+										<span class="editor-lang-json">JSON</span>
 										<div class="editor-input">
 											<MonacoEditor @ref="_instanceEditor" Id="editor-instance" ConstructionOptions="BasicOptions"
 											              CssClass="h-100"/>

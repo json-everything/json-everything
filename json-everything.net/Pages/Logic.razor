@@ -6,6 +6,7 @@
 @using EditorOptions = JsonEverythingNet.Services.EditorOptions
 @using System.Text.Encodings.Web
 @using System.Text.Json.Nodes
+@using Yaml2JsonNode
 
 @inject DataManager DataManager;
 
@@ -41,9 +42,10 @@
 					<div class="col-5">
 						<label class="w-100">
 							Logic
+							<span class="editor-lang-@_logicEditorLanguage">@_logicEditorLanguage</span>
 							<div class="editor-input">
 								<MonacoEditor @ref="_logicEditor" Id="editor-logic" ConstructionOptions="BasicOptions"
-								              CssClass="h-100"/>
+								              CssClass="h-100" OnDidChangeModelContent="HandleLogicChanged"/>
 							</div>
 						</label>
 					</div>
@@ -53,9 +55,10 @@
 					<div class="col-5">
 						<label class="w-100">
 							Data
+							<span class="editor-lang-@_instanceEditorLanguage">@_instanceEditorLanguage</span>
 							<div class="editor-input">
 								<MonacoEditor @ref="_instanceEditor" Id="editor-instance" ConstructionOptions="BasicOptions"
-								              CssClass="h-100"/>
+											  CssClass="h-100" OnDidChangeModelContent="HandleInstanceChanged" />
 							</div>
 						</label>
 					</div>
@@ -76,7 +79,9 @@
 @code {
 #pragma warning disable CS8618
 	private MonacoEditor _logicEditor;
+	private string _logicEditorLanguage;
 	private MonacoEditor _instanceEditor;
+	private string _instanceEditorLanguage;
 	private MonacoEditor _outputEditor;
 
 	private readonly List<LibraryVersion> _libraries = new()
@@ -94,10 +99,10 @@
 		await SaveInstance();
 		await _outputEditor.SetValue(string.Empty);
 
-		Rule rule;
+		JsonNode? rule;
 		try
 		{
-			rule = JsonSerializer.Deserialize<Rule>(await _logicEditor.GetValue())!;
+			rule = YamlSerializer.Parse(await _logicEditor.GetValue()).ToJsonNode().FirstOrDefault();
 		}
 		catch (Exception e)
 		{
@@ -115,7 +120,7 @@
 			return;
 		}
 
-		var results = rule.Apply(instance);
+		var results = JsonLogic.Apply(rule, instance);
 
 		var resultText = JsonSerializer.Serialize(results, new JsonSerializerOptions
 		{
@@ -153,8 +158,21 @@
 			await LoadSavedLogic();
 			await LoadSavedInstance();
 			await _outputEditor.SetValue(string.Empty);
+
+			_logicEditorLanguage = await _logicEditor.DetectLanguage();
+			_instanceEditorLanguage = await _instanceEditor.DetectLanguage();
 		}
 
 		await base.OnAfterRenderAsync(firstRender);
+	}
+
+	private async Task HandleLogicChanged()
+	{
+		_logicEditorLanguage = await _logicEditor.DetectLanguage();
+	}
+
+	private async Task HandleInstanceChanged()
+	{
+		_instanceEditorLanguage = await _instanceEditor.DetectLanguage();
 	}
 }

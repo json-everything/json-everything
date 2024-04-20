@@ -51,6 +51,7 @@
 								<div class="col-6">
 									<label class="w-100">
 										Template
+										<span class="editor-lang-@_templateEditorLanguage">@_templateEditorLanguage</span>
 										<div class="editor-input">
 											<MonacoEditor @ref="_templateEditor" Id="editor-schema" ConstructionOptions="BasicOptions"
 														  CssClass="h-100" OnDidChangeModelContent="HandleTemplateChanged" />
@@ -60,6 +61,7 @@
 								<div class="col-6">
 									<label class="w-100">
 										Context
+										<span class="editor-lang-@_contextEditorLanguage">@_contextEditorLanguage</span>
 										<div class="editor-input">
 											<MonacoEditor @ref="_contextEditor" Id="editor-instance" ConstructionOptions="BasicOptions"
 														  CssClass="h-100" OnDidChangeModelContent="HandleContextChanged" />
@@ -88,7 +90,9 @@
 @code {
 #pragma warning disable CS8618
 	private MonacoEditor _templateEditor;
+	private string _templateEditorLanguage;
 	private MonacoEditor _contextEditor;
+	private string _contextEditorLanguage;
 	private MonacoEditor _outputEditor;
 #pragma warning restore CS8618
 
@@ -165,7 +169,7 @@
 
 	private async Task HandleTemplateChanged()
 	{
-		await _templateEditor.DetectLanguage();
+		_templateEditorLanguage = await _templateEditor.DetectLanguage();
 	}
 
 	private async Task SaveTemplate()
@@ -180,7 +184,7 @@
 
 	private async Task HandleContextChanged()
 	{
-		await _contextEditor.DetectLanguage();
+		_contextEditorLanguage = await _contextEditor.DetectLanguage();
 	}
 
 	private async Task SaveContext()
@@ -200,8 +204,8 @@
 			await LoadSavedTemplate();
 			await LoadSavedContext();
 
-			await _templateEditor.DetectLanguage();
-			await _contextEditor.DetectLanguage();
+			_templateEditorLanguage = await _templateEditor.DetectLanguage();
+			_contextEditorLanguage = await _contextEditor.DetectLanguage();
 
 			await _outputEditor.SetLanguageAsync("yaml");
 			await _outputEditor.UpdateOptions(new GlobalEditorOptions { TabSize = 2 });

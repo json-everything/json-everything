@@ -18,7 +18,7 @@ public static class EditorExtensions
 		await MonacoEditorBase.SetModelLanguage(model, language);
 	}
 
-	public static async Task DetectLanguage(this MonacoEditor editor)
+	public static async Task<string> DetectLanguage(this MonacoEditor editor)
 	{
 		var text = await editor.GetValue();
 
@@ -26,12 +26,16 @@ public static class EditorExtensions
 		{
 			await editor.UpdateOptions(new GlobalEditorOptions { TabSize = 2 });
 			await editor.SetLanguageAsync("json");
+			return "json";
 		}
 		else if (TryParseYaml(text))
 		{
 			await editor.UpdateOptions(new GlobalEditorOptions { TabSize = 2 });
 			await editor.SetLanguageAsync("yaml");
+			return "yaml";
 		}
+
+		return string.Empty;
 	}
 
 	private static bool TryParseJson(string text)
