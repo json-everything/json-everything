@@ -1,4 +1,4 @@
-﻿using System.Linq;
+﻿using System;
 using System.Text.Json.Nodes;
 using Json.Pointer;
 
@@ -14,7 +14,7 @@ internal class MoveOperationHandler : IPatchOperationHandler
 	{
 		if (Equals(operation.Path, operation.From)) return;
 
-		if (operation.Path.OldSegments.Length == 0)
+		if (operation.Path.Segments.Length == 0)
 		{
 			context.Message = "Cannot move root value.";
 			return;
@@ -33,34 +33,38 @@ internal class MoveOperationHandler : IPatchOperationHandler
 			return;
 		}
 
-		var lastFromSegment = operation.From.OldSegments.Last().Value;
+		var lastFromSegment = operation.From[^1];
 		if (source is JsonObject objSource)
-			objSource.Remove(lastFromSegment);
+			objSource.Remove(lastFromSegment.GetSegmentValue());
 		else if (source is JsonArray arrSource)
 		{
-			var index = lastFromSegment == "-" ? arrSource.Count - 1 : int.Parse(lastFromSegment);
+			var index = lastFromSegment.Length == 0 && lastFromSegment[0] == '-'
+				? arrSource.Count
+				: lastFromSegment.TryGetInt(out var i)
+					? i
+					: throw new ArgumentException("Expected integer");
 			arrSource.RemoveAt(index);
 		}
 
-		if (operation.Path.OldSegments.Length == 0)
+		if (operation.Path.Segments.Length == 0)
 		{
 			context.Source = data;
 			return;
 		}
 
-		var lastPathSegment = operation.Path.OldSegments.Last().Value;
+		var lastPathSegment = operation.Path[^1];
 		if (target is JsonObject objTarget)
 		{
-			objTarget[lastPathSegment] = data?.DeepClone();
+			objTarget[lastPathSegment.GetSegmentValue()] = data?.DeepClone();
 			return;
 		}
 
 		if (target is JsonArray arrTarget)
 		{
 			int index;
-			if (lastPathSegment == "-")
+			if (lastPathSegment.Length == 0 && lastPathSegment[0] == '-')
 				index = arrTarget.Count;
-			else if (!int.TryParse(lastPathSegment, out index))
+			else if (!lastPathSegment.TryGetInt(out index))
 			{
 				context.Message = $"Target path `{operation.Path}` could not be reached.";
 				return;
@@ -72,19 +76,5 @@ internal class MoveOperationHandler : IPatchOperationHandler
 			else
 				context.Message = "Path indicates an index greater than the bounds of the array";
 		}
-	}
-}
-
-internal static class PointerExtensions
-{
-	public static bool EvaluateAndGetParent(this JsonPointer pointer, JsonNode? node, out JsonNode? target)
-	{
-		if (pointer == JsonPointer.Empty)
-		{
-			target = node?.Parent;
-			return target != null;
-		}
-		var parentPointer = JsonPointer.Create(pointer.OldSegments.Take(pointer.OldSegments.Length - 1).ToArray());
-		return parentPointer.TryEvaluate(node, out target);
 	}
 }
