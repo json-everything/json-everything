@@ -295,11 +295,10 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 		using var owner = MemoryPool<char>.Shared.Rent();
 		var span = owner.Memory.Span;
 		_plain.AsSpan().CopyTo(span);
-		span[_plain.Length] = '/';
-		var nextSegment = span[(_plain.Length + 1)..];
+		var nextSegment = span[_plain.Length..];
 		other._plain.AsSpan().CopyTo(nextSegment);
 
-		return Parse(span);
+		return Parse(span[..(_plain.Length + other._plain.Length)]);
 	}
 
 	/// <summary>
@@ -327,7 +326,7 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 	}
 
 	/// <summary>
-	/// Creates a new pointer that retrieves an ancestor of the represented location.
+	/// Creates a new pointer that retrieves an ancestor (left side, start) of the represented location.
 	/// </summary>
 	/// <param name="levels">How many levels to go back.  Default is 1, which gets the immediate parent.</param>
 	/// <returns>A new pointer.</returns>
@@ -338,11 +337,30 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 	{
 		if (levels == 0) return this;
 		if (levels < 0 || levels > Segments.Length)
-			throw new ArgumentException("Ancestor cannot be reached", nameof(levels));
+			throw new IndexOutOfRangeException("Ancestor cannot be reached");
 		if (levels == Segments.Length) return Empty;
 
 		var end = Segments[^(levels+1)].End;
 		return Parse(_plain.AsSpan()[..end]);
+	}
+
+	/// <summary>
+	/// Creates a new pointer that retrieves the local part (right side, end) of the represented location.
+	/// </summary>
+	/// <param name="skip">How many levels to skip from the start of the pointer.</param>
+	/// <returns>A new pointer.</returns>
+	/// <exception cref="ArgumentException">
+	/// Thrown if <paramref name="skip"/> is less than zero or more than the number of segments.
+	/// </exception>
+	public JsonPointer GetLocal(int skip)
+	{
+		if (skip == 0) return this;
+		if (skip == Segments.Length) return Empty;
+		if (skip < 0 || skip > Segments.Length)
+			throw new IndexOutOfRangeException("Local cannot be reached");
+
+		var start = Segments[skip].Start.Value - 1; // capture the slash
+		return Parse(_plain.AsSpan()[start..]);
 	}
 
 	/// <summary>

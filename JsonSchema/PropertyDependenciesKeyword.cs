@@ -83,20 +83,20 @@ public class PropertyDependenciesKeyword : IJsonSchemaKeyword, ICustomSchemaColl
 	{
 		var failedProperties = evaluation.ChildEvaluations
 			.Where(x => !x.Results.IsValid)
-			.Select(x => x.Results.EvaluationPath.OldSegments.Last().Value)
+			.Select(x => x.Results.EvaluationPath[^1].GetSegmentValue())
 			.ToArray();
-		evaluation.Results.SetAnnotation(Name, evaluation.ChildEvaluations.Select(x => (JsonNode)x.Results.EvaluationPath.OldSegments.Last().Value!).ToJsonArray());
+		evaluation.Results.SetAnnotation(Name, evaluation.ChildEvaluations.Select(x => (JsonNode)x.Results.EvaluationPath[^1].ToString()!).ToJsonArray());
 		
 		if (failedProperties.Length != 0)
 			evaluation.Results.Fail(Name, ErrorMessages.GetDependentSchemas(context.Options.Culture)
 				.ReplaceToken("failed", failedProperties));
 	}
 
-	(JsonSchema?, int) ICustomSchemaCollector.FindSubschema(IReadOnlyList<PointerSegment> segments)
+	(JsonSchema? Schema, int SegmentsConsumed) ICustomSchemaCollector.FindSubschema(JsonPointer pointer)
 	{
-		if (segments.Count < 2) return (null, 0);
-		if (!Dependencies.TryGetValue(segments[0].Value, out var property)) return (null, 0);
-		if (!property.Schemas.TryGetValue(segments[1].Value, out var schema)) return (null, 0);
+		if (pointer.Segments.Length < 2) return (null, 0);
+		if (!Dependencies.TryGetValue(pointer[0].GetSegmentValue(), out var property)) return (null, 0);
+		if (!property.Schemas.TryGetValue(pointer[1].GetSegmentValue(), out var schema)) return (null, 0);
 
 		return (schema, 2);
 	}

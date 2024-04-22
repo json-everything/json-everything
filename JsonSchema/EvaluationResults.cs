@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -132,17 +131,17 @@ public class EvaluationResults
 	private Uri BuildSchemaLocation()
 	{
 		var localEvaluationPathStart = 0;
-		for (var i = 0; i < EvaluationPath.OldSegments.Length; i++)
+		for (var i = 0; i < EvaluationPath.Segments.Length; i++)
 		{
-			var segment = EvaluationPath.OldSegments[i];
-			if (segment.Value is RefKeyword.Name or RecursiveRefKeyword.Name or DynamicRefKeyword.Name)
+			var segment = EvaluationPath[i].GetSegmentValue();
+			if (segment is RefKeyword.Name or RecursiveRefKeyword.Name or DynamicRefKeyword.Name)
 				localEvaluationPathStart = i + 1;
 		}
 
 		if (_reference == null && _currentUri == Parent?._currentUri)
 			_reference = Parent._reference;
 		var fragment = _reference ?? JsonPointer.Empty;
-		fragment = fragment.Combine(EvaluationPath.OldSegments.Skip(localEvaluationPathStart).ToArray());
+		fragment = fragment.Combine(EvaluationPath.GetLocal(localEvaluationPathStart));
 
 		return fragment == JsonPointer.Empty
 			? _currentUri

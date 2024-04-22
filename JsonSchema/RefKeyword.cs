@@ -68,7 +68,7 @@ public class RefKeyword : IJsonSchemaKeyword
 		var targetBase = context.Options.SchemaRegistry.Get(newBaseUri) ??
 						 throw new JsonSchemaException($"Cannot resolve base schema from `{newUri}`");
 
-		if (JsonPointer.TryParse(fragment, out var pointerFragment))
+		if (JsonPointer.TryParse(fragment.AsSpan(), out var pointerFragment))
 		{
 			if (targetBase == null)
 				throw new JsonSchemaException($"Cannot resolve base schema from `{newUri}`");

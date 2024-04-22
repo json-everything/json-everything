@@ -105,9 +105,9 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 		
 		var failedProperties = evaluation.ChildEvaluations
 			.Where(x => !x.Results.IsValid)
-			.Select(x => x.Results.EvaluationPath.OldSegments.Last().Value)
+			.Select(x => x.Results.EvaluationPath[^1].GetSegmentValue())
 			.ToArray();
-		evaluation.Results.SetAnnotation(Name, evaluation.ChildEvaluations.Select(x => (JsonNode)x.Results.EvaluationPath.OldSegments.Last().Value!).ToJsonArray());
+		evaluation.Results.SetAnnotation(Name, evaluation.ChildEvaluations.Select(x => (JsonNode)x.Results.EvaluationPath[^1].GetSegmentValue()!).ToJsonArray());
 
 		if (failedProperties.Length != 0)
 			evaluation.Results.Fail(Name, ErrorMessages.GetDependentSchemas(context.Options.Culture)

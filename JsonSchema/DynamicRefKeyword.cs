@@ -79,7 +79,7 @@ public class DynamicRefKeyword : IJsonSchemaKeyword
 
 		if (targetSchema == null)
 		{
-			if (JsonPointer.TryParse(newUri.Fragment, out var pointerFragment))
+			if (JsonPointer.TryParse(newUri.Fragment.AsSpan(), out var pointerFragment))
 			{
 				if (targetBase == null)
 					throw new JsonSchemaException($"Cannot resolve base schema from `{newUri}`");
