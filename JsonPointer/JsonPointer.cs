@@ -9,7 +9,6 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using System.Web;
-using Json.More;
 
 namespace Json.Pointer;
 
@@ -18,25 +17,37 @@ namespace Json.Pointer;
 /// </summary>
 [JsonConverter(typeof(JsonPointerJsonConverter))]
 [TypeConverter(typeof(JsonPointerTypeConverter))]
-public struct JsonPointer : IEquatable<JsonPointer>
+public readonly struct JsonPointer : IEquatable<JsonPointer>
 {
 	/// <summary>
 	/// The empty pointer.
 	/// </summary>
 	public static readonly JsonPointer Empty = new();
 
-	private string _plain;
+	private readonly string _plain = null!;
 
+	/// <summary>
+	/// Gets the ranges of the pointer string that represents each segment.
+	/// </summary>
 	public Range[] Segments { get; }
-	public readonly  ReadOnlySpan<char> this[int index] => _plain.AsSpan()[Segments[index]];
+	/// <summary>
+	/// Gets a segment value by index.
+	/// </summary>
+	/// <param name="index">The index.</param>
+	/// <returns>The indicated segment value as a span.</returns>
+	public ReadOnlySpan<char> this[int index] => _plain.AsSpan()[Segments[index]];
 
+	/// <summary>
+	/// Creates the empty pointer.
+	/// </summary>
 	public JsonPointer()
 	{
 		_plain = string.Empty;
 		Segments = [];
 	}
-	private JsonPointer(ReadOnlySpan<Range> segments)
+	private JsonPointer(string plain, ReadOnlySpan<Range> segments)
 	{
+		_plain = plain;
 		Segments = [..segments];
 	}
 
@@ -86,10 +97,7 @@ public struct JsonPointer : IEquatable<JsonPointer>
 			? new Range(0, 0)
 			: new Range(start, i);
 
-		return new JsonPointer(span[..(count+1)])
-		{
-			_plain = source.ToString()  // allocation
-		};
+		return new JsonPointer(source.ToString(), span[..(count+1)]);
 	}
 
 	/// <summary>
@@ -154,10 +162,7 @@ public struct JsonPointer : IEquatable<JsonPointer>
 			? new Range(0, 0)
 			: new Range(start, i);
 
-		pointer = new JsonPointer(span[..(count + 1)])
-		{
-			_plain = source.ToString()  // allocation
-		};
+		pointer = new JsonPointer(source.ToString(), span[..(count + 1)]);
 		return true;
 	}
 
@@ -285,7 +290,7 @@ public struct JsonPointer : IEquatable<JsonPointer>
 	/// </summary>
 	/// <param name="other">Another pointer.</param>
 	/// <returns>A new pointer.</returns>
-	public readonly JsonPointer Combine(JsonPointer other)
+	public JsonPointer Combine(JsonPointer other)
 	{
 		using var owner = MemoryPool<char>.Shared.Rent();
 		var span = owner.Memory.Span;
@@ -302,7 +307,7 @@ public struct JsonPointer : IEquatable<JsonPointer>
 	/// </summary>
 	/// <param name="additionalSegments">The additional segments.</param>
 	/// <returns>A new pointer.</returns>
-	public readonly JsonPointer Combine(params PointerSegment[] additionalSegments)
+	public JsonPointer Combine(params PointerSegment[] additionalSegments)
 	{
 		using var owner = MemoryPool<char>.Shared.Rent();
 		var span = owner.Memory.Span;
@@ -325,7 +330,7 @@ public struct JsonPointer : IEquatable<JsonPointer>
 	/// </summary>
 	/// <param name="root">The <see cref="JsonElement"/>.</param>
 	/// <returns>The sub-element at the pointer's location, or null if the path does not exist.</returns>
-	public readonly JsonElement? Evaluate(JsonElement root)
+	public JsonElement? Evaluate(JsonElement root)
 	{
 		var current = root;
 		var kind = root.ValueKind;
@@ -381,7 +386,7 @@ public struct JsonPointer : IEquatable<JsonPointer>
 	/// <param name="root">The <see cref="JsonNode"/>.</param>
 	/// <param name="result">The result, if return value is true; null otherwise</param>
 	/// <returns>true if a value exists at the indicate path; false otherwise.</returns>
-	public readonly bool TryEvaluate(JsonNode? root, out JsonNode? result)
+	public bool TryEvaluate(JsonNode? root, out JsonNode? result)
 	{
 		var current = root;
 		result = null;
@@ -440,22 +445,9 @@ public struct JsonPointer : IEquatable<JsonPointer>
 	/// <returns>The string representation.</returns>
 	public string ToString(JsonPointerStyle pointerStyle)
 	{
-		return _plain;
-
-		//string BuildString(StringBuilder sb)
-		//{
-		//	foreach (var segment in OldSegments)
-		//	{
-		//		sb.Append('/');
-		//		sb.Append(segment.ToString(pointerStyle));
-		//	}
-
-		//	return sb.ToString();
-		//}
-
-		//return pointerStyle != JsonPointerStyle.UriEncoded
-		//	? _plain
-		//	: _uriEncoded ??= BuildString(new StringBuilder("#"));
+		return pointerStyle == JsonPointerStyle.UriEncoded
+			? HttpUtility.HtmlEncode(_plain)
+			: _plain;
 	}
 
 	/// <summary>Returns the string representation of this instance.</summary>
@@ -468,7 +460,7 @@ public struct JsonPointer : IEquatable<JsonPointer>
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
 	/// <param name="other">An object to compare with this object.</param>
 	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-	public readonly bool Equals(JsonPointer other)
+	public bool Equals(JsonPointer other)
 	{
 		return string.Equals(_plain, other._plain, StringComparison.Ordinal);
 	}
@@ -485,7 +477,7 @@ public struct JsonPointer : IEquatable<JsonPointer>
 
 	/// <summary>Returns the hash code for this instance.</summary>
 	/// <returns>A 32-bit signed integer that is the hash code for this instance.</returns>
-	public readonly override int GetHashCode()
+	public override int GetHashCode()
 	{
 		// ReSharper disable once NonReadonlyMemberInGetHashCode
 		return _plain.GetHashCode();
