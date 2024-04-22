@@ -26,13 +26,13 @@ internal class CopyOperationHandler : IPatchOperationHandler
 			return;
 		}
 
-		if (operation.Path.Segments.Length == 0)
+		if (operation.Path.OldSegments.Length == 0)
 		{
 			context.Source = data;
 			return;
 		}
 
-		var lastPathSegment = operation.Path.Segments.Last().Value;
+		var lastPathSegment = operation.Path.OldSegments.Last().Value;
 		if (target is JsonObject objTarget)
 		{
 			objTarget[lastPathSegment] = data?.DeepClone();

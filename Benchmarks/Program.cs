@@ -1,6 +1,7 @@
 ﻿using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Running;
 using Json.Benchmarks.LogicSuite;
+using Json.Benchmarks.Pointer;
 using Json.Benchmarks.SchemaSuite;
 
 namespace Json.Benchmarks;
@@ -18,7 +19,7 @@ class Program
 		runner.BenchmarkSetup();
 		runner.Models();
 #else
-		var summary = BenchmarkRunner.Run<SuiteRunner>();
+		var summary = BenchmarkRunner.Run<Runner>();
 #endif
 	}
 }

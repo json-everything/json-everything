@@ -32,6 +32,7 @@
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     
     <PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
+    <PolySharpUsePublicAccessibilityForGeneratedTypes>true</PolySharpUsePublicAccessibilityForGeneratedTypes>
   </PropertyGroup>
 
   <ItemGroup>

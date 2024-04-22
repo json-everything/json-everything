@@ -20,7 +20,7 @@ public sealed class JsonPointerJsonConverter : WeaklyTypedJsonConverter<JsonPoin
 			throw new JsonException("Expected string");
 
 		var str = reader.GetString()!;
-		return JsonPointer.TryParse(str, out var pointer)
+		return JsonPointer.TryParse(str.AsSpan(), out var pointer)
 			? pointer
 			: throw new JsonException("Value does not represent a JSON Pointer");
 	}

@@ -94,7 +94,7 @@ public class ContainsKeyword : IJsonSchemaKeyword, ISchemaContainer
 
 			var validIndices = evaluation.ChildEvaluations
 				.Where(x => x.Results.IsValid)
-				.Select(x => int.Parse(x.RelativeInstanceLocation.Segments[0].Value))
+				.Select(x => int.Parse(x.RelativeInstanceLocation.OldSegments[0].Value))
 				.ToArray();
 			evaluation.Results.SetAnnotation(Name, JsonSerializer.SerializeToNode(validIndices, JsonSchemaSerializerContext.Default.Int32Array));
 

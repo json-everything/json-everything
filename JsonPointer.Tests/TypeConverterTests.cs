@@ -10,9 +10,9 @@ namespace Json.Pointer.Tests
 		public void ConvertFromString()
 		{
 			var typeConverter = TypeDescriptor.GetConverter(typeof(JsonPointer));
-			var pointer = typeConverter.ConvertFromInvariantString("/foo") as JsonPointer;
+			var pointer = typeConverter.ConvertFromInvariantString("/foo");
 
-			Assert.IsNotNull(pointer);
+			Assert.IsInstanceOf<JsonPointer>(pointer);
 			Assert.AreEqual("/foo", pointer!.ToString());
 		}
 
@@ -31,9 +31,9 @@ namespace Json.Pointer.Tests
 		{
 			var pointer = JsonPointer.Parse("/foo");
 			var typeConverter = TypeDescriptor.GetConverter(typeof(JsonPointer));
-			var pointer2 = typeConverter.ConvertFrom(pointer) as JsonPointer;
+			var pointer2 = typeConverter.ConvertFrom(pointer);
 
-			Assert.IsNotNull(pointer2);
+			Assert.IsInstanceOf<JsonPointer>(pointer2);
 			Assert.AreNotSame(pointer, pointer2);
 			Assert.AreEqual("/foo", pointer2!.ToString());
 		}
@@ -43,9 +43,9 @@ namespace Json.Pointer.Tests
 		{
 			var pointer = JsonPointer.Parse("/foo");
 			var typeConverter = TypeDescriptor.GetConverter(typeof(JsonPointer));
-			var pointer2 = typeConverter.ConvertTo(pointer, typeof(JsonPointer)) as JsonPointer;
+			var pointer2 = typeConverter.ConvertTo(pointer, typeof(JsonPointer));
 
-			Assert.IsNotNull(pointer2);
+			Assert.IsInstanceOf<JsonPointer>(pointer2);
 			Assert.AreNotSame(pointer, pointer2);
 			Assert.AreEqual("/foo", pointer2!.ToString());
 		}
