@@ -4,6 +4,10 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "09.01"
 ---
+# 6.1.2 (No PR) {#release-schema-6.1.2}
+
+Revert changes from [v6.1.0](#release-schema-6.1.0) as they broke functionality in satellite packages.  Will reintroduce with next major version.  Until then, the returns from these methods can be safely cast to `IReadOnlyList<T>`.
+
 # [6.1.1](https://github.com/gregsdennis/json-everything/pull/717) {#release-schema-6.1.1}
 
 Fixed an exception message.
