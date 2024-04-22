@@ -11,7 +11,7 @@ internal class RemoveOperationHandler : IPatchOperationHandler
 
 	public void Process(PatchContext context, PatchOperation operation)
 	{
-		if (operation.Path.Segments.Length == 0)
+		if (operation.Path.OldSegments.Length == 0)
 		{
 			context.Message = "Cannot remove root value.";
 			return;
@@ -24,7 +24,7 @@ internal class RemoveOperationHandler : IPatchOperationHandler
 			return;
 		}
 
-		var lastPathSegment = operation.Path.Segments.Last().Value;
+		var lastPathSegment = operation.Path.OldSegments.Last().Value;
 		if (source is JsonObject objSource)
 			objSource.Remove(lastPathSegment);
 		else if (source is JsonArray arrSource)

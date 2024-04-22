@@ -132,9 +132,9 @@ public class EvaluationResults
 	private Uri BuildSchemaLocation()
 	{
 		var localEvaluationPathStart = 0;
-		for (var i = 0; i < EvaluationPath.Segments.Length; i++)
+		for (var i = 0; i < EvaluationPath.OldSegments.Length; i++)
 		{
-			var segment = EvaluationPath.Segments[i];
+			var segment = EvaluationPath.OldSegments[i];
 			if (segment.Value is RefKeyword.Name or RecursiveRefKeyword.Name or DynamicRefKeyword.Name)
 				localEvaluationPathStart = i + 1;
 		}
@@ -142,7 +142,7 @@ public class EvaluationResults
 		if (_reference == null && _currentUri == Parent?._currentUri)
 			_reference = Parent._reference;
 		var fragment = _reference ?? JsonPointer.Empty;
-		fragment = fragment.Combine(EvaluationPath.Segments.Skip(localEvaluationPathStart).ToArray());
+		fragment = fragment.Combine(EvaluationPath.OldSegments.Skip(localEvaluationPathStart).ToArray());
 
 		return fragment == JsonPointer.Empty
 			? _currentUri

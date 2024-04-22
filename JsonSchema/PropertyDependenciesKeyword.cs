@@ -83,9 +83,9 @@ public class PropertyDependenciesKeyword : IJsonSchemaKeyword, ICustomSchemaColl
 	{
 		var failedProperties = evaluation.ChildEvaluations
 			.Where(x => !x.Results.IsValid)
-			.Select(x => x.Results.EvaluationPath.Segments.Last().Value)
+			.Select(x => x.Results.EvaluationPath.OldSegments.Last().Value)
 			.ToArray();
-		evaluation.Results.SetAnnotation(Name, evaluation.ChildEvaluations.Select(x => (JsonNode)x.Results.EvaluationPath.Segments.Last().Value!).ToJsonArray());
+		evaluation.Results.SetAnnotation(Name, evaluation.ChildEvaluations.Select(x => (JsonNode)x.Results.EvaluationPath.OldSegments.Last().Value!).ToJsonArray());
 		
 		if (failedProperties.Length != 0)
 			evaluation.Results.Fail(Name, ErrorMessages.GetDependentSchemas(context.Options.Culture)

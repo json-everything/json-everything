@@ -14,7 +14,7 @@ internal class MoveOperationHandler : IPatchOperationHandler
 	{
 		if (Equals(operation.Path, operation.From)) return;
 
-		if (operation.Path.Segments.Length == 0)
+		if (operation.Path.OldSegments.Length == 0)
 		{
 			context.Message = "Cannot move root value.";
 			return;
@@ -33,7 +33,7 @@ internal class MoveOperationHandler : IPatchOperationHandler
 			return;
 		}
 
-		var lastFromSegment = operation.From.Segments.Last().Value;
+		var lastFromSegment = operation.From.OldSegments.Last().Value;
 		if (source is JsonObject objSource)
 			objSource.Remove(lastFromSegment);
 		else if (source is JsonArray arrSource)
@@ -42,13 +42,13 @@ internal class MoveOperationHandler : IPatchOperationHandler
 			arrSource.RemoveAt(index);
 		}
 
-		if (operation.Path.Segments.Length == 0)
+		if (operation.Path.OldSegments.Length == 0)
 		{
 			context.Source = data;
 			return;
 		}
 
-		var lastPathSegment = operation.Path.Segments.Last().Value;
+		var lastPathSegment = operation.Path.OldSegments.Last().Value;
 		if (target is JsonObject objTarget)
 		{
 			objTarget[lastPathSegment] = data?.DeepClone();
@@ -84,7 +84,7 @@ internal static class PointerExtensions
 			target = node?.Parent;
 			return target != null;
 		}
-		var parentPointer = JsonPointer.Create(pointer.Segments.Take(pointer.Segments.Length - 1).ToArray());
+		var parentPointer = JsonPointer.Create(pointer.OldSegments.Take(pointer.OldSegments.Length - 1).ToArray());
 		return parentPointer.TryEvaluate(node, out target);
 	}
 }

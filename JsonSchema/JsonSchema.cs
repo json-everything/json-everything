@@ -658,7 +658,7 @@ public class JsonSchema : IBaseDocument
 					}
 					break;
 				case ICustomSchemaCollector customCollector:
-					var (found, segmentsConsumed) = customCollector.FindSubschema(pointer.Segments.Skip(i).ToReadOnlyList());
+					var (found, segmentsConsumed) = customCollector.FindSubschema(pointer.OldSegments.Skip(i).ToReadOnlyList());
 					hostSchema = found!;
 					newResolvable = hostSchema;
 					i += segmentsConsumed;
@@ -671,15 +671,15 @@ public class JsonSchema : IBaseDocument
 					var typeInfo = SchemaKeywordRegistry.GetTypeInfo(localResolvable.GetType());
 					var serialized = JsonSerializer.Serialize(localResolvable, typeInfo!);
 					var json = JsonNode.Parse(serialized);
-					var newPointer = JsonPointer.Create(pointer.Segments.Skip(i));
-					i += newPointer.Segments.Length - 1;
+					var newPointer = JsonPointer.Create(pointer.OldSegments.Skip(i));
+					i += newPointer.OldSegments.Length - 1;
 					return ExtractSchemaFromData(newPointer, json, hostSchema);
 			}
 
 			if (newResolvable is UnrecognizedKeyword unrecognized)
 			{
-				var newPointer = JsonPointer.Create(pointer.Segments.Skip(i + 1));
-				i += newPointer.Segments.Length;
+				var newPointer = JsonPointer.Create(pointer.OldSegments.Skip(i + 1));
+				i += newPointer.OldSegments.Length;
 				return ExtractSchemaFromData(newPointer, unrecognized.Value, (JsonSchema)localResolvable);
 			}
 
@@ -688,9 +688,9 @@ public class JsonSchema : IBaseDocument
 
 		object? resolvable = this;
 		var currentSchema = this;
-		for (var i = 0; i < pointer.Segments.Length; i++)
+		for (var i = 0; i < pointer.OldSegments.Length; i++)
 		{
-			var segment = pointer.Segments[i];
+			var segment = pointer.OldSegments[i];
 
 			resolvable = CheckResolvable(resolvable, ref i, segment.Value, ref currentSchema);
 			if (resolvable == null) return null;
@@ -698,7 +698,7 @@ public class JsonSchema : IBaseDocument
 
 		if (resolvable is JsonSchema target) return target;
 
-		var count = pointer.Segments.Length;
+		var count = pointer.OldSegments.Length;
 		// These parameters don't really matter.  This extra check only captures the case where the
 		// last segment of the pointer is an ISchemaContainer.
 		return CheckResolvable(resolvable, ref count, null!, ref currentSchema) as JsonSchema;
