@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Linq;
+﻿using System.Collections;
 using FluentAssertions;
 using NUnit.Framework;
 
@@ -80,9 +78,7 @@ public class JsonPointerParseTests
 	[TestCaseSource(nameof(SpecificationExamples))]
 	public void TryParse(string pointerString, string[] segments)
 	{
-		Assert.IsTrue(JsonPointer.TryParse(pointerString, out var check));
-
-		var pointer = check!.Value;
+		Assert.IsTrue(JsonPointer.TryParse(pointerString, out var pointer));
 
 		pointer.Segments.Length.Should().Be(segments.Length);
 		for (int i = 0; i < pointer.Segments.Length; i++)
