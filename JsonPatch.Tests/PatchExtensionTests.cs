@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 using NUnit.Framework;
 // ReSharper disable UnusedAutoPropertyAccessor.Local
 
@@ -33,17 +34,19 @@ public class PatchExtensionTests
 			Id = Guid.Parse("40664cc7-864f-4eed-939c-78076a252df0"),
 			Attributes = JsonNode.Parse("[{\"test\":\"test123\"},{\"test\":\"test32132\"},{\"test1\":\"test321\"},{\"test\":[1,2,3]},{\"test\":[1,2,3]}]")
 		};
-		var patchExpected =
+		var patchExpected = JsonNode.Parse(
 			"[{\"op\":\"replace\",\"path\":\"/Id\",\"value\":\"40664cc7-864f-4eed-939c-78076a252df0\"}," +
 			"{\"op\":\"replace\",\"path\":\"/Attributes/1/test\",\"value\":\"test32132\"}," +
 			"{\"op\":\"remove\",\"path\":\"/Attributes/2/test\"}," +
 			"{\"op\":\"add\",\"path\":\"/Attributes/2/test1\",\"value\":\"test321\"}," +
 			"{\"op\":\"replace\",\"path\":\"/Attributes/3/test/2\",\"value\":3}," +
-			"{\"op\":\"add\",\"path\":\"/Attributes/4\",\"value\":{\"test\":[1,2,3]}}]";
+			"{\"op\":\"add\",\"path\":\"/Attributes/4\",\"value\":{\"test\":[1,2,3]}}]");
 
 		var patch = initial.CreatePatch(expected, TestEnvironment.SerializerOptions);
 
-		Assert.AreEqual(patchExpected, JsonSerializer.Serialize(patch, TestEnvironment.SerializerOptions));
+		var serialized = JsonSerializer.SerializeToNode(patch, TestEnvironment.SerializerOptions);
+
+		Assert.IsTrue(serialized.IsEquivalentTo(patchExpected));
 	}
 
 	[Test]
@@ -354,19 +357,19 @@ public class PatchExtensionTests
 			Id = Guid.Parse("40664cc7-864f-4eed-939c-78076a252df0"),
 			Attributes = JsonNode.Parse("[{\"test\":\"test123\"},{\"test\":\"test32132\"},{\"test1\":\"test321\"},{\"test\":[1,2,3]},{\"test\":[1,2,3]}]")
 		};
-		var patchExpected =
+		var patchExpected = JsonNode.Parse(
 			"[{\"op\":\"replace\",\"path\":\"/Id\",\"value\":\"40664cc7-864f-4eed-939c-78076a252df0\"}," +
 			"{\"op\":\"replace\",\"path\":\"/Attributes/1/test\",\"value\":\"test32132\"}," +
 			"{\"op\":\"remove\",\"path\":\"/Attributes/2/test\"}," +
 			"{\"op\":\"add\",\"path\":\"/Attributes/2/test1\",\"value\":\"test321\"}," +
 			"{\"op\":\"replace\",\"path\":\"/Attributes/3/test/2\",\"value\":3}," +
-			"{\"op\":\"add\",\"path\":\"/Attributes/4\",\"value\":{\"test\":[1,2,3]}}]";
+			"{\"op\":\"add\",\"path\":\"/Attributes/4\",\"value\":{\"test\":[1,2,3]}}]");
 
 		var patch = initial.CreatePatch(expected, TestEnvironment.SerializerOptions);
 		// use source generated json serializer context
-		var patchJson = JsonSerializer.Serialize(patch, TestEnvironment.SerializerOptions);
+		var patchJson = JsonSerializer.SerializeToNode(patch, TestEnvironment.SerializerOptions);
 
-		Assert.AreEqual(patchExpected, patchJson);
+		Assert.IsTrue(patchJson.IsEquivalentTo(patchExpected));
 	}
 
 	private static readonly JsonSerializerOptions _indentedSerializerOptions =

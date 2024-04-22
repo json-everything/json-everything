@@ -80,8 +80,9 @@ public static class SpanExtensions
 		long parsedValue = 0;
 		var overflowed = false;
 		value = 0;
-		while (i < span.Length && char.IsDigit(span[i]))
+		while (i < span.Length && span[i] != '/')
 		{
+			if (!char.IsDigit(span[i])) return false;
 			if (zeroStart) return false;
 
 			if (!foundNumber && span[i] == '0')

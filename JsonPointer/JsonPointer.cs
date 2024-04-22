@@ -322,7 +322,8 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 			i += segment.Value.Length;
 		}
 
-		return Parse(span);
+		i++;
+		return Parse(span[..i]);
 	}
 
 	/// <summary>
