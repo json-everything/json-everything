@@ -10,12 +10,12 @@ namespace Json.Pointer;
 /// Represents a Relative JSON Pointer IAW draft-handrews-relative-json-pointer-02
 /// </summary>
 [JsonConverter(typeof(RelativeJsonPointerJsonConverter))]
-public class RelativeJsonPointer
+public struct RelativeJsonPointer
 {
 	/// <summary>
 	/// The null pointer.  Indicates no navigation should occur.
 	/// </summary>
-	public static readonly RelativeJsonPointer Null = new(0, JsonPointer.Empty);
+	public static readonly RelativeJsonPointer Null = new();
 
 	/// <summary>
 	/// Gets whether the pointer is an index query, which returns the index within the parent rather than the value.
@@ -34,6 +34,16 @@ public class RelativeJsonPointer
 	/// </summary>
 	public JsonPointer Pointer { get; }
 
+	/// <summary>
+	/// Creates the null pointer.
+	/// </summary>
+	public RelativeJsonPointer()
+	{
+		IsIndexQuery = false;
+		ParentSteps = 0;
+		ArrayIndexManipulator = 0;
+		Pointer = JsonPointer.Empty;
+	}
 	private RelativeJsonPointer(uint parentSteps)
 	{
 		IsIndexQuery = true;
@@ -208,7 +218,7 @@ public class RelativeJsonPointer
 			return false;
 		}
 
-		relativePointer = new RelativeJsonPointer(parentSteps, indexManipulation, pointer!.Value);
+		relativePointer = new RelativeJsonPointer(parentSteps, indexManipulation, pointer);
 		return true;
 	}
 
