@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers;
 
 namespace Json.Pointer;
 
@@ -10,33 +11,32 @@ public struct PointerSegment
 	/// <summary>
 	/// Gets the segment value.
 	/// </summary>
-	public Memory<char> Value { get; private set; }
+	public string Value { get; private set; }
 
 	/// <summary>
 	/// Creates a new segment.
 	/// </summary>
 	public PointerSegment()
 	{
-		Value = Memory<char>.Empty;
+		Value = string.Empty;
 	}
 
 	/// <summary>
 	/// Implicitly casts an <see cref="uint"/> to a <see cref="PointerSegment"/>.
 	/// </summary>
 	/// <param name="value">A pointer segment that represents the value.</param>
-	/// <remarks>No URI encoding is performed for implicit casts.</remarks>
 	public static implicit operator PointerSegment(int value)
 	{
-		if (value < -1)
+		if (value < 0)
 			throw new ArgumentOutOfRangeException(nameof(value));
-		return new PointerSegment { Value = Encode(value) };
+		return new PointerSegment { Value = value.ToString() };
 	}
 
 	/// <summary>
 	/// Implicitly casts a <see cref="string"/> to a <see cref="PointerSegment"/>.
 	/// </summary>
 	/// <param name="value">A pointer segment that represents the value.</param>
-	/// <remarks>No URI encoding is performed for implicit casts.</remarks>
+	/// <remarks>JSON Pointer encoding is performed, but URI encoding is not.</remarks>
 	public static implicit operator PointerSegment(string value)
 	{
 		return new PointerSegment { Value = Encode(value) };
@@ -44,15 +44,35 @@ public struct PointerSegment
 
 	/// <summary>Returns the fully qualified type name of this instance.</summary>
 	/// <returns>The fully qualified type name.</returns>
-	public override string ToString() => Value.ToString();
+	public readonly override string ToString() => Value;
 
-	private static Memory<char> Encode(int index)
+	private static string Encode(string key)
 	{
+		var owner = MemoryPool<char>.Shared.Rent();
+		var span = owner.Memory.Span;
 
-	}
+		var length = 0;
+		foreach (var ch in key)
+		{
+			switch (ch)
+			{
+				case '~':
+					span[length] = '~';
+					span[length + 1] = '0';
+					length+=2;
+					break;
+				case '/':
+					span[length] = '~';
+					span[length + 1] = '1';
+					length+=2;
+					break;
+				default:
+					span[length] = ch;
+					length++;
+					break;
+			}
+		}
 
-	private static Memory<char> Encode(string key)
-	{
-
+		return span[..length].ToString();
 	}
 }

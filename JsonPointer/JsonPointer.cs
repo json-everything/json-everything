@@ -549,7 +549,7 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 			bIndex++;
 		}
 
-		return true;
+		return aIndex == segment.Length && bIndex == expected.Length;
 	}
 	
 	/// <summary>
