@@ -10,7 +10,7 @@ namespace Json.Pointer;
 /// Represents a Relative JSON Pointer IAW draft-handrews-relative-json-pointer-02
 /// </summary>
 [JsonConverter(typeof(RelativeJsonPointerJsonConverter))]
-public struct RelativeJsonPointer
+public readonly struct RelativeJsonPointer
 {
 	/// <summary>
 	/// The null pointer.  Indicates no navigation should occur.
