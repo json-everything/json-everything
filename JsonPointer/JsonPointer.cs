@@ -336,11 +336,11 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 	public JsonPointer GetAncestor(int levels = 1)
 	{
 		if (levels == 0) return this;
-		if (levels < 0 || levels >= Segments.Length)
+		if (levels < 0 || levels > Segments.Length)
 			throw new ArgumentException("Ancestor cannot be reached", nameof(levels));
-		if (levels == Segments.Length - 1) return Empty;
+		if (levels == Segments.Length) return Empty;
 
-		var end = Segments[levels].End;
+		var end = Segments[^(levels+1)].End;
 		return Parse(_plain.AsSpan()[..end]);
 	}
 

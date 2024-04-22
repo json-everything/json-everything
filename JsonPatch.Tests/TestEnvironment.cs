@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.Patch.Tests.Suite;
-using Json.Schema;
+//using Json.Schema;
 using NUnit.Framework;
 
 namespace Json.Patch.Tests;
@@ -13,9 +14,11 @@ namespace Json.Patch.Tests;
 public class TestEnvironment
 {
 	public static readonly JsonSerializerOptions SerializerOptions =
-		new JsonSerializerOptions
+		new()
 			{
-				TypeInfoResolverChain = { TestSerializerContext.Default }
+				TypeInfoResolverChain = { TestSerializerContext.Default },
+				WriteIndented = true,
+				Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
 			};
 }
 
@@ -37,5 +40,5 @@ public class TestEnvironment
 [JsonSerializable(typeof(JsonNode))]
 [JsonSerializable(typeof(JsonPatch))]
 [JsonSerializable(typeof(PatchResult))]
-[JsonSerializable(typeof(EvaluationResults))]
+//[JsonSerializable(typeof(EvaluationResults))]
 internal partial class TestSerializerContext : JsonSerializerContext;
