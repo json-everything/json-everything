@@ -35,7 +35,7 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 	/// </summary>
 	/// <param name="index">The index.</param>
 	/// <returns>The indicated segment value as a span.</returns>
-	public ReadOnlySpan<char> this[int index] => _plain.AsSpan()[Segments[index]];
+	public ReadOnlySpan<char> this[Index index] => _plain.AsSpan()[Segments[index]];
 
 	/// <summary>
 	/// Creates the empty pointer.
@@ -88,7 +88,7 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 				count++;
 			}
 
-			_ = ConsiderEscapes(source, ref i);
+			_ = SpanExtensions.ConsiderEscapes(source, ref i);
 
 			i++;
 		}
@@ -149,7 +149,7 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 				count++;
 			}
 
-			if (!TryConsiderEscapes(source, ref i))
+			if (!SpanExtensions.TryConsiderEscapes(source, ref i))
 			{
 				pointer = Empty;
 				return false;
@@ -323,6 +323,25 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 		}
 
 		return Parse(span);
+	}
+
+	/// <summary>
+	/// Creates a new pointer that retrieves an ancestor of the represented location.
+	/// </summary>
+	/// <param name="levels">How many levels to go back.  Default is 1, which gets the immediate parent.</param>
+	/// <returns>A new pointer.</returns>
+	/// <exception cref="ArgumentException">
+	/// Thrown if <paramref name="levels"/> is less than zero or more than the number of segments.
+	/// </exception>
+	public JsonPointer GetAncestor(int levels = 1)
+	{
+		if (levels == 0) return this;
+		if (levels < 0 || levels >= Segments.Length)
+			throw new ArgumentException("Ancestor cannot be reached", nameof(levels));
+		if (levels == Segments.Length - 1) return Empty;
+
+		var end = Segments[levels].End;
+		return Parse(_plain.AsSpan()[..end]);
 	}
 
 	/// <summary>
@@ -502,7 +521,7 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 
 		while (aIndex < segment.Length && bIndex < expected.Length)
 		{
-			var aChar = ConsiderEscapes(segment, ref aIndex);
+			var aChar = SpanExtensions.ConsiderEscapes(segment, ref aIndex);
 			var bChar = expected[bIndex];
 
 			if (aChar != bChar) return false;
@@ -513,38 +532,7 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 
 		return true;
 	}
-
-	private static char ConsiderEscapes(ReadOnlySpan<char> value, ref int index)
-	{
-		var ch = value[index];
-		if (ch == '~')
-		{
-			if (index + 1 >= value.Length)
-				throw new PointerParseException("Value does not represent a valid JSON Pointer segment");
-			ch = value[index + 1] switch
-			{
-				'0' => '~',
-				'1' => '/',
-				_ => throw new PointerParseException("Value does not represent a valid JSON Pointer segment")
-			};
-			index++;
-		}
-
-		return ch;
-	}
-
-	private static bool TryConsiderEscapes(ReadOnlySpan<char> value, ref int index)
-	{
-		var ch = value[index];
-		if (ch == '~')
-		{
-			if (index + 1 >= value.Length) return false;
-			return value[index + 1] is '0' or '1';
-		}
-
-		return true;
-	}
-
+	
 	/// <summary>
 	/// Evaluates equality via <see cref="Equals(JsonPointer)"/>.
 	/// </summary>

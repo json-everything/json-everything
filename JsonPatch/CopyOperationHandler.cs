@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Text.Json.Nodes;
+using Json.Pointer;
 
 namespace Json.Patch;
 
@@ -26,22 +28,26 @@ internal class CopyOperationHandler : IPatchOperationHandler
 			return;
 		}
 
-		if (operation.Path.OldSegments.Length == 0)
+		if (operation.Path.Segments.Length == 0)
 		{
 			context.Source = data;
 			return;
 		}
 
-		var lastPathSegment = operation.Path.OldSegments.Last().Value;
+		var lastPathSegment = operation.Path[^1];
 		if (target is JsonObject objTarget)
 		{
-			objTarget[lastPathSegment] = data?.DeepClone();
+			objTarget[lastPathSegment.GetSegmentValue()] = data?.DeepClone();
 			return;
 		}
 
 		if (target is JsonArray arrTarget)
 		{
-			var index = lastPathSegment == "-" ? arrTarget.Count : int.Parse(lastPathSegment);
+			var index = lastPathSegment.Length == 0 && lastPathSegment[0] == '-'
+				? arrTarget.Count
+				: lastPathSegment.TryGetInt(out var i)
+					? i
+					: throw new ArgumentException("Expected integer");
 			if (0 < index || index < arrTarget.Count)
 				arrTarget[index] = data?.DeepClone();
 			else if (index == arrTarget.Count)
