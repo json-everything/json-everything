@@ -70,11 +70,11 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer
 			
 			var propertiesEvaluation = evaluation.GetKeywordEvaluation<PropertiesKeyword>();
 			if (propertiesEvaluation != null)
-				properties = properties.Except(propertiesEvaluation.ChildEvaluations.Select(x => x.RelativeInstanceLocation.OldSegments[0].Value));
+				properties = properties.Except(propertiesEvaluation.ChildEvaluations.Select(x => x.RelativeInstanceLocation[0].GetSegmentValue()));
 
 			var patternPropertiesEvaluation = evaluation.GetKeywordEvaluation<PatternPropertiesKeyword>();
 			if (patternPropertiesEvaluation != null)
-				properties = properties.Except(patternPropertiesEvaluation.ChildEvaluations.Select(x => x.RelativeInstanceLocation.OldSegments[0].Value));
+				properties = properties.Except(patternPropertiesEvaluation.ChildEvaluations.Select(x => x.RelativeInstanceLocation[0].GetSegmentValue()));
 
 			return properties.Select(x => JsonPointer.Create(x));
 		};
@@ -88,7 +88,7 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer
 
 	private static void Evaluator(KeywordEvaluation evaluation, EvaluationContext context)
 	{
-		evaluation.Results.SetAnnotation(Name, evaluation.ChildEvaluations.Select(x => (JsonNode)x.RelativeInstanceLocation.OldSegments[0].Value!).ToJsonArray());
+		evaluation.Results.SetAnnotation(Name, evaluation.ChildEvaluations.Select(x => (JsonNode)x.RelativeInstanceLocation[0].GetSegmentValue()!).ToJsonArray());
 
 		if (!evaluation.ChildEvaluations.All(x => x.Results.IsValid))
 			evaluation.Results.Fail();

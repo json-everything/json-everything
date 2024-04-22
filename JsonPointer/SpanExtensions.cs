@@ -3,8 +3,17 @@ using System.Buffers;
 
 namespace Json.Pointer;
 
+/// <summary>
+/// Provides some extensions on <see cref="Span{Char}"/>.
+/// </summary>
 public static class SpanExtensions
 {
+	/// <summary>
+	/// Decodes a pointer segment string, considering escapes.
+	/// </summary>
+	/// <param name="segment">The segment.</param>
+	/// <returns>The decoded string.</returns>
+	/// <exception cref="PointerParseException">Throw when the span does not represent a valid JSON Pointer segment.</exception>
 	public static string GetSegmentValue(this ReadOnlySpan<char> segment)
 	{
 		using var owner = MemoryPool<char>.Shared.Rent(segment.Length);
@@ -63,6 +72,12 @@ public static class SpanExtensions
 		return true;
 	}
 
+	/// <summary>
+	/// Attempts to parse an integer from the span.  Included for .Net Standard 2.0 support.
+	/// </summary>
+	/// <param name="span">The span.</param>
+	/// <param name="value">The value if successful; 0 otherwise.</param>
+	/// <returns>true if successful; false otherwise.</returns>
 	public static bool TryGetInt(this ReadOnlySpan<char> span, out int value)
 	{
 #if NETSTANDARD2_0

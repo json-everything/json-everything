@@ -67,7 +67,7 @@ public class PropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 
 	private static void Evaluator(KeywordEvaluation evaluation, EvaluationContext context)
 	{
-		evaluation.Results.SetAnnotation(Name, evaluation.ChildEvaluations.Select(x => (JsonNode)x.RelativeInstanceLocation.OldSegments[0].Value!).ToJsonArray());
+		evaluation.Results.SetAnnotation(Name, evaluation.ChildEvaluations.Select(x => (JsonNode)x.RelativeInstanceLocation[0].GetSegmentValue()!).ToJsonArray());
 
 		if (!evaluation.ChildEvaluations.All(x => x.Results.IsValid))
 			evaluation.Results.Fail();

@@ -18,7 +18,7 @@ public interface ICustomSchemaCollector
 	/// <summary>
 	/// Gets the indicated subschema.
 	/// </summary>
-	/// <param name="segments">The JSON Pointer segments to follow.</param>
+	/// <param name="pointer"></param>
 	/// <returns>If found, the schema and the number of segments followed to find the subschema; `(null, 0)` otherwise.</returns>
-	(JsonSchema? Schema, int SegmentsConsumed) FindSubschema(IReadOnlyList<PointerSegment> segments);
+	(JsonSchema? Schema, int SegmentsConsumed) FindSubschema(JsonPointer pointer);
 }
