@@ -18,6 +18,8 @@ namespace Json.Schema;
 [JsonConverter(typeof(DependenciesKeywordJsonConverter))]
 public class DependenciesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 {
+	private readonly IReadOnlyDictionary<string, JsonSchema> _schemas;
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
@@ -28,9 +30,7 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 	/// </summary>
 	public IReadOnlyDictionary<string, SchemaOrPropertyList> Requirements { get; }
 
-	IReadOnlyDictionary<string, JsonSchema> IKeyedSchemaCollector.Schemas =>
-		Requirements.Where(x => x.Value.Schema != null)
-			.ToDictionary(x => x.Key, x => x.Value.Schema!);
+	IReadOnlyDictionary<string, JsonSchema> IKeyedSchemaCollector.Schemas => _schemas;
 
 	/// <summary>
 	/// Creates a new <see cref="DependenciesKeyword"/>.
@@ -39,6 +39,7 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 	public DependenciesKeyword(IReadOnlyDictionary<string, SchemaOrPropertyList> values)
 	{
 		Requirements = values;
+		_schemas = Requirements.Where(x => x.Value.Schema != null).ToDictionary(x => x.Key, x => x.Value.Schema!);
 	}
 
 	/// <summary>

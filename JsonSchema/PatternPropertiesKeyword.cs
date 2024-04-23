@@ -26,6 +26,7 @@ namespace Json.Schema;
 public class PatternPropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 {
 	private readonly Dictionary<Regex, JsonPointer> _evaluationPointers;
+	private readonly Dictionary<string, JsonSchema> _schemas;
 
 	/// <summary>
 	/// The JSON name of the keyword.
@@ -44,7 +45,7 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollecto
 	/// </remarks>
 	public IReadOnlyList<string>? InvalidPatterns { get; }
 
-	IReadOnlyDictionary<string, JsonSchema> IKeyedSchemaCollector.Schemas => Patterns.ToDictionary(x => x.Key.ToString(), x => x.Value);
+	IReadOnlyDictionary<string, JsonSchema> IKeyedSchemaCollector.Schemas => _schemas;
 
 	/// <summary>
 	/// Creates a new <see cref="PatternPropertiesKeyword"/>.
@@ -55,6 +56,7 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollecto
 		Patterns = values ?? throw new ArgumentNullException(nameof(values));
 
 		_evaluationPointers = values.ToDictionary(x => x.Key, x => JsonPointer.Create(Name, x.Key.ToString()));
+		_schemas = Patterns.ToDictionary(x => x.Key.ToString(), x => x.Value);
 	}
 	internal PatternPropertiesKeyword(IReadOnlyDictionary<Regex, JsonSchema> values, IReadOnlyList<string> invalidPatterns)
 		: this(values)

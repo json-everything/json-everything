@@ -11,7 +11,7 @@ namespace Json.Schema;
 /// Represents a single entry in the `propertyDependencies` keyword.
 /// </summary>
 [JsonConverter(typeof(PropertyDependencyJsonConverter))]
-public class PropertyDependency : IKeyedSchemaCollector, IEquatable<PropertyDependency>
+public class PropertyDependency : IEquatable<PropertyDependency>
 {
 	/// <summary>
 	/// Gets the collection of value-dependent schemas for this property.

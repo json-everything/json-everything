@@ -37,6 +37,7 @@ public class JsonSchema : IBaseDocument
 	private readonly List<(DynamicScope Scope, SchemaConstraint Constraint)> _constraints = [];
 
 	private EvaluationOptions? _lastCalledOptions;
+	private bool? _isDynamic;
 
 	/// <summary>
 	/// The empty schema `{}`.  Functionally equivalent to <see cref="True"/>.
@@ -336,9 +337,28 @@ public class JsonSchema : IBaseDocument
 	private bool IsDynamic()
 	{
 		if (BoolValue.HasValue) return false;
-		if (Keywords!.Any(x => x is DynamicRefKeyword or RecursiveRefKeyword)) return true;
+		if (_isDynamic.HasValue) return _isDynamic.Value;
 
-		return Keywords!.SelectMany(GetSubschemas).Any(x => x.IsDynamic());
+		foreach (var keyword in Keywords!)
+		{
+			if (keyword is DynamicRefKeyword or RecursiveRefKeyword)
+			{
+				_isDynamic = true;
+				return true;
+			}
+
+			foreach (var subschema in GetSubschemas(keyword))
+			{
+				if (subschema.IsDynamic())
+				{
+					_isDynamic = true;
+					return true;
+				}
+			}
+		}
+
+		_isDynamic = false;
+		return false;
 	}
 
 	/// <summary>
@@ -454,7 +474,7 @@ public class JsonSchema : IBaseDocument
 				constraint.UnknownKeywords = unknownKeywordsAnnotation;
 			}
 
-			foreach (var keyword in Keywords)
+			foreach (var keyword in Keywords.OrderBy(x => x.Priority()))
 			{
 				KeywordConstraint? keywordConstraint;
 				if (keywords.Contains(keyword))
@@ -583,11 +603,18 @@ public class JsonSchema : IBaseDocument
 				resourceRoot.RecursiveAnchor = schema;
 		}
 
-		var subschemas = schema.Keywords!.SelectMany(GetSubschemas);
+		//var subschemas = schema.Keywords!.SelectMany(GetSubschemas);
+		//foreach (var subschema in subschemas)
+		//{
+		//	PopulateBaseUris(subschema, resourceRoot, schema.BaseUri, registry, evaluatingAs);
+		//}
 
-		foreach (var subschema in subschemas)
+		foreach (var keyword in schema.Keywords!)
 		{
-			PopulateBaseUris(subschema, resourceRoot, schema.BaseUri, registry, evaluatingAs);
+			foreach (var subschema in GetSubschemas(keyword))
+			{
+				PopulateBaseUris(subschema, resourceRoot, schema.BaseUri, registry, evaluatingAs);
+			}
 		}
 	}
 
@@ -596,7 +623,7 @@ public class JsonSchema : IBaseDocument
 		switch (keyword)
 		{
 			// ReSharper disable once RedundantAlwaysMatchSubpattern
-			case ISchemaContainer { Schema: { } } container:
+			case ISchemaContainer { Schema: not null } container:
 				yield return container.Schema;
 				break;
 			case ISchemaCollector collector:

@@ -18,6 +18,8 @@ namespace Json.Schema;
 [JsonConverter(typeof(PropertyDependenciesKeywordJsonConverter))]
 public class PropertyDependenciesKeyword : IJsonSchemaKeyword, ICustomSchemaCollector
 {
+	private readonly JsonSchema[] _schemas;
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
@@ -28,7 +30,7 @@ public class PropertyDependenciesKeyword : IJsonSchemaKeyword, ICustomSchemaColl
 	/// </summary>
 	public IReadOnlyDictionary<string, PropertyDependency> Dependencies { get; }
 
-	IEnumerable<JsonSchema> ICustomSchemaCollector.Schemas => Dependencies.SelectMany(x => x.Value.Schemas.Select(y => y.Value));
+	IEnumerable<JsonSchema> ICustomSchemaCollector.Schemas => _schemas;
 	/// <summary>
 	/// Creates a new instance of the <see cref="PropertyDependenciesKeyword"/>.
 	/// </summary>
@@ -36,6 +38,7 @@ public class PropertyDependenciesKeyword : IJsonSchemaKeyword, ICustomSchemaColl
 	public PropertyDependenciesKeyword(IReadOnlyDictionary<string, PropertyDependency> dependencies)
 	{
 		Dependencies = dependencies;
+		_schemas = Dependencies.SelectMany(x => x.Value.Schemas.Select(y => y.Value)).ToArray();
 	}
 
 	/// <summary>
