@@ -422,7 +422,7 @@ public class GithubTests
 		}
 
 		public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
-			IReadOnlyList<KeywordConstraint> localConstraints,
+			Span<KeywordConstraint> localConstraints,
 			EvaluationContext context)
 		{
 			throw new NotImplementedException();
@@ -1003,7 +1003,7 @@ public class GithubTests
 			Value = value ?? throw new ArgumentNullException(nameof(value));
 		}
 
-		public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, EvaluationContext context)
+		public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, Span<KeywordConstraint> localConstraints, EvaluationContext context)
 		{
 			return KeywordConstraint.SimpleAnnotation(Name, Value);
 		}

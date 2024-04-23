@@ -50,15 +50,15 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer
 	/// </summary>
 	/// <param name="schemaConstraint">The <see cref="SchemaConstraint"/> for the schema object that houses this keyword.</param>
 	/// <param name="localConstraints">
-	/// The set of other <see cref="KeywordConstraint"/>s that have been processed prior to this one.
-	/// Will contain the constraints for keyword dependencies.
+	///     The set of other <see cref="KeywordConstraint"/>s that have been processed prior to this one.
+	///     Will contain the constraints for keyword dependencies.
 	/// </param>
 	/// <param name="context">The <see cref="EvaluationContext"/>.</param>
 	/// <returns>A constraint object.</returns>
-	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, EvaluationContext context)
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, Span<KeywordConstraint> localConstraints, EvaluationContext context)
 	{
-		var propertiesConstraint = localConstraints.FirstOrDefault(x => x.Keyword == PropertiesKeyword.Name);
-		var patternPropertiesConstraint = localConstraints.FirstOrDefault(x => x.Keyword == PatternPropertiesKeyword.Name);
+		var propertiesConstraint = localConstraints.GetKeywordConstraint<PropertiesKeyword>();
+		var patternPropertiesConstraint = localConstraints.GetKeywordConstraint<PatternPropertiesKeyword>();
 		var keywordConstraints = new[] { propertiesConstraint, patternPropertiesConstraint }.Where(x => x != null).ToArray();
 
 		var subschemaConstraint = Schema.GetConstraint(JsonPointer.Create(Name), schemaConstraint.BaseInstanceLocation, JsonPointer.Empty, context);

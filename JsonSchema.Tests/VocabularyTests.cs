@@ -28,7 +28,7 @@ public partial class VocabularyTests
 		}
 
 		public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
-			IReadOnlyList<KeywordConstraint> localConstraints,
+			Span<KeywordConstraint> localConstraints,
 			EvaluationContext context)
 		{
 			return new KeywordConstraint(Name, (e, _) =>
@@ -78,7 +78,7 @@ public partial class VocabularyTests
 		}
 
 		public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
-			IReadOnlyList<KeywordConstraint> localConstraints,
+			Span<KeywordConstraint> localConstraints,
 			EvaluationContext context)
 		{
 			return new KeywordConstraint(Name, (e, _) =>
@@ -129,7 +129,7 @@ public partial class VocabularyTests
 		}
 
 		public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
-			IReadOnlyList<KeywordConstraint> localConstraints,
+			Span<KeywordConstraint> localConstraints,
 			EvaluationContext context)
 		{
 			throw new NotImplementedException();
@@ -390,7 +390,7 @@ public partial class VocabularyTests
 		}
 
 		public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
-			IReadOnlyList<KeywordConstraint> localConstraints,
+			Span<KeywordConstraint> localConstraints,
 			EvaluationContext context)
 		{
 			if (BoolValue.HasValue)

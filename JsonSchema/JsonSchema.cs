@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -420,7 +421,7 @@ public class JsonSchema : IBaseDocument
 				var refKeyword = (RefKeyword?) Keywords!.FirstOrDefault(x => x is RefKeyword);
 				if (refKeyword != null)
 				{
-					var refConstraint = refKeyword.GetConstraint(constraint, Array.Empty<KeywordConstraint>(), context);
+					var refConstraint = refKeyword.GetConstraint(constraint, [], context);
 					constraint.Constraints = [refConstraint];
 					return;
 				}
@@ -433,31 +434,45 @@ public class JsonSchema : IBaseDocument
 				context.Scope.Push(BaseUri);
 				context.PushEvaluatingAs(DeclaredVersion);
 			}
-			var localConstraints = new List<KeywordConstraint>();
+
+			using var owner = MemoryPool<KeywordConstraint>.Shared.Rent(Keywords!.Count);
+			var localConstraints = owner.Memory.Span;
+			var constraintCount = 0;
 			var version = DeclaredVersion == SpecVersion.Unspecified ? context.EvaluatingAs : DeclaredVersion;
 			var keywords = EvaluationOptions.FilterKeywords(context.GetKeywordsToProcess(this, context.Options), version).ToArray();
-			var unrecognized = Keywords!.OfType<UnrecognizedKeyword>();
-			var unrecognizedButSupported = Keywords!.Except(keywords).ToArray();
 			if (context.Options.AddAnnotationForUnknownKeywords)
-				constraint.UnknownKeywords = new JsonArray(unrecognizedButSupported.Concat(unrecognized)
-					.Select(x => (JsonNode?)x.Keyword())
-					.ToArray());
-			foreach (var keyword in keywords.OrderBy(x => x.Priority()))
 			{
-				var keywordConstraint = keyword.GetConstraint(constraint, localConstraints, context);
-				localConstraints.Add(keywordConstraint);
+				var unknownKeywordsAnnotation = new JsonArray();  // allocation
+				foreach (var keyword in Keywords)
+				{
+					if (keywords.Contains(keyword)) continue;
+
+					// explicit cast removes AOT warning
+					unknownKeywordsAnnotation.Add((JsonNode?)keyword.Keyword());
+				}
+
+				constraint.UnknownKeywords = unknownKeywordsAnnotation;
 			}
 
-			foreach (var keyword in unrecognizedButSupported)
+			foreach (var keyword in Keywords)
 			{
+				KeywordConstraint? keywordConstraint;
+				if (keywords.Contains(keyword))
+				{
+					keywordConstraint = keyword.GetConstraint(constraint, localConstraints[..constraintCount], context);
+					localConstraints[constraintCount] = keywordConstraint;
+					constraintCount++;
+					continue;
+				}
+
 				var typeInfo = SchemaKeywordRegistry.GetTypeInfo(keyword.GetType());
-				var jsonText = JsonSerializer.Serialize(keyword, typeInfo!);
-				var json = JsonNode.Parse(jsonText);
-				var keywordConstraint = KeywordConstraint.SimpleAnnotation(keyword.Keyword(), json);
-				localConstraints.Add(keywordConstraint);
+				var json = JsonSerializer.SerializeToNode(keyword, typeInfo!);  // allocation
+				keywordConstraint = KeywordConstraint.SimpleAnnotation(keyword.Keyword(), json);
+				localConstraints[constraintCount] = keywordConstraint;
+				constraintCount++;
 			}
 
-			constraint.Constraints = [.. localConstraints];
+			constraint.Constraints = localConstraints[..constraintCount].ToArray();  // allocation
 			if (dynamicScopeChanged)
 			{
 				context.Scope.Pop();

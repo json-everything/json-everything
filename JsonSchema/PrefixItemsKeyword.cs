@@ -65,13 +65,13 @@ public class PrefixItemsKeyword : IJsonSchemaKeyword, ISchemaCollector
 	/// </summary>
 	/// <param name="schemaConstraint">The <see cref="SchemaConstraint"/> for the schema object that houses this keyword.</param>
 	/// <param name="localConstraints">
-	/// The set of other <see cref="KeywordConstraint"/>s that have been processed prior to this one.
-	/// Will contain the constraints for keyword dependencies.
+	///     The set of other <see cref="KeywordConstraint"/>s that have been processed prior to this one.
+	///     Will contain the constraints for keyword dependencies.
 	/// </param>
 	/// <param name="context">The <see cref="EvaluationContext"/>.</param>
 	/// <returns>A constraint object.</returns>
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
-		IReadOnlyList<KeywordConstraint> localConstraints,
+		Span<KeywordConstraint> localConstraints,
 		EvaluationContext context)
 	{
 		var subschemaConstraints = ArraySchemas.Select((x, i) => x.GetConstraint(JsonPointer.Create(Name, i), schemaConstraint.BaseInstanceLocation, CommonJsonPointers.NumberSegments[i], context)).ToArray();

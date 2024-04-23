@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 
 namespace Json.Schema;
@@ -26,9 +26,13 @@ public static class ConstraintExtensions
 	/// <typeparam name="T">The keyword type.</typeparam>
 	/// <param name="constraints">The set of constraints.</param>
 	/// <returns>The keyword evaluation, if it exists.</returns>
-	public static KeywordConstraint? GetKeywordConstraint<T>(this IEnumerable<KeywordConstraint> constraints)
+	public static KeywordConstraint? GetKeywordConstraint<T>(this Span<KeywordConstraint> constraints)
 		where T : IJsonSchemaKeyword
 	{
-		return constraints.SingleOrDefault(x => x.Keyword == typeof(T).Keyword());
+		foreach (var constraint in constraints)
+		{
+			if (constraint.Keyword == typeof(T).Keyword()) return constraint;
+		}
+		return null;
 	}
 }
