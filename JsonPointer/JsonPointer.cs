@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Buffers;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
@@ -23,6 +22,13 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 	/// The empty pointer.
 	/// </summary>
 	public static readonly JsonPointer Empty = new();
+
+	/// <summary>
+	/// Defines the default segment array size.  Used during parsing.  Default is 50.  Increase as needed if you expect pointers with many segments.
+	/// </summary>
+	// ReSharper disable once FieldCanBeMadeReadOnly.Global
+	// ReSharper disable once ConvertToConstant.Global
+	public static int DefaultMaxSize = 50;
 
 	private readonly string _plain = null!;
 
@@ -58,23 +64,22 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 	/// <returns>A JSON Pointer.</returns>
 	/// <exception cref="ArgumentNullException"><paramref name="source"/> is null.</exception>
 	/// <exception cref="PointerParseException"><paramref name="source"/> does not contain a valid pointer or contains a pointer of the wrong kind.</exception>
-	public static JsonPointer Parse(ReadOnlySpan<char> source)
+	public static JsonPointer Parse(string source)
 	{
-		if (source == null) throw new ArgumentNullException(nameof(source));
 		if (source.Length == 0) return Empty;
 
 		if (source[0] == '#')
-			source = HttpUtility.UrlDecode(source[1..].ToString()).AsSpan();  // allocations
+			source = HttpUtility.UrlDecode(source[1..]);  // allocation
 
 		if (source.Length == 0) return Empty;
 		if (source[0] != '/')
-			throw new PointerParseException("Pointer must start with either `#` or `/` or be empty");
+			throw new PointerParseException("Pointer must start with either `#/` or `/` or be empty");
 
 		var i = 1;
 		var count = 0;
 		var start = 1;
-		using var owner = MemoryPool<Range>.Shared.Rent();
-		var span = owner.Memory.Span;
+		var sourceSpan = source.AsSpan();
+		Span<Range> span = stackalloc Range[DefaultMaxSize];
 		while (i < source.Length)
 		{
 			if (source[i] == '/')
@@ -84,7 +89,7 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 				count++;
 			}
 
-			_ = SpanExtensions.ConsiderEscapes(source, ref i);
+			_ = sourceSpan.Decode(ref i);
 
 			i++;
 		}
@@ -93,7 +98,7 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 			? new Range(0, 0)
 			: new Range(start, i);
 
-		return new JsonPointer(source.ToString(), span[..(count + 1)]);
+		return new JsonPointer(source, span[..(count + 1)]);
 	}
 
 	/// <summary>
@@ -103,9 +108,8 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 	/// <param name="pointer">The resulting pointer.</param>
 	/// <returns>`true` if the parse was successful; `false` otherwise.</returns>
 	/// <exception cref="ArgumentNullException"><paramref name="source"/> is null.</exception>
-	public static bool TryParse(ReadOnlySpan<char> source, out JsonPointer pointer)
+	public static bool TryParse(string source, out JsonPointer pointer)
 	{
-		if (source == null) throw new ArgumentNullException(nameof(source));
 		if (source.Length == 0)
 		{
 			pointer = Empty;
@@ -114,7 +118,7 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 
 		if (source[0] == '#')
 		{
-			source = HttpUtility.UrlDecode(source[1..].ToString()).AsSpan();  // allocation
+			source = HttpUtility.UrlDecode(source[1..]);  // allocation
 		}
 
 		if (source.Length == 0)
@@ -132,8 +136,8 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 		var i = 1;
 		var count = 0;
 		var start = 1;
-		using var owner = MemoryPool<Range>.Shared.Rent();
-		var span = owner.Memory.Span;
+		var sourceSpan = source.AsSpan();
+		Span<Range> span = stackalloc Range[DefaultMaxSize];
 		while (i < source.Length)
 		{
 			if (source[i] == '/')
@@ -143,7 +147,7 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 				count++;
 			}
 
-			if (!SpanExtensions.TryConsiderEscapes(source, ref i))
+			if (!sourceSpan.TryDecode(ref i))
 			{
 				pointer = Empty;
 				return false;
@@ -156,8 +160,29 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 			? new Range(0, 0)
 			: new Range(start, i);
 
-		pointer = new JsonPointer(source.ToString(), span[..(count + 1)]);
+		pointer = new JsonPointer(source, span[..(count + 1)]);
 		return true;
+	}
+
+	/// <summary>
+	/// Creates a single-segment pointer.
+	/// </summary>
+	/// <param name="segment"></param>
+	/// <returns></returns>
+	public static JsonPointer Create(PointerSegment segment)
+	{
+		Span<char> span = stackalloc char[segment.GetLength() * 2 + 1];
+
+		var i = 0;
+		span[i] = '/';
+		i++;
+		foreach (var ch in segment.GetValue().Encode())
+		{
+			span[i] = ch;
+			i++;
+		}
+
+		return Parse(span[..i].ToString());
 	}
 
 	/// <summary>
@@ -168,32 +193,21 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 	/// <remarks>This method creates un-encoded pointers only.</remarks>
 	public static JsonPointer Create(params PointerSegment[] segments)
 	{
-		return Create((IEnumerable<PointerSegment>)segments);
-	}
-
-	/// <summary>
-	/// Creates a new JSON Pointer from a collection of segments.
-	/// </summary>
-	/// <param name="segments">A collection of segments.</param>
-	/// <returns>The JSON Pointer.</returns>
-	public static JsonPointer Create(IEnumerable<PointerSegment> segments)
-	{
-		using var owner = MemoryPool<char>.Shared.Rent();
-		var span = owner.Memory.Span;
+		Span<char> span = stackalloc char[GetPointerLength(segments)];
 
 		var i = 0;
 		foreach (var segment in segments)
 		{
 			span[i] = '/';
 			i++;
-			foreach (var ch in segment.Value)
+			foreach (var ch in segment.GetValue().Encode())
 			{
 				span[i] = ch;
 				i++;
 			}
 		}
 
-		return Parse(owner.Memory.Span[..i]);
+		return Parse(span[..i].ToString());
 	}
 
 	/// <summary>
@@ -286,13 +300,15 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 	/// <returns>A new pointer.</returns>
 	public JsonPointer Combine(JsonPointer other)
 	{
-		using var owner = MemoryPool<char>.Shared.Rent();
-		var span = owner.Memory.Span;
+		if (other.Segments.Length == 0) return this;
+		if (Segments.Length == 0) return other;
+
+		Span<char> span = stackalloc char[_plain.Length + other._plain.Length];
 		_plain.AsSpan().CopyTo(span);
 		var nextSegment = span[_plain.Length..];
 		other._plain.AsSpan().CopyTo(nextSegment);
 
-		return Parse(span[..(_plain.Length + other._plain.Length)]);
+		return Parse(span.ToString());
 	}
 
 	/// <summary>
@@ -302,21 +318,36 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 	/// <returns>A new pointer.</returns>
 	public JsonPointer Combine(params PointerSegment[] additionalSegments)
 	{
-		using var owner = MemoryPool<char>.Shared.Rent();
-		var span = owner.Memory.Span;
+		if (additionalSegments.Length == 0) return this;
+		if (Segments.Length == 0) return Create(additionalSegments);
+
+		Span<char> span = stackalloc char[_plain.Length + GetPointerLength(additionalSegments)];
 		_plain.AsSpan().CopyTo(span);
 
 		var i = _plain.Length;
 		foreach (var segment in additionalSegments)
 		{
 			span[i] = '/';
-			var nextSegment = span[(i + 1)..];
-			segment.Value.AsSpan().CopyTo(nextSegment);
-			i += segment.Value.Length;
+			i++;
+			var nextSegment = span[i..];
+			var value = segment.GetValue();
+			value.CopyTo(nextSegment);
+			i += value.Length;
 		}
 
 		i++;
-		return Parse(span[..i]);
+		return Parse(span[..(i - 1)].ToString());
+	}
+
+	private static int GetPointerLength(PointerSegment[] segments)
+	{
+		var sum = 1;
+		foreach (var segment in segments)
+		{
+			sum += segment.GetLength() * 2;
+		}
+
+		return sum;
 	}
 
 	/// <summary>
@@ -335,7 +366,7 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 		if (levels == Segments.Length) return Empty;
 
 		var end = Segments[^(levels+1)].End;
-		return Parse(_plain.AsSpan()[..end]);
+		return Parse(_plain.AsSpan()[..end].ToString());
 	}
 
 	/// <summary>
@@ -354,7 +385,7 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 			throw new IndexOutOfRangeException("Local cannot be reached");
 
 		var start = Segments[skip].Start.Value - 1; // capture the slash
-		return Parse(_plain.AsSpan()[start..]);
+		return Parse(_plain.AsSpan()[start..].ToString());
 	}
 
 	/// <summary>
@@ -534,7 +565,7 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 
 		while (aIndex < segment.Length && bIndex < expected.Length)
 		{
-			var aChar = SpanExtensions.ConsiderEscapes(segment, ref aIndex);
+			var aChar = segment.Decode(ref aIndex);
 			var bChar = expected[bIndex];
 
 			if (aChar != bChar) return false;

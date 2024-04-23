@@ -70,7 +70,7 @@ public class MissingSomeRule : Rule, IRule
 					{
 						Path = p, Pointer = (JsonPointer?) (s == string.Empty
 							? JsonPointer.Empty
-							: JsonPointer.Parse($"/{s.Replace('.', '/')}".AsSpan()))
+							: JsonPointer.Parse($"/{s.Replace('.', '/')}"))
 					};
 				return new { Path = p, Pointer = (JsonPointer?)null }!;
 			})

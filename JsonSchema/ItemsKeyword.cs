@@ -96,22 +96,7 @@ public class ItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, ISchemaCollect
 			var prefixItemsConstraint = localConstraints.FirstOrDefault(x => x.Keyword == PrefixItemsKeyword.Name);
 
 			var subschemaConstraint = SingleSchema.GetConstraint(JsonPointer.Create(Name), schemaConstraint.BaseInstanceLocation, JsonPointer.Empty, context);
-			subschemaConstraint.InstanceLocator = evaluation =>
-			{
-				if (evaluation.LocalInstance is not JsonArray array) return Array.Empty<JsonPointer>();
-
-				if (array.Count == 0) return Array.Empty<JsonPointer>();
-
-				var startIndex = 0;
-
-				var prefixItemsEvaluation = evaluation.GetKeywordEvaluation<PrefixItemsKeyword>();
-				if (prefixItemsEvaluation != null)
-					startIndex = prefixItemsEvaluation.ChildEvaluations.Length;
-
-				if (array.Count <= startIndex) return Array.Empty<JsonPointer>();
-
-				return Enumerable.Range(startIndex, array.Count - startIndex).Select(x => JsonPointer.Create(x));
-			};
+			subschemaConstraint.InstanceLocator = LocateInstances;
 
 			if (prefixItemsConstraint != null)
 				constraint.SiblingDependencies = [prefixItemsConstraint];
@@ -123,12 +108,31 @@ public class ItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, ISchemaCollect
 			    context.EvaluatingAs.HasFlag(SpecVersion.DraftNext))
 				throw new JsonSchemaException($"Array form of {Name} is invalid for draft 2020-12 and later");
 
-			var subschemaConstraints = ArraySchemas!.Select((x, i) => x.GetConstraint(JsonPointer.Create(Name, i), schemaConstraint.BaseInstanceLocation, JsonPointer.Create(i), context)).ToArray();
+			var subschemaConstraints = ArraySchemas!.Select((x, i) => x.GetConstraint(JsonPointer.Create(Name, i), schemaConstraint.BaseInstanceLocation, CommonJsonPointers.NumberSegments[i], context)).ToArray();
 
 			constraint.ChildDependencies = subschemaConstraints;
 		}
 
 		return constraint;
+	}
+
+	private static IEnumerable<JsonPointer> LocateInstances(KeywordEvaluation evaluation)
+	{
+		if (evaluation.LocalInstance is not JsonArray array) yield break;
+
+		if (array.Count == 0) yield break;
+
+		var startIndex = 0;
+
+		var prefixItemsEvaluation = evaluation.GetKeywordEvaluation<PrefixItemsKeyword>();
+		if (prefixItemsEvaluation != null) startIndex = prefixItemsEvaluation.ChildEvaluations.Length;
+
+		if (array.Count <= startIndex) yield break;
+
+		for (int i = startIndex; i < array.Count; i++)
+		{
+			yield return CommonJsonPointers.NumberSegments[i];
+		}
 	}
 
 	private static void Evaluator(KeywordEvaluation evaluation, EvaluationContext context)

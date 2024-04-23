@@ -62,22 +62,7 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer
 		var keywordConstraints = new[] { propertiesConstraint, patternPropertiesConstraint }.Where(x => x != null).ToArray();
 
 		var subschemaConstraint = Schema.GetConstraint(JsonPointer.Create(Name), schemaConstraint.BaseInstanceLocation, JsonPointer.Empty, context);
-		subschemaConstraint.InstanceLocator = evaluation =>
-		{
-			if (evaluation.LocalInstance is not JsonObject obj) return Array.Empty<JsonPointer>();
-
-			var properties = obj.Select(x => x.Key);
-			
-			var propertiesEvaluation = evaluation.GetKeywordEvaluation<PropertiesKeyword>();
-			if (propertiesEvaluation != null)
-				properties = properties.Except(propertiesEvaluation.ChildEvaluations.Select(x => x.RelativeInstanceLocation[0].GetSegmentValue()));
-
-			var patternPropertiesEvaluation = evaluation.GetKeywordEvaluation<PatternPropertiesKeyword>();
-			if (patternPropertiesEvaluation != null)
-				properties = properties.Except(patternPropertiesEvaluation.ChildEvaluations.Select(x => x.RelativeInstanceLocation[0].GetSegmentValue()));
-
-			return properties.Select(x => JsonPointer.Create(x));
-		};
+		subschemaConstraint.InstanceLocator = LocateInstances;
 
 		return new KeywordConstraint(Name, Evaluator)
 		{
@@ -86,9 +71,41 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer
 		};
 	}
 
+	private static IEnumerable<JsonPointer> LocateInstances(KeywordEvaluation evaluation)
+	{
+		if (evaluation.LocalInstance is not JsonObject obj) yield break;
+
+		var skip = new HashSet<string>();
+
+		var propertiesEvaluation = evaluation.GetKeywordEvaluation<PropertiesKeyword>();
+		if (propertiesEvaluation != null)
+		{
+			foreach (var child in propertiesEvaluation.ChildEvaluations)
+			{
+				skip.Add(child.RelativeInstanceLocation[0].GetSegmentName());
+			}
+		};
+
+		var patternPropertiesEvaluation = evaluation.GetKeywordEvaluation<PatternPropertiesKeyword>();
+		if (patternPropertiesEvaluation != null)
+		{
+			foreach (var child in patternPropertiesEvaluation.ChildEvaluations)
+			{
+				skip.Add(child.RelativeInstanceLocation[0].GetSegmentName());
+			}
+		}
+
+		foreach (var kvp in obj)
+		{
+			if (skip.Contains(kvp.Key)) continue;
+
+			yield return JsonPointer.Create(kvp.Key);
+		}
+	}
+
 	private static void Evaluator(KeywordEvaluation evaluation, EvaluationContext context)
 	{
-		evaluation.Results.SetAnnotation(Name, evaluation.ChildEvaluations.Select(x => (JsonNode)x.RelativeInstanceLocation[0].GetSegmentValue()!).ToJsonArray());
+		evaluation.Results.SetAnnotation(Name, evaluation.ChildEvaluations.Select(x => (JsonNode)x.RelativeInstanceLocation[0].GetSegmentName()!).ToJsonArray());
 
 		if (!evaluation.ChildEvaluations.All(x => x.Results.IsValid))
 			evaluation.Results.Fail();

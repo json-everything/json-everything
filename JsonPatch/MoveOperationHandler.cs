@@ -35,7 +35,7 @@ internal class MoveOperationHandler : IPatchOperationHandler
 
 		var lastFromSegment = operation.From[^1];
 		if (source is JsonObject objSource)
-			objSource.Remove(lastFromSegment.GetSegmentValue());
+			objSource.Remove(lastFromSegment.GetSegmentName());
 		else if (source is JsonArray arrSource)
 		{
 			var index = lastFromSegment.Length == 0 && lastFromSegment[0] == '-'
@@ -55,7 +55,7 @@ internal class MoveOperationHandler : IPatchOperationHandler
 		var lastPathSegment = operation.Path[^1];
 		if (target is JsonObject objTarget)
 		{
-			objTarget[lastPathSegment.GetSegmentValue()] = data?.DeepClone();
+			objTarget[lastPathSegment.GetSegmentName()] = data?.DeepClone();
 			return;
 		}
 

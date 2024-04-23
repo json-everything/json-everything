@@ -19,11 +19,10 @@ public static class NodeExtensions
 	{
 		foreach (var kvp in obj)
 		{
-			if (JsonPointer.SegmentEquals(segment, kvp.Key))
-			{
-				node = kvp.Value;
-				return true;
-			}
+			if (!JsonPointer.SegmentEquals(segment, kvp.Key)) continue;
+
+			node = kvp.Value;
+			return true;
 		}
 
 		node = null;

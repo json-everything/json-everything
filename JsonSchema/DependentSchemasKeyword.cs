@@ -63,9 +63,9 @@ public class DependentSchemasKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 			{
 				if (evaluation.LocalInstance is not JsonObject obj ||
 				    !obj.ContainsKey(requirement.Key))
-					return Array.Empty<JsonPointer>();
+					return [];
 
-				return JsonPointers.SingleEmptyPointerArray;
+				return CommonJsonPointers.SingleEmptyPointerArray;
 			};
 
 			return subschemaConstraint;
@@ -80,14 +80,15 @@ public class DependentSchemasKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 	private static void Evaluator(KeywordEvaluation evaluation, EvaluationContext context)
 	{
 		var failedProperties = evaluation.ChildEvaluations
-			.Where(x => !x.Results.IsValid)
-			.Select(x => x.Results.EvaluationPath[^1].GetSegmentValue())
-			.ToArray();
-		evaluation.Results.SetAnnotation(Name, evaluation.ChildEvaluations.Select(x => (JsonNode)x.Results.EvaluationPath[^1].GetSegmentValue()!).ToJsonArray());
+			.Where(x => !x.Results.IsValid);
+
+		// ReSharper disable PossibleMultipleEnumeration
+		if (!failedProperties.Any()) return;
 		
-		if (failedProperties.Length != 0)
-			evaluation.Results.Fail(Name, ErrorMessages.GetDependentSchemas(context.Options.Culture)
-				.ReplaceToken("failed", failedProperties));
+		var properties = failedProperties.Select(x => x.Results.EvaluationPath[^1].GetSegmentName()).ToArray();
+		evaluation.Results.Fail(Name, ErrorMessages.GetDependentSchemas(context.Options.Culture)
+				.ReplaceToken("failed", properties));
+		// ReSharper restore PossibleMultipleEnumeration
 	}
 }
 

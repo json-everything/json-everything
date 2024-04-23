@@ -58,7 +58,7 @@ public class PropertyNamesKeyword : IJsonSchemaKeyword, ISchemaContainer
 		var subschemaConstraint = Schema.GetConstraint(JsonPointer.Create(Name), schemaConstraint.BaseInstanceLocation, JsonPointer.Empty, context);
 		subschemaConstraint.InstanceLocator = evaluation =>
 		{
-			if (evaluation.LocalInstance is not JsonObject obj) return Array.Empty<JsonPointer>();
+			if (evaluation.LocalInstance is not JsonObject obj) return [];
 
 			var properties = obj.Select(x => x.Key);
 

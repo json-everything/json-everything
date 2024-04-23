@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Json.Pointer;
 
@@ -30,7 +29,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder UniqueKeys(this JsonSchemaBuilder builder, IEnumerable<string> keys)
 	{
-		builder.Add(new UniqueKeysKeyword(keys.Select(s => JsonPointer.Parse(s.AsSpan()))));
+		builder.Add(new UniqueKeysKeyword(keys.Select(JsonPointer.Parse)));
 		return builder;
 	}
 
@@ -54,7 +53,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder UniqueKeys(this JsonSchemaBuilder builder, params string[] keys)
 	{
-		builder.Add(new UniqueKeysKeyword(keys.Select(s => JsonPointer.Parse(s.AsSpan()))));
+		builder.Add(new UniqueKeysKeyword(keys.Select(JsonPointer.Parse)));
 		return builder;
 	}
 

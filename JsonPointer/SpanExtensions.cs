@@ -13,9 +13,11 @@ public static class SpanExtensions
 	/// </summary>
 	/// <param name="segment">The segment.</param>
 	/// <returns>The decoded string.</returns>
-	/// <exception cref="PointerParseException">Throw when the span does not represent a valid JSON Pointer segment.</exception>
-	public static string GetSegmentValue(this ReadOnlySpan<char> segment)
+	/// <exception cref="PointerParseException">Thrown when the span does not represent a valid JSON Pointer segment.</exception>
+	public static string GetSegmentName(this ReadOnlySpan<char> segment)
 	{
+		if (segment.Length == 0) return string.Empty;
+
 		using var owner = MemoryPool<char>.Shared.Rent(segment.Length);
 		var span = owner.Memory.Span;
 		var j = 0;
@@ -41,7 +43,18 @@ public static class SpanExtensions
 		return span[..j].ToString();
 	}
 
-	internal static char ConsiderEscapes(ReadOnlySpan<char> value, ref int index)
+	/// <summary>
+	/// Attempts to get an integer index from a pointer segment.
+	/// </summary>
+	/// <param name="segment">The segment.</param>
+	/// <returns>The index value.</returns>
+	/// <exception cref="PointerParseException">Thrown when the span does not represent a valid integer.</exception>
+	public static int GetSegmentIndex(this ReadOnlySpan<char> segment)
+	{
+		return segment.TryGetInt(out var value) ? value : throw new PointerParseException("Value does not represent an index");
+	}
+
+	internal static char Decode(this ReadOnlySpan<char> value, ref int index)
 	{
 		var ch = value[index];
 		if (ch == '~')
@@ -60,7 +73,7 @@ public static class SpanExtensions
 		return ch;
 	}
 
-	internal static bool TryConsiderEscapes(ReadOnlySpan<char> value, ref int index)
+	internal static bool TryDecode(this ReadOnlySpan<char> value, ref int index)
 	{
 		var ch = value[index];
 		if (ch == '~')
@@ -70,6 +83,36 @@ public static class SpanExtensions
 		}
 
 		return true;
+	}
+
+	internal static ReadOnlySpan<char> Encode(this ReadOnlySpan<char> key)
+	{
+		var owner = MemoryPool<char>.Shared.Rent(key.Length * 2);
+		var span = owner.Memory.Span;
+
+		var length = 0;
+		foreach (var ch in key)
+		{
+			switch (ch)
+			{
+				case '~':
+					span[length] = '~';
+					span[length + 1] = '0';
+					length += 2;
+					break;
+				case '/':
+					span[length] = '~';
+					span[length + 1] = '1';
+					length += 2;
+					break;
+				default:
+					span[length] = ch;
+					length++;
+					break;
+			}
+		}
+
+		return span[..length];
 	}
 
 	/// <summary>

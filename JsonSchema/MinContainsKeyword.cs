@@ -52,7 +52,7 @@ public class MinContainsKeyword : IJsonSchemaKeyword
 		IReadOnlyList<KeywordConstraint> localConstraints,
 		EvaluationContext context)
 	{
-		return new KeywordConstraint(Name, (e, _) => e.Results.SetAnnotation(Name, Value));
+		return KeywordConstraint.SimpleAnnotation(Name, Value);
 	}
 }
 

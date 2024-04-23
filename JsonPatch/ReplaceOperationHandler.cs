@@ -28,7 +28,7 @@ internal class ReplaceOperationHandler : IPatchOperationHandler
 		var lastPathSegment = operation.Path[^1];
 		if (target is JsonObject objTarget)
 		{
-			objTarget[lastPathSegment.GetSegmentValue()] = operation.Value?.DeepClone();
+			objTarget[lastPathSegment.GetSegmentName()] = operation.Value?.DeepClone();
 			return;
 		}
 

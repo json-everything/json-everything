@@ -37,7 +37,7 @@ internal class CopyOperationHandler : IPatchOperationHandler
 		var lastPathSegment = operation.Path[^1];
 		if (target is JsonObject objTarget)
 		{
-			objTarget[lastPathSegment.GetSegmentValue()] = data?.DeepClone();
+			objTarget[lastPathSegment.GetSegmentName()] = data?.DeepClone();
 			return;
 		}
 

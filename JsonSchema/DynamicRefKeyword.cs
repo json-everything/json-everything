@@ -79,7 +79,7 @@ public class DynamicRefKeyword : IJsonSchemaKeyword
 
 		if (targetSchema == null)
 		{
-			if (JsonPointer.TryParse(newUri.Fragment.AsSpan(), out var pointerFragment))
+			if (JsonPointer.TryParse(newUri.Fragment, out var pointerFragment))
 			{
 				if (targetBase == null)
 					throw new JsonSchemaException($"Cannot resolve base schema from `{newUri}`");
@@ -109,7 +109,7 @@ public class DynamicRefKeyword : IJsonSchemaKeyword
 		var childEvaluation = target
 			.GetConstraint(JsonPointer.Create(Name), evaluation.Results.InstanceLocation, JsonPointer.Empty, context)
 			.BuildEvaluation(evaluation.LocalInstance, evaluation.Results.InstanceLocation, evaluation.Results.EvaluationPath.Combine(Name), context.Options);
-		evaluation.ChildEvaluations = new[] { childEvaluation };
+		evaluation.ChildEvaluations = [childEvaluation];
 
 		childEvaluation.Evaluate(context);
 

@@ -133,7 +133,7 @@ public class EvaluationResults
 		var localEvaluationPathStart = 0;
 		for (var i = 0; i < EvaluationPath.Segments.Length; i++)
 		{
-			var segment = EvaluationPath[i].GetSegmentValue();
+			var segment = EvaluationPath[i].GetSegmentName();
 			if (segment is RefKeyword.Name or RecursiveRefKeyword.Name or DynamicRefKeyword.Name)
 				localEvaluationPathStart = i + 1;
 		}

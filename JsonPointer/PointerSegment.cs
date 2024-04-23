@@ -8,71 +8,53 @@ namespace Json.Pointer;
 /// </summary>
 public struct PointerSegment
 {
-	/// <summary>
-	/// Gets the segment value.
-	/// </summary>
-	public string Value { get; private set; }
+	private string? _stringValue;
+	private int? _intValue;
 
-	/// <summary>
-	/// Creates a new segment.
-	/// </summary>
-	public PointerSegment()
+	internal readonly ReadOnlySpan<char> GetValue()
 	{
-		Value = string.Empty;
+		if (_intValue.HasValue)
+		{
+			var owner = MemoryPool<char>.Shared.Rent(15);
+			var span = owner.Memory.Span;
+			var current = _intValue.Value;
+			var length = GetLength();
+			for (int i = 0; i < length; i++)
+			{
+				var digit = current % 10;
+				span[^(i+1)] = (char)(digit + '0');
+				current /= 10;
+			}
+
+			return span[^length..];
+		}
+
+		return _stringValue!.AsSpan();
 	}
+
+	internal readonly int GetLength() =>
+		_intValue.HasValue
+			? _intValue.Value / 10 + 1
+			: _stringValue!.Length;
 
 	/// <summary>
 	/// Implicitly casts an <see cref="uint"/> to a <see cref="PointerSegment"/>.
 	/// </summary>
 	/// <param name="value">A pointer segment that represents the value.</param>
-	public static implicit operator PointerSegment(int value)
-	{
-		if (value < 0)
-			throw new ArgumentOutOfRangeException(nameof(value));
-		return new PointerSegment { Value = value.ToString() };
-	}
+	public static implicit operator PointerSegment(int value) =>
+		value >= 0
+			? new PointerSegment { _intValue = value }
+			: throw new ArgumentOutOfRangeException(nameof(value));
 
 	/// <summary>
 	/// Implicitly casts a <see cref="string"/> to a <see cref="PointerSegment"/>.
 	/// </summary>
 	/// <param name="value">A pointer segment that represents the value.</param>
 	/// <remarks>JSON Pointer encoding is performed, but URI encoding is not.</remarks>
-	public static implicit operator PointerSegment(string value)
-	{
-		return new PointerSegment { Value = Encode(value) };
-	}
+	public static implicit operator PointerSegment(string value) => 
+		new() { _stringValue = value };
 
 	/// <summary>Returns the fully qualified type name of this instance.</summary>
 	/// <returns>The fully qualified type name.</returns>
-	public readonly override string ToString() => Value;
-
-	private static string Encode(string key)
-	{
-		var owner = MemoryPool<char>.Shared.Rent();
-		var span = owner.Memory.Span;
-
-		var length = 0;
-		foreach (var ch in key)
-		{
-			switch (ch)
-			{
-				case '~':
-					span[length] = '~';
-					span[length + 1] = '0';
-					length+=2;
-					break;
-				case '/':
-					span[length] = '~';
-					span[length + 1] = '1';
-					length+=2;
-					break;
-				default:
-					span[length] = ch;
-					length++;
-					break;
-			}
-		}
-
-		return span[..length].ToString();
-	}
+	public readonly override string ToString() => _intValue?.ToString() ?? _stringValue!;
 }

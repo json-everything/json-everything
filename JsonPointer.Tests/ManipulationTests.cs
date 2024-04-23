@@ -40,4 +40,14 @@ public class ManipulationTests
 
 		Assert.AreEqual(expected, actual.ToString());
 	}
+
+	[Test]
+	public void CombineSegments()
+	{
+		var pointer = JsonPointer.Parse("/foo/5/bar");
+
+		var actual = pointer.Combine("baz", 0, "quux", 5, 10);
+
+		Assert.AreEqual("/foo/5/bar/baz/0/quux/5/10", actual.ToString());
+	}
 }

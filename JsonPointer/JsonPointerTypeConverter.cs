@@ -21,7 +21,7 @@ internal sealed class JsonPointerTypeConverter : TypeConverter
 	public override object ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object? value)
 	{
 		if (value is string s)
-			return JsonPointer.Parse(s.AsSpan());
+			return JsonPointer.Parse(s);
 			
 		if (value is JsonPointer pointer)
 			return pointer;
@@ -55,7 +55,7 @@ internal sealed class JsonPointerTypeConverter : TypeConverter
 	public override bool IsValid(ITypeDescriptorContext? context, object? value)
 	{
 		return value is string s
-			? JsonPointer.TryParse(s.AsSpan(), out _)
+			? JsonPointer.TryParse(s, out _)
 			: value is JsonPointer;
 	}
 }

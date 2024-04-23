@@ -195,7 +195,7 @@ public static class Formats
 		if (node.GetSchemaValueType() != SchemaValueType.String) return true;
 
 		var str = node!.GetValue<string>();
-		return string.IsNullOrEmpty(str) || (str[0] != '#' && Pointer.JsonPointer.TryParse(str.AsSpan(), out _));
+		return string.IsNullOrEmpty(str) || (str[0] != '#' && Pointer.JsonPointer.TryParse(str, out _));
 	}
 
 	private static bool CheckRelativeJsonPointer(JsonNode? node)

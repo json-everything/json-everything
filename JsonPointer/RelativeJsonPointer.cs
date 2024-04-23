@@ -143,7 +143,7 @@ public readonly struct RelativeJsonPointer
 
 		if (span[i] != '/') throw new PointerParseException($"{nameof(source)} must contain either a `#` or a pointer after the initial number");
 
-		var pointer = JsonPointer.Parse(span[i..]);
+		var pointer = JsonPointer.Parse(span[i..].ToString());
 
 		return new RelativeJsonPointer(parentSteps, indexManipulation, pointer);
 	}
@@ -212,7 +212,7 @@ public readonly struct RelativeJsonPointer
 			return false;
 		}
 
-		if (!JsonPointer.TryParse(span[i..], out var pointer))
+		if (!JsonPointer.TryParse(span[i..].ToString(), out var pointer))
 		{
 			relativePointer = null;
 			return false;

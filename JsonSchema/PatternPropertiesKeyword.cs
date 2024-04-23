@@ -25,6 +25,8 @@ namespace Json.Schema;
 [JsonConverter(typeof(PatternPropertiesKeywordJsonConverter))]
 public class PatternPropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 {
+	private readonly Dictionary<Regex, JsonPointer> _evaluationPointers;
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
@@ -51,10 +53,12 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollecto
 	public PatternPropertiesKeyword(IReadOnlyDictionary<Regex, JsonSchema> values)
 	{
 		Patterns = values ?? throw new ArgumentNullException(nameof(values));
+
+		_evaluationPointers = values.ToDictionary(x => x.Key, x => JsonPointer.Create(Name, x.Key.ToString()));
 	}
 	internal PatternPropertiesKeyword(IReadOnlyDictionary<Regex, JsonSchema> values, IReadOnlyList<string> invalidPatterns)
+		: this(values)
 	{
-		Patterns = values ?? throw new ArgumentNullException(nameof(values));
 		InvalidPatterns = invalidPatterns;
 	}
 
@@ -72,10 +76,10 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollecto
 	{
 		var subschemaConstraints = Patterns.Select(pattern =>
 		{
-			var subschemaConstraint = pattern.Value.GetConstraint(JsonPointer.Create(Name), schemaConstraint.BaseInstanceLocation, JsonPointer.Empty, context);
+			var subschemaConstraint = pattern.Value.GetConstraint(_evaluationPointers[pattern.Key], schemaConstraint.BaseInstanceLocation, JsonPointer.Empty, context);
 			subschemaConstraint.InstanceLocator = evaluation =>
 			{
-				if (evaluation.LocalInstance is not JsonObject obj) return Array.Empty<JsonPointer>();
+				if (evaluation.LocalInstance is not JsonObject obj) return [];
 
 				var properties = obj.Select(x => x.Key).Where(x => pattern.Key.IsMatch(x));
 
@@ -93,7 +97,7 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollecto
 
 	private static void Evaluator(KeywordEvaluation evaluation, EvaluationContext context)
 	{
-		evaluation.Results.SetAnnotation(Name, evaluation.ChildEvaluations.Select(x => (JsonNode)x.RelativeInstanceLocation[0].GetSegmentValue()).ToJsonArray());
+		evaluation.Results.SetAnnotation(Name, evaluation.ChildEvaluations.Select(x => (JsonNode)x.RelativeInstanceLocation[0].GetSegmentName()).ToJsonArray());
 		
 		if (!evaluation.ChildEvaluations.All(x => x.Results.IsValid))
 			evaluation.Results.Fail();

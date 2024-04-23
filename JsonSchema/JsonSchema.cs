@@ -690,7 +690,7 @@ public class JsonSchema : IBaseDocument
 		var currentSchema = this;
 		for (var i = 0; i < pointer.Segments.Length; i++)
 		{
-			var segment = pointer[i].GetSegmentValue();
+			var segment = pointer[i].GetSegmentName();
 
 			resolvable = CheckResolvable(resolvable, ref i, segment, ref currentSchema);
 			if (resolvable == null) return null;

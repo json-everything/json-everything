@@ -19,7 +19,7 @@ class Program
 		runner.BenchmarkSetup();
 		runner.Models();
 #else
-		var summary = BenchmarkRunner.Run<Runner>();
+		var summary = BenchmarkRunner.Run<TestSuiteRunner>();
 #endif
 	}
 }

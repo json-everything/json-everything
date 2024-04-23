@@ -95,7 +95,7 @@ public class KeywordConstraint
 					{
 						JsonNode? instance;
 						if (dependency.UseLocatorAsInstance)
-							instance = relativeInstanceLocation[0].GetSegmentValue();
+							instance = relativeInstanceLocation[0].GetSegmentName();
 						else if (!relativeInstanceLocation.TryEvaluate(schemaEvaluation.LocalInstance, out instance)) continue;
 
 						var templatedInstanceLocation = instanceLocation.Combine(relativeInstanceLocation);
@@ -112,7 +112,7 @@ public class KeywordConstraint
 					subschemaEvaluations.Add(localEvaluation);
 				}
 			}
-			evaluation.ChildEvaluations = [.. subschemaEvaluations];
+			evaluation.ChildEvaluations = [..subschemaEvaluations];
 		}
 		else
 			evaluation.ChildEvaluations = [];
