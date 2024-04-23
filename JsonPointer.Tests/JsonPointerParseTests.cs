@@ -101,4 +101,26 @@ public class JsonPointerParseTests
 	{
 		Assert.False(JsonPointer.TryParse(pointerString, out _));
 	}
+
+	[Test]
+	public void ParseShouldStoreNonUrlForm()
+	{
+		var pointer = JsonPointer.Parse("#/foo");
+		var expected = "/foo";
+
+		var actual = pointer.ToString();
+
+		Assert.AreEqual(expected, actual);
+	}
+
+	[Test]
+	public void TryParseShouldStoreNonUrlForm()
+	{
+		Assert.IsTrue(JsonPointer.TryParse("#/foo", out var pointer));
+		var expected = "/foo";
+
+		var actual = pointer.ToString();
+
+		Assert.AreEqual(expected, actual);
+	}
 }

@@ -63,20 +63,16 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 		if (source == null) throw new ArgumentNullException(nameof(source));
 		if (source.Length == 0) return Empty;
 
-		var i = 0;
-		if (source[i] == '#')
-		{
-			source = HttpUtility.UrlDecode(source.ToString()).AsSpan();  // allocation
-			i++;
-		}
+		if (source[0] == '#')
+			source = HttpUtility.UrlDecode(source[1..].ToString()).AsSpan();  // allocations
 
-		if (source.Length == i) return Empty;
-		if (source[i] != '/')
+		if (source.Length == 0) return Empty;
+		if (source[0] != '/')
 			throw new PointerParseException("Pointer must start with either `#` or `/` or be empty");
 
-		i++;
+		var i = 1;
 		var count = 0;
-		var start = i;
+		var start = 1;
 		using var owner = MemoryPool<Range>.Shared.Rent();
 		var span = owner.Memory.Span;
 		while (i < source.Length)
@@ -97,7 +93,7 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 			? new Range(0, 0)
 			: new Range(start, i);
 
-		return new JsonPointer(source.ToString(), span[..(count+1)]);
+		return new JsonPointer(source.ToString(), span[..(count + 1)]);
 	}
 
 	/// <summary>
@@ -116,28 +112,26 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 			return true;
 		}
 
-		var i = 0;
-		if (source[i] == '#')
+		if (source[0] == '#')
 		{
-			source = HttpUtility.UrlDecode(source.ToString()).AsSpan();  // allocation
-			i++;
+			source = HttpUtility.UrlDecode(source[1..].ToString()).AsSpan();  // allocation
 		}
 
-		if (source.Length == i)
+		if (source.Length == 0)
 		{
 			pointer = Empty;
 			return true;
 		}
 
-		if (source[i] != '/')
+		if (source[0] != '/')
 		{
 			pointer = Empty;
 			return false;
 		}
 
-		i++;
+		var i = 1;
 		var count = 0;
-		var start = i;
+		var start = 1;
 		using var owner = MemoryPool<Range>.Shared.Rent();
 		var span = owner.Memory.Span;
 		while (i < source.Length)
