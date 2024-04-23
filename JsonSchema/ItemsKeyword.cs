@@ -108,7 +108,7 @@ public class ItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, ISchemaCollect
 			    context.EvaluatingAs.HasFlag(SpecVersion.DraftNext))
 				throw new JsonSchemaException($"Array form of {Name} is invalid for draft 2020-12 and later");
 
-			var subschemaConstraints = ArraySchemas!.Select((x, i) => x.GetConstraint(JsonPointer.Create(Name, i), schemaConstraint.BaseInstanceLocation, CommonJsonPointers.NumberSegments[i], context)).ToArray();
+			var subschemaConstraints = ArraySchemas!.Select((x, i) => x.GetConstraint(JsonPointer.Create(Name, i), schemaConstraint.BaseInstanceLocation, CommonJsonPointers.GetNumberSegment(i), context)).ToArray();
 
 			constraint.ChildDependencies = subschemaConstraints;
 		}
@@ -131,7 +131,7 @@ public class ItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, ISchemaCollect
 
 		for (int i = startIndex; i < array.Count; i++)
 		{
-			yield return CommonJsonPointers.NumberSegments[i];
+			yield return CommonJsonPointers.GetNumberSegment(i);
 		}
 	}
 

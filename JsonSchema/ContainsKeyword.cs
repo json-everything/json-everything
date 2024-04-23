@@ -75,7 +75,7 @@ public class ContainsKeyword : IJsonSchemaKeyword, ISchemaContainer
 
 		for (int i = 0; i < array.Count; i++)
 		{
-			yield return CommonJsonPointers.NumberSegments[i];
+			yield return CommonJsonPointers.GetNumberSegment(i);
 		}
 	}
 

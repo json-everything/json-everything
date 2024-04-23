@@ -79,7 +79,7 @@ public class AdditionalItemsKeyword : IJsonSchemaKeyword, ISchemaContainer
 
 		for (int i = startIndex; i < array.Count; i++)
 		{
-			yield return CommonJsonPointers.NumberSegments[i];
+			yield return CommonJsonPointers.GetNumberSegment(i);
 		}
 	}
 

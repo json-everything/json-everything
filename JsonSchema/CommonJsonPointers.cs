@@ -1,4 +1,4 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
 using Json.Pointer;
 
 namespace Json.Schema;
@@ -16,9 +16,19 @@ public static class CommonJsonPointers
 	/// </summary>
 	public static readonly JsonPointer[] SingleEmptyPointerArray = { JsonPointer.Empty };
 
+	private static readonly Dictionary<int, JsonPointer> _numberSegments = new();
+
 	/// <summary>
 	/// A set of predefined single-segment JSON Pointers that contain numeric indices.
 	/// </summary>
-	public static readonly JsonPointer[] NumberSegments = Enumerable.Range(0, 50).Select(x => JsonPointer.Create(x)).ToArray();
+	public static JsonPointer GetNumberSegment(int i)
+	{
+		if (!_numberSegments.TryGetValue(i, out var pointer))
+		{
+			_numberSegments[i] = pointer = JsonPointer.Create(i);
+		}
+
+		return pointer;
+	}
 
 }
