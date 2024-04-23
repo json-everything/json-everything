@@ -53,7 +53,12 @@ public class MissingRule : Rule, IRule
 			return expected.ToJsonArray();
 
 		var paths = expected.Select(e => e.GetValue<string?>()!)
-			.Select(p => new { Path = p, Pointer = JsonPointer.Parse(p == string.Empty ? "" : $"/{p.Replace('.', '/')}") })
+			.Select(p => new
+			{
+				Path = p, Pointer = p == string.Empty
+					? JsonPointer.Empty
+					: JsonPointer.Parse($"/{p.Replace('.', '/')}".AsSpan())
+			})
 			.Select(p =>
 			{
 				p.Pointer.TryEvaluate(data, out var value);

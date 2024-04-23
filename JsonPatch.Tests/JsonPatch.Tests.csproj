@@ -21,6 +21,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\JsonPatch\JsonPatch.csproj" />
+		<ProjectReference Include="..\JsonSchema\JsonSchema.csproj" />
 	</ItemGroup>
 
 </Project>
