@@ -66,12 +66,17 @@ public class MissingSomeRule : Rule, IRule
 			.Select(p =>
 			{
 				if (p is JsonValue v && v.TryGetValue(out string? s))
-					return new { Path = p, Pointer = JsonPointer.Parse(s == string.Empty ? "" : $"/{s.Replace('.', '/')}") };
+					return new
+					{
+						Path = p, Pointer = (JsonPointer?) (s == string.Empty
+							? JsonPointer.Empty
+							: JsonPointer.Parse($"/{s.Replace('.', '/')}".AsSpan()))
+					};
 				return new { Path = p, Pointer = (JsonPointer?)null }!;
 			})
 			.Select(p =>
 			{
-				if (p.Pointer != null! && p.Pointer.TryEvaluate(data, out var value))
+				if (p.Pointer != null! && p.Pointer.Value.TryEvaluate(data, out var value))
 					return new { Path = p.Path, Value = value };
 				return new { Path = p.Path, Value = (JsonNode?)null };
 			})

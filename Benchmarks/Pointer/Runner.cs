@@ -45,22 +45,16 @@ public class Runner
 	public int Count { get; set; }
 
 	[Benchmark]
-	public int RangeBackingWithMemory()
+	public int Run()
 	{
 		for (int i = 0; i < Count; i++)
 		{
 			foreach (var test in _pointersToParse)
 			{
-				_ = JsonPointer.Create<Model>(x => x.Items[5].Single.Single.Items[10]);
+				_ = JsonPointer.Parse(test);
 			}
 		}
 
 		return Count;
-	}
-
-	private class Model
-	{
-		public Model Single { get; set; }
-		public Model[] Items { get; set; }
 	}
 }
