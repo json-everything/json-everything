@@ -167,4 +167,10 @@ public class GithubTests
 
 		result.AssertInvalid();
 	}
+
+	[Test]
+	public void Issue720_DiscriminatorCtorFailing()
+	{
+		_ = new DiscriminatorKeyword("petType", null, null);
+	}
 }
