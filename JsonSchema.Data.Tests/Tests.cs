@@ -119,7 +119,7 @@ public class Tests
 		var instanceData = "{\"minValu\":5,\"foo\":10}";
 		var instance = JsonNode.Parse(instanceData);
 
-		Assert.Throws<RefResolutionException>(() => _instanceRef.Evaluate(instance));
+		Assert.Throws<DataRefResolutionException>(() => _instanceRef.Evaluate(instance));
 	}
 
 	[Test]

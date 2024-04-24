@@ -10,7 +10,7 @@ namespace Json.Schema;
 /// <remarks>
 /// This class will be moved into a future version of JsonSchema.Net.
 /// </remarks>
-public class RefResolutionException : Exception
+public class DataRefResolutionException : Exception
 {
 	/// <summary>
 	/// The URI that could not be resolved.
@@ -22,7 +22,7 @@ public class RefResolutionException : Exception
 	/// </summary>
 	/// <param name="references">The references that could not be resolved.</param>
 	/// <param name="innerException">The exception that caused this error.</param>
-	public RefResolutionException(IEnumerable<string> references, Exception? innerException = null)
+	public DataRefResolutionException(IEnumerable<string> references, Exception? innerException = null)
 		: base("An error occurred attempting to resolve one or more references", innerException)
 	{
 		References = references;

@@ -24,15 +24,6 @@ public class JsonSchema : IBaseDocument
 {
 	private const string _unknownKeywordsAnnotationKey = "$unknownKeywords";
 
-	private static readonly HashSet<SpecVersion> _definedSpecVersions = [.. GetSpecVersions()];
-
-	private static SpecVersion[] GetSpecVersions() =>
-#if NET6_0_OR_GREATER
-		Enum.GetValues<SpecVersion>();
-#else
-		Enum.GetValues(typeof(SpecVersion)).Cast<SpecVersion>().ToArray();
-#endif
-
 	private readonly Dictionary<string, IJsonSchemaKeyword>? _keywords;
 	private readonly List<(DynamicScope Scope, SchemaConstraint Constraint)> _constraints = [];
 
@@ -89,10 +80,7 @@ public class JsonSchema : IBaseDocument
 	/// <summary>
 	/// Gets the specification version as determined by analyzing the `$schema` keyword, if it exists.
 	/// </summary>
-	public SpecVersion DeclaredVersion { get; private set; }
-
-	internal Dictionary<string, (JsonSchema Schema, bool IsDynamic)> Anchors { get; } = [];
-	internal JsonSchema? RecursiveAnchor { get; set; }
+	public SpecVersion DeclaredVersion { get; internal set; }
 
 	private JsonSchema(bool value)
 	{
@@ -299,13 +287,9 @@ public class JsonSchema : IBaseDocument
 		options.Changed = false;
 
 		options = EvaluationOptions.From(options);
+		options.SchemaRegistry.Register(this);
 
-		// BaseUri may change if $id is present
-		var evaluatingAs = DetermineSpecVersion(this, options.SchemaRegistry, options.EvaluateAs);
-		PopulateBaseUris(this, this, BaseUri, options.SchemaRegistry, evaluatingAs, true);
-
-
-		var context = new EvaluationContext(options, evaluatingAs, BaseUri);
+		var context = new EvaluationContext(options, DeclaredVersion, BaseUri);
 		var constraint = BuildConstraint(JsonPointer.Empty, JsonPointer.Empty, JsonPointer.Empty, context.Scope);
 		if (!BoolValue.HasValue)
 			PopulateConstraint(constraint, context);
@@ -503,120 +487,56 @@ public class JsonSchema : IBaseDocument
 
 	internal static void Initialize(JsonSchema schema, SchemaRegistry registry, Uri? baseUri = null)
 	{
-		PopulateBaseUris(schema, schema, baseUri ?? schema.BaseUri, registry, selfRegister: true);
 	}
 
-	private static SpecVersion DetermineSpecVersion(JsonSchema schema, SchemaRegistry registry, SpecVersion desiredDraft)
-	{
-		if (schema.BoolValue.HasValue) return SpecVersion.DraftNext;
-		if (schema.DeclaredVersion != SpecVersion.Unspecified) return schema.DeclaredVersion;
-		if (!_definedSpecVersions.Contains(desiredDraft)) return desiredDraft;
+	//private static SpecVersion DetermineSpecVersion(JsonSchema schema, SchemaRegistry registry, SpecVersion desiredDraft)
+	//{
+	//	if (schema.BoolValue.HasValue) return SpecVersion.DraftNext;
+	//	if (schema.DeclaredVersion != SpecVersion.Unspecified) return schema.DeclaredVersion;
+	//	if (!_definedSpecVersions.Contains(desiredDraft)) return desiredDraft;
 
-		if (schema.TryGetKeyword<SchemaKeyword>(SchemaKeyword.Name, out var schemaKeyword))
-		{
-			var metaSchemaId = schemaKeyword.Schema;
-			while (metaSchemaId != null)
-			{
-				var version = metaSchemaId.OriginalString switch
-				{
-					MetaSchemas.Draft6IdValue => SpecVersion.Draft6,
-					MetaSchemas.Draft7IdValue => SpecVersion.Draft7,
-					MetaSchemas.Draft201909IdValue => SpecVersion.Draft201909,
-					MetaSchemas.Draft202012IdValue => SpecVersion.Draft202012,
-					MetaSchemas.DraftNextIdValue => SpecVersion.DraftNext,
-					_ => SpecVersion.Unspecified
-				};
-				if (version != SpecVersion.Unspecified)
-				{
-					schema.DeclaredVersion = version;
-					return version;
-				}
+	//	if (schema.TryGetKeyword<SchemaKeyword>(SchemaKeyword.Name, out var schemaKeyword))
+	//	{
+	//		var metaSchemaId = schemaKeyword.Schema;
+	//		while (metaSchemaId != null)
+	//		{
+	//			var version = metaSchemaId.OriginalString switch
+	//			{
+	//				MetaSchemas.Draft6IdValue => SpecVersion.Draft6,
+	//				MetaSchemas.Draft7IdValue => SpecVersion.Draft7,
+	//				MetaSchemas.Draft201909IdValue => SpecVersion.Draft201909,
+	//				MetaSchemas.Draft202012IdValue => SpecVersion.Draft202012,
+	//				MetaSchemas.DraftNextIdValue => SpecVersion.DraftNext,
+	//				_ => SpecVersion.Unspecified
+	//			};
+	//			if (version != SpecVersion.Unspecified)
+	//			{
+	//				schema.DeclaredVersion = version;
+	//				return version;
+	//			}
 
-				var metaSchema = registry.Get(metaSchemaId) as JsonSchema ??
-					throw new JsonSchemaException("Cannot resolve custom meta-schema.");
+	//			var metaSchema = registry.Get(metaSchemaId) as JsonSchema ??
+	//				throw new JsonSchemaException("Cannot resolve custom meta-schema.");
 
-				if (metaSchema.TryGetKeyword<SchemaKeyword>(SchemaKeyword.Name, out var newMetaSchemaKeyword) &&
-				    newMetaSchemaKeyword.Schema == metaSchemaId)
-					throw new JsonSchemaException("Custom meta-schema `$schema` keywords must eventually resolve to a meta-schema for a supported specification version.");
+	//			if (metaSchema.TryGetKeyword<SchemaKeyword>(SchemaKeyword.Name, out var newMetaSchemaKeyword) &&
+	//			    newMetaSchemaKeyword.Schema == metaSchemaId)
+	//				throw new JsonSchemaException("Custom meta-schema `$schema` keywords must eventually resolve to a meta-schema for a supported specification version.");
 
-				metaSchemaId = newMetaSchemaKeyword?.Schema;
-			}
-		}
+	//			metaSchemaId = newMetaSchemaKeyword?.Schema;
+	//		}
+	//	}
 
-		if (desiredDraft != SpecVersion.Unspecified) return desiredDraft;
+	//	if (desiredDraft != SpecVersion.Unspecified) return desiredDraft;
 
-		var allDraftsArray = GetSpecVersions();
-		var allDrafts = allDraftsArray.Aggregate(SpecVersion.Unspecified, (a, x) => a | x);
-		var commonDrafts = schema.Keywords!.Aggregate(allDrafts, (a, x) => a & x.VersionsSupported());
-		var candidates = allDraftsArray.Where(x => commonDrafts.HasFlag(x)).ToArray();
+	//	var allDraftsArray = GetSpecVersions();
+	//	var allDrafts = allDraftsArray.Aggregate(SpecVersion.Unspecified, (a, x) => a | x);
+	//	var commonDrafts = schema.Keywords!.Aggregate(allDrafts, (a, x) => a & x.VersionsSupported());
+	//	var candidates = allDraftsArray.Where(x => commonDrafts.HasFlag(x)).ToArray();
 
-		return candidates.Length != 0 ? candidates.Max() : SpecVersion.DraftNext;
-	}
+	//	return candidates.Length != 0 ? candidates.Max() : SpecVersion.DraftNext;
+	//}
 
-	private static void PopulateBaseUris(JsonSchema schema, JsonSchema resourceRoot, Uri currentBaseUri, SchemaRegistry registry, SpecVersion evaluatingAs = SpecVersion.Unspecified, bool selfRegister = false)
-	{
-		if (schema.BoolValue.HasValue) return;
-		evaluatingAs = DetermineSpecVersion(schema, registry, evaluatingAs);
-		if (evaluatingAs is SpecVersion.Draft6 or SpecVersion.Draft7 &&
-			schema.TryGetKeyword<RefKeyword>(RefKeyword.Name, out _))
-		{
-			schema.BaseUri = currentBaseUri;
-			if (selfRegister)
-				registry.RegisterSchema(schema.BaseUri, schema);
-		}
-		else
-		{
-			var idKeyword = (IIdKeyword?)schema.Keywords!.FirstOrDefault(x => x is IIdKeyword);
-			if (idKeyword != null)
-			{
-				if (evaluatingAs <= SpecVersion.Draft7 &&
-				    idKeyword.Id.OriginalString[0] == '#' &&
-				    AnchorKeyword.AnchorPattern201909.IsMatch(idKeyword.Id.OriginalString[1..]))
-				{
-					schema.BaseUri = currentBaseUri;
-					resourceRoot.Anchors[idKeyword.Id.OriginalString[1..]] = (schema, false);
-				}
-				else
-				{
-					schema.IsResourceRoot = true;
-					schema.DeclaredVersion = evaluatingAs;
-					resourceRoot = schema;
-					schema.BaseUri = new Uri(currentBaseUri, idKeyword.Id);
-					registry.RegisterSchema(schema.BaseUri, schema);
-				}
-			}
-			else
-			{
-				schema.BaseUri = currentBaseUri;
-				if (selfRegister)
-					registry.RegisterSchema(schema.BaseUri, schema);
-			}
-
-			if (schema.TryGetKeyword<AnchorKeyword>(AnchorKeyword.Name, out var anchorKeyword)) 
-				resourceRoot.Anchors[anchorKeyword.Anchor] = (schema, false);
-
-			if (schema.TryGetKeyword<DynamicAnchorKeyword>(DynamicAnchorKeyword.Name, out var dynamicAnchorKeyword)) 
-				resourceRoot.Anchors[dynamicAnchorKeyword.Value] = (schema, true);
-
-			schema.TryGetKeyword<RecursiveAnchorKeyword>(RecursiveAnchorKeyword.Name, out var recursiveAnchorKeyword);
-			if (recursiveAnchorKeyword is { Value: true })
-				resourceRoot.RecursiveAnchor = schema;
-		}
-
-		//var subschemas = schema.Keywords!.SelectMany(GetSubschemas);
-		//foreach (var subschema in subschemas)
-		//{
-		//	PopulateBaseUris(subschema, resourceRoot, schema.BaseUri, registry, evaluatingAs);
-		//}
-
-		foreach (var keyword in schema.Keywords!)
-		{
-			foreach (var subschema in GetSubschemas(keyword))
-			{
-				PopulateBaseUris(subschema, resourceRoot, schema.BaseUri, registry, evaluatingAs);
-			}
-		}
-	}
+	internal IEnumerable<JsonSchema> GetSubschemas() => Keywords?.SelectMany(GetSubschemas) ?? [];
 
 	internal static IEnumerable<JsonSchema> GetSubschemas(IJsonSchemaKeyword keyword)
 	{
@@ -655,7 +575,6 @@ public class JsonSchema : IBaseDocument
 
 			var asSchema = FromText(value?.ToString() ?? "null");
 			asSchema.BaseUri = hostSchema.BaseUri;
-			PopulateBaseUris(asSchema, hostSchema, hostSchema.BaseUri, options.SchemaRegistry);
 			return asSchema;
 		}
 
@@ -746,17 +665,17 @@ public class JsonSchema : IBaseDocument
 		return CheckResolvable(resolvable, ref count, null!, ref currentSchema) as JsonSchema;
 	}
 
-	/// <summary>
-	/// Gets a defined anchor.
-	/// </summary>
-	/// <param name="anchorName">The name of the anchor (excluding the `#`)</param>
-	/// <returns>The associated subschema, if the anchor exists, or null.</returns>
-	public JsonSchema? GetAnchor(string anchorName) =>
-		Anchors.TryGetValue(anchorName, out var anchorDefinition)
-			? anchorDefinition.IsDynamic
-				? null
-				: anchorDefinition.Schema
-			: null;
+	///// <summary>
+	///// Gets a defined anchor.
+	///// </summary>
+	///// <param name="anchorName">The name of the anchor (excluding the `#`)</param>
+	///// <returns>The associated subschema, if the anchor exists, or null.</returns>
+	//public JsonSchema? GetAnchor(string anchorName) =>
+	//	Anchors.TryGetValue(anchorName, out var anchorDefinition)
+	//		? anchorDefinition.IsDynamic
+	//			? null
+	//			: anchorDefinition.Schema
+	//		: null;
 
 	/// <summary>
 	/// Implicitly converts a boolean value into one of the boolean schemas. 

@@ -62,29 +62,24 @@ public class RefKeyword : IJsonSchemaKeyword
 		if (context.NavigatedReferences.Contains(navigation))
 			throw new JsonSchemaException($"Encountered circular reference at schema location `{newUri}` and instance location `{schemaConstraint.RelativeInstanceLocation}`");
 
-		var newBaseUri = new Uri(newUri.GetLeftPart(UriPartial.Query));
-
-		JsonSchema? targetSchema = null;
-		var targetBase = context.Options.SchemaRegistry.Get(newBaseUri) ??
-						 throw new JsonSchemaException($"Cannot resolve base schema from `{newUri}`");
+		JsonSchema? targetSchema;
 
 		if (JsonPointer.TryParse(fragment, out var pointerFragment))
 		{
-			if (targetBase == null)
-				throw new JsonSchemaException($"Cannot resolve base schema from `{newUri}`");
+			var targetBase = context.Options.SchemaRegistry.Get(newUri) ??
+							 throw new JsonSchemaException($"Cannot resolve base schema from `{newUri}`");
 
-			targetSchema = targetBase.FindSubschema(pointerFragment!, context.Options);
+			targetSchema = targetBase.FindSubschema(pointerFragment, context.Options);
 		}
 		else
 		{
+			var allowLegacy = context.EvaluatingAs is SpecVersion.Draft6 or SpecVersion.Draft7;
 			var anchorFragment = fragment[1..];
 			if ((context.EvaluatingAs <= SpecVersion.Draft201909 && !AnchorKeyword.AnchorPattern201909.IsMatch(anchorFragment)) ||
 			    (context.EvaluatingAs >= SpecVersion.Draft202012 && !AnchorKeyword.AnchorPattern202012.IsMatch(anchorFragment)))
 				throw new JsonSchemaException($"Unrecognized fragment type `{newUri}`");
 
-			if (targetBase is JsonSchema targetBaseSchema &&
-				targetBaseSchema.Anchors.TryGetValue(anchorFragment, out var anchorDefinition))
-				targetSchema = anchorDefinition.Schema;
+			targetSchema = context.Options.SchemaRegistry.Get(newUri, anchorFragment, allowLegacy) as JsonSchema;
 		}
 
 		if (targetSchema == null)

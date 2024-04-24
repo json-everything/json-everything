@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -95,7 +94,7 @@ public class DataKeyword : IJsonSchemaKeyword
 		}
 
 		if (failedReferences.Count != 0)
-			throw new RefResolutionException(failedReferences.Select(x => x.ToString())!);
+			throw new DataRefResolutionException(failedReferences.Select(x => x.ToString())!);
 
 		var json = JsonSerializer.Serialize(data, JsonSchemaDataSerializerContext.Default.DictionaryStringJsonNode);
 		var subschema = JsonSerializer.Deserialize(json, JsonSchemaDataSerializerContext.Default.JsonSchema)!;

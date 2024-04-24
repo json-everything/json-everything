@@ -51,50 +51,25 @@ public class DynamicRefKeyword : IJsonSchemaKeyword
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, Span<KeywordConstraint> localConstraints, EvaluationContext context)
 	{
 		var newUri = new Uri(context.Scope.LocalScope, Reference);
-		var newBaseUri = new Uri(newUri.GetLeftPart(UriPartial.Query));
-		var anchorName = Reference.OriginalString.Split('#').Last();
 
 		JsonSchema? targetSchema = null;
-		var targetBase = context.Options.SchemaRegistry.Get(newBaseUri) ??
-		                 throw new JsonSchemaException($"Cannot resolve base schema from `{newUri}`");
-
-		foreach (var uri in context.Scope.Reverse())
-		{
-			var scopeRoot = context.Options.SchemaRegistry.Get(uri);
-			if (scopeRoot == null)
-				throw new Exception("This shouldn't happen");
-
-			if (scopeRoot is not JsonSchema schemaRoot)
-				throw new Exception("Does OpenAPI use anchors?");
-
-			if (!schemaRoot.Anchors.TryGetValue(anchorName, out var anchor) || !anchor.IsDynamic) continue;
-
-			if (targetBase is JsonSchema targetBaseSchema &&
-			    context.EvaluatingAs == SpecVersion.Draft202012 &&
-			    (!targetBaseSchema.Anchors.TryGetValue(anchorName, out var targetAnchor) || !targetAnchor.IsDynamic)) break;
-
-			targetSchema = anchor.Schema;
-			break;
-		}
 
 		if (targetSchema == null)
 		{
 			if (JsonPointer.TryParse(newUri.Fragment, out var pointerFragment))
 			{
-				if (targetBase == null)
-					throw new JsonSchemaException($"Cannot resolve base schema from `{newUri}`");
+				var newBaseUri = new Uri(newUri.GetLeftPart(UriPartial.Query));
+				var targetBase = context.Options.SchemaRegistry.Get(newBaseUri);
 
-				targetSchema = targetBase.FindSubschema(pointerFragment!, context.Options);
+				targetSchema = targetBase.FindSubschema(pointerFragment, context.Options);
 			}
 			else
 			{
-				var anchorFragment = newUri.Fragment[1..];
-				if (!AnchorKeyword.AnchorPattern202012.IsMatch(anchorFragment))
+				var anchorName = Reference.OriginalString.Split('#').Last();
+				if (!AnchorKeyword.AnchorPattern202012.IsMatch(anchorName))
 					throw new JsonSchemaException($"Unrecognized fragment type `{newUri}`");
 
-				if (targetBase is JsonSchema targetBaseSchema &&
-				    targetBaseSchema.Anchors.TryGetValue(anchorFragment, out var anchorDefinition))
-					targetSchema = anchorDefinition.Schema;
+				targetSchema = context.Options.SchemaRegistry.Get(context.Scope, newUri, anchorName, context.EvaluatingAs == SpecVersion.Draft202012);
 			}
 
 			if (targetSchema == null)
