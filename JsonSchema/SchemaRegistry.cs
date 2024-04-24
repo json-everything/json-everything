@@ -369,4 +369,20 @@ public class SchemaRegistry
 		schema.DeclaredVersion = SpecVersion.Unspecified;
 	}
 
+	//private bool TryGetVocab(JsonSchema schema, out Vocabulary[]? vocab)
+	//{
+	//	var schemaKeyword = (SchemaKeyword?)schema.Keywords?.FirstOrDefault(x => x is SchemaKeyword);
+	//	if (schemaKeyword == null)
+	//	{
+	//		vocab = null;
+	//		return false;
+	//	}
+
+	//	var metaSchema = (JsonSchema)Get(schemaKeyword.Schema);
+	//	var vocabulary = metaSchema.GetVocabulary();
+
+	//	vocab = vocabulary?.Keys.Select(x => VocabularyRegistry.Global.Get(x)!).ToArray();
+	//	Dialect[schema.BaseUri] = vocab;
+	//	return true;
+	//}
 }

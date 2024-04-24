@@ -82,6 +82,8 @@ public class JsonSchema : IBaseDocument
 	/// </summary>
 	public SpecVersion DeclaredVersion { get; internal set; }
 
+	internal Vocabulary[] Dialect { get; set; }
+
 	private JsonSchema(bool value)
 	{
 		BoolValue = value;
@@ -448,7 +450,7 @@ public class JsonSchema : IBaseDocument
 			var localConstraints = owner.Memory.Span;
 			var constraintCount = 0;
 			var version = DeclaredVersion == SpecVersion.Unspecified ? context.EvaluatingAs : DeclaredVersion;
-			var keywords = EvaluationOptions.FilterKeywords(context.GetKeywordsToProcess(this, context.Options), version);  // allocation
+			var keywords = FilterKeywords(context.GetKeywordsToProcess(this, context.Options), version);  // allocation
 			if (context.Options.AddAnnotationForUnknownKeywords)
 			{
 				var unknownKeywordsAnnotation = new JsonArray();  // allocation
@@ -488,6 +490,13 @@ public class JsonSchema : IBaseDocument
 				context.PopEvaluatingAs();
 			}
 		}
+	}
+
+	internal static IEnumerable<IJsonSchemaKeyword> FilterKeywords(IEnumerable<IJsonSchemaKeyword> keywords, SpecVersion preferredVersion)
+	{
+		if (!Enum.IsDefined(typeof(SpecVersion), preferredVersion) || preferredVersion == SpecVersion.Unspecified) return keywords;
+
+		return keywords.Where(k => k.SupportsVersion(preferredVersion));
 	}
 
 	internal ReadOnlySpan<JsonSchema> GetSubschemas()

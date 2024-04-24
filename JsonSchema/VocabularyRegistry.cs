@@ -56,6 +56,11 @@ public class VocabularyRegistry
 		_vocabularies[vocabulary.Id] = vocabulary;
 	}
 
+	public void Unregister(Vocabulary vocabulary)
+	{
+		_vocabularies?.TryRemove(vocabulary.Id, out _);
+	}
+
 	/// <summary>
 	/// Indicates whether a vocabulary is known by URI ID and/or anchor.
 	/// </summary>
