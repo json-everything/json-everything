@@ -26,14 +26,15 @@ public class ReferenceTests
 
 		var baseData = JsonNode.Parse(GetResource("base_data"));
 
-		SchemaRegistry.Global.Register(refSchema);
-		SchemaRegistry.Global.Register(baseSchema);
-		SchemaRegistry.Global.Register(hashSchema);
+		var options = new EvaluationOptions();
+		options.SchemaRegistry.Register(refSchema);
+		options.SchemaRegistry.Register(baseSchema);
+		options.SchemaRegistry.Register(hashSchema);
 
 		// in previous versions, this would still validate the instance, but since adding
 		// static analysis, the ref with the # in it is checked early
 		// and since it can't resolve, it now throws.
-		Assert.Throws<JsonSchemaException>(() => baseSchema.Evaluate(baseData));
+		Assert.Throws<JsonSchemaException>(() => baseSchema.Evaluate(baseData, options));
 	}
 
 	[Test]
@@ -45,11 +46,12 @@ public class ReferenceTests
 
 		var baseData = JsonNode.Parse(GetResource("base_data_hash_uri"));
 
-		SchemaRegistry.Global.Register(refSchema);
-		SchemaRegistry.Global.Register(baseSchema);
-		SchemaRegistry.Global.Register(hashSchema);
-		
-		Assert.Throws<JsonSchemaException>(()=>baseSchema.Evaluate(baseData));
+		var options = new EvaluationOptions();
+		options.SchemaRegistry.Register(refSchema);
+		options.SchemaRegistry.Register(baseSchema);
+		options.SchemaRegistry.Register(hashSchema);
+
+		Assert.Throws<JsonSchemaException>(()=>baseSchema.Evaluate(baseData, options));
 	}
 
 	[Test]

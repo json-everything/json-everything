@@ -33,7 +33,7 @@ public class JsonSchema : IBaseDocument
 	/// <summary>
 	/// The empty schema `{}`.  Functionally equivalent to <see cref="True"/>.
 	/// </summary>
-	public static readonly JsonSchema Empty = new(Enumerable.Empty<IJsonSchemaKeyword>());
+	public static readonly JsonSchema Empty = new([]);
 	/// <summary>
 	/// The `true` schema.  Passes all instances.
 	/// </summary>
@@ -275,14 +275,7 @@ public class JsonSchema : IBaseDocument
 	{
 		options ??= EvaluationOptions.Default;
 		if (!ReferenceEquals(options, _lastCalledOptions) || options.Changed)
-		{
-			var subschemas = Keywords?.SelectMany(GetSubschemas) ?? [];
-			foreach (var subschema in subschemas)
-			{
-				subschema._constraints.Clear();
-			}
-			_constraints.Clear();
-		}
+			ClearConstraints();
 		_lastCalledOptions = options;
 		options.Changed = false;
 
@@ -316,6 +309,16 @@ public class JsonSchema : IBaseDocument
 		}
 
 		return results;
+	}
+
+	private void ClearConstraints()
+	{
+		var subschemas = Keywords?.SelectMany(GetSubschemas) ?? [];
+		foreach (var subschema in subschemas)
+		{
+			subschema.ClearConstraints();
+		}
+		_constraints.Clear();
 	}
 
 	private bool IsDynamic()
@@ -425,8 +428,8 @@ public class JsonSchema : IBaseDocument
 				var refKeyword = (RefKeyword?) Keywords!.FirstOrDefault(x => x is RefKeyword);
 				if (refKeyword != null)
 				{
-					var refConstraint = refKeyword.GetConstraint(constraint, [], context);
-					constraint.Constraints = [refConstraint];
+					var refConstraint = refKeyword.GetConstraint(constraint, [], context);  // allocation
+					constraint.Constraints = [refConstraint];  // allocation
 					return;
 				}
 			}
@@ -443,13 +446,13 @@ public class JsonSchema : IBaseDocument
 			var localConstraints = owner.Memory.Span;
 			var constraintCount = 0;
 			var version = DeclaredVersion == SpecVersion.Unspecified ? context.EvaluatingAs : DeclaredVersion;
-			var keywords = EvaluationOptions.FilterKeywords(context.GetKeywordsToProcess(this, context.Options), version).ToArray();
+			var keywords = EvaluationOptions.FilterKeywords(context.GetKeywordsToProcess(this, context.Options), version);  // allocation
 			if (context.Options.AddAnnotationForUnknownKeywords)
 			{
 				var unknownKeywordsAnnotation = new JsonArray();  // allocation
 				foreach (var keyword in Keywords)
 				{
-					if (keywords.Contains(keyword)) continue;
+					if (keyword is not UnrecognizedKeyword && keywords.Contains(keyword)) continue;
 
 					// explicit cast removes AOT warning
 					unknownKeywordsAnnotation.Add((JsonNode?)keyword.Keyword());
@@ -463,7 +466,7 @@ public class JsonSchema : IBaseDocument
 				KeywordConstraint? keywordConstraint;
 				if (keywords.Contains(keyword))
 				{
-					keywordConstraint = keyword.GetConstraint(constraint, localConstraints[..constraintCount], context);
+					keywordConstraint = keyword.GetConstraint(constraint, localConstraints[..constraintCount], context);  // allocation
 					localConstraints[constraintCount] = keywordConstraint;
 					constraintCount++;
 					continue;
@@ -484,57 +487,6 @@ public class JsonSchema : IBaseDocument
 			}
 		}
 	}
-
-	internal static void Initialize(JsonSchema schema, SchemaRegistry registry, Uri? baseUri = null)
-	{
-	}
-
-	//private static SpecVersion DetermineSpecVersion(JsonSchema schema, SchemaRegistry registry, SpecVersion desiredDraft)
-	//{
-	//	if (schema.BoolValue.HasValue) return SpecVersion.DraftNext;
-	//	if (schema.DeclaredVersion != SpecVersion.Unspecified) return schema.DeclaredVersion;
-	//	if (!_definedSpecVersions.Contains(desiredDraft)) return desiredDraft;
-
-	//	if (schema.TryGetKeyword<SchemaKeyword>(SchemaKeyword.Name, out var schemaKeyword))
-	//	{
-	//		var metaSchemaId = schemaKeyword.Schema;
-	//		while (metaSchemaId != null)
-	//		{
-	//			var version = metaSchemaId.OriginalString switch
-	//			{
-	//				MetaSchemas.Draft6IdValue => SpecVersion.Draft6,
-	//				MetaSchemas.Draft7IdValue => SpecVersion.Draft7,
-	//				MetaSchemas.Draft201909IdValue => SpecVersion.Draft201909,
-	//				MetaSchemas.Draft202012IdValue => SpecVersion.Draft202012,
-	//				MetaSchemas.DraftNextIdValue => SpecVersion.DraftNext,
-	//				_ => SpecVersion.Unspecified
-	//			};
-	//			if (version != SpecVersion.Unspecified)
-	//			{
-	//				schema.DeclaredVersion = version;
-	//				return version;
-	//			}
-
-	//			var metaSchema = registry.Get(metaSchemaId) as JsonSchema ??
-	//				throw new JsonSchemaException("Cannot resolve custom meta-schema.");
-
-	//			if (metaSchema.TryGetKeyword<SchemaKeyword>(SchemaKeyword.Name, out var newMetaSchemaKeyword) &&
-	//			    newMetaSchemaKeyword.Schema == metaSchemaId)
-	//				throw new JsonSchemaException("Custom meta-schema `$schema` keywords must eventually resolve to a meta-schema for a supported specification version.");
-
-	//			metaSchemaId = newMetaSchemaKeyword?.Schema;
-	//		}
-	//	}
-
-	//	if (desiredDraft != SpecVersion.Unspecified) return desiredDraft;
-
-	//	var allDraftsArray = GetSpecVersions();
-	//	var allDrafts = allDraftsArray.Aggregate(SpecVersion.Unspecified, (a, x) => a | x);
-	//	var commonDrafts = schema.Keywords!.Aggregate(allDrafts, (a, x) => a & x.VersionsSupported());
-	//	var candidates = allDraftsArray.Where(x => commonDrafts.HasFlag(x)).ToArray();
-
-	//	return candidates.Length != 0 ? candidates.Max() : SpecVersion.DraftNext;
-	//}
 
 	internal IEnumerable<JsonSchema> GetSubschemas() => Keywords?.SelectMany(GetSubschemas) ?? [];
 

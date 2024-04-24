@@ -11,7 +11,6 @@ namespace Json.Schema;
 public class EvaluationOptions
 {
 	private HashSet<Type>? _ignoredAnnotationTypes;
-	private SpecVersion _evaluateAs;
 	private bool _requireFormatValidation;
 	private bool _onlyKnownFormats;
 	private bool _processCustomKeywords;
@@ -25,16 +24,7 @@ public class EvaluationOptions
 	/// Indicates which specification version to process as.  This will filter the keywords
 	/// of a schema based on their support.
 	/// </summary>
-	public SpecVersion EvaluateAs
-	{
-		get => _evaluateAs;
-		set
-		{
-			if (!Equals(_evaluateAs, value))
-				Changed = true;
-			_evaluateAs = value;
-		}
-	}
+	public SpecVersion EvaluateAs { get; init; }
 
 	/// <summary>
 	/// Indicates whether the schema should be validated against its `$schema` value.

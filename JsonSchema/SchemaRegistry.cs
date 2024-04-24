@@ -11,7 +11,7 @@ public class SchemaRegistry
 {
 	private class Registration
 	{
-		public IBaseDocument Root { get; set; } = null!;
+		public required IBaseDocument Root { get; init; } = null!;
 		public Dictionary<string, JsonSchema> Anchors { get; } = [];
 		public Dictionary<string, JsonSchema> LegacyAnchors { get; } = [];
 		public Dictionary<string, JsonSchema> DynamicAnchors { get; } = [];
@@ -104,12 +104,7 @@ public class SchemaRegistry
 	public void Register(Uri? uri, IBaseDocument document)
 	{
 		RegisterSchema(uri, document);
-
-		if (document is JsonSchema schema)
-			JsonSchema.Initialize(schema, this, uri);
-
-		if (_options != null)
-			_options.Changed = true;
+		_options.Changed = true;
 	}
 
 	private void RegisterSchema(Uri? uri, IBaseDocument document)
@@ -117,7 +112,11 @@ public class SchemaRegistry
 		uri = MakeAbsolute(uri);
 		var registration = _registered.GetValueOrDefault(uri);
 		if (registration != null) return;
-		if (document is not JsonSchema schema) return;
+		if (document is not JsonSchema schema)
+		{
+			_registered[uri] = new Registration { Root = document };
+			return;
+		}
 		
 		var registrations = Scan(uri, schema);
 		foreach (var reg in registrations)
@@ -195,8 +194,17 @@ public class SchemaRegistry
 
 	private IBaseDocument? Get(Uri baseUri, string? anchor, bool isDynamic, bool allowLegacy)
 	{
-		return GetFromRegistry(_registered, baseUri, anchor, isDynamic, allowLegacy) ??
-			   GetFromRegistry(Global._registered, baseUri, anchor, isDynamic, allowLegacy);
+		var document = GetFromRegistry(_registered, baseUri, anchor, isDynamic, allowLegacy) ??
+		               GetFromRegistry(Global._registered, baseUri, anchor, isDynamic, allowLegacy);
+
+		if (document is null)
+		{
+			document = Fetch(baseUri) ?? Global.Fetch(baseUri);
+			if (document is not null)
+				Register(baseUri, document);
+		}
+
+		return document;
 	}
 
 	private static IBaseDocument? GetFromRegistry(Dictionary<Uri, Registration> registry, Uri baseUri, string? anchor, bool isDynamic, bool allowLegacy)
@@ -225,6 +233,32 @@ public class SchemaRegistry
 		foreach (var registration in other._registered)
 		{
 			_registered[registration.Key] = registration.Value;
+		}
+	}
+
+	public void Initialize(Uri baseUri, JsonSchema document)
+	{
+		var registrations = Scan(baseUri, document);
+		foreach (var reg in registrations)
+		{
+			if (_registered.TryGetValue(reg.Key, out var registration))
+			{
+				foreach (var anchor in reg.Value.LegacyAnchors)
+				{
+					registration.LegacyAnchors[anchor.Key] = anchor.Value;
+				}
+				foreach (var anchor in reg.Value.Anchors)
+				{
+					registration.Anchors[anchor.Key] = anchor.Value;
+				}
+				foreach (var anchor in reg.Value.DynamicAnchors)
+				{
+					registration.DynamicAnchors[anchor.Key] = anchor.Value;
+				}
+				registration.RecursiveAnchor = reg.Value.RecursiveAnchor;
+			}
+			else
+				_registered[reg.Key] = reg.Value;
 		}
 	}
 
@@ -295,8 +329,6 @@ public class SchemaRegistry
 			schema.DeclaredVersion = SpecVersion.Unspecified;
 			return;
 		}
-
-		if (schema.DeclaredVersion != SpecVersion.Unspecified) return;
 
 		if (schema.TryGetKeyword<SchemaKeyword>(SchemaKeyword.Name, out var schemaKeyword))
 		{

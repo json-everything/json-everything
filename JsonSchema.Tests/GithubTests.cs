@@ -171,7 +171,7 @@ public class GithubTests
 		var schema = JsonSchema.FromText("{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"string\"}");
 		var instance = JsonNode.Parse("\"some string\"");
 
-		Assert.Throws<JsonSchemaException>(() => schema.Evaluate(instance));
+		Assert.Throws<RefResolutionException>(() => schema.Evaluate(instance));
 	}
 
 	[Test]
@@ -180,7 +180,7 @@ public class GithubTests
 		var schema = JsonSchema.FromText("{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"string\"}");
 		var instance = JsonNode.Parse("\"some string\"");
 
-		Assert.Throws<JsonSchemaException>(() => schema.Evaluate(instance, new EvaluationOptions
+		Assert.Throws<RefResolutionException>(() => schema.Evaluate(instance, new EvaluationOptions
 		{
 			OutputFormat = OutputFormat.Hierarchical
 		}));
@@ -442,7 +442,7 @@ public class GithubTests
 
 		VocabularyRegistry.Global.Register(new Vocabulary(vocabId, typeof(MinDateKeyword)));
 
-		Assert.Throws<JsonSchemaException>(() => SchemaRegistry.Global.Register(metaSchemaId, metaSchema));
+		Assert.Throws<RefResolutionException>(() => SchemaRegistry.Global.Register(metaSchemaId, metaSchema));
 	}
 
 	[Test]
@@ -498,7 +498,7 @@ public class GithubTests
 
 		var instance = JsonNode.Parse("{\"ContentDefinitionId\": \"fa81bc1d-3efe-4192-9e03-31e9898fef90\"}");
 
-		Assert.Throws<JsonSchemaException>(() => schema.Evaluate(instance, new EvaluationOptions
+		Assert.Throws<RefResolutionException>(() => schema.Evaluate(instance, new EvaluationOptions
 		{
 			ValidateAgainstMetaSchema = true
 		}));

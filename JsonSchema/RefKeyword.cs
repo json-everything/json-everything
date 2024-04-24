@@ -67,7 +67,7 @@ public class RefKeyword : IJsonSchemaKeyword
 		if (JsonPointer.TryParse(fragment, out var pointerFragment))
 		{
 			var targetBase = context.Options.SchemaRegistry.Get(newUri) ??
-							 throw new JsonSchemaException($"Cannot resolve base schema from `{newUri}`");
+							 throw new RefResolutionException(newUri, pointerFragment);
 
 			targetSchema = targetBase.FindSubschema(pointerFragment, context.Options);
 		}
@@ -83,7 +83,7 @@ public class RefKeyword : IJsonSchemaKeyword
 		}
 
 		if (targetSchema == null)
-			throw new JsonSchemaException($"Cannot resolve schema `{newUri}`");
+			throw new RefResolutionException(newUri);
 
 		context.NavigatedReferences.Push(navigation);
 		var subschemaConstraint = targetSchema.GetConstraint(JsonPointer.Create(Name), schemaConstraint.BaseInstanceLocation, JsonPointer.Empty, context);

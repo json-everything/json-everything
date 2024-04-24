@@ -43,26 +43,17 @@ public class TestSuiteRunner
 		var fileNames = Directory.GetFiles(testsPath, "*.json", SearchOption.AllDirectories);
 		var options = new EvaluationOptions
 		{
-			OutputFormat = OutputFormat.List
+			OutputFormat = OutputFormat.List,
+			EvaluateAs = draftFolder switch
+			{
+				"draft6" => SpecVersion.Draft6,
+				"draft7" => SpecVersion.Draft7,
+				"draft2019-09" => SpecVersion.Draft201909,
+				"draft2020-12" => SpecVersion.Draft202012,
+				"draft-next" => SpecVersion.DraftNext,
+				_ => SpecVersion.Unspecified
+			}
 		};
-		switch (draftFolder)
-		{
-			case "draft6":
-				options.EvaluateAs = SpecVersion.Draft6;
-				break;
-			case "draft7":
-				options.EvaluateAs = SpecVersion.Draft7;
-				break;
-			case "draft2019-09":
-				options.EvaluateAs = SpecVersion.Draft201909;
-				break;
-			case "draft2020-12":
-				options.EvaluateAs = SpecVersion.Draft202012;
-				break;
-			case "draft-next":
-				// options.ValidateAs = SpecVersion.DraftNext;
-				break;
-		}
 
 		foreach (var fileName in fileNames)
 		{

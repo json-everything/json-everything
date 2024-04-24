@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Json.Pointer;
@@ -54,7 +53,10 @@ public class JsonNodeBaseDocument : IBaseDocument
 
 			var schema = location.Deserialize(JsonSchemaSerializerContext.Default.JsonSchema);
 			if (schema != null)
-				JsonSchema.Initialize(schema, options.SchemaRegistry, BaseUri);
+			{
+				schema.BaseUri = BaseUri;
+				options.SchemaRegistry.Initialize(BaseUri, schema);
+			}
 
 			return schema;
 		});
