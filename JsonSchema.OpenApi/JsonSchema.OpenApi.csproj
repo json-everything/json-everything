@@ -15,8 +15,8 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <Version>3.0.0.2</Version>
-    <FileVersion>3.0.0.2</FileVersion>
+    <Version>3.0.1</Version>
+    <FileVersion>3.0.1</FileVersion>
     <AssemblyVersion>3.0.0.0</AssemblyVersion>
     <Authors>Greg Dennis</Authors>
     <Description>Extends JsonSchema.Net to support OpenAPI v3.1's JSON Schema vocabulary extension</Description>

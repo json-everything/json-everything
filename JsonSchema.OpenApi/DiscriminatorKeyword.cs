@@ -53,7 +53,7 @@ public class DiscriminatorKeyword : IJsonSchemaKeyword
 		Mapping = mapping;
 		Extensions = extensions;
 
-		_json = JsonSerializer.SerializeToNode(this, JsonSchemaOpenApiSerializerContext.Default.JsonNode);
+		_json = JsonSerializer.SerializeToNode(this, JsonSchemaOpenApiSerializerContext.Default.DiscriminatorKeyword);
 	}
 
 	internal DiscriminatorKeyword(string propertyName, IReadOnlyDictionary<string, string>? mapping, IReadOnlyDictionary<string, JsonNode?>? extensions, JsonNode? json)
