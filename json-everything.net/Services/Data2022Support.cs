@@ -48,12 +48,11 @@ public static class Data2022Support
 
 		public static readonly Vocabulary Data2022 = new(Data2022Id, typeof(DataKeyword));
 
-		public static void Register(VocabularyRegistry? vocabRegistry = null, SchemaRegistry? schemaRegistry = null)
+		public static void Register(SchemaRegistry? schemaRegistry = null)
 		{
-			vocabRegistry ??= VocabularyRegistry.Global;
 			schemaRegistry ??= SchemaRegistry.Global;
 
-			vocabRegistry.Register(Data2022);
+			VocabularyRegistry.Register(Data2022);
 			// don't need the data keyword registered because it's already registered by the 2023 version.
 			schemaRegistry.Register(MetaSchemas.Data2022);
 		}

@@ -81,7 +81,10 @@ public static partial class JsonSchemaExtensions
 				if (schema.Keywords == null) continue;
 				
 				searchedSchemas.Add(schema);
-			//	schemasToSearch.AddRange(schema.GetSubschemas());
+				foreach (var subschema in schema.GetSubschemas())
+				{
+					schemasToSearch.Add(subschema);
+				}
 
 				// this handles references that are already bundled.
 				if (schema.BaseUri != nextReference && !bundledReferences.Contains(schema.BaseUri))

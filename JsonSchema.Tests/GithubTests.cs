@@ -432,17 +432,23 @@ public class GithubTests
 	[Test]
 	public void Issue191_SelfReferentialCustomMetaschemaShouldError()
 	{
-		var metaSchemaId = new Uri("https://myserver.net/meta-schema");
-
 		var vocabId = "https://myserver.net/my-vocab";
+		var vocab = new Vocabulary(vocabId, typeof(MinDateKeyword));
+		try
+		{
+			var metaSchemaId = new Uri("https://myserver.net/meta-schema");
+			var metaSchema = JsonSchema.FromText(GetResource(191, "MetaSchema"));
 
-		var metaSchema = JsonSchema.FromText(GetResource(191, "MetaSchema"));
+			SchemaKeywordRegistry.Register<MinDateKeyword>();
 
-		SchemaKeywordRegistry.Register<MinDateKeyword>();
+			VocabularyRegistry.Register(vocab);
 
-		VocabularyRegistry.Global.Register(new Vocabulary(vocabId, typeof(MinDateKeyword)));
-
-		Assert.Throws<RefResolutionException>(() => SchemaRegistry.Global.Register(metaSchemaId, metaSchema));
+			Assert.Throws<JsonSchemaException>(() => SchemaRegistry.Global.Register(metaSchemaId, metaSchema));
+		}
+		finally
+		{
+			VocabularyRegistry.Unregister(vocab);
+		}
 	}
 
 	[Test]

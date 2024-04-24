@@ -18,12 +18,11 @@ public static class Vocabularies
 	/// <summary>
 	/// Registers the all components required to use the data vocabulary.
 	/// </summary>
-	public static void Register(VocabularyRegistry? vocabRegistry = null, SchemaRegistry? schemaRegistry = null)
+	public static void Register(SchemaRegistry? schemaRegistry = null)
 	{
-		vocabRegistry ??= VocabularyRegistry.Global;
 		schemaRegistry ??= SchemaRegistry.Global;
 
-		vocabRegistry.Register(Data);
+		VocabularyRegistry.Register(Data);
 		SchemaKeywordRegistry.Register<DataKeyword>(JsonSchemaDataSerializerContext.Default);
 		schemaRegistry.Register(MetaSchemas.Data);
 		schemaRegistry.Register(MetaSchemas.Data_202012);

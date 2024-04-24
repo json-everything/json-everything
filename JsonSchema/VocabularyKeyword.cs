@@ -82,7 +82,7 @@ public class VocabularyKeyword : IJsonSchemaKeyword
 		var overallResult = true;
 		foreach (var kvp in _allVocabularies)
 		{
-			var isKnown = context.Options.VocabularyRegistry.IsKnown(kvp.Key);
+			var isKnown = VocabularyRegistry.IsKnown(kvp.Key);
 			var isValid = !kvp.Value || isKnown;
 			if (!isValid)
 				violations.Add(kvp.Key);

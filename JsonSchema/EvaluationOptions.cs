@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 
 namespace Json.Schema;
 
@@ -41,12 +40,6 @@ public class EvaluationOptions
 	/// automatically check the global registry as well.
 	/// </summary>
 	public SchemaRegistry SchemaRegistry { get; }
-
-	/// <summary>
-	/// The local vocabulary registry.  If a schema is not found here, it will
-	/// automatically check the global registry as well.
-	/// </summary>
-	public VocabularyRegistry VocabularyRegistry { get; } = new();
 
 	/// <summary>
 	/// Specifies whether the `format` keyword should be required to provide
@@ -172,7 +165,6 @@ public class EvaluationOptions
 				: new HashSet<Type>(other._ignoredAnnotationTypes)
 		};
 		options.SchemaRegistry.CopyFrom(other.SchemaRegistry);
-		options.VocabularyRegistry.CopyFrom(other.VocabularyRegistry);
 		return options;
 	}
 

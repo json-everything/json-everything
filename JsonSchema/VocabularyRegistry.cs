@@ -1,48 +1,42 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 
 namespace Json.Schema;
 
 /// <summary>
 /// A registry for vocabularies.
 /// </summary>
-public class VocabularyRegistry
+public static class VocabularyRegistry
 {
-	private ConcurrentDictionary<Uri, Vocabulary>? _vocabularies;
-
-	/// <summary>
-	/// The global registry.
-	/// </summary>
-	public static VocabularyRegistry Global { get; }
+	private static readonly ConcurrentDictionary<Uri, Vocabulary> _vocabularies = new();
 
 	static VocabularyRegistry()
 	{
-		Global = new VocabularyRegistry();
+		Register(Vocabularies.Core201909);
+		Register(Vocabularies.Applicator201909);
+		Register(Vocabularies.Validation201909);
+		Register(Vocabularies.Metadata201909);
+		Register(Vocabularies.Format201909);
+		Register(Vocabularies.Content201909);
 
-		Global.Register(Vocabularies.Core201909);
-		Global.Register(Vocabularies.Applicator201909);
-		Global.Register(Vocabularies.Validation201909);
-		Global.Register(Vocabularies.Metadata201909);
-		Global.Register(Vocabularies.Format201909);
-		Global.Register(Vocabularies.Content201909);
+		Register(Vocabularies.Core202012);
+		Register(Vocabularies.Applicator202012);
+		Register(Vocabularies.Validation202012);
+		Register(Vocabularies.Metadata202012);
+		Register(Vocabularies.Unevaluated202012);
+		Register(Vocabularies.FormatAnnotation202012);
+		Register(Vocabularies.FormatAssertion202012);
+		Register(Vocabularies.Content202012);
 
-		Global.Register(Vocabularies.Core202012);
-		Global.Register(Vocabularies.Applicator202012);
-		Global.Register(Vocabularies.Validation202012);
-		Global.Register(Vocabularies.Metadata202012);
-		Global.Register(Vocabularies.Unevaluated202012);
-		Global.Register(Vocabularies.FormatAnnotation202012);
-		Global.Register(Vocabularies.FormatAssertion202012);
-		Global.Register(Vocabularies.Content202012);
-
-		Global.Register(Vocabularies.CoreNext);
-		Global.Register(Vocabularies.ApplicatorNext);
-		Global.Register(Vocabularies.ValidationNext);
-		Global.Register(Vocabularies.MetadataNext);
-		Global.Register(Vocabularies.UnevaluatedNext);
-		Global.Register(Vocabularies.FormatAnnotationNext);
-		Global.Register(Vocabularies.FormatAssertionNext);
-		Global.Register(Vocabularies.ContentNext);
+		Register(Vocabularies.CoreNext);
+		Register(Vocabularies.ApplicatorNext);
+		Register(Vocabularies.ValidationNext);
+		Register(Vocabularies.MetadataNext);
+		Register(Vocabularies.UnevaluatedNext);
+		Register(Vocabularies.FormatAnnotationNext);
+		Register(Vocabularies.FormatAssertionNext);
+		Register(Vocabularies.ContentNext);
 	}
 
 	/// <summary>
@@ -50,15 +44,18 @@ public class VocabularyRegistry
 	/// keywords.  This must be done separately.
 	/// </summary>
 	/// <param name="vocabulary"></param>
-	public void Register(Vocabulary vocabulary)
+	public static void Register(Vocabulary vocabulary)
 	{
-		_vocabularies ??= new ConcurrentDictionary<Uri, Vocabulary>();
 		_vocabularies[vocabulary.Id] = vocabulary;
 	}
 
-	public void Unregister(Vocabulary vocabulary)
+	/// <summary>
+	/// Removes a vocabulary from the registry.
+	/// </summary>
+	/// <param name="vocabulary"></param>
+	public static void Unregister(Vocabulary vocabulary)
 	{
-		_vocabularies?.TryRemove(vocabulary.Id, out _);
+		_vocabularies.TryRemove(vocabulary.Id, out _);
 	}
 
 	/// <summary>
@@ -69,14 +66,9 @@ public class VocabularyRegistry
 	/// `true`, if registered in either this or the global registry;
 	/// `false` otherwise.
 	/// </returns>
-	public bool IsKnown(Uri vocabularyId)
+	public static bool IsKnown(Uri vocabularyId)
 	{
-		if (_vocabularies != null && _vocabularies.ContainsKey(vocabularyId)) return true;
-
-		if (!ReferenceEquals(this, Global))
-			return Global.IsKnown(vocabularyId);
-
-		return false;
+		return _vocabularies.ContainsKey(vocabularyId);
 	}
 
 	/// <summary>
@@ -84,29 +76,8 @@ public class VocabularyRegistry
 	/// </summary>
 	/// <param name="vocabularyId">The URI ID.</param>
 	/// <returns>The vocabulary, if known; otherwise null.</returns>
-	public Vocabulary? Get(Uri vocabularyId)
+	public static Vocabulary? Get(Uri vocabularyId)
 	{
-		if (_vocabularies != null && _vocabularies.TryGetValue(vocabularyId, out var vocabulary)) return vocabulary;
-
-		if (!ReferenceEquals(this, Global))
-			return Global.Get(vocabularyId);
-
-		return null;
-	}
-
-	internal void CopyFrom(VocabularyRegistry other)
-	{
-		if (other._vocabularies == null) return;
-
-		if (_vocabularies == null)
-		{
-			_vocabularies = new ConcurrentDictionary<Uri, Vocabulary>(other._vocabularies);
-			return;
-		}
-
-		foreach (var vocabulary in other._vocabularies)
-		{
-			_vocabularies[vocabulary.Key] = vocabulary.Value;
-		}
+		return _vocabularies.GetValueOrDefault(vocabularyId);
 	}
 }

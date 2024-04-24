@@ -33,7 +33,8 @@ public class FormatKeyword : IJsonSchemaKeyword
 	private static readonly Uri[] _formatAssertionIds =
 	{
 		new(Vocabularies.Format201909Id),
-		new(Vocabularies.FormatAssertion202012Id)
+		new(Vocabularies.FormatAssertion202012Id),
+		new(Vocabularies.FormatAssertionNextId)
 	};
 
 	/// <summary>
@@ -72,7 +73,7 @@ public class FormatKeyword : IJsonSchemaKeyword
 
 		if (!requireValidation)
 		{
-			var vocabs = context.Dialect[context.Scope.LocalScope];
+			var vocabs = schemaConstraint.LocalSchema.Dialect;
 			if (vocabs != null)
 			{
 				foreach (var formatAssertionId in _formatAssertionIds)

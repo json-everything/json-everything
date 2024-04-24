@@ -23,12 +23,11 @@ public static class Vocabularies
 	/// <summary>
 	/// Registers the all components required to use the data vocabulary.
 	/// </summary>
-	public static void Register(VocabularyRegistry? vocabRegistry = null, SchemaRegistry? schemaRegistry = null)
+	public static void Register(SchemaRegistry? schemaRegistry = null)
 	{
-		vocabRegistry ??= VocabularyRegistry.Global;
 		schemaRegistry ??= SchemaRegistry.Global;
 
-		vocabRegistry.Register(OpenApi);
+		VocabularyRegistry.Register(OpenApi);
 		SchemaKeywordRegistry.Register<ExampleKeyword>(JsonSchemaOpenApiSerializerContext.Default);
 		SchemaKeywordRegistry.RegisterNullValue(new ExampleKeyword(null));
 		SchemaKeywordRegistry.Register<DiscriminatorKeyword>(JsonSchemaOpenApiSerializerContext.Default);
