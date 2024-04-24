@@ -313,8 +313,7 @@ public class JsonSchema : IBaseDocument
 
 	private void ClearConstraints()
 	{
-		var subschemas = Keywords?.SelectMany(GetSubschemas) ?? [];
-		foreach (var subschema in subschemas)
+		foreach (var subschema in GetSubschemas())
 		{
 			subschema.ClearConstraints();
 		}
@@ -333,7 +332,10 @@ public class JsonSchema : IBaseDocument
 				_isDynamic = true;
 				return true;
 			}
+		}
 
+		foreach (var keyword in Keywords!)
+		{
 			foreach (var subschema in GetSubschemas(keyword))
 			{
 				if (subschema.IsDynamic())
@@ -488,35 +490,63 @@ public class JsonSchema : IBaseDocument
 		}
 	}
 
-	internal IEnumerable<JsonSchema> GetSubschemas() => Keywords?.SelectMany(GetSubschemas) ?? [];
-
-	internal static IEnumerable<JsonSchema> GetSubschemas(IJsonSchemaKeyword keyword)
+	internal ReadOnlySpan<JsonSchema> GetSubschemas()
 	{
+		if (BoolValue.HasValue) return [];
+
+		using var owner = MemoryPool<JsonSchema>.Shared.Rent();
+		var span = owner.Memory.Span;
+
+		var i = 0;
+		foreach (var keyword in Keywords!)
+		{
+			foreach (var subschema in GetSubschemas(keyword))
+			{
+				span[i] = subschema;
+				i++;
+			}
+		}
+
+		return i == 0 ? [] : span[..i];
+	}
+
+	internal static ReadOnlySpan<JsonSchema> GetSubschemas(IJsonSchemaKeyword keyword)
+	{
+		using var owner = MemoryPool<JsonSchema>.Shared.Rent();
+		var span = owner.Memory.Span;
+
+		int i = 0;
 		switch (keyword)
 		{
 			// ReSharper disable once RedundantAlwaysMatchSubpattern
 			case ISchemaContainer { Schema: not null } container:
-				yield return container.Schema;
+				span[0] = container.Schema;
+				i++;
 				break;
 			case ISchemaCollector collector:
 				foreach (var schema in collector.Schemas)
 				{
-					yield return schema;
+					span[i] = schema;
+					i++;
 				}
 				break;
 			case IKeyedSchemaCollector collector:
 				foreach (var schema in collector.Schemas.Values)
 				{
-					yield return schema;
+					span[i] = schema;
+					i++;
 				}
 				break;
 			case ICustomSchemaCollector collector:
 				foreach (var schema in collector.Schemas)
 				{
-					yield return schema;
+					span[i] = schema;
+					i++;
 				}
 				break;
 		}
+
+		return i == 0 ? [] : span[..i];
 	}
 
 	JsonSchema? IBaseDocument.FindSubschema(JsonPointer pointer, EvaluationOptions options)
@@ -531,7 +561,7 @@ public class JsonSchema : IBaseDocument
 			return asSchema;
 		}
 
-		object? CheckResolvable(object localResolvable, ref int i, string pointerSegment, ref JsonSchema hostSchema)
+		object? CheckResolvable(object localResolvable, ref int i, ReadOnlySpan<char> pointerSegment, ref JsonSchema hostSchema)
 		{
 			int index;
 			object? newResolvable = null;
@@ -544,7 +574,7 @@ public class JsonSchema : IBaseDocument
 						newResolvable = hostSchema;
 						i--;
 					}
-					else if (int.TryParse(pointerSegment, out index) &&
+					else if (pointerSegment.TryGetInt(out index) &&
 					         index >= 0 && index < collector.Schemas.Count)
 					{
 						hostSchema = collector.Schemas[index];
@@ -557,7 +587,7 @@ public class JsonSchema : IBaseDocument
 					i--;
 					break;
 				case ISchemaCollector collector:
-					if (int.TryParse(pointerSegment, out index) &&
+					if (pointerSegment.TryGetInt(out index) &&
 					    index >= 0 && index < collector.Schemas.Count)
 					{
 						hostSchema = collector.Schemas[index];
@@ -565,7 +595,7 @@ public class JsonSchema : IBaseDocument
 					}
 					break;
 				case IKeyedSchemaCollector keyedCollector:
-					if (keyedCollector.Schemas.TryGetValue(pointerSegment, out var subschema))
+					if (keyedCollector.Schemas.TryMatchPointerSegment(pointerSegment, out var subschema))
 					{
 						hostSchema = subschema;
 						newResolvable = hostSchema;
@@ -578,7 +608,7 @@ public class JsonSchema : IBaseDocument
 					i += segmentsConsumed;
 					break;
 				case JsonSchema { _keywords: not null } schema:
-					schema._keywords.TryGetValue(pointerSegment, out var k);
+					schema._keywords.TryMatchPointerSegment(pointerSegment, out var k);
 					newResolvable = k;
 					break;
 				default: // non-applicator keyword
@@ -604,7 +634,7 @@ public class JsonSchema : IBaseDocument
 		var currentSchema = this;
 		for (var i = 0; i < pointer.Segments.Length; i++)
 		{
-			var segment = pointer[i].GetSegmentName();
+			var segment = pointer[i];
 
 			resolvable = CheckResolvable(resolvable, ref i, segment, ref currentSchema);
 			if (resolvable == null) return null;
@@ -617,18 +647,6 @@ public class JsonSchema : IBaseDocument
 		// last segment of the pointer is an ISchemaContainer.
 		return CheckResolvable(resolvable, ref count, null!, ref currentSchema) as JsonSchema;
 	}
-
-	///// <summary>
-	///// Gets a defined anchor.
-	///// </summary>
-	///// <param name="anchorName">The name of the anchor (excluding the `#`)</param>
-	///// <returns>The associated subschema, if the anchor exists, or null.</returns>
-	//public JsonSchema? GetAnchor(string anchorName) =>
-	//	Anchors.TryGetValue(anchorName, out var anchorDefinition)
-	//		? anchorDefinition.IsDynamic
-	//			? null
-	//			: anchorDefinition.Schema
-	//		: null;
 
 	/// <summary>
 	/// Implicitly converts a boolean value into one of the boolean schemas. 

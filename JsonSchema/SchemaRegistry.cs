@@ -236,9 +236,14 @@ public class SchemaRegistry
 		}
 	}
 
-	public void Initialize(Uri baseUri, JsonSchema document)
+	/// <summary>
+	/// Sets base URI and spec version for a schema.  Generally not needed as this happens automatically on registration and evaluation.
+	/// </summary>
+	/// <param name="baseUri">The base URI for the schema.</param>
+	/// <param name="schema">The schema</param>
+	public void Initialize(Uri baseUri, JsonSchema schema)
 	{
-		var registrations = Scan(baseUri, document);
+		var registrations = Scan(baseUri, schema);
 		foreach (var reg in registrations)
 		{
 			if (_registered.TryGetValue(reg.Key, out var registration))
