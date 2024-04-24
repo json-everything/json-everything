@@ -527,6 +527,7 @@ public class JsonSchema : IBaseDocument
 
 			var asSchema = FromText(value?.ToString() ?? "null");
 			asSchema.BaseUri = hostSchema.BaseUri;
+			options.SchemaRegistry.Initialize(hostSchema.BaseUri, asSchema);
 			return asSchema;
 		}
 
