@@ -4,6 +4,10 @@ title: JsonSchema.Net.OpenApi
 icon: fas fa-tag
 order: "09.04"
 ---
+# [3.1.0](https://github.com/gregsdennis/json-everything/pull/719) {#release-schemaopenapi-3.1.0}
+
+Updated to use _JsonSchema.Net_ v7.0.0, which contains breaking changes ([release notes](/rn-json-schema/#release-schema-7.0.0)).
+
 # [3.0.1](https://github.com/gregsdennis/json-everything/pull/721) {#release-schemaopenapi-3.0.1}
 
 [#720](https://github.com/gregsdennis/json-everything/issues/720) - `DiscriminatorKeyword` constructor throws `InvalidCastException`.

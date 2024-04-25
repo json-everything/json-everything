@@ -15,8 +15,8 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <Version>6.0.0.2</Version>
-    <FileVersion>6.0.0.2</FileVersion>
+    <Version>6.1.0</Version>
+    <FileVersion>6.1.0.0</FileVersion>
     <AssemblyVersion>6.0.0.0</AssemblyVersion>
     <Authors>Greg Dennis</Authors>
     <Description>Extends JsonSchema.Net to provide the "data" keyword</Description>

@@ -16,8 +16,8 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageId>JsonSchema.Net.DataGeneration</PackageId>
-    <Version>2.1.0.2</Version>
-    <FileVersion>2.1.0.2</FileVersion>
+    <Version>2.2.0</Version>
+    <FileVersion>2.2.0.0</FileVersion>
     <AssemblyVersion>2.0.0.0</AssemblyVersion>
     <Authors>Greg Dennis</Authors>
     <Product>JsonSchema.Net</Product>
