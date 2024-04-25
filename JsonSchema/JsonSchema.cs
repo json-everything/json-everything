@@ -418,6 +418,8 @@ public class JsonSchema : IBaseDocument
 		return scopedConstraint;
 	}
 
+	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "<Pending>")]
+	[UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "<Pending>")]
 	private void PopulateConstraint(SchemaConstraint constraint, EvaluationContext context)
 	{
 		if (constraint.Constraints.Length != 0) return;
@@ -480,7 +482,7 @@ public class JsonSchema : IBaseDocument
 					constraintCount++;
 
 					if (keyword is UnrecognizedKeyword unrecognized) 
-						constraint.UnknownKeywords?.Add((JsonValue?)unrecognized.Name);  // allocation
+						constraint.UnknownKeywords?.Add((JsonValue)unrecognized.Name);  // allocation
 
 					continue;
 				}
@@ -491,7 +493,7 @@ public class JsonSchema : IBaseDocument
 				localConstraints[constraintCount] = keywordConstraint;
 				constraintCount++;
 
-				constraint.UnknownKeywords?.Add((JsonValue?)keyword.Keyword());  // allocation
+				constraint.UnknownKeywords?.Add((JsonValue)keyword.Keyword());  // allocation
 			}
 
 			constraint.Constraints = localConstraints[..constraintCount].ToArray();  // allocation
@@ -649,14 +651,14 @@ public class JsonSchema : IBaseDocument
 					var serialized = JsonSerializer.Serialize(localResolvable, typeInfo!);
 					var json = JsonNode.Parse(serialized);
 					var newPointer = pointer.GetLocal(i);
-					i += newPointer.Segments.Length - 1;
+					i += newPointer.SegmentCount - 1;
 					return ExtractSchemaFromData(newPointer, json, hostSchema);
 			}
 
 			if (newResolvable is UnrecognizedKeyword unrecognized)
 			{
 				var newPointer = pointer.GetLocal(i+1);
-				i += newPointer.Segments.Length;
+				i += newPointer.SegmentCount;
 				return ExtractSchemaFromData(newPointer, unrecognized.Value, (JsonSchema)localResolvable);
 			}
 
@@ -665,7 +667,7 @@ public class JsonSchema : IBaseDocument
 
 		object? resolvable = this;
 		var currentSchema = this;
-		for (var i = 0; i < pointer.Segments.Length; i++)
+		for (var i = 0; i < pointer.SegmentCount; i++)
 		{
 			var segment = pointer[i];
 
@@ -675,7 +677,7 @@ public class JsonSchema : IBaseDocument
 
 		if (resolvable is JsonSchema target) return target;
 
-		var count = pointer.Segments.Length;
+		var count = pointer.SegmentCount;
 		// These parameters don't really matter.  This extra check only captures the case where the
 		// last segment of the pointer is an ISchemaContainer.
 		return CheckResolvable(resolvable, ref count, null!, ref currentSchema) as JsonSchema;

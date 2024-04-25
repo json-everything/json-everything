@@ -28,7 +28,7 @@ internal class CopyOperationHandler : IPatchOperationHandler
 			return;
 		}
 
-		if (operation.Path.Segments.Length == 0)
+		if (operation.Path.SegmentCount == 0)
 		{
 			context.Source = data;
 			return;

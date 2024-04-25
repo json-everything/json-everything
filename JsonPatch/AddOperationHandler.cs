@@ -13,7 +13,7 @@ internal class AddOperationHandler : IPatchOperationHandler
 
 	public void Process(PatchContext context, PatchOperation operation)
 	{
-		if (operation.Path.Segments.Length == 0)
+		if (operation.Path.SegmentCount == 0)
 		{
 			context.Source = operation.Value;
 			return;

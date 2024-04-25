@@ -12,7 +12,7 @@ internal class RemoveOperationHandler : IPatchOperationHandler
 
 	public void Process(PatchContext context, PatchOperation operation)
 	{
-		if (operation.Path.Segments.Length == 0)
+		if (operation.Path.SegmentCount == 0)
 		{
 			context.Message = "Cannot remove root value.";
 			return;

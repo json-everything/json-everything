@@ -131,7 +131,7 @@ public class EvaluationResults
 	private Uri BuildSchemaLocation()
 	{
 		var localEvaluationPathStart = 0;
-		for (var i = 0; i < EvaluationPath.Segments.Length; i++)
+		for (var i = 0; i < EvaluationPath.SegmentCount; i++)
 		{
 			var segment = EvaluationPath[i];
 			if (JsonPointer.SegmentEquals(segment, RefKeyword.Name) ||

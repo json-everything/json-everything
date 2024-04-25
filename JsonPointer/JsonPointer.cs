@@ -33,15 +33,17 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 	private readonly string _plain = null!;
 
 	/// <summary>
-	/// Gets the ranges of the pointer string that represents each segment.
+	/// Gets the number of segments in the pointer.
 	/// </summary>
-	public Range[] Segments { get; }
+	public int SegmentCount => Segments.Length;
 	/// <summary>
 	/// Gets a segment value by index.
 	/// </summary>
 	/// <param name="index">The index.</param>
 	/// <returns>The indicated segment value as a span.</returns>
 	public ReadOnlySpan<char> this[Index index] => _plain.AsSpan()[Segments[index]];
+
+	internal Range[] Segments { get; }
 
 	/// <summary>
 	/// Creates the empty pointer.

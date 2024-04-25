@@ -97,7 +97,7 @@ public class PropertyDependenciesKeyword : IJsonSchemaKeyword, ICustomSchemaColl
 
 	(JsonSchema? Schema, int SegmentsConsumed) ICustomSchemaCollector.FindSubschema(JsonPointer pointer)
 	{
-		if (pointer.Segments.Length < 2) return (null, 0);
+		if (pointer.SegmentCount < 2) return (null, 0);
 		if (!Dependencies.TryGetValue(pointer[0].GetSegmentName(), out var property)) return (null, 0);
 		if (!property.Schemas.TryGetValue(pointer[1].GetSegmentName(), out var schema)) return (null, 0);
 

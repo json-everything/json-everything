@@ -14,7 +14,7 @@ internal class MoveOperationHandler : IPatchOperationHandler
 	{
 		if (Equals(operation.Path, operation.From)) return;
 
-		if (operation.Path.Segments.Length == 0)
+		if (operation.Path.SegmentCount == 0)
 		{
 			context.Message = "Cannot move root value.";
 			return;
@@ -46,7 +46,7 @@ internal class MoveOperationHandler : IPatchOperationHandler
 			arrSource.RemoveAt(index);
 		}
 
-		if (operation.Path.Segments.Length == 0)
+		if (operation.Path.SegmentCount == 0)
 		{
 			context.Source = data;
 			return;
