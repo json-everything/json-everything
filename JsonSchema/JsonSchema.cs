@@ -315,7 +315,8 @@ public class JsonSchema : IBaseDocument
 
 	private void ClearConstraints()
 	{
-		foreach (var subschema in GetSubschemas())
+		using var owner = MemoryPool<JsonSchema>.Shared.Rent();
+		foreach (var subschema in GetSubschemas(owner))
 		{
 			subschema.ClearConstraints();
 		}
@@ -336,15 +337,13 @@ public class JsonSchema : IBaseDocument
 			}
 		}
 
-		foreach (var keyword in Keywords!)
+		using var owner = MemoryPool<JsonSchema>.Shared.Rent();
+		foreach (var subschema in GetSubschemas(owner))
 		{
-			foreach (var subschema in GetSubschemas(keyword))
+			if (subschema.IsDynamic())
 			{
-				if (subschema.IsDynamic())
-				{
-					_isDynamic = true;
-					return true;
-				}
+				_isDynamic = true;
+				return true;
 			}
 		}
 
@@ -432,7 +431,7 @@ public class JsonSchema : IBaseDocument
 				var refKeyword = (RefKeyword?) Keywords!.FirstOrDefault(x => x is RefKeyword);
 				if (refKeyword != null)
 				{
-					var refConstraint = refKeyword.GetConstraint(constraint, [], context);  // allocation
+					var refConstraint = refKeyword.GetConstraint(constraint, [], context);  // indirect allocation
 					constraint.Constraints = [refConstraint];  // allocation
 					return;
 				}
@@ -446,41 +445,53 @@ public class JsonSchema : IBaseDocument
 				context.PushEvaluatingAs(DeclaredVersion);
 			}
 
-			using var owner = MemoryPool<KeywordConstraint>.Shared.Rent(Keywords!.Count);
-			var localConstraints = owner.Memory.Span;
+			using var constraintOwner = MemoryPool<KeywordConstraint>.Shared.Rent(Keywords!.Count);
+			var localConstraints = constraintOwner.Memory.Span;
 			var constraintCount = 0;
+
 			var version = DeclaredVersion == SpecVersion.Unspecified ? context.EvaluatingAs : DeclaredVersion;
-			var keywords = FilterKeywords(GetKeywordsToProcess(context.Options), version);  // allocation
-			if (context.Options.AddAnnotationForUnknownKeywords)
+			if (context.Options.AddAnnotationForUnknownKeywords) 
+				constraint.UnknownKeywords = [];  // allocation;
+
+			using var dialectOwner = MemoryPool<Type>.Shared.Rent();
+			var declaredKeywordTypes = dialectOwner.Memory.Span;
+			var i = 0;
+			if (Dialect is not null)
 			{
-				var unknownKeywordsAnnotation = new JsonArray();  // allocation
-				foreach (var keyword in Keywords)
+				foreach (var vocabulary in Dialect)
 				{
-					if (keyword is not UnrecognizedKeyword && keywords.Contains(keyword)) continue;
-
-					// explicit cast removes AOT warning
-					unknownKeywordsAnnotation.Add((JsonNode?)keyword.Keyword());
+					foreach (var keywordType in vocabulary.Keywords)
+					{
+						declaredKeywordTypes[i] = keywordType;
+						i++;
+					}
 				}
-
-				constraint.UnknownKeywords = unknownKeywordsAnnotation;
 			}
+
+			declaredKeywordTypes = declaredKeywordTypes[..i];
 
 			foreach (var keyword in Keywords.OrderBy(x => x.Priority()))
 			{
 				KeywordConstraint? keywordConstraint;
-				if (keywords.Contains(keyword))
+				if (ShouldProcessKeyword(keyword, context.Options.ProcessCustomKeywords, version, declaredKeywordTypes))
 				{
-					keywordConstraint = keyword.GetConstraint(constraint, localConstraints[..constraintCount], context);  // allocation
+					keywordConstraint = keyword.GetConstraint(constraint, localConstraints[..constraintCount], context);  // indirect allocation
 					localConstraints[constraintCount] = keywordConstraint;
 					constraintCount++;
+
+					if (keyword is UnrecognizedKeyword unrecognized) 
+						constraint.UnknownKeywords?.Add((JsonValue?)unrecognized.Name);  // allocation
+
 					continue;
 				}
 
 				var typeInfo = SchemaKeywordRegistry.GetTypeInfo(keyword.GetType());
-				var json = JsonSerializer.SerializeToNode(keyword, typeInfo!);  // allocation
+				var json = JsonSerializer.SerializeToNode(keyword, typeInfo!);  // indirect allocation
 				keywordConstraint = KeywordConstraint.SimpleAnnotation(keyword.Keyword(), json);
 				localConstraints[constraintCount] = keywordConstraint;
 				constraintCount++;
+
+				constraint.UnknownKeywords?.Add((JsonValue?)keyword.Keyword());  // allocation
 			}
 
 			constraint.Constraints = localConstraints[..constraintCount].ToArray();  // allocation
@@ -492,32 +503,38 @@ public class JsonSchema : IBaseDocument
 		}
 	}
 
-	internal IEnumerable<IJsonSchemaKeyword> GetKeywordsToProcess(EvaluationOptions options)
+	private bool ShouldProcessKeyword(IJsonSchemaKeyword keyword, bool processCustomKeywords, SpecVersion preferredVersion, ReadOnlySpan<Type> declaredKeywordTypes)
 	{
-		if (options.ProcessCustomKeywords || Dialect == null) return Keywords!;
+		if (!processCustomKeywords && Dialect is not null)
+		{
+			var found = false;
+			foreach (var type in declaredKeywordTypes)
+			{
+				if (type != keyword.GetType()) continue;
 
-		var vocabKeywordTypes = Dialect.SelectMany(x => x?.Keywords ?? []);
-		return Keywords!.Where(x => vocabKeywordTypes.Contains(x.GetType()));
+				found = true;
+				break;
+			}
+
+			if (!found) return false;
+		}
+
+		if (!Enum.IsDefined(typeof(SpecVersion), preferredVersion) || preferredVersion == SpecVersion.Unspecified) return true;
+
+		return keyword.SupportsVersion(preferredVersion);
 	}
 
-	internal static IEnumerable<IJsonSchemaKeyword> FilterKeywords(IEnumerable<IJsonSchemaKeyword> keywords, SpecVersion preferredVersion)
-	{
-		if (!Enum.IsDefined(typeof(SpecVersion), preferredVersion) || preferredVersion == SpecVersion.Unspecified) return keywords;
-
-		return keywords.Where(k => k.SupportsVersion(preferredVersion));
-	}
-
-	internal ReadOnlySpan<JsonSchema> GetSubschemas()
+	internal ReadOnlySpan<JsonSchema> GetSubschemas(IMemoryOwner<JsonSchema> owner)
 	{
 		if (BoolValue.HasValue) return [];
 
-		using var owner = MemoryPool<JsonSchema>.Shared.Rent();
 		var span = owner.Memory.Span;
 
+		using var keywordOwner = MemoryPool<JsonSchema>.Shared.Rent();
 		var i = 0;
 		foreach (var keyword in Keywords!)
 		{
-			foreach (var subschema in GetSubschemas(keyword))
+			foreach (var subschema in GetSubschemas(keyword, keywordOwner))
 			{
 				span[i] = subschema;
 				i++;
@@ -527,9 +544,8 @@ public class JsonSchema : IBaseDocument
 		return i == 0 ? [] : span[..i];
 	}
 
-	internal static ReadOnlySpan<JsonSchema> GetSubschemas(IJsonSchemaKeyword keyword)
+	private static ReadOnlySpan<JsonSchema> GetSubschemas(IJsonSchemaKeyword keyword, IMemoryOwner<JsonSchema> owner)
 	{
-		using var owner = MemoryPool<JsonSchema>.Shared.Rent();
 		var span = owner.Memory.Span;
 
 		int i = 0;

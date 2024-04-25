@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Buffers;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
 using Json.More;
 
@@ -81,9 +81,12 @@ public static partial class JsonSchemaExtensions
 				if (schema.Keywords == null) continue;
 				
 				searchedSchemas.Add(schema);
-				foreach (var subschema in schema.GetSubschemas())
+				using (var owner = MemoryPool<JsonSchema>.Shared.Rent())
 				{
-					schemasToSearch.Add(subschema);
+					foreach (var subschema in schema.GetSubschemas(owner))
+					{
+						schemasToSearch.Add(subschema);
+					}
 				}
 
 				// this handles references that are already bundled.

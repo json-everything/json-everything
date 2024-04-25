@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Buffers;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace Json.Schema;
@@ -335,7 +337,8 @@ public class SchemaRegistry
 				registration.Anchors[anchor] = currentSchema;
 			}
 
-			foreach (var subschema in currentSchema.GetSubschemas())
+			using var owner = MemoryPool<JsonSchema>.Shared.Rent();
+			foreach (var subschema in currentSchema.GetSubschemas(owner))
 			{
 				if (subschema.BoolValue.HasValue) continue;
 
@@ -400,6 +403,27 @@ public class SchemaRegistry
 		var metaSchema = (JsonSchema)Get(schemaKeyword.Schema);
 		var vocabulary = metaSchema.GetVocabulary();
 
-		schema.Dialect = vocabulary?.Keys.Select(x => VocabularyRegistry.Get(x)!).ToArray();
+
+		if (vocabulary is null) return;
+
+		using var owner = MemoryPool<Vocabulary>.Shared.Rent();
+		var span = owner.Memory.Span;
+		var i = 0;
+
+		foreach (var kvp in vocabulary)
+		{
+			var vocab = VocabularyRegistry.Get(kvp.Key);
+			if (vocab is null)
+			{
+				if (kvp.Value && _options.ValidateAgainstMetaSchema)
+					throw new JsonSchemaException($"Detected unknown required vocabulary: '{kvp.Key}'");
+				continue;
+			}
+
+			span[i] = vocab;
+			i++;
+		}
+
+		schema.Dialect = span[..i].ToArray();
 	}
 }

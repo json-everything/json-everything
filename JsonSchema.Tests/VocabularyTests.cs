@@ -219,14 +219,13 @@ public partial class VocabularyTests
 			OutputFormat = OutputFormat.List
 		};
 		options.SchemaRegistry.Register(DatesMetaSchema);
-		var results = schema.Evaluate(instance, options);
 
 		Console.WriteLine(JsonSerializer.Serialize(schema, _serializerOptions));
 		Console.WriteLine();
 		Console.WriteLine(instance);
 		Console.WriteLine();
 
-		results.AssertInvalid();
+		Assert.Throws<JsonSchemaException>(() => schema.Evaluate(instance, options));
 	}
 
 	[Test]
