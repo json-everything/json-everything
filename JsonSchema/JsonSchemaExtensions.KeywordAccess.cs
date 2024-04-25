@@ -29,7 +29,7 @@ public static partial class JsonSchemaExtensions
 	/// <summary>
 	/// Gets the schemas in `allOf` if the keyword exists.
 	/// </summary>
-	public static IReadOnlyCollection<JsonSchema>? GetAllOf(this JsonSchema schema)
+	public static IReadOnlyList<JsonSchema>? GetAllOf(this JsonSchema schema)
 	{
 		return schema.TryGetKeyword<AllOfKeyword>(AllOfKeyword.Name, out var k) ? k.Schemas : null;
 	}
@@ -45,7 +45,7 @@ public static partial class JsonSchemaExtensions
 	/// <summary>
 	/// Gets the schemas in `anyOf` if the keyword exists.
 	/// </summary>
-	public static IReadOnlyCollection<JsonSchema>? GetAnyOf(this JsonSchema schema)
+	public static IReadOnlyList<JsonSchema>? GetAnyOf(this JsonSchema schema)
 	{
 		return schema.TryGetKeyword<AnyOfKeyword>(AnyOfKeyword.Name, out var k) ? k.Schemas : null;
 	}
@@ -189,7 +189,7 @@ public static partial class JsonSchemaExtensions
 	/// <summary>
 	/// Gets the values in `enum` if the keyword exists.
 	/// </summary>
-	public static IReadOnlyCollection<JsonNode?>? GetEnum(this JsonSchema schema)
+	public static IReadOnlyList<JsonNode?>? GetEnum(this JsonSchema schema)
 	{
 		return schema.TryGetKeyword<EnumKeyword>(EnumKeyword.Name, out var k) ? k.Values : null;
 	}
@@ -197,7 +197,7 @@ public static partial class JsonSchemaExtensions
 	/// <summary>
 	/// Gets the values in `examples` if the keyword exists.
 	/// </summary>
-	public static IReadOnlyCollection<JsonNode?>? GetExamples(this JsonSchema schema)
+	public static IReadOnlyList<JsonNode?>? GetExamples(this JsonSchema schema)
 	{
 		return schema.TryGetKeyword<ExamplesKeyword>(ExamplesKeyword.Name, out var k) ? k.Values : null;
 	}
@@ -253,7 +253,7 @@ public static partial class JsonSchemaExtensions
 	/// <summary>
 	/// Gets the schemas in `items` if the keyword exists and is an array of schemas.
 	/// </summary>
-	public static IReadOnlyCollection<JsonSchema>? GetItemsArrayForm(this JsonSchema schema)
+	public static IReadOnlyList<JsonSchema>? GetItemsArrayForm(this JsonSchema schema)
 	{
 		return schema.TryGetKeyword<ItemsKeyword>(ItemsKeyword.Name, out var k) ? k.ArraySchemas : null;
 	}
@@ -357,7 +357,7 @@ public static partial class JsonSchemaExtensions
 	/// <summary>
 	/// Gets the schemas in `oneOf` if the keyword exists.
 	/// </summary>
-	public static IReadOnlyCollection<JsonSchema>? GetOneOf(this JsonSchema schema)
+	public static IReadOnlyList<JsonSchema>? GetOneOf(this JsonSchema schema)
 	{
 		return schema.TryGetKeyword<OneOfKeyword>(OneOfKeyword.Name, out var k) ? k.Schemas : null;
 	}
@@ -381,7 +381,7 @@ public static partial class JsonSchemaExtensions
 	/// <summary>
 	/// Gets the schemas in `prefixItems` if the keyword exists.
 	/// </summary>
-	public static IReadOnlyCollection<JsonSchema>? GetPrefixItems(this JsonSchema schema)
+	public static IReadOnlyList<JsonSchema>? GetPrefixItems(this JsonSchema schema)
 	{
 		return schema.TryGetKeyword<PrefixItemsKeyword>(PrefixItemsKeyword.Name, out var k) ? k.ArraySchemas : null;
 	}

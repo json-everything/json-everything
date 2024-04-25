@@ -48,7 +48,7 @@ public class EnumKeyword : IJsonSchemaKeyword
 	/// <remarks>
 	/// Enum values aren't necessarily strings; they can be of any JSON value.
 	/// </remarks>
-	public IReadOnlyCollection<JsonNode?> Values => _values;
+	public IReadOnlyList<JsonNode?> Values => _values;
 
 	/// <summary>
 	/// Creates a new <see cref="EnumKeyword"/>.
