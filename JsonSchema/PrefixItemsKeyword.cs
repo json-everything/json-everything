@@ -71,7 +71,7 @@ public class PrefixItemsKeyword : IJsonSchemaKeyword, ISchemaCollector
 	/// <param name="context">The <see cref="EvaluationContext"/>.</param>
 	/// <returns>A constraint object.</returns>
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
-		Span<KeywordConstraint> localConstraints,
+		ReadOnlySpan<KeywordConstraint> localConstraints,
 		EvaluationContext context)
 	{
 		var subschemaConstraints = ArraySchemas.Select((x, i) => x.GetConstraint(JsonPointer.Create(Name, i), schemaConstraint.BaseInstanceLocation, CommonJsonPointers.GetNumberSegment(i), context)).ToArray();

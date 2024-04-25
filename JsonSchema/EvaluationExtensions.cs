@@ -26,7 +26,7 @@ public static class ConstraintExtensions
 	/// <typeparam name="T">The keyword type.</typeparam>
 	/// <param name="constraints">The set of constraints.</param>
 	/// <returns>The keyword evaluation, if it exists.</returns>
-	public static KeywordConstraint? GetKeywordConstraint<T>(this Span<KeywordConstraint> constraints)
+	public static KeywordConstraint? GetKeywordConstraint<T>(this ReadOnlySpan<KeywordConstraint> constraints)
 		where T : IJsonSchemaKeyword
 	{
 		foreach (var constraint in constraints)

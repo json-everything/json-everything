@@ -52,7 +52,7 @@ public class MinLengthKeyword : IJsonSchemaKeyword
 	/// <param name="context">The <see cref="EvaluationContext"/>.</param>
 	/// <returns>A constraint object.</returns>
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
-		Span<KeywordConstraint> localConstraints,
+		ReadOnlySpan<KeywordConstraint> localConstraints,
 		EvaluationContext context)
 	{
 		return new KeywordConstraint(Name, Evaluator);

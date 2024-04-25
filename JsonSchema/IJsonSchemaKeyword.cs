@@ -18,6 +18,6 @@ public interface IJsonSchemaKeyword
 	/// <param name="context">The <see cref="EvaluationContext"/>.</param>
 	/// <returns>A constraint object.</returns>
 	KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
-		Span<KeywordConstraint> localConstraints,
+		ReadOnlySpan<KeywordConstraint> localConstraints,
 		EvaluationContext context);
 }

@@ -68,7 +68,7 @@ public class OneOfKeyword : IJsonSchemaKeyword, ISchemaCollector
 	/// </param>
 	/// <param name="context">The <see cref="EvaluationContext"/>.</param>
 	/// <returns>A constraint object.</returns>
-	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, Span<KeywordConstraint> localConstraints, EvaluationContext context)
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, ReadOnlySpan<KeywordConstraint> localConstraints, EvaluationContext context)
 	{
 		var subschemaConstraints = Schemas.Select((x, i) => x.GetConstraint(JsonPointer.Create(Name, i), schemaConstraint.BaseInstanceLocation, JsonPointer.Empty, context)).ToArray();
 

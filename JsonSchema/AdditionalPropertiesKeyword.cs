@@ -55,7 +55,7 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer
 	/// </param>
 	/// <param name="context">The <see cref="EvaluationContext"/>.</param>
 	/// <returns>A constraint object.</returns>
-	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, Span<KeywordConstraint> localConstraints, EvaluationContext context)
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, ReadOnlySpan<KeywordConstraint> localConstraints, EvaluationContext context)
 	{
 		var propertiesConstraint = localConstraints.GetKeywordConstraint<PropertiesKeyword>();
 		var patternPropertiesConstraint = localConstraints.GetKeywordConstraint<PatternPropertiesKeyword>();

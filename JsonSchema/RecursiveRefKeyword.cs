@@ -44,7 +44,7 @@ public class RecursiveRefKeyword : IJsonSchemaKeyword
 	/// </param>
 	/// <param name="context">The <see cref="EvaluationContext"/>.</param>
 	/// <returns>A constraint object.</returns>
-	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, Span<KeywordConstraint> localConstraints, EvaluationContext context)
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, ReadOnlySpan<KeywordConstraint> localConstraints, EvaluationContext context)
 	{
 		var targetSchema = context.Options.SchemaRegistry.GetRecursive(context.Scope);
 

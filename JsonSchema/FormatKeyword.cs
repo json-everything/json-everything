@@ -62,7 +62,7 @@ public class FormatKeyword : IJsonSchemaKeyword
 	/// <param name="context">The <see cref="EvaluationContext"/>.</param>
 	/// <returns>A constraint object.</returns>
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
-		Span<KeywordConstraint> localConstraints,
+		ReadOnlySpan<KeywordConstraint> localConstraints,
 		EvaluationContext context)
 	{
 		if (Value is UnknownFormat && context.Options.OnlyKnownFormats)

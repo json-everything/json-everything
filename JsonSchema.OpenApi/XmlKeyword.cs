@@ -109,7 +109,7 @@ public class XmlKeyword : IJsonSchemaKeyword
 	/// <param name="context">The <see cref="EvaluationContext"/>.</param>
 	/// <returns>A constraint object.</returns>
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
-		Span<KeywordConstraint> localConstraints,
+		ReadOnlySpan<KeywordConstraint> localConstraints,
 		EvaluationContext context)
 	{
 		return new KeywordConstraint(_Name, (e, _) => e.Results.SetAnnotation(_Name, _json));

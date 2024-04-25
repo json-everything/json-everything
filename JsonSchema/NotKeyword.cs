@@ -51,7 +51,7 @@ public class NotKeyword : IJsonSchemaKeyword, ISchemaContainer
 	/// </param>
 	/// <param name="context">The <see cref="EvaluationContext"/>.</param>
 	/// <returns>A constraint object.</returns>
-	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, Span<KeywordConstraint> localConstraints, EvaluationContext context)
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, ReadOnlySpan<KeywordConstraint> localConstraints, EvaluationContext context)
 	{
 		var subschemaConstraint = Schema.GetConstraint(JsonPointer.Create(Name), schemaConstraint.BaseInstanceLocation, JsonPointer.Empty, context);
 

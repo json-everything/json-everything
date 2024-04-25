@@ -85,7 +85,7 @@ public class EnumKeyword : IJsonSchemaKeyword
 	/// <param name="context">The <see cref="EvaluationContext"/>.</param>
 	/// <returns>A constraint object.</returns>
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
-		Span<KeywordConstraint> localConstraints,
+		ReadOnlySpan<KeywordConstraint> localConstraints,
 		EvaluationContext context)
 	{
 		return new KeywordConstraint(Name, Evaluator);
@@ -96,7 +96,7 @@ public class EnumKeyword : IJsonSchemaKeyword
 		if (!Values.Contains(evaluation.LocalInstance, JsonNodeEqualityComparer.Instance))
 			evaluation.Results.Fail(Name, ErrorMessages.GetEnum(context.Options.Culture)
 				.ReplaceToken("received", evaluation.LocalInstance, JsonSchemaSerializerContext.Default.JsonNode)
-				.ReplaceToken("values", Values, JsonSchemaSerializerContext.Default.IReadOnlyCollectionJsonNode!));
+				.ReplaceToken("values", Values!, JsonSchemaSerializerContext.Default.IReadOnlyCollectionJsonNode));
 	}
 }
 
