@@ -4,7 +4,7 @@ title: JsonPointer.Net
 icon: fas fa-tag
 order: "09.10"
 ---
-# [5.0.0](https://github.com/gregsdennis/json-everything/pull/712) {#release-pointer-5.0.0}
+# [5.0.0](https://github.com/gregsdennis/json-everything/pull/719) {#release-pointer-5.0.0}
 
 Complete overhaul of `JsonPointer` to reduce memory usage for consuming applications.
 
