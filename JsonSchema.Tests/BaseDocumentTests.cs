@@ -158,4 +158,51 @@ public class BaseDocumentTests
 
 		result.IsValid.Should().BeTrue();
 	}
+
+	[Test]
+	public void ReferenceEmbeddedSchemaStartingWithOtherEmbeddedSchema()
+	{
+		var subjectSchemaJson = new JsonObject
+		{
+			["properties"] = new JsonObject
+			{
+				["data"] = new JsonObject
+				{
+					["$ref"] = "#/prop2/1"
+				}
+
+			}
+		};
+
+		var json = new JsonObject
+		{
+			["prop1"] = "foo",
+			["prop2"] = new JsonArray
+			(
+				"bar",
+				new JsonObject
+				{
+					["type"] = "integer"
+				}
+			),
+			["prop3"] = subjectSchemaJson
+		};
+
+		var options = new EvaluationOptions
+		{
+			OutputFormat = OutputFormat.List
+		};
+
+		var jsonBaseDoc = new JsonNodeBaseDocument(json, new Uri("http://localhost:1234/doc"));
+		options.SchemaRegistry.Register(jsonBaseDoc);
+
+		var subjectSchema = subjectSchemaJson.Deserialize(TestSerializerContext.Default.JsonSchema)!;
+		subjectSchema.BaseUri = jsonBaseDoc.BaseUri;
+
+		JsonNode instance = new JsonObject { ["data"] = 42 };
+
+		var result = subjectSchema.Evaluate(instance, options);
+
+		result.AssertValid();
+	}
 }
