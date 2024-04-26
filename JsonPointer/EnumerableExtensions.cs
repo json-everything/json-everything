@@ -21,7 +21,7 @@ public static class EnumerableExtensions
 	{
 		foreach (var kvp in dictionary)
 		{
-			if (JsonPointer.SegmentEquals(pointerSegment, kvp.Key))
+			if (pointerSegment.SegmentEquals(kvp.Key))
 			{
 				value = kvp.Value!;
 				return true;

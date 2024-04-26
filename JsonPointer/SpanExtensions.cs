@@ -54,6 +54,37 @@ public static class SpanExtensions
 		return segment.TryGetInt(out var value) ? value : throw new PointerParseException("Value does not represent an index");
 	}
 
+	/// <summary>
+	/// Compares a pointer segment to an expected string.
+	/// </summary>
+	/// <param name="segment">The pointer segment.</param>
+	/// <param name="expected">The expected string.</param>
+	/// <returns>true if the segment and the string are equivalent; false otherwise.</returns>
+	/// <remarks>
+	/// The escapes for `~` and `/` are considered for the pointer segment, but not the expected string.
+	/// </remarks>
+	public static bool SegmentEquals(this ReadOnlySpan<char> segment, string expected)
+	{
+		if (string.IsNullOrEmpty(expected)) return segment.Length == 0;
+		if (segment.Length == 0) return false;
+
+		var aIndex = 0;
+		var bIndex = 0;
+
+		while (aIndex < segment.Length && bIndex < expected.Length)
+		{
+			var aChar = segment.Decode(ref aIndex);
+			var bChar = expected[bIndex];
+
+			if (aChar != bChar) return false;
+
+			aIndex++;
+			bIndex++;
+		}
+
+		return aIndex == segment.Length && bIndex == expected.Length;
+	}
+
 	internal static char Decode(this ReadOnlySpan<char> value, ref int index)
 	{
 		var ch = value[index];

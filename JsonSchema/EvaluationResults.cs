@@ -134,9 +134,9 @@ public class EvaluationResults
 		for (var i = 0; i < EvaluationPath.SegmentCount; i++)
 		{
 			var segment = EvaluationPath[i];
-			if (JsonPointer.SegmentEquals(segment, RefKeyword.Name) ||
-			    JsonPointer.SegmentEquals(segment, RecursiveRefKeyword.Name) ||
-			    JsonPointer.SegmentEquals(segment, DynamicRefKeyword.Name))
+			if (segment.SegmentEquals(RefKeyword.Name) ||
+			    segment.SegmentEquals(RecursiveRefKeyword.Name) ||
+				segment.SegmentEquals(DynamicRefKeyword.Name))
 				localEvaluationPathStart = i + 1;
 		}
 

@@ -428,7 +428,7 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 					var found = false;
 					foreach (var p in current.EnumerateObject())
 					{
-						if (!SegmentEquals(segmentValue, p.Name)) continue;
+						if (!segmentValue.SegmentEquals(p.Name)) continue;
 
 						current = p.Value;
 						found = true;
@@ -487,7 +487,7 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 					var found = false;
 					foreach (var kvp in obj)
 					{
-						if (!SegmentEquals(segmentValue, kvp.Key)) continue;
+						if (!segmentValue.SegmentEquals(kvp.Key)) continue;
 						
 						current = kvp.Value;
 						found = true;
@@ -546,37 +546,6 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 	{
 		// ReSharper disable once NonReadonlyMemberInGetHashCode
 		return _plain.GetHashCode();
-	}
-
-	/// <summary>
-	/// Compares a pointer segment to an expected string.
-	/// </summary>
-	/// <param name="segment">The pointer segment.</param>
-	/// <param name="expected">The expected string.</param>
-	/// <returns>true if the segment and the string are equivalent; false otherwise.</returns>
-	/// <remarks>
-	/// The escapes for `~` and `/` are considered for the pointer segment, but not the expected string.
-	/// </remarks>
-	public static bool SegmentEquals(ReadOnlySpan<char> segment, string expected)
-	{
-		if (string.IsNullOrEmpty(expected)) return segment.Length == 0;
-		if (segment.Length == 0) return false;
-
-		var aIndex = 0;
-		var bIndex = 0;
-
-		while (aIndex < segment.Length && bIndex < expected.Length)
-		{
-			var aChar = segment.Decode(ref aIndex);
-			var bChar = expected[bIndex];
-
-			if (aChar != bChar) return false;
-
-			aIndex++;
-			bIndex++;
-		}
-
-		return aIndex == segment.Length && bIndex == expected.Length;
 	}
 	
 	/// <summary>

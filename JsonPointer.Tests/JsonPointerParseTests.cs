@@ -71,7 +71,7 @@ public class JsonPointerParseTests
 			var segment = pointer[i];
 			var expected = segments[i];
 
-			Assert.IsTrue(JsonPointer.SegmentEquals(segment, expected));
+			Assert.IsTrue(segment.SegmentEquals(expected));
 		}
 	}
 
@@ -86,7 +86,7 @@ public class JsonPointerParseTests
 			var segment = pointer[i];
 			var expected = segments[i];
 
-			Assert.IsTrue(JsonPointer.SegmentEquals(segment, expected));
+			Assert.IsTrue(segment.SegmentEquals(expected));
 		}
 	}
 
