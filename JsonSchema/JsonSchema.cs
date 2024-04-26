@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Buffers;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -25,7 +26,8 @@ public class JsonSchema : IBaseDocument
 	private const string _unknownKeywordsAnnotationKey = "$unknownKeywords";
 
 	private readonly Dictionary<string, IJsonSchemaKeyword>? _keywords;
-	private readonly List<(DynamicScope Scope, SchemaConstraint Constraint)> _constraints = [];
+	// using ConcurrentStack because it has a Clear() method
+	private readonly ConcurrentStack<(DynamicScope Scope, SchemaConstraint Constraint)> _constraints = [];
 
 	private EvaluationOptions? _lastCalledOptions;
 	private bool? _isDynamic;
@@ -398,7 +400,7 @@ public class JsonSchema : IBaseDocument
 			var baseUri = BoolValue.HasValue ? scope.LocalScope : BaseUri;
 
 			var constraint = new SchemaConstraint(evaluationPath, baseInstanceLocation.Combine(relativeInstanceLocation), relativeInstanceLocation, baseUri, this);
-			_constraints.Add((new DynamicScope(scope), constraint));
+			_constraints.Push((new DynamicScope(scope), constraint));
 		
 			return constraint;
 		}

@@ -103,11 +103,17 @@ public class SchemaRegistry
 	private void RegisterSchema(Uri? uri, IBaseDocument document)
 	{
 		uri = MakeAbsolute(uri);
+		var schema = document as JsonSchema;
 		var registration = _registered.GetValueOrDefault(uri);
-		if (registration != null) return;
+		if (registration != null)
+		{
+			if (registration.Root != document && schema is not null)
+				Initialize(uri, schema);
+			return;
+		}
 
 		_registered[uri] = new Registration { Root = document };
-		if (document is not JsonSchema schema) return;
+		if (schema is null) return;
 		
 		var registrations = Scan(uri, schema);
 		foreach (var reg in registrations)
