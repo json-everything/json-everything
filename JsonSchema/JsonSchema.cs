@@ -409,19 +409,13 @@ public class JsonSchema : IBaseDocument
 	private SchemaConstraint? CheckScopedConstraints(DynamicScope scope)
 	{
 		SchemaConstraint? scopedConstraint;
-		// ReSharper disable InconsistentlySynchronizedField
-		// We only need to worry about synchronization when potentially adding new constraints
-		// which only happens in BuildConstraint().
 		if (IsDynamic())
 			(_, scopedConstraint) = _constraints.FirstOrDefault(x => x.Scope.Equals(scope));
 		else
 			scopedConstraint = _constraints.SingleOrDefault().Constraint;
-		// ReSharper restore InconsistentlySynchronizedField
 		return scopedConstraint;
 	}
 
-	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "<Pending>")]
-	[UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "<Pending>")]
 	private void PopulateConstraint(SchemaConstraint constraint, EvaluationContext context)
 	{
 		if (constraint.Constraints.Length != 0) return;
@@ -484,7 +478,7 @@ public class JsonSchema : IBaseDocument
 					constraintCount++;
 
 					if (keyword is UnrecognizedKeyword unrecognized) 
-						constraint.UnknownKeywords?.Add((JsonValue)unrecognized.Name);  // allocation
+						constraint.UnknownKeywords?.Add((JsonNode)unrecognized.Name);  // allocation
 
 					continue;
 				}
@@ -495,7 +489,7 @@ public class JsonSchema : IBaseDocument
 				localConstraints[constraintCount] = keywordConstraint;
 				constraintCount++;
 
-				constraint.UnknownKeywords?.Add((JsonValue)keyword.Keyword());  // allocation
+				constraint.UnknownKeywords?.Add((JsonNode)keyword.Keyword());  // allocation
 			}
 
 			constraint.Constraints = localConstraints[..constraintCount].ToArray();  // allocation
