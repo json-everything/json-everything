@@ -143,7 +143,7 @@ public class EvaluationResults
 		if (_reference == null && _currentUri == Parent?._currentUri)
 			_reference = Parent._reference;
 		var fragment = _reference ?? JsonPointer.Empty;
-		fragment = fragment.Combine(EvaluationPath.GetLocal(localEvaluationPathStart));
+		fragment = fragment.Combine(EvaluationPath.GetLocal(localEvaluationPathStart));  // 2 allocations
 
 		return fragment == JsonPointer.Empty
 			? _currentUri

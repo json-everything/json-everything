@@ -316,7 +316,13 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 		_plain.AsSpan().CopyTo(span);
 		_segments.CopyTo(ranges);
 		other._plain.AsSpan().CopyTo(span[_plain.Length..]);
-		other._segments.CopyTo(ranges[_segments.Length..]);
+
+		for (int i = 0; i < other._segments.Length; i++)
+		{
+			var current = other._segments[i];
+			var offset = (current.Start.Value + _plain.Length)..(current.End.Value + _plain.Length);
+			ranges[_segments.Length + i] = offset;
+		}
 
 		return new JsonPointer(span.ToString(), ranges);
 	}
@@ -348,6 +354,7 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 			value.CopyTo(nextSegment);
 			i += value.Length;
 			ranges[s] = start..i;
+			s++;
 		}
 
 		return new JsonPointer(span[..i].ToString(), ranges[..s]);
