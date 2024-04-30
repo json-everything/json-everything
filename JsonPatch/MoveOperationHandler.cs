@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Text.Json.Nodes;
-using Json.Pointer;
 
 namespace Json.Patch;
 
@@ -14,7 +13,7 @@ internal class MoveOperationHandler : IPatchOperationHandler
 	{
 		if (Equals(operation.Path, operation.From)) return;
 
-		if (operation.Path.SegmentCount == 0)
+		if (operation.Path.Count == 0)
 		{
 			context.Message = "Cannot move root value.";
 			return;
@@ -35,18 +34,18 @@ internal class MoveOperationHandler : IPatchOperationHandler
 
 		var lastFromSegment = operation.From[^1];
 		if (source is JsonObject objSource)
-			objSource.Remove(lastFromSegment.GetSegmentName());
+			objSource.Remove(lastFromSegment);
 		else if (source is JsonArray arrSource)
 		{
 			var index = lastFromSegment.Length == 0 && lastFromSegment[0] == '-'
 				? arrSource.Count
-				: lastFromSegment.TryGetInt(out var i)
+				: int.TryParse(lastFromSegment, out var i)
 					? i
 					: throw new ArgumentException("Expected integer");
 			arrSource.RemoveAt(index);
 		}
 
-		if (operation.Path.SegmentCount == 0)
+		if (operation.Path.Count == 0)
 		{
 			context.Source = data;
 			return;
@@ -55,7 +54,7 @@ internal class MoveOperationHandler : IPatchOperationHandler
 		var lastPathSegment = operation.Path[^1];
 		if (target is JsonObject objTarget)
 		{
-			objTarget[lastPathSegment.GetSegmentName()] = data?.DeepClone();
+			objTarget[lastPathSegment] = data?.DeepClone();
 			return;
 		}
 
@@ -64,7 +63,7 @@ internal class MoveOperationHandler : IPatchOperationHandler
 			int index;
 			if (lastPathSegment.Length == 0 && lastPathSegment[0] == '-')
 				index = arrTarget.Count;
-			else if (!lastPathSegment.TryGetInt(out index))
+			else if (!int.TryParse(lastPathSegment, out index))
 			{
 				context.Message = $"Target path `{operation.Path}` could not be reached.";
 				return;

@@ -54,8 +54,8 @@ public static class ResultsExtensions
 					.ToList();
 				foreach (var group in grouped)
 				{
-					if (group.Values.Count != 2) return (false, currentLocation.Value.Combine(group.Key));
-					var (areEquivalent, errorLocation) = AreEquivalent(group.Values[0], group.Values[1], currentLocation.Value.Combine(group.Key));
+					if (group.Values.Count != 2) return (false, currentLocation.Combine(group.Key));
+					var (areEquivalent, errorLocation) = AreEquivalent(group.Values[0], group.Values[1], currentLocation.Combine(group.Key));
 					if (!areEquivalent) return (false, errorLocation);
 				}
 				return (true, currentLocation);
@@ -65,7 +65,7 @@ public static class ResultsExtensions
 				int index = 0;
 				foreach (var item in zipped)
 				{
-					var (areEquivalent, errorLocation) = AreEquivalent(item.ae, item.be, currentLocation.Value.Combine(index++));
+					var (areEquivalent, errorLocation) = AreEquivalent(item.ae, item.be, currentLocation.Combine(index++));
 					if (!areEquivalent) return (false, errorLocation);
 				}
 				return (true, currentLocation);

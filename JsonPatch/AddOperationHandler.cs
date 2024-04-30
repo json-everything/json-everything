@@ -1,5 +1,4 @@
 ﻿using System.Text.Json.Nodes;
-using Json.Pointer;
 
 namespace Json.Patch;
 
@@ -13,7 +12,7 @@ internal class AddOperationHandler : IPatchOperationHandler
 
 	public void Process(PatchContext context, PatchOperation operation)
 	{
-		if (operation.Path.SegmentCount == 0)
+		if (operation.Path.Count == 0)
 		{
 			context.Source = operation.Value;
 			return;
@@ -28,16 +27,16 @@ internal class AddOperationHandler : IPatchOperationHandler
 		var lastPathSegment = operation.Path[^1];
 		if (target is JsonObject objTarget)
 		{
-			objTarget[lastPathSegment.GetSegmentName()] = operation.Value?.DeepClone();
+			objTarget[lastPathSegment] = operation.Value?.DeepClone();
 			return;
 		}
 
 		if (target is JsonArray arrTarget)
 		{
 			int index;
-			if (lastPathSegment.Length == 1 && lastPathSegment[0] == '-')
+			if (lastPathSegment is ['-'])
 				index = arrTarget.Count;
-			else if (!lastPathSegment.TryGetInt(out index))
+			else if (!int.TryParse(lastPathSegment, out index))
 			{
 				context.Message = $"Target path `{operation.Path}` could not be reached.";
 				return;

@@ -86,7 +86,7 @@ public class PropertyDependenciesKeyword : IJsonSchemaKeyword, ICustomSchemaColl
 	{
 		var failedProperties = evaluation.ChildEvaluations
 			.Where(x => !x.Results.IsValid)
-			.Select(x => x.Results.EvaluationPath[^1].GetSegmentName())
+			.Select(x => x.Results.EvaluationPath[^1])
 			.ToArray();
 		evaluation.Results.SetAnnotation(Name, evaluation.ChildEvaluations.Select(x => (JsonNode)x.Results.EvaluationPath[^1].ToString()!).ToJsonArray());
 		
@@ -97,9 +97,9 @@ public class PropertyDependenciesKeyword : IJsonSchemaKeyword, ICustomSchemaColl
 
 	(JsonSchema? Schema, int SegmentsConsumed) ICustomSchemaCollector.FindSubschema(JsonPointer pointer)
 	{
-		if (pointer.SegmentCount < 2) return (null, 0);
-		if (!Dependencies.TryGetValue(pointer[0].GetSegmentName(), out var property)) return (null, 0);
-		if (!property.Schemas.TryGetValue(pointer[1].GetSegmentName(), out var schema)) return (null, 0);
+		if (pointer.Count < 2) return (null, 0);
+		if (!Dependencies.TryGetValue(pointer[0], out var property)) return (null, 0);
+		if (!property.Schemas.TryGetValue(pointer[1], out var schema)) return (null, 0);
 
 		return (schema, 2);
 	}

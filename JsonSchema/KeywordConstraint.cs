@@ -95,7 +95,7 @@ public class KeywordConstraint
 					{
 						JsonNode? instance;
 						if (dependency.UseLocatorAsInstance)
-							instance = relativeInstanceLocation[0].GetSegmentName();
+							instance = relativeInstanceLocation[0];
 						else if (!relativeInstanceLocation.TryEvaluate(schemaEvaluation.LocalInstance, out instance)) continue;
 
 						var templatedInstanceLocation = instanceLocation.Combine(relativeInstanceLocation);

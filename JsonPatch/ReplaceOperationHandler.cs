@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Text.Json.Nodes;
-using Json.Pointer;
+﻿using System.Text.Json.Nodes;
 
 namespace Json.Patch;
 
@@ -12,7 +10,7 @@ internal class ReplaceOperationHandler : IPatchOperationHandler
 
 	public void Process(PatchContext context, PatchOperation operation)
 	{
-		if (operation.Path.SegmentCount == 0)
+		if (operation.Path.Count == 0)
 		{
 			context.Source = operation.Value;
 			return;
@@ -28,7 +26,7 @@ internal class ReplaceOperationHandler : IPatchOperationHandler
 		var lastPathSegment = operation.Path[^1];
 		if (target is JsonObject objTarget)
 		{
-			objTarget[lastPathSegment.GetSegmentName()] = operation.Value?.DeepClone();
+			objTarget[lastPathSegment] = operation.Value?.DeepClone();
 			return;
 		}
 
@@ -37,7 +35,7 @@ internal class ReplaceOperationHandler : IPatchOperationHandler
 			int index;
 			if (lastPathSegment.Length == 0 && lastPathSegment[0] == '-')
 				index = arrTarget.Count;
-			else if (!lastPathSegment.TryGetInt(out index))
+			else if (!int.TryParse(lastPathSegment, out index))
 			{
 				context.Message = $"Target path `{operation.Path}` could not be reached.";
 				return;

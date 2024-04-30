@@ -85,7 +85,7 @@ public class DependentSchemasKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 		// ReSharper disable PossibleMultipleEnumeration
 		if (!failedProperties.Any()) return;
 		
-		var properties = failedProperties.Select(x => x.Results.EvaluationPath[^1].GetSegmentName()).ToArray();
+		var properties = failedProperties.Select(x => x.Results.EvaluationPath[^1]).ToArray();
 		evaluation.Results.Fail(Name, ErrorMessages.GetDependentSchemas(context.Options.Culture)
 				.ReplaceToken("failed", properties));
 		// ReSharper restore PossibleMultipleEnumeration

@@ -12,7 +12,11 @@ public class ManipulationTests
 	{
 		var pointer = JsonPointer.Parse(original);
 
+#if NET6_0
 		var actual = pointer.GetAncestor(levels);
+#else
+		var actual = pointer[..^levels];
+#endif
 
 		Assert.AreEqual(expected, actual.ToString());
 	}
@@ -25,7 +29,11 @@ public class ManipulationTests
 	{
 		var pointer = JsonPointer.Parse(original);
 
+#if NET6_0
 		var actual = pointer.GetLocal(skip);
+#else
+		var actual = pointer[skip..];
+#endif
 
 		Assert.AreEqual(expected, actual.ToString());
 	}

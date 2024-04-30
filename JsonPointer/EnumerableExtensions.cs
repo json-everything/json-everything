@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace Json.Pointer;
 
@@ -10,25 +10,15 @@ namespace Json.Pointer;
 public static class EnumerableExtensions
 {
 	/// <summary>
-	/// Finds an item in a dictionary that matches a pointer segment without having to get the segment's value as a string.
+	/// Gets a collection-oriented hash code by combining the hash codes of its elements.
 	/// </summary>
-	/// <typeparam name="T">The value type.</typeparam>
-	/// <param name="dictionary">The dictionary.</param>
-	/// <param name="pointerSegment">The pointer segment.</param>
-	/// <param name="value">The value if found; default otherwise.</param>
-	/// <returns>true if found; false otherwise.</returns>
-	public static bool TryMatchPointerSegment<T>(this IReadOnlyDictionary<string, T> dictionary, ReadOnlySpan<char> pointerSegment, [NotNullWhen(true)] out T? value)
+	/// <typeparam name="T">The type of element.</typeparam>
+	/// <param name="collection">The collection of elements.</param>
+	/// <returns>A singular integer value that represents the collection.</returns>
+	/// <remarks>This can be used to correctly compare the contents of collections.</remarks>
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static int GetCollectionHashCode<T>(this IEnumerable<T> collection)
 	{
-		foreach (var kvp in dictionary)
-		{
-			if (pointerSegment.SegmentEquals(kvp.Key))
-			{
-				value = kvp.Value!;
-				return true;
-			}
-		}
-
-		value = default;
-		return false;
+		return collection.Aggregate(0, (current, obj) => unchecked(current * 397) ^ (obj?.GetHashCode() ?? 0));
 	}
 }

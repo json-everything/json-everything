@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Buffers;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -8,6 +11,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using System.Web;
+using Json.More;
 
 namespace Json.Pointer;
 
@@ -16,47 +20,60 @@ namespace Json.Pointer;
 /// </summary>
 [JsonConverter(typeof(JsonPointerJsonConverter))]
 [TypeConverter(typeof(JsonPointerTypeConverter))]
-public readonly struct JsonPointer : IEquatable<JsonPointer>
+public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 {
 	/// <summary>
 	/// The empty pointer.
 	/// </summary>
 	public static readonly JsonPointer Empty = new();
 
-	/// <summary>
-	/// Defines the default segment array size.  Used during parsing.  Default is 50.  Increase as needed if you expect pointers with many segments.
-	/// </summary>
-	// ReSharper disable once FieldCanBeMadeReadOnly.Global
-	// ReSharper disable once ConvertToConstant.Global
-	public static int DefaultMaxSize = 50;
-
-	private readonly string _plain;
-	private readonly Range[] _segments;
+	private readonly string[] _decodedSegments;
+	private string? _plain;
+	private int? _hashCode;
 
 	/// <summary>
 	/// Gets the number of segments in the pointer.
 	/// </summary>
-	public int SegmentCount => _segments.Length;
+	public int Count => _decodedSegments.Length;
+	
 	/// <summary>
 	/// Gets a segment value by index.
 	/// </summary>
-	/// <param name="index">The index.</param>
+	/// <param name="i">The index.</param>
 	/// <returns>The indicated segment value as a span.</returns>
-	public ReadOnlySpan<char> this[Index index] => _plain.AsSpan()[_segments[index]];
+	public string this[int i] => _decodedSegments[i];
 
-
+#if !NETSTANDARD2_0
 	/// <summary>
-	/// Creates the empty pointer.
+	/// Creates a new pointer with the indicated segments.
 	/// </summary>
-	public JsonPointer()
+	/// <param name="r">The segment range for the new pointer.</param>
+	/// <returns>A new pointer.</returns>
+	public JsonPointer this[Range r] => GetSubPointer(r);
+#endif
+
+	/// <summary>Returns an enumerator that iterates through the collection.</summary>
+	/// <returns>An enumerator that can be used to iterate through the collection.</returns>
+	public IEnumerator<string> GetEnumerator() => ((IEnumerable<string>)_decodedSegments).GetEnumerator();
+
+	/// <summary>Returns an enumerator that iterates through the collection.</summary>
+	/// <returns>An enumerator that can be used to iterate through the collection.</returns>
+	IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+	private JsonPointer()
 	{
+		_decodedSegments = [];
 		_plain = string.Empty;
-		_segments = [];
 	}
-	private JsonPointer(string plain, ReadOnlySpan<Range> segments)
+	private JsonPointer(ReadOnlySpan<string> segments, string? plain = null)
 	{
+		_decodedSegments = [..segments];
 		_plain = plain;
-		_segments = [..segments];
+	}
+	private JsonPointer(string[] segments, string? plain = null)
+	{
+		_decodedSegments = segments;
+		_plain = plain;
 	}
 
 	/// <summary>
@@ -77,30 +94,33 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 		if (source[0] != '/')
 			throw new PointerParseException("Pointer must start with either `#/` or `/` or be empty");
 
-		var i = 1;
-		var count = 0;
-		var start = 1;
+		var segmentIndex = 0;
+		var sourceIndex = 1;
+		var builderIndex = 0;
 		var sourceSpan = source.AsSpan();
-		Span<Range> span = stackalloc Range[DefaultMaxSize];
-		while (i < source.Length)
+		using var segmentMemory = MemoryPool<string>.Shared.Rent();
+		var segments = segmentMemory.Memory.Span;
+		using var builderMemory = MemoryPool<char>.Shared.Rent();
+		var builder = builderMemory.Memory.Span;
+		while (sourceIndex < source.Length)
 		{
-			if (source[i] == '/')
+			if (source[sourceIndex] == '/')
 			{
-				span[count] = new Range(start, i);
-				start = i + 1;
-				count++;
+				segments[segmentIndex] = builder[..builderIndex].ToString();
+				builderIndex = 0;
+				segmentIndex++;
+				sourceIndex++;
+				continue;
 			}
 
-			_ = sourceSpan.Decode(ref i);
-
-			i++;
+			builder[builderIndex] = sourceSpan.Decode(ref sourceIndex);
+			builderIndex++;
+			sourceIndex++;
 		}
 
-		span[count] = start >= source.Length
-			? new Range(0, 0)
-			: new Range(start, i);
+		segments[segmentIndex] = builder[..builderIndex].ToString();
 
-		return new JsonPointer(source, span[..(count + 1)]);
+		return new JsonPointer(segments[..(segmentIndex + 1)], source);
 	}
 
 	/// <summary>
@@ -110,7 +130,7 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 	/// <param name="pointer">The resulting pointer.</param>
 	/// <returns>`true` if the parse was successful; `false` otherwise.</returns>
 	/// <exception cref="ArgumentNullException"><paramref name="source"/> is null.</exception>
-	public static bool TryParse(string source, out JsonPointer pointer)
+	public static bool TryParse(string source, [NotNullWhen(true)] out JsonPointer? pointer)
 	{
 		if (source.Length == 0)
 		{
@@ -131,60 +151,44 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 
 		if (source[0] != '/')
 		{
-			pointer = Empty;
+			pointer = null;
 			return false;
 		}
 
-		var i = 1;
-		var count = 0;
-		var start = 1;
+		var segmentIndex = 0;
+		var sourceIndex = 1;
+		var builderIndex = 0;
 		var sourceSpan = source.AsSpan();
-		Span<Range> span = stackalloc Range[DefaultMaxSize];
-		while (i < source.Length)
+		using var segmentMemory = MemoryPool<string>.Shared.Rent();
+		var segments = segmentMemory.Memory.Span;
+		using var builderMemory = MemoryPool<char>.Shared.Rent();
+		var builder = builderMemory.Memory.Span;
+		while (sourceIndex < source.Length)
 		{
-			if (source[i] == '/')
+			if (source[sourceIndex] == '/')
 			{
-				span[count] = new Range(start, i);
-				start = i + 1;
-				count++;
+				segments[segmentIndex] = builder[..builderIndex].ToString();
+				builderIndex = 0;
+				segmentIndex++;
+				sourceIndex++;
+				continue;
 			}
 
-			if (!sourceSpan.TryDecode(ref i))
+			if (!sourceSpan.TryDecode(ref sourceIndex, out var ch))
 			{
-				pointer = Empty;
+				pointer = null;
 				return false;
 			}
 
-			i++;
+			builder[builderIndex] = ch;
+			builderIndex++;
+			sourceIndex++;
 		}
 
-		span[count] = start >= source.Length
-			? new Range(0, 0)
-			: new Range(start, i);
+		segments[segmentIndex] = builder[..builderIndex].ToString();
 
-		pointer = new JsonPointer(source, span[..(count + 1)]);
+		pointer = new JsonPointer(segments[..(segmentIndex + 1)], source);
 		return true;
-	}
-
-	/// <summary>
-	/// Creates a single-segment pointer.
-	/// </summary>
-	/// <param name="segment"></param>
-	/// <returns></returns>
-	public static JsonPointer Create(PointerSegment segment)
-	{
-		Span<char> span = stackalloc char[segment.GetLength() * 2 + 1];
-
-		var i = 0;
-		span[i] = '/';
-		i++;
-		foreach (var ch in segment.GetValue().Encode())
-		{
-			span[i] = ch;
-			i++;
-		}
-
-		return new JsonPointer(span[..i].ToString(), [(1..i)]);
 	}
 
 	/// <summary>
@@ -195,27 +199,14 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 	/// <remarks>This method creates un-encoded pointers only.</remarks>
 	public static JsonPointer Create(params PointerSegment[] segments)
 	{
-		Span<char> str = stackalloc char[GetPointerLength(segments)];
-		Span<Range> ranges = stackalloc Range[segments.Length];
+		var array = new string[segments.Length];
 
-		var i = 0;
-		var s = 0;
-		foreach (var segment in segments)
+		for (var i = 0; i < segments.Length; i++)
 		{
-			str[i] = '/';
-			i++;
-			var start = i;
-			foreach (var ch in segment.GetValue().Encode())
-			{
-				str[i] = ch;
-				i++;
-			}
-
-			ranges[s] = start..i;
-			s++;
+			array[i] = segments[i].Value;
 		}
 
-		return new JsonPointer(str[..i].ToString(), ranges[..s]);
+		return new JsonPointer(array);
 	}
 
 	/// <summary>
@@ -231,7 +222,7 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 	/// </exception>
 	public static JsonPointer Create<T>(Expression<Func<T, object>> expression, PointerCreationOptions? options = null)
 	{
-		PointerSegment GetSegment(MemberInfo member)
+		string GetSegment(MemberInfo member)
 		{
 			var attribute = member.GetCustomAttribute<JsonPropertyNameAttribute>();
 			if (attribute is not null)
@@ -308,23 +299,14 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 	/// <returns>A new pointer.</returns>
 	public JsonPointer Combine(JsonPointer other)
 	{
-		if (other._segments.Length == 0) return this;
-		if (_segments.Length == 0) return other;
+		if (other._decodedSegments.Length == 0) return this;
+		if (_decodedSegments.Length == 0) return other;
 
-		Span<char> span = stackalloc char[_plain.Length + other._plain.Length];
-		Span<Range> ranges = stackalloc Range[_segments.Length + other._segments.Length];
-		_plain.AsSpan().CopyTo(span);
-		_segments.CopyTo(ranges);
-		other._plain.AsSpan().CopyTo(span[_plain.Length..]);
+		var array = new string[_decodedSegments.Length + other._decodedSegments.Length];
+		Array.Copy(_decodedSegments, array, _decodedSegments.Length);
+		Array.Copy(other._decodedSegments, 0, array, _decodedSegments.Length, other._decodedSegments.Length);
 
-		for (int i = 0; i < other._segments.Length; i++)
-		{
-			var current = other._segments[i];
-			var offset = (current.Start.Value + _plain.Length)..(current.End.Value + _plain.Length);
-			ranges[_segments.Length + i] = offset;
-		}
-
-		return new JsonPointer(span.ToString(), ranges);
+		return new JsonPointer(array);
 	}
 
 	/// <summary>
@@ -335,79 +317,49 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 	public JsonPointer Combine(params PointerSegment[] additionalSegments)
 	{
 		if (additionalSegments.Length == 0) return this;
-		if (_segments.Length == 0) return Create(additionalSegments);
+		if (_decodedSegments.Length == 0) return Create(additionalSegments);
 
-		Span<char> span = stackalloc char[_plain.Length + GetPointerLength(additionalSegments)];
-		Span<Range> ranges = stackalloc Range[_segments.Length + additionalSegments.Length];
-		_plain.AsSpan().CopyTo(span);
-		_segments.CopyTo(ranges);
+		var array = new string[_decodedSegments.Length + additionalSegments.Length];
+		Array.Copy(_decodedSegments, array, _decodedSegments.Length);
 
-		var i = _plain.Length;
-		var s = _segments.Length;
-		foreach (var segment in additionalSegments)
+		for (int i = 0; i < additionalSegments.Length; i++)
 		{
-			span[i] = '/';
-			i++;
-			var start = i;
-			var nextSegment = span[i..];
-			var value = segment.GetValue().Encode();
-			value.CopyTo(nextSegment);
-			i += value.Length;
-			ranges[s] = start..i;
-			s++;
+			array[_decodedSegments.Length + i] = additionalSegments[i].Value;
 		}
 
-		return new JsonPointer(span[..i].ToString(), ranges[..s]);
+		return new JsonPointer(array);
 	}
 
-	private static int GetPointerLength(PointerSegment[] segments)
-	{
-		var sum = 1;
-		foreach (var segment in segments)
-		{
-			sum += segment.GetLength() * 2;
-		}
-
-		return sum;
-	}
-
+#if NETSTANDARD2_0
 	/// <summary>
-	/// Creates a new pointer that retrieves an ancestor (left side, start) of the represented location.
+	/// Creates a new pointer retaining the starting segments.
 	/// </summary>
-	/// <param name="levels">How many levels to go back.  Default is 1, which gets the immediate parent.</param>
+	/// <param name="levels">How many levels to remove from the end of the pointer.</param>
 	/// <returns>A new pointer.</returns>
-	/// <exception cref="ArgumentException">
-	/// Thrown if <paramref name="levels"/> is less than zero or more than the number of segments.
-	/// </exception>
-	public JsonPointer GetAncestor(int levels = 1)
+	public JsonPointer GetAncestor(int levels)
 	{
-		if (levels == 0) return this;
-		if (levels < 0 || levels > _segments.Length)
-			throw new IndexOutOfRangeException("Ancestor cannot be reached");
-		if (levels == _segments.Length) return Empty;
-
-		var end = _segments[^(levels+1)].End;
-		return Parse(_plain.AsSpan()[..end].ToString());
+		return new(_decodedSegments.AsSpan()[..^levels]);
 	}
-
 	/// <summary>
-	/// Creates a new pointer that retrieves the local part (right side, end) of the represented location.
+	/// Creates a new pointer retaining the ending segments.
 	/// </summary>
-	/// <param name="skip">How many levels to skip from the start of the pointer.</param>
+	/// <param name="levels">How many levels to skip from the start of the pointer.</param>
 	/// <returns>A new pointer.</returns>
-	/// <exception cref="ArgumentException">
-	/// Thrown if <paramref name="skip"/> is less than zero or more than the number of segments.
-	/// </exception>
-	public JsonPointer GetLocal(int skip)
+	public JsonPointer GetLocal(int levels)
 	{
-		if (skip == 0) return this;
-		if (skip == _segments.Length) return Empty;
-		if (skip < 0 || skip > _segments.Length)
-			throw new IndexOutOfRangeException("Local cannot be reached");
-
-		var start = _segments[skip].Start.Value - 1; // capture the slash
-		return Parse(_plain.AsSpan()[start..].ToString());
+		return new(_decodedSegments.AsSpan()[levels..]);
 	}
+#else
+	/// <summary>
+	/// Creates a new pointer with the indicated segments.
+	/// </summary>
+	/// <param name="r">The segment range for the new pointer.</param>
+	/// <returns>A new pointer.</returns>
+	public JsonPointer GetSubPointer(Range range)
+	{
+		return new(_decodedSegments.AsSpan()[range]);
+	}
+#endif
 
 	/// <summary>
 	/// Evaluates the pointer over a <see cref="JsonElement"/>.
@@ -419,35 +371,31 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 		var current = root;
 		var kind = root.ValueKind;
 
-		var span = _plain.AsSpan();
-		foreach (var segment in _segments)
+		foreach (var segment in _decodedSegments)
 		{
-			ReadOnlySpan<char> segmentValue;
 			switch (kind)
 			{
 				case JsonValueKind.Array:
-					segmentValue = span[segment];
-					if (segmentValue.Length == 0) return null;
-					if (segmentValue.Length == 1 && segmentValue[0] == '0')
+					if (segment.Length == 0) return null;
+					if (segment is ['0'])
 					{
 						if (current.GetArrayLength() == 0) return null;
 						current = current.EnumerateArray().First();
 						break;
 					}
-					if (segmentValue[0] == '0') return null;
-					if (segmentValue.Length == 1 && segmentValue[0] == '-') return current.EnumerateArray().LastOrDefault();
-					if (!segmentValue.TryGetInt(out var index)) return null;
+					if (segment[0] == '0') return null;
+					if (segment is ['-']) return current.EnumerateArray().LastOrDefault();
+					if (!int.TryParse(segment, out var index)) return null;
 					if (index >= current.GetArrayLength()) return null;
 					if (index < 0) return null;
 
 					current = current.EnumerateArray().ElementAt(index);
 					break;
 				case JsonValueKind.Object:
-					segmentValue = span[segment];
 					var found = false;
 					foreach (var p in current.EnumerateObject())
 					{
-						if (!segmentValue.SegmentEquals(p.Name)) continue;
+						if (segment != p.Name) continue;
 
 						current = p.Value;
 						found = true;
@@ -475,45 +423,31 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 		var current = root;
 		result = null;
 
-		var span = _plain.AsSpan();
-		foreach (var segment in _segments)
+		foreach (var segment in _decodedSegments)
 		{
-			ReadOnlySpan<char> segmentValue;
 			switch (current)
 			{
 				case JsonArray array:
-					segmentValue = span[segment];
-					if (segmentValue.Length == 0) return false;
-					if (segmentValue.Length is 1 && segmentValue[0] == '0')
+					if (segment.Length == 0) return false;
+					if (segment is ['0'])
 					{
 						if (array.Count == 0) return false;
 						current = current[0];
 						break;
 					}
-					if (segmentValue[0] == '0') return false;
-					if (segmentValue.Length is 1 && segmentValue[0] == '-')
+					if (segment[0] == '0') return false;
+					if (segment is ['-'])
 					{
 						result = array.Last();
 						return true;
 					}
-					if (!segmentValue.TryGetInt(out var index)) return false;
+					if (!int.TryParse(segment, out var index)) return false;
 					if (index >= array.Count) return false;
 					if (index < 0) return false;
 					current = array[index];
 					break;
 				case JsonObject obj:
-					segmentValue = span[segment];
-					var found = false;
-					foreach (var kvp in obj)
-					{
-						if (!segmentValue.SegmentEquals(kvp.Key)) continue;
-						
-						current = kvp.Value;
-						found = true;
-						break;
-					}
-
-					if (!found) return false;
+					if (!obj.TryGetValue(segment, out current, out _)) return false;
 					break;
 				default:
 					return false;
@@ -525,28 +459,34 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 	}
 
 	/// <summary>Returns the string representation of this instance.</summary>
-	/// <param name="pointerStyle">Indicates whether to URL-encode the pointer.</param>
-	/// <returns>The string representation.</returns>
-	public string ToString(JsonPointerStyle pointerStyle)
-	{
-		return pointerStyle == JsonPointerStyle.UriEncoded
-			? HttpUtility.HtmlEncode(_plain)
-			: _plain;
-	}
-
-	/// <summary>Returns the string representation of this instance.</summary>
 	/// <returns>The string representation.</returns>
 	public override string ToString()
 	{
-		return ToString(JsonPointerStyle.Plain);
+		if (_plain is not null) return _plain;
+
+		using var memory = MemoryPool<char>.Shared.Rent();
+		var span = memory.Memory.Span;
+		var length = 0;
+		foreach (var segment in _decodedSegments)
+		{
+			span[length] = '/';
+			length++;
+			segment.AsSpan().CopyTo(span[length..]);
+			length += segment.Length;
+		}
+
+		return _plain ??= span[..length].ToString();
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
 	/// <param name="other">An object to compare with this object.</param>
 	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-	public bool Equals(JsonPointer other)
+	public bool Equals(JsonPointer? other)
 	{
-		return string.Equals(_plain, other._plain, StringComparison.Ordinal);
+		if (other is null) return false;
+		if (ReferenceEquals(this, other)) return true;
+
+		return _decodedSegments.SequenceEqual(other._decodedSegments);
 	}
 
 	/// <summary>Indicates whether this instance and a specified object are equal.</summary>
@@ -554,9 +494,7 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 	/// <returns>true if <paramref name="obj">obj</paramref> and this instance are the same type and represent the same value; otherwise, false.</returns>
 	public override bool Equals(object? obj)
 	{
-		if (obj is not JsonPointer pointer) return false;
-
-		return Equals(pointer);
+		return Equals(obj as JsonPointer);
 	}
 
 	/// <summary>Returns the hash code for this instance.</summary>
@@ -564,7 +502,7 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 	public override int GetHashCode()
 	{
 		// ReSharper disable once NonReadonlyMemberInGetHashCode
-		return _plain.GetHashCode();
+		return _hashCode ??= _decodedSegments.GetCollectionHashCode();
 	}
 	
 	/// <summary>

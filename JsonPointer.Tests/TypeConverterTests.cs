@@ -34,7 +34,6 @@ namespace Json.Pointer.Tests
 			var pointer2 = typeConverter.ConvertFrom(pointer);
 
 			Assert.IsInstanceOf<JsonPointer>(pointer2);
-			Assert.AreNotSame(pointer, pointer2);
 			Assert.AreEqual("/foo", pointer2!.ToString());
 		}
 
@@ -46,7 +45,6 @@ namespace Json.Pointer.Tests
 			var pointer2 = typeConverter.ConvertTo(pointer, typeof(JsonPointer));
 
 			Assert.IsInstanceOf<JsonPointer>(pointer2);
-			Assert.AreNotSame(pointer, pointer2);
 			Assert.AreEqual("/foo", pointer2!.ToString());
 		}
 

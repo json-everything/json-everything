@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Text.Json.Nodes;
-using Json.Pointer;
 
 namespace Json.Patch;
 
@@ -12,7 +11,7 @@ internal class RemoveOperationHandler : IPatchOperationHandler
 
 	public void Process(PatchContext context, PatchOperation operation)
 	{
-		if (operation.Path.SegmentCount == 0)
+		if (operation.Path.Count == 0)
 		{
 			context.Message = "Cannot remove root value.";
 			return;
@@ -27,12 +26,12 @@ internal class RemoveOperationHandler : IPatchOperationHandler
 
 		var lastPathSegment = operation.Path[^1];
 		if (source is JsonObject objSource)
-			objSource.Remove(lastPathSegment.GetSegmentName());
+			objSource.Remove(lastPathSegment);
 		else if (source is JsonArray arrSource)
 		{
 			var index = lastPathSegment.Length == 0 && lastPathSegment[0] == '-'
 				? arrSource.Count - 1
-				: lastPathSegment.TryGetInt(out var i)
+				: int.TryParse(lastPathSegment, out var i)
 					? i
 					: throw new ArgumentException("Expected integer");
 			arrSource.RemoveAt(index);

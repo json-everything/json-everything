@@ -65,13 +65,13 @@ public class JsonPointerParseTests
 	{
 		var pointer = JsonPointer.Parse(pointerString);
 
-		pointer.SegmentCount.Should().Be(segments.Length);
-		for (int i = 0; i < pointer.SegmentCount; i++)
+		pointer.Count.Should().Be(segments.Length);
+		for (int i = 0; i < pointer.Count; i++)
 		{
 			var segment = pointer[i];
 			var expected = segments[i];
 
-			Assert.IsTrue(segment.SegmentEquals(expected));
+			Assert.AreEqual(expected, segment);
 		}
 	}
 
@@ -80,13 +80,13 @@ public class JsonPointerParseTests
 	{
 		Assert.IsTrue(JsonPointer.TryParse(pointerString, out var pointer));
 
-		pointer.SegmentCount.Should().Be(segments.Length);
-		for (int i = 0; i < pointer.SegmentCount; i++)
+		pointer.Count.Should().Be(segments.Length);
+		for (int i = 0; i < pointer.Count; i++)
 		{
 			var segment = pointer[i];
 			var expected = segments[i];
 
-			Assert.IsTrue(segment.SegmentEquals(expected));
+			Assert.AreEqual(expected, segment);
 		}
 	}
 

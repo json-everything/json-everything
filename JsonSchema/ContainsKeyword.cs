@@ -92,7 +92,7 @@ public class ContainsKeyword : IJsonSchemaKeyword, ISchemaContainer
 
 			var validIndices = evaluation.ChildEvaluations
 				.Where(x => x.Results.IsValid)
-				.Select(x => x.RelativeInstanceLocation[0].GetSegmentIndex())
+				.Select(x => int.Parse(x.RelativeInstanceLocation[0]))
 				.ToArray();
 
 			var actual = validIndices.Length;
