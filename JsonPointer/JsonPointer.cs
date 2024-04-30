@@ -330,7 +330,6 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 		return new JsonPointer(array);
 	}
 
-#if NETSTANDARD2_0
 	/// <summary>
 	/// Creates a new pointer retaining the starting segments.
 	/// </summary>
@@ -343,13 +342,14 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 	/// <summary>
 	/// Creates a new pointer retaining the ending segments.
 	/// </summary>
-	/// <param name="levels">How many levels to skip from the start of the pointer.</param>
+	/// <param name="levels">How many levels to keep from the end of the pointer.</param>
 	/// <returns>A new pointer.</returns>
 	public JsonPointer GetLocal(int levels)
 	{
 		return new(_decodedSegments.AsSpan()[levels..]);
 	}
-#else
+
+#if !NETSTANDARD2_0
 	/// <summary>
 	/// Creates a new pointer with the indicated segments.
 	/// </summary>

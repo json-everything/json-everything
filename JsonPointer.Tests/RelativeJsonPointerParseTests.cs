@@ -69,7 +69,7 @@ public class RelativeJsonPointerParseTests
 	{
 		Assert.IsTrue(RelativeJsonPointer.TryParse(pointerString, out var check));
 
-		var pointer = check!.Value;
+		var pointer = check!;
 
 		pointer.ParentSteps.Should().Be((uint)parentSteps);
 		pointer.ArrayIndexManipulator.Should().Be(indexManipulation);
