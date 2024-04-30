@@ -43,6 +43,12 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 	/// <returns>The indicated segment value as a span.</returns>
 	public string this[int i] => _decodedSegments[i];
 
+	// There's a problem with how PolySharp adds the Range type that means I can't
+	// expose this in the netstandard2.0 build.  When the lib is consumed by an app
+	// running anything previous to .Net 8, the netstandard2.0 version is used.
+	// If the generated Range type is exposed, it conflicts with the built-in Range
+	// type, and this feature can't be used anyway.  I'd like to have a solution
+	// for this, but I haven't been able to think of one.
 #if !NETSTANDARD2_0
 	/// <summary>
 	/// Creates a new pointer with the indicated segments.
