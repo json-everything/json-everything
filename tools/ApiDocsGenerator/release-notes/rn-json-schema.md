@@ -15,9 +15,9 @@ Benchmark of the JSON Schema Test Suite before and after changes:
 | Version | n  | Mean       | Error    | StdDev   | Gen0        | Gen1       | Allocated |
 |-------- |--- |-----------:|---------:|---------:|------------:|-----------:|----------:|
 | 6.1.2   | 1  |   412.7 ms | 14.16 ms | 41.30 ms |  27000.0000 |  1000.0000 |  82.66 MB |
-| 7.0.0   | 1  | 301.6 ms   |  5.93 ms | 10.07 ms |  23000.0000 | 7000.0000  |  78.41 MB |
+| 7.0.0   | 1  |   296.5 ms |  5.82 ms | 10.03 ms |  21000.0000 |  4000.0000 |  72.81 MB |
 | 6.1.2   | 10 | 1,074.7 ms | 22.24 ms | 63.82 ms | 218000.0000 | 11000.0000 | 476.56 MB |
-| 7.0.0   | 10 | 945.9 ms   | 18.64 ms | 32.15 ms | 216000.0000 | 5000.0000  | 472.94 MB |
+| 7.0.0   | 10 |   903.0 ms | 17.96 ms | 40.91 ms | 202000.0000 |  9000.0000 | 443.65 MB |
 
 ## Breaking changes
 
@@ -32,6 +32,7 @@ Benchmark of the JSON Schema Test Suite before and after changes:
 - `EvaluationExtensions.GetKeywordConstraint<T>(IEnumerable<KeywordConstraint>)` updated to `GetKeywordConstraint<T>(ReadOnlySpan<KeywordConstraint>)`
 - `JsonSchemaExtensions` methods with return type of `IReadOnlyCollection<T>` updated to `IReadOnlyList<T>` to match keyword output
 - `JsonPointers` static class renamed to `CommonJsonPointers`
+- `KeywordExtensions` static class consolidated into `SchemaKeywordRegistry`
 
 ## Additions
 
