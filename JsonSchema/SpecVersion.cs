@@ -31,5 +31,9 @@ public enum SpecVersion
 	/// <summary>
 	/// JSON Schema Draft Next.
 	/// </summary>
-	DraftNext = 1 << 4
+	DraftNext = 1 << 4,
+	/// <summary>
+	/// All versions.
+	/// </summary>
+	All = Draft6 | Draft7 | Draft201909 | Draft202012 | DraftNext,
 }
