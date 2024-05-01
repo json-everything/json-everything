@@ -1,7 +1,7 @@
 {
   "entryAssembly": "json-everything.net",
   "resources": {
-    "hash": "sha256-jsOZF1yHzxoXpuP4P3f0t1s7W2avqxQozv5SFsfs7Fo=",
+    "hash": "sha256-UH8nv8OVOZ0uPdDFfBm5DSokOqHFSfYf2oqWlOPC3to=",
     "runtime": {
       "dotnet.6.0.29.2xjs4qx1tr.js": "sha256-BV1wi9qAMCmpfZ+aXPplngN3cFgig0bFqWhNad3R5Lo=",
       "dotnet.timezones.blat": "sha256-csJ9EjcYXaAQrYK1S5WLY51YBLmp7zcST7wH0IDbvgg=",
@@ -18,20 +18,20 @@
       "Fare.dll": "sha256-SVH+QtXbURqAHJ16vvFtLclngwLa8V5y/fKBwpNYInA=",
       "Humanizer.dll": "sha256-1oUwdVR9fjA+/WA1TZEaL/GO26WCzaL6WdkaLl3Pnpg=",
       "IndexRange.dll": "sha256-eKdKywtX07zShAyWLgQTPtF8qx+tX3wQopHBDZF+lqs=",
-      "json-everything.net.dll": "sha256-cjmLxk7fvIoGK35yUteSrz6Zdf41bG97dkQ/XllI0/I=",
-      "Json.More.dll": "sha256-ufUph69iiCppAw0gezE4veoWmBosCxw41l3MtdwFMe4=",
-      "JsonE.Net.dll": "sha256-jbCeumafMsNUxAKv9qoe6C2Vumv2sf81FkCRAdrQB1A=",
-      "JsonLogic.dll": "sha256-sYLxnrvoq6UYrPdcBszqJezBxrBEXZGHOASviXwIVzg=",
-      "JsonPatch.Net.dll": "sha256-ZamUfE0fvl0nDesuAMxcW5LfdBwIUjL3TF/3H9MApZk=",
-      "JsonPath.Net.dll": "sha256-VXARcTLqD0+Ha2ZJkAJP8aGsm02YB4YsoyF2dnPKc+o=",
-      "JsonPointer.Net.dll": "sha256-tH6z9e5SvCCYJt5sucgQUxJ3t39nTHNJqBKD7BYTRmU=",
-      "JsonSchema.Net.ArrayExt.dll": "sha256-echwdZOijl4P+68Q4pib/eDtVqaisyRm200wOvvdrqk=",
-      "JsonSchema.Net.Data.dll": "sha256-iVV0gsiJsmTk0f/FGR56w0rGyG08gni6Kb2KDBrd7WQ=",
-      "JsonSchema.Net.DataGeneration.dll": "sha256-dZzYe8DeOYstOucTgLTV68n/8rsASMe5JDq2GcQMOWQ=",
-      "JsonSchema.Net.dll": "sha256-pp9Ge+xGGXzpeSUvcuLhwOg18IPxoLKsNH4Serghd+E=",
-      "JsonSchema.Net.Generation.DataAnnotations.dll": "sha256-CKDwFO/n5DbMWyGhl+5gjcJBOUUjHQA/9j8LHhjLTFE=",
-      "JsonSchema.Net.Generation.dll": "sha256-S4szzKQOq6LKsv2Dw0uaFX7bm89ax6oRC1ZvJihJGj4=",
-      "JsonSchema.Net.OpenApi.dll": "sha256-HA3lk4Wodmi8dj2pqDeh1LFrAAMmxZZY+gMWpIrd3eA=",
+      "json-everything.net.dll": "sha256-CHnh0nYW+KaNebivbKHAnQ7T1AovRb/ERJY96+vd6Zo=",
+      "Json.More.dll": "sha256-6yOy0a3G8gYfI+J9HTwLdyDx5jFJ3EXcMi2mCHrw0uY=",
+      "JsonE.Net.dll": "sha256-VrbxbQluEucWzpIzuXveSgUJKXjvtveyaiTXpjYm/bU=",
+      "JsonLogic.dll": "sha256-cudssf96ZjZoDFIUn7yKjSaBa0LzjGkSSieNvKHiADw=",
+      "JsonPatch.Net.dll": "sha256-H0D9aPJLLrB0PFHF2JyOhGbDe+ykENPzmti2LAXodn4=",
+      "JsonPath.Net.dll": "sha256-nE50ROVm+DtX4eu5SPvaQ95osT33VICAs266pK1bBUQ=",
+      "JsonPointer.Net.dll": "sha256-E/g+5X/dmFPWs1wFM1hi57Y//97WRyvnD7HyJuzbKFk=",
+      "JsonSchema.Net.ArrayExt.dll": "sha256-Ep4g2sXP1vIHlgKbU/aIwDhOLOCn96JjcfPwQPZ2+hI=",
+      "JsonSchema.Net.Data.dll": "sha256-FPzLXVnGxumhOdBgv/NiLlHTxTCzPnNafHL1b6vEbc0=",
+      "JsonSchema.Net.DataGeneration.dll": "sha256-b4WR14aS0+yd1LhG6ScfBCsIF/NZmgcZpAGxA8nRtTY=",
+      "JsonSchema.Net.dll": "sha256-vB7RUl11LPRVeQ47PuRCKdNU2IsOp83zE8iGops/Wc0=",
+      "JsonSchema.Net.Generation.DataAnnotations.dll": "sha256-QmPNn6Vs/sRZ3TphJXQ/l+VlfQQjpyn0y/64hVhXhrQ=",
+      "JsonSchema.Net.Generation.dll": "sha256-uIYVzCMAa6sujug1eel2M9klcIobst/Eq9vyEtNVIfo=",
+      "JsonSchema.Net.OpenApi.dll": "sha256-0SqbBuUxq50UssfXJiClqUSSUZLHgC66u8IUDyS4LsU=",
       "JsonSchema.Net.UniqueKeys.dll": "sha256-SDgDpXZNxY3DUWw0tsPU9nvEgqUByS+lXbTvXfxk24k=",
       "Markdig.dll": "sha256-/zBLNTAFSwzmj9Qq3hOzX4jN+IzlZOPHCL3qEU4t8BQ=",
       "Markdig.SyntaxHighlighting.dll": "sha256-YEfO9OsS0T4kDjPXOW2pJF8qg62omn4UYMy/C2tcmC4=",
@@ -228,7 +228,7 @@
       "System.Xml.XPath.dll": "sha256-3XVeMuF3ZSWohkJxf6dnDdddctg8mXxIkWGqMIWOlFQ=",
       "System.Xml.XPath.XDocument.dll": "sha256-1dKGPEj+oFeUjt4jshvv81XcAhOrA7D8c6VUROJS658=",
       "WindowsBase.dll": "sha256-PKfAo+TEXTRI7u0zFvbmCBxeJcxrZ9LE3rNJfL34FIc=",
-      "Yaml2JsonNode.dll": "sha256-7cZBWgOkllXr9SfCmZQIZX7+xiout3c2yCwprloduhk=",
+      "Yaml2JsonNode.dll": "sha256-CffdX/GkWyb962TGTsPIEb0m6G+3J6hySC9TdeJF8Sg=",
       "YamlDotNet.dll": "sha256-k0yLJ8upQlWla1rNxh3YZLA59wkVX8fVd8FoiL64fj8="
     },
     "satelliteResources": {
@@ -245,7 +245,7 @@
         "de/Microsoft.CodeAnalysis.Scripting.resources.dll": "sha256-dt0aZmfhRRAioiyUtsSpfquHXJuaGHCcqs02XXty0fU="
       },
       "es": {
-        "es/JsonSchema.Net.resources.dll": "sha256-UfuYMJCVTypEzqHLBAaPa9ri3TOh0THZFagT+he5LPI=",
+        "es/JsonSchema.Net.resources.dll": "sha256-2mSAPfLedeIN/ggUMB44F+s+UesjeFjhhA50X1BMDeY=",
         "es/Microsoft.CodeAnalysis.CSharp.resources.dll": "sha256-1Da5d7H4ufrZdRzfSimTvsNHIB0Z8exiKp31sDFNEI8=",
         "es/Microsoft.CodeAnalysis.CSharp.Scripting.resources.dll": "sha256-tkX3XpeY41WDDEiv5RSNFLcsV8tc3Oc8F0N15Yebyr0=",
         "es/Microsoft.CodeAnalysis.resources.dll": "sha256-sL3z25XbvWvQGjVGJ03BatCSHVFK0Kpw6uF5f+S8IAU=",
@@ -258,7 +258,7 @@
         "fr/Microsoft.CodeAnalysis.Scripting.resources.dll": "sha256-rqMfXsrcctvm4EBQWjZdTAXu1FEko6/zJkXEOPhrk5w="
       },
       "it": {
-        "it/JsonSchema.Net.resources.dll": "sha256-kMQjoTWk3/BUfy/3XKZ2wP00fChgQpm/8ltHn3NopYc=",
+        "it/JsonSchema.Net.resources.dll": "sha256-IJ1Vp3CsnoFZF6selrgU8/jvYsdB8G6ajC9fFkfmnyQ=",
         "it/Microsoft.CodeAnalysis.CSharp.resources.dll": "sha256-Dvk3pQqc5mMYM1Fw4csAG70iOyQQiJlqnInRSX6xj3g=",
         "it/Microsoft.CodeAnalysis.CSharp.Scripting.resources.dll": "sha256-iNOlCewZhMg9m++lrmyeMIpjjw4mj0Y5U/cNIb6Hwp8=",
         "it/Microsoft.CodeAnalysis.resources.dll": "sha256-Thk/wsw1S5DTSVpw5VhEak/DUCuqJ8dYt1CNlPXv0IE=",
@@ -277,10 +277,10 @@
         "ko/Microsoft.CodeAnalysis.Scripting.resources.dll": "sha256-qL3kOcqT2MQfAnl14LHATjBJN3p5TH7gbPd3SIF1ffQ="
       },
       "nb-NO": {
-        "nb-NO/JsonSchema.Net.resources.dll": "sha256-oQYVN0wQwmS0UntpmnnvNN+yv26jxTIqQ5R2/mxixu0="
+        "nb-NO/JsonSchema.Net.resources.dll": "sha256-ulYvirl3B0ZspuWhjvi/39bUNMhLTqniFUWUv22F2ro="
       },
       "pl-PL": {
-        "pl-PL/JsonSchema.Net.resources.dll": "sha256-sKgwbyXdK2b2fMZXa5pRm7ZeC8y6O8fhFScFtdtGoNU="
+        "pl-PL/JsonSchema.Net.resources.dll": "sha256-QaGf2MLSKSsxUrNZnCAFD6v2HRqbg380Q3Fi6MYkOjM="
       },
       "pl": {
         "pl/Microsoft.CodeAnalysis.CSharp.resources.dll": "sha256-2xVL0IAORrhN1IWNYNBRmd7TsT1sd1PNgTDObVHmgIU=",
@@ -295,17 +295,17 @@
         "pt-BR/Microsoft.CodeAnalysis.Scripting.resources.dll": "sha256-ugLAG4od39XDKQnQ31FVY6Ur22DkVJkL6Ucw5vvxAKA="
       },
       "ru": {
-        "ru/JsonSchema.Net.resources.dll": "sha256-Cl3NWHOE5NT74nAZhxAHHVrriZZY8Q272L2ryuQmHhU=",
+        "ru/JsonSchema.Net.resources.dll": "sha256-l3pzBg4MtdEMgtL20+giSlZNnAadz8DoncYSTvXGGNU=",
         "ru/Microsoft.CodeAnalysis.CSharp.resources.dll": "sha256-kOceEUOg4BqEqlnZbI49S1Q3cyMeg/9S7RLd9tikiK4=",
         "ru/Microsoft.CodeAnalysis.CSharp.Scripting.resources.dll": "sha256-eGBOoxlQQFp+qwW4uUCllr3SnqUGB3fEbmHVLxJRuMw=",
         "ru/Microsoft.CodeAnalysis.resources.dll": "sha256-8Yy1pzCAtJjjkV+cWP0axzIqav1s8ryy2GXZmdnIHmY=",
         "ru/Microsoft.CodeAnalysis.Scripting.resources.dll": "sha256-SbvB72NlHdX6C9HUHyZfaOHTL5+ZFNbnsMbl5M3QZTA="
       },
       "sv-SE": {
-        "sv-SE/JsonSchema.Net.resources.dll": "sha256-iWlhLPa+q+zG22SWS9mNLYZQMoNTj9HK18sXRTKQE7E="
+        "sv-SE/JsonSchema.Net.resources.dll": "sha256-IEUU4ol/bMQIajWBpr/lHLLfoFQjlWMtwen/gOd/3m4="
       },
       "tr-TR": {
-        "tr-TR/JsonSchema.Net.resources.dll": "sha256-ZHKOEEOQC17bsBaym9btH9KXPkbiogKvIObgKCKMI/o="
+        "tr-TR/JsonSchema.Net.resources.dll": "sha256-OSqJYZwIevwdXlDCZmkI6RfHYJJPyI+GA/wwzxBWdDw="
       },
       "tr": {
         "tr/Microsoft.CodeAnalysis.CSharp.resources.dll": "sha256-sZWMPA3j71Kh/XqkAGzimSmUUagBFZ+CNq5sACW3Wu0=",
