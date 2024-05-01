@@ -6,6 +6,9 @@ order: "09.01"
 ---
 # [7.0.0](https://github.com/gregsdennis/json-everything/pull/719) {#release-schema-7.0.0}
 
+> Versions 7.0.0.x are just repackaging of 7.0.0.  There were some issues getting the dependencies right.  I've unlisted all but 7.0.0.3.  Thanks to [@na1307](https://github.com/na1307) for reporting the issue and helping verify the fix.
+{: .prompt-info }
+
 Updated to use _JsonPointer.Net_ v5.0.0, which contains breaking changes ([release notes](/rn-json-pointer/#release-pointer-5.0.0)).
 
 Also includes numerous refactors for better evaluation times and memory management.
