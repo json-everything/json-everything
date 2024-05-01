@@ -25,6 +25,9 @@ namespace Json.Schema;
 [JsonConverter(typeof(PatternPropertiesKeywordJsonConverter))]
 public class PatternPropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 {
+	private readonly Dictionary<Regex, JsonPointer> _evaluationPointers;
+	private readonly Dictionary<string, JsonSchema> _schemas;
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
@@ -42,7 +45,7 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollecto
 	/// </remarks>
 	public IReadOnlyList<string>? InvalidPatterns { get; }
 
-	IReadOnlyDictionary<string, JsonSchema> IKeyedSchemaCollector.Schemas => Patterns.ToDictionary(x => x.Key.ToString(), x => x.Value);
+	IReadOnlyDictionary<string, JsonSchema> IKeyedSchemaCollector.Schemas => _schemas;
 
 	/// <summary>
 	/// Creates a new <see cref="PatternPropertiesKeyword"/>.
@@ -51,10 +54,13 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollecto
 	public PatternPropertiesKeyword(IReadOnlyDictionary<Regex, JsonSchema> values)
 	{
 		Patterns = values ?? throw new ArgumentNullException(nameof(values));
+
+		_evaluationPointers = values.ToDictionary(x => x.Key, x => JsonPointer.Create(Name, x.Key.ToString()));
+		_schemas = Patterns.ToDictionary(x => x.Key.ToString(), x => x.Value);
 	}
 	internal PatternPropertiesKeyword(IReadOnlyDictionary<Regex, JsonSchema> values, IReadOnlyList<string> invalidPatterns)
+		: this(values)
 	{
-		Patterns = values ?? throw new ArgumentNullException(nameof(values));
 		InvalidPatterns = invalidPatterns;
 	}
 
@@ -63,19 +69,19 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollecto
 	/// </summary>
 	/// <param name="schemaConstraint">The <see cref="SchemaConstraint"/> for the schema object that houses this keyword.</param>
 	/// <param name="localConstraints">
-	/// The set of other <see cref="KeywordConstraint"/>s that have been processed prior to this one.
-	/// Will contain the constraints for keyword dependencies.
+	///     The set of other <see cref="KeywordConstraint"/>s that have been processed prior to this one.
+	///     Will contain the constraints for keyword dependencies.
 	/// </param>
 	/// <param name="context">The <see cref="EvaluationContext"/>.</param>
 	/// <returns>A constraint object.</returns>
-	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, EvaluationContext context)
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, ReadOnlySpan<KeywordConstraint> localConstraints, EvaluationContext context)
 	{
 		var subschemaConstraints = Patterns.Select(pattern =>
 		{
-			var subschemaConstraint = pattern.Value.GetConstraint(JsonPointer.Create(Name), schemaConstraint.BaseInstanceLocation, JsonPointer.Empty, context);
+			var subschemaConstraint = pattern.Value.GetConstraint(_evaluationPointers[pattern.Key], schemaConstraint.BaseInstanceLocation, JsonPointer.Empty, context);
 			subschemaConstraint.InstanceLocator = evaluation =>
 			{
-				if (evaluation.LocalInstance is not JsonObject obj) return Array.Empty<JsonPointer>();
+				if (evaluation.LocalInstance is not JsonObject obj) return [];
 
 				var properties = obj.Select(x => x.Key).Where(x => pattern.Key.IsMatch(x));
 
@@ -93,7 +99,7 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollecto
 
 	private static void Evaluator(KeywordEvaluation evaluation, EvaluationContext context)
 	{
-		evaluation.Results.SetAnnotation(Name, evaluation.ChildEvaluations.Select(x => (JsonNode)x.RelativeInstanceLocation.Segments[0].Value).ToJsonArray());
+		evaluation.Results.SetAnnotation(Name, evaluation.ChildEvaluations.Select(x => (JsonNode)x.RelativeInstanceLocation[0]).ToJsonArray());
 		
 		if (!evaluation.ChildEvaluations.All(x => x.Results.IsValid))
 			evaluation.Results.Fail();

@@ -171,7 +171,7 @@ public class GithubTests
 		var schema = JsonSchema.FromText("{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"string\"}");
 		var instance = JsonNode.Parse("\"some string\"");
 
-		Assert.Throws<JsonSchemaException>(() => schema.Evaluate(instance));
+		Assert.Throws<RefResolutionException>(() => schema.Evaluate(instance));
 	}
 
 	[Test]
@@ -180,7 +180,7 @@ public class GithubTests
 		var schema = JsonSchema.FromText("{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"string\"}");
 		var instance = JsonNode.Parse("\"some string\"");
 
-		Assert.Throws<JsonSchemaException>(() => schema.Evaluate(instance, new EvaluationOptions
+		Assert.Throws<RefResolutionException>(() => schema.Evaluate(instance, new EvaluationOptions
 		{
 			OutputFormat = OutputFormat.Hierarchical
 		}));
@@ -422,7 +422,7 @@ public class GithubTests
 		}
 
 		public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
-			IReadOnlyList<KeywordConstraint> localConstraints,
+			ReadOnlySpan<KeywordConstraint> localConstraints,
 			EvaluationContext context)
 		{
 			throw new NotImplementedException();
@@ -432,17 +432,23 @@ public class GithubTests
 	[Test]
 	public void Issue191_SelfReferentialCustomMetaschemaShouldError()
 	{
-		var metaSchemaId = new Uri("https://myserver.net/meta-schema");
-
 		var vocabId = "https://myserver.net/my-vocab";
+		var vocab = new Vocabulary(vocabId, typeof(MinDateKeyword));
+		try
+		{
+			var metaSchemaId = new Uri("https://myserver.net/meta-schema");
+			var metaSchema = JsonSchema.FromText(GetResource(191, "MetaSchema"));
 
-		var metaSchema = JsonSchema.FromText(GetResource(191, "MetaSchema"));
+			SchemaKeywordRegistry.Register<MinDateKeyword>();
 
-		SchemaKeywordRegistry.Register<MinDateKeyword>();
+			VocabularyRegistry.Register(vocab);
 
-		VocabularyRegistry.Global.Register(new Vocabulary(vocabId, typeof(MinDateKeyword)));
-
-		Assert.Throws<JsonSchemaException>(() => SchemaRegistry.Global.Register(metaSchemaId, metaSchema));
+			Assert.Throws<JsonSchemaException>(() => SchemaRegistry.Global.Register(metaSchemaId, metaSchema));
+		}
+		finally
+		{
+			VocabularyRegistry.Unregister(vocab);
+		}
 	}
 
 	[Test]
@@ -498,7 +504,7 @@ public class GithubTests
 
 		var instance = JsonNode.Parse("{\"ContentDefinitionId\": \"fa81bc1d-3efe-4192-9e03-31e9898fef90\"}");
 
-		Assert.Throws<JsonSchemaException>(() => schema.Evaluate(instance, new EvaluationOptions
+		Assert.Throws<RefResolutionException>(() => schema.Evaluate(instance, new EvaluationOptions
 		{
 			ValidateAgainstMetaSchema = true
 		}));
@@ -1003,7 +1009,7 @@ public class GithubTests
 			Value = value ?? throw new ArgumentNullException(nameof(value));
 		}
 
-		public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, EvaluationContext context)
+		public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, ReadOnlySpan<KeywordConstraint> localConstraints, EvaluationContext context)
 		{
 			return KeywordConstraint.SimpleAnnotation(Name, Value);
 		}

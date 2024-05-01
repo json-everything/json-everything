@@ -50,34 +50,19 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer
 	/// </summary>
 	/// <param name="schemaConstraint">The <see cref="SchemaConstraint"/> for the schema object that houses this keyword.</param>
 	/// <param name="localConstraints">
-	/// The set of other <see cref="KeywordConstraint"/>s that have been processed prior to this one.
-	/// Will contain the constraints for keyword dependencies.
+	///     The set of other <see cref="KeywordConstraint"/>s that have been processed prior to this one.
+	///     Will contain the constraints for keyword dependencies.
 	/// </param>
 	/// <param name="context">The <see cref="EvaluationContext"/>.</param>
 	/// <returns>A constraint object.</returns>
-	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, EvaluationContext context)
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, ReadOnlySpan<KeywordConstraint> localConstraints, EvaluationContext context)
 	{
-		var propertiesConstraint = localConstraints.FirstOrDefault(x => x.Keyword == PropertiesKeyword.Name);
-		var patternPropertiesConstraint = localConstraints.FirstOrDefault(x => x.Keyword == PatternPropertiesKeyword.Name);
+		var propertiesConstraint = localConstraints.GetKeywordConstraint<PropertiesKeyword>();
+		var patternPropertiesConstraint = localConstraints.GetKeywordConstraint<PatternPropertiesKeyword>();
 		var keywordConstraints = new[] { propertiesConstraint, patternPropertiesConstraint }.Where(x => x != null).ToArray();
 
 		var subschemaConstraint = Schema.GetConstraint(JsonPointer.Create(Name), schemaConstraint.BaseInstanceLocation, JsonPointer.Empty, context);
-		subschemaConstraint.InstanceLocator = evaluation =>
-		{
-			if (evaluation.LocalInstance is not JsonObject obj) return Array.Empty<JsonPointer>();
-
-			var properties = obj.Select(x => x.Key);
-			
-			var propertiesEvaluation = evaluation.GetKeywordEvaluation<PropertiesKeyword>();
-			if (propertiesEvaluation != null)
-				properties = properties.Except(propertiesEvaluation.ChildEvaluations.Select(x => x.RelativeInstanceLocation.Segments[0].Value));
-
-			var patternPropertiesEvaluation = evaluation.GetKeywordEvaluation<PatternPropertiesKeyword>();
-			if (patternPropertiesEvaluation != null)
-				properties = properties.Except(patternPropertiesEvaluation.ChildEvaluations.Select(x => x.RelativeInstanceLocation.Segments[0].Value));
-
-			return properties.Select(x => JsonPointer.Create(x));
-		};
+		subschemaConstraint.InstanceLocator = LocateInstances;
 
 		return new KeywordConstraint(Name, Evaluator)
 		{
@@ -86,9 +71,41 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer
 		};
 	}
 
+	private static IEnumerable<JsonPointer> LocateInstances(KeywordEvaluation evaluation)
+	{
+		if (evaluation.LocalInstance is not JsonObject obj) yield break;
+
+		var skip = new HashSet<string>();
+
+		var propertiesEvaluation = evaluation.GetKeywordEvaluation<PropertiesKeyword>();
+		if (propertiesEvaluation != null)
+		{
+			foreach (var child in propertiesEvaluation.ChildEvaluations)
+			{
+				skip.Add(child.RelativeInstanceLocation[0]);
+			}
+		};
+
+		var patternPropertiesEvaluation = evaluation.GetKeywordEvaluation<PatternPropertiesKeyword>();
+		if (patternPropertiesEvaluation != null)
+		{
+			foreach (var child in patternPropertiesEvaluation.ChildEvaluations)
+			{
+				skip.Add(child.RelativeInstanceLocation[0]);
+			}
+		}
+
+		foreach (var kvp in obj)
+		{
+			if (skip.Contains(kvp.Key)) continue;
+
+			yield return JsonPointer.Create(kvp.Key);
+		}
+	}
+
 	private static void Evaluator(KeywordEvaluation evaluation, EvaluationContext context)
 	{
-		evaluation.Results.SetAnnotation(Name, evaluation.ChildEvaluations.Select(x => (JsonNode)x.RelativeInstanceLocation.Segments[0].Value!).ToJsonArray());
+		evaluation.Results.SetAnnotation(Name, evaluation.ChildEvaluations.Select(x => (JsonNode)x.RelativeInstanceLocation[0]).ToJsonArray());
 
 		if (!evaluation.ChildEvaluations.All(x => x.Results.IsValid))
 			evaluation.Results.Fail();

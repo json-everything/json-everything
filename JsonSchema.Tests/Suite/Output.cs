@@ -33,7 +33,7 @@ public class Output
 	{
 		return GetTests("draft2019-09")
 			.Concat(GetTests("draft2020-12"))
-			.Concat(_runDraftNext ? GetTests("draft-next") : Enumerable.Empty<TestCaseData>());
+			.Concat(_runDraftNext ? GetTests("draft-next") : []);
 	}
 
 	private static IEnumerable<TestCaseData> GetTests(string draftFolder)
@@ -43,25 +43,20 @@ public class Output
 
 		var testsPath = Path.Combine(TestContext.CurrentContext.WorkDirectory, testCasesPath, $"{draftFolder}/")
 			.AdjustForPlatform();
-		if (!Directory.Exists(testsPath)) return Enumerable.Empty<TestCaseData>();
+		if (!Directory.Exists(testsPath)) return [];
 
 		var fileNames = Directory.GetFiles(testsPath, "*.json", SearchOption.AllDirectories);
 		var options = new EvaluationOptions
 		{
-			OutputFormat = OutputFormat.Hierarchical
+			OutputFormat = OutputFormat.Hierarchical,
+			EvaluateAs = draftFolder switch
+			{
+				"draft2019-09" => SpecVersion.Draft201909,
+				"draft2020-12" => SpecVersion.Draft202012,
+				"draft-next" => SpecVersion.DraftNext,
+				_ => SpecVersion.Unspecified
+			}
 		};
-		switch (draftFolder)
-		{
-			case "draft2019-09":
-				options.EvaluateAs = SpecVersion.Draft201909;
-				break;
-			case "draft2020-12":
-				options.EvaluateAs = SpecVersion.Draft202012;
-				break;
-			case "draft-next":
-				// options.ValidateAs = Draft.DraftNext;
-				break;
-		}
 
 		var allTests = new List<TestCaseData>();
 		foreach (var fileName in fileNames)

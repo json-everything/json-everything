@@ -56,7 +56,7 @@ public class AutoEvaluationTests
 
 		var options = new EvaluationOptions();
 
-		Assert.Throws<ArgumentException>(() => JsonSchema.AutoEvaluate(instance, options));
+		Assert.Throws<RefResolutionException>(() => JsonSchema.AutoEvaluate(instance, options));
 	}
 
 	[Test]

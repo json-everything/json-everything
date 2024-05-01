@@ -115,4 +115,16 @@ public class SpecificationTests
 		Assert.IsTrue(success);
 		Assert.IsTrue(actual.IsEquivalentTo(expected));
 	}
+
+	[TestCaseSource(nameof(ExampleCases))]
+	public void ToString(string pointerString, string expectedString)
+	{
+		if (pointerString.Length != 0 && pointerString[0] == '#')
+			Assert.Inconclusive("Returning to URI encoded is not supported");
+
+		var pointer = JsonPointer.Parse(pointerString);
+		var backToString = pointer.ToString();
+
+		Assert.AreEqual(pointerString, backToString);
+	}
 }

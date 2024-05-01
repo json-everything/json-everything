@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Text.Json.Nodes;
+﻿using System.Text.Json.Nodes;
 
 namespace Json.Patch;
 
@@ -11,7 +10,7 @@ internal class ReplaceOperationHandler : IPatchOperationHandler
 
 	public void Process(PatchContext context, PatchOperation operation)
 	{
-		if (operation.Path.Segments.Length == 0)
+		if (operation.Path.Count == 0)
 		{
 			context.Source = operation.Value;
 			return;
@@ -24,7 +23,7 @@ internal class ReplaceOperationHandler : IPatchOperationHandler
 			return;
 		}
 
-		var lastPathSegment = operation.Path.Segments.Last().Value;
+		var lastPathSegment = operation.Path[^1];
 		if (target is JsonObject objTarget)
 		{
 			objTarget[lastPathSegment] = operation.Value?.DeepClone();
@@ -34,7 +33,7 @@ internal class ReplaceOperationHandler : IPatchOperationHandler
 		if (target is JsonArray arrTarget)
 		{
 			int index;
-			if (lastPathSegment == "-")
+			if (lastPathSegment.Length == 0 && lastPathSegment[0] == '-')
 				index = arrTarget.Count;
 			else if (!int.TryParse(lastPathSegment, out index))
 			{

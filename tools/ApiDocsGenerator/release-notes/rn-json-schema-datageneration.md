@@ -4,6 +4,10 @@ title: JsonSchema.Net.DataGeneration
 icon: fas fa-tag
 order: "09.07"
 ---
+# [2.2.0](https://github.com/gregsdennis/json-everything/pull/719) {#release-schemadatagen-2.2.0}
+
+Updated to use _JsonSchema.Net_ v7.0.0, which contains breaking changes ([release notes](/rn-json-schema/#release-schema-7.0.0)).
+
 # [2.1.0.x](https://github.com/gregsdennis/json-everything/pull/712) {#release-schemadatagen-2.1.0.x}
 
 [#711](https://github.com/gregsdennis/json-everything/issues/711) - Nuget package meta-data updates; no functional changes from previous version.

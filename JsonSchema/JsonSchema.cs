@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Buffers;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -23,24 +25,17 @@ public class JsonSchema : IBaseDocument
 {
 	private const string _unknownKeywordsAnnotationKey = "$unknownKeywords";
 
-	private static readonly HashSet<SpecVersion> _definedSpecVersions = [.. GetSpecVersions()];
-
-	private static SpecVersion[] GetSpecVersions() =>
-#if NET6_0_OR_GREATER
-		Enum.GetValues<SpecVersion>();
-#else
-		Enum.GetValues(typeof(SpecVersion)).Cast<SpecVersion>().ToArray();
-#endif
-
 	private readonly Dictionary<string, IJsonSchemaKeyword>? _keywords;
-	private readonly List<(DynamicScope Scope, SchemaConstraint Constraint)> _constraints = [];
+	// using ConcurrentStack because it has a Clear() method
+	private readonly ConcurrentStack<(DynamicScope Scope, SchemaConstraint Constraint)> _constraints = [];
 
 	private EvaluationOptions? _lastCalledOptions;
+	private bool? _isDynamic;
 
 	/// <summary>
 	/// The empty schema `{}`.  Functionally equivalent to <see cref="True"/>.
 	/// </summary>
-	public static readonly JsonSchema Empty = new(Enumerable.Empty<IJsonSchemaKeyword>());
+	public static readonly JsonSchema Empty = new([]);
 	/// <summary>
 	/// The `true` schema.  Passes all instances.
 	/// </summary>
@@ -87,10 +82,9 @@ public class JsonSchema : IBaseDocument
 	/// <summary>
 	/// Gets the specification version as determined by analyzing the `$schema` keyword, if it exists.
 	/// </summary>
-	public SpecVersion DeclaredVersion { get; private set; }
+	public SpecVersion DeclaredVersion { get; internal set; }
 
-	internal Dictionary<string, (JsonSchema Schema, bool IsDynamic)> Anchors { get; } = [];
-	internal JsonSchema? RecursiveAnchor { get; set; }
+	internal Vocabulary[]? Dialect { get; set; }
 
 	private JsonSchema(bool value)
 	{
@@ -285,25 +279,14 @@ public class JsonSchema : IBaseDocument
 	{
 		options ??= EvaluationOptions.Default;
 		if (!ReferenceEquals(options, _lastCalledOptions) || options.Changed)
-		{
-			var subschemas = Keywords?.SelectMany(GetSubschemas) ?? [];
-			foreach (var subschema in subschemas)
-			{
-				subschema._constraints.Clear();
-			}
-			_constraints.Clear();
-		}
+			ClearConstraints();
 		_lastCalledOptions = options;
 		options.Changed = false;
 
 		options = EvaluationOptions.From(options);
+		options.SchemaRegistry.Register(this);
 
-		// BaseUri may change if $id is present
-		var evaluatingAs = DetermineSpecVersion(this, options.SchemaRegistry, options.EvaluateAs);
-		PopulateBaseUris(this, this, BaseUri, options.SchemaRegistry, evaluatingAs, true);
-
-
-		var context = new EvaluationContext(options, evaluatingAs, BaseUri);
+		var context = new EvaluationContext(options, DeclaredVersion, BaseUri);
 		var constraint = BuildConstraint(JsonPointer.Empty, JsonPointer.Empty, JsonPointer.Empty, context.Scope);
 		if (!BoolValue.HasValue)
 			PopulateConstraint(constraint, context);
@@ -332,12 +315,42 @@ public class JsonSchema : IBaseDocument
 		return results;
 	}
 
+	private void ClearConstraints()
+	{
+		using var owner = MemoryPool<JsonSchema>.Shared.Rent();
+		foreach (var subschema in GetSubschemas(owner))
+		{
+			subschema.ClearConstraints();
+		}
+		_constraints.Clear();
+	}
+
 	private bool IsDynamic()
 	{
 		if (BoolValue.HasValue) return false;
-		if (Keywords!.Any(x => x is DynamicRefKeyword or RecursiveRefKeyword)) return true;
+		if (_isDynamic.HasValue) return _isDynamic.Value;
 
-		return Keywords!.SelectMany(GetSubschemas).Any(x => x.IsDynamic());
+		foreach (var keyword in Keywords!)
+		{
+			if (keyword is DynamicRefKeyword or RecursiveRefKeyword)
+			{
+				_isDynamic = true;
+				return true;
+			}
+		}
+
+		using var owner = MemoryPool<JsonSchema>.Shared.Rent();
+		foreach (var subschema in GetSubschemas(owner))
+		{
+			if (subschema.IsDynamic())
+			{
+				_isDynamic = true;
+				return true;
+			}
+		}
+
+		_isDynamic = false;
+		return false;
 	}
 
 	/// <summary>
@@ -387,7 +400,7 @@ public class JsonSchema : IBaseDocument
 			var baseUri = BoolValue.HasValue ? scope.LocalScope : BaseUri;
 
 			var constraint = new SchemaConstraint(evaluationPath, baseInstanceLocation.Combine(relativeInstanceLocation), relativeInstanceLocation, baseUri, this);
-			_constraints.Add((new DynamicScope(scope), constraint));
+			_constraints.Push((new DynamicScope(scope), constraint));
 		
 			return constraint;
 		}
@@ -396,14 +409,10 @@ public class JsonSchema : IBaseDocument
 	private SchemaConstraint? CheckScopedConstraints(DynamicScope scope)
 	{
 		SchemaConstraint? scopedConstraint;
-		// ReSharper disable InconsistentlySynchronizedField
-		// We only need to worry about synchronization when potentially adding new constraints
-		// which only happens in BuildConstraint().
 		if (IsDynamic())
 			(_, scopedConstraint) = _constraints.FirstOrDefault(x => x.Scope.Equals(scope));
 		else
 			scopedConstraint = _constraints.SingleOrDefault().Constraint;
-		// ReSharper restore InconsistentlySynchronizedField
 		return scopedConstraint;
 	}
 
@@ -420,8 +429,8 @@ public class JsonSchema : IBaseDocument
 				var refKeyword = (RefKeyword?) Keywords!.FirstOrDefault(x => x is RefKeyword);
 				if (refKeyword != null)
 				{
-					var refConstraint = refKeyword.GetConstraint(constraint, Array.Empty<KeywordConstraint>(), context);
-					constraint.Constraints = [refConstraint];
+					var refConstraint = refKeyword.GetConstraint(constraint, [], context);  // indirect allocation
+					constraint.Constraints = [refConstraint];  // allocation
 					return;
 				}
 			}
@@ -433,31 +442,57 @@ public class JsonSchema : IBaseDocument
 				context.Scope.Push(BaseUri);
 				context.PushEvaluatingAs(DeclaredVersion);
 			}
-			var localConstraints = new List<KeywordConstraint>();
+
+			using var constraintOwner = MemoryPool<KeywordConstraint>.Shared.Rent(Keywords!.Count);
+			var localConstraints = constraintOwner.Memory.Span;
+			var constraintCount = 0;
+
 			var version = DeclaredVersion == SpecVersion.Unspecified ? context.EvaluatingAs : DeclaredVersion;
-			var keywords = EvaluationOptions.FilterKeywords(context.GetKeywordsToProcess(this, context.Options), version).ToArray();
-			var unrecognized = Keywords!.OfType<UnrecognizedKeyword>();
-			var unrecognizedButSupported = Keywords!.Except(keywords).ToArray();
-			if (context.Options.AddAnnotationForUnknownKeywords)
-				constraint.UnknownKeywords = new JsonArray(unrecognizedButSupported.Concat(unrecognized)
-					.Select(x => (JsonNode?)x.Keyword())
-					.ToArray());
-			foreach (var keyword in keywords.OrderBy(x => x.Priority()))
+			if (context.Options.AddAnnotationForUnknownKeywords) 
+				constraint.UnknownKeywords = [];  // allocation;
+
+			using var dialectOwner = MemoryPool<Type>.Shared.Rent();
+			var declaredKeywordTypes = dialectOwner.Memory.Span;
+			var i = 0;
+			if (Dialect is not null)
 			{
-				var keywordConstraint = keyword.GetConstraint(constraint, localConstraints, context);
-				localConstraints.Add(keywordConstraint);
+				foreach (var vocabulary in Dialect)
+				{
+					foreach (var keywordType in vocabulary.Keywords)
+					{
+						declaredKeywordTypes[i] = keywordType;
+						i++;
+					}
+				}
 			}
 
-			foreach (var keyword in unrecognizedButSupported)
+			declaredKeywordTypes = declaredKeywordTypes[..i];
+
+			foreach (var keyword in Keywords.OrderBy(x => x.Priority()))
 			{
+				KeywordConstraint? keywordConstraint;
+				if (ShouldProcessKeyword(keyword, context.Options.ProcessCustomKeywords, version, declaredKeywordTypes))
+				{
+					keywordConstraint = keyword.GetConstraint(constraint, localConstraints[..constraintCount], context);  // indirect allocation
+					localConstraints[constraintCount] = keywordConstraint;
+					constraintCount++;
+
+					if (keyword is UnrecognizedKeyword unrecognized) 
+						constraint.UnknownKeywords?.Add((JsonNode)unrecognized.Name);  // allocation
+
+					continue;
+				}
+
 				var typeInfo = SchemaKeywordRegistry.GetTypeInfo(keyword.GetType());
-				var jsonText = JsonSerializer.Serialize(keyword, typeInfo!);
-				var json = JsonNode.Parse(jsonText);
-				var keywordConstraint = KeywordConstraint.SimpleAnnotation(keyword.Keyword(), json);
-				localConstraints.Add(keywordConstraint);
+				var json = JsonSerializer.SerializeToNode(keyword, typeInfo!);  // indirect allocation
+				keywordConstraint = KeywordConstraint.SimpleAnnotation(keyword.Keyword(), json);
+				localConstraints[constraintCount] = keywordConstraint;
+				constraintCount++;
+
+				constraint.UnknownKeywords?.Add((JsonNode)keyword.Keyword());  // allocation
 			}
 
-			constraint.Constraints = [.. localConstraints];
+			constraint.Constraints = localConstraints[..constraintCount].ToArray();  // allocation
 			if (dynamicScopeChanged)
 			{
 				context.Scope.Pop();
@@ -466,143 +501,83 @@ public class JsonSchema : IBaseDocument
 		}
 	}
 
-	internal static void Initialize(JsonSchema schema, SchemaRegistry registry, Uri? baseUri = null)
+	private bool ShouldProcessKeyword(IJsonSchemaKeyword keyword, bool processCustomKeywords, SpecVersion preferredVersion, ReadOnlySpan<Type> declaredKeywordTypes)
 	{
-		PopulateBaseUris(schema, schema, baseUri ?? schema.BaseUri, registry, selfRegister: true);
+		if (!processCustomKeywords && Dialect is not null)
+		{
+			var found = false;
+			foreach (var type in declaredKeywordTypes)
+			{
+				if (type != keyword.GetType()) continue;
+
+				found = true;
+				break;
+			}
+
+			if (!found) return false;
+		}
+
+		if (!Enum.IsDefined(typeof(SpecVersion), preferredVersion) || preferredVersion == SpecVersion.Unspecified) return true;
+
+		return keyword.SupportsVersion(preferredVersion);
 	}
 
-	private static SpecVersion DetermineSpecVersion(JsonSchema schema, SchemaRegistry registry, SpecVersion desiredDraft)
+	internal ReadOnlySpan<JsonSchema> GetSubschemas(IMemoryOwner<JsonSchema> owner)
 	{
-		if (schema.BoolValue.HasValue) return SpecVersion.DraftNext;
-		if (schema.DeclaredVersion != SpecVersion.Unspecified) return schema.DeclaredVersion;
-		if (!_definedSpecVersions.Contains(desiredDraft)) return desiredDraft;
+		if (BoolValue.HasValue) return [];
 
-		if (schema.TryGetKeyword<SchemaKeyword>(SchemaKeyword.Name, out var schemaKeyword))
+		var span = owner.Memory.Span;
+
+		using var keywordOwner = MemoryPool<JsonSchema>.Shared.Rent();
+		var i = 0;
+		foreach (var keyword in Keywords!)
 		{
-			var metaSchemaId = schemaKeyword.Schema;
-			while (metaSchemaId != null)
+			foreach (var subschema in GetSubschemas(keyword, keywordOwner))
 			{
-				var version = metaSchemaId.OriginalString switch
-				{
-					MetaSchemas.Draft6IdValue => SpecVersion.Draft6,
-					MetaSchemas.Draft7IdValue => SpecVersion.Draft7,
-					MetaSchemas.Draft201909IdValue => SpecVersion.Draft201909,
-					MetaSchemas.Draft202012IdValue => SpecVersion.Draft202012,
-					MetaSchemas.DraftNextIdValue => SpecVersion.DraftNext,
-					_ => SpecVersion.Unspecified
-				};
-				if (version != SpecVersion.Unspecified)
-				{
-					schema.DeclaredVersion = version;
-					return version;
-				}
-
-				var metaSchema = registry.Get(metaSchemaId) as JsonSchema ??
-					throw new JsonSchemaException("Cannot resolve custom meta-schema.");
-
-				if (metaSchema.TryGetKeyword<SchemaKeyword>(SchemaKeyword.Name, out var newMetaSchemaKeyword) &&
-				    newMetaSchemaKeyword.Schema == metaSchemaId)
-					throw new JsonSchemaException("Custom meta-schema `$schema` keywords must eventually resolve to a meta-schema for a supported specification version.");
-
-				metaSchemaId = newMetaSchemaKeyword?.Schema;
+				span[i] = subschema;
+				i++;
 			}
 		}
 
-		if (desiredDraft != SpecVersion.Unspecified) return desiredDraft;
-
-		var allDraftsArray = GetSpecVersions();
-		var allDrafts = allDraftsArray.Aggregate(SpecVersion.Unspecified, (a, x) => a | x);
-		var commonDrafts = schema.Keywords!.Aggregate(allDrafts, (a, x) => a & x.VersionsSupported());
-		var candidates = allDraftsArray.Where(x => commonDrafts.HasFlag(x)).ToArray();
-
-		return candidates.Length != 0 ? candidates.Max() : SpecVersion.DraftNext;
+		return i == 0 ? [] : span[..i];
 	}
 
-	private static void PopulateBaseUris(JsonSchema schema, JsonSchema resourceRoot, Uri currentBaseUri, SchemaRegistry registry, SpecVersion evaluatingAs = SpecVersion.Unspecified, bool selfRegister = false)
+	private static ReadOnlySpan<JsonSchema> GetSubschemas(IJsonSchemaKeyword keyword, IMemoryOwner<JsonSchema> owner)
 	{
-		if (schema.BoolValue.HasValue) return;
-		evaluatingAs = DetermineSpecVersion(schema, registry, evaluatingAs);
-		if (evaluatingAs is SpecVersion.Draft6 or SpecVersion.Draft7 &&
-			schema.TryGetKeyword<RefKeyword>(RefKeyword.Name, out _))
-		{
-			schema.BaseUri = currentBaseUri;
-			if (selfRegister)
-				registry.RegisterSchema(schema.BaseUri, schema);
-		}
-		else
-		{
-			var idKeyword = (IIdKeyword?)schema.Keywords!.FirstOrDefault(x => x is IIdKeyword);
-			if (idKeyword != null)
-			{
-				if (evaluatingAs <= SpecVersion.Draft7 &&
-				    idKeyword.Id.OriginalString[0] == '#' &&
-				    AnchorKeyword.AnchorPattern201909.IsMatch(idKeyword.Id.OriginalString[1..]))
-				{
-					schema.BaseUri = currentBaseUri;
-					resourceRoot.Anchors[idKeyword.Id.OriginalString[1..]] = (schema, false);
-				}
-				else
-				{
-					schema.IsResourceRoot = true;
-					schema.DeclaredVersion = evaluatingAs;
-					resourceRoot = schema;
-					schema.BaseUri = new Uri(currentBaseUri, idKeyword.Id);
-					registry.RegisterSchema(schema.BaseUri, schema);
-				}
-			}
-			else
-			{
-				schema.BaseUri = currentBaseUri;
-				if (selfRegister)
-					registry.RegisterSchema(schema.BaseUri, schema);
-			}
+		var span = owner.Memory.Span;
 
-			if (schema.TryGetKeyword<AnchorKeyword>(AnchorKeyword.Name, out var anchorKeyword)) 
-				resourceRoot.Anchors[anchorKeyword.Anchor] = (schema, false);
-
-			if (schema.TryGetKeyword<DynamicAnchorKeyword>(DynamicAnchorKeyword.Name, out var dynamicAnchorKeyword)) 
-				resourceRoot.Anchors[dynamicAnchorKeyword.Value] = (schema, true);
-
-			schema.TryGetKeyword<RecursiveAnchorKeyword>(RecursiveAnchorKeyword.Name, out var recursiveAnchorKeyword);
-			if (recursiveAnchorKeyword is { Value: true })
-				resourceRoot.RecursiveAnchor = schema;
-		}
-
-		var subschemas = schema.Keywords!.SelectMany(GetSubschemas);
-
-		foreach (var subschema in subschemas)
-		{
-			PopulateBaseUris(subschema, resourceRoot, schema.BaseUri, registry, evaluatingAs);
-		}
-	}
-
-	internal static IEnumerable<JsonSchema> GetSubschemas(IJsonSchemaKeyword keyword)
-	{
+		int i = 0;
 		switch (keyword)
 		{
 			// ReSharper disable once RedundantAlwaysMatchSubpattern
-			case ISchemaContainer { Schema: { } } container:
-				yield return container.Schema;
+			case ISchemaContainer { Schema: not null } container:
+				span[0] = container.Schema;
+				i++;
 				break;
 			case ISchemaCollector collector:
 				foreach (var schema in collector.Schemas)
 				{
-					yield return schema;
+					span[i] = schema;
+					i++;
 				}
 				break;
 			case IKeyedSchemaCollector collector:
 				foreach (var schema in collector.Schemas.Values)
 				{
-					yield return schema;
+					span[i] = schema;
+					i++;
 				}
 				break;
 			case ICustomSchemaCollector collector:
 				foreach (var schema in collector.Schemas)
 				{
-					yield return schema;
+					span[i] = schema;
+					i++;
 				}
 				break;
 		}
+
+		return i == 0 ? [] : span[..i];
 	}
 
 	JsonSchema? IBaseDocument.FindSubschema(JsonPointer pointer, EvaluationOptions options)
@@ -613,7 +588,7 @@ public class JsonSchema : IBaseDocument
 
 			var asSchema = FromText(value?.ToString() ?? "null");
 			asSchema.BaseUri = hostSchema.BaseUri;
-			PopulateBaseUris(asSchema, hostSchema, hostSchema.BaseUri, options.SchemaRegistry);
+			options.SchemaRegistry.Initialize(hostSchema.BaseUri, asSchema);
 			return asSchema;
 		}
 
@@ -658,7 +633,11 @@ public class JsonSchema : IBaseDocument
 					}
 					break;
 				case ICustomSchemaCollector customCollector:
-					var (found, segmentsConsumed) = customCollector.FindSubschema(pointer.Segments.Skip(i).ToReadOnlyList());
+#if NETSTANDARD2_0
+					var (found, segmentsConsumed) = customCollector.FindSubschema(pointer.GetLocal(i));
+#else
+					var (found, segmentsConsumed) = customCollector.FindSubschema(pointer[i..]);
+#endif
 					hostSchema = found!;
 					newResolvable = hostSchema;
 					i += segmentsConsumed;
@@ -671,15 +650,23 @@ public class JsonSchema : IBaseDocument
 					var typeInfo = SchemaKeywordRegistry.GetTypeInfo(localResolvable.GetType());
 					var serialized = JsonSerializer.Serialize(localResolvable, typeInfo!);
 					var json = JsonNode.Parse(serialized);
-					var newPointer = JsonPointer.Create(pointer.Segments.Skip(i));
-					i += newPointer.Segments.Length - 1;
+#if NETSTANDARD2_0
+					var newPointer = pointer.GetLocal(i);
+#else
+					var newPointer = pointer[i..];
+#endif
+					i += newPointer.Count - 1;
 					return ExtractSchemaFromData(newPointer, json, hostSchema);
 			}
 
 			if (newResolvable is UnrecognizedKeyword unrecognized)
 			{
-				var newPointer = JsonPointer.Create(pointer.Segments.Skip(i + 1));
-				i += newPointer.Segments.Length;
+#if NETSTANDARD2_0
+				var newPointer = pointer.GetLocal(i+1);
+#else
+				var newPointer = pointer[(i+1)..];
+#endif
+				i += newPointer.Count;
 				return ExtractSchemaFromData(newPointer, unrecognized.Value, (JsonSchema)localResolvable);
 			}
 
@@ -688,33 +675,21 @@ public class JsonSchema : IBaseDocument
 
 		object? resolvable = this;
 		var currentSchema = this;
-		for (var i = 0; i < pointer.Segments.Length; i++)
+		for (var i = 0; i < pointer.Count; i++)
 		{
-			var segment = pointer.Segments[i];
+			var segment = pointer[i];
 
-			resolvable = CheckResolvable(resolvable, ref i, segment.Value, ref currentSchema);
+			resolvable = CheckResolvable(resolvable, ref i, segment, ref currentSchema);
 			if (resolvable == null) return null;
 		}
 
 		if (resolvable is JsonSchema target) return target;
 
-		var count = pointer.Segments.Length;
+		var count = pointer.Count;
 		// These parameters don't really matter.  This extra check only captures the case where the
 		// last segment of the pointer is an ISchemaContainer.
 		return CheckResolvable(resolvable, ref count, null!, ref currentSchema) as JsonSchema;
 	}
-
-	/// <summary>
-	/// Gets a defined anchor.
-	/// </summary>
-	/// <param name="anchorName">The name of the anchor (excluding the `#`)</param>
-	/// <returns>The associated subschema, if the anchor exists, or null.</returns>
-	public JsonSchema? GetAnchor(string anchorName) =>
-		Anchors.TryGetValue(anchorName, out var anchorDefinition)
-			? anchorDefinition.IsDynamic
-				? null
-				: anchorDefinition.Schema
-			: null;
 
 	/// <summary>
 	/// Implicitly converts a boolean value into one of the boolean schemas. 

@@ -4,6 +4,47 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "09.01"
 ---
+# [7.0.0](https://github.com/gregsdennis/json-everything/pull/719) {#release-schema-7.0.0}
+
+Updated to use _JsonPointer.Net_ v5.0.0, which contains breaking changes ([release notes](/rn-json-pointer/#release-pointer-5.0.0)).
+
+Also includes numerous refactors for better evaluation times and memory management.
+
+Benchmark of the JSON Schema Test Suite before and after changes:
+
+| Version | n  | Mean       | Error    | StdDev   | Gen0        | Gen1       | Allocated |
+|-------- |--- |-----------:|---------:|---------:|------------:|-----------:|----------:|
+| 6.1.2   | 1  |   412.7 ms | 14.16 ms | 41.30 ms |  27000.0000 |  1000.0000 |  82.66 MB |
+| 7.0.0   | 1  |   296.5 ms |  5.82 ms | 10.03 ms |  21000.0000 |  4000.0000 |  72.81 MB |
+| 6.1.2   | 10 | 1,074.7 ms | 22.24 ms | 63.82 ms | 218000.0000 | 11000.0000 | 476.56 MB |
+| 7.0.0   | 10 |   903.0 ms | 17.96 ms | 40.91 ms | 202000.0000 |  9000.0000 | 443.65 MB |
+
+## Breaking changes
+
+- `EvaluationOptions`
+  - `EvaluateAs` is now init-only
+  - `VocabularyRegistry` removed
+- `VocabularyRegistry` is now a static class
+- `SchemaRegistry`
+  - parameterless constructor removed (was marked obsolete)
+  - `Get(uri)` will either return an `IBaseDocument` instance or throw `RefResolutionException` (previously would return null)
+- `IJsonSchemaKeyword.GetConstraint(SchemaConstraint, IReadOnlyList<KeywordConstraint>, EvaluationContext)` updated to `GetConstraint(SchemaConstraint, ReadOnlySpan<KeywordConstraint>, EvaluationContext)`
+- `EvaluationExtensions.GetKeywordConstraint<T>(IEnumerable<KeywordConstraint>)` updated to `GetKeywordConstraint<T>(ReadOnlySpan<KeywordConstraint>)`
+- `JsonSchemaExtensions` methods with return type of `IReadOnlyCollection<T>` updated to `IReadOnlyList<T>` to match keyword output
+- `JsonPointers` static class renamed to `CommonJsonPointers`
+- `KeywordExtensions` static class consolidated into `SchemaKeywordRegistry`
+
+## Additions
+
+- `CommonJsonPointers.GetNumberSegment(int)` for easy re-use of numeric pointer segments
+- (.Net Standard 2.0) `NetStandardExtensions.GetValueOrDefault<TKey, TValue>(this IReadOnlyDictionary<TKey, TValue>, TKey)` to mirror same method available in .Net 8
+- `RefResolutionException` (derives from `JsonSchemaException`) thrown when a reference cannot be resolved
+- `VocabularyRegistry.Unregister(Vocabulary)` to remove a registration
+
+## Other changes
+
+There was a lot of refactoring internally.  Most impactfully, the schema registry now performs a lot more analysis on registration, like identifying anchors, dialects, and spec version as well as propagating base URIs.  Previously this was done on initial evaluation.
+
 # 6.1.2 (No PR) {#release-schema-6.1.2}
 
 Revert changes from [v6.1.0](#release-schema-6.1.0) as they broke functionality in satellite packages.  Will reintroduce with next major version.  Until then, the returns from these methods can be safely cast to `IReadOnlyList<T>`.

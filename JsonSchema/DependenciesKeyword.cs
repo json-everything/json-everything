@@ -18,6 +18,8 @@ namespace Json.Schema;
 [JsonConverter(typeof(DependenciesKeywordJsonConverter))]
 public class DependenciesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 {
+	private readonly IReadOnlyDictionary<string, JsonSchema> _schemas;
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
@@ -28,9 +30,7 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 	/// </summary>
 	public IReadOnlyDictionary<string, SchemaOrPropertyList> Requirements { get; }
 
-	IReadOnlyDictionary<string, JsonSchema> IKeyedSchemaCollector.Schemas =>
-		Requirements.Where(x => x.Value.Schema != null)
-			.ToDictionary(x => x.Key, x => x.Value.Schema!);
+	IReadOnlyDictionary<string, JsonSchema> IKeyedSchemaCollector.Schemas => _schemas;
 
 	/// <summary>
 	/// Creates a new <see cref="DependenciesKeyword"/>.
@@ -39,6 +39,7 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 	public DependenciesKeyword(IReadOnlyDictionary<string, SchemaOrPropertyList> values)
 	{
 		Requirements = values;
+		_schemas = Requirements.Where(x => x.Value.Schema != null).ToDictionary(x => x.Key, x => x.Value.Schema!);
 	}
 
 	/// <summary>
@@ -46,13 +47,13 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 	/// </summary>
 	/// <param name="schemaConstraint">The <see cref="SchemaConstraint"/> for the schema object that houses this keyword.</param>
 	/// <param name="localConstraints">
-	/// The set of other <see cref="KeywordConstraint"/>s that have been processed prior to this one.
-	/// Will contain the constraints for keyword dependencies.
+	///     The set of other <see cref="KeywordConstraint"/>s that have been processed prior to this one.
+	///     Will contain the constraints for keyword dependencies.
 	/// </param>
 	/// <param name="context">The <see cref="EvaluationContext"/>.</param>
 	/// <returns>A constraint object.</returns>
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
-		IReadOnlyList<KeywordConstraint> localConstraints,
+		ReadOnlySpan<KeywordConstraint> localConstraints,
 		EvaluationContext context)
 	{
 		var subschemaConstraints = Requirements
@@ -66,7 +67,7 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 				    !obj.ContainsKey(requirement.Key))
 					return Array.Empty<JsonPointer>();
 
-				return JsonPointers.SingleEmptyPointerArray;
+				return CommonJsonPointers.SingleEmptyPointerArray;
 			};
 
 			return subschemaConstraint;
@@ -102,16 +103,17 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 			evaluation.Results.Fail(Name, ErrorMessages.GetDependentRequired(context.Options.Culture)
 				.ReplaceToken("missing", missing));
 
-		
-		var failedProperties = evaluation.ChildEvaluations
-			.Where(x => !x.Results.IsValid)
-			.Select(x => x.Results.EvaluationPath.Segments.Last().Value)
-			.ToArray();
-		evaluation.Results.SetAnnotation(Name, evaluation.ChildEvaluations.Select(x => (JsonNode)x.Results.EvaluationPath.Segments.Last().Value!).ToJsonArray());
 
-		if (failedProperties.Length != 0)
-			evaluation.Results.Fail(Name, ErrorMessages.GetDependentSchemas(context.Options.Culture)
-				.ReplaceToken("failed", failedProperties));
+		var failedProperties = evaluation.ChildEvaluations
+			.Where(x => !x.Results.IsValid);
+
+		// ReSharper disable PossibleMultipleEnumeration
+		if (!failedProperties.Any()) return;
+		
+		var properties = failedProperties.Select(x => x.Results.EvaluationPath[^1]).ToArray();
+		evaluation.Results.Fail(Name, ErrorMessages.GetDependentSchemas(context.Options.Culture)
+				.ReplaceToken("failed", properties));
+		// ReSharper restore PossibleMultipleEnumeration
 	}
 }
 

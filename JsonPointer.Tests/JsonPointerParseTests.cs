@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
 
@@ -66,8 +65,14 @@ public class JsonPointerParseTests
 	{
 		var pointer = JsonPointer.Parse(pointerString);
 
-		pointer.Segments.Length.Should().Be(segments.Length);
-		pointer.Segments.Select(s => s.Value).Should().BeEquivalentTo(segments);
+		pointer.Count.Should().Be(segments.Length);
+		for (int i = 0; i < pointer.Count; i++)
+		{
+			var segment = pointer[i];
+			var expected = segments[i];
+
+			Assert.AreEqual(expected, segment);
+		}
 	}
 
 	[TestCaseSource(nameof(SpecificationExamples))]
@@ -75,8 +80,14 @@ public class JsonPointerParseTests
 	{
 		Assert.IsTrue(JsonPointer.TryParse(pointerString, out var pointer));
 
-		pointer!.Segments.Length.Should().Be(segments.Length);
-		pointer.Segments.Select(s => s.Value).Should().BeEquivalentTo(segments);
+		pointer.Count.Should().Be(segments.Length);
+		for (int i = 0; i < pointer.Count; i++)
+		{
+			var segment = pointer[i];
+			var expected = segments[i];
+
+			Assert.AreEqual(expected, segment);
+		}
 	}
 
 	[TestCaseSource(nameof(FailureCases))]
@@ -89,5 +100,27 @@ public class JsonPointerParseTests
 	public void TryParseFailure(string pointerString)
 	{
 		Assert.False(JsonPointer.TryParse(pointerString, out _));
+	}
+
+	[Test]
+	public void ParseShouldStoreNonUrlForm()
+	{
+		var pointer = JsonPointer.Parse("#/foo");
+		var expected = "/foo";
+
+		var actual = pointer.ToString();
+
+		Assert.AreEqual(expected, actual);
+	}
+
+	[Test]
+	public void TryParseShouldStoreNonUrlForm()
+	{
+		Assert.IsTrue(JsonPointer.TryParse("#/foo", out var pointer));
+		var expected = "/foo";
+
+		var actual = pointer.ToString();
+
+		Assert.AreEqual(expected, actual);
 	}
 }

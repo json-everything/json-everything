@@ -34,7 +34,7 @@ public class SlackTests
 		var schema = JsonSchema.FromText(json);
 		var instance = JsonNode.Parse(json);
 
-		Assert.Throws<JsonSchemaException>(() => schema.Evaluate(instance, new EvaluationOptions
+		Assert.Throws<RefResolutionException>(() => schema.Evaluate(instance, new EvaluationOptions
 		{
 			OutputFormat = OutputFormat.Hierarchical
 		}));

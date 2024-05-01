@@ -18,13 +18,13 @@ internal sealed class JsonPointerTypeConverter : TypeConverter
 		return destinationType == typeof(string) || destinationType == typeof(JsonPointer) || base.CanConvertTo(context, destinationType);
 	}
 
-	public override object ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object value)
+	public override object ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object? value)
 	{
 		if (value is string s)
 			return JsonPointer.Parse(s);
 			
 		if (value is JsonPointer pointer)
-			return JsonPointer.Create(pointer.Segments);
+			return pointer;
 
 		throw GetConvertFromException(value);
 	}
@@ -37,7 +37,7 @@ internal sealed class JsonPointerTypeConverter : TypeConverter
 				return pointer.ToString();
 				
 			if (destinationType == typeof(JsonPointer))
-				return JsonPointer.Create(pointer.Segments);
+				return pointer;
 		}
 
 		throw GetConvertToException(value, destinationType);
@@ -54,10 +54,8 @@ internal sealed class JsonPointerTypeConverter : TypeConverter
 
 	public override bool IsValid(ITypeDescriptorContext? context, object? value)
 	{
-		if (value is string s)
-		{
-			return JsonPointer.TryParse(s, out _);
-		}
-		return value is JsonPointer;
+		return value is string s
+			? JsonPointer.TryParse(s, out _)
+			: value is JsonPointer;
 	}
 }

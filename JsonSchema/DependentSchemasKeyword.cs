@@ -47,13 +47,13 @@ public class DependentSchemasKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 	/// </summary>
 	/// <param name="schemaConstraint">The <see cref="SchemaConstraint"/> for the schema object that houses this keyword.</param>
 	/// <param name="localConstraints">
-	/// The set of other <see cref="KeywordConstraint"/>s that have been processed prior to this one.
-	/// Will contain the constraints for keyword dependencies.
+	///     The set of other <see cref="KeywordConstraint"/>s that have been processed prior to this one.
+	///     Will contain the constraints for keyword dependencies.
 	/// </param>
 	/// <param name="context">The <see cref="EvaluationContext"/>.</param>
 	/// <returns>A constraint object.</returns>
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
-		IReadOnlyList<KeywordConstraint> localConstraints,
+		ReadOnlySpan<KeywordConstraint> localConstraints,
 		EvaluationContext context)
 	{
 		var subschemaConstraints = Schemas.Select(requirement =>
@@ -63,9 +63,9 @@ public class DependentSchemasKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 			{
 				if (evaluation.LocalInstance is not JsonObject obj ||
 				    !obj.ContainsKey(requirement.Key))
-					return Array.Empty<JsonPointer>();
+					return [];
 
-				return JsonPointers.SingleEmptyPointerArray;
+				return CommonJsonPointers.SingleEmptyPointerArray;
 			};
 
 			return subschemaConstraint;
@@ -80,14 +80,15 @@ public class DependentSchemasKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 	private static void Evaluator(KeywordEvaluation evaluation, EvaluationContext context)
 	{
 		var failedProperties = evaluation.ChildEvaluations
-			.Where(x => !x.Results.IsValid)
-			.Select(x => x.Results.EvaluationPath.Segments.Last().Value)
-			.ToArray();
-		evaluation.Results.SetAnnotation(Name, evaluation.ChildEvaluations.Select(x => (JsonNode)x.Results.EvaluationPath.Segments.Last().Value!).ToJsonArray());
+			.Where(x => !x.Results.IsValid);
+
+		// ReSharper disable PossibleMultipleEnumeration
+		if (!failedProperties.Any()) return;
 		
-		if (failedProperties.Length != 0)
-			evaluation.Results.Fail(Name, ErrorMessages.GetDependentSchemas(context.Options.Culture)
-				.ReplaceToken("failed", failedProperties));
+		var properties = failedProperties.Select(x => x.Results.EvaluationPath[^1]).ToArray();
+		evaluation.Results.Fail(Name, ErrorMessages.GetDependentSchemas(context.Options.Culture)
+				.ReplaceToken("failed", properties));
+		// ReSharper restore PossibleMultipleEnumeration
 	}
 }
 

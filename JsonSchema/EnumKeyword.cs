@@ -48,7 +48,7 @@ public class EnumKeyword : IJsonSchemaKeyword
 	/// <remarks>
 	/// Enum values aren't necessarily strings; they can be of any JSON value.
 	/// </remarks>
-	public IReadOnlyCollection<JsonNode?> Values => _values;
+	public IReadOnlyList<JsonNode?> Values => _values;
 
 	/// <summary>
 	/// Creates a new <see cref="EnumKeyword"/>.
@@ -79,13 +79,13 @@ public class EnumKeyword : IJsonSchemaKeyword
 	/// </summary>
 	/// <param name="schemaConstraint">The <see cref="SchemaConstraint"/> for the schema object that houses this keyword.</param>
 	/// <param name="localConstraints">
-	/// The set of other <see cref="KeywordConstraint"/>s that have been processed prior to this one.
-	/// Will contain the constraints for keyword dependencies.
+	///     The set of other <see cref="KeywordConstraint"/>s that have been processed prior to this one.
+	///     Will contain the constraints for keyword dependencies.
 	/// </param>
 	/// <param name="context">The <see cref="EvaluationContext"/>.</param>
 	/// <returns>A constraint object.</returns>
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
-		IReadOnlyList<KeywordConstraint> localConstraints,
+		ReadOnlySpan<KeywordConstraint> localConstraints,
 		EvaluationContext context)
 	{
 		return new KeywordConstraint(Name, Evaluator);
@@ -96,7 +96,7 @@ public class EnumKeyword : IJsonSchemaKeyword
 		if (!Values.Contains(evaluation.LocalInstance, JsonNodeEqualityComparer.Instance))
 			evaluation.Results.Fail(Name, ErrorMessages.GetEnum(context.Options.Culture)
 				.ReplaceToken("received", evaluation.LocalInstance, JsonSchemaSerializerContext.Default.JsonNode)
-				.ReplaceToken("values", Values, JsonSchemaSerializerContext.Default.IReadOnlyCollectionJsonNode!));
+				.ReplaceToken("values", Values!, JsonSchemaSerializerContext.Default.IReadOnlyCollectionJsonNode));
 	}
 }
 

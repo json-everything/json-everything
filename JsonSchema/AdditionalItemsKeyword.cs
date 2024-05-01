@@ -45,31 +45,18 @@ public class AdditionalItemsKeyword : IJsonSchemaKeyword, ISchemaContainer
 	/// </summary>
 	/// <param name="schemaConstraint">The <see cref="SchemaConstraint"/> for the schema object that houses this keyword.</param>
 	/// <param name="localConstraints">
-	/// The set of other <see cref="KeywordConstraint"/>s that have been processed prior to this one.
-	/// Will contain the constraints for keyword dependencies.
+	///     The set of other <see cref="KeywordConstraint"/>s that have been processed prior to this one.
+	///     Will contain the constraints for keyword dependencies.
 	/// </param>
 	/// <param name="context">The <see cref="EvaluationContext"/>.</param>
 	/// <returns>A constraint object.</returns>
-	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, EvaluationContext context)
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, ReadOnlySpan<KeywordConstraint> localConstraints, EvaluationContext context)
 	{
 		var itemsConstraint = localConstraints.GetKeywordConstraint<ItemsKeyword>();
 		if (itemsConstraint == null) return KeywordConstraint.Skip;
 
 		var subschemaConstraint = Schema.GetConstraint(JsonPointer.Create(Name), schemaConstraint.BaseInstanceLocation, JsonPointer.Empty, context);
-		subschemaConstraint.InstanceLocator = evaluation =>
-		{
-			if (evaluation.LocalInstance is not JsonArray array) return Array.Empty<JsonPointer>();
-
-			var startIndex = 0;
-
-			var itemsEvaluation = evaluation.GetKeywordEvaluation<ItemsKeyword>();
-			if (itemsEvaluation != null)
-				startIndex = itemsEvaluation.ChildEvaluations.Length;
-
-			if (array.Count <= startIndex) return Array.Empty<JsonPointer>();
-
-			return Enumerable.Range(startIndex, array.Count - startIndex).Select(x => JsonPointer.Create(x));
-		};
+		subschemaConstraint.InstanceLocator = LocateInstances;
 
 		var constraint = new KeywordConstraint(Name, Evaluator)
 		{
@@ -77,6 +64,23 @@ public class AdditionalItemsKeyword : IJsonSchemaKeyword, ISchemaContainer
 			ChildDependencies = [subschemaConstraint]
 		};
 		return constraint;
+	}
+
+	private static IEnumerable<JsonPointer> LocateInstances(KeywordEvaluation evaluation)
+	{
+		if (evaluation.LocalInstance is not JsonArray array) yield break;
+
+		var startIndex = 0;
+
+		var itemsEvaluation = evaluation.GetKeywordEvaluation<ItemsKeyword>();
+		if (itemsEvaluation != null) startIndex = itemsEvaluation.ChildEvaluations.Length;
+
+		if (array.Count <= startIndex) yield break;
+
+		for (int i = startIndex; i < array.Count; i++)
+		{
+			yield return CommonJsonPointers.GetNumberSegment(i);
+		}
 	}
 
 	private static void Evaluator(KeywordEvaluation evaluation, EvaluationContext context)

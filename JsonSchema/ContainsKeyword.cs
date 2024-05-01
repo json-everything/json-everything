@@ -51,34 +51,32 @@ public class ContainsKeyword : IJsonSchemaKeyword, ISchemaContainer
 	/// </summary>
 	/// <param name="schemaConstraint">The <see cref="SchemaConstraint"/> for the schema object that houses this keyword.</param>
 	/// <param name="localConstraints">
-	/// The set of other <see cref="KeywordConstraint"/>s that have been processed prior to this one.
-	/// Will contain the constraints for keyword dependencies.
+	///     The set of other <see cref="KeywordConstraint"/>s that have been processed prior to this one.
+	///     Will contain the constraints for keyword dependencies.
 	/// </param>
 	/// <param name="context">The <see cref="EvaluationContext"/>.</param>
 	/// <returns>A constraint object.</returns>
-	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, EvaluationContext context)
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, ReadOnlySpan<KeywordConstraint> localConstraints, EvaluationContext context)
 	{
 		var subschemaConstraint = Schema.GetConstraint(JsonPointer.Create(Name), schemaConstraint.BaseInstanceLocation, JsonPointer.Empty, context);
-		subschemaConstraint.InstanceLocator = evaluation =>
-		{
-			if (evaluation.LocalInstance is JsonArray array)
-			{
-				if (array.Count == 0) return Array.Empty<JsonPointer>();
 
-				return Enumerable.Range(0, array.Count).Select(x => JsonPointer.Create(x));
-			}
-
-			if (evaluation.LocalInstance is JsonObject obj &&
-			    context.EvaluatingAs is SpecVersion.Unspecified or >= SpecVersion.DraftNext)
-				return obj.Select(x => JsonPointer.Create(x.Key));
-
-			return Array.Empty<JsonPointer>();
-		};
+		subschemaConstraint.InstanceLocator = SubschemaConstraintInstanceLocator;
 
 		return new KeywordConstraint(Name, Evaluator)
 		{
-			ChildDependencies = new[] { subschemaConstraint }
+			ChildDependencies = [subschemaConstraint]
 		};
+	}
+
+	private static IEnumerable<JsonPointer> SubschemaConstraintInstanceLocator(KeywordEvaluation evaluation)
+	{
+		if (evaluation.LocalInstance is not JsonArray array) yield break;
+		if (array.Count == 0) yield break;
+
+		for (int i = 0; i < array.Count; i++)
+		{
+			yield return CommonJsonPointers.GetNumberSegment(i);
+		}
 	}
 
 	private static void Evaluator(KeywordEvaluation evaluation, EvaluationContext context)
@@ -94,9 +92,8 @@ public class ContainsKeyword : IJsonSchemaKeyword, ISchemaContainer
 
 			var validIndices = evaluation.ChildEvaluations
 				.Where(x => x.Results.IsValid)
-				.Select(x => int.Parse(x.RelativeInstanceLocation.Segments[0].Value))
+				.Select(x => int.Parse(x.RelativeInstanceLocation[0]))
 				.ToArray();
-			evaluation.Results.SetAnnotation(Name, JsonSerializer.SerializeToNode(validIndices, JsonSchemaSerializerContext.Default.Int32Array));
 
 			var actual = validIndices.Length;
 			if (actual < minimum)
@@ -107,6 +104,8 @@ public class ContainsKeyword : IJsonSchemaKeyword, ISchemaContainer
 				evaluation.Results.Fail(Name, ErrorMessages.GetContainsTooMany(context.Options.Culture)
 					.ReplaceToken("received", actual)
 					.ReplaceToken("maximum", maximum.Value));
+			
+			evaluation.Results.SetAnnotation(Name, JsonSerializer.SerializeToNode(validIndices, JsonSchemaSerializerContext.Default.Int32Array));
 			return;
 		}
 

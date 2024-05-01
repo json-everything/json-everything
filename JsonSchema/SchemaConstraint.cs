@@ -79,10 +79,8 @@ public class SchemaConstraint
 		if (Source != null)
 			Constraints = Source.Constraints;
 
-		if (RelativeInstanceLocation != JsonPointer.Empty)
-			instanceLocation = instanceLocation.Combine(RelativeInstanceLocation);
-		if (_relativeEvaluationPath != JsonPointer.Empty)
-			evaluationPath = evaluationPath.Combine(_relativeEvaluationPath);
+		instanceLocation = instanceLocation.Combine(RelativeInstanceLocation);
+		evaluationPath = evaluationPath.Combine(_relativeEvaluationPath);
 
 		var evaluation = new SchemaEvaluation(localInstance,
 			RelativeInstanceLocation,

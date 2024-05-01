@@ -13,7 +13,7 @@ namespace Json.Patch.Tests.Suite;
 [TestFixture]
 public class JsonPatchTestSuite
 {
-	private const string _testFolder = @"../../../../ref-repos/json-patch-tests";
+	private const string _testFolder = "../../../../ref-repos/json-patch-tests";
 
 	// ReSharper disable once MemberCanBePrivate.Global
 	public static IEnumerable TestData => LoadTests();
@@ -30,7 +30,7 @@ public class JsonPatchTestSuite
 
 			foreach (var test in suite.Where(t => t != null!))
 			{
-				var testName = test.Comment?.Replace(' ', '_') ?? "Unnamed test";
+				var testName = test.Comment ?? "Unnamed test";
 				yield return new TestCaseData(fileName, test) { TestName = testName };
 			}
 		}

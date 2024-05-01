@@ -47,12 +47,12 @@ public class RefKeyword : IJsonSchemaKeyword
 	/// </summary>
 	/// <param name="schemaConstraint">The <see cref="SchemaConstraint"/> for the schema object that houses this keyword.</param>
 	/// <param name="localConstraints">
-	/// The set of other <see cref="KeywordConstraint"/>s that have been processed prior to this one.
-	/// Will contain the constraints for keyword dependencies.
+	///     The set of other <see cref="KeywordConstraint"/>s that have been processed prior to this one.
+	///     Will contain the constraints for keyword dependencies.
 	/// </param>
 	/// <param name="context">The <see cref="EvaluationContext"/>.</param>
 	/// <returns>A constraint object.</returns>
-	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, EvaluationContext context)
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, ReadOnlySpan<KeywordConstraint> localConstraints, EvaluationContext context)
 	{
 		var newUri = new Uri(schemaConstraint.SchemaBaseUri, Reference);
 		var fragment = newUri.Fragment;
@@ -62,33 +62,28 @@ public class RefKeyword : IJsonSchemaKeyword
 		if (context.NavigatedReferences.Contains(navigation))
 			throw new JsonSchemaException($"Encountered circular reference at schema location `{newUri}` and instance location `{schemaConstraint.RelativeInstanceLocation}`");
 
-		var newBaseUri = new Uri(newUri.GetLeftPart(UriPartial.Query));
-
-		JsonSchema? targetSchema = null;
-		var targetBase = context.Options.SchemaRegistry.Get(newBaseUri) ??
-						 throw new JsonSchemaException($"Cannot resolve base schema from `{newUri}`");
+		JsonSchema? targetSchema;
 
 		if (JsonPointer.TryParse(fragment, out var pointerFragment))
 		{
-			if (targetBase == null)
-				throw new JsonSchemaException($"Cannot resolve base schema from `{newUri}`");
+			var targetBase = context.Options.SchemaRegistry.Get(newUri) ??
+							 throw new RefResolutionException(newUri, pointerFragment);
 
-			targetSchema = targetBase.FindSubschema(pointerFragment!, context.Options);
+			targetSchema = targetBase.FindSubschema(pointerFragment, context.Options);
 		}
 		else
 		{
+			var allowLegacy = context.EvaluatingAs is SpecVersion.Draft6 or SpecVersion.Draft7;
 			var anchorFragment = fragment[1..];
 			if ((context.EvaluatingAs <= SpecVersion.Draft201909 && !AnchorKeyword.AnchorPattern201909.IsMatch(anchorFragment)) ||
 			    (context.EvaluatingAs >= SpecVersion.Draft202012 && !AnchorKeyword.AnchorPattern202012.IsMatch(anchorFragment)))
 				throw new JsonSchemaException($"Unrecognized fragment type `{newUri}`");
 
-			if (targetBase is JsonSchema targetBaseSchema &&
-				targetBaseSchema.Anchors.TryGetValue(anchorFragment, out var anchorDefinition))
-				targetSchema = anchorDefinition.Schema;
+			targetSchema = context.Options.SchemaRegistry.Get(newUri, anchorFragment, allowLegacy) as JsonSchema;
 		}
 
 		if (targetSchema == null)
-			throw new JsonSchemaException($"Cannot resolve schema `{newUri}`");
+			throw new RefResolutionException(newUri);
 
 		context.NavigatedReferences.Push(navigation);
 		var subschemaConstraint = targetSchema.GetConstraint(JsonPointer.Create(Name), schemaConstraint.BaseInstanceLocation, JsonPointer.Empty, context);

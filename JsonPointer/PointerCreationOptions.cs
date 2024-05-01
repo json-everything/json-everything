@@ -18,7 +18,7 @@ public class PointerCreationOptions
 	/// <summary>
 	/// Gets or sets the property naming resolver.  Default is <see cref="PropertyNameResolvers.AsDeclared"/>.
 	/// </summary>
-	public PropertyNameResolver? PropertyNameResolver
+	public PropertyNameResolver PropertyNameResolver
 	{
 		get => _propertyNameResolver ??= PropertyNameResolvers.AsDeclared;
 		set => _propertyNameResolver = value;

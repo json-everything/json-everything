@@ -33,7 +33,8 @@ public class FormatKeyword : IJsonSchemaKeyword
 	private static readonly Uri[] _formatAssertionIds =
 	{
 		new(Vocabularies.Format201909Id),
-		new(Vocabularies.FormatAssertion202012Id)
+		new(Vocabularies.FormatAssertion202012Id),
+		new(Vocabularies.FormatAssertionNextId)
 	};
 
 	/// <summary>
@@ -55,13 +56,13 @@ public class FormatKeyword : IJsonSchemaKeyword
 	/// </summary>
 	/// <param name="schemaConstraint">The <see cref="SchemaConstraint"/> for the schema object that houses this keyword.</param>
 	/// <param name="localConstraints">
-	/// The set of other <see cref="KeywordConstraint"/>s that have been processed prior to this one.
-	/// Will contain the constraints for keyword dependencies.
+	///     The set of other <see cref="KeywordConstraint"/>s that have been processed prior to this one.
+	///     Will contain the constraints for keyword dependencies.
 	/// </param>
 	/// <param name="context">The <see cref="EvaluationContext"/>.</param>
 	/// <returns>A constraint object.</returns>
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
-		IReadOnlyList<KeywordConstraint> localConstraints,
+		ReadOnlySpan<KeywordConstraint> localConstraints,
 		EvaluationContext context)
 	{
 		if (Value is UnknownFormat && context.Options.OnlyKnownFormats)
@@ -72,7 +73,7 @@ public class FormatKeyword : IJsonSchemaKeyword
 
 		if (!requireValidation)
 		{
-			var vocabs = context.Dialect[context.Scope.LocalScope];
+			var vocabs = schemaConstraint.LocalSchema.Dialect;
 			if (vocabs != null)
 			{
 				foreach (var formatAssertionId in _formatAssertionIds)

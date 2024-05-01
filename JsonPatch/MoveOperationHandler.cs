@@ -1,6 +1,5 @@
-﻿using System.Linq;
+﻿using System;
 using System.Text.Json.Nodes;
-using Json.Pointer;
 
 namespace Json.Patch;
 
@@ -14,7 +13,7 @@ internal class MoveOperationHandler : IPatchOperationHandler
 	{
 		if (Equals(operation.Path, operation.From)) return;
 
-		if (operation.Path.Segments.Length == 0)
+		if (operation.Path.Count == 0)
 		{
 			context.Message = "Cannot move root value.";
 			return;
@@ -33,22 +32,26 @@ internal class MoveOperationHandler : IPatchOperationHandler
 			return;
 		}
 
-		var lastFromSegment = operation.From.Segments.Last().Value;
+		var lastFromSegment = operation.From[^1];
 		if (source is JsonObject objSource)
 			objSource.Remove(lastFromSegment);
 		else if (source is JsonArray arrSource)
 		{
-			var index = lastFromSegment == "-" ? arrSource.Count - 1 : int.Parse(lastFromSegment);
+			var index = lastFromSegment.Length == 0 && lastFromSegment[0] == '-'
+				? arrSource.Count
+				: int.TryParse(lastFromSegment, out var i)
+					? i
+					: throw new ArgumentException("Expected integer");
 			arrSource.RemoveAt(index);
 		}
 
-		if (operation.Path.Segments.Length == 0)
+		if (operation.Path.Count == 0)
 		{
 			context.Source = data;
 			return;
 		}
 
-		var lastPathSegment = operation.Path.Segments.Last().Value;
+		var lastPathSegment = operation.Path[^1];
 		if (target is JsonObject objTarget)
 		{
 			objTarget[lastPathSegment] = data?.DeepClone();
@@ -58,7 +61,7 @@ internal class MoveOperationHandler : IPatchOperationHandler
 		if (target is JsonArray arrTarget)
 		{
 			int index;
-			if (lastPathSegment == "-")
+			if (lastPathSegment.Length == 0 && lastPathSegment[0] == '-')
 				index = arrTarget.Count;
 			else if (!int.TryParse(lastPathSegment, out index))
 			{
@@ -72,19 +75,5 @@ internal class MoveOperationHandler : IPatchOperationHandler
 			else
 				context.Message = "Path indicates an index greater than the bounds of the array";
 		}
-	}
-}
-
-internal static class PointerExtensions
-{
-	public static bool EvaluateAndGetParent(this JsonPointer pointer, JsonNode? node, out JsonNode? target)
-	{
-		if (pointer == JsonPointer.Empty)
-		{
-			target = node?.Parent;
-			return target != null;
-		}
-		var parentPointer = JsonPointer.Create(pointer.Segments.Take(pointer.Segments.Length - 1).ToArray());
-		return parentPointer.TryEvaluate(node, out target);
 	}
 }

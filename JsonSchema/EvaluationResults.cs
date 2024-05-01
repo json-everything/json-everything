@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -132,17 +131,23 @@ public class EvaluationResults
 	private Uri BuildSchemaLocation()
 	{
 		var localEvaluationPathStart = 0;
-		for (var i = 0; i < EvaluationPath.Segments.Length; i++)
+		for (var i = 0; i < EvaluationPath.Count; i++)
 		{
-			var segment = EvaluationPath.Segments[i];
-			if (segment.Value is RefKeyword.Name or RecursiveRefKeyword.Name or DynamicRefKeyword.Name)
+			var segment = EvaluationPath[i];
+			if (segment == RefKeyword.Name ||
+			    segment == RecursiveRefKeyword.Name ||
+			    segment == DynamicRefKeyword.Name)
 				localEvaluationPathStart = i + 1;
 		}
 
 		if (_reference == null && _currentUri == Parent?._currentUri)
 			_reference = Parent._reference;
 		var fragment = _reference ?? JsonPointer.Empty;
-		fragment = fragment.Combine(EvaluationPath.Segments.Skip(localEvaluationPathStart).ToArray());
+#if NETSTANDARD2_0
+		fragment = fragment.Combine(EvaluationPath.GetLocal(localEvaluationPathStart));  // 2 allocations
+#else
+		fragment = fragment.Combine(EvaluationPath[localEvaluationPathStart..]);  // 2 allocations
+#endif
 
 		return fragment == JsonPointer.Empty
 			? _currentUri
@@ -154,7 +159,7 @@ public class EvaluationResults
 	/// </summary>
 	public void ToList()
 	{
-		var children = GetAllChildren().ToList();
+		var children = GetAllChildren();
 		if (children.Count == 0) return;
 
 		children.Remove(this);
@@ -175,7 +180,7 @@ public class EvaluationResults
 		Format = OutputFormat.List;
 	}
 
-	private IEnumerable<EvaluationResults> GetAllChildren()
+	private List<EvaluationResults> GetAllChildren()
 	{
 		var all = new List<EvaluationResults>();
 		var toProcess = new Queue<EvaluationResults>();

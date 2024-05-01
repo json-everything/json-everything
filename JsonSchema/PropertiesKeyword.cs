@@ -24,6 +24,9 @@ namespace Json.Schema;
 [JsonConverter(typeof(PropertiesKeywordJsonConverter))]
 public class PropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 {
+	private readonly Dictionary<string, JsonPointer> _evaluationPointers;
+	private readonly Dictionary<string, JsonPointer> _instancePointers;
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
@@ -43,6 +46,9 @@ public class PropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 	public PropertiesKeyword(IReadOnlyDictionary<string, JsonSchema> values)
 	{
 		Properties = values ?? throw new ArgumentNullException(nameof(values));
+
+		_evaluationPointers = values.ToDictionary(x => x.Key, x => JsonPointer.Create(Name, x.Key));
+		_instancePointers = values.ToDictionary(x => x.Key, x => JsonPointer.Create(x.Key));
 	}
 
 	/// <summary>
@@ -50,14 +56,14 @@ public class PropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 	/// </summary>
 	/// <param name="schemaConstraint">The <see cref="SchemaConstraint"/> for the schema object that houses this keyword.</param>
 	/// <param name="localConstraints">
-	/// The set of other <see cref="KeywordConstraint"/>s that have been processed prior to this one.
-	/// Will contain the constraints for keyword dependencies.
+	///     The set of other <see cref="KeywordConstraint"/>s that have been processed prior to this one.
+	///     Will contain the constraints for keyword dependencies.
 	/// </param>
 	/// <param name="context">The <see cref="EvaluationContext"/>.</param>
 	/// <returns>A constraint object.</returns>
-	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, IReadOnlyList<KeywordConstraint> localConstraints, EvaluationContext context)
+	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, ReadOnlySpan<KeywordConstraint> localConstraints, EvaluationContext context)
 	{
-		var subschemaConstraints = Properties.Select(x => x.Value.GetConstraint(JsonPointer.Create(Name, x.Key), schemaConstraint.BaseInstanceLocation, JsonPointer.Create(x.Key), context)).ToArray();
+		var subschemaConstraints = Properties.Select(x => x.Value.GetConstraint(_evaluationPointers[x.Key], schemaConstraint.BaseInstanceLocation, _instancePointers[x.Key], context)).ToArray();
 
 		return new KeywordConstraint(Name, Evaluator)
 		{
@@ -67,7 +73,7 @@ public class PropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 
 	private static void Evaluator(KeywordEvaluation evaluation, EvaluationContext context)
 	{
-		evaluation.Results.SetAnnotation(Name, evaluation.ChildEvaluations.Select(x => (JsonNode)x.RelativeInstanceLocation.Segments[0].Value!).ToJsonArray());
+		evaluation.Results.SetAnnotation(Name, evaluation.ChildEvaluations.Select(x => (JsonNode)x.RelativeInstanceLocation[0]).ToJsonArray());
 
 		if (!evaluation.ChildEvaluations.All(x => x.Results.IsValid))
 			evaluation.Results.Fail();

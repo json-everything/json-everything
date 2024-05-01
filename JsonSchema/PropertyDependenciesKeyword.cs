@@ -18,6 +18,8 @@ namespace Json.Schema;
 [JsonConverter(typeof(PropertyDependenciesKeywordJsonConverter))]
 public class PropertyDependenciesKeyword : IJsonSchemaKeyword, ICustomSchemaCollector
 {
+	private readonly JsonSchema[] _schemas;
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
@@ -28,7 +30,7 @@ public class PropertyDependenciesKeyword : IJsonSchemaKeyword, ICustomSchemaColl
 	/// </summary>
 	public IReadOnlyDictionary<string, PropertyDependency> Dependencies { get; }
 
-	IEnumerable<JsonSchema> ICustomSchemaCollector.Schemas => Dependencies.SelectMany(x => x.Value.Schemas.Select(y => y.Value));
+	IEnumerable<JsonSchema> ICustomSchemaCollector.Schemas => _schemas;
 	/// <summary>
 	/// Creates a new instance of the <see cref="PropertyDependenciesKeyword"/>.
 	/// </summary>
@@ -36,6 +38,7 @@ public class PropertyDependenciesKeyword : IJsonSchemaKeyword, ICustomSchemaColl
 	public PropertyDependenciesKeyword(IReadOnlyDictionary<string, PropertyDependency> dependencies)
 	{
 		Dependencies = dependencies;
+		_schemas = Dependencies.SelectMany(x => x.Value.Schemas.Select(y => y.Value)).ToArray();
 	}
 
 	/// <summary>
@@ -43,13 +46,13 @@ public class PropertyDependenciesKeyword : IJsonSchemaKeyword, ICustomSchemaColl
 	/// </summary>
 	/// <param name="schemaConstraint">The <see cref="SchemaConstraint"/> for the schema object that houses this keyword.</param>
 	/// <param name="localConstraints">
-	/// The set of other <see cref="KeywordConstraint"/>s that have been processed prior to this one.
-	/// Will contain the constraints for keyword dependencies.
+	///     The set of other <see cref="KeywordConstraint"/>s that have been processed prior to this one.
+	///     Will contain the constraints for keyword dependencies.
 	/// </param>
 	/// <param name="context">The <see cref="EvaluationContext"/>.</param>
 	/// <returns>A constraint object.</returns>
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
-		IReadOnlyList<KeywordConstraint> localConstraints,
+		ReadOnlySpan<KeywordConstraint> localConstraints,
 		EvaluationContext context)
 	{
 		var subschemaConstraints = Dependencies.SelectMany(property =>
@@ -62,9 +65,9 @@ public class PropertyDependenciesKeyword : IJsonSchemaKeyword, ICustomSchemaColl
 					if (evaluation.LocalInstance is not JsonObject obj ||
 					    !obj.TryGetValue(property.Key, out var value, out _) ||
 					    !value.IsEquivalentTo(requirement.Key))
-						return Array.Empty<JsonPointer>();
+						return [];
 
-					return JsonPointers.SingleEmptyPointerArray;
+					return CommonJsonPointers.SingleEmptyPointerArray;
 				};
 
 				return requirementConstraint;
@@ -83,20 +86,20 @@ public class PropertyDependenciesKeyword : IJsonSchemaKeyword, ICustomSchemaColl
 	{
 		var failedProperties = evaluation.ChildEvaluations
 			.Where(x => !x.Results.IsValid)
-			.Select(x => x.Results.EvaluationPath.Segments.Last().Value)
+			.Select(x => x.Results.EvaluationPath[^1])
 			.ToArray();
-		evaluation.Results.SetAnnotation(Name, evaluation.ChildEvaluations.Select(x => (JsonNode)x.Results.EvaluationPath.Segments.Last().Value!).ToJsonArray());
+		evaluation.Results.SetAnnotation(Name, evaluation.ChildEvaluations.Select(x => (JsonNode)x.Results.EvaluationPath[^1].ToString()!).ToJsonArray());
 		
 		if (failedProperties.Length != 0)
 			evaluation.Results.Fail(Name, ErrorMessages.GetDependentSchemas(context.Options.Culture)
 				.ReplaceToken("failed", failedProperties));
 	}
 
-	(JsonSchema?, int) ICustomSchemaCollector.FindSubschema(IReadOnlyList<PointerSegment> segments)
+	(JsonSchema? Schema, int SegmentsConsumed) ICustomSchemaCollector.FindSubschema(JsonPointer pointer)
 	{
-		if (segments.Count < 2) return (null, 0);
-		if (!Dependencies.TryGetValue(segments[0].Value, out var property)) return (null, 0);
-		if (!property.Schemas.TryGetValue(segments[1].Value, out var schema)) return (null, 0);
+		if (pointer.Count < 2) return (null, 0);
+		if (!Dependencies.TryGetValue(pointer[0], out var property)) return (null, 0);
+		if (!property.Schemas.TryGetValue(pointer[1], out var schema)) return (null, 0);
 
 		return (schema, 2);
 	}

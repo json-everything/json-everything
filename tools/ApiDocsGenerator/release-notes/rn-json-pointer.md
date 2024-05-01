@@ -4,6 +4,48 @@ title: JsonPointer.Net
 icon: fas fa-tag
 order: "09.10"
 ---
+# [5.0.0](https://github.com/gregsdennis/json-everything/pull/719) {#release-pointer-5.0.0}
+
+Complete overhaul of `JsonPointer` to reduce memory usage for consuming applications.
+
+Benchmark showing performance of parsing various pointer strings before and after changes.
+
+| Version | Count | Mean       | Error      | StdDev     | Gen0     | Allocated |
+|-------  |------ |-----------:| ----------:| ----------:|---------:|----------:|
+| 4.0.1   | 1     |   5.830 us |  0.2559 us |  0.7300 us |   4.6387 |   9.48 KB |
+| 5.0.0   | 1     |   3.188 us |  0.0492 us |  0.0460 us |   2.2583 |   4.62 KB |
+| 4.0.1   | 10    |  54.627 us |  1.0469 us |  2.9355 us |  46.3867 |  94.77 KB |
+| 5.0.0   | 10    |  31.482 us |  0.4489 us |  0.4199 us |  22.5830 |  46.17 KB |
+| 4.0.1   | 100   | 537.704 us | 10.6843 us | 22.5369 us | 463.8672 | 947.66 KB |
+| 5.0.0   | 100   | 329.112 us |  2.6580 us |  2.4863 us | 226.0742 | 461.72 KB |
+
+## Architecture change
+
+`JsonPointer` is now a struct which holds the complete pointer string.  Segments are now exposed via an indexer and return `ReadOnlySpan<char>`s which contain the JSON-Pointer-encoded segment.  Use `JsonPointer.SegmentEquals()` for zero-allocation string comparisons or the `.GetSegmentName()` to decode to a string.
+
+`RelativeJsonPointer` as likewise been updated to a struct.
+
+## Breaking changes
+
+- `JsonPointer` is now a struct.
+- `JsonPointer.Segments` removed.
+- `JsonPointer.Create(IEnumerable<PointerSegment>)` removed.
+- `PointerSegment` is now only an intermediary type for building pointers; non-constructable.
+- `RelativeJsonPointer` is now a struct.
+- `EnumerableExtensions.GetCollectionHashCode<T>()` removed.
+
+## Additions
+
+- `JsonPointer` segment indexer
+- `JsonPointer.SegmentEquals(ReadOnlySpan<char>, string)`
+- `JsonPointer.GetAncestor(int)` (gets left part)
+- `JsonPointer.GetLocal(int)` (gets right part)
+- `NodeExtensions.TryGetSegment()` extension on `JsonObject` to find a key using a JSON-Pointer-encoded char span.
+- `SpanExtensions`
+  - `GetSegmentName()` decodes a pointer segment char span into a string name
+  - `GetSegmentIndex()` decoes a pointer segment char span into an integer index
+  - `TryGetInt()` attempts to parse an integer from a char span
+
 # [4.0.1.x](https://github.com/gregsdennis/json-everything/pull/712) {#release-pointer-4.0.1.x}
 
 [#711](https://github.com/gregsdennis/json-everything/issues/711) - Nuget package meta-data updates; no functional changes from previous version.

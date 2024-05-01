@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 
 namespace Json.Schema;
 
@@ -11,7 +10,6 @@ namespace Json.Schema;
 public class EvaluationOptions
 {
 	private HashSet<Type>? _ignoredAnnotationTypes;
-	private SpecVersion _evaluateAs;
 	private bool _requireFormatValidation;
 	private bool _onlyKnownFormats;
 	private bool _processCustomKeywords;
@@ -25,16 +23,7 @@ public class EvaluationOptions
 	/// Indicates which specification version to process as.  This will filter the keywords
 	/// of a schema based on their support.
 	/// </summary>
-	public SpecVersion EvaluateAs
-	{
-		get => _evaluateAs;
-		set
-		{
-			if (!Equals(_evaluateAs, value))
-				Changed = true;
-			_evaluateAs = value;
-		}
-	}
+	public SpecVersion EvaluateAs { get; init; }
 
 	/// <summary>
 	/// Indicates whether the schema should be validated against its `$schema` value.
@@ -51,12 +40,6 @@ public class EvaluationOptions
 	/// automatically check the global registry as well.
 	/// </summary>
 	public SchemaRegistry SchemaRegistry { get; }
-
-	/// <summary>
-	/// The local vocabulary registry.  If a schema is not found here, it will
-	/// automatically check the global registry as well.
-	/// </summary>
-	public VocabularyRegistry VocabularyRegistry { get; } = new();
 
 	/// <summary>
 	/// Specifies whether the `format` keyword should be required to provide
@@ -182,7 +165,6 @@ public class EvaluationOptions
 				: new HashSet<Type>(other._ignoredAnnotationTypes)
 		};
 		options.SchemaRegistry.CopyFrom(other.SchemaRegistry);
-		options.VocabularyRegistry.CopyFrom(other.VocabularyRegistry);
 		return options;
 	}
 
@@ -220,34 +202,5 @@ public class EvaluationOptions
 	public void CollectAnnotationsFrom<T>()
 	{
 		_ignoredAnnotationTypes?.Remove(typeof(T));
-	}
-
-	internal static IEnumerable<IJsonSchemaKeyword> FilterKeywords(IEnumerable<IJsonSchemaKeyword> keywords, SpecVersion declaredVersion)
-	{
-		if (declaredVersion is SpecVersion.Draft6 or SpecVersion.Draft7)
-			return DisallowSiblingRef(keywords, declaredVersion);
-
-		return AllowSiblingRef(keywords, declaredVersion);
-	}
-
-	private static IEnumerable<IJsonSchemaKeyword> DisallowSiblingRef(IEnumerable<IJsonSchemaKeyword> keywords, SpecVersion version)
-	{
-		// ReSharper disable once PossibleMultipleEnumeration
-		var refKeyword = keywords.OfType<RefKeyword>().SingleOrDefault();
-
-		// ReSharper disable once PossibleMultipleEnumeration
-		return refKeyword != null ? new[] { refKeyword } : FilterBySpecVersion(keywords, version);
-	}
-
-	private static IEnumerable<IJsonSchemaKeyword> AllowSiblingRef(IEnumerable<IJsonSchemaKeyword> keywords, SpecVersion version)
-	{
-		return FilterBySpecVersion(keywords, version);
-	}
-
-	private static IEnumerable<IJsonSchemaKeyword> FilterBySpecVersion(IEnumerable<IJsonSchemaKeyword> keywords, SpecVersion version)
-	{
-		if (!Enum.IsDefined(typeof(SpecVersion), version) || version == SpecVersion.Unspecified) return keywords;
-
-		return keywords.Where(k => k.SupportsVersion(version));
 	}
 }

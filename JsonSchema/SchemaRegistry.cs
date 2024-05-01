@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Buffers;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 
 namespace Json.Schema;
 
@@ -10,14 +13,18 @@ public class SchemaRegistry
 {
 	private class Registration
 	{
-		public IBaseDocument Root { get; set; } = null!;
+		public required IBaseDocument Root { get; init; } = null!;
+		public Dictionary<string, JsonSchema>? Anchors { get; set; }
+		public Dictionary<string, JsonSchema>? LegacyAnchors { get; set; }
+		public Dictionary<string, JsonSchema>? DynamicAnchors { get; set; }
+		public JsonSchema? RecursiveAnchor { get; set; }
 	}
 
 	private static readonly Uri _empty = new("http://everything.json/");
 
-	private Dictionary<Uri, Registration>? _registered;
+	private readonly Dictionary<Uri, Registration> _registered = [];
+	private readonly EvaluationOptions _options;
 	private Func<Uri, IBaseDocument?>? _fetch;
-	private readonly EvaluationOptions? _options;
 
 	/// <summary>
 	/// The global registry.
@@ -33,14 +40,6 @@ public class SchemaRegistry
 		set => _fetch = value;
 	}
 
-	/// <summary>
-	/// Creates a new <see cref="SchemaRegistry"/>.
-	/// </summary>
-	[Obsolete("There should be no reason to create a schema registry.  This is handled internally.")]
-	public SchemaRegistry()
-	{
-	}
-
 	internal SchemaRegistry(EvaluationOptions options)
 	{
 		_options = options;
@@ -48,37 +47,37 @@ public class SchemaRegistry
 
 	internal void InitializeMetaSchemas()
 	{
-		JsonSchema.Initialize(MetaSchemas.Draft6, this);
+		Register(MetaSchemas.Draft6);
 
-		JsonSchema.Initialize(MetaSchemas.Draft7, this);
+		Register(MetaSchemas.Draft7);
 
-		JsonSchema.Initialize(MetaSchemas.Draft201909, this);
-		JsonSchema.Initialize(MetaSchemas.Core201909, this);
-		JsonSchema.Initialize(MetaSchemas.Applicator201909, this);
-		JsonSchema.Initialize(MetaSchemas.Validation201909, this);
-		JsonSchema.Initialize(MetaSchemas.Metadata201909, this);
-		JsonSchema.Initialize(MetaSchemas.Format201909, this);
-		JsonSchema.Initialize(MetaSchemas.Content201909, this);
+		Register(MetaSchemas.Draft201909);
+		Register(MetaSchemas.Core201909);
+		Register(MetaSchemas.Applicator201909);
+		Register(MetaSchemas.Validation201909);
+		Register(MetaSchemas.Metadata201909);
+		Register(MetaSchemas.Format201909);
+		Register(MetaSchemas.Content201909);
 
-		JsonSchema.Initialize(MetaSchemas.Draft202012, this);
-		JsonSchema.Initialize(MetaSchemas.Core202012, this);
-		JsonSchema.Initialize(MetaSchemas.Applicator202012, this);
-		JsonSchema.Initialize(MetaSchemas.Validation202012, this);
-		JsonSchema.Initialize(MetaSchemas.Metadata202012, this);
-		JsonSchema.Initialize(MetaSchemas.Unevaluated202012, this);
-		JsonSchema.Initialize(MetaSchemas.FormatAnnotation202012, this);
-		JsonSchema.Initialize(MetaSchemas.FormatAssertion202012, this);
-		JsonSchema.Initialize(MetaSchemas.Content202012, this);
+		Register(MetaSchemas.Draft202012);
+		Register(MetaSchemas.Core202012);
+		Register(MetaSchemas.Applicator202012);
+		Register(MetaSchemas.Validation202012);
+		Register(MetaSchemas.Metadata202012);
+		Register(MetaSchemas.Unevaluated202012);
+		Register(MetaSchemas.FormatAnnotation202012);
+		Register(MetaSchemas.FormatAssertion202012);
+		Register(MetaSchemas.Content202012);
 
-		JsonSchema.Initialize(MetaSchemas.DraftNext, this);
-		JsonSchema.Initialize(MetaSchemas.CoreNext, this);
-		JsonSchema.Initialize(MetaSchemas.ApplicatorNext, this);
-		JsonSchema.Initialize(MetaSchemas.ValidationNext, this);
-		JsonSchema.Initialize(MetaSchemas.MetadataNext, this);
-		JsonSchema.Initialize(MetaSchemas.UnevaluatedNext, this);
-		JsonSchema.Initialize(MetaSchemas.FormatAnnotationNext, this);
-		JsonSchema.Initialize(MetaSchemas.FormatAssertionNext, this);
-		JsonSchema.Initialize(MetaSchemas.ContentNext, this);
+		Register(MetaSchemas.DraftNext);
+		Register(MetaSchemas.CoreNext);
+		Register(MetaSchemas.ApplicatorNext);
+		Register(MetaSchemas.ValidationNext);
+		Register(MetaSchemas.MetadataNext);
+		Register(MetaSchemas.UnevaluatedNext);
+		Register(MetaSchemas.FormatAnnotationNext);
+		Register(MetaSchemas.FormatAssertionNext);
+		Register(MetaSchemas.ContentNext);
 	}
 
 	/// <summary>
@@ -98,21 +97,35 @@ public class SchemaRegistry
 	public void Register(Uri? uri, IBaseDocument document)
 	{
 		RegisterSchema(uri, document);
-
-		if (document is JsonSchema schema)
-			JsonSchema.Initialize(schema, this, uri);
-
-		if (_options != null)
-			_options.Changed = true;
+		_options.Changed = true;
 	}
 
-	internal void RegisterSchema(Uri? uri, IBaseDocument document)
+	private void RegisterSchema(Uri? uri, IBaseDocument document)
 	{
-		_registered ??= [];
 		uri = MakeAbsolute(uri);
-		var registration = CheckRegistry(_registered, uri);
-		if (registration == null)
-			_registered[uri] = new Registration{Root = document};
+		var schema = document as JsonSchema;
+		var registration = _registered.GetValueOrDefault(uri);
+		if (registration != null)
+		{
+			if (registration.Root != document && schema is not null)
+				Initialize(uri, schema);
+			return;
+		}
+
+		_registered[uri] = new Registration { Root = document };
+		if (schema is null) return;
+		
+		var registrations = Scan(uri, schema);
+		foreach (var reg in registrations)
+		{
+			_registered[reg.Key] = reg.Value;
+		}
+
+		if (_registered.ContainsKey(uri)) return;
+
+		// also register with custom URI
+		registration = _registered.First(x => ReferenceEquals(x.Value.Root, schema)).Value;
+		_registered[uri] = registration;
 	}
 
 	/// <summary>
@@ -125,41 +138,85 @@ public class SchemaRegistry
 	/// </returns>
 	// For URI equality see https://docs.microsoft.com/en-us/dotnet/api/system.uri.op_equality?view=netcore-3.1
 	// tl;dr - URI equality doesn't consider fragments
-	public IBaseDocument? Get(Uri? uri)
+	public IBaseDocument Get(Uri uri)
 	{
-		var registration = GetRegistration(uri);
-
-		return registration?.Root;
+		return Get(uri, null);
 	}
 
-	private Registration? GetRegistration(Uri? uri)
+	internal IBaseDocument Get(Uri baseUri, string? anchor, bool allowLegacy = false)
 	{
-		Registration? registration = null;
-		uri = MakeAbsolute(uri);
-		// check local
-		if (_registered != null)
-			registration = CheckRegistry(_registered, uri);
-		// if not found, check global
-		if (registration == null && !ReferenceEquals(Global, this))
-			registration = CheckRegistry(Global._registered!, uri);
+		return Get(baseUri, anchor, false, allowLegacy) ?? throw new RefResolutionException(baseUri, anchor);
+	}
 
-		if (registration == null)
+	internal JsonSchema Get(DynamicScope scope, Uri baseUri, string anchor, bool requireLocalAnchor)
+	{
+		if (requireLocalAnchor)
 		{
-			var schema = Fetch(uri) ?? Global.Fetch(uri);
-			if (schema == null) return null;
-
-			Register(uri, schema);
-			registration = CheckRegistry(_registered!, uri);
+			var registration = _registered.GetValueOrDefault(baseUri) ??
+			                   Global._registered.GetValueOrDefault(baseUri) ??
+			                   throw new InvalidOperationException($"Could not find '{baseUri}'. This shouldn't happen.");
+			if (registration.DynamicAnchors is null || !registration.DynamicAnchors.ContainsKey(anchor))
+			{
+				var target = Get(baseUri, anchor, false, false) ?? throw new RefResolutionException(baseUri, anchor);
+				return (JsonSchema)target;
+			}
 		}
 
-		return registration;
+		foreach (var uri in scope.Reverse())
+		{
+			var target = Get(uri, anchor, true, false);
+			if (target is not null) return (JsonSchema)target;
+		}
+
+		throw new RefResolutionException(scope.LocalScope, anchor, true);
 	}
 
-	private static Registration? CheckRegistry(Dictionary<Uri, Registration> lookup, Uri uri)
+	internal JsonSchema GetRecursive(DynamicScope scope)
 	{
-		return lookup.TryGetValue(uri, out var registration) ? registration : null;
+		JsonSchema? resolved = null;
+		foreach (var uri in scope)
+		{
+			var registration = _registered.GetValueOrDefault(uri) ?? Global._registered.GetValueOrDefault(uri);
+			if (registration == null)
+				throw new InvalidOperationException($"Could not find '{uri}'. This shouldn't happen.");
+			if (registration.RecursiveAnchor is null)
+				return resolved ?? (JsonSchema) registration.Root;
+
+			resolved = registration.RecursiveAnchor;
+		}
+
+		// resolved should always be set
+		return resolved ?? throw new NotImplementedException();
 	}
 
+	private IBaseDocument? Get(Uri baseUri, string? anchor, bool isDynamic, bool allowLegacy)
+	{
+		var document = GetFromRegistry(_registered, baseUri, anchor, isDynamic, allowLegacy) ??
+		               GetFromRegistry(Global._registered, baseUri, anchor, isDynamic, allowLegacy);
+
+		if (document is null)
+		{
+			document = Fetch(baseUri) ?? Global.Fetch(baseUri);
+			if (document is not null)
+				Register(baseUri, document);
+		}
+
+		return document;
+	}
+
+	private static IBaseDocument? GetFromRegistry(Dictionary<Uri, Registration> registry, Uri baseUri, string? anchor, bool isDynamic, bool allowLegacy)
+	{
+		if (!registry.TryGetValue(baseUri, out var registration)) return null;
+
+		if (anchor is null) return registration.Root;
+
+		var anchorList = isDynamic ? registration.DynamicAnchors : registration.Anchors;
+
+		return anchorList?.GetValueOrDefault(anchor) ??
+		       (allowLegacy && registration.LegacyAnchors is not null
+			       ? registration.LegacyAnchors.GetValueOrDefault(anchor)
+			       : null);
+	}
 	private static Uri MakeAbsolute(Uri? uri)
 	{
 		if (uri == null) return _empty;
@@ -173,17 +230,206 @@ public class SchemaRegistry
 	{
 		_fetch = other._fetch;
 
-		if (other._registered == null) return;
-
-		if (_registered == null)
-		{
-			_registered = new Dictionary<Uri, Registration>(other._registered);
-			return;
-		}
-
 		foreach (var registration in other._registered)
 		{
 			_registered[registration.Key] = registration.Value;
 		}
+	}
+
+	/// <summary>
+	/// Sets base URI and spec version for a schema.  Generally not needed as this happens automatically on registration and evaluation.
+	/// </summary>
+	/// <param name="baseUri">The base URI for the schema.</param>
+	/// <param name="schema">The schema</param>
+	public void Initialize(Uri baseUri, JsonSchema schema)
+	{
+		var registrations = Scan(baseUri, schema);
+		foreach (var reg in registrations)
+		{
+			if (_registered.TryGetValue(reg.Key, out var registration))
+			{
+				if (reg.Value.LegacyAnchors != null)
+				{
+					registration.LegacyAnchors ??= [];
+					foreach (var anchor in reg.Value.LegacyAnchors)
+					{
+						registration.LegacyAnchors[anchor.Key] = anchor.Value;
+					}
+				}
+
+				if (reg.Value.Anchors != null)
+				{
+					registration.Anchors ??= [];
+					foreach (var anchor in reg.Value.Anchors)
+					{
+						registration.Anchors[anchor.Key] = anchor.Value;
+					}
+				}
+
+				if (reg.Value.DynamicAnchors is not null)
+				{
+					registration.DynamicAnchors ??= [];
+					foreach (var anchor in reg.Value.DynamicAnchors)
+					{
+						registration.DynamicAnchors[anchor.Key] = anchor.Value;
+					}
+				}
+
+				registration.RecursiveAnchor = reg.Value.RecursiveAnchor;
+			}
+			else
+				_registered[reg.Key] = reg.Value;
+
+			SetDialect((JsonSchema)reg.Value.Root, null);
+		}
+	}
+
+	private Dictionary<Uri, Registration> Scan(Uri baseUri, JsonSchema document)
+	{
+		var toCheck = new Queue<(Uri, JsonSchema, SpecVersion, Vocabulary[]?)>();
+		toCheck.Enqueue((baseUri, document, _options.EvaluateAs, null));
+
+		var registrations = new Dictionary<Uri, Registration>();
+
+		while (toCheck.Count != 0)
+		{
+			var (currentUri, currentSchema, parentSpecVersion, parentDialect) = toCheck.Dequeue();
+
+			SetDialect(currentSchema, parentDialect);
+			
+			var id = currentSchema.GetId();
+			
+			DetermineSpecVersion(currentSchema, this);
+			if (currentSchema.DeclaredVersion is SpecVersion.Unspecified)
+				currentSchema.DeclaredVersion = parentSpecVersion;
+			if ((currentSchema.DeclaredVersion is not (SpecVersion.Draft6 or SpecVersion.Draft7) || currentSchema.GetRef() is null) && id is not null)
+				currentUri = new Uri(currentUri, id);
+
+			if (!registrations.TryGetValue(currentUri, out var registration))
+				registrations[currentUri] = registration = new Registration
+				{
+					Root = currentSchema
+				};
+
+			currentSchema.BaseUri = currentUri;
+
+			if (!string.IsNullOrEmpty(currentUri.Fragment))
+			{
+				var fragment = currentUri.Fragment[1..];
+				if (AnchorKeyword.AnchorPattern201909.IsMatch(fragment))
+				{
+					registration.LegacyAnchors ??= [];
+					registration.LegacyAnchors[fragment] = currentSchema;
+				}
+			}
+
+			var dynamicAnchor = currentSchema.GetDynamicAnchor();
+			if (dynamicAnchor is not null)
+			{
+				registration.Anchors ??= [];
+				registration.Anchors[dynamicAnchor] = currentSchema;
+				registration.DynamicAnchors ??= [];
+				registration.DynamicAnchors[dynamicAnchor] = currentSchema;
+			}
+
+			var recursiveAnchor = currentSchema.GetRecursiveAnchor();
+			if (recursiveAnchor == true)
+				registration.RecursiveAnchor = currentSchema;
+
+			var anchor = currentSchema.GetAnchor();
+			if (anchor is not null)
+			{
+				registration.Anchors ??= [];
+				registration.Anchors[anchor] = currentSchema;
+			}
+
+			using var owner = MemoryPool<JsonSchema>.Shared.Rent();
+			foreach (var subschema in currentSchema.GetSubschemas(owner))
+			{
+				if (subschema.BoolValue.HasValue) continue;
+
+				toCheck.Enqueue((currentUri, subschema, currentSchema.DeclaredVersion, currentSchema.Dialect));
+			}
+		}
+
+		return registrations;
+	}
+
+	private static void DetermineSpecVersion(JsonSchema schema, SchemaRegistry registry)
+	{
+		if (schema.BoolValue.HasValue)
+		{
+			schema.DeclaredVersion = SpecVersion.Unspecified;
+			return;
+		}
+
+		if (schema.TryGetKeyword<SchemaKeyword>(SchemaKeyword.Name, out var schemaKeyword))
+		{
+			var metaSchemaId = schemaKeyword.Schema;
+			while (metaSchemaId != null)
+			{
+				var version = metaSchemaId.OriginalString switch
+				{
+					MetaSchemas.Draft6IdValue => SpecVersion.Draft6,
+					MetaSchemas.Draft7IdValue => SpecVersion.Draft7,
+					MetaSchemas.Draft201909IdValue => SpecVersion.Draft201909,
+					MetaSchemas.Draft202012IdValue => SpecVersion.Draft202012,
+					MetaSchemas.DraftNextIdValue => SpecVersion.DraftNext,
+					_ => SpecVersion.Unspecified
+				};
+				if (version != SpecVersion.Unspecified)
+				{
+					schema.DeclaredVersion = version;
+					return;
+				}
+
+				var metaSchema = registry.Get(metaSchemaId) as JsonSchema ??
+					throw new JsonSchemaException("Cannot resolve custom meta-schema.");
+
+				var newMetaSchemaId = metaSchema.GetSchema();
+				if (newMetaSchemaId == metaSchemaId)
+					throw new JsonSchemaException("Custom meta-schema `$schema` keywords must eventually resolve to a meta-schema for a supported specification version.");
+
+				metaSchemaId = newMetaSchemaId;
+			}
+		}
+
+		schema.DeclaredVersion = SpecVersion.Unspecified;
+	}
+
+	private void SetDialect(JsonSchema schema, Vocabulary[]? parentDialect)
+	{
+		var schemaKeyword = (SchemaKeyword?)schema.Keywords?.FirstOrDefault(x => x is SchemaKeyword);
+		if (schemaKeyword == null)
+		{
+			schema.Dialect = parentDialect;
+			return;
+		}
+
+		var metaSchema = (JsonSchema)Get(schemaKeyword.Schema);
+		var vocabulary = metaSchema.GetVocabulary();
+
+
+		if (vocabulary is null) return;
+
+		using var owner = MemoryPool<Vocabulary>.Shared.Rent();
+		var span = owner.Memory.Span;
+		var i = 0;
+
+		foreach (var kvp in vocabulary)
+		{
+			var vocab = VocabularyRegistry.Get(kvp.Key);
+			if (vocab is null)
+			{
+				if (kvp.Value && _options.ValidateAgainstMetaSchema)
+					throw new JsonSchemaException($"Detected unknown required vocabulary: '{kvp.Key}'");
+				continue;
+			}
+
+			span[i] = vocab;
+			i++;
+		}
+
+		schema.Dialect = span[..i].ToArray();
 	}
 }

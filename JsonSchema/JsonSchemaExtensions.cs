@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Buffers;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
 using Json.More;
 
@@ -48,7 +48,7 @@ public static partial class JsonSchemaExtensions
 	{
 		options = EvaluationOptions.From(options ?? EvaluationOptions.Default);
 
-		JsonSchema.Initialize(jsonSchema, options.SchemaRegistry);
+		options.SchemaRegistry.Register(jsonSchema);
 
 		var schemasToSearch = new List<JsonSchema>();
 		var searchedSchemas = new List<JsonSchema>(); // uses reference equality
@@ -62,12 +62,8 @@ public static partial class JsonSchemaExtensions
 			referencesToCheck.RemoveAt(0);
 
 			var resolved = options.SchemaRegistry.Get(nextReference);
-			if (resolved == null)
-				throw new JsonSchemaException($"Cannot resolve reference: '{nextReference}'");
 			if (resolved is not JsonSchema resolvedSchema)
 				throw new NotSupportedException("Bundling is not supported for non-schema root documents");
-
-			JsonSchema.Initialize(resolvedSchema, options.SchemaRegistry);
 
 			if (!bundledReferences.Contains(nextReference))
 			{
@@ -85,7 +81,13 @@ public static partial class JsonSchemaExtensions
 				if (schema.Keywords == null) continue;
 				
 				searchedSchemas.Add(schema);
-				schemasToSearch.AddRange(schema.Keywords.SelectMany(JsonSchema.GetSubschemas));
+				using (var owner = MemoryPool<JsonSchema>.Shared.Rent())
+				{
+					foreach (var subschema in schema.GetSubschemas(owner))
+					{
+						schemasToSearch.Add(subschema);
+					}
+				}
 
 				// this handles references that are already bundled.
 				if (schema.BaseUri != nextReference && !bundledReferences.Contains(schema.BaseUri))

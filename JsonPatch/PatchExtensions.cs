@@ -120,14 +120,13 @@ public static class PatchExtensions
 		{
 			for (int i = 0; i < target.Count; i++)
 			{
-				var ui = (uint)i;
 				if (i >= original.Count)
 				{
-					patch.Add(PatchOperation.Add(path.Combine(ui), target[i]));
+					patch.Add(PatchOperation.Add(path.Combine(i), target[i]));
 					continue;
 				}
 
-				PatchForArrayIndex(i, ui);
+				PatchForArrayIndex(i);
 			}
 		}
 		else if (target.Count == 0)
@@ -142,19 +141,19 @@ public static class PatchExtensions
 				var ui = (uint)i;
 				if (i >= target.Count)
 				{
-					patch.Add(PatchOperation.Remove(path.Combine(ui)));
+					patch.Add(PatchOperation.Remove(path.Combine(i)));
 					continue;
 				}
-				PatchForArrayIndex(i, ui);
+				PatchForArrayIndex(i);
 			}
 		}
 
-		void PatchForArrayIndex(int i, uint ui)
+		void PatchForArrayIndex(int i)
 		{
 			var origValue = original[i];
 			var modValue = target[i];
 
-			CreatePatch(patch, origValue, modValue, path.Combine(ui));
+			CreatePatch(patch, origValue, modValue, path.Combine(i));
 		}
 	}
 }

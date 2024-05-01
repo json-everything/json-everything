@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Buffers;
+using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
@@ -19,26 +20,67 @@ namespace Json.Pointer;
 /// </summary>
 [JsonConverter(typeof(JsonPointerJsonConverter))]
 [TypeConverter(typeof(JsonPointerTypeConverter))]
-public class JsonPointer : IEquatable<JsonPointer>
+public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 {
 	/// <summary>
 	/// The empty pointer.
 	/// </summary>
-	public static readonly JsonPointer Empty =
-		new()
-		{
-			Segments = []
-		};
+	public static readonly JsonPointer Empty = new();
 
-	private string? _uriEncoded;
+	private readonly string[] _decodedSegments;
 	private string? _plain;
+	private int? _hashCode;
 
 	/// <summary>
-	/// Gets the collection of pointer segments.
+	/// Gets the number of segments in the pointer.
 	/// </summary>
-	public PointerSegment[] Segments { get; private set; } = null!;
+	public int Count => _decodedSegments.Length;
+	
+	/// <summary>
+	/// Gets a segment value by index.
+	/// </summary>
+	/// <param name="i">The index.</param>
+	/// <returns>The indicated segment value as a span.</returns>
+	public string this[int i] => _decodedSegments[i];
 
-	private JsonPointer() { }
+	// There's a problem with how PolySharp adds the Range type that means I can't
+	// expose this in the netstandard2.0 build.  When the lib is consumed by an app
+	// running anything previous to .Net 8, the netstandard2.0 version is used.
+	// If the generated Range type is exposed, it conflicts with the built-in Range
+	// type, and this feature can't be used anyway.  I'd like to have a solution
+	// for this, but I haven't been able to think of one.
+#if !NETSTANDARD2_0
+	/// <summary>
+	/// Creates a new pointer with the indicated segments.
+	/// </summary>
+	/// <param name="r">The segment range for the new pointer.</param>
+	/// <returns>A new pointer.</returns>
+	public JsonPointer this[Range r] => GetSubPointer(r);
+#endif
+
+	/// <summary>Returns an enumerator that iterates through the collection.</summary>
+	/// <returns>An enumerator that can be used to iterate through the collection.</returns>
+	public IEnumerator<string> GetEnumerator() => ((IEnumerable<string>)_decodedSegments).GetEnumerator();
+
+	/// <summary>Returns an enumerator that iterates through the collection.</summary>
+	/// <returns>An enumerator that can be used to iterate through the collection.</returns>
+	IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+	private JsonPointer()
+	{
+		_decodedSegments = [];
+		_plain = string.Empty;
+	}
+	private JsonPointer(ReadOnlySpan<string> segments, string? plain = null)
+	{
+		_decodedSegments = [..segments];
+		_plain = plain;
+	}
+	private JsonPointer(string[] segments, string? plain = null)
+	{
+		_decodedSegments = segments;
+		_plain = plain;
+	}
 
 	/// <summary>
 	/// Parses a JSON Pointer from a string.
@@ -49,30 +91,42 @@ public class JsonPointer : IEquatable<JsonPointer>
 	/// <exception cref="PointerParseException"><paramref name="source"/> does not contain a valid pointer or contains a pointer of the wrong kind.</exception>
 	public static JsonPointer Parse(string source)
 	{
-		if (source == null) throw new ArgumentNullException(nameof(source));
-		if (source == string.Empty) return Empty;
+		if (source.Length == 0) return Empty;
 
 		if (source[0] == '#')
-			source = HttpUtility.UrlDecode(source);
+			source = HttpUtility.UrlDecode(source[1..]);  // allocation
 
-		var parts = source.Split('/');
-		var i = 0;
-		if (parts[0] == "#" || parts[0] == string.Empty)
+		if (source.Length == 0) return Empty;
+		if (source[0] != '/')
+			throw new PointerParseException("Pointer must start with either `#/` or `/` or be empty");
+
+		var segmentIndex = 0;
+		var sourceIndex = 1;
+		var builderIndex = 0;
+		var sourceSpan = source.AsSpan();
+		using var segmentMemory = MemoryPool<string>.Shared.Rent();
+		var segments = segmentMemory.Memory.Span;
+		using var builderMemory = MemoryPool<char>.Shared.Rent();
+		var builder = builderMemory.Memory.Span;
+		while (sourceIndex < source.Length)
 		{
-			i++;
+			if (source[sourceIndex] == '/')
+			{
+				segments[segmentIndex] = builder[..builderIndex].ToString();
+				builderIndex = 0;
+				segmentIndex++;
+				sourceIndex++;
+				continue;
+			}
+
+			builder[builderIndex] = sourceSpan.Decode(ref sourceIndex);
+			builderIndex++;
+			sourceIndex++;
 		}
-		else throw new PointerParseException("Pointer must start with either `#` or `/` or be empty");
 
-		var segments = new PointerSegment[parts.Length - i];
-		for (; i < parts.Length; i++)
-		{
-			segments[i - 1] = PointerSegment.Parse(parts[i]);
-		}
+		segments[segmentIndex] = builder[..builderIndex].ToString();
 
-		return new JsonPointer
-		{
-			Segments = segments
-		};
+		return new JsonPointer(segments[..(segmentIndex + 1)], source);
 	}
 
 	/// <summary>
@@ -84,46 +138,62 @@ public class JsonPointer : IEquatable<JsonPointer>
 	/// <exception cref="ArgumentNullException"><paramref name="source"/> is null.</exception>
 	public static bool TryParse(string source, [NotNullWhen(true)] out JsonPointer? pointer)
 	{
-		if (source == null) throw new ArgumentNullException(nameof(source));
-		if (source == string.Empty)
+		if (source.Length == 0)
 		{
 			pointer = Empty;
 			return true;
 		}
 
 		if (source[0] == '#')
-			source = HttpUtility.UrlDecode(source);
-
-
-		var parts = source.Split('/');
-		var i = 0;
-		if (parts[0] == "#" || parts[0] == string.Empty)
 		{
-			i++;
+			source = HttpUtility.UrlDecode(source[1..]);  // allocation
 		}
-		else
+
+		if (source.Length == 0)
+		{
+			pointer = Empty;
+			return true;
+		}
+
+		if (source[0] != '/')
 		{
 			pointer = null;
 			return false;
 		}
 
-		var segments = new PointerSegment[parts.Length - i];
-		for (; i < parts.Length; i++)
+		var segmentIndex = 0;
+		var sourceIndex = 1;
+		var builderIndex = 0;
+		var sourceSpan = source.AsSpan();
+		using var segmentMemory = MemoryPool<string>.Shared.Rent();
+		var segments = segmentMemory.Memory.Span;
+		using var builderMemory = MemoryPool<char>.Shared.Rent();
+		var builder = builderMemory.Memory.Span;
+		while (sourceIndex < source.Length)
 		{
-			var part = parts[i];
-			if (!PointerSegment.TryParse(part, out var segment))
+			if (source[sourceIndex] == '/')
+			{
+				segments[segmentIndex] = builder[..builderIndex].ToString();
+				builderIndex = 0;
+				segmentIndex++;
+				sourceIndex++;
+				continue;
+			}
+
+			if (!sourceSpan.TryDecode(ref sourceIndex, out var ch))
 			{
 				pointer = null;
 				return false;
 			}
 
-			segments[i - 1] = segment!;
+			builder[builderIndex] = ch;
+			builderIndex++;
+			sourceIndex++;
 		}
 
-		pointer = new JsonPointer
-		{
-			Segments = segments
-		};
+		segments[segmentIndex] = builder[..builderIndex].ToString();
+
+		pointer = new JsonPointer(segments[..(segmentIndex + 1)], source);
 		return true;
 	}
 
@@ -135,23 +205,14 @@ public class JsonPointer : IEquatable<JsonPointer>
 	/// <remarks>This method creates un-encoded pointers only.</remarks>
 	public static JsonPointer Create(params PointerSegment[] segments)
 	{
-		return new JsonPointer
-		{
-			Segments = segments
-		};
-	}
+		var array = new string[segments.Length];
 
-	/// <summary>
-	/// Creates a new JSON Pointer from a collection of segments.
-	/// </summary>
-	/// <param name="segments">A collection of segments.</param>
-	/// <returns>The JSON Pointer.</returns>
-	public static JsonPointer Create(IEnumerable<PointerSegment> segments)
-	{
-		return new JsonPointer
+		for (var i = 0; i < segments.Length; i++)
 		{
-			Segments = segments.ToArray()
-		};
+			array[i] = segments[i].Value;
+		}
+
+		return new JsonPointer(array);
 	}
 
 	/// <summary>
@@ -167,17 +228,17 @@ public class JsonPointer : IEquatable<JsonPointer>
 	/// </exception>
 	public static JsonPointer Create<T>(Expression<Func<T, object>> expression, PointerCreationOptions? options = null)
 	{
-		PointerSegment GetSegment(MemberInfo member)
+		string GetSegment(MemberInfo member)
 		{
 			var attribute = member.GetCustomAttribute<JsonPropertyNameAttribute>();
 			if (attribute is not null)
 				return attribute.Name;
 
-			return options!.PropertyNameResolver!(member);
+			return options.PropertyNameResolver(member);
 		}
 
 		// adapted from https://stackoverflow.com/a/2616980/878701
-		object? GetValue(Expression? member)
+		object GetValue(Expression? member)
 		{
 			if (member == null) return "null";
 
@@ -190,7 +251,9 @@ public class JsonPointer : IEquatable<JsonPointer>
 		options ??= PointerCreationOptions.Default;
 
 		var body = expression.Body;
-		var segments = new List<PointerSegment>();
+		using var owner = MemoryPool<PointerSegment>.Shared.Rent();
+		var segments = owner.Memory.Span;
+		var i = segments.Length - 1;
 		while (body != null)
 		{
 			if (body.NodeType == ExpressionType.Convert && body is UnaryExpression unary)
@@ -198,7 +261,7 @@ public class JsonPointer : IEquatable<JsonPointer>
 
 			if (body is MemberExpression me)
 			{
-				segments.Insert(0, GetSegment(me.Member));
+				segments[i] = GetSegment(me.Member);
 				body = me.Expression;
 			}
 			else if (body is MethodCallExpression mce1 &&
@@ -208,27 +271,31 @@ public class JsonPointer : IEquatable<JsonPointer>
 			{
 				var arg = mce1.Arguments[0];
 				var value = GetValue(arg) ?? throw new NotSupportedException("Method in expression must return a non-null expression");
-				segments.Insert(0, PointerSegment.Create(value.ToString()!));
+				segments[i] = value.ToString()!;
 				body = mce1.Object;
 			}
 			else if (body is MethodCallExpression { Method: { IsStatic: true, Name: nameof(Enumerable.Last) } } mce2 &&
 			         mce2.Method.DeclaringType == typeof(Enumerable))
 			{
-				segments.Insert(0, PointerSegment.Create("-"));
+				segments[i] = "-";
 				body = mce2.Arguments[0];
 			}
 			else if (body is BinaryExpression { Right: ConstantExpression arrayIndexExpression } binaryExpression
 					 and { NodeType: ExpressionType.ArrayIndex })
 			{
 				// Array index
-				segments.Insert(0, PointerSegment.Create(arrayIndexExpression.Value!.ToString()!));
+				segments[i] = arrayIndexExpression.Value!.ToString()!;
 				body = binaryExpression.Left;
 			}
 			else if (body is ParameterExpression) break; // this is the param of the expression itself.
 			else throw new NotSupportedException($"Expression nodes of type {body.NodeType} are not currently supported.");
+
+			i--;
 		}
 
-		return Create(segments);
+		i++;
+
+		return Create(segments[i..].ToArray());
 	}
 
 	/// <summary>
@@ -238,14 +305,14 @@ public class JsonPointer : IEquatable<JsonPointer>
 	/// <returns>A new pointer.</returns>
 	public JsonPointer Combine(JsonPointer other)
 	{
-		var segments = new PointerSegment[Segments.Length + other.Segments.Length];
-		Segments.CopyTo(segments, 0);
-		other.Segments.CopyTo(segments, Segments.Length);
+		if (other._decodedSegments.Length == 0) return this;
+		if (_decodedSegments.Length == 0) return other;
 
-		return new JsonPointer
-		{
-			Segments = segments
-		};
+		var array = new string[_decodedSegments.Length + other._decodedSegments.Length];
+		Array.Copy(_decodedSegments, array, _decodedSegments.Length);
+		Array.Copy(other._decodedSegments, 0, array, _decodedSegments.Length, other._decodedSegments.Length);
+
+		return new JsonPointer(array);
 	}
 
 	/// <summary>
@@ -255,15 +322,50 @@ public class JsonPointer : IEquatable<JsonPointer>
 	/// <returns>A new pointer.</returns>
 	public JsonPointer Combine(params PointerSegment[] additionalSegments)
 	{
-		var segments = new PointerSegment[Segments.Length + additionalSegments.Length];
-		Segments.CopyTo(segments, 0);
-		additionalSegments.CopyTo(segments, Segments.Length);
+		if (additionalSegments.Length == 0) return this;
+		if (_decodedSegments.Length == 0) return Create(additionalSegments);
 
-		return new JsonPointer
+		var array = new string[_decodedSegments.Length + additionalSegments.Length];
+		Array.Copy(_decodedSegments, array, _decodedSegments.Length);
+
+		for (int i = 0; i < additionalSegments.Length; i++)
 		{
-			Segments = segments
-		};
+			array[_decodedSegments.Length + i] = additionalSegments[i].Value;
+		}
+
+		return new JsonPointer(array);
 	}
+
+	/// <summary>
+	/// Creates a new pointer retaining the starting segments.
+	/// </summary>
+	/// <param name="levels">How many levels to remove from the end of the pointer.</param>
+	/// <returns>A new pointer.</returns>
+	public JsonPointer GetAncestor(int levels)
+	{
+		return new(_decodedSegments.AsSpan()[..^levels]);
+	}
+	/// <summary>
+	/// Creates a new pointer retaining the ending segments.
+	/// </summary>
+	/// <param name="levels">How many levels to keep from the end of the pointer.</param>
+	/// <returns>A new pointer.</returns>
+	public JsonPointer GetLocal(int levels)
+	{
+		return new(_decodedSegments.AsSpan()[levels..]);
+	}
+
+#if !NETSTANDARD2_0
+	/// <summary>
+	/// Creates a new pointer with the indicated segments.
+	/// </summary>
+	/// <param name="range">The segment range for the new pointer.</param>
+	/// <returns>A new pointer.</returns>
+	public JsonPointer GetSubPointer(Range range)
+	{
+		return new(_decodedSegments.AsSpan()[range]);
+	}
+#endif
 
 	/// <summary>
 	/// Evaluates the pointer over a <see cref="JsonElement"/>.
@@ -275,37 +377,35 @@ public class JsonPointer : IEquatable<JsonPointer>
 		var current = root;
 		var kind = root.ValueKind;
 
-		foreach (var segment in Segments)
+		foreach (var segment in _decodedSegments)
 		{
-			string segmentValue;
 			switch (kind)
 			{
 				case JsonValueKind.Array:
-					segmentValue = segment.Value;
-					if (segmentValue == "0")
+					if (segment.Length == 0) return null;
+					if (segment is ['0'])
 					{
 						if (current.GetArrayLength() == 0) return null;
 						current = current.EnumerateArray().First();
 						break;
 					}
-					if (segmentValue[0] == '0') return null;
-					if (segmentValue == "-") return current.EnumerateArray().LastOrDefault();
-					if (!int.TryParse(segmentValue, out var index)) return null;
+					if (segment[0] == '0') return null;
+					if (segment is ['-']) return current.EnumerateArray().LastOrDefault();
+					if (!int.TryParse(segment, out var index)) return null;
 					if (index >= current.GetArrayLength()) return null;
 					if (index < 0) return null;
+
 					current = current.EnumerateArray().ElementAt(index);
 					break;
 				case JsonValueKind.Object:
-					segmentValue = segment.Value;
 					var found = false;
 					foreach (var p in current.EnumerateObject())
 					{
-						if (p.NameEquals(segmentValue))
-						{
-							current = p.Value;
-							found = true;
-							break;
-						}
+						if (segment != p.Name) continue;
+
+						current = p.Value;
+						found = true;
+						break;
 					}
 					if (!found) return null;
 					break;
@@ -329,35 +429,31 @@ public class JsonPointer : IEquatable<JsonPointer>
 		var current = root;
 		result = null;
 
-		foreach (var segment in Segments)
+		foreach (var segment in _decodedSegments)
 		{
-			string segmentValue;
 			switch (current)
 			{
 				case JsonArray array:
-					segmentValue = segment.Value;
-					if (segmentValue == string.Empty) return false;
-					if (segmentValue == "0")
+					if (segment.Length == 0) return false;
+					if (segment is ['0'])
 					{
 						if (array.Count == 0) return false;
 						current = current[0];
 						break;
 					}
-					if (segmentValue[0] == '0') return false;
-					if (segmentValue == "-")
+					if (segment[0] == '0') return false;
+					if (segment is ['-'])
 					{
 						result = array.Last();
 						return true;
 					}
-					if (!int.TryParse(segmentValue, out var index)) return false;
+					if (!int.TryParse(segment, out var index)) return false;
 					if (index >= array.Count) return false;
 					if (index < 0) return false;
 					current = array[index];
 					break;
 				case JsonObject obj:
-					segmentValue = segment.Value;
-					if (!obj.TryGetValue(segmentValue, out var found, out _)) return false;
-					current = found;
+					if (!obj.TryGetValue(segment, out current, out _)) return false;
 					break;
 				default:
 					return false;
@@ -369,31 +465,23 @@ public class JsonPointer : IEquatable<JsonPointer>
 	}
 
 	/// <summary>Returns the string representation of this instance.</summary>
-	/// <param name="pointerStyle">Indicates whether to URL-encode the pointer.</param>
-	/// <returns>The string representation.</returns>
-	public string ToString(JsonPointerStyle pointerStyle)
-	{
-		string BuildString(StringBuilder sb)
-		{
-			foreach (var segment in Segments)
-			{
-				sb.Append('/');
-				sb.Append(segment.ToString(pointerStyle));
-			}
-
-			return sb.ToString();
-		}
-
-		return pointerStyle != JsonPointerStyle.UriEncoded
-			? _plain ??= BuildString(new StringBuilder())
-			: _uriEncoded ??= BuildString(new StringBuilder("#"));
-	}
-
-	/// <summary>Returns the string representation of this instance.</summary>
 	/// <returns>The string representation.</returns>
 	public override string ToString()
 	{
-		return ToString(JsonPointerStyle.Plain);
+		if (_plain is not null) return _plain;
+
+		using var memory = MemoryPool<char>.Shared.Rent();
+		var span = memory.Memory.Span;
+		var length = 0;
+		foreach (var segment in _decodedSegments)
+		{
+			span[length] = '/';
+			length++;
+			segment.AsSpan().CopyTo(span[length..]);
+			length += segment.Length;
+		}
+
+		return _plain ??= span[..length].ToString();
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
@@ -404,7 +492,7 @@ public class JsonPointer : IEquatable<JsonPointer>
 		if (other is null) return false;
 		if (ReferenceEquals(this, other)) return true;
 
-		return Segments.SequenceEqual(other.Segments);
+		return _decodedSegments.SequenceEqual(other._decodedSegments);
 	}
 
 	/// <summary>Indicates whether this instance and a specified object are equal.</summary>
@@ -420,9 +508,9 @@ public class JsonPointer : IEquatable<JsonPointer>
 	public override int GetHashCode()
 	{
 		// ReSharper disable once NonReadonlyMemberInGetHashCode
-		return Segments.GetCollectionHashCode();
+		return _hashCode ??= _decodedSegments.GetCollectionHashCode();
 	}
-
+	
 	/// <summary>
 	/// Evaluates equality via <see cref="Equals(JsonPointer)"/>.
 	/// </summary>

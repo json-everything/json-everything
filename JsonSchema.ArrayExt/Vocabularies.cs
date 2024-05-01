@@ -18,12 +18,11 @@ public static class Vocabularies
 	/// <summary>
 	/// Registers the all components required to use the array extensions vocabulary.
 	/// </summary>
-	public static void Register(VocabularyRegistry? vocabRegistry = null, SchemaRegistry? schemaRegistry = null)
+	public static void Register(SchemaRegistry? schemaRegistry = null)
 	{
-		vocabRegistry ??= VocabularyRegistry.Global;
 		schemaRegistry ??= SchemaRegistry.Global;
 
-		vocabRegistry.Register(ArrayExt);
+		VocabularyRegistry.Register(ArrayExt);
 		SchemaKeywordRegistry.Register<UniqueKeysKeyword>(JsonSchemaArrayExtSerializerContext.Default);
 		SchemaKeywordRegistry.Register<OrderingKeyword>(JsonSchemaArrayExtSerializerContext.Default);
 		schemaRegistry.Register(MetaSchemas.ArrayExt);
