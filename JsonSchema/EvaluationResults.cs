@@ -159,7 +159,7 @@ public class EvaluationResults
 	/// </summary>
 	public void ToList()
 	{
-		var children = GetAllChildren().ToList();
+		var children = GetAllChildren();
 		if (children.Count == 0) return;
 
 		children.Remove(this);
@@ -180,7 +180,7 @@ public class EvaluationResults
 		Format = OutputFormat.List;
 	}
 
-	private IEnumerable<EvaluationResults> GetAllChildren()
+	private List<EvaluationResults> GetAllChildren()
 	{
 		var all = new List<EvaluationResults>();
 		var toProcess = new Queue<EvaluationResults>();

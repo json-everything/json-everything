@@ -33,7 +33,7 @@ public static class SchemaKeywordRegistry
 		public SpecVersion SupportedVersions { get; set; } 
 		public JsonSerializerContext? SerializerContext { get; }
 
-		public KeywordMetaData(Type type, JsonSerializerContext context = null)
+		public KeywordMetaData(Type type, JsonSerializerContext? context = null)
 		{
 			Type = type;
 			SerializerContext = context;
@@ -53,77 +53,77 @@ public static class SchemaKeywordRegistry
 
 	static SchemaKeywordRegistry()
 	{
-		var keywordData = new (Type, string)[]
+		var keywordData = new[]
 		{
-			( typeof(AdditionalItemsKeyword), AdditionalItemsKeyword.Name),
-			( typeof(AdditionalPropertiesKeyword), AdditionalPropertiesKeyword.Name),
-			( typeof(AllOfKeyword), AllOfKeyword.Name),
-			( typeof(AnchorKeyword), AnchorKeyword.Name),
-			( typeof(AnyOfKeyword), AnyOfKeyword.Name),
-			( typeof(CommentKeyword), CommentKeyword.Name),
-			( typeof(ConstKeyword), ConstKeyword.Name),
-			( typeof(ContainsKeyword), ContainsKeyword.Name),
-			( typeof(ContentEncodingKeyword), ContentEncodingKeyword.Name),
-			( typeof(ContentMediaTypeKeyword), ContentMediaTypeKeyword.Name),
-			( typeof(ContentSchemaKeyword), ContentSchemaKeyword.Name),
-			( typeof(DefaultKeyword), DefaultKeyword.Name),
-			( typeof(DefinitionsKeyword), DefinitionsKeyword.Name),
-			( typeof(DefsKeyword), DefsKeyword.Name),
-			( typeof(DependenciesKeyword), DependenciesKeyword.Name),
-			( typeof(DependentRequiredKeyword), DependentRequiredKeyword.Name),
-			( typeof(DependentSchemasKeyword), DependentSchemasKeyword.Name),
-			( typeof(DeprecatedKeyword), DeprecatedKeyword.Name),
-			( typeof(DescriptionKeyword), DescriptionKeyword.Name),
-			( typeof(DynamicAnchorKeyword), DynamicAnchorKeyword.Name),
-			( typeof(DynamicRefKeyword), DynamicRefKeyword.Name),
-			( typeof(ElseKeyword), ElseKeyword.Name),
-			( typeof(EnumKeyword), EnumKeyword.Name),
-			( typeof(ExamplesKeyword), ExamplesKeyword.Name),
-			( typeof(ExclusiveMaximumKeyword), ExclusiveMaximumKeyword.Name),
-			( typeof(ExclusiveMinimumKeyword), ExclusiveMinimumKeyword.Name),
-			( typeof(FormatKeyword), FormatKeyword.Name),
-			( typeof(IdKeyword), IdKeyword.Name),
-			( typeof(IfKeyword), IfKeyword.Name),
-			( typeof(ItemsKeyword), ItemsKeyword.Name),
-			( typeof(MaxContainsKeyword), MaxContainsKeyword.Name),
-			( typeof(MaximumKeyword), MaximumKeyword.Name),
-			( typeof(MaxItemsKeyword), MaxItemsKeyword.Name),
-			( typeof(MaxLengthKeyword), MaxLengthKeyword.Name),
-			( typeof(MaxPropertiesKeyword), MaxPropertiesKeyword.Name),
-			( typeof(MinContainsKeyword), MinContainsKeyword.Name),
-			( typeof(MinimumKeyword), MinimumKeyword.Name),
-			( typeof(MinItemsKeyword), MinItemsKeyword.Name),
-			( typeof(MinLengthKeyword), MinLengthKeyword.Name),
-			( typeof(MinPropertiesKeyword), MinPropertiesKeyword.Name),
-			( typeof(MultipleOfKeyword), MultipleOfKeyword.Name),
-			( typeof(NotKeyword), NotKeyword.Name),
-			( typeof(OneOfKeyword), OneOfKeyword.Name),
-			( typeof(PatternKeyword), PatternKeyword.Name),
-			( typeof(PatternPropertiesKeyword), PatternPropertiesKeyword.Name),
-			( typeof(PrefixItemsKeyword), PrefixItemsKeyword.Name),
-			( typeof(PropertiesKeyword), PropertiesKeyword.Name),
-			( typeof(PropertyDependenciesKeyword), PropertyDependenciesKeyword.Name),
-			( typeof(PropertyNamesKeyword), PropertyNamesKeyword.Name),
-			( typeof(ReadOnlyKeyword), ReadOnlyKeyword.Name),
-			( typeof(RecursiveAnchorKeyword), RecursiveAnchorKeyword.Name),
-			( typeof(RecursiveRefKeyword), RecursiveRefKeyword.Name),
-			( typeof(RefKeyword), RefKeyword.Name),
-			( typeof(RequiredKeyword), RequiredKeyword.Name),
-			( typeof(SchemaKeyword), SchemaKeyword.Name),
-			( typeof(ThenKeyword), ThenKeyword.Name),
-			( typeof(TitleKeyword), TitleKeyword.Name),
-			( typeof(TypeKeyword), TypeKeyword.Name),
-			( typeof(UnevaluatedItemsKeyword), UnevaluatedItemsKeyword.Name),
-			( typeof(UnevaluatedPropertiesKeyword), UnevaluatedPropertiesKeyword.Name),
-			( typeof(UniqueItemsKeyword), UniqueItemsKeyword.Name),
-			( typeof(VocabularyKeyword), VocabularyKeyword.Name),
-			( typeof(WriteOnlyKeyword), WriteOnlyKeyword.Name),
+			typeof(AdditionalItemsKeyword),
+			typeof(AdditionalPropertiesKeyword),
+			typeof(AllOfKeyword),
+			typeof(AnchorKeyword),
+			typeof(AnyOfKeyword),
+			typeof(CommentKeyword),
+			typeof(ConstKeyword),
+			typeof(ContainsKeyword),
+			typeof(ContentEncodingKeyword),
+			typeof(ContentMediaTypeKeyword),
+			typeof(ContentSchemaKeyword),
+			typeof(DefaultKeyword),
+			typeof(DefinitionsKeyword),
+			typeof(DefsKeyword),
+			typeof(DependenciesKeyword),
+			typeof(DependentRequiredKeyword),
+			typeof(DependentSchemasKeyword),
+			typeof(DeprecatedKeyword),
+			typeof(DescriptionKeyword),
+			typeof(DynamicAnchorKeyword),
+			typeof(DynamicRefKeyword),
+			typeof(ElseKeyword),
+			typeof(EnumKeyword),
+			typeof(ExamplesKeyword),
+			typeof(ExclusiveMaximumKeyword),
+			typeof(ExclusiveMinimumKeyword),
+			typeof(FormatKeyword),
+			typeof(IdKeyword),
+			typeof(IfKeyword),
+			typeof(ItemsKeyword),
+			typeof(MaxContainsKeyword),
+			typeof(MaximumKeyword),
+			typeof(MaxItemsKeyword),
+			typeof(MaxLengthKeyword),
+			typeof(MaxPropertiesKeyword),
+			typeof(MinContainsKeyword),
+			typeof(MinimumKeyword),
+			typeof(MinItemsKeyword),
+			typeof(MinLengthKeyword),
+			typeof(MinPropertiesKeyword),
+			typeof(MultipleOfKeyword),
+			typeof(NotKeyword),
+			typeof(OneOfKeyword),
+			typeof(PatternKeyword),
+			typeof(PatternPropertiesKeyword),
+			typeof(PrefixItemsKeyword),
+			typeof(PropertiesKeyword),
+			typeof(PropertyDependenciesKeyword),
+			typeof(PropertyNamesKeyword),
+			typeof(ReadOnlyKeyword),
+			typeof(RecursiveAnchorKeyword),
+			typeof(RecursiveRefKeyword),
+			typeof(RefKeyword),
+			typeof(RequiredKeyword),
+			typeof(SchemaKeyword),
+			typeof(ThenKeyword),
+			typeof(TitleKeyword),
+			typeof(TypeKeyword),
+			typeof(UnevaluatedItemsKeyword),
+			typeof(UnevaluatedPropertiesKeyword),
+			typeof(UniqueItemsKeyword),
+			typeof(VocabularyKeyword),
+			typeof(WriteOnlyKeyword),
 		};
 
-		_keywordData = new();
+		_keywordData = [];
 		_keywordData.AddLookup(x => x.Name);
 		_keywordData.AddLookup(x => x.Type);
-		foreach (var (type, _) in keywordData)
+		foreach (var type in keywordData)
 		{
 			var metaData = new KeywordMetaData(type, JsonSchemaSerializerContext.Default);
 			_keywordData.Add(metaData);
@@ -153,7 +153,7 @@ public static class SchemaKeywordRegistry
 		toCheck.Remove(keyword);
 
 		var priority = 0;
-		while (toCheck.Any())
+		while (toCheck.Count != 0)
 		{
 			var unprioritized = toCheck.Select(x => x.Type).ToArray();
 			for (var i = 0; i < toCheck.Count; i++)

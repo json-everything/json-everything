@@ -9,24 +9,18 @@ namespace Json.Schema;
 internal class MultiLookupConcurrentDictionary<TValue> : IEnumerable<KeyValuePair<object, TValue>>
 {
 	private readonly ConcurrentDictionary<object, TValue> _lookup = new();
-	private readonly List<Func<TValue, object>> _keyFunctions = new();
-
-	public int Count => _lookup.Count;
-
-	public bool IsReadOnly => false;
+	private readonly List<Func<TValue, object>> _keyFunctions = [];
 
 	public TValue this[object key]
 	{
-		get => _lookup[key!];
-		set => _lookup[key!] = value;
+		get => _lookup[key];
+		set => _lookup[key] = value;
 	}
 
 	public void AddLookup(Func<TValue, object> lookup)
 	{
 		_keyFunctions.Add(lookup);
 	}
-
-	public void Clear() => _lookup.Clear();
 
 	public void Add(TValue value)
 	{
@@ -37,8 +31,6 @@ internal class MultiLookupConcurrentDictionary<TValue> : IEnumerable<KeyValuePai
 		}
 	}
 
-	public bool ContainsKey(object key) => _lookup.ContainsKey(key);
-
 	public void Remove(TValue value)
 	{
 		foreach (var lookup in _keyFunctions)
@@ -48,7 +40,7 @@ internal class MultiLookupConcurrentDictionary<TValue> : IEnumerable<KeyValuePai
 		}
 	}
 
-	public bool TryGetValue(object key, [UnscopedRef] out TValue value) => _lookup.TryGetValue(key, out value);
+	public bool TryGetValue(object key, [UnscopedRef, NotNullWhen(true)] out TValue? value) => _lookup.TryGetValue(key, out value!);
 
 	public TValue? GetValueOrDefault(object key) => _lookup.GetValueOrDefault(key);
 

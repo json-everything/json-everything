@@ -24,6 +24,7 @@ public static class Vocabularies
 
 		VocabularyRegistry.Register(Data);
 		SchemaKeywordRegistry.Register<DataKeyword>(JsonSchemaDataSerializerContext.Default);
+		SchemaKeywordRegistry.Register<OptionalDataKeyword>(JsonSchemaDataSerializerContext.Default);
 		schemaRegistry.Register(MetaSchemas.Data);
 		schemaRegistry.Register(MetaSchemas.Data_202012);
 	}

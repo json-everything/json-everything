@@ -359,7 +359,7 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 	/// <summary>
 	/// Creates a new pointer with the indicated segments.
 	/// </summary>
-	/// <param name="r">The segment range for the new pointer.</param>
+	/// <param name="range">The segment range for the new pointer.</param>
 	/// <returns>A new pointer.</returns>
 	public JsonPointer GetSubPointer(Range range)
 	{
