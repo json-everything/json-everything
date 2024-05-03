@@ -4,7 +4,7 @@ title: Yaml2JsonNode
 icon: fas fa-tag
 order: "09.13"
 ---
-# 2.1.0 (No PR) {#release-yaml-2.1.0}
+# [2.1.0](https://github.com/gregsdennis/json-everything/commit/7c20af32520ade11cf09edd3b90fbdace9905b84) {#release-yaml-2.1.0}
 
 Updated to latest YamlDotNet (v12.2.1 to v15.1.2).
 
