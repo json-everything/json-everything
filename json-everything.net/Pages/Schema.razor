@@ -147,7 +147,7 @@
 								</div>
 								<div class="col-6">
 									<label class="w-100">
-										Instance
+										Instance (supports JSON & YAML)
 										<span class="editor-lang-@_instanceEditorLanguage">@GetLanguageText(_instanceEditorLanguage)</span>
 										<div class="editor-input">
 											<StandaloneCodeEditor @ref="_instanceEditor" Id="editor-instance" ConstructionOptions="BasicOptions"
@@ -248,7 +248,7 @@
 	}
 
 	private string HelpSummary { get; set; } = HelpContent.SchemaEvaluate;
-	private string SchemaEditorLabel { get; set; } = "Schema";
+	private string SchemaEditorLabel { get; set; } = "Schema (supports JSON & YAML)";
 	private string EvaluationOptionsVisibility { get; set; } = "visible";
 
 	private static StandaloneEditorConstructionOptions BasicOptions(StandaloneCodeEditor _) => EditorOptions.Basic();
@@ -302,7 +302,7 @@
 		_schemaEditor.UpdateOptions(new EditorUpdateOptions { TabSize = 4 });
 		Task.Run(() => DataManager.Set("schema-input-language", "csharp"));
 			
-		SchemaEditorLabel = "Classes";
+		SchemaEditorLabel = "Classes (C#)";
 
 		HelpSummary = HelpContent.SchemaGenerateSchema;
 

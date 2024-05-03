@@ -37,6 +37,8 @@ public static class YamlSerializer
 	/// <param name="yaml">The stream.</param>
 	/// <param name="configure">(optional) YAML serializer configuration method.</param>
 	/// <returns>The YAML string.</returns>
+	[RequiresDynamicCode("Calls JsonSerializer.Serialize. Make sure the options object contains all relevant JsonTypeInfos before suppressing this warning.")]
+	[RequiresUnreferencedCode("Calls JsonSerializer.Serialize. Make sure the options object contains all relevant JsonTypeInfos before suppressing this warning.")]
 	public static string Serialize(YamlStream yaml, Action<SerializerBuilder>? configure = null)
 	{
 		var builder = new SerializerBuilder();
@@ -61,6 +63,8 @@ public static class YamlSerializer
 	/// <param name="yaml">The document.</param>
 	/// <param name="configure">(optional) YAML serializer configuration method.</param>
 	/// <returns>The YAML string.</returns>
+	[RequiresDynamicCode("Calls JsonSerializer.Serialize. Make sure the options object contains all relevant JsonTypeInfos before suppressing this warning.")]
+	[RequiresUnreferencedCode("Calls JsonSerializer.Serialize. Make sure the options object contains all relevant JsonTypeInfos before suppressing this warning.")]
 	public static string Serialize(YamlDocument yaml, Action<SerializerBuilder>? configure = null)
 	{
 		return Serialize(new YamlStream(yaml), configure);
@@ -72,6 +76,8 @@ public static class YamlSerializer
 	/// <param name="yaml">The node.</param>
 	/// <param name="configure">(optional) YAML serializer configuration method.</param>
 	/// <returns>The YAML string.</returns>
+	[RequiresDynamicCode("Calls JsonSerializer.Serialize. Make sure the options object contains all relevant JsonTypeInfos before suppressing this warning.")]
+	[RequiresUnreferencedCode("Calls JsonSerializer.Serialize. Make sure the options object contains all relevant JsonTypeInfos before suppressing this warning.")]
 	public static string Serialize(YamlNode yaml, Action<SerializerBuilder>? configure = null)
 	{
 		return Serialize(new YamlDocument(yaml), configure);
