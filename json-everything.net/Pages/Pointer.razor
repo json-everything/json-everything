@@ -1,10 +1,10 @@
 ﻿@page "/json-pointer"
-@using BlazorMonaco
 @using System.Text.Json
 @using Json.Pointer
 @using JsonEverythingNet.Services
 @using EditorOptions = JsonEverythingNet.Services.EditorOptions
 @using System.Text.Encodings.Web
+@using BlazorMonaco.Editor
 
 @inject DataManager DataManager;
 
@@ -49,7 +49,7 @@
 							Data
 							<span class="editor-lang-json">JSON</span>
 							<div class="editor-input">
-								<MonacoEditor @ref="_instanceEditor" Id="editor-instance" ConstructionOptions="BasicOptions"
+								<StandaloneCodeEditor @ref="_instanceEditor" Id="editor-instance" ConstructionOptions="BasicOptions"
 								              CssClass="h-100"/>
 							</div>
 						</label>
@@ -59,7 +59,7 @@
 						<label class="col-5">
 							Result
 							<div class="editor-input">
-								<MonacoEditor @ref="_outputEditor" Id="editor-output" ConstructionOptions="ReadOnlyOptions"
+								<StandaloneCodeEditor @ref="_outputEditor" Id="editor-output" ConstructionOptions="ReadOnlyOptions"
 								              CssClass="h-100"/>
 							</div>
 						</label>
@@ -72,8 +72,8 @@
 
 @code {
 	#pragma warning disable CS8618
-	private MonacoEditor _instanceEditor;
-	private MonacoEditor _outputEditor;
+	private StandaloneCodeEditor _instanceEditor;
+	private StandaloneCodeEditor _outputEditor;
 
 	private readonly InputModel _input = new();
 
@@ -88,8 +88,8 @@
 		public string? Pointer { get; set; }
 	}
 
-	private static StandaloneEditorConstructionOptions BasicOptions(MonacoEditor _) => EditorOptions.Basic();
-	private static StandaloneEditorConstructionOptions ReadOnlyOptions(MonacoEditor _) => EditorOptions.Readonly();
+	private static StandaloneEditorConstructionOptions BasicOptions(StandaloneCodeEditor _) => EditorOptions.Basic();
+	private static StandaloneEditorConstructionOptions ReadOnlyOptions(StandaloneCodeEditor _) => EditorOptions.Readonly();
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{

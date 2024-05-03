@@ -1,4 +1,5 @@
 ﻿using BlazorMonaco;
+using BlazorMonaco.Editor;
 
 namespace JsonEverythingNet.Services
 {

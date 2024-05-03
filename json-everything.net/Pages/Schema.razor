@@ -1,6 +1,5 @@
 ﻿@page "/json-schema"
 @using Json.Schema.DataGeneration
-@using BlazorMonaco
 @using Json.Schema
 @using System.Text.Json
 @using Json.Schema.Data
@@ -12,6 +11,7 @@
 @using Microsoft.CodeAnalysis.CSharp
 @using System.Reflection
 @using System.Text.Json.Nodes
+@using BlazorMonaco.Editor
 @using Json.Schema.ArrayExt
 @using Json.Schema.Generation.XmlComments
 @using Json.Schema.OpenApi
@@ -19,6 +19,7 @@
 
 @inject DataManager DataManager;
 @inject NavigationManager NavigationManager;
+@inject IJSRuntime JsRuntime;
 
 <PageTitle>JSON Schema - json-everything.net</PageTitle>
 
@@ -139,7 +140,7 @@
 										@SchemaEditorLabel
 										<span class="editor-lang-@_schemaEditorLanguage">@GetLanguageText(_schemaEditorLanguage)</span>
 										<div class="editor-input">
-											<MonacoEditor @ref="_schemaEditor" Id="editor-schema" ConstructionOptions="BasicOptions"
+											<StandaloneCodeEditor @ref="_schemaEditor" Id="editor-schema" ConstructionOptions="BasicOptions"
 														  CssClass="h-100" OnDidChangeModelContent="HandleSchemaChanged" />
 										</div>
 									</label>
@@ -149,7 +150,7 @@
 										Instance
 										<span class="editor-lang-@_instanceEditorLanguage">@GetLanguageText(_instanceEditorLanguage)</span>
 										<div class="editor-input">
-											<MonacoEditor @ref="_instanceEditor" Id="editor-instance" ConstructionOptions="BasicOptions"
+											<StandaloneCodeEditor @ref="_instanceEditor" Id="editor-instance" ConstructionOptions="BasicOptions"
 														  CssClass="h-100" OnDidChangeModelContent="HandleInstanceChanged" />
 										</div>
 									</label>
@@ -161,7 +162,7 @@
 							<label class="mb-4">
 								Results
 								<div class="editor-input">
-									<MonacoEditor @ref="_outputEditor" Id="editor-output" ConstructionOptions="ReadOnlyOptions"
+									<StandaloneCodeEditor @ref="_outputEditor" Id="editor-output" ConstructionOptions="ReadOnlyOptions"
 									              CssClass="h-100 mb-2"/>
 								</div>
 							</label>
@@ -175,23 +176,23 @@
 
 @code {
 	#pragma warning disable CS8618
-	private MonacoEditor _schemaEditor;
+	private StandaloneCodeEditor _schemaEditor;
 	private string _schemaEditorLanguage;
-	private MonacoEditor _instanceEditor;
+	private StandaloneCodeEditor _instanceEditor;
 	private string _instanceEditorLanguage;
-	private MonacoEditor _outputEditor;
+	private StandaloneCodeEditor _outputEditor;
 
 	private readonly SchemaOptionsModel _options = new();
 
-	private readonly List<LibraryVersion> _libraries = new()
-	{
+	private readonly List<LibraryVersion> _libraries =
+	[
 		LibraryVersion.GetFor<JsonSchema>(),
 		LibraryVersion.GetFor<DataKeyword>(),
 		LibraryVersion.GetFor<UniqueKeysKeyword>(),
 		LibraryVersion.GetFor<DiscriminatorKeyword>(),
 		LibraryVersion.GetFor<ISchemaRefiner>(),
 		LibraryVersion.GetFor<Bound>()
-	};
+	];
 
 	private IEnumerable<MetadataReference> _references;
 	private SchemaOperations _operation = SchemaOperations.Evaluate;
@@ -250,8 +251,8 @@
 	private string SchemaEditorLabel { get; set; } = "Schema";
 	private string EvaluationOptionsVisibility { get; set; } = "visible";
 
-	private static StandaloneEditorConstructionOptions BasicOptions(MonacoEditor _) => EditorOptions.Basic();
-	private static StandaloneEditorConstructionOptions ReadOnlyOptions(MonacoEditor _) => EditorOptions.Readonly();
+	private static StandaloneEditorConstructionOptions BasicOptions(StandaloneCodeEditor _) => EditorOptions.Basic();
+	private static StandaloneEditorConstructionOptions ReadOnlyOptions(StandaloneCodeEditor _) => EditorOptions.Readonly();
 
 	private static string GetLanguageText(string langKey) => langKey switch
 	{
@@ -280,10 +281,10 @@
 
 	private void ConfigureForEvaluation()
 	{
-		_schemaEditor.UpdateOptions(new GlobalEditorOptions { TabSize = 2 });
+		_schemaEditor.UpdateOptions(new EditorUpdateOptions { TabSize = 2 });
 		Task.Run(async () =>
 		{
-			_schemaEditorLanguage = await _schemaEditor.DetectLanguage();
+			_schemaEditorLanguage = await _schemaEditor.DetectLanguage(JsRuntime);
 			await DataManager.Set("schema-input-language", "json");
 		});
 			
@@ -296,9 +297,9 @@
 
 	private void ConfigureForSchemaGen()
 	{
-		_schemaEditor.SetLanguage("csharp");
+		_schemaEditor.SetLanguage("csharp", JsRuntime);
 		_schemaEditorLanguage = "csharp";
-		_schemaEditor.UpdateOptions(new GlobalEditorOptions { TabSize = 4 });
+		_schemaEditor.UpdateOptions(new EditorUpdateOptions { TabSize = 4 });
 		Task.Run(() => DataManager.Set("schema-input-language", "csharp"));
 			
 		SchemaEditorLabel = "Classes";
@@ -310,10 +311,10 @@
 
 	private void ConfigureForDataGen()
 	{
-		_schemaEditor.UpdateOptions(new GlobalEditorOptions { TabSize = 2 });
+		_schemaEditor.UpdateOptions(new EditorUpdateOptions { TabSize = 2 });
 		Task.Run(async () =>
 		{
-			_schemaEditorLanguage = await _schemaEditor.DetectLanguage();
+			_schemaEditorLanguage = await _schemaEditor.DetectLanguage(JsRuntime);
 			await DataManager.Set("schema-input-language", "json");
 		});
 			
@@ -347,7 +348,7 @@
 
 	private async Task Validate()
 	{
-		await _outputEditor.SetLanguageAsync("json");
+		await _outputEditor.SetLanguageAsync("json", JsRuntime);
 		await _outputEditor.SetValue(string.Empty);
 
 		JsonSchema schema;
@@ -358,7 +359,7 @@
 		}
 		catch (Exception e)
 		{
-			await _outputEditor.SetLanguageAsync("text");
+			await _outputEditor.SetLanguageAsync("text", JsRuntime);
 			await _outputEditor.SetValue($"Schema is invalid\n\n{e.Message}");
 			return;
 		}
@@ -369,7 +370,7 @@
 		}
 		catch (Exception e)
 		{
-			await _outputEditor.SetLanguageAsync("text");
+			await _outputEditor.SetLanguageAsync("text", JsRuntime);
 			await _outputEditor.SetValue($"Instance is invalid\n\n{e.Message}");
 			return;
 		}
@@ -389,14 +390,14 @@
 		}
 		catch (Exception e)
 		{
-			await _outputEditor.SetLanguageAsync("text");
+			await _outputEditor.SetLanguageAsync("text", JsRuntime);
 			await _outputEditor.SetValue(e.Message);
 		}
 	}
 
 	private async Task GenerateData()
 	{
-		await _outputEditor.SetLanguageAsync("json");
+		await _outputEditor.SetLanguageAsync("json", JsRuntime);
 		await _outputEditor.SetValue(string.Empty);
 
 		JsonSchema schema;
@@ -406,7 +407,7 @@
 		}
 		catch (Exception e)
 		{
-			await _outputEditor.SetLanguageAsync("text");
+			await _outputEditor.SetLanguageAsync("text", JsRuntime);
 			await _outputEditor.SetValue($"Schema is invalid\n\n{e.Message}");
 			return;
 		}
@@ -428,7 +429,7 @@
 #pragma warning disable CS0618 // Type or member is obsolete
 	private async Task GenerateSchema()
 	{
-		await _outputEditor.SetLanguageAsync("json");
+		await _outputEditor.SetLanguageAsync("json", JsRuntime);
 		await _outputEditor.SetValue(string.Empty);
 
 		Assembly? assembly = null;
@@ -491,7 +492,7 @@ namespace JsonEverythingTemp;
 		}
 		catch (Exception e)
 		{
-			await _outputEditor.SetLanguageAsync("text");
+			await _outputEditor.SetLanguageAsync("text", JsRuntime);
 			await _outputEditor.SetValue(e.Message);
 		}
 		finally
@@ -521,7 +522,7 @@ namespace JsonEverythingTemp;
 
 	private async Task HandleSchemaChanged()
 	{
-		_schemaEditorLanguage = await _schemaEditor.DetectLanguage();
+		_schemaEditorLanguage = await _schemaEditor.DetectLanguage(JsRuntime);
 	}
 
 	private async Task LoadSavedSchema()
@@ -536,7 +537,7 @@ namespace JsonEverythingTemp;
 
 	private async Task HandleInstanceChanged()
 	{
-		_instanceEditorLanguage = await _instanceEditor.DetectLanguage();
+		_instanceEditorLanguage = await _instanceEditor.DetectLanguage(JsRuntime);
 	}
 
 	private async Task LoadSavedInstance()
@@ -547,7 +548,7 @@ namespace JsonEverythingTemp;
 	private async Task LoadSavedSettings()
 	{
 		var language = await DataManager.Get("schema-input-language") ?? "json";
-		await _schemaEditor.SetLanguageAsync(language);
+		await _schemaEditor.SetLanguageAsync(language, JsRuntime);
 
 		Operation = language == "json" ? SchemaOperations.Evaluate : SchemaOperations.GenerateSchema;
 		SchemaEditorLabel = language == "json" ? "Classes" : "Schema";
@@ -570,11 +571,11 @@ namespace JsonEverythingTemp;
 
 			await LoadAssemblyReferences();
 
-			_schemaEditorLanguage = await _schemaEditor.DetectLanguage();
-			_instanceEditorLanguage = await _instanceEditor.DetectLanguage();
+			_schemaEditorLanguage = await _schemaEditor.DetectLanguage(JsRuntime);
+			_instanceEditorLanguage = await _instanceEditor.DetectLanguage(JsRuntime);
 
-			await _outputEditor.SetLanguageAsync("json");
-			await _outputEditor.UpdateOptions(new GlobalEditorOptions { TabSize = 2 });
+			await _outputEditor.SetLanguageAsync("json", JsRuntime);
+			await _outputEditor.UpdateOptions(new EditorUpdateOptions { TabSize = 2 });
 			await _outputEditor.SetValue(string.Empty);
 		}
 

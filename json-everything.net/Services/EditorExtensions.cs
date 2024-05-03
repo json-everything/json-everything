@@ -1,37 +1,39 @@
 ﻿using System.Text.Json.Nodes;
 using BlazorMonaco;
+using BlazorMonaco.Editor;
+using Microsoft.JSInterop;
 using Yaml2JsonNode;
 
 namespace JsonEverythingNet.Services;
 
 public static class EditorExtensions
 {
-	public static void SetLanguage(this MonacoEditor editor, string language)
+	public static void SetLanguage(this StandaloneCodeEditor editor, string language, IJSRuntime jsRuntime)
 	{
 		editor.GetModel()
-			.ContinueWith(x => MonacoEditorBase.SetModelLanguage(x.Result, language));
+			.ContinueWith(x => Global.SetModelLanguage(jsRuntime, x.Result, language));
 	}
 
-	public static async Task SetLanguageAsync(this MonacoEditor editor, string language)
+	public static async Task SetLanguageAsync(this StandaloneCodeEditor editor, string language, IJSRuntime jsRuntime)
 	{
 		var model = await editor.GetModel();
-		await MonacoEditorBase.SetModelLanguage(model, language);
+		await Global.SetModelLanguage(jsRuntime, model, language);
 	}
 
-	public static async Task<string> DetectLanguage(this MonacoEditor editor)
+	public static async Task<string> DetectLanguage(this StandaloneCodeEditor editor, IJSRuntime jsRuntime)
 	{
 		var text = await editor.GetValue();
 
 		if (TryParseJson(text))
 		{
-			await editor.UpdateOptions(new GlobalEditorOptions { TabSize = 2 });
-			await editor.SetLanguageAsync("json");
+			await editor.UpdateOptions(new EditorUpdateOptions { TabSize = 2 });
+			await editor.SetLanguageAsync("json", jsRuntime);
 			return "json";
 		}
 		else if (TryParseYaml(text))
 		{
-			await editor.UpdateOptions(new GlobalEditorOptions { TabSize = 2 });
-			await editor.SetLanguageAsync("yaml");
+			await editor.UpdateOptions(new EditorUpdateOptions { TabSize = 2 });
+			await editor.SetLanguageAsync("yaml", jsRuntime);
 			return "yaml";
 		}
 

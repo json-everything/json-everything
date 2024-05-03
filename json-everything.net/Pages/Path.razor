@@ -1,16 +1,15 @@
 ﻿@page "/json-path"
-@using BlazorMonaco
 @using System.Text.Json
 @using Json.Path
 @using JsonEverythingNet.Services
 @using EditorOptions = JsonEverythingNet.Services.EditorOptions
 @using System.Text.Encodings.Web
 @using System.Text.Json.Nodes
+@using BlazorMonaco.Editor
 
 @inject DataManager DataManager;
 
 <PageTitle>JSON Path - json-everything.net</PageTitle>
-
 
 <div class="row mx-3 fill-remaining">
 	<div class="mh-100 scroll">
@@ -110,14 +109,14 @@
 								Data
 								<span class="editor-lang-json">JSON</span>
 								<div class="editor-input">
-									<MonacoEditor @ref="_instanceEditor" Id="editor-instance" ConstructionOptions="BasicOptions"
+									<StandaloneCodeEditor @ref="_instanceEditor" Id="editor-instance" ConstructionOptions="BasicOptions"
 									              CssClass="h-100"/>
 								</div>
 							</Label>
 							<label class="col-6">
 								Results
 								<div class="editor-input">
-									<MonacoEditor @ref="_outputEditor" Id="editor-output" ConstructionOptions="ReadOnlyOptions"
+									<StandaloneCodeEditor @ref="_outputEditor" Id="editor-output" ConstructionOptions="ReadOnlyOptions"
 									              CssClass="h-100"/>
 								</div>
 							</label>
@@ -131,8 +130,8 @@
 
 @code {
 	#pragma warning disable CS8618
-	private MonacoEditor _instanceEditor;
-	private MonacoEditor _outputEditor;
+	private StandaloneCodeEditor _instanceEditor;
+	private StandaloneCodeEditor _outputEditor;
 
 	private readonly InputModel _input = new();
 
@@ -167,8 +166,8 @@
 		};
 	}
 
-	private static StandaloneEditorConstructionOptions BasicOptions(MonacoEditor _) => EditorOptions.Basic();
-	private static StandaloneEditorConstructionOptions ReadOnlyOptions(MonacoEditor _) => EditorOptions.Readonly();
+	private static StandaloneEditorConstructionOptions BasicOptions(StandaloneCodeEditor _) => EditorOptions.Basic();
+	private static StandaloneEditorConstructionOptions ReadOnlyOptions(StandaloneCodeEditor _) => EditorOptions.Readonly();
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{

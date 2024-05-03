@@ -1,14 +1,15 @@
 ﻿@page "/json-logic"
-@using BlazorMonaco
 @using System.Text.Json
 @using Json.Logic
 @using JsonEverythingNet.Services
 @using EditorOptions = JsonEverythingNet.Services.EditorOptions
 @using System.Text.Encodings.Web
 @using System.Text.Json.Nodes
+@using BlazorMonaco.Editor
 @using Yaml2JsonNode
 
 @inject DataManager DataManager;
+@inject IJSRuntime JsRuntime;
 
 <PageTitle>JSON Logic - json-everything.net</PageTitle>
 
@@ -44,7 +45,7 @@
 							Logic
 							<span class="editor-lang-@_logicEditorLanguage">@_logicEditorLanguage</span>
 							<div class="editor-input">
-								<MonacoEditor @ref="_logicEditor" Id="editor-logic" ConstructionOptions="BasicOptions"
+								<StandaloneCodeEditor @ref="_logicEditor" Id="editor-logic" ConstructionOptions="BasicOptions"
 								              CssClass="h-100" OnDidChangeModelContent="HandleLogicChanged"/>
 							</div>
 						</label>
@@ -57,7 +58,7 @@
 							Data
 							<span class="editor-lang-@_instanceEditorLanguage">@_instanceEditorLanguage</span>
 							<div class="editor-input">
-								<MonacoEditor @ref="_instanceEditor" Id="editor-instance" ConstructionOptions="BasicOptions"
+								<StandaloneCodeEditor @ref="_instanceEditor" Id="editor-instance" ConstructionOptions="BasicOptions"
 											  CssClass="h-100" OnDidChangeModelContent="HandleInstanceChanged" />
 							</div>
 						</label>
@@ -68,7 +69,7 @@
 			<label>
 				Result
 				<div class="editor-input">
-					<MonacoEditor @ref="_outputEditor" Id="editor-output" ConstructionOptions="ReadOnlyOptions"
+					<StandaloneCodeEditor @ref="_outputEditor" Id="editor-output" ConstructionOptions="ReadOnlyOptions"
 					              CssClass="h-100"/>
 				</div>
 			</label>
@@ -78,20 +79,17 @@
 
 @code {
 #pragma warning disable CS8618
-	private MonacoEditor _logicEditor;
+	private StandaloneCodeEditor _logicEditor;
 	private string _logicEditorLanguage;
-	private MonacoEditor _instanceEditor;
+	private StandaloneCodeEditor _instanceEditor;
 	private string _instanceEditorLanguage;
-	private MonacoEditor _outputEditor;
-
-	private readonly List<LibraryVersion> _libraries = new()
-	{
-		LibraryVersion.GetFor<Rule>(),
-	};
+	private StandaloneCodeEditor _outputEditor;
 #pragma warning restore CS8618
 
-	private static StandaloneEditorConstructionOptions BasicOptions(MonacoEditor _) => EditorOptions.Basic();
-	private static StandaloneEditorConstructionOptions ReadOnlyOptions(MonacoEditor _) => EditorOptions.Readonly();
+	private readonly List<LibraryVersion> _libraries = [LibraryVersion.GetFor<Rule>()];
+
+	private static StandaloneEditorConstructionOptions BasicOptions(StandaloneCodeEditor _) => EditorOptions.Basic();
+	private static StandaloneEditorConstructionOptions ReadOnlyOptions(StandaloneCodeEditor _) => EditorOptions.Readonly();
 
 	private async Task Apply()
 	{
@@ -159,8 +157,8 @@
 			await LoadSavedInstance();
 			await _outputEditor.SetValue(string.Empty);
 
-			_logicEditorLanguage = await _logicEditor.DetectLanguage();
-			_instanceEditorLanguage = await _instanceEditor.DetectLanguage();
+			_logicEditorLanguage = await _logicEditor.DetectLanguage(JsRuntime);
+			_instanceEditorLanguage = await _instanceEditor.DetectLanguage(JsRuntime);
 		}
 
 		await base.OnAfterRenderAsync(firstRender);
@@ -168,11 +166,11 @@
 
 	private async Task HandleLogicChanged()
 	{
-		_logicEditorLanguage = await _logicEditor.DetectLanguage();
+		_logicEditorLanguage = await _logicEditor.DetectLanguage(JsRuntime);
 	}
 
 	private async Task HandleInstanceChanged()
 	{
-		_instanceEditorLanguage = await _instanceEditor.DetectLanguage();
+		_instanceEditorLanguage = await _instanceEditor.DetectLanguage(JsRuntime);
 	}
 }

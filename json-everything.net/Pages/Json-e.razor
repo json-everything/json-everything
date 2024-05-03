@@ -1,14 +1,15 @@
 ﻿@page "/json-e"
-@using BlazorMonaco
 @using System.Text.Json
 @using JsonEverythingNet.Services
 @using EditorOptions = JsonEverythingNet.Services.EditorOptions
 @using System.Text.Encodings.Web
 @using System.Text.Json.Nodes
+@using BlazorMonaco.Editor
 @using Json.JsonE
 @using Yaml2JsonNode
 
 @inject DataManager DataManager;
+@inject IJSRuntime JsRuntime;
 
 <PageTitle>JSON-e - json-everything.net</PageTitle>
 
@@ -53,7 +54,7 @@
 										Template
 										<span class="editor-lang-@_templateEditorLanguage">@_templateEditorLanguage</span>
 										<div class="editor-input">
-											<MonacoEditor @ref="_templateEditor" Id="editor-schema" ConstructionOptions="BasicOptions"
+											<StandaloneCodeEditor @ref="_templateEditor" Id="editor-schema" ConstructionOptions="BasicOptions"
 														  CssClass="h-100" OnDidChangeModelContent="HandleTemplateChanged" />
 										</div>
 									</label>
@@ -63,7 +64,7 @@
 										Context
 										<span class="editor-lang-@_contextEditorLanguage">@_contextEditorLanguage</span>
 										<div class="editor-input">
-											<MonacoEditor @ref="_contextEditor" Id="editor-instance" ConstructionOptions="BasicOptions"
+											<StandaloneCodeEditor @ref="_contextEditor" Id="editor-instance" ConstructionOptions="BasicOptions"
 														  CssClass="h-100" OnDidChangeModelContent="HandleContextChanged" />
 										</div>
 									</label>
@@ -75,7 +76,7 @@
 							<label class="mb-4">
 								Results
 								<div class="editor-input">
-									<MonacoEditor @ref="_outputEditor" Id="editor-output" ConstructionOptions="ReadOnlyOptions"
+									<StandaloneCodeEditor @ref="_outputEditor" Id="editor-output" ConstructionOptions="ReadOnlyOptions"
 									              CssClass="h-100 mb-2"/>
 								</div>
 							</label>
@@ -89,25 +90,22 @@
 
 @code {
 #pragma warning disable CS8618
-	private MonacoEditor _templateEditor;
+	private StandaloneCodeEditor _templateEditor;
 	private string _templateEditorLanguage;
-	private MonacoEditor _contextEditor;
+	private StandaloneCodeEditor _contextEditor;
 	private string _contextEditorLanguage;
-	private MonacoEditor _outputEditor;
+	private StandaloneCodeEditor _outputEditor;
 #pragma warning restore CS8618
 
-	private readonly List<LibraryVersion> _libraries = new()
-	{
-		LibraryVersion.GetFor<JsonFunction>(),
-	};
+	private readonly List<LibraryVersion> _libraries = [LibraryVersion.GetFor<JsonFunction>()];
 	private static readonly JsonSerializerOptions _serializerOptions = new()
 	{
 		WriteIndented = true,
 		Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
 	};
 
-	private static StandaloneEditorConstructionOptions BasicOptions(MonacoEditor _) => EditorOptions.Basic();
-	private static StandaloneEditorConstructionOptions ReadOnlyOptions(MonacoEditor _) => EditorOptions.Readonly();
+	private static StandaloneEditorConstructionOptions BasicOptions(StandaloneCodeEditor _) => EditorOptions.Basic();
+	private static StandaloneEditorConstructionOptions ReadOnlyOptions(StandaloneCodeEditor _) => EditorOptions.Readonly();
 
 	private async Task Run()
 	{
@@ -119,7 +117,7 @@
 
 	private async Task Evaluate()
 	{
-		await _outputEditor.SetLanguageAsync("yaml");
+		await _outputEditor.SetLanguageAsync("yaml", JsRuntime);
 		await _outputEditor.SetValue(string.Empty);
 
 		try
@@ -136,12 +134,12 @@
 			string resultText;
 			if (usesYaml)
 			{
-				await _outputEditor.SetLanguageAsync("yaml");
+				await _outputEditor.SetLanguageAsync("yaml", JsRuntime);
 				resultText = YamlSerializer.Serialize(results, _serializerOptions);
 			}
 			else
 			{
-				await _outputEditor.SetLanguageAsync("json");
+				await _outputEditor.SetLanguageAsync("json", JsRuntime);
 				resultText = JsonSerializer.Serialize(results, _serializerOptions);
 			}
 
@@ -149,7 +147,7 @@
 		}
 		catch (Exception e)
 		{
-			await _outputEditor.SetLanguageAsync("text");
+			await _outputEditor.SetLanguageAsync("text", JsRuntime);
 			await _outputEditor.SetValue(e.Message);
 		}
 	}
@@ -169,7 +167,7 @@
 
 	private async Task HandleTemplateChanged()
 	{
-		_templateEditorLanguage = await _templateEditor.DetectLanguage();
+		_templateEditorLanguage = await _templateEditor.DetectLanguage(JsRuntime);
 	}
 
 	private async Task SaveTemplate()
@@ -184,7 +182,7 @@
 
 	private async Task HandleContextChanged()
 	{
-		_contextEditorLanguage = await _contextEditor.DetectLanguage();
+		_contextEditorLanguage = await _contextEditor.DetectLanguage(JsRuntime);
 	}
 
 	private async Task SaveContext()
@@ -204,11 +202,11 @@
 			await LoadSavedTemplate();
 			await LoadSavedContext();
 
-			_templateEditorLanguage = await _templateEditor.DetectLanguage();
-			_contextEditorLanguage = await _contextEditor.DetectLanguage();
+			_templateEditorLanguage = await _templateEditor.DetectLanguage(JsRuntime);
+			_contextEditorLanguage = await _contextEditor.DetectLanguage(JsRuntime);
 
-			await _outputEditor.SetLanguageAsync("yaml");
-			await _outputEditor.UpdateOptions(new GlobalEditorOptions { TabSize = 2 });
+			await _outputEditor.SetLanguageAsync("yaml", JsRuntime);
+			await _outputEditor.UpdateOptions(new EditorUpdateOptions { TabSize = 2 });
 			await _outputEditor.SetValue(string.Empty);
 		}
 

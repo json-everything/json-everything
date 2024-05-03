@@ -1,16 +1,16 @@
 ﻿@page "/json-patch"
-@using BlazorMonaco
 @using System.Text.Json
 @using Json.Patch
 @using JsonEverythingNet.Services
 @using EditorOptions = JsonEverythingNet.Services.EditorOptions
 @using System.Text.Encodings.Web
 @using System.Text.Json.Nodes
+@using BlazorMonaco.Editor
 
 @inject DataManager DataManager;
+@inject IJSRuntime JsRuntime;
 
 <PageTitle>JSON Patch - json-everything.net</PageTitle>
-
 
 <div class="row mx-3 fill-remaining">
 	<div class="mh-100 scroll">
@@ -64,7 +64,7 @@
 										@PatchEditorLabel
 										<span class="editor-lang-json">JSON</span>
 										<div class="editor-input">
-											<MonacoEditor @ref="_patchEditor" Id="editor-patch" ConstructionOptions="BasicOptions"
+											<StandaloneCodeEditor @ref="_patchEditor" Id="editor-patch" ConstructionOptions="BasicOptions"
 											              CssClass="h-100"/>
 										</div>
 									</label>
@@ -74,7 +74,7 @@
 										Data / Target data
 										<span class="editor-lang-json">JSON</span>
 										<div class="editor-input">
-											<MonacoEditor @ref="_instanceEditor" Id="editor-instance" ConstructionOptions="BasicOptions"
+											<StandaloneCodeEditor @ref="_instanceEditor" Id="editor-instance" ConstructionOptions="BasicOptions"
 											              CssClass="h-100"/>
 										</div>
 									</label>
@@ -86,7 +86,7 @@
 							<label>
 								Result
 								<div class="editor-input">
-									<MonacoEditor @ref="_outputEditor" Id="editor-output" ConstructionOptions="ReadOnlyOptions"
+									<StandaloneCodeEditor @ref="_outputEditor" Id="editor-output" ConstructionOptions="ReadOnlyOptions"
 									              CssClass="h-100"/>
 								</div>
 							</label>
@@ -100,9 +100,9 @@
 
 @code {
 #pragma warning disable CS8618
-	private MonacoEditor _patchEditor;
-	private MonacoEditor _instanceEditor;
-	private MonacoEditor _outputEditor;
+	private StandaloneCodeEditor _patchEditor;
+	private StandaloneCodeEditor _instanceEditor;
+	private StandaloneCodeEditor _outputEditor;
 
 	private readonly PatchOptionsModel _options = new();
 
@@ -148,8 +148,8 @@
 	private string HelpSummary { get; set; } = HelpContent.PatchApply;
 	private string PatchEditorLabel { get; set; } = "Patch";
 
-	private static StandaloneEditorConstructionOptions BasicOptions(MonacoEditor _) => EditorOptions.Basic();
-	private static StandaloneEditorConstructionOptions ReadOnlyOptions(MonacoEditor _) => EditorOptions.Readonly();
+	private static StandaloneEditorConstructionOptions BasicOptions(StandaloneCodeEditor _) => EditorOptions.Basic();
+	private static StandaloneEditorConstructionOptions ReadOnlyOptions(StandaloneCodeEditor _) => EditorOptions.Readonly();
 
 	private static string GetDescription(PatchOperations operation) => operation switch
 	{
@@ -286,8 +286,8 @@
 			await LoadSavedPatch();
 			await LoadSavedInstance();
 
-			await _patchEditor.SetLanguageAsync("json");
-			await _patchEditor.UpdateOptions(new GlobalEditorOptions { TabSize = 2 });
+			await _patchEditor.SetLanguageAsync("json", JsRuntime);
+			await _patchEditor.UpdateOptions(new EditorUpdateOptions { TabSize = 2 });
 			await DataManager.Set("schema-input-language", "json");
 			await _outputEditor.SetValue(string.Empty);
 		}
