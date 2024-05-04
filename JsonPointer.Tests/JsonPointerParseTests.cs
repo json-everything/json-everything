@@ -80,7 +80,7 @@ public class JsonPointerParseTests
 	{
 		Assert.IsTrue(JsonPointer.TryParse(pointerString, out var pointer));
 
-		pointer.Count.Should().Be(segments.Length);
+		pointer!.Count.Should().Be(segments.Length);
 		for (int i = 0; i < pointer.Count; i++)
 		{
 			var segment = pointer[i];
@@ -119,7 +119,7 @@ public class JsonPointerParseTests
 		Assert.IsTrue(JsonPointer.TryParse("#/foo", out var pointer));
 		var expected = "/foo";
 
-		var actual = pointer.ToString();
+		var actual = pointer!.ToString();
 
 		Assert.AreEqual(expected, actual);
 	}
