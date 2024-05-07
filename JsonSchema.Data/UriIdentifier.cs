@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Json.Pointer;
@@ -11,6 +10,8 @@ namespace Json.Schema.Data;
 /// </summary>
 public class UriIdentifier : IDataResourceIdentifier
 {
+	private static readonly char[] _separator = ['#'];
+
 	/// <summary>
 	/// The URI target.
 	/// </summary>
@@ -34,7 +35,7 @@ public class UriIdentifier : IDataResourceIdentifier
 	/// <returns>True if resolution was successful; false otherwise.</returns>
 	public bool TryResolve(KeywordEvaluation evaluation, SchemaRegistry registry, out JsonNode? value)
 	{
-		var parts = Target.OriginalString.Split(new[] { '#' }, StringSplitOptions.None);
+		var parts = Target.OriginalString.Split(_separator, StringSplitOptions.None);
 		var baseUri = parts[0];
 		var fragment = parts.Length > 1 ? parts[1] : null;
 
@@ -46,7 +47,7 @@ public class UriIdentifier : IDataResourceIdentifier
 				wasResolved = Download(newUri, out data);
 			else
 			{
-				var localScope = new Uri(evaluation.Results.SchemaLocation.OriginalString.Split(new[] { '#' }, StringSplitOptions.None)[0]);
+				var localScope = new Uri(evaluation.Results.SchemaLocation.OriginalString.Split(_separator, StringSplitOptions.None)[0]);
 				var uriFolder = localScope.OriginalString.EndsWith("/")
 					? localScope
 					: localScope.GetParentUri();
@@ -65,7 +66,8 @@ public class UriIdentifier : IDataResourceIdentifier
 				root = root.Parent;
 			}
 
-			var rootSchema = (JsonSchema?) registry.Get(root.SchemaLocation);
+			var rootBaseUri = new Uri(root.SchemaLocation.GetLeftPart(UriPartial.Query));
+			var rootSchema = (JsonSchema?) registry.Get(rootBaseUri);
 			data = JsonSerializer.SerializeToNode(rootSchema, JsonSchemaDataSerializerContext.Default.JsonSchema!);
 		}
 
