@@ -58,8 +58,7 @@ public class DynamicRefKeyword : IJsonSchemaKeyword
 		{
 			if (JsonPointer.TryParse(newUri.Fragment, out var pointerFragment))
 			{
-				var newBaseUri = new Uri(newUri.GetLeftPart(UriPartial.Query));
-				var targetBase = context.Options.SchemaRegistry.Get(newBaseUri);
+				var targetBase = context.Options.SchemaRegistry.Get(newUri);
 
 				targetSchema = targetBase.FindSubschema(pointerFragment, context.Options);
 			}
