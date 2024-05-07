@@ -150,6 +150,8 @@ public class SchemaRegistry
 
 	internal JsonSchema Get(DynamicScope scope, Uri baseUri, string anchor, bool requireLocalAnchor)
 	{
+		baseUri = new Uri(baseUri.GetLeftPart(UriPartial.Query));
+	
 		if (requireLocalAnchor)
 		{
 			var registration = _registered.GetValueOrDefault(baseUri) ??
