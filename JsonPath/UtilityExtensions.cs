@@ -81,7 +81,7 @@ internal static class UtilityExtensions
 				// The Regex class doesn't match `.` on non-BMP unicode very well,
 				// so we need to translate that to something it does understand.
 				// Ref: https://github.com/ietf-wg-jsonpath/iregexp/issues/22#issuecomment-1510543510
-				sb.Append(@"(\P{Cs}|\p{Cs}\p{Cs})");
+				sb.Append(@"(?:(?![\r\n])\P{Cs}|\p{Cs}\p{Cs})");
 			}
 			else
 			{
