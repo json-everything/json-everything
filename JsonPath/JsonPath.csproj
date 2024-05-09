@@ -14,6 +14,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PackageId>JsonPath.Net</PackageId>
     <Version>1.0.2</Version>
     <FileVersion>1.0.2</FileVersion>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
@@ -21,9 +22,9 @@
     <Description>JSON Path (RFC 9535) built on the System.Text.Json namespace</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIcon>json-logo-256.png</PackageIcon>
     <PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
     <RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>
-    <PackageIcon>json-logo-256.png</PackageIcon>
     <PackageTags>json-path jsonpath query path json rfc9535</PackageTags>
     <PackageReleaseNotes>Release notes can be found at https://docs.json-everything.net/rn-json-path/</PackageReleaseNotes>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
