@@ -84,10 +84,13 @@ jobs:
           tag: schema-v${{ needs.build.outputs.version }}
           tag_exists_error: false
       - name: archive packages
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: archive-packages-core
-          path: nupkg/*.nupkg
+          path: |
+            **/*.nupkg
+            **/*.snupkg
+          if-no-files-found: error
   publish-localizations:
     needs: build
     name: pack & publish localizations
@@ -117,7 +120,10 @@ jobs:
           echo ${PKG_NAME}
           nuget push nupkg/*.nupkg -Source https://api.nuget.org/v3/index.json -SkipDuplicate
       - name: archive packages
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: archive-packages-localizations
-          path: nupkg/*.nupkg
+          path: |
+            **/*.nupkg
+            **/*.snupkg
+          if-no-files-found: error

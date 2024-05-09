@@ -21,16 +21,17 @@ jobs:
       # Publish
       - name: publish schema generation
         id: publish_schema_generation
-        uses: alirezanet/publish-nuget@v3.0.0
+        uses: alirezanet/publish-nuget@v3.1.0
         with:
           PROJECT_FILE_PATH: JsonSchema.Generation/JsonSchema.Generation.csproj
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
           INCLUDE_SYMBOLS: true
           TAG_FORMAT: schema-gen-v*
       - name: archive packages
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: archive-packages
           path: |
             **/*.nupkg
             **/*.snupkg
+          if-no-files-found: error
