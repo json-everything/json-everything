@@ -27,6 +27,7 @@ jobs:
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
           INCLUDE_SYMBOLS: true
           TAG_FORMAT: schema-data-v*
+          PACKAGE_NAME: JsonSchema.Net.Data
       - name: archive packages
         uses: actions/upload-artifact@v4
         with:

@@ -27,6 +27,7 @@ jobs:
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
           INCLUDE_SYMBOLS: true
           TAG_FORMAT: pointer-v*
+          PACKAGE_NAME: JsonPointer.Net
       - name: archive packages
         uses: actions/upload-artifact@v4
         with:
