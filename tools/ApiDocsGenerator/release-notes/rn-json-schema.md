@@ -4,6 +4,10 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "09.01"
 ---
+# [7.0.2](https://github.com/gregsdennis/json-everything/pull/730) {#release-schema-7.0.2}
+
+[#726](https://github.com/gregsdennis/json-everything/issues/726) - [@filzrev](https://github.com/filzrev) discovered a thread-safety issue.
+
 # [7.0.1](https://github.com/gregsdennis/json-everything/pull/724) {#release-schema-7.0.1}
 
 Fixes an issue where URI lookups consider the fragment.  This can cause issues if the user has supplied their own `SchemaRegistry.Fetch` method and performs a lookup by merely `.ToString()`-ing the URI and performing string equality.
