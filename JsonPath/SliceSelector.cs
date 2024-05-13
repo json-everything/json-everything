@@ -57,7 +57,7 @@ public class SliceSelector : ISelector
 		if (Step == 0) yield break;
 
 		var step = Step ?? 1;
-		var start = Start ?? (step >= 0 ? 0 : arr.Count);
+		var start = Start ?? (step >= 0 ? 0 : arr.Count - 1);
 		var end = End ?? (step >= 0 ? arr.Count : -arr.Count - 1);
 		var (lower, upper) = Bounds(start, end, step, arr.Count);
 
