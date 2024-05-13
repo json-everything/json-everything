@@ -4,6 +4,10 @@ title: JsonPath.Net
 icon: fas fa-tag
 order: "09.08"
 ---
+# [1.0.3](https://github.com/gregsdennis/json-everything/pull/730) {#release-path-1.0.3}
+
+[Test Suite PR #77](https://github.com/jsonpath-standard/jsonpath-compliance-test-suite/pull/77) added some tests to check for a dot `.` inside square brackets, where it should be considered a literal and not transformed.
+
 # [1.0.2](https://github.com/gregsdennis/json-everything/pull/725) {#release-path-1.0.2}
 
 Fixes a rare issue with `match()` and `search()` functions.

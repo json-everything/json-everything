@@ -15,8 +15,8 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageId>JsonPath.Net</PackageId>
-    <Version>1.0.2</Version>
-    <FileVersion>1.0.2</FileVersion>
+    <Version>1.0.3</Version>
+    <FileVersion>1.0.3</FileVersion>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <Authors>Greg Dennis</Authors>
     <Description>JSON Path (RFC 9535) built on the System.Text.Json namespace</Description>

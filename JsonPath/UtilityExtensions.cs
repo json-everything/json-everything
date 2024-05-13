@@ -74,9 +74,10 @@ internal static class UtilityExtensions
 	{
 		var sb = new StringBuilder();
 		var escaped = false;
+		var inBrackets = false;
 		foreach (var c in regex)
 		{
-			if (!escaped && c == '.')
+			if (!escaped && !inBrackets && c == '.')
 			{
 				// The Regex class doesn't match `.` on non-BMP unicode very well,
 				// so we need to translate that to something it does understand.
@@ -89,6 +90,17 @@ internal static class UtilityExtensions
 				if (c == '\\')
 				{
 					escaped = true;
+					continue;
+				}
+				if (!escaped && c == '[')
+				{
+					inBrackets = true;
+					continue;
+				}
+
+				if (!escaped && c == ']')
+				{
+					inBrackets = false;
 					continue;
 				}
 			}
