@@ -21,18 +21,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\JsonE\JsonE.csproj" />
-    <ProjectReference Include="..\JsonLogic\JsonLogic.csproj" />
-    <ProjectReference Include="..\JsonPatch\JsonPatch.csproj" />
-    <ProjectReference Include="..\JsonPath\JsonPath.csproj" />
-    <ProjectReference Include="..\JsonSchema.DataGeneration\JsonSchema.DataGeneration.csproj" />
-    <ProjectReference Include="..\JsonSchema.Data\JsonSchema.Data.csproj" />
-    <ProjectReference Include="..\JsonSchema.Generation.DataAnnotations\JsonSchema.Generation.DataAnnotations.csproj" />
-    <ProjectReference Include="..\JsonSchema.Generation\JsonSchema.Generation.csproj" />
-    <ProjectReference Include="..\JsonSchema.OpenApi\JsonSchema.OpenApi.csproj" />
-    <ProjectReference Include="..\JsonSchema.ArrayExt\JsonSchema.ArrayExt.csproj" />
-    <ProjectReference Include="..\JsonSchema\JsonSchema.csproj" />
-    <ProjectReference Include="..\Yaml2JsonNode\Yaml2JsonNode.csproj" />
+    <ProjectReference Include="..\src\JsonE\JsonE.csproj" />
+    <ProjectReference Include="..\src\JsonLogic\JsonLogic.csproj" />
+    <ProjectReference Include="..\src\JsonPatch\JsonPatch.csproj" />
+    <ProjectReference Include="..\src\JsonPath\JsonPath.csproj" />
+    <ProjectReference Include="..\src\JsonSchema.DataGeneration\JsonSchema.DataGeneration.csproj" />
+    <ProjectReference Include="..\src\JsonSchema.Data\JsonSchema.Data.csproj" />
+    <ProjectReference Include="..\src\JsonSchema.Generation.DataAnnotations\JsonSchema.Generation.DataAnnotations.csproj" />
+    <ProjectReference Include="..\src\JsonSchema.Generation\JsonSchema.Generation.csproj" />
+    <ProjectReference Include="..\src\JsonSchema.OpenApi\JsonSchema.OpenApi.csproj" />
+    <ProjectReference Include="..\src\JsonSchema.ArrayExt\JsonSchema.ArrayExt.csproj" />
+    <ProjectReference Include="..\src\JsonSchema\JsonSchema.csproj" />
+    <ProjectReference Include="..\src\Yaml2JsonNode\Yaml2JsonNode.csproj" />
   </ItemGroup>
 
   <ItemGroup>

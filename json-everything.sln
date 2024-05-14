@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31423.177
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonSchema", "JsonSchema\JsonSchema.csproj", "{B936A840-C0AC-4B19-9C8D-55A40F4C0022}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonSchema", "src\JsonSchema\JsonSchema.csproj", "{B936A840-C0AC-4B19-9C8D-55A40F4C0022}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonPointer", "JsonPointer\JsonPointer.csproj", "{2F14586F-20F4-48DD-B224-4731CEA24045}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonPointer", "src\JsonPointer\JsonPointer.csproj", "{2F14586F-20F4-48DD-B224-4731CEA24045}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonPointer.Tests", "JsonPointer.Tests\JsonPointer.Tests.csproj", "{949D6DFD-3605-4ECA-87DD-105898839EEC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonPointer.Tests", "src\JsonPointer.Tests\JsonPointer.Tests.csproj", "{949D6DFD-3605-4ECA-87DD-105898839EEC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonSchema.Tests", "JsonSchema.Tests\JsonSchema.Tests.csproj", "{0141E58A-FED6-4277-8793-85CEC87E5AC2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonSchema.Tests", "src\JsonSchema.Tests\JsonSchema.Tests.csproj", "{0141E58A-FED6-4277-8793-85CEC87E5AC2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MetaSchemas", "MetaSchemas", "{CB7DADBA-D486-42D0-A972-00DB95F697F9}"
 	ProjectSection(SolutionItems) = preProject
@@ -28,23 +28,23 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "schema2019-09", "schema2019
 		Meta-Schemas\2019-09\validation.json = Meta-Schemas\2019-09\validation.json
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Json.More", "Json.More\Json.More.csproj", "{3B375A99-1DF2-49D3-BCD2-42E04552FCA6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Json.More", "src\Json.More\Json.More.csproj", "{3B375A99-1DF2-49D3-BCD2-42E04552FCA6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonPath", "JsonPath\JsonPath.csproj", "{4BAE35FA-3580-4BDB-89FB-2F5B4DB20207}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonPath", "src\JsonPath\JsonPath.csproj", "{4BAE35FA-3580-4BDB-89FB-2F5B4DB20207}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonPath.Tests", "JsonPath.Tests\JsonPath.Tests.csproj", "{14B1DBB1-4D5C-4F19-82C2-EEE2D160DC48}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonPath.Tests", "src\JsonPath.Tests\JsonPath.Tests.csproj", "{14B1DBB1-4D5C-4F19-82C2-EEE2D160DC48}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonPatch", "JsonPatch\JsonPatch.csproj", "{1771519F-C54F-4C3F-8377-65C67D47727A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonPatch", "src\JsonPatch\JsonPatch.csproj", "{1771519F-C54F-4C3F-8377-65C67D47727A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonPatch.Tests", "JsonPatch.Tests\JsonPatch.Tests.csproj", "{90DBF8E4-12BC-478F-B1BF-0E7CAAEC60E7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonPatch.Tests", "src\JsonPatch.Tests\JsonPatch.Tests.csproj", "{90DBF8E4-12BC-478F-B1BF-0E7CAAEC60E7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonSchema.Generation", "JsonSchema.Generation\JsonSchema.Generation.csproj", "{0E5324CA-5F37-4D85-9ED3-AA5B491036CB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonSchema.Generation", "src\JsonSchema.Generation\JsonSchema.Generation.csproj", "{0E5324CA-5F37-4D85-9ED3-AA5B491036CB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonSchema.Generation.Tests", "JsonSchema.Generation.Tests\JsonSchema.Generation.Tests.csproj", "{42E4E81F-82FA-469B-AF01-019D19BD5838}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonSchema.Generation.Tests", "src\JsonSchema.Generation.Tests\JsonSchema.Generation.Tests.csproj", "{42E4E81F-82FA-469B-AF01-019D19BD5838}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonLogic", "JsonLogic\JsonLogic.csproj", "{F59C47CA-A1C2-496A-B76D-73A7DA91D837}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonLogic", "src\JsonLogic\JsonLogic.csproj", "{F59C47CA-A1C2-496A-B76D-73A7DA91D837}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonLogic.Tests", "JsonLogic.Tests\JsonLogic.Tests.csproj", "{9515FF22-CBE2-44D8-8FAC-5F7AF4CDF98C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonLogic.Tests", "src\JsonLogic.Tests\JsonLogic.Tests.csproj", "{9515FF22-CBE2-44D8-8FAC-5F7AF4CDF98C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "schema2020-12", "schema2020-12", "{D8603D94-7FF1-4C79-BF33-69999FEC4592}"
 	ProjectSection(SolutionItems) = preProject
@@ -59,11 +59,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "schema2020-12", "schema2020
 		Meta-Schemas\2020-12\validation.json = Meta-Schemas\2020-12\validation.json
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonSchema.Data", "JsonSchema.Data\JsonSchema.Data.csproj", "{435FA9F1-496D-454C-85EA-A98029C54A10}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonSchema.Data", "src\JsonSchema.Data\JsonSchema.Data.csproj", "{435FA9F1-496D-454C-85EA-A98029C54A10}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonSchema.Data.Tests", "JsonSchema.Data.Tests\JsonSchema.Data.Tests.csproj", "{E42C6093-9763-4246-8D10-EB835B7FA932}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonSchema.Data.Tests", "src\JsonSchema.Data.Tests\JsonSchema.Data.Tests.csproj", "{E42C6093-9763-4246-8D10-EB835B7FA932}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Json.More.Tests", "Json.More.Tests\Json.More.Tests.csproj", "{D6E10FBB-8BF4-4ECF-90B4-3C4EE6418496}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Json.More.Tests", "src\Json.More.Tests\Json.More.Tests.csproj", "{D6E10FBB-8BF4-4ECF-90B4-3C4EE6418496}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Vocabs", "Vocabs", "{86873071-9A8D-458E-8FE9-41BA2DF50651}"
 EndProject
@@ -77,22 +77,22 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Patch", "Patch", "{AD28D909
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Pointer", "Pointer", "{66DDF95D-B908-4A5F-A546-6725D31F35E4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonSchema.ArrayExt", "JsonSchema.ArrayExt\JsonSchema.ArrayExt.csproj", "{2C489C55-CDC4-47B6-BF94-B1D4755047A5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonSchema.ArrayExt", "src\JsonSchema.ArrayExt\JsonSchema.ArrayExt.csproj", "{2C489C55-CDC4-47B6-BF94-B1D4755047A5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonSchema.ArrayExt.Tests", "JsonSchema.ArrayExt.Tests\JsonSchema.ArrayExt.Tests.csproj", "{5844BA9B-31F6-4A34-A391-BE9016029BB6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonSchema.ArrayExt.Tests", "src\JsonSchema.ArrayExt.Tests\JsonSchema.ArrayExt.Tests.csproj", "{5844BA9B-31F6-4A34-A391-BE9016029BB6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{ACD36FCC-3A8D-45CF-BC6B-5E2380D421E9}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonSchema.DataGeneration", "JsonSchema.DataGeneration\JsonSchema.DataGeneration.csproj", "{0776DED0-94A7-4034-BDDB-610C0197FE4E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonSchema.DataGeneration", "src\JsonSchema.DataGeneration\JsonSchema.DataGeneration.csproj", "{0776DED0-94A7-4034-BDDB-610C0197FE4E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonSchema.DataGeneration.Tests", "JsonSchema.DataGeneration.Tests\JsonSchema.DataGeneration.Tests.csproj", "{FABD51FE-F729-4D02-8295-66A6687C6240}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonSchema.DataGeneration.Tests", "src\JsonSchema.DataGeneration.Tests\JsonSchema.DataGeneration.Tests.csproj", "{FABD51FE-F729-4D02-8295-66A6687C6240}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "json-everything.net", "json-everything.net\json-everything.net.csproj", "{38C3F2AF-B356-456D-BC5F-C382085F3798}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonSchema.OpenApi", "JsonSchema.OpenApi\JsonSchema.OpenApi.csproj", "{FB6CD9FB-184B-4B8B-9DD3-F52816387E11}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonSchema.OpenApi", "src\JsonSchema.OpenApi\JsonSchema.OpenApi.csproj", "{FB6CD9FB-184B-4B8B-9DD3-F52816387E11}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OpenAPI", "OpenAPI", "{EF7AC22E-9DD7-4F23-8542-74A0D315E5E2}"
 EndProject
@@ -103,7 +103,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3.1", "3.1", "{B22CB191-B36
 		Meta-Schemas\OpenAPI\3.1\schema.json = Meta-Schemas\OpenAPI\3.1\schema.json
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonSchema.OpenApi.Tests", "JsonSchema.OpenApi.Tests\JsonSchema.OpenApi.Tests.csproj", "{6A9AD8D7-B790-4BB3-B96C-9ADBC342388B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonSchema.OpenApi.Tests", "src\JsonSchema.OpenApi.Tests\JsonSchema.OpenApi.Tests.csproj", "{6A9AD8D7-B790-4BB3-B96C-9ADBC342388B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "next", "next", "{763E70E4-7B8E-4E05-AA64-1DD1EB6ED8EC}"
 	ProjectSection(SolutionItems) = preProject
@@ -120,27 +120,27 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "next", "next", "{763E70E4-7
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utilities", "Utilities", "{95A6A4EA-AF0E-439C-A0FD-B7F8BE57BD8A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yaml2JsonNode", "Yaml2JsonNode\Yaml2JsonNode.csproj", "{16891EEF-985F-4BDC-9C97-0D40707BF9F6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yaml2JsonNode", "src\Yaml2JsonNode\Yaml2JsonNode.csproj", "{16891EEF-985F-4BDC-9C97-0D40707BF9F6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yaml2JsonNode.Tests", "Yaml2JsonNode.Tests\Yaml2JsonNode.Tests.csproj", "{9F30736E-69EC-4B7A-B78B-7C116C33F010}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yaml2JsonNode.Tests", "src\Yaml2JsonNode.Tests\Yaml2JsonNode.Tests.csproj", "{9F30736E-69EC-4B7A-B78B-7C116C33F010}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{A09F0319-B69A-401D-814D-43524E883850}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiDocsGenerator", "tools\ApiDocsGenerator\ApiDocsGenerator.csproj", "{63EB78DD-70B3-41BB-86D1-0E7886F8A312}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CrossProjectTesting", "CrossProjectTesting\CrossProjectTesting.csproj", "{38E50AC7-002E-4FA4-AE19-E72A28CD4863}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CrossProjectTesting", "tools\CrossProjectTesting\CrossProjectTesting.csproj", "{38E50AC7-002E-4FA4-AE19-E72A28CD4863}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "JSON-e", "JSON-e", "{36E07DAA-6682-41E6-A838-273677E3B16B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonE", "JsonE\JsonE.csproj", "{DCAA7E94-74F1-4B18-82A1-64F274E21394}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonE", "src\JsonE\JsonE.csproj", "{DCAA7E94-74F1-4B18-82A1-64F274E21394}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonE.Tests", "JsonE.Tests\JsonE.Tests.csproj", "{02701B75-3297-4B4B-BECD-5F7D61D11B8C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonE.Tests", "src\JsonE.Tests\JsonE.Tests.csproj", "{02701B75-3297-4B4B-BECD-5F7D61D11B8C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonSchema.Generation.DataAnnotations", "JsonSchema.Generation.DataAnnotations\JsonSchema.Generation.DataAnnotations.csproj", "{5DEF8F44-630F-4469-9CE1-1611DA54FA7D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonSchema.Generation.DataAnnotations", "src\JsonSchema.Generation.DataAnnotations\JsonSchema.Generation.DataAnnotations.csproj", "{5DEF8F44-630F-4469-9CE1-1611DA54FA7D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonSchema.Generation.DataAnnotations.Tests", "JsonSchema.Generation.DataAnnotations.Tests\JsonSchema.Generation.DataAnnotations.Tests.csproj", "{ADFF3D17-7F72-4FE2-A959-FE394B0754F7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonSchema.Generation.DataAnnotations.Tests", "src\JsonSchema.Generation.DataAnnotations.Tests\JsonSchema.Generation.DataAnnotations.Tests.csproj", "{ADFF3D17-7F72-4FE2-A959-FE394B0754F7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Benchmarks", "Benchmarks\Benchmarks.csproj", "{95DD7EBB-D16D-4927-93B2-09069B851753}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Benchmarks", "tools\Benchmarks\Benchmarks.csproj", "{95DD7EBB-D16D-4927-93B2-09069B851753}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
