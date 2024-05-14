@@ -5,7 +5,7 @@ on:
     branches:
       - master # Default release branch
     paths:
-      - JsonE/**
+      - src/JsonE/**
   workflow_dispatch:
 
 jobs:
@@ -23,7 +23,7 @@ jobs:
         id: publish_e
         uses: alirezanet/publish-nuget@v3.1.0
         with:
-          PROJECT_FILE_PATH: JsonE/JsonE.csproj
+          PROJECT_FILE_PATH: src/JsonE/JsonE.csproj
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
           INCLUDE_SYMBOLS: true
           TAG_FORMAT: json-e-v*

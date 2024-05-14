@@ -5,7 +5,7 @@ on:
     branches:
       - master # Default release branch
     paths:
-      - Yaml2JsonNode/**
+      - src/Yaml2JsonNode/**
   workflow_dispatch:
 
 jobs:
@@ -23,7 +23,7 @@ jobs:
         id: publish_yaml
         uses: alirezanet/publish-nuget@v3.1.0
         with:
-          PROJECT_FILE_PATH: Yaml2JsonNode/Yaml2JsonNode.csproj
+          PROJECT_FILE_PATH: src/Yaml2JsonNode/Yaml2JsonNode.csproj
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
           INCLUDE_SYMBOLS: true
           TAG_FORMAT: yaml-v*

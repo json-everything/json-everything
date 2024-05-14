@@ -1,53 +1,71 @@
 "pkg:more":
-  - Json.More/**/*
+- changed-files:
+  - any-glob-to-any-file: src/Json.More/**/*
 
 "pkg:schema":
-  - JsonSchema/**/*
+- changed-files:
+  - any-glob-to-any-file: src/JsonSchema/**/*
 
 "pkg:schema-generation":
-  - JsonSchema.Generation/**/*
+- changed-files:
+  - any-glob-to-any-file: src/JsonSchema.Generation/**/*
 
 "pkg:schema-generation-dataannotations":
-  - JsonSchema.Generation.DataAnnotations/**/*
+- changed-files:
+  - any-glob-to-any-file: src/JsonSchema.Generation.DataAnnotations/**/*
 
 "pkg:schema-datagen":
-  - JsonSchema.DataGeneration/**/*
+- changed-files:
+  - any-glob-to-any-file: src/JsonSchema.DataGeneration/**/*
 
 "pkg:schema-codegen":
-  - JsonSchema.CodeGeneration/**/*
+- changed-files:
+  - any-glob-to-any-file: src/JsonSchema.CodeGeneration/**/*
 
 "pkg:schema-data":
-  - JsonSchema.Data/**/*
+- changed-files:
+  - any-glob-to-any-file: src/JsonSchema.Data/**/*
 
 "pkg:schema-openapi":
-  - JsonSchema.OpenApi/**/*
+- changed-files:
+  - any-glob-to-any-file: src/JsonSchema.OpenApi/**/*
 
 "pkg:schema-unique-keys":
-  - JsonSchema.UniqueKeys/**/*
+- changed-files:
+  - any-glob-to-any-file: src/JsonSchema.UniqueKeys/**/*
 
 "pkg:schema-array-ext":
-  - JsonSchema.ArrayExt/**/*
+- changed-files:
+  - any-glob-to-any-file: src/JsonSchema.ArrayExt/**/*
 
 "pkg:logic":
-  - JsonLogic/**/*
+- changed-files:
+  - any-glob-to-any-file: src/JsonLogic/**/*
 
 "pkg:pointer":
-  - JsonPointer/**/*
+- changed-files:
+  - any-glob-to-any-file: src/JsonPointer/**/*
 
 "pkg:path":
-  - JsonPath/**/*
+- changed-files:
+  - any-glob-to-any-file: src/JsonPath/**/*
 
 "pkg:patch":
-  - JsonPatch/**/*
+- changed-files:
+  - any-glob-to-any-file: src/JsonPatch/**/*
 
 "pkg:json-e":
-  - JsonE/**/*
+- changed-files:
+  - any-glob-to-any-file: src/JsonE/**/*
 
 "pkg:yaml":
-  - Yaml2JsonNode/**/*
+- changed-files:
+  - any-glob-to-any-file: src/Yaml2JsonNode/**/*
 
 "build pipeline":
-  - .github/workflows/**/*
+- changed-files:
+  - any-glob-to-any-file: .github/workflows/**/*
 
 "json-everything.net":
-  - any: ['json-everything.net/**/*']
+- changed-files:
+  - any-glob-to-any-file: 'json-everything.net/**/*'
