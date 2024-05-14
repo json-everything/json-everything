@@ -153,7 +153,7 @@ internal static class SpanExtensions
 
 			var block = span[i..end];
 			if (block[0] == '\'' && block[^1] == '\'')
-				block = $"\"{block[1..^1].ToString()}\"".AsSpan();
+				block = $"\"{block[1..^1].ToString().Replace("\"", "\\\"").Replace("\\'", "'")}\"".AsSpan();
 			node = JsonNode.Parse(block.ToString());
 			i = end;
 			return true;
