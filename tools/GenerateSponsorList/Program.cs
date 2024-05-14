@@ -55,7 +55,6 @@ var sponsorData = response.Data!.User!.Sponsors.Nodes!.Select(x =>
 
 	return new SponsorData (name!, avatar!, website!, GetBubbleSize(value));
 }).ToList();
-Arrange(sponsorData);
 var allSponsorsJson = JsonSerializer.Serialize(sponsorData, options);
 Console.WriteLine(allSponsorsJson);
 
@@ -70,23 +69,22 @@ return;
 
 static BubbleSize GetBubbleSize(int value)
 {
-	return BubbleSize.Small;
-
 	if (value < 100) return BubbleSize.None;
 	if (value < 250) return BubbleSize.Small;
 	if (value < 500) return BubbleSize.Medium;
 	return BubbleSize.Large;
 }
 
+static int GetBubbleRadius(BubbleSize x) => x switch
+{
+	BubbleSize.Small => 15,
+	BubbleSize.Medium => 30,
+	BubbleSize.Large => 60,
+	_ => throw new ArgumentOutOfRangeException(nameof(x), x, null)
+};
+
 static void Arrange(List<SponsorData> data)
 {
-	int GetBubbleRadius(BubbleSize x) => x switch
-	{
-		BubbleSize.Small => 15,
-		BubbleSize.Medium => 30,
-		BubbleSize.Large => 60,
-		_ => throw new ArgumentOutOfRangeException(nameof(x), x, null)
-	};
 
 	bool Overlaps(SponsorData item, double x, double y, HashSet<SponsorData> field) =>
 		field.Any(sd =>
@@ -133,6 +131,24 @@ static void Arrange(List<SponsorData> data)
 		}
 
 		positioned.Add(item);
+		Reposition(positioned);
+	}
+}
+
+static void Reposition(HashSet<SponsorData> field)
+{
+	var minX = field.Select(x => x.X - GetBubbleRadius(x.BubbleSize)).Min();
+	var minY = field.Select(x => x.Y - GetBubbleRadius(x.BubbleSize)).Min();
+	var maxX = field.Select(x => x.X + GetBubbleRadius(x.BubbleSize)).Max();
+	var maxY = field.Select(x => x.Y + GetBubbleRadius(x.BubbleSize)).Max();
+
+	var deltaX = (maxX + minX) / 2;
+	var deltaY = (maxY + minY) / 2;
+
+	foreach (var data in field)
+	{
+		data.X -= deltaX;
+		data.Y -= deltaY;
 	}
 }
 
