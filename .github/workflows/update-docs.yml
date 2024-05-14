@@ -4,8 +4,8 @@ on:
   push:
     branches: [ master ]
     paths:
-      - 'Json*/**/*'
-      - 'Yaml2JsonNode*/**/*'
+      - 'src/Json*/**/*'
+      - 'src/Yaml2JsonNode*/**/*'
       - 'tools/ApiDocsGenerator*/**/*'
       - '.github/workflows/update-docs.yml'
   workflow_dispatch:

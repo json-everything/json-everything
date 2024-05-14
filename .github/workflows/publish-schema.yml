@@ -6,7 +6,7 @@ on:
       - master # Default release branch
     paths:
       - .github/workflows/publish-schema.yml
-      - JsonSchema/**
+      - src/JsonSchema/**
   workflow_dispatch:
 
 jobs:
@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@v3
       - id: get-localized-nuspecs
         run: |
-          NUSPEC_FILES=$(echo -n '[' ; ls JsonSchema/nuspec/JsonSchema.Net.*.nuspec --format=commas|sed -e 's/^/\"/'|sed -e 's/,$/\",/'|sed -e 's/\([^,]\)$/\1\"\]/'|sed -e 's/, /\",\"/g')
+          NUSPEC_FILES=$(echo -n '[' ; ls src/JsonSchema/nuspec/JsonSchema.Net.*.nuspec --format=commas|sed -e 's/^/\"/'|sed -e 's/,$/\",/'|sed -e 's/\([^,]\)$/\1\"\]/'|sed -e 's/, /\",\"/g')
           echo $NUSPEC_FILES
           DELIMITER="$(openssl rand -hex 8)"
           echo "NUSPEC_FILES<<$DELIMITER" >> $GITHUB_OUTPUT
@@ -32,19 +32,19 @@ jobs:
         run: dotnet restore
       - name: Build
         # Localization build automatically moves localization DLLs into nuspec/ folder
-        run: dotnet build JsonSchema/JsonSchema.csproj --configuration Release --no-restore
+        run: dotnet build src/JsonSchema/JsonSchema.csproj --configuration Release --no-restore
       - name: Get version
         id: get-version
         run: |
-          version="$(grep '<Version' JsonSchema/JsonSchema.csproj | cut -f2 -d'>'|cut -f1 -d'<')"
+          version="$(grep '<Version' src/JsonSchema/JsonSchema.csproj | cut -f2 -d'>'|cut -f1 -d'<')"
           echo $version
           echo "version=$version" >> $GITHUB_OUTPUT
       - uses: actions/upload-artifact@v3
         with:
           name: build-output
           path: |
-            JsonSchema/bin/Release/**/*
-            JsonSchema/nuspec
+            src/JsonSchema/bin/Release/**/*
+            src/JsonSchema/nuspec
     outputs:
       matrix: ${{ steps.get-localized-nuspecs.outputs.NUSPEC_FILES }}
       version: ${{ steps.get-version.outputs.version }}

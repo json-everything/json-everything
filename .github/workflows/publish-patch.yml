@@ -5,7 +5,7 @@ on:
     branches:
       - master # Default release branch
     paths:
-      - JsonPatch/**
+      - src/JsonPatch/**
   workflow_dispatch:
 
 jobs:
@@ -23,7 +23,7 @@ jobs:
         id: publish_patch
         uses: alirezanet/publish-nuget@v3.1.0
         with:
-          PROJECT_FILE_PATH: JsonPatch/JsonPatch.csproj
+          PROJECT_FILE_PATH: src/JsonPatch/JsonPatch.csproj
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
           INCLUDE_SYMBOLS: true
           TAG_FORMAT: patch-v*

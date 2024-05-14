@@ -4,17 +4,17 @@ on:
     branches:
       - master # Default release branch
     paths:
-      - Json.More/**
-      - JsonLogic/**
-      - JsonPatch/**
-      - JsonPath/**
-      - JsonPointer/**
-      - JsonSchema/**
-      - JsonSchema.Data/**
-      - JsonSchema.UniqueKeys/**
-      - JsonSchema.Generation/**
-      - JsonSchema.DataGeneration/**
-      - JsonSchema.CodeGeneration/**
+      - src/Json.More/**
+      - src/JsonLogic/**
+      - src/JsonPatch/**
+      - src/JsonPath/**
+      - src/JsonPointer/**
+      - src/JsonSchema/**
+      - src/JsonSchema.Data/**
+      - src/JsonSchema.UniqueKeys/**
+      - src/JsonSchema.Generation/**
+      - src/JsonSchema.DataGeneration/**
+      - src/JsonSchema.CodeGeneration/**
       - json-everything.net/**
   workflow_dispatch:
 

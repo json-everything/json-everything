@@ -5,7 +5,7 @@ on:
     branches:
       - master # Default release branch
     paths:
-      - JsonSchema.OpenApi/**
+      - src/JsonSchema.OpenApi/**
   workflow_dispatch:
 
 jobs:
@@ -23,7 +23,7 @@ jobs:
         id: publish_schema_openapi
         uses: alirezanet/publish-nuget@v3.1.0
         with:
-          PROJECT_FILE_PATH: JsonSchema.OpenApi/JsonSchema.OpenApi.csproj
+          PROJECT_FILE_PATH: src/JsonSchema.OpenApi/JsonSchema.OpenApi.csproj
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
           INCLUDE_SYMBOLS: true
           TAG_FORMAT: schema-openapi-v*
