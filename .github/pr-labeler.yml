@@ -1,50 +1,50 @@
 "pkg:more":
-  - Json.More/**/*
+  - src/Json.More/**/*
 
 "pkg:schema":
-  - JsonSchema/**/*
+  - src/JsonSchema/**/*
 
 "pkg:schema-generation":
-  - JsonSchema.Generation/**/*
+  - src/JsonSchema.Generation/**/*
 
 "pkg:schema-generation-dataannotations":
-  - JsonSchema.Generation.DataAnnotations/**/*
+  - src/JsonSchema.Generation.DataAnnotations/**/*
 
 "pkg:schema-datagen":
-  - JsonSchema.DataGeneration/**/*
+  - src/JsonSchema.DataGeneration/**/*
 
 "pkg:schema-codegen":
-  - JsonSchema.CodeGeneration/**/*
+  - src/JsonSchema.CodeGeneration/**/*
 
 "pkg:schema-data":
-  - JsonSchema.Data/**/*
+  - src/JsonSchema.Data/**/*
 
 "pkg:schema-openapi":
-  - JsonSchema.OpenApi/**/*
+  - src/JsonSchema.OpenApi/**/*
 
 "pkg:schema-unique-keys":
-  - JsonSchema.UniqueKeys/**/*
+  - src/JsonSchema.UniqueKeys/**/*
 
 "pkg:schema-array-ext":
-  - JsonSchema.ArrayExt/**/*
+  - src/JsonSchema.ArrayExt/**/*
 
 "pkg:logic":
-  - JsonLogic/**/*
+  - src/JsonLogic/**/*
 
 "pkg:pointer":
-  - JsonPointer/**/*
+  - src/JsonPointer/**/*
 
 "pkg:path":
-  - JsonPath/**/*
+  - src/JsonPath/**/*
 
 "pkg:patch":
-  - JsonPatch/**/*
+  - src/JsonPatch/**/*
 
 "pkg:json-e":
-  - JsonE/**/*
+  - src/JsonE/**/*
 
 "pkg:yaml":
-  - Yaml2JsonNode/**/*
+  - src/Yaml2JsonNode/**/*
 
 "build pipeline":
   - .github/workflows/**/*
