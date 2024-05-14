@@ -1,4 +1,9 @@
 ﻿@page "/"
+@using LiveChartsCore.SkiaSharpView.Blazor
+@using JsonEverythingNet.ViewModels
+@using System.Text.Json
+
+@inject HttpClient Client
 
 <PageTitle>json-everything</PageTitle>
 
@@ -10,3 +15,27 @@
 	<Banner Content="All libraries now support .Net 8 and Native AOT!!"></Banner>
 </div>
 
+<div class="text-center align-bottom">
+	<CartesianChart Series="ViewModel.Series"></CartesianChart>
+</div>
+
+@code {
+
+	private static readonly JsonSerializerOptions _options = new()
+	{
+		PropertyNameCaseInsensitive = false
+	};
+
+	public FeaturedSponsorData ViewModel { get; set; } = new([]);
+
+	protected override async Task OnInitializedAsync()
+	{
+		var content = await Client.GetStringAsync("data/sponsor-data.json");
+		var sponsorData = JsonSerializer.Deserialize<List<SponsorData>>(content, _options)!;
+
+		ViewModel = new FeaturedSponsorData(sponsorData);
+
+		await base.OnInitializedAsync();
+	}
+
+}
