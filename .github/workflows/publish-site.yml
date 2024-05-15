@@ -37,7 +37,7 @@ jobs:
       - name: Get sponsor data
         run: |
           cd tools/GenerateSponsorList/bin/Release/net8.0
-          dotnet run GenerateSponsorList.dll
+          dotnet GenerateSponsorList.dll
           cp sponsor-data.json ../../../../../json-everything.net/wwwroot/data/
         env:
           GenerateSponsorList: ${{secrets.GenerateSponsorList}}
