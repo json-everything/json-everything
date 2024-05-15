@@ -354,6 +354,7 @@ blockquote {
   position: absolute;
   background: white;
   transition: transform .3s ease-in-out;
+
 }
 
   .sponsor-bubble:hover {
@@ -361,21 +362,21 @@ blockquote {
   }
 
 .bubble-Small {
-  height: 30px;
-  width: 30px;
-  border-radius: 15px;
+  height: 50px;
+  width: 50px;
+  border-radius: 25px;
 }
 
 .bubble-Medium {
-  height: 60px;
-  width: 60px;
-  border-radius: 30px;
+  height: 100px;
+  width: 100px;
+  border-radius: 50px;
 }
 
 .bubble-Large {
-  height: 120px;
-  width: 120px;
-  border-radius: 60px;
+  height: 200px;
+  width: 200px;
+  border-radius: 100px;
 }
 
 .cover {

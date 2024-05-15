@@ -24,9 +24,9 @@
 	int GetBubbleRadius(BubbleSize size) =>
 		size switch
 		{
-			BubbleSize.Small => 15,
-			BubbleSize.Medium => 30,
-			BubbleSize.Large => 60,
+			BubbleSize.Small => 25,
+			BubbleSize.Medium => 50,
+			BubbleSize.Large => 100,
 			_ => throw new ArgumentOutOfRangeException(nameof(size), size, null)
 		};
 

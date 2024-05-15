@@ -69,7 +69,7 @@ return;
 
 static BubbleSize GetBubbleSize(int value)
 {
-	// return BubbleSize.Medium;
+	return (BubbleSize)Random.Shared.Next(1, 3);
 
 	if (value < 100) return BubbleSize.None;
 	if (value < 250) return BubbleSize.Small;
@@ -79,9 +79,9 @@ static BubbleSize GetBubbleSize(int value)
 
 static int GetBubbleRadius(BubbleSize x) => x switch
 {
-	BubbleSize.Small => 15,
-	BubbleSize.Medium => 30,
-	BubbleSize.Large => 60,
+	BubbleSize.Small => 25,
+	BubbleSize.Medium => 50,
+	BubbleSize.Large => 100,
 	_ => throw new ArgumentOutOfRangeException(nameof(x), x, null)
 };
 
@@ -91,7 +91,7 @@ static void Arrange(List<SponsorData> data)
 	bool Overlaps(SponsorData item, double x, double y, HashSet<SponsorData> field) =>
 		field.Any(sd =>
 		{
-			const int padding = 5;
+			const int padding = 10;
 			var fieldRadius = GetBubbleRadius(sd.BubbleSize);
 			var itemRadius = GetBubbleRadius(item.BubbleSize);
 			var requiredDistance = fieldRadius + padding + itemRadius;
@@ -135,6 +135,8 @@ static void Arrange(List<SponsorData> data)
 		positioned.Add(item);
 		Reposition(positioned);
 	}
+
+	Normalize(positioned);
 }
 
 static void Reposition(HashSet<SponsorData> field)
@@ -151,6 +153,25 @@ static void Reposition(HashSet<SponsorData> field)
 	{
 		data.X -= deltaX;
 		data.Y -= deltaY;
+	}
+}
+
+
+static void Normalize(HashSet<SponsorData> field)
+{
+	// currently the bubbles are arranged centered around the origin
+	// for the site, we need to move all of the bubbles into the positive Y
+
+	// additionally, the bubbles are drawn with a top-left origin instead of
+	// the current center origin, so we need to account for that as well
+
+	var minY = field.Select(x => x.Y - GetBubbleRadius(x.BubbleSize)).Min();
+
+	foreach (var data in field)
+	{
+		var radius = GetBubbleRadius(data.BubbleSize);
+		data.Y -= minY + radius;
+		data.X -= radius;
 	}
 }
 
