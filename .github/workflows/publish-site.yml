@@ -16,6 +16,7 @@ on:
       - src/JsonSchema.DataGeneration/**
       - src/JsonSchema.CodeGeneration/**
       - json-everything.net/**
+      - .github/workflows/publish-site.yml
   workflow_dispatch:
 
 jobs:
