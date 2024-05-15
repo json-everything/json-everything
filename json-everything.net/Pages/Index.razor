@@ -55,10 +55,13 @@
 				 Flipped="true">
 		</Feature>
 		
-		<p class="lead mb-5">Finally, a big thanks to the leading sponsors of this project:</p>
-		<div class="div-hcenter">
-			<SponsorCloud Data="@SponsorData"></SponsorCloud>
-		</div>
+		@if (SponsorData.Count != 0)
+		{
+			<p class="lead mb-5">Finally, a big thanks to the leading sponsors of this project:</p>
+			<div class="div-hcenter mb-5">
+				<SponsorCloud Data="@SponsorData"></SponsorCloud>
+			</div>
+		}
 	</div>
 </div>
 

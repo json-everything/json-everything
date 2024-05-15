@@ -1,5 +1,5 @@
 ﻿@using JsonEverythingNet.Models
-<div class="bubble-field">
+<div class="bubble-field" style="height: @(Height)px">
 	@foreach (var item in Data)
 	{
 		<SponsorBubble Username="@item.Username"
@@ -15,6 +15,11 @@
 @code {
 	[Parameter]
 	public IReadOnlyList<SponsorData> Data { get; set; } = [];
+
+	private int Height => Data.Count == 0
+		? 0
+		: (int)Math.Abs(Data.Max(x => x.Y + GetBubbleRadius(x.BubbleSize)) -
+		                Data.Min(x => x.Y - GetBubbleRadius(x.BubbleSize)));
 
 	int GetBubbleRadius(BubbleSize size) =>
 		size switch
