@@ -86,10 +86,6 @@ public class EvaluationOptions
 	/// Custom keywords are those which have associated <see cref="IJsonSchemaKeyword"/>
 	/// implementations.  Unrecognized keywords, for which annotations should
 	/// be collected, are not considered "custom."
-	/// 
-	/// Only applies to vocab-enabled JSON Schema versions
-	/// (e.g. draft 2019-09 &amp;amp; 20200-12).
-	/// annotations.
 	/// </remarks>
 	public bool ProcessCustomKeywords
 	{
