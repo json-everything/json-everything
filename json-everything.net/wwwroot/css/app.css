@@ -336,6 +336,12 @@ blockquote {
 	fill: rgb(175, 176, 177);
 }
 
+/*--- FEATURE ---*/
+
+.feature{
+  margin: 120px auto;
+}
+
 /*--- SPONSOR CLOUD ---*/
 
 .bubble-field {
@@ -375,3 +381,4 @@ blockquote {
 .cover {
   object-fit: cover;
 }
+

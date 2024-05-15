@@ -19,7 +19,7 @@ public static class HelpContent
 		- [OpenAPI v3.1](https://docs.json-everything.net/schema/vocabs/openapi/) - `https://spec.openapis.org/oas/3.1/meta/base`
 		- [ArrayExt](https://docs.json-everything.net/schema/vocabs/array-ext/) - `https://json-everything.net/meta/vocab/array-ext`
 
-		\* _The UniqueKeys vocabulary has been replaced by ArrayExt.  It and Data 2022 are still supported._
+		\* _The Data 2022 dialect is also still supported._
 		""";
 
 	public const string SchemaGenerateSchema =

@@ -1,0 +1,38 @@
+﻿<div class="container feature">
+	<div class="row justify-content-evenly align-items-center">
+		<div class="col-6 @(Flipped ? "order-1" : "")">
+			<h2 class="display-6 mb-4">
+				<span class="font-monospace text-muted">@Title</span>
+			</h2>
+			<p class="lead mb-4">@Description</p>
+			<div class="hstack justify-content-center">
+				<a class="mx-3" href="@PlaygroundUrl">
+					<span class="btn btn-primary mt-2">Playground</span>
+				</a>
+				<a class="mx-3" href="@DocsUrl">
+					<span class="btn btn-primary mt-2">Documentation</span>
+				</a>
+			</div>
+		</div>
+		<div class="col-4">
+			<img src="@ImageUrl" height="250" width="250" />
+		</div>
+	</div>
+</div>
+
+
+
+@code {
+	[Parameter]
+	public string Title { get; set; }
+	[Parameter]
+	public string Description { get; set; }
+	[Parameter]
+	public string ImageUrl { get; set; }
+	[Parameter]
+	public string PlaygroundUrl { get; set; }
+	[Parameter]
+	public string DocsUrl { get; set; }
+	[Parameter]
+	public bool Flipped { get; set; }
+}
