@@ -15,10 +15,11 @@ Please add a short description of the changes.  Be sure to include:
 ### Links
 
 <!--
-Please add a link to the issue(s) in the appropriate field(s) and delete the others
+Please add a link to the issue(s) in the appropriate field(s) and delete the ones you don't use.
 -->
 Resolves ___     <!-- Use if these changes completely resolve the issue -->
 Relates to ___   <!-- Use if these changes relate to but do not resolve the issue -->
+Depends on ___   <!-- Use if these changes require other changes to be merged first -->
 
 ### Checks
 
