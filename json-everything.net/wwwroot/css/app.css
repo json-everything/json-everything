@@ -255,7 +255,7 @@ a.navbar-brand {
 .tooltip-text {
 	visibility: hidden;
 	position: absolute;
-	z-index: 1;
+	z-index: 99;
 	max-width: 400px;
 	font-size: 14px;
 	background-color: #271a3b;
@@ -334,5 +334,51 @@ blockquote {
 
 .markdown-anchor {
 	fill: rgb(175, 176, 177);
+}
+
+/*--- FEATURE ---*/
+
+.feature{
+  margin: 120px auto;
+}
+
+/*--- SPONSOR CLOUD ---*/
+
+.bubble-field {
+  width: 60%;
+  height: 40%;
+  position: relative;
+}
+
+.sponsor-bubble {
+  position: absolute;
+  background: white;
+  transition: transform .3s ease-in-out;
+}
+
+  .sponsor-bubble:hover {
+    transform: scale(1.1);
+  }
+
+.bubble-Small {
+  height: 30px;
+  width: 30px;
+  border-radius: 15px;
+}
+
+.bubble-Medium {
+  height: 60px;
+  width: 60px;
+  border-radius: 30px;
+}
+
+.bubble-Large {
+  height: 120px;
+  width: 120px;
+  border-radius: 60px;
+}
+
+.cover {
+  object-fit: cover;
 }
 

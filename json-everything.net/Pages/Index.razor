@@ -1,12 +1,99 @@
 ﻿@page "/"
+@using System.Text.Json
+@using JsonEverythingNet.Models
+@using JsonEverythingNet.Services
+
+@inject HttpClient Client
 
 <PageTitle>json-everything</PageTitle>
 
-<div class="text-center">
-	<h1 class="display-4 mt-5 mb-4">
-		<span class="font-monospace text-muted">json-everything</span>
-	</h1>
-	<p class="lead mb-5">Extended JSON support in .Net built on top of the System.Text.Json namespace</p>
-	<Banner Content="All libraries now support .Net 8 and Native AOT!!"></Banner>
+<div class="row mx-3 fill-remaining">
+	<div class="mh-100 scroll text-center">
+		<h1 class="display-4 mt-5 mb-4">
+			<span class="font-monospace text-muted">json-everything</span>
+		</h1>
+		<p class="lead mb-5">Extended JSON support in .Net built on top of the System.Text.Json namespace</p>
+		<Banner Content="All libraries now support .Net 8 and Native AOT!!"></Banner>
+		
+		<Feature Title="JSON Schema"
+		         Description="@IndexContent.SchemaTagline"
+		         PlaygroundUrl="json-schema"
+				 DocsUrl="https://docs.json-everything.net/schema/basics/"
+				 ImageUrl="img/json-schema.png">
+		</Feature>
+		<Feature Title="JSON Path"
+				 Description="@IndexContent.PathTagline"
+				 PlaygroundUrl="json-path"
+				 DocsUrl="https://docs.json-everything.net/path/basics/"
+				 ImageUrl="img/json-path.png"
+		         Flipped="true">
+		</Feature>
+		<Feature Title="JSON-e"
+				 Description="@IndexContent.JsonETagline"
+				 PlaygroundUrl="json-e"
+				 DocsUrl="https://docs.json-everything.net/json-e/basics/"
+				 ImageUrl="img/json-e.png">
+		</Feature>
+		<Feature Title="JSON Logic"
+				 Description="@IndexContent.LogicTagline"
+				 PlaygroundUrl="json-logic"
+				 DocsUrl="https://docs.json-everything.net/pointer/basics/"
+				 ImageUrl="img/json-logic.png"
+		         Flipped="true">
+		</Feature>
+		<Feature Title="JSON Patch"
+				 Description="@IndexContent.PatchTagline"
+				 PlaygroundUrl="json-patch"
+				 DocsUrl="https://docs.json-everything.net/patch/basics/"
+				 ImageUrl="img/json-patch.png">
+		</Feature>
+		<Feature Title="JSON Pointer"
+				 Description="@IndexContent.PointerTagline"
+				 PlaygroundUrl="json-pointer"
+				 DocsUrl="https://docs.json-everything.net/pointer/basics/"
+				 ImageUrl="img/json-pointer.png"
+				 Flipped="true">
+		</Feature>
+		
+		@if (SponsorData.Count != 0)
+		{
+			<p class="lead mb-5">Finally, a big thanks to the leading sponsors of this project:</p>
+			<div class="div-hcenter mb-5">
+				<SponsorCloud Data="@SponsorData"></SponsorCloud>
+			</div>
+		}
+	</div>
 </div>
 
+@code {
+	private static readonly JsonSerializerOptions _options = new()
+	{
+		PropertyNameCaseInsensitive = true
+	};
+
+	private IReadOnlyList<SponsorData> SponsorData { get; set; } = [];
+
+	protected override async Task OnInitializedAsync()
+	{
+		var content = await Client.GetStringAsync("data/sponsor-data.json");
+		var sponsorData = JsonSerializer.Deserialize<List<SponsorData>>(content, _options)!;
+
+		await FillImageData(sponsorData);
+
+		SponsorData = sponsorData;
+
+		await base.OnInitializedAsync();
+	}
+
+	private async Task FillImageData(List<SponsorData> sponsorData)
+	{
+		foreach (var data in sponsorData)
+		{
+			if (data.AvatarUrl is null) continue;
+
+			var content = await Client.GetByteArrayAsync(data.AvatarUrl);
+			if (content.Length is not 0)
+				data.ImageData = content;
+		}
+	}
+}

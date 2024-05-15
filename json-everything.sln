@@ -142,6 +142,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonSchema.Generation.DataA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Benchmarks", "tools\Benchmarks\Benchmarks.csproj", "{95DD7EBB-D16D-4927-93B2-09069B851753}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GenerateSponsorList", "tools\GenerateSponsorList\GenerateSponsorList.csproj", "{32E5C34F-C77D-4A7E-976F-1AAF741EBDDF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -341,6 +343,12 @@ Global
 		{95DD7EBB-D16D-4927-93B2-09069B851753}.Localization|Any CPU.Build.0 = Debug|Any CPU
 		{95DD7EBB-D16D-4927-93B2-09069B851753}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{95DD7EBB-D16D-4927-93B2-09069B851753}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32E5C34F-C77D-4A7E-976F-1AAF741EBDDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32E5C34F-C77D-4A7E-976F-1AAF741EBDDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32E5C34F-C77D-4A7E-976F-1AAF741EBDDF}.Localization|Any CPU.ActiveCfg = Debug|Any CPU
+		{32E5C34F-C77D-4A7E-976F-1AAF741EBDDF}.Localization|Any CPU.Build.0 = Debug|Any CPU
+		{32E5C34F-C77D-4A7E-976F-1AAF741EBDDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32E5C34F-C77D-4A7E-976F-1AAF741EBDDF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -384,6 +392,7 @@ Global
 		{5DEF8F44-630F-4469-9CE1-1611DA54FA7D} = {8396D8E1-076D-48A5-B57F-F504C5F16D11}
 		{ADFF3D17-7F72-4FE2-A959-FE394B0754F7} = {8396D8E1-076D-48A5-B57F-F504C5F16D11}
 		{95DD7EBB-D16D-4927-93B2-09069B851753} = {A09F0319-B69A-401D-814D-43524E883850}
+		{32E5C34F-C77D-4A7E-976F-1AAF741EBDDF} = {A09F0319-B69A-401D-814D-43524E883850}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {366B43A8-8380-41C8-B855-B82689CBA669}

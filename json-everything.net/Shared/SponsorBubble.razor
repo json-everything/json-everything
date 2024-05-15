@@ -1,0 +1,23 @@
+﻿@using JsonEverythingNet.Models
+
+<div class="sponsor-bubble bubble-@Size tooltip-icon" style="left: @(X)px; top: @(Y)px;">
+	<a href="@WebsiteUrl">
+		<img src="@AvatarUrl" class="cover bubble-@Size"/>
+	</a>
+	<span class="tooltip-text">@@@Username</span>
+</div>
+
+@code {
+	[Parameter]
+	public string Username { get; set; }
+	[Parameter]
+	public string AvatarUrl { get; set; }
+	[Parameter]
+	public string WebsiteUrl { get; set; }
+	[Parameter]
+	public BubbleSize Size { get; set; }
+	[Parameter]
+	public double X { get; set; }
+	[Parameter]
+	public double Y { get; set; }
+}
