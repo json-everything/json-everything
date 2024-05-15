@@ -41,7 +41,7 @@ jobs:
           dotnet GenerateSponsorList.dll
           cp sponsor-data.json ../../../../../json-everything.net/wwwroot/data/
         env:
-          GenerateSponsorList: ${{ secrets.GITHUB_TOKEN }}
+          GenerateSponsorList: ${{ secrets.GenerateSponsorCloud }}
       - name: Build
         run: dotnet publish json-everything.net/json-everything.net.csproj -c Release --no-restore -o bin
       - name: Add .nojekyll file
