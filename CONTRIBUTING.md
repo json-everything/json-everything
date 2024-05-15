@@ -30,11 +30,11 @@ All of the projects are configured to use the latest C# version.
 
 I use Visual Studio Community with Resharper, and I try to keep everything updated.
 
-Jetbrains Rider (comes with the Resharper stuff built-in), VS Code with your favorite extensions, or any basic text editor with a command line would work just fine.  You do you.
+Jetbrains Rider (comes with the Resharper stuff built-in), VS Code with your favorite extensions, or any basic text editor and a command line would work just fine.  You do you.
 
 ## Code Style & Releases
 
-Please feel free to add any code contributions using your own coding style.  Trying to conform to someone else's style can be a headache and confusing, and I prefer working code over pretty code.  I find it's easier for contributors if I make my own style adjustments after a contribution rather than forcing conformance to my preferences.
+Whie I do have an `.editorconfig` that most editors should respect, please feel free to add any code contributions using your own coding style.  Trying to conform to someone else's style can be a headache and confusing, and I prefer working code over pretty code.  I find it's easier for contributors if I make my own style adjustments after a contribution rather than forcing conformance to my preferences.
 
 Deployments to Nuget and [json-everything.net](https://json-everything.net) occur automatically upon merging with `master`, so I usually create a secondary branch where I can first make any adjustments, including updating package versions and release notes.
 
@@ -46,4 +46,4 @@ Anything in the [issues](https://github.com/gregsdennis/json-everything/issues?q
 
 Of primary focus is translating the [resource file](https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/Localization/Resources.resx) into additional languages for _JsonSchema.Net_.
 
-Outside of this, PRs are welcome.  For larger changes or changes to the API surface, it's preferred that there be some discussion in an issue before a PR is submitted, just to discuss the specifics of the change.  Mainly, I don't want you to feel like you've wasted your time if changes are requested or the PR is ultimately closed unmerged.
+Outside of this, PRs are welcome.  As mentioned above, for larger changes or changes to the API surface, it's preferred that there be some discussion in an issue before a PR is submitted.  Mainly, I don't want you to feel like you've wasted your time if changes are requested or the PR is ultimately closed unmerged.
