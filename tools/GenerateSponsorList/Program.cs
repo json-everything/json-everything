@@ -69,7 +69,7 @@ return;
 
 static BubbleSize GetBubbleSize(int value)
 {
-	//return BubbleSize.Small;
+	return BubbleSize.Medium;
 
 	if (value < 100) return BubbleSize.None;
 	if (value < 250) return BubbleSize.Small;
@@ -95,7 +95,7 @@ static void Arrange(List<SponsorData> data)
 			var fieldRadius = GetBubbleRadius(sd.BubbleSize);
 			var itemRadius = GetBubbleRadius(item.BubbleSize);
 			var requiredDistance = fieldRadius + padding + itemRadius;
-			var actualDistance = Math.Sqrt((sd.X.Value - x) * (sd.X.Value - x) + (sd.Y.Value - y) * (sd.Y.Value - y));
+			var actualDistance = Math.Sqrt((sd.X!.Value - x) * (sd.X.Value - x) + (sd.Y!.Value - y) * (sd.Y.Value - y));
 
 			return actualDistance < requiredDistance;
 		});
