@@ -69,6 +69,8 @@ return;
 
 static BubbleSize GetBubbleSize(int value)
 {
+	//return BubbleSize.Small;
+
 	if (value < 100) return BubbleSize.None;
 	if (value < 250) return BubbleSize.Small;
 	if (value < 500) return BubbleSize.Medium;

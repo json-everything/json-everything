@@ -1,0 +1,28 @@
+﻿@using JsonEverythingNet.Models
+<div class="bubble-field">
+	@foreach (var item in Data)
+	{
+		<SponsorBubble Username="@item.Username"
+		               AvatarUrl="@item.AvatarUrl?.OriginalString"
+		               WebsiteUrl="@item.WebsiteUrl?.OriginalString"
+		               Size="@item.BubbleSize"
+		               X="@item.X"
+		               Y="@item.Y">
+		</SponsorBubble>
+	}
+</div>
+
+@code {
+	[Parameter]
+	public IReadOnlyList<SponsorData> Data { get; set; } = [];
+
+	int GetBubbleRadius(BubbleSize size) =>
+		size switch
+		{
+			BubbleSize.Small => 15,
+			BubbleSize.Medium => 30,
+			BubbleSize.Large => 60,
+			_ => throw new ArgumentOutOfRangeException(nameof(size), size, null)
+		};
+
+}

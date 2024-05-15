@@ -1,7 +1,6 @@
 ﻿@page "/"
-@using LiveChartsCore.SkiaSharpView.Blazor
-@using JsonEverythingNet.ViewModels
 @using System.Text.Json
+@using JsonEverythingNet.Models
 
 @inject HttpClient Client
 
@@ -13,29 +12,44 @@
 	</h1>
 	<p class="lead mb-5">Extended JSON support in .Net built on top of the System.Text.Json namespace</p>
 	<Banner Content="All libraries now support .Net 8 and Native AOT!!"></Banner>
-</div>
-
-<div class="text-center align-bottom">
-	<CartesianChart Series="ViewModel.Series"></CartesianChart>
+	
+	<p class="lead mb-5">Thank you to the major sponsors of this project:</p>
+	<div class="div-hcenter">
+		<SponsorCloud @ref="_cloud" Data="@SponsorData"></SponsorCloud>
+	</div>
 </div>
 
 @code {
-
 	private static readonly JsonSerializerOptions _options = new()
 	{
-		PropertyNameCaseInsensitive = false
+		PropertyNameCaseInsensitive = true
 	};
 
-	public FeaturedSponsorData ViewModel { get; set; } = new([]);
+	private SponsorCloud _cloud;
+
+	public IReadOnlyList<SponsorData> SponsorData { get; set; } = [];
 
 	protected override async Task OnInitializedAsync()
 	{
 		var content = await Client.GetStringAsync("data/sponsor-data.json");
 		var sponsorData = JsonSerializer.Deserialize<List<SponsorData>>(content, _options)!;
 
-		ViewModel = new FeaturedSponsorData(sponsorData);
+		await FillImageData(sponsorData);
+
+		SponsorData = sponsorData;
 
 		await base.OnInitializedAsync();
 	}
 
+	private async Task FillImageData(List<SponsorData> sponsorData)
+	{
+		foreach (var data in sponsorData)
+		{
+			if (data.AvatarUrl is null) continue;
+
+			var content = await Client.GetByteArrayAsync(data.AvatarUrl);
+			if (content.Length is not 0)
+				data.ImageData = content;
+		}
+	}
 }
