@@ -6,7 +6,7 @@ namespace JsonEverythingNet.Models;
 public enum BubbleSize
 {
 	None,
-	Small,
-	Medium,
-	Large
+	Small = 25,
+	Medium = 50,
+	Large = 100
 }

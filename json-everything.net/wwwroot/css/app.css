@@ -263,6 +263,11 @@ a.navbar-brand {
 	padding: 10px;
 }
 
+.tooltip-text-small {
+  font-size: 10px;
+  padding: 6px;
+}
+
 .tooltip-text p:last-child {
 	margin-bottom: auto;
 }
@@ -270,6 +275,7 @@ a.navbar-brand {
 .tooltip-icon:hover .tooltip-text {
 	visibility: visible;
 }
+
 /*--- DOCS ---*/
 .docs-pane {
 	margin: 2em auto;
@@ -360,6 +366,10 @@ blockquote {
   .sponsor-bubble:hover {
     transform: scale(1.1);
   }
+
+.tooltip-icon:hover .sponsor-bubble {
+  transform: scale(1.1);
+}
 
 .bubble-Small {
   height: 50px;

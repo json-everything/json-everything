@@ -69,21 +69,16 @@ return;
 
 static BubbleSize GetBubbleSize(int value)
 {
-	//return (BubbleSize)Random.Shared.Next(1, 3);
+#if DEBUG
+	return (BubbleSize)Random.Shared.Next(1, 3);
+#else
 
 	if (value < 100) return BubbleSize.None;
 	if (value < 250) return BubbleSize.Small;
 	if (value < 500) return BubbleSize.Medium;
 	return BubbleSize.Large;
+#endif
 }
-
-static int GetBubbleRadius(BubbleSize x) => x switch
-{
-	BubbleSize.Small => 25,
-	BubbleSize.Medium => 50,
-	BubbleSize.Large => 100,
-	_ => throw new ArgumentOutOfRangeException(nameof(x), x, null)
-};
 
 static void Arrange(List<SponsorData> data)
 {
@@ -92,8 +87,8 @@ static void Arrange(List<SponsorData> data)
 		field.Any(sd =>
 		{
 			const int padding = 10;
-			var fieldRadius = GetBubbleRadius(sd.BubbleSize);
-			var itemRadius = GetBubbleRadius(item.BubbleSize);
+			var fieldRadius = (int)sd.BubbleSize;
+			var itemRadius = (int)item.BubbleSize;
 			var requiredDistance = fieldRadius + padding + itemRadius;
 			var actualDistance = Math.Sqrt((sd.X!.Value - x) * (sd.X.Value - x) + (sd.Y!.Value - y) * (sd.Y.Value - y));
 
@@ -141,10 +136,10 @@ static void Arrange(List<SponsorData> data)
 
 static void Reposition(HashSet<SponsorData> field)
 {
-	var minX = field.Select(x => x.X - GetBubbleRadius(x.BubbleSize)).Min();
-	var minY = field.Select(x => x.Y - GetBubbleRadius(x.BubbleSize)).Min();
-	var maxX = field.Select(x => x.X + GetBubbleRadius(x.BubbleSize)).Max();
-	var maxY = field.Select(x => x.Y + GetBubbleRadius(x.BubbleSize)).Max();
+	var minX = field.Select(x => x.X - (int)x.BubbleSize).Min();
+	var minY = field.Select(x => x.Y - (int)x.BubbleSize).Min();
+	var maxX = field.Select(x => x.X + (int)x.BubbleSize).Max();
+	var maxY = field.Select(x => x.Y + (int)x.BubbleSize).Max();
 
 	var deltaX = (maxX + minX) / 2;
 	var deltaY = (maxY + minY) / 2;
@@ -165,11 +160,11 @@ static void Normalize(HashSet<SponsorData> field)
 	// additionally, the bubbles are drawn with a top-left origin instead of
 	// the current center origin, so we need to account for that as well
 
-	var minY = field.Select(x => x.Y - GetBubbleRadius(x.BubbleSize)).Min();
+	var minY = field.Select(x => x.Y - (int)x.BubbleSize).Min();
 
 	foreach (var data in field)
 	{
-		var radius = GetBubbleRadius(data.BubbleSize);
+		var radius = (int)data.BubbleSize;
 		data.Y -= minY + radius;
 		data.X -= radius;
 	}
@@ -179,9 +174,9 @@ static void Normalize(HashSet<SponsorData> field)
 public enum BubbleSize
 {
 	None,
-	Small,
-	Medium,
-	Large
+	Small = 25,
+	Medium = 50,
+	Large = 100
 }
 
 public record SponsorData(string Username, Uri AvatarUrl, Uri WebsiteUrl, BubbleSize BubbleSize)

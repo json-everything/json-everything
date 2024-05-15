@@ -2,13 +2,18 @@
 <div class="bubble-field" style="height: @(Height)px">
 	@foreach (var item in Data)
 	{
-		<SponsorBubble Username="@item.Username"
-		               AvatarUrl="@item.AvatarUrl?.OriginalString"
-		               WebsiteUrl="@item.WebsiteUrl?.OriginalString"
-		               Size="@item.BubbleSize"
-		               X="@item.X"
-		               Y="@item.Y">
-		</SponsorBubble>
+		<div class="tooltip-icon">
+			<SponsorBubble AvatarUrl="@item.AvatarUrl?.OriginalString"
+			               WebsiteUrl="@item.WebsiteUrl?.OriginalString"
+			               Size="@item.BubbleSize"
+			               X="@item.X"
+			               Y="@item.Y">
+			</SponsorBubble>
+			<span class="tooltip-text tooltip-text-small"
+				  style="left: @(item.X + (int)item.BubbleSize)px; top: @(item.Y + (int)item.BubbleSize)px;">
+				@@@item.Username
+			</span>
+		</div>
 	}
 </div>
 
@@ -18,16 +23,7 @@
 
 	private int Height => Data.Count == 0
 		? 0
-		: (int)Math.Abs(Data.Max(x => x.Y + GetBubbleRadius(x.BubbleSize)) -
-		                Data.Min(x => x.Y - GetBubbleRadius(x.BubbleSize)));
-
-	int GetBubbleRadius(BubbleSize size) =>
-		size switch
-		{
-			BubbleSize.Small => 25,
-			BubbleSize.Medium => 50,
-			BubbleSize.Large => 100,
-			_ => throw new ArgumentOutOfRangeException(nameof(size), size, null)
-		};
+		: (int)Math.Abs(Data.Max(x => x.Y + (int)x.BubbleSize) -
+						Data.Min(x => x.Y - (int)x.BubbleSize));
 
 }
