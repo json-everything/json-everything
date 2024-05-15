@@ -69,7 +69,7 @@ return;
 
 static BubbleSize GetBubbleSize(int value)
 {
-	return (BubbleSize)Random.Shared.Next(1, 3);
+	//return (BubbleSize)Random.Shared.Next(1, 3);
 
 	if (value < 100) return BubbleSize.None;
 	if (value < 250) return BubbleSize.Small;
