@@ -32,7 +32,7 @@ public class JsonPointerTests
 
 		var actual = pointer.Evaluate(target.RootElement);
 
-		Assert.IsNull(actual);
+		Assert.That(actual, Is.Null);
 	}
 
 	[TestCaseSource(nameof(ErrorCases))]
@@ -44,8 +44,8 @@ public class JsonPointerTests
 
 		var success = pointer.TryEvaluate(target, out var actual);
 
-		Assert.IsFalse(success);
-		Assert.IsNull(actual);
+		Assert.That(success, Is.False);
+		Assert.That(actual, Is.Null);
 	}
 
 	[Test]
@@ -58,7 +58,7 @@ public class JsonPointerTests
 		var actual = pointer.Evaluate(target.RootElement)!;
 
 		// ReSharper disable once PossibleInvalidOperationException
-		Assert.AreEqual(false, actual.Value.GetBoolean());
+		Assert.That(actual.Value.GetBoolean(), Is.EqualTo(false));
 	}
 
 	[Test]
@@ -70,8 +70,11 @@ public class JsonPointerTests
 
 		var success = pointer.TryEvaluate(target, out var actual);
 
-		Assert.IsTrue(success);
-		Assert.AreEqual(false, actual!.GetValue<bool>());
+		Assert.Multiple(() =>
+		{
+			Assert.That(success, Is.True);
+			Assert.That(actual!.GetValue<bool>(), Is.EqualTo(false));
+		});
 	}
 
 	[Test]
@@ -84,7 +87,7 @@ public class JsonPointerTests
 		var actual = pointer.Evaluate(target.RootElement)!;
 
 		// ReSharper disable once PossibleInvalidOperationException
-		Assert.AreEqual(JsonValueKind.Null, actual.Value.ValueKind);
+		Assert.That(actual.Value.ValueKind, Is.EqualTo(JsonValueKind.Null));
 	}
 
 	[Test]
@@ -96,8 +99,11 @@ public class JsonPointerTests
 
 		var success = pointer.TryEvaluate(target, out var actual);
 
-		Assert.IsTrue(success);
-		Assert.IsNull(actual);
+		Assert.Multiple(() =>
+		{
+			Assert.That(success, Is.True);
+			Assert.That(actual, Is.Null);
+		});
 	}
 
 	[Test]
@@ -105,6 +111,6 @@ public class JsonPointerTests
 	{
 		var pointer = JsonPointer.Create("string", 1, "foo");
 
-		Assert.AreEqual("/string/1/foo", pointer.ToString());
+		Assert.That(pointer.ToString(), Is.EqualTo("/string/1/foo"));
 	}
 }

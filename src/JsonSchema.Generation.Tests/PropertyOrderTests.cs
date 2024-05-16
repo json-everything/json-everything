@@ -30,8 +30,11 @@ public class PropertyOrderTests
 
 		var properties = schema.Keywords!.OfType<PropertiesKeyword>().Single();
 
-		Assert.AreEqual(nameof(SpecifiedOrder.Second), properties.Properties.Keys.First());
-		Assert.AreEqual(nameof(SpecifiedOrder.First), properties.Properties.Keys.Last());
+		Assert.Multiple(() =>
+		{
+			Assert.That(properties.Properties.Keys.First(), Is.EqualTo(nameof(SpecifiedOrder.Second)));
+			Assert.That(properties.Properties.Keys.Last(), Is.EqualTo(nameof(SpecifiedOrder.First)));
+		});
 	}
 
 	[Test]
@@ -47,9 +50,12 @@ public class PropertyOrderTests
 
 		var properties = schema.Keywords!.OfType<PropertiesKeyword>().Single();
 
-		Assert.AreEqual(nameof(SpecifiedOrder.Second), properties.Properties.Keys.ElementAt(0));
-		Assert.AreEqual(nameof(SpecifiedOrder.First), properties.Properties.Keys.ElementAt(1));
-		Assert.AreEqual(nameof(SpecifiedOrderDerived.Third), properties.Properties.Keys.ElementAt(2));
+		Assert.Multiple(() =>
+		{
+			Assert.That(properties.Properties.Keys.ElementAt(0), Is.EqualTo(nameof(SpecifiedOrder.Second)));
+			Assert.That(properties.Properties.Keys.ElementAt(1), Is.EqualTo(nameof(SpecifiedOrder.First)));
+			Assert.That(properties.Properties.Keys.ElementAt(2), Is.EqualTo(nameof(SpecifiedOrderDerived.Third)));
+		});
 	}
 
 	[Test]
@@ -65,7 +71,10 @@ public class PropertyOrderTests
 
 		var properties = schema.Keywords!.OfType<PropertiesKeyword>().Single();
 
-		Assert.AreEqual(nameof(SpecifiedOrder.First), properties.Properties.Keys.First());
-		Assert.AreEqual(nameof(SpecifiedOrder.Second), properties.Properties.Keys.Last());
+		Assert.Multiple(() =>
+		{
+			Assert.That(properties.Properties.Keys.First(), Is.EqualTo(nameof(SpecifiedOrder.First)));
+			Assert.That(properties.Properties.Keys.Last(), Is.EqualTo(nameof(SpecifiedOrder.Second)));
+		});
 	}
 }

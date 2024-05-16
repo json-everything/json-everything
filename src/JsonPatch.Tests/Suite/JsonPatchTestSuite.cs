@@ -48,10 +48,10 @@ public class JsonPatchTestSuite
 			{
 				result = test.Patch!.Apply(test.Doc);
 
-				Assert.AreNotEqual(test.ExpectsError, result.IsSuccess);
+				Assert.That(result.IsSuccess, Is.Not.EqualTo(test.ExpectsError));
 
 				if (test.HasExpectedValue)
-					Assert.IsTrue(test.ExpectedValue.IsEquivalentTo(result.Result));
+					Assert.That(test.ExpectedValue.IsEquivalentTo(result.Result), Is.True);
 			}
 			catch (Exception e)
 			{

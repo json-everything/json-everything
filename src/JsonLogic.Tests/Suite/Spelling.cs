@@ -8,6 +8,7 @@ using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using Json.More;
 using NUnit.Framework;
+using TestHelpers;
 
 namespace Json.Logic.Tests.Suite;
 

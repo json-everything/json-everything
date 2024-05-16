@@ -1,6 +1,7 @@
 using System.IO;
 using System.Text.Json.Nodes;
 using NUnit.Framework;
+using TestHelpers;
 
 namespace Json.Schema.Tests;
 

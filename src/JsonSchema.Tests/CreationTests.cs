@@ -15,7 +15,7 @@ public class CreationTests
 
 		var results = schema.Evaluate(10);
 
-		Assert.True(results.IsValid);
+		results.AssertValid();
 	}
 	[Test]
 	public void FromTextIgnoringComments()
@@ -35,7 +35,7 @@ public class CreationTests
 
 		var results = schema.Evaluate(json.RootElement);
 
-		Assert.True(results.IsValid);
+		results.AssertValid();
 	}
 	[Test]
 	public async Task FromStream()
@@ -49,6 +49,6 @@ public class CreationTests
 
 		var results = schema.Evaluate(json.RootElement);
 
-		Assert.True(results.IsValid);
+		results.AssertValid();
 	}
 }

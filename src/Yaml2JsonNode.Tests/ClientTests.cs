@@ -3,6 +3,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using Json.More;
 using NUnit.Framework;
+using TestHelpers;
 using YamlDotNet.RepresentationModel;
 using YamlDotNet.Serialization;
 
@@ -29,7 +30,7 @@ public class ClientTests
 		Console.WriteLine("# jsonRoundText:");
 		Console.WriteLine(jsonRoundText);
 
-		Assert.True(json.IsEquivalentTo(jsonRoundTripped));
+		JsonAssert.AreEquivalent(json, jsonRoundTripped);
 	}
 
 	[Test]
@@ -67,7 +68,7 @@ public class ClientTests
 
 			var actual = YamlSerializer.Parse(yamlText).Single().ToJsonNode();
 
-			Assert.True(actual.IsEquivalentTo(expected));
+			JsonAssert.AreEquivalent(expected, actual);
 		}
 		finally
 		{
@@ -90,7 +91,7 @@ public class ClientTests
 
 			var actual = YamlSerializer.Parse(yamlText).Single().ToJsonNode();
 
-			Assert.True(actual.IsEquivalentTo(expected));
+			JsonAssert.AreEquivalent(expected, actual);
 		}
 		finally
 		{
@@ -129,6 +130,6 @@ rawValTrim: |-
 
 		Console.WriteLine(actual.AsJsonString(new JsonSerializerOptions { WriteIndented = true }));
 
-		Assert.IsTrue(actual.IsEquivalentTo(expected));
+		JsonAssert.AreEquivalent(expected, actual);
 	}
 }

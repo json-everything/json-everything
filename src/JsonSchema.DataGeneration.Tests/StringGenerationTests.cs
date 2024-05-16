@@ -1,7 +1,7 @@
 ﻿using System;
 using NUnit.Framework;
 
-using static Json.Schema.DataGeneration.Tests.TestHelpers;
+using static Json.Schema.DataGeneration.Tests.TestRunner;
 
 namespace Json.Schema.DataGeneration.Tests;
 
@@ -320,6 +320,6 @@ public class StringGenerationTests
 		var result = schema.GenerateData();
 
 		Console.WriteLine(result.ErrorMessage);
-		Assert.IsFalse(result.IsSuccess);
+		Assert.That(result.IsSuccess, Is.False);
 	}
 }

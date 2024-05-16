@@ -1,5 +1,6 @@
 using Json.Logic.Rules;
 using NUnit.Framework;
+using TestHelpers;
 
 namespace Json.Logic.Tests;
 

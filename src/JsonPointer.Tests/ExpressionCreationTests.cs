@@ -26,7 +26,7 @@ public class ExpressionCreationTests
 		var expected = "/String";
 		var actual = JsonPointer.Create<TestClass>(x => x.String);
 
-		Assert.AreEqual(expected, actual.ToString());
+		Assert.That(actual.ToString(), Is.EqualTo(expected));
 	}
 
 	public static IEnumerable<TestCaseData> NamingOptions
@@ -48,7 +48,7 @@ public class ExpressionCreationTests
 	{
 		var actual = JsonPointer.Create<TestClass>(x => x.NestMore, new PointerCreationOptions { PropertyNameResolver = resolver });
 
-		Assert.AreEqual(expected, actual.ToString());
+		Assert.That(actual.ToString(), Is.EqualTo(expected));
 	}
 
 	[Test]
@@ -57,7 +57,7 @@ public class ExpressionCreationTests
 		var expected = "/customName";
 		var actual = JsonPointer.Create<TestClass>(x => x.Other);
 
-		Assert.AreEqual(expected, actual.ToString());
+		Assert.That(actual.ToString(), Is.EqualTo(expected));
 	}
 
 	[Test]
@@ -66,7 +66,7 @@ public class ExpressionCreationTests
 		var expected = "/Ints/1";
 		var actual = JsonPointer.Create<TestClass>(x => x.Ints[1]);
 
-		Assert.AreEqual(expected, actual.ToString());
+		Assert.That(actual.ToString(), Is.EqualTo(expected));
 	}
 
 	[Test]
@@ -75,7 +75,7 @@ public class ExpressionCreationTests
 		var expected = "/StringArray/2";
 		var actual = JsonPointer.Create<TestClass>(x => x.StringArray[2]);
 
-		Assert.AreEqual(expected, actual.ToString());
+		Assert.That(actual.ToString(), Is.EqualTo(expected));
 	}
 
 	[Test]
@@ -84,7 +84,7 @@ public class ExpressionCreationTests
 		var expected = "/Nest/Nest";
 		var actual = JsonPointer.Create<TestClass>(x => x.Nest.Nest);
 
-		Assert.AreEqual(expected, actual.ToString());
+		Assert.That(actual.ToString(), Is.EqualTo(expected));
 	}
 
 	[Test]
@@ -93,7 +93,7 @@ public class ExpressionCreationTests
 		var expected = "/Nest/Ints/5";
 		var actual = JsonPointer.Create<TestClass>(x => x.Nest.Ints[5]);
 
-		Assert.AreEqual(expected, actual.ToString());
+		Assert.That(actual.ToString(), Is.EqualTo(expected));
 	}
 
 	[Test]
@@ -102,7 +102,7 @@ public class ExpressionCreationTests
 		var expected = "/NestMore/5/Nest";
 		var actual = JsonPointer.Create<TestClass>(x => x.NestMore[5].Nest);
 
-		Assert.AreEqual(expected, actual.ToString());
+		Assert.That(actual.ToString(), Is.EqualTo(expected));
 	}
 
 	[Test]
@@ -111,7 +111,7 @@ public class ExpressionCreationTests
 		var expected = "/NestMore/-";
 		var actual = JsonPointer.Create<TestClass>(x => x.NestMore.Last());
 
-		Assert.AreEqual(expected, actual.ToString());
+		Assert.That(actual.ToString(), Is.EqualTo(expected));
 	}
 
 	[Test]
@@ -120,7 +120,7 @@ public class ExpressionCreationTests
 		var expected = "/NestMore/-/Nest";
 		var actual = JsonPointer.Create<TestClass>(x => x.NestMore.Last().Nest);
 
-		Assert.AreEqual(expected, actual.ToString());
+		Assert.That(actual.ToString(), Is.EqualTo(expected));
 	}
 
 	[Test]
@@ -131,7 +131,7 @@ public class ExpressionCreationTests
 		var expected = "/NestMore/5/Nest";
 		var actual = JsonPointer.Create<TestClass>(x => x.NestMore[index].Nest);
 
-		Assert.AreEqual(expected, actual.ToString());
+		Assert.That(actual.ToString(), Is.EqualTo(expected));
 	}
 
 	[Test]
@@ -142,6 +142,6 @@ public class ExpressionCreationTests
 		var expected = "/NestMore/5/Nest";
 		var actual = JsonPointer.Create<TestClass>(x => x.NestMore[index.Foo].Nest);
 
-		Assert.AreEqual(expected, actual.ToString());
+		Assert.That(actual.ToString(), Is.EqualTo(expected));
 	}
 }

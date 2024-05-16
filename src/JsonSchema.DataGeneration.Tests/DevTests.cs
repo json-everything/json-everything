@@ -1,6 +1,6 @@
 using NUnit.Framework;
 
-using static Json.Schema.DataGeneration.Tests.TestHelpers;
+using static Json.Schema.DataGeneration.Tests.TestRunner;
 
 namespace Json.Schema.DataGeneration.Tests;
 

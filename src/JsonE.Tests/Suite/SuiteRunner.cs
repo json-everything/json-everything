@@ -6,6 +6,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Json.More;
 using NUnit.Framework;
+using TestHelpers;
 using Yaml2JsonNode;
 
 namespace Json.JsonE.Tests.Suite;

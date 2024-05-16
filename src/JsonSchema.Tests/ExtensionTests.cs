@@ -21,9 +21,12 @@ public class ExtensionTests
 	[TestCaseSource(nameof(ArrayCases))]
 	public void CollectionsAgree(IReadOnlyList<int> a, IReadOnlyList<int> b, bool matches)
 	{
-		Assert.AreEqual(matches, a.ContentsEqual(b));
-		Assert.AreEqual(matches, b.ContentsEqual(a));
-		Assert.AreEqual(matches, a.GetUnorderedCollectionHashCode() == b.GetUnorderedCollectionHashCode());
+		Assert.Multiple(() =>
+		{
+			Assert.That(a.ContentsEqual(b), Is.EqualTo(matches));
+			Assert.That(b.ContentsEqual(a), Is.EqualTo(matches));
+			Assert.That(a.GetUnorderedCollectionHashCode() == b.GetUnorderedCollectionHashCode(), Is.EqualTo(matches));
+		});
 	}
 
 	public static IEnumerable<TestCaseData> DictionaryCases
@@ -116,6 +119,6 @@ public class ExtensionTests
 	[TestCaseSource(nameof(DictionaryCases))]
 	public void CollectionsAgree(IReadOnlyDictionary<string, int> a, IReadOnlyDictionary<string, int> b, bool matches)
 	{
-		Assert.AreEqual(matches, a.GetStringDictionaryHashCode() == b.GetStringDictionaryHashCode());
+		Assert.That(a.GetStringDictionaryHashCode() == b.GetStringDictionaryHashCode(), Is.EqualTo(matches));
 	}
 }

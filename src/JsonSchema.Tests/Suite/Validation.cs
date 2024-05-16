@@ -6,6 +6,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using Json.More;
 using NUnit.Framework;
+using TestHelpers;
 
 namespace Json.Schema.Tests.Suite;
 
@@ -123,7 +124,7 @@ public class Validation
 
 		if (collection.IsOptional && result.IsValid != test.Valid)
 			Assert.Inconclusive("Test optional");
-		Assert.AreEqual(test.Valid, result.IsValid);
+		Assert.That(result.IsValid, Is.EqualTo(test.Valid));
 	}
 
 	private static bool InstanceIsDeserializable(in JsonNode? testData)
@@ -153,7 +154,7 @@ public class Validation
 	[Test]
 	public void EnsureTestSuiteConfiguredForServerBuild()
 	{
-		Assert.IsFalse(_useExternal);
+		Assert.That(_useExternal, Is.False);
 		//Assert.IsFalse(_runDraftNext);
 	}
 }

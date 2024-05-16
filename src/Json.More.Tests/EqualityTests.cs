@@ -11,7 +11,7 @@ public class EqualityTests
 		JsonNode intFour = 4;
 		JsonNode floatFour = 4.0;
 
-		Assert.IsTrue(intFour.IsEquivalentTo(floatFour));
+		Assert.That(intFour.IsEquivalentTo(floatFour), Is.True);
 	}
 
 	[Test]
@@ -20,7 +20,7 @@ public class EqualityTests
 		JsonNode intFour = (decimal) 4;
 		JsonNode floatFour = (decimal) 4.0;
 
-		Assert.IsTrue(intFour.IsEquivalentTo(floatFour));
+		Assert.That(intFour.IsEquivalentTo(floatFour), Is.True);
 	}
 
 	[Test]
@@ -29,7 +29,7 @@ public class EqualityTests
 		JsonNode intFour = 4;
 		JsonNode floatFour = 4.0m;
 
-		Assert.IsTrue(intFour.IsEquivalentTo(floatFour));
+		Assert.That(intFour.IsEquivalentTo(floatFour), Is.True);
 	}
 
 	[Test]
@@ -40,7 +40,7 @@ public class EqualityTests
 		JsonNode explicitFour = a;
 		JsonNode summedFour = b;
 
-		Assert.IsTrue(explicitFour.IsEquivalentTo(summedFour));
+		Assert.That(explicitFour.IsEquivalentTo(summedFour), Is.True);
 	}
 
 	[Test]
@@ -49,6 +49,6 @@ public class EqualityTests
 		var intFour = JsonNode.Parse("4");
 		var floatFour = JsonNode.Parse("4.0");
 
-		Assert.IsTrue(intFour.IsEquivalentTo(floatFour));
+		Assert.That(intFour.IsEquivalentTo(floatFour), Is.True);
 	}
 }

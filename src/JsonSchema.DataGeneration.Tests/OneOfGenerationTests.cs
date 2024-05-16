@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using static Json.Schema.DataGeneration.Tests.TestRunner;
 
 namespace Json.Schema.DataGeneration.Tests;
 
@@ -14,7 +15,7 @@ internal class OneOfGenerationTests
 				new JsonSchemaBuilder().Type(SchemaValueType.String)
 			);
 
-		TestHelpers.Run(schema);
+		Run(schema);
 	}
 
 	[Test]
@@ -31,6 +32,6 @@ internal class OneOfGenerationTests
 			.Minimum(0)
 			.Maximum(50);
 
-		TestHelpers.Run(schema);
+		Run(schema);
 	}
 }

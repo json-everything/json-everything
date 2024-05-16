@@ -19,7 +19,7 @@ public class GetPointerFromRootTests
 
 		var actual = target.GetPointerFromRoot();
 
-		Assert.AreEqual(expected, actual);
+		Assert.That(actual, Is.EqualTo(expected));
 	}
 
 	[Test]
@@ -36,7 +36,7 @@ public class GetPointerFromRootTests
 
 		var actual = target.GetPointerFromRoot();
 
-		Assert.AreEqual(expected, actual);
+		Assert.That(actual, Is.EqualTo(expected));
 	}
 
 	[Test]
@@ -53,6 +53,6 @@ public class GetPointerFromRootTests
 
 		var actual = target.GetPointerFromRoot();
 
-		Assert.AreEqual(expected, actual);
+		Assert.That(actual, Is.EqualTo(expected));
 	}
 }

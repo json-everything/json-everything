@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Json.More;
 using Json.Pointer;
 using NUnit.Framework;
+using TestHelpers;
 
 namespace Json.Schema.Tests;
 
@@ -325,14 +326,14 @@ public class GithubTests
 			{
 				Fetch = uri =>
 				{
-					Assert.True(map.TryGetValue(uri, out var ret), "Unexpected uri: {0}", uri);
+					Assert.That(map.TryGetValue(uri, out var ret), Is.True, $"Unexpected uri: {uri}");
 					return ret;
 				}
 			}
 		};
 		var result = schema2.Evaluate(json, options);
 		result.AssertValid();
-		Assert.AreEqual(result.Details[0].Details[0].SchemaLocation, "https://json-everything.net/schema1.json#");
+		Assert.That(result.Details[0].SchemaLocation.OriginalString, Is.EqualTo("https://json-everything.net/schema1.json"));
 	}
 
 	[Test]
@@ -409,17 +410,12 @@ public class GithubTests
 
 	[SchemaKeyword(Name)]
 	[SchemaSpecVersion(SpecVersion.Draft201909 | SpecVersion.Draft202012)]
-	private class MinDateKeyword : IJsonSchemaKeyword, IEquatable<MinDateKeyword>
+	private class MinDateKeyword : IJsonSchemaKeyword
 	{
 		// ReSharper disable once InconsistentNaming
 #pragma warning disable IDE1006 // Naming Styles
 		private const string Name = "minDate";
 #pragma warning restore IDE1006 // Naming Styles
-
-		public bool Equals(MinDateKeyword? other)
-		{
-			throw new NotImplementedException();
-		}
 
 		public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
 			ReadOnlySpan<KeywordConstraint> localConstraints,
@@ -573,7 +569,7 @@ public class GithubTests
 		{
 			var node = nodes.First();
 			nodes.Remove(node);
-			Assert.AreNotEqual("#/additionalProperties", node.EvaluationPath.ToString());
+			Assert.That(node.EvaluationPath.ToString(), Is.Not.EqualTo("#/additionalProperties"));
 			nodes.AddRange(node.Details);
 		}
 	}
@@ -673,12 +669,12 @@ public class GithubTests
 	{
 		// items: true
 		var singleItemSchema = new JsonSchemaBuilder()
-			.Items(JsonSchema.True)
+			.Items(true)
 			.Build();
 		singleItemSchema.Bundle(); // throws
 		// items: [true, true]
 		var multiItemSchema = new JsonSchemaBuilder()
-			.Items(new[] { JsonSchema.True, JsonSchema.True })
+			.Items([true, true])
 			.Build();
 		multiItemSchema.Bundle(); // throws
 	}
@@ -881,7 +877,7 @@ public class GithubTests
 		var pointer = JsonPointer.Parse("/additionalProperties");
 		var subSchema = schema.FindSubschema(pointer, EvaluationOptions.Default);
 
-		Assert.IsNotNull(subSchema);
+		Assert.That(subSchema, Is.Not.Null);
 	}
 
 	[Test]
@@ -894,7 +890,7 @@ public class GithubTests
 
 		var text = "{\"foo\":null,\"bar\":null}";
 
-		Assert.AreEqual(text, JsonSerializer.Serialize(actual, TestEnvironment.SerializerOptions));
+		Assert.That(JsonSerializer.Serialize(actual, TestEnvironment.SerializerOptions), Is.EqualTo(text));
 	}
 
 	[TestCase(@"{""additionalItems"":""not-a-schema""}", 0, 33)]
@@ -921,12 +917,15 @@ public class GithubTests
 	{
 		// Reminder: per the JsonException documentation, expectedLineNumber & expectedBytePositionInLine are 0-based
 		var exception = Assert.Throws<JsonException>(() => JsonSerializer.Deserialize<JsonSchema>(schemaStr, TestEnvironment.SerializerOptions));
-		Assert.IsNotNull(exception);
-		TestContext.Out.WriteLine("Expected error");
-		TestContext.Out.WriteLine(schemaStr.Split('\n')[expectedLineNumber]);
-		TestContext.Out.WriteLine(new string('-', expectedBytePositionInLine - 1) + '^');
-		Assert.AreEqual(expectedLineNumber, exception?.LineNumber);
-		Assert.AreEqual(expectedBytePositionInLine, exception?.BytePositionInLine);
+		Assert.Multiple(() =>
+		{
+			Assert.That(exception, Is.Not.Null);
+			Console.WriteLine("Expected error");
+			Console.WriteLine(schemaStr.Split('\n')[expectedLineNumber]);
+			Console.WriteLine(new string('-', expectedBytePositionInLine - 1) + '^');
+			Assert.That(exception?.LineNumber, Is.EqualTo(expectedLineNumber));
+			Assert.That(exception?.BytePositionInLine, Is.EqualTo(expectedBytePositionInLine));
+		});
 	}
 
 	[Test]
@@ -956,7 +955,7 @@ public class GithubTests
 
 		var targetSchemaLocation = result.Details[0].Details[0].SchemaLocation;
 
-		Assert.AreEqual("http://localhost/v1#/components/schemas/user/properties/last-name", targetSchemaLocation.OriginalString);
+		Assert.That(targetSchemaLocation.OriginalString, Is.EqualTo("http://localhost/v1#/components/schemas/user/properties/last-name"));
 	}
 
 	[Test]

@@ -7,6 +7,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Json.More;
 using NUnit.Framework;
+using TestHelpers;
 
 namespace Json.Logic.Tests.Suite;
 
@@ -51,7 +52,7 @@ public class SuiteRunner
 
 		if (rule == null)
 		{
-			Assert.IsNull(test.Expected);
+			Assert.That(test.Expected, Is.Null);
 			return;
 		}
 

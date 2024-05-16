@@ -44,6 +44,6 @@ public class StackOverflowTests
 
 		var results = path.Evaluate(data);
 
-		Assert.AreEqual(2, results.Matches!.Count);
+		Assert.That(results.Matches!, Has.Count.EqualTo(2));
 	}
 }

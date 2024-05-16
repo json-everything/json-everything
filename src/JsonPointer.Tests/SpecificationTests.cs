@@ -3,6 +3,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using Json.More;
 using NUnit.Framework;
+using TestHelpers;
 
 namespace Json.Pointer.Tests;
 
@@ -87,7 +88,7 @@ public class SpecificationTests
 		using var expected = JsonDocument.Parse(expectedString);
 
 		// ReSharper disable once PossibleInvalidOperationException
-		Assert.IsTrue(actual.Value.IsEquivalentTo(expected.RootElement));
+		JsonAssert.AreEquivalent(expected.RootElement, actual.Value);
 	}
 
 	[TestCaseSource(nameof(ExampleCases))]
@@ -112,12 +113,12 @@ public class SpecificationTests
 
 		var expected = JsonNode.Parse(expectedString);
 
-		Assert.IsTrue(success);
-		Assert.IsTrue(actual.IsEquivalentTo(expected));
+		Assert.That(success, Is.True);
+		JsonAssert.AreEquivalent(expected, actual);
 	}
 
 	[TestCaseSource(nameof(ExampleCases))]
-	public void ToString(string pointerString, string expectedString)
+	public void ToString(string pointerString, string unused)
 	{
 		if (pointerString.Length != 0 && pointerString[0] == '#')
 			Assert.Inconclusive("Returning to URI encoded is not supported");
@@ -125,6 +126,6 @@ public class SpecificationTests
 		var pointer = JsonPointer.Parse(pointerString);
 		var backToString = pointer.ToString();
 
-		Assert.AreEqual(pointerString, backToString);
+		Assert.That(backToString, Is.EqualTo(pointerString));
 	}
 }

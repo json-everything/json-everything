@@ -19,11 +19,11 @@ public class EnumStringConverterTests
 		var expected = "{\"Day\":\"Wednesday\"}";
 		var actual = JsonSerializer.Serialize(new ConversionTest { Day = DayOfWeek.Wednesday });
 
-		Assert.AreEqual(expected, actual);
+		Assert.That(actual, Is.EqualTo(expected));
 
 		var deserialized = JsonSerializer.Deserialize<ConversionTest>(actual)!;
 
-		Assert.AreEqual(DayOfWeek.Wednesday, deserialized.Day);
+		Assert.That(deserialized.Day, Is.EqualTo(DayOfWeek.Wednesday));
 	}
 
 	[JsonConverter(typeof(EnumStringConverter<CustomEnum>))]
@@ -43,11 +43,11 @@ public class EnumStringConverterTests
 		var expected = $"\"{serializedValue}\"";
 		var actual = JsonSerializer.Serialize(value);
 
-		Assert.AreEqual(expected, actual);
+		Assert.That(actual, Is.EqualTo(expected));
 
 		var deserialized = JsonSerializer.Deserialize<CustomEnum>(actual);
 
-		Assert.AreEqual(value, deserialized);
+		Assert.That(deserialized, Is.EqualTo(value));
 	}
 
 	[JsonConverter(typeof(EnumStringConverter<CustomFlagsEnum>))]
@@ -72,10 +72,10 @@ public class EnumStringConverterTests
 		var expected = "{\"Value\":[\"One\",\"Two\"]}";
 		var actual = JsonSerializer.Serialize(value);
 
-		Assert.AreEqual(expected, actual);
+		Assert.That(actual, Is.EqualTo(expected));
 
 		var deserialized = JsonSerializer.Deserialize<FlagsEnumContainer>(actual)!;
 
-		Assert.AreEqual(CustomFlagsEnum.One | CustomFlagsEnum.Two, deserialized.Value);
+		Assert.That(deserialized.Value, Is.EqualTo(CustomFlagsEnum.One | CustomFlagsEnum.Two));
 	}
 }

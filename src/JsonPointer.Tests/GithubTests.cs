@@ -13,7 +13,10 @@ public class GithubTests
 
 		var success = pointer.TryEvaluate(data, out var array);
 
-		Assert.IsFalse(success);
-		Assert.IsNull(array);
+		Assert.Multiple(() =>
+		{
+			Assert.That(success, Is.False);
+			Assert.That(array, Is.Null);
+		});
 	}
 }

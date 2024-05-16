@@ -12,8 +12,8 @@ namespace Json.Path.Tests
 			var typeConverter = TypeDescriptor.GetConverter(typeof(JsonPath));
 			var path = typeConverter.ConvertFromInvariantString("$.store.book[*].author") as JsonPath;
 
-			Assert.IsNotNull(path);
-			Assert.AreEqual("$.store.book[*].author", path!.ToString());
+			Assert.That(path, Is.Not.Null);
+			Assert.That(path!.ToString(), Is.EqualTo("$.store.book[*].author"));
 		}
 
 		[Test]
@@ -23,7 +23,7 @@ namespace Json.Path.Tests
 			var typeConverter = TypeDescriptor.GetConverter(typeof(JsonPath));
 			var pathString = typeConverter.ConvertToInvariantString(path);
 
-			Assert.AreEqual("$.store.book[*].author", pathString);
+			Assert.That(pathString, Is.EqualTo("$.store.book[*].author"));
 		}
 
 		[Test]
@@ -33,9 +33,9 @@ namespace Json.Path.Tests
 			var typeConverter = TypeDescriptor.GetConverter(typeof(JsonPath));
 			var path2 = typeConverter.ConvertFrom(path) as JsonPath;
 
-			Assert.IsNotNull(path2);
-			Assert.AreNotSame(path, path2);
-			Assert.AreEqual("$.store.book[*].author", path2!.ToString());
+			Assert.That(path2, Is.Not.Null);
+			Assert.That(path2, Is.Not.SameAs(path));
+			Assert.That(path2!.ToString(), Is.EqualTo("$.store.book[*].author"));
 		}
 
 		[Test]
@@ -45,9 +45,9 @@ namespace Json.Path.Tests
 			var typeConverter = TypeDescriptor.GetConverter(typeof(JsonPath));
 			var path2 = typeConverter.ConvertTo(path, typeof(JsonPath)) as JsonPath;
 
-			Assert.IsNotNull(path2);
-			Assert.AreNotSame(path, path2);
-			Assert.AreEqual("$.store.book[*].author", path2!.ToString());
+			Assert.That(path2, Is.Not.Null);
+			Assert.That(path2, Is.Not.SameAs(path));
+			Assert.That(path2!.ToString(), Is.EqualTo("$.store.book[*].author"));
 		}
 
 	}

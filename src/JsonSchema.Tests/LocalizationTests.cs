@@ -20,7 +20,7 @@ public class LocalizationTests
 
 		var message = results.Errors!["minimum"];
 
-		Assert.AreEqual("5 should be at least 10", message);
+		Assert.That(message, Is.EqualTo("5 should be at least 10"));
 	}
 
 	[Test]
@@ -41,7 +41,7 @@ public class LocalizationTests
 
 			var message = results.Errors!["minimum"];
 
-			Assert.AreEqual("5 es menor o igual que 10", message);
+			Assert.That(message, Is.EqualTo("5 es menor o igual que 10"));
 		}
 		finally
 		{
@@ -66,7 +66,7 @@ public class LocalizationTests
 
 			var message = results.Errors!["minimum"];
 
-			Assert.AreEqual("This is a custom error message with 5 and 10", message);
+			Assert.That(message, Is.EqualTo("This is a custom error message with 5 and 10"));
 		}
 		finally
 		{
@@ -100,8 +100,11 @@ public class LocalizationTests
 				Task.Run(() => RunWithCulture(CultureInfo.GetCultureInfo("en-us")))
 			);
 
-			Assert.AreEqual("5 es menor o igual que 10", messages[0]);
-			Assert.AreEqual("5 should be at least 10", messages[1]);
+			Assert.Multiple(() =>
+			{
+				Assert.That(messages[0], Is.EqualTo("5 es menor o igual que 10"));
+				Assert.That(messages[1], Is.EqualTo("5 should be at least 10"));
+			});
 		}
 		finally
 		{

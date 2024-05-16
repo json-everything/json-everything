@@ -17,7 +17,7 @@ public class FormatTests
 
 		var result = schema.Evaluate(value, new EvaluationOptions { RequireFormatValidation = true });
 
-		Assert.True(result.IsValid);
+		result.AssertValid();
 	}
 	[Test]
 	public void Ipv4_Fail()
@@ -29,7 +29,7 @@ public class FormatTests
 
 		var result = schema.Evaluate(value, new EvaluationOptions { RequireFormatValidation = true });
 
-		Assert.False(result.IsValid);
+		result.AssertInvalid();
 	}
 
 	[TestCase("2023-04-28T21:51:26.56Z")]
@@ -49,7 +49,7 @@ public class FormatTests
 
 		var result = schema.Evaluate(value, new EvaluationOptions { RequireFormatValidation = true });
 
-		Assert.True(result.IsValid);
+		result.AssertValid();
 	}
 
 	[Test]
@@ -101,7 +101,7 @@ public class FormatTests
 
 		results.AssertValid();
 		var serialized = JsonSerializer.Serialize(results, TestEnvironment.SerializerOptions);
-		Assert.IsTrue(serialized.Contains("something-dumb"));
+		Assert.That(serialized, Contains.Substring("something-dumb"));
 	}
 
 	[Test]
@@ -126,7 +126,7 @@ public class FormatTests
 
 		results.AssertInvalid();
 		var serialized = JsonSerializer.Serialize(results, TestEnvironment.SerializerOptions);
-		Assert.IsTrue(serialized.Contains("something-dumb"));
+		Assert.That(serialized, Contains.Substring("something-dumb"));
 	}
 
 	[Test]
@@ -149,7 +149,7 @@ public class FormatTests
 
 		results.AssertInvalid();
 		var serialized = JsonSerializer.Serialize(results, TestEnvironment.SerializerOptions);
-		Assert.IsTrue(serialized.Contains("something-dumb"));
+		Assert.That(serialized, Contains.Substring("something-dumb"));
 	}
 
 	private class RegexBasedFormat : RegexFormat
@@ -178,6 +178,6 @@ public class FormatTests
 		});
 
 		Console.WriteLine(JsonSerializer.Serialize(results, TestEnvironment.TestOutputSerializerOptions));
-		Assert.AreEqual(isValid, results.IsValid);
+		Assert.That(results.IsValid, Is.EqualTo(isValid));
 	}
 }

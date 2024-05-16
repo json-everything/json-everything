@@ -13,11 +13,11 @@ public class DevTest
 		var value = JsonValue.Create(new MinFunction())!;
 
 		var stored = value.GetValue<object>();
-		Assert.IsInstanceOf<MinFunction>(stored);
+		Assert.That(stored, Is.InstanceOf<MinFunction>());
 
 		var copy = value.DeepClone();
 
 		stored = copy.GetValue<object>();
-		Assert.IsInstanceOf<MinFunction>(stored);
+		Assert.That(stored, Is.InstanceOf<MinFunction>());
 	}
 }

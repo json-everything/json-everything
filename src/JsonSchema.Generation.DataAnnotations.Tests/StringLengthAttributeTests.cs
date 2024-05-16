@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Json.Schema.Generation.Tests;
 using NUnit.Framework;
+using static Json.Schema.Generation.Tests.AssertionExtensions;
 
 namespace Json.Schema.Generation.DataAnnotations.Tests;
 
@@ -29,6 +29,6 @@ public class StringLengthAttributeTests
 				)
 			);
 
-		AssertionExtensions.VerifyGeneration<Target>(expected);
+		VerifyGeneration<Target>(expected);
 	}
 }

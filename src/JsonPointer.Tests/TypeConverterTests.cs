@@ -12,8 +12,8 @@ namespace Json.Pointer.Tests
 			var typeConverter = TypeDescriptor.GetConverter(typeof(JsonPointer));
 			var pointer = typeConverter.ConvertFromInvariantString("/foo");
 
-			Assert.IsInstanceOf<JsonPointer>(pointer);
-			Assert.AreEqual("/foo", pointer!.ToString());
+			Assert.That(pointer, Is.InstanceOf<JsonPointer>());
+			Assert.That(pointer!.ToString(), Is.EqualTo("/foo"));
 		}
 
 		[Test]
@@ -23,7 +23,7 @@ namespace Json.Pointer.Tests
 			var typeConverter = TypeDescriptor.GetConverter(typeof(JsonPointer));
 			var pointerString = typeConverter.ConvertToInvariantString(pointer);
 
-			Assert.AreEqual("/foo", pointerString);
+			Assert.That(pointerString, Is.EqualTo("/foo"));
 		}
 
 		[Test]
@@ -33,8 +33,8 @@ namespace Json.Pointer.Tests
 			var typeConverter = TypeDescriptor.GetConverter(typeof(JsonPointer));
 			var pointer2 = typeConverter.ConvertFrom(pointer);
 
-			Assert.IsInstanceOf<JsonPointer>(pointer2);
-			Assert.AreEqual("/foo", pointer2!.ToString());
+			Assert.That(pointer2, Is.InstanceOf<JsonPointer>());
+			Assert.That(pointer2!.ToString(), Is.EqualTo("/foo"));
 		}
 
 		[Test]
@@ -44,8 +44,8 @@ namespace Json.Pointer.Tests
 			var typeConverter = TypeDescriptor.GetConverter(typeof(JsonPointer));
 			var pointer2 = typeConverter.ConvertTo(pointer, typeof(JsonPointer));
 
-			Assert.IsInstanceOf<JsonPointer>(pointer2);
-			Assert.AreEqual("/foo", pointer2!.ToString());
+			Assert.That(pointer2, Is.InstanceOf<JsonPointer>());
+			Assert.That(pointer2!.ToString(), Is.EqualTo("/foo"));
 		}
 
   }

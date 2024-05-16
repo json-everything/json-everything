@@ -6,8 +6,8 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using Humanizer;
 using Json.More;
-using Json.Schema.Tests;
 using NUnit.Framework;
+using TestHelpers;
 
 namespace Json.Schema.Data.Tests.Suite;
 
@@ -29,7 +29,7 @@ public class Suite
 
 		var testsPath = System.IO.Path.Combine(TestContext.CurrentContext.WorkDirectory, testCasesPath)
 			.AdjustForPlatform();
-		if (!Directory.Exists(testsPath)) return Enumerable.Empty<TestCaseData>();
+		if (!Directory.Exists(testsPath)) return [];
 
 		var fileNames = Directory.GetFiles(testsPath, "*.json");
 		var options = new EvaluationOptions
@@ -113,7 +113,7 @@ public class Suite
 
 		if (collection.IsOptional && result.IsValid != test.Valid)
 			Assert.Inconclusive("Test optional");
-		Assert.AreEqual(test.Valid, result.IsValid);
+		Assert.That(result.IsValid, Is.EqualTo(test.Valid));
 	}
 
 	public static IEnumerable<TestCaseData> CoreTestCases()
@@ -123,7 +123,7 @@ public class Suite
 
 		var testsPath = System.IO.Path.Combine(TestContext.CurrentContext.WorkDirectory, testCasesPath)
 			.AdjustForPlatform();
-		if (!Directory.Exists(testsPath)) return Enumerable.Empty<TestCaseData>();
+		if (!Directory.Exists(testsPath)) return [];
 
 		var fileNames = Directory.GetFiles(testsPath, "*.json");
 
@@ -149,6 +149,6 @@ public class Suite
 	[Test]
 	public void EnsureTestSuiteConfiguredForServerBuild()
 	{
-		Assert.IsFalse(_useExternal);
+		Assert.That(_useExternal, Is.False);
 	}
 }

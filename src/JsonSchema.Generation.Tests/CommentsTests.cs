@@ -31,9 +31,12 @@ public class CommentsTests
 
 		JsonSchema schema = new JsonSchemaBuilder().FromType<TypeCommentedModel>(config);
 
-		Assert.AreEqual("Type commented model description", schema.GetDescription());
+		Assert.Multiple(() =>
+		{
+			Assert.That(schema.GetDescription(), Is.EqualTo("Type commented model description"));
 
-		Assert.AreEqual("Type commented inner model description", schema.GetProperties()?["Inner"].GetDescription());
+			Assert.That(schema.GetProperties()?["Inner"].GetDescription(), Is.EqualTo("Type commented inner model description"));
+		});
 	}
 
 	private class MemberCommentedModel
@@ -52,7 +55,7 @@ public class CommentsTests
 
 		JsonSchema schema = new JsonSchemaBuilder().FromType<MemberCommentedModel>(config);
 
-		Assert.AreEqual("Bar is for counting", schema.GetProperties()?["Bar"].GetDescription());
+		Assert.That(schema.GetProperties()?["Bar"].GetDescription(), Is.EqualTo("Bar is for counting"));
 	}
 
 	/// <summary>
@@ -74,7 +77,7 @@ public class CommentsTests
 
 		JsonSchema schema = new JsonSchemaBuilder().FromType<TypeAndMemberCommentedModel>(config);
 
-		Assert.AreEqual("This overrides the type description", schema.GetProperties()?["Inner"].GetDescription());
+		Assert.That(schema.GetProperties()?["Inner"].GetDescription(), Is.EqualTo("This overrides the type description"));
 	}
 
 	/// <summary>
@@ -100,9 +103,12 @@ public class CommentsTests
 
 		Console.WriteLine(JsonSerializer.Serialize(schema, TestEnvironment.SerializerOptions));
 
-		Assert.AreEqual("This overrides the type description", schema.GetProperties()?["Inner"].GetDescription());
-		Assert.IsNull(schema.GetProperties()?["Inner2"].GetDescription());
-		Assert.IsNull(schema.GetProperties()?["Inner3"].GetDescription());
-		Assert.AreEqual("Type commented inner model description", schema.GetDefs()?["typeCommentedInnerModelInCommentsTests"].GetDescription());
+		Assert.Multiple(() =>
+		{
+			Assert.That(schema.GetProperties()?["Inner"].GetDescription(), Is.EqualTo("This overrides the type description"));
+			Assert.That(schema.GetProperties()?["Inner2"].GetDescription(), Is.Null);
+			Assert.That(schema.GetProperties()?["Inner3"].GetDescription(), Is.Null);
+			Assert.That(schema.GetDefs()?["typeCommentedInnerModelInCommentsTests"].GetDescription(), Is.EqualTo("Type commented inner model description"));
+		});
 	}
 }

@@ -1,6 +1,5 @@
-﻿using Json.Schema.Generation.Tests;
-using NUnit.Framework;
-
+﻿using NUnit.Framework;
+using static Json.Schema.Generation.Tests.AssertionExtensions;
 using DAMinLength = System.ComponentModel.DataAnnotations.MinLengthAttribute;
 
 namespace Json.Schema.Generation.DataAnnotations.Tests;
@@ -24,6 +23,6 @@ public class MinLengthAttributeTests
 				)
 			);
 
-		AssertionExtensions.VerifyGeneration<Target>(expected);
+		VerifyGeneration<Target>(expected);
 	}
 }

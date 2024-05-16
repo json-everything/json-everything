@@ -71,14 +71,14 @@ public class JsonPointerParseTests
 			var segment = pointer[i];
 			var expected = segments[i];
 
-			Assert.AreEqual(expected, segment);
+			Assert.That(segment, Is.EqualTo(expected));
 		}
 	}
 
 	[TestCaseSource(nameof(SpecificationExamples))]
 	public void TryParse(string pointerString, string[] segments)
 	{
-		Assert.IsTrue(JsonPointer.TryParse(pointerString, out var pointer));
+		Assert.That(JsonPointer.TryParse(pointerString, out var pointer), Is.True);
 
 		pointer!.Count.Should().Be(segments.Length);
 		for (int i = 0; i < pointer.Count; i++)
@@ -86,7 +86,7 @@ public class JsonPointerParseTests
 			var segment = pointer[i];
 			var expected = segments[i];
 
-			Assert.AreEqual(expected, segment);
+			Assert.That(segment, Is.EqualTo(expected));
 		}
 	}
 
@@ -99,7 +99,7 @@ public class JsonPointerParseTests
 	[TestCaseSource(nameof(FailureCases))]
 	public void TryParseFailure(string pointerString)
 	{
-		Assert.False(JsonPointer.TryParse(pointerString, out _));
+		Assert.That(JsonPointer.TryParse(pointerString, out _), Is.False);
 	}
 
 	[Test]
@@ -110,17 +110,17 @@ public class JsonPointerParseTests
 
 		var actual = pointer.ToString();
 
-		Assert.AreEqual(expected, actual);
+		Assert.That(actual, Is.EqualTo(expected));
 	}
 
 	[Test]
 	public void TryParseShouldStoreNonUrlForm()
 	{
-		Assert.IsTrue(JsonPointer.TryParse("#/foo", out var pointer));
+		Assert.That(JsonPointer.TryParse("#/foo", out var pointer), Is.True);
 		var expected = "/foo";
 
 		var actual = pointer!.ToString();
 
-		Assert.AreEqual(expected, actual);
+		Assert.That(actual, Is.EqualTo(expected));
 	}
 }

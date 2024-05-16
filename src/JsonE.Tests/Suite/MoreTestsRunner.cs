@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.Json;
 using Json.More;
 using NUnit.Framework;
+using TestHelpers;
 using Yaml2JsonNode;
 
 namespace Json.JsonE.Tests.Suite;
@@ -57,7 +58,7 @@ public class MoreTestsRunner
 				if (test.Error != errorMessage && test.Error.EndsWith(e.Message))
 					Assert.Inconclusive($"Error message is correct, but received type ({GetErrorPrefix(e)}) is wrong.\n");
 
-				Assert.AreEqual(test.Error, errorMessage);
+				Assert.That(errorMessage, Is.EqualTo(test.Error));
 			}
 		}
 	}

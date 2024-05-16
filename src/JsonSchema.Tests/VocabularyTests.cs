@@ -475,7 +475,7 @@ public partial class VocabularyTests
 
 			var result = schema.Evaluate(instance);
 
-			Assert.AreEqual(isValid, result.IsValid);
+			Assert.That(result.IsValid, Is.EqualTo(isValid));
 		}
 		finally
 		{
@@ -502,7 +502,7 @@ public partial class VocabularyTests
 
 			var result = schema.Evaluate(instance);
 
-			Assert.AreEqual(isValid, result.IsValid);
+			Assert.That(result.IsValid, Is.EqualTo(isValid));
 		}
 		finally
 		{

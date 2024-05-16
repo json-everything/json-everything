@@ -1,8 +1,8 @@
 ﻿#if NET8_0_OR_GREATER
 
 using System.ComponentModel.DataAnnotations;
-using Json.Schema.Generation.Tests;
 using NUnit.Framework;
+using static Json.Schema.Generation.Tests.AssertionExtensions;
 
 namespace Json.Schema.Generation.DataAnnotations.Tests;
 
@@ -25,7 +25,7 @@ public class Base64StringAttributeTests
 				)
 			);
 
-		AssertionExtensions.VerifyGeneration<Target>(expected);
+		VerifyGeneration<Target>(expected);
 	}
 }
 

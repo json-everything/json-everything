@@ -19,7 +19,7 @@ public class GetPathFromRootTests
 
 		var actual = target.GetPathFromRoot();
 
-		Assert.AreEqual(expected, actual);
+		Assert.That(actual, Is.EqualTo(expected));
 	}
 
 	[Test]
@@ -36,7 +36,7 @@ public class GetPathFromRootTests
 
 		var actual = target.GetPathFromRoot(true);
 
-		Assert.AreEqual(expected, actual);
+		Assert.That(actual, Is.EqualTo(expected));
 	}
 
 	[Test]
@@ -53,7 +53,7 @@ public class GetPathFromRootTests
 
 		var actual = target.GetPathFromRoot();
 
-		Assert.AreEqual(expected, actual);
+		Assert.That(actual, Is.EqualTo(expected));
 	}
 
 	[Test]
@@ -70,6 +70,6 @@ public class GetPathFromRootTests
 
 		var actual = target.GetPathFromRoot();
 
-		Assert.AreEqual(expected, actual);
+		Assert.That(actual, Is.EqualTo(expected));
 	}
 }
