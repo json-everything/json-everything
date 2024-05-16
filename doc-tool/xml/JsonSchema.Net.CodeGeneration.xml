@@ -1,0 +1,110 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>JsonSchema.Net.CodeGeneration</name>
+    </assembly>
+    <members>
+        <member name="T:Json.Schema.CodeGeneration.CodeGenExtensions">
+            <summary>
+            Generates code from a <see cref="T:Json.Schema.JsonSchema"/>.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.CodeGeneration.CodeGenExtensions.GenerateCode(Json.Schema.JsonSchema,Json.Schema.CodeGeneration.Language.ICodeWriter,Json.Schema.EvaluationOptions)">
+            <summary>
+            Generates code from a <see cref="T:Json.Schema.JsonSchema"/>.
+            </summary>
+            <param name="schema">The JSON Schema object.</param>
+            <param name="codeWriter">The writer for the output language.</param>
+            <param name="options">Evaluation options.</param>
+            <returns></returns>
+        </member>
+        <member name="P:Json.Schema.CodeGeneration.CodeGenSerializerContext.JsonSchema">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.CodeGeneration.CodeGenSerializerContext.Default">
+            <summary>
+            The default <see cref="T:System.Text.Json.Serialization.JsonSerializerContext"/> associated with a default <see cref="T:System.Text.Json.JsonSerializerOptions"/> instance.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.CodeGeneration.CodeGenSerializerContext.GeneratedSerializerOptions">
+            <summary>
+            The source-generated options associated with this context.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.CodeGeneration.CodeGenSerializerContext.#ctor">
+            <inheritdoc/>
+        </member>
+        <member name="M:Json.Schema.CodeGeneration.CodeGenSerializerContext.#ctor(System.Text.Json.JsonSerializerOptions)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Json.Schema.CodeGeneration.CodeGenSerializerContext.GetTypeInfo(System.Type)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Json.Schema.CodeGeneration.Language.ICodeWriter">
+            <summary>
+            Converts the type model into code text.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.CodeGeneration.Language.ICodeWriter.TransformName(System.String)">
+            <summary>
+            Transforms a name as it appears in a JSON string into a language-appropriate type or member name.
+            </summary>
+            <param name="original">The JSON string.</param>
+            <returns>The transformed name, or null if the string is unsupported.</returns>
+        </member>
+        <member name="M:Json.Schema.CodeGeneration.Language.ICodeWriter.Write(System.Text.StringBuilder,Json.Schema.CodeGeneration.Model.TypeModel)">
+            <summary>
+            Converts a single type model into code text.
+            </summary>
+            <param name="builder">A string builder.</param>
+            <param name="model">A type model.</param>
+        </member>
+        <member name="T:Json.Schema.CodeGeneration.Language.CodeWriters">
+            <summary>
+            Provides predefined code writers.
+            </summary>
+        </member>
+        <member name="F:Json.Schema.CodeGeneration.Language.CodeWriters.CSharp">
+            <summary>
+            A code writer to generate C# text.
+            </summary>
+        </member>
+        <member name="T:Json.Schema.CodeGeneration.Model.TypeModel">
+            <summary>
+            Base class for modeling a type.
+            </summary>
+        </member>
+        <member name="P:Json.Schema.CodeGeneration.Model.TypeModel.Name">
+            <summary>
+            Gets the name of the type.  Provided by the `title` keyword.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.CodeGeneration.Model.TypeModel.Equals(Json.Schema.CodeGeneration.Model.TypeModel)">
+            <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+            <param name="other">An object to compare with this object.</param>
+            <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.CodeGeneration.Model.TypeModel.Equals(System.Object)">
+            <summary>Determines whether the specified object is equal to the current object.</summary>
+            <param name="obj">The object to compare with the current object.</param>
+            <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        </member>
+        <member name="M:Json.Schema.CodeGeneration.Model.TypeModel.GetHashCode">
+            <summary>Serves as the default hash function.</summary>
+            <returns>A hash code for the current object.</returns>
+        </member>
+        <member name="T:Json.Schema.CodeGeneration.UnsupportedSchemaException">
+            <summary>
+            Thrown when the generator encounters an unsupported scenario.
+            </summary>
+        </member>
+        <member name="M:Json.Schema.CodeGeneration.UnsupportedSchemaException.#ctor(System.String)">
+            <summary>
+            Creates a new instance of the exception.
+            </summary>
+            <param name="message">The exception message.</param>
+        </member>
+    </members>
+</doc>
