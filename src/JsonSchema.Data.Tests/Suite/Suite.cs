@@ -6,8 +6,8 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using Humanizer;
 using Json.More;
-using Json.Schema.Tests;
 using NUnit.Framework;
+using TestHelpers;
 
 namespace Json.Schema.Data.Tests.Suite;
 
@@ -113,7 +113,7 @@ public class Suite
 
 		if (collection.IsOptional && result.IsValid != test.Valid)
 			Assert.Inconclusive("Test optional");
-		Assert.AreEqual(test.Valid, result.IsValid);
+		Assert.That(result.IsValid, Is.EqualTo(test.Valid));
 	}
 
 	public static IEnumerable<TestCaseData> CoreTestCases()
@@ -149,6 +149,6 @@ public class Suite
 	[Test]
 	public void EnsureTestSuiteConfiguredForServerBuild()
 	{
-		Assert.IsFalse(_useExternal);
+		Assert.That(_useExternal, Is.False);
 	}
 }

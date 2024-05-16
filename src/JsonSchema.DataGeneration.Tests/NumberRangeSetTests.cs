@@ -8,17 +8,17 @@ public class NumberRangeSetTests
 	[Test]
 	public void DualIntersection()
 	{
-		var a = new NumberRangeSet(new[]
-		{
+		var a = new NumberRangeSet(
+		[
 			new NumberRange(-100, -10),
 			new NumberRange(10, 100)
-		});
+		]);
 		var b = new NumberRangeSet(new NumberRange(-20, 20));
-		var expected = new NumberRangeSet(new[]
-		{
+		var expected = new NumberRangeSet(
+		[
 			new NumberRange(-20, -10),
 			new NumberRange(10, 20)
-		});
+		]);
 
 		var result = a * b;
 
@@ -28,17 +28,17 @@ public class NumberRangeSetTests
 	[Test]
 	public void DualIntersectionTheOtherWay()
 	{
-		var a = new NumberRangeSet(new[]
-		{
+		var a = new NumberRangeSet(
+		[
 			new NumberRange(-100, -10),
 			new NumberRange(10, 100)
-		});
+		]);
 		var b = new NumberRangeSet(new NumberRange(-20, 20));
-		var expected = new NumberRangeSet(new[]
-		{
+		var expected = new NumberRangeSet(
+		[
 			new NumberRange(-20, -10),
 			new NumberRange(10, 20)
-		});
+		]);
 
 		var result = b * a;
 

@@ -22,9 +22,12 @@ public class BoundaryTests
 			.FromType<BoundaryTestSubject>()
 			.Build();
 
-		Assert.AreEqual(decimal.MaxValue, schema.GetProperties()!["Value"].GetExclusiveMaximum());
-		Assert.AreEqual(decimal.MinValue, schema.GetProperties()!["Value"].GetExclusiveMinimum());
-		Assert.AreEqual(decimal.MaxValue, schema.GetProperties()!["Value"].GetMaximum());
-		Assert.AreEqual(decimal.MinValue, schema.GetProperties()!["Value"].GetMinimum());
+		Assert.Multiple(() =>
+		{
+			Assert.That(schema.GetProperties()!["Value"].GetExclusiveMaximum(), Is.EqualTo(decimal.MaxValue));
+			Assert.That(schema.GetProperties()!["Value"].GetExclusiveMinimum(), Is.EqualTo(decimal.MinValue));
+			Assert.That(schema.GetProperties()!["Value"].GetMaximum(), Is.EqualTo(decimal.MaxValue));
+			Assert.That(schema.GetProperties()!["Value"].GetMinimum(), Is.EqualTo(decimal.MinValue));
+		});
 	}
 }

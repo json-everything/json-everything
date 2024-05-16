@@ -111,7 +111,7 @@ public class BaseDocumentTests
 
 		var result = subjectSchema.Evaluate(instance, options);
 
-		result.IsValid.Should().BeTrue();
+		result.AssertValid();
 	}
 
 	[Test]
@@ -156,7 +156,7 @@ public class BaseDocumentTests
 
 		var result = subjectSchema.Evaluate(instance, options);
 
-		result.IsValid.Should().BeTrue();
+		result.AssertValid();
 	}
 
 	[Test]

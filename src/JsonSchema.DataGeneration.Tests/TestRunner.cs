@@ -7,7 +7,7 @@ using NUnit.Framework;
 
 namespace Json.Schema.DataGeneration.Tests;
 
-public static class TestHelpers
+public static class TestRunner
 {
 	public static readonly JsonSerializerOptions SerializerOptions =
 		new()
@@ -23,11 +23,11 @@ public static class TestHelpers
 
 		var result = schema.GenerateData(options);
 
-		Assert.IsTrue(result.IsSuccess, "failed generation");
+		Assert.That(result.IsSuccess, Is.True, "failed generation");
 		Console.WriteLine(JsonSerializer.Serialize(result.Result, SerializerOptions));
 		var validation = schema.Evaluate(result.Result, options);
 		Console.WriteLine(JsonSerializer.Serialize(validation, SerializerOptions));
-		Assert.IsTrue(validation.IsValid, "failed validation");
+		Assert.That(validation.IsValid, Is.True, "failed validation");
 	}
 
 	public static void RunFailure(JsonSchema schema, EvaluationOptions? options = null)
@@ -37,7 +37,7 @@ public static class TestHelpers
 		Console.WriteLine(result.ErrorMessage);
 		if (result.IsSuccess)
 			Console.WriteLine(JsonSerializer.Serialize(result.Result, SerializerOptions));
-		Assert.IsFalse(result.IsSuccess, "generation succeeded");
+		Assert.That(result.IsSuccess, Is.False, "generation succeeded");
 	}
 
 	public static void RunInLoopForDebugging(JsonSchema schema)

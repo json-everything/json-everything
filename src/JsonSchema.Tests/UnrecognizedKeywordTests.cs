@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using Json.More;
 using NUnit.Framework;
+using TestHelpers;
 
 namespace Json.Schema.Tests;
 
@@ -18,8 +18,11 @@ public class UnrecognizedKeywordTests
 
 		var schema = JsonSerializer.Deserialize<JsonSchema>(schemaText, TestEnvironment.SerializerOptions);
 
-		Assert.AreEqual(1, schema!.Keywords!.Count);
-		Assert.IsInstanceOf<UnrecognizedKeyword>(schema.Keywords.First());
+		Assert.Multiple(() =>
+		{
+			Assert.That(schema!.Keywords!, Has.Count.EqualTo(1));
+			Assert.That(schema.Keywords!.First(), Is.InstanceOf<UnrecognizedKeyword>());
+		});
 	}
 
 	[Test]
@@ -31,9 +34,9 @@ public class UnrecognizedKeywordTests
 
 		var result = schema!.Evaluate(new JsonObject(), new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
 
-		Assert.IsTrue(result.IsValid);
-		Assert.AreEqual(1, result.Annotations!.Count);
-		Assert.IsTrue(((JsonNode?)"bar").IsEquivalentTo(result.Annotations["foo"]));
+		result.AssertValid();
+		Assert.That(result.Annotations!.Count, Is.EqualTo(1));
+		JsonAssert.AreEquivalent("bar", result.Annotations!["foo"]);
 	}
 
 	[Test]
@@ -49,9 +52,9 @@ public class UnrecognizedKeywordTests
 			AddAnnotationForUnknownKeywords = true
 		});
 
-		Assert.IsTrue(result.IsValid);
-		Assert.AreEqual(2, result.Annotations!.Count);
-		Assert.IsTrue(new JsonArray("foo").IsEquivalentTo(result.Annotations["$unknownKeywords"]));
+		result.AssertValid();
+		Assert.That(result.Annotations!, Has.Count.EqualTo(2));
+		JsonAssert.AreEquivalent(new JsonArray("foo"), result.Annotations!["$unknownKeywords"]);
 	}
 
 	[Test]
@@ -71,10 +74,10 @@ public class UnrecognizedKeywordTests
 			AddAnnotationForUnknownKeywords = true
 		});
 
-		Assert.IsTrue(result.IsValid);
-		Assert.AreEqual(2, result.Annotations!.Count);
-		Assert.IsTrue(new JsonObject { ["foo"] = false }.IsEquivalentTo(result.Annotations["dependencies"]));
-		Assert.IsTrue(new JsonArray("dependencies").IsEquivalentTo(result.Annotations["$unknownKeywords"]));
+		result.AssertValid();
+		Assert.That(result.Annotations!, Has.Count.EqualTo(2));
+		JsonAssert.AreEquivalent(new JsonObject { ["foo"] = false }, result.Annotations!["dependencies"]);
+		JsonAssert.AreEquivalent(new JsonArray("dependencies"), result.Annotations["$unknownKeywords"]);
 	}
 
 	[Test]
@@ -86,9 +89,9 @@ public class UnrecognizedKeywordTests
 
 		var result = schema.Evaluate(new JsonObject(), new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
 
-		Assert.IsTrue(result.IsValid);
-		Assert.AreEqual(1, result.Annotations!.Count);
-		Assert.IsTrue(((JsonNode?)"bar").IsEquivalentTo(result.Annotations["foo"]));
+		result.AssertValid();
+		Assert.That(result.Annotations!, Has.Count.EqualTo(1));
+		JsonAssert.AreEquivalent("bar", result.Annotations!["foo"]);
 	}
 
 	[Test]
@@ -116,9 +119,9 @@ public class UnrecognizedKeywordTests
 		};
 		Console.WriteLine(JsonSerializer.Serialize(result, serializerOptions));
 
-		Assert.IsTrue(result.IsValid);
-		Assert.AreEqual(1, result.Annotations!.Count);
-		Assert.IsTrue(((JsonNode?)"bar").IsEquivalentTo(result.Annotations["foo"]));
+		result.AssertValid();
+		Assert.That(result.Annotations!, Has.Count.EqualTo(1));
+		JsonAssert.AreEquivalent("bar", result.Annotations!["foo"]);
 	}
 
 	[Test]
@@ -130,6 +133,6 @@ public class UnrecognizedKeywordTests
 
 		var reText = JsonSerializer.Serialize(schema, TestEnvironment.SerializerOptions);
 
-		Assert.AreEqual(schemaText, reText);	
+		Assert.That(reText, Is.EqualTo(schemaText));	
 	}
 }

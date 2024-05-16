@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 
-using static Json.Schema.DataGeneration.Tests.TestHelpers;
+using static Json.Schema.DataGeneration.Tests.TestRunner;
 
 namespace Json.Schema.DataGeneration.Tests;
 
@@ -30,6 +30,6 @@ internal class AllOfGenerationTests
 
 		var result = schema.GenerateData();
 
-		Assert.IsFalse(result.IsSuccess, $"generation succeeded somehow");
+		Assert.That(result.IsSuccess, Is.False, "generation succeeded somehow");
 	}
 }

@@ -8,6 +8,8 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using Json.More;
 using NUnit.Framework;
+using TestHelpers;
+
 // ReSharper disable LocalizableElement
 
 namespace Json.Schema.Tests;
@@ -16,8 +18,7 @@ namespace Json.Schema.Tests;
 public class SelfValidationTest
 {
 	public static IEnumerable<TestCaseData> TestData =>
-		new[]
-		{
+		[
 			new TestCaseData(MetaSchemas.Draft6) { TestName = nameof(MetaSchemas.Draft6) },
 
 			new TestCaseData(MetaSchemas.Draft7) { TestName = nameof(MetaSchemas.Draft7) },
@@ -38,7 +39,7 @@ public class SelfValidationTest
 			new TestCaseData(MetaSchemas.FormatAssertion202012) { TestName = nameof(MetaSchemas.FormatAssertion202012) },
 			new TestCaseData(MetaSchemas.Content202012) { TestName = nameof(MetaSchemas.Content202012) },
 			new TestCaseData(MetaSchemas.Unevaluated202012) { TestName = nameof(MetaSchemas.Unevaluated202012) },
-		};
+		];
 
 	[TestCaseSource(nameof(TestData))]
 	public void Hardcoded(JsonSchema schema)
@@ -110,6 +111,6 @@ public class SelfValidationTest
 
 		var asNode = JsonSerializer.SerializeToNode(schema, TestEnvironment.SerializerOptions);
 		var onlineAsNode = JsonSerializer.SerializeToNode(returnTrip, TestEnvironment.SerializerOptions);
-		Assert.That(() => asNode.IsEquivalentTo(onlineAsNode));
+		JsonAssert.AreEquivalent(onlineAsNode, asNode);
 	}
 }

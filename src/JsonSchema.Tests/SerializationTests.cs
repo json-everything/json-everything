@@ -102,7 +102,7 @@ public class SerializationTests
 
 		var returnToText = JsonSerializer.Serialize(schema, TestEnvironment.SerializerOptions);
 
-		Assert.AreEqual(text, returnToText);
+		Assert.That(returnToText, Is.EqualTo(text));
 	}
 
 	[Test]

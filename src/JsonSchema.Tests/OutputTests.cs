@@ -414,7 +414,7 @@ public class OutputTests
 		var serialized = JsonSerializer.Serialize(result, TestEnvironment.TestOutputSerializerOptions);
 		Console.WriteLine(serialized);
 
-		Assert.False(serialized.Contains("additionalProperties"));
+		Assert.That(serialized, Does.Not.Contain("additionalProperties"));
 	}
 
 	[Test]
@@ -433,7 +433,7 @@ public class OutputTests
 		var serialized = JsonSerializer.Serialize(result, TestEnvironment.TestOutputSerializerOptions);
 		Console.WriteLine(serialized);
 
-		Assert.False(serialized.Contains("unevaluatedProperties"));
+		Assert.That(serialized, Does.Not.Contain("unevaluatedProperties"));
 	}
 
 	[Test]
@@ -457,7 +457,7 @@ public class OutputTests
 		var serialized = JsonSerializer.Serialize(result, TestEnvironment.TestOutputSerializerOptions);
 		Console.WriteLine(serialized);
 
-		Assert.True(serialized.Contains("unevaluatedProperties"));
+		Assert.That(serialized, Does.Contain("unevaluatedProperties"));
 	}
 
 	[Test]
@@ -474,7 +474,7 @@ public class OutputTests
 		var serialized = JsonSerializer.Serialize(result, TestEnvironment.TestOutputSerializerOptions);
 		Console.WriteLine(serialized);
 
-		Assert.False(serialized.Contains("additionalItems"));
+		Assert.That(serialized, Does.Not.Contain("additionalItems"));
 	}
 
 	[Test]
@@ -492,7 +492,7 @@ public class OutputTests
 		var serialized = JsonSerializer.Serialize(result, TestEnvironment.TestOutputSerializerOptions);
 		Console.WriteLine(serialized);
 
-		Assert.False(serialized.Contains("unevaluatedItems"));
+		Assert.That(serialized, Does.Not.Contain("unevaluatedItems"));
 	}
 
 	[Test]

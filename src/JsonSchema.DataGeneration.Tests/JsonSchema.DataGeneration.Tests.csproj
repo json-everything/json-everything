@@ -26,6 +26,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\JsonSchema.DataGeneration\JsonSchema.DataGeneration.csproj" />
+		<ProjectReference Include="..\JsonSchema.Tests\JsonSchema.Tests.csproj" />
 	</ItemGroup>
 
 </Project>

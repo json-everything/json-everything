@@ -7,6 +7,7 @@ using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.More;
 using NUnit.Framework;
+using TestHelpers;
 
 namespace Json.Schema.Tests.Suite;
 
@@ -182,7 +183,7 @@ public class Output
 	[Test]
 	public void EnsureTestSuiteConfiguredForServerBuild()
 	{
-		Assert.IsFalse(_useExternal);
+		Assert.That(_useExternal, Is.False);
 		//Assert.IsFalse(_runDraftNext);
 	}
 }

@@ -217,10 +217,13 @@ public class ClientTests
 		generatorConfiguration.Refiners.Add(personRefiner);
 		jsonSchemaBuilder.FromType(typeof(Person), generatorConfiguration).Build();
 
-		Assert.AreEqual(1, personRefiner.FoundAttributes[nameof(Person.FirstName)].Count);
-		Assert.IsTrue(personRefiner.FoundAttributes[nameof(Person.FirstName)][0] == typeof(MyAttribute1));
-		Assert.AreEqual(1, personRefiner.FoundAttributes[nameof(Person.LastName)].Count);
-		Assert.IsTrue(personRefiner.FoundAttributes[nameof(Person.LastName)][0] == typeof(MyAttribute2));
+		Assert.Multiple(() =>
+		{
+			Assert.That(personRefiner.FoundAttributes[nameof(Person.FirstName)], Has.Count.EqualTo(1));
+			Assert.That(personRefiner.FoundAttributes[nameof(Person.FirstName)][0], Is.EqualTo(typeof(MyAttribute1)));
+			Assert.That(personRefiner.FoundAttributes[nameof(Person.LastName)], Has.Count.EqualTo(1));
+			Assert.That(personRefiner.FoundAttributes[nameof(Person.LastName)][0], Is.EqualTo(typeof(MyAttribute2)));
+		});
 	}
 
 	private class TypeWithSomeNullableOthersNot
@@ -303,8 +306,11 @@ public class ClientTests
 		var schemaJson = JsonSerializer.Serialize(schema, TestSerializerContext.Default.JsonSchema);
 		Console.WriteLine(schemaJson);
 
-		Assert.AreEqual(1, schema.GetProperties()!["BBB"].Keywords!.Count);
-		Assert.AreEqual("type", schema.GetProperties()!["BBB"].Keywords!.First().Keyword());
+		Assert.Multiple(() =>
+		{
+			Assert.That(schema.GetProperties()!["BBB"].Keywords!, Has.Count.EqualTo(1));
+			Assert.That(schema.GetProperties()!["BBB"].Keywords!.First().Keyword(), Is.EqualTo("type"));
+		});
 	}
 
 	private class Type551_MinItemsOnString
@@ -321,8 +327,11 @@ public class ClientTests
 		var schemaJson = JsonSerializer.Serialize(schema, TestSerializerContext.Default.JsonSchema);
 		Console.WriteLine(schemaJson);
 
-		Assert.AreEqual(1, schema.GetProperties()!["Value"].Keywords!.Count);
-		Assert.AreEqual("type", schema.GetProperties()!["Value"].Keywords!.First().Keyword());
+		Assert.Multiple(() =>
+		{
+			Assert.That(schema.GetProperties()!["Value"].Keywords!, Has.Count.EqualTo(1));
+			Assert.That(schema.GetProperties()!["Value"].Keywords!.First().Keyword(), Is.EqualTo("type"));
+		});
 	}
 
 	private class Issue696_NullableDecimalWithMultipleOf
@@ -352,6 +361,6 @@ public class ClientTests
 		var schemaJson = JsonSerializer.SerializeToNode(schema, TestSerializerContext.Default.JsonSchema);
 		Console.WriteLine(schemaJson);
 
-		Assert.IsTrue(schemaJson.IsEquivalentTo(expected));
+		Assert.That(schemaJson.IsEquivalentTo(expected), Is.True);
 	}
 }

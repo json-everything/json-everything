@@ -14,7 +14,7 @@ public static class ResultsExtensions
 	{
 		Console.WriteLine(JsonSerializer.Serialize(results, TestEnvironment.TestOutputSerializerOptions));
 
-		Assert.False(results.IsValid);
+		Assert.That(results.IsValid, Is.False);
 		AssertEquivalent(results, expected);
 	}
 
@@ -23,7 +23,7 @@ public static class ResultsExtensions
 		if (!hideIfPassed || !results.IsValid)
 			Console.WriteLine(JsonSerializer.Serialize(results, TestEnvironment.TestOutputSerializerOptions));
 
-		Assert.True(results.IsValid);
+		Assert.That(results.IsValid, Is.True);
 		AssertEquivalent(results, expected);
 	}
 
