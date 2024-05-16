@@ -4,6 +4,10 @@ title: JsonPath.Net
 icon: fas fa-tag
 order: "09.08"
 ---
+# [1.0.4](https://github.com/gregsdennis/json-everything/pull/731) {#release-path-1.0.4}
+
+[#728](https://github.com/gregsdennis/json-everything/issues/728) - Failure to parse escaped single quote in single-quoted string in filter expressions.  Thanks to [@ashek-simeon](https://github.com/ashek-simeon) for reporting this.
+
 # [1.0.3](https://github.com/gregsdennis/json-everything/pull/730) {#release-path-1.0.3}
 
 [Test Suite PR #77](https://github.com/jsonpath-standard/jsonpath-compliance-test-suite/pull/77) added some tests to check for a dot `.` inside square brackets, where it should be considered a literal and not transformed.
