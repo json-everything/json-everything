@@ -18,10 +18,13 @@ public class SingleOpProcessingTests
 ]",
 			TestEnvironment.SerializerOptions)!;
 
-		Assert.AreEqual(3, patch.Operations.Count);
-		Assert.AreEqual(OperationType.Replace, patch.Operations[0].Op);
-		Assert.AreEqual(OperationType.Add, patch.Operations[1].Op);
-		Assert.AreEqual(OperationType.Remove, patch.Operations[2].Op);
+		Assert.Multiple(() =>
+		{
+			Assert.That(patch.Operations, Has.Count.EqualTo(3));
+			Assert.That(patch.Operations[0].Op, Is.EqualTo(OperationType.Replace));
+			Assert.That(patch.Operations[1].Op, Is.EqualTo(OperationType.Add));
+			Assert.That(patch.Operations[2].Op, Is.EqualTo(OperationType.Remove));
+		});
 	}
 
 	[Test]
@@ -36,8 +39,11 @@ public class SingleOpProcessingTests
 
 		var actual = patch.Apply(element);
 
-		Assert.IsNull(actual.Error);
-		Assert.IsTrue(expected.IsEquivalentTo(actual.Result));
+		Assert.Multiple(() =>
+		{
+			Assert.That(actual.Error, Is.Null);
+			Assert.That(expected.IsEquivalentTo(actual.Result), Is.True);
+		});
 	}
 
 	[Test]
@@ -54,8 +60,11 @@ public class SingleOpProcessingTests
 
 		Console.WriteLine(actual.Result.AsJsonString());
 
-		Assert.IsNull(actual.Error);
-		Assert.IsTrue(expected.IsEquivalentTo(actual.Result));
+		Assert.Multiple(() =>
+		{
+			Assert.That(actual.Error, Is.Null);
+			Assert.That(expected.IsEquivalentTo(actual.Result), Is.True);
+		});
 	}
 
 	[Test]
@@ -72,8 +81,11 @@ public class SingleOpProcessingTests
 
 		Console.WriteLine(actual.Result.AsJsonString());
 
-		Assert.IsNull(actual.Error);
-		Assert.IsTrue(expected.IsEquivalentTo(actual.Result));
+		Assert.Multiple(() =>
+		{
+			Assert.That(actual.Error, Is.Null);
+			Assert.That(expected.IsEquivalentTo(actual.Result), Is.True);
+		});
 	}
 
 	[Test]
@@ -89,7 +101,7 @@ public class SingleOpProcessingTests
 
 		Console.WriteLine(actual.Result.AsJsonString());
 
-		Assert.AreEqual("Target path `/inserted/hello` could not be reached.", actual.Error);
+		Assert.That(actual.Error, Is.EqualTo("Target path `/inserted/hello` could not be reached."));
 	}
 
 	[Test]
@@ -104,8 +116,11 @@ public class SingleOpProcessingTests
 
 		var actual = patch.Apply(element);
 
-		Assert.IsNull(actual.Error);
-		Assert.IsTrue(expected.IsEquivalentTo(actual.Result));
+		Assert.Multiple(() =>
+		{
+			Assert.That(actual.Error, Is.Null);
+			Assert.That(expected.IsEquivalentTo(actual.Result), Is.True);
+		});
 	}
 
 	[TestCase(0, 1, new[] { 2, 1, 3, 4 })]
@@ -125,6 +140,6 @@ public class SingleOpProcessingTests
 
 		var actual = patch.Apply(element, TestEnvironment.SerializerOptions);
 
-		CollectionAssert.AreEqual(expected, actual?.Numbers);
+		Assert.That(actual?.Numbers, Is.EqualTo(expected).AsCollection);
 	}
 }

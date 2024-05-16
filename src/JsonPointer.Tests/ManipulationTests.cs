@@ -18,7 +18,7 @@ public class ManipulationTests
 		var actual = pointer[..^levels];
 #endif
 
-		Assert.AreEqual(expected, actual.ToString());
+		Assert.That(actual.ToString(), Is.EqualTo(expected));
 	}
 
 	[TestCase("/foo/5/bar", 0, "/foo/5/bar")]
@@ -35,7 +35,7 @@ public class ManipulationTests
 		var actual = pointer[skip..];
 #endif
 
-		Assert.AreEqual(expected, actual.ToString());
+		Assert.That(actual.ToString(), Is.EqualTo(expected));
 	}
 
 	[TestCase("/foo/5/bar", "/baz/42/quux", "/foo/5/bar/baz/42/quux")]
@@ -46,7 +46,7 @@ public class ManipulationTests
 
 		var actual = left.Combine(right);
 
-		Assert.AreEqual(expected, actual.ToString());
+		Assert.That(actual.ToString(), Is.EqualTo(expected));
 	}
 
 	[Test]
@@ -56,6 +56,6 @@ public class ManipulationTests
 
 		var actual = pointer.Combine("baz", 0, "quux", 5, 10);
 
-		Assert.AreEqual("/foo/5/bar/baz/0/quux/5/10", actual.ToString());
+		Assert.That(actual.ToString(), Is.EqualTo("/foo/5/bar/baz/0/quux/5/10"));
 	}
 }

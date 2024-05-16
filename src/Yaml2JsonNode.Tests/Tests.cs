@@ -3,6 +3,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using Json.More;
 using NUnit.Framework;
+using TestHelpers;
 using YamlDotNet.RepresentationModel;
 
 namespace Yaml2JsonNode.Tests;
@@ -40,6 +41,6 @@ public class Tests
 
 		Console.WriteLine(myJson.AsJsonString(_serializerOptions));
 
-		Assert.That(() => myJson.IsEquivalentTo(theirJson));
+		JsonAssert.AreEquivalent(theirJson, myJson);
 	}
 }

@@ -54,7 +54,7 @@ public class ComplianceTestSuiteTests
 				Assert.Fail("TryParse() threw an exception");
 				throw; // this will never run, but the compiler doesn't know that Assert.Fail() will always throw.
 			}
-			Assert.IsFalse(tryParseResult);
+			Assert.That(tryParseResult, Is.False);
 
 			var exception = Assert.Throws<PathParseException>(() => JsonPath.Parse(testCase.Selector));
 			Console.WriteLine($"Error: {exception!.Message}");
@@ -65,7 +65,7 @@ public class ComplianceTestSuiteTests
 		Evaluate(path, testCase);
 
 		var success = JsonPath.TryParse(testCase.Selector, out path);
-		Assert.True(success);
+		Assert.That(success, Is.True);
 		Evaluate(path!, testCase);
 	}
 
@@ -81,7 +81,7 @@ public class ComplianceTestSuiteTests
 			Assert.Fail($"{testCase.Selector} is not a valid path.");
 
 		if (testCase.Result is not null)
-			Assert.IsTrue(testCase.Result.IsEquivalentTo(actualValues), "Unexpected results returned");
+			Assert.That(testCase.Result.IsEquivalentTo(actualValues), Is.True, "Unexpected results returned");
 		else
 			Assert.That(() => testCase.Results!.Contains(actualValues, JsonNodeEqualityComparer.Instance), "None of the options matched.");
 	}

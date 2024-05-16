@@ -27,6 +27,6 @@ public class TruthyTests
 	[TestCaseSource(nameof(TruthyTestCases))]
 	public void IsTruthy(JsonNode? node, bool expected)
 	{
-		Assert.AreEqual(expected, node.IsTruthy());
+		Assert.That(node.IsTruthy(), Is.EqualTo(expected));
 	}
 }

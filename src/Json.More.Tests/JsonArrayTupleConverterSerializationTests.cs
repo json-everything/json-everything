@@ -19,7 +19,7 @@ public class JsonArrayTupleConverterSerializationTests
 
 		var actual = JsonSerializer.Serialize(tuple, _options);
 
-		Assert.AreEqual(expected, actual);
+		Assert.That(actual, Is.EqualTo(expected));
 	}
 
 	[Test]
@@ -30,7 +30,7 @@ public class JsonArrayTupleConverterSerializationTests
 
 		var actual = JsonSerializer.Serialize(tuple, _options);
 
-		Assert.AreEqual(expected, actual);
+		Assert.That(actual, Is.EqualTo(expected));
 	}
 
 	[Test]
@@ -41,7 +41,7 @@ public class JsonArrayTupleConverterSerializationTests
 
 		var actual = JsonSerializer.Serialize(tuple, _options);
 
-		Assert.AreEqual(expected, actual);
+		Assert.That(actual, Is.EqualTo(expected));
 	}
 
 	[Test]
@@ -52,7 +52,7 @@ public class JsonArrayTupleConverterSerializationTests
 
 		var actual = JsonSerializer.Serialize(tuple, _options);
 
-		Assert.AreEqual(expected, actual);
+		Assert.That(actual, Is.EqualTo(expected));
 	}
 
 	[Test]
@@ -63,7 +63,7 @@ public class JsonArrayTupleConverterSerializationTests
 
 		var actual = JsonSerializer.Serialize(tuple, _options);
 
-		Assert.AreEqual(expected, actual);
+		Assert.That(actual, Is.EqualTo(expected));
 	}
 
 	[Test]
@@ -74,7 +74,7 @@ public class JsonArrayTupleConverterSerializationTests
 
 		var actual = JsonSerializer.Serialize(tuple, _options);
 
-		Assert.AreEqual(expected, actual);
+		Assert.That(actual, Is.EqualTo(expected));
 	}
 
 	[Test]
@@ -85,7 +85,7 @@ public class JsonArrayTupleConverterSerializationTests
 
 		var actual = JsonSerializer.Serialize(tuple, _options);
 
-		Assert.AreEqual(expected, actual);
+		Assert.That(actual, Is.EqualTo(expected));
 	}
 
 	[Test]
@@ -96,7 +96,7 @@ public class JsonArrayTupleConverterSerializationTests
 
 		var actual = JsonSerializer.Serialize(tuple, _options);
 
-		Assert.AreEqual(expected, actual);
+		Assert.That(actual, Is.EqualTo(expected));
 	}
 
 	[Test]
@@ -107,7 +107,7 @@ public class JsonArrayTupleConverterSerializationTests
 
 		var actual = JsonSerializer.Serialize(tuple, _options);
 
-		Assert.AreEqual(expected, actual);
+		Assert.That(actual, Is.EqualTo(expected));
 	}
 
 	[Test]
@@ -118,6 +118,6 @@ public class JsonArrayTupleConverterSerializationTests
 
 		var actual = JsonSerializer.Serialize(tuple, _options);
 
-		Assert.AreEqual(expected, actual);
+		Assert.That(actual, Is.EqualTo(expected));
 	}
 }

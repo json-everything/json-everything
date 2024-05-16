@@ -332,7 +332,7 @@ public class GithubTests
 		};
 		var result = schema2.Evaluate(json, options);
 		result.AssertValid();
-		Assert.AreEqual(result.Details[0].Details[0].SchemaLocation, "https://json-everything.net/schema1.json#");
+		Assert.AreEqual(result.Details[0].SchemaLocation.OriginalString, "https://json-everything.net/schema1.json");
 	}
 
 	[Test]

@@ -182,7 +182,7 @@ public class GithubTests
 			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
 		};
 		Console.WriteLine(JsonSerializer.Serialize(result, serializerOptions));
-		Assert.IsNotNull(patchConfig.Apply(singleObject).Error);
+		Assert.That(patchConfig.Apply(singleObject).Error, Is.Not.Null);
 	}
 
 	public class Target543
@@ -206,6 +206,6 @@ public class GithubTests
 
 		var patchResult = jsonPatch.Apply(target);
 
-		Assert.IsTrue(expected.IsEquivalentTo(patchResult.Result));
+		Assert.That(expected.IsEquivalentTo(patchResult.Result), Is.True);
 	}
 }

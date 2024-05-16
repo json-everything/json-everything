@@ -7,8 +7,7 @@ namespace Json.Path.Tests;
 public class ParsingTests
 {
 	public static IEnumerable<TestCaseData> SuccessCases =>
-		new[]
-		{
+		[
 			new TestCaseData("$['foo']"),
 			new TestCaseData("$[ 'foo']"),
 			new TestCaseData("$['foo' ]"),
@@ -62,7 +61,7 @@ public class ParsingTests
 			new TestCaseData("$[?(@['name'] == null || @['name'] == 'abc')]"),
 
 			new TestCaseData("$[1,'foo',1:2:3,*]"),
-		};
+		];
 
 	[TestCaseSource(nameof(SuccessCases))]
 	public void ParseSuccess(string path)
@@ -71,14 +70,13 @@ public class ParsingTests
 	}
 
 	public static IEnumerable<TestCaseData> OptionalMathCases =>
-		new[]
-		{
+		[
 			new TestCaseData("$[?(@.foo==(4+5))]"),
 			new TestCaseData("$[?(@.foo==2*(4+5))]"),
 			new TestCaseData("$[?(@.foo==2+(4+5))]"),
 			new TestCaseData("$[?(@.foo==2-(4+5))]"),
 			new TestCaseData("$[?(@.foo==2*4+5)]"),
-		};
+		];
 
 	[TestCaseSource(nameof(OptionalMathCases))]
 	public void ParseMathWithOptions(string path)
@@ -93,11 +91,10 @@ public class ParsingTests
 	}
 
 	public static IEnumerable<TestCaseData> OptionalJsonLiteralCases =>
-		new[]
-		{
+		[
 			new TestCaseData("$[?@.foo==[1,2,3]]"),
 			new TestCaseData("$[?@.foo=={\"bar\":\"object\"}]"),
-		};
+		];
 
 	[TestCaseSource(nameof(OptionalJsonLiteralCases))]
 	public void ParseLiteralWithOptions(string path)
@@ -112,10 +109,9 @@ public class ParsingTests
 	}
 
 	public static IEnumerable<TestCaseData> OptionalInOpCases =>
-		new[]
-		{
+		[
 			new TestCaseData("$[?5 in @.foo]"),
-		};
+		];
 
 	[TestCaseSource(nameof(OptionalInOpCases))]
 	public void ParseInOpWithOptions(string path)

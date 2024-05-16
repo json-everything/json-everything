@@ -5,7 +5,7 @@ using System.Text.Json.Nodes;
 using Json.Logic.Rules;
 using Json.More;
 using NUnit.Framework;
-
+using TestHelpers;
 using static Json.Logic.JsonLogic;
 
 namespace Json.Logic.Tests;
@@ -121,8 +121,8 @@ public class GithubTests
 	{
 		var rule = JsonSerializer.Deserialize("{ \"+\" : [ 1, 2 ] }", TestSerializerContext.Default.Rule);
 
-		Assert.IsInstanceOf<AddRule>(rule);
-		Assert.IsTrue(rule!.Apply().IsEquivalentTo(3));
+		Assert.That(rule, Is.InstanceOf<AddRule>());
+		Assert.That(rule!.Apply().IsEquivalentTo(3), Is.True);
 	}
 
 	[Test]
@@ -138,7 +138,7 @@ public class GithubTests
 		var rule = node.Deserialize(TestSerializerContext.Default.Rule);
 		var result = rule!.Apply(JsonNode.Parse("{\"value\": null}"));
 
-		Assert.IsTrue(result.IsEquivalentTo(true));
+		JsonAssert.IsTrue(result);
 	}
 
 	[Test]
@@ -151,7 +151,7 @@ public class GithubTests
 			CultureInfo.CurrentCulture = new CultureInfo("de-AT");
 			var number = JsonValue.Create("3.14").Numberify();
 
-			Assert.AreEqual(3.14d, number);
+			Assert.That(number, Is.EqualTo(3.14d));
 		}
 		finally
 		{
@@ -185,6 +185,6 @@ public class GithubTests
 
 		Console.WriteLine(result.AsJsonString());
 
-		Assert.IsTrue(result.IsEquivalentTo(true));
+		JsonAssert.IsTrue(result);
 	}
 }

@@ -144,6 +144,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Benchmarks", "tools\Benchma
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GenerateSponsorList", "tools\GenerateSponsorList\GenerateSponsorList.csproj", "{32E5C34F-C77D-4A7E-976F-1AAF741EBDDF}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestHelpers", "src\TestHelpers\TestHelpers.csproj", "{1B231471-AD1E-4C88-AF86-D54BDA12EDDA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -349,6 +351,12 @@ Global
 		{32E5C34F-C77D-4A7E-976F-1AAF741EBDDF}.Localization|Any CPU.Build.0 = Debug|Any CPU
 		{32E5C34F-C77D-4A7E-976F-1AAF741EBDDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{32E5C34F-C77D-4A7E-976F-1AAF741EBDDF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B231471-AD1E-4C88-AF86-D54BDA12EDDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B231471-AD1E-4C88-AF86-D54BDA12EDDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B231471-AD1E-4C88-AF86-D54BDA12EDDA}.Localization|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B231471-AD1E-4C88-AF86-D54BDA12EDDA}.Localization|Any CPU.Build.0 = Debug|Any CPU
+		{1B231471-AD1E-4C88-AF86-D54BDA12EDDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B231471-AD1E-4C88-AF86-D54BDA12EDDA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -393,6 +401,7 @@ Global
 		{ADFF3D17-7F72-4FE2-A959-FE394B0754F7} = {8396D8E1-076D-48A5-B57F-F504C5F16D11}
 		{95DD7EBB-D16D-4927-93B2-09069B851753} = {A09F0319-B69A-401D-814D-43524E883850}
 		{32E5C34F-C77D-4A7E-976F-1AAF741EBDDF} = {A09F0319-B69A-401D-814D-43524E883850}
+		{1B231471-AD1E-4C88-AF86-D54BDA12EDDA} = {95A6A4EA-AF0E-439C-A0FD-B7F8BE57BD8A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {366B43A8-8380-41C8-B855-B82689CBA669}

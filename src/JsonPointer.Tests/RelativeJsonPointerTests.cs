@@ -2,6 +2,7 @@
 using System.Text.Json.Nodes;
 using Json.More;
 using NUnit.Framework;
+using TestHelpers;
 
 namespace Json.Pointer.Tests;
 
@@ -45,8 +46,8 @@ public class RelativeJsonPointerTests
 
 		var success = pointer.TryEvaluate(startElement, out var actual);
 
-		Assert.IsTrue(success);
-		Assert.IsTrue(actual!.IsEquivalentTo(expected));
+		Assert.That(success, Is.True);
+		JsonAssert.AreEquivalent(expected, actual);
 	}
 
 	[TestCaseSource(nameof(FailureCases))]

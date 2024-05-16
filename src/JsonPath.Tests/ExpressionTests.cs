@@ -2,6 +2,7 @@
 using System.Text.Json.Nodes;
 using Json.More;
 using NUnit.Framework;
+using TestHelpers;
 
 namespace Json.Path.Tests;
 
@@ -32,6 +33,6 @@ public class ExpressionTests
 
 		var actual = path.Evaluate(target).Matches!.Select(x => x.Value).ToJsonArray();
 
-		Assert.IsTrue(actual.IsEquivalentTo(expected));
+		JsonAssert.AreEquivalent(expected, actual);
 	}
 }

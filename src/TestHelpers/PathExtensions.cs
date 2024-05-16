@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Json.Logic.Tests;
+﻿namespace TestHelpers;
 
 public static class PathExtensions
 {

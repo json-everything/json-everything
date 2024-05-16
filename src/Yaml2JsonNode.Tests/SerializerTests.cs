@@ -105,7 +105,7 @@ public class SerializerTests
 
 		var actual = YamlSerializer.Serialize(foo, TestSerializerContext.Default.Options);
 
-		Assert.AreEqual(expected, actual);
+		Assert.That(actual, Is.EqualTo(expected));
 	}
 
 	[Test]
@@ -137,7 +137,7 @@ public class SerializerTests
 
 		var actual = YamlSerializer.Deserialize<Foo>(text, TestSerializerContext.Default.Options);
 
-		Assert.AreEqual(expected, actual);
+		Assert.That(actual, Is.EqualTo(expected));
 	}
 }
 

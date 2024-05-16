@@ -1,11 +1,17 @@
-﻿using System.Text.Json.Nodes;
+﻿using System.Text.Json;
+using System.Text.Json.Nodes;
 using Json.More;
-using NUnit.Framework;
 
-namespace Json.Logic.Tests;
+namespace TestHelpers;
 
 public static class JsonAssert
 {
+	public static void AreEquivalent(JsonElement expected, JsonElement actual)
+	{
+		if (!expected.IsEquivalentTo(actual))
+			Assert.Fail($"Expected: {expected}\nActual: {actual}");
+	}
+
 	public static void AreEquivalent(JsonNode? expected, JsonNode? actual)
 	{
 		if (!expected.IsEquivalentTo(actual))

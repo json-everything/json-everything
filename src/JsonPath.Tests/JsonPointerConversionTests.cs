@@ -12,7 +12,7 @@ public class JsonPointerTests
 
 		var asPointer = path.AsJsonPointer();
 
-		Assert.AreEqual("/foo", asPointer);
+		Assert.That(asPointer, Is.EqualTo("/foo"));
 	}
 
 	[Test]
@@ -22,7 +22,7 @@ public class JsonPointerTests
 
 		var asPointer = path.AsJsonPointer();
 
-		Assert.AreEqual("/foo", asPointer);
+		Assert.That(asPointer, Is.EqualTo("/foo"));
 	}
 
 	[Test]
@@ -32,7 +32,7 @@ public class JsonPointerTests
 
 		var asPointer = path.AsJsonPointer();
 
-		Assert.AreEqual("/1", asPointer);
+		Assert.That(asPointer, Is.EqualTo("/1"));
 	}
 
 	[Test]
@@ -42,7 +42,7 @@ public class JsonPointerTests
 
 		var asPointer = path.AsJsonPointer();
 
-		Assert.AreEqual("/1/foo", asPointer);
+		Assert.That(asPointer, Is.EqualTo("/1/foo"));
 	}
 
 	[Test]
@@ -52,7 +52,7 @@ public class JsonPointerTests
 
 		var asPointer = path.AsJsonPointer();
 
-		Assert.AreEqual("/~0foo", asPointer);
+		Assert.That(asPointer, Is.EqualTo("/~0foo"));
 	}
 
 	[Test]
@@ -62,7 +62,7 @@ public class JsonPointerTests
 
 		var asPointer = path.AsJsonPointer();
 
-		Assert.AreEqual("/~1foo", asPointer);
+		Assert.That(asPointer, Is.EqualTo("/~1foo"));
 	}
 
 	[Test]
@@ -72,7 +72,7 @@ public class JsonPointerTests
 
 		var asPointer = path.AsJsonPointer();
 
-		Assert.AreEqual("/𝄞", asPointer);
+		Assert.That(asPointer, Is.EqualTo("/𝄞"));
 	}
 
 	[Test]
@@ -122,7 +122,7 @@ public class JsonPointerTests
 
 		var asPointer = path.AsJsonPointer();
 
-		Assert.AreEqual("/1", asPointer);
+		Assert.That(asPointer, Is.EqualTo("/1"));
 	}
 
 	[Test]
@@ -132,6 +132,6 @@ public class JsonPointerTests
 
 		var asPointer = path.AsJsonPointer();
 
-		Assert.AreEqual("/1", asPointer);
+		Assert.That(asPointer, Is.EqualTo("/1"));
 	}
 }

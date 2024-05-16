@@ -17,6 +17,6 @@ public class ExtensionTests
 	{
 		var json = JsonNode.Parse(text);
 
-		Assert.AreEqual(expected, json.IsTruthy());
+		Assert.That(json.IsTruthy(), Is.EqualTo(expected));
 	}
 }

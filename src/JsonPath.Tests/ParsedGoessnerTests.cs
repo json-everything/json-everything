@@ -16,8 +16,8 @@ public class ParsedGoessnerTests
 		{
 			Store = new Store
 			{
-				Book = new[]
-				{
+				Book =
+				[
 					new Book
 					{
 						Category = "reference",
@@ -48,7 +48,7 @@ public class ParsedGoessnerTests
 						Isbn = "0-395-19395-8",
 						Price = 22.99m
 					}
-				},
+				],
 				Bicycle = new Bicycle
 				{
 					Color = "red",
@@ -72,10 +72,13 @@ public class ParsedGoessnerTests
 
 		var result = path.Evaluate(_instance);
 
-		Assert.IsNull(result.Error);
-		Assert.AreEqual(1, result.Matches!.Count);
-		Assert.AreEqual("Sayings of the Century", result.Matches[0].Value!.GetValue<string>());
-		Assert.AreEqual(input, path.ToString());
+		Assert.Multiple(() =>
+		{
+			Assert.That(result.Error, Is.Null);
+			Assert.That(result.Matches!, Has.Count.EqualTo(1));
+			Assert.That(result.Matches![0].Value!.GetValue<string>(), Is.EqualTo("Sayings of the Century"));
+			Assert.That(path.ToString(), Is.EqualTo(input));
+		});
 	}
 
 	[Test]
@@ -86,13 +89,16 @@ public class ParsedGoessnerTests
 
 		var result = path.Evaluate(_instance);
 
-		Assert.IsNull(result.Error);
-		Assert.AreEqual(4, result.Matches!.Count);
-		Assert.AreEqual("Nigel Rees", result.Matches[0].Value!.GetValue<string>());
-		Assert.AreEqual("Evelyn Waugh", result.Matches[1].Value!.GetValue<string>());
-		Assert.AreEqual("Herman Melville", result.Matches[2].Value!.GetValue<string>());
-		Assert.AreEqual("J. R. R. Tolkien", result.Matches[3].Value!.GetValue<string>());
-		Assert.AreEqual(input, path.ToString());
+		Assert.Multiple(() =>
+		{
+			Assert.That(result.Error, Is.Null);
+			Assert.That(result.Matches!, Has.Count.EqualTo(4));
+			Assert.That(result.Matches![0].Value!.GetValue<string>(), Is.EqualTo("Nigel Rees"));
+			Assert.That(result.Matches[1].Value!.GetValue<string>(), Is.EqualTo("Evelyn Waugh"));
+			Assert.That(result.Matches[2].Value!.GetValue<string>(), Is.EqualTo("Herman Melville"));
+			Assert.That(result.Matches[3].Value!.GetValue<string>(), Is.EqualTo("J. R. R. Tolkien"));
+			Assert.That(path.ToString(), Is.EqualTo(input));
+		});
 	}
 
 	[Test]
@@ -103,13 +109,16 @@ public class ParsedGoessnerTests
 
 		var result = path.Evaluate(_instance);
 
-		Assert.IsNull(result.Error);
-		Assert.AreEqual(4, result.Matches!.Count);
-		Assert.AreEqual("Nigel Rees", result.Matches[0].Value!.GetValue<string>());
-		Assert.AreEqual("Evelyn Waugh", result.Matches[1].Value!.GetValue<string>());
-		Assert.AreEqual("Herman Melville", result.Matches[2].Value!.GetValue<string>());
-		Assert.AreEqual("J. R. R. Tolkien", result.Matches[3].Value!.GetValue<string>());
-		Assert.AreEqual(input, path.ToString());
+		Assert.Multiple(() =>
+		{
+			Assert.That(result.Error, Is.Null);
+			Assert.That(result.Matches!, Has.Count.EqualTo(4));
+			Assert.That(result.Matches![0].Value!.GetValue<string>(), Is.EqualTo("Nigel Rees"));
+			Assert.That(result.Matches[1].Value!.GetValue<string>(), Is.EqualTo("Evelyn Waugh"));
+			Assert.That(result.Matches[2].Value!.GetValue<string>(), Is.EqualTo("Herman Melville"));
+			Assert.That(result.Matches[3].Value!.GetValue<string>(), Is.EqualTo("J. R. R. Tolkien"));
+			Assert.That(path.ToString(), Is.EqualTo(input));
+		});
 	}
 
 	[Test]
@@ -120,11 +129,14 @@ public class ParsedGoessnerTests
 
 		var result = path.Evaluate(_instance);
 
-		Assert.IsNull(result.Error);
-		Assert.AreEqual(2, result.Matches!.Count);
-		Assert.AreEqual(4, result.Matches[0].Value!.AsArray().Count);
-		Assert.AreEqual(2, result.Matches[1].Value!.AsObject().Count);
-		Assert.AreEqual(input, path.ToString());
+		Assert.Multiple(() =>
+		{
+			Assert.That(result.Error, Is.Null);
+			Assert.That(result.Matches!, Has.Count.EqualTo(2));
+			Assert.That(result.Matches![0].Value!.AsArray(), Has.Count.EqualTo(4));
+			Assert.That(result.Matches[1].Value!.AsObject(), Has.Count.EqualTo(2));
+			Assert.That(path.ToString(), Is.EqualTo(input));
+		});
 	}
 
 	[Test]
@@ -135,14 +147,17 @@ public class ParsedGoessnerTests
 
 		var result = path.Evaluate(_instance);
 
-		Assert.IsNull(result.Error);
-		Assert.AreEqual(5, result.Matches!.Count);
-		Assert.AreEqual(8.95m, result.Matches[0].Value!.AsValue().GetNumber());
-		Assert.AreEqual(12.99m, result.Matches[1].Value!.AsValue().GetNumber());
-		Assert.AreEqual(8.99m, result.Matches[2].Value!.AsValue().GetNumber());
-		Assert.AreEqual(22.99m, result.Matches[3].Value!.AsValue().GetNumber());
-		Assert.AreEqual(19.95m, result.Matches[4].Value!.AsValue().GetNumber());
-		Assert.AreEqual(input, path.ToString());
+		Assert.Multiple(() =>
+		{
+			Assert.That(result.Error, Is.Null);
+			Assert.That(result.Matches!, Has.Count.EqualTo(5));
+			Assert.That(result.Matches![0].Value!.AsValue().GetNumber(), Is.EqualTo(8.95m));
+			Assert.That(result.Matches[1].Value!.AsValue().GetNumber(), Is.EqualTo(12.99m));
+			Assert.That(result.Matches[2].Value!.AsValue().GetNumber(), Is.EqualTo(8.99m));
+			Assert.That(result.Matches[3].Value!.AsValue().GetNumber(), Is.EqualTo(22.99m));
+			Assert.That(result.Matches[4].Value!.AsValue().GetNumber(), Is.EqualTo(19.95m));
+			Assert.That(path.ToString(), Is.EqualTo(input));
+		});
 	}
 
 	[Test]
@@ -153,10 +168,13 @@ public class ParsedGoessnerTests
 
 		var result = path.Evaluate(_instance);
 
-		Assert.IsNull(result.Error);
-		Assert.AreEqual(1, result.Matches!.Count);
-		Assert.AreEqual("Moby Dick", result.Matches[0].Value!["title"]!.GetValue<string>());
-		Assert.AreEqual(input, path.ToString());
+		Assert.Multiple(() =>
+		{
+			Assert.That(result.Error, Is.Null);
+			Assert.That(result.Matches!, Has.Count.EqualTo(1));
+			Assert.That(result.Matches![0].Value!["title"]!.GetValue<string>(), Is.EqualTo("Moby Dick"));
+			Assert.That(path.ToString(), Is.EqualTo(input));
+		});
 	}
 
 	[Test]
@@ -168,10 +186,13 @@ public class ParsedGoessnerTests
 
 		var result = path.Evaluate(_instance);
 
-		Assert.IsNull(result.Error);
-		Assert.AreEqual(1, result.Matches!.Count);
-		Assert.AreEqual("The Lord of the Rings", result.Matches[0].Value!["title"]!.GetValue<string>());
-		Assert.AreEqual(input, path.ToString());
+		Assert.Multiple(() =>
+		{
+			Assert.That(result.Error, Is.Null);
+			Assert.That(result.Matches!, Has.Count.EqualTo(1));
+			Assert.That(result.Matches![0].Value!["title"]!.GetValue<string>(), Is.EqualTo("The Lord of the Rings"));
+			Assert.That(path.ToString(), Is.EqualTo(input));
+		});
 	}
 
 	[Test]
@@ -182,10 +203,13 @@ public class ParsedGoessnerTests
 
 		var result = path.Evaluate(_instance);
 
-		Assert.IsNull(result.Error);
-		Assert.AreEqual(1, result.Matches!.Count);
-		Assert.AreEqual("The Lord of the Rings", result.Matches[0].Value!["title"]!.GetValue<string>());
-		Assert.AreEqual(input, path.ToString());
+		Assert.Multiple(() =>
+		{
+			Assert.That(result.Error, Is.Null);
+			Assert.That(result.Matches!, Has.Count.EqualTo(1));
+			Assert.That(result.Matches![0].Value!["title"]!.GetValue<string>(), Is.EqualTo("The Lord of the Rings"));
+			Assert.That(path.ToString(), Is.EqualTo(input));
+		});
 	}
 
 	[Test]
@@ -196,11 +220,14 @@ public class ParsedGoessnerTests
 
 		var result = path.Evaluate(_instance);
 
-		Assert.IsNull(result.Error);
-		Assert.AreEqual(2, result.Matches!.Count);
-		Assert.AreEqual("Sayings of the Century", result.Matches[0].Value!["title"]!.GetValue<string>());
-		Assert.AreEqual("Sword of Honour", result.Matches[1].Value!["title"]!.GetValue<string>());
-		Assert.AreEqual(input, path.ToString());
+		Assert.Multiple(() =>
+		{
+			Assert.That(result.Error, Is.Null);
+			Assert.That(result.Matches!, Has.Count.EqualTo(2));
+			Assert.That(result.Matches![0].Value!["title"]!.GetValue<string>(), Is.EqualTo("Sayings of the Century"));
+			Assert.That(result.Matches[1].Value!["title"]!.GetValue<string>(), Is.EqualTo("Sword of Honour"));
+			Assert.That(path.ToString(), Is.EqualTo(input));
+		});
 	}
 
 	[Test]
@@ -211,11 +238,14 @@ public class ParsedGoessnerTests
 
 		var result = path.Evaluate(_instance);
 
-		Assert.IsNull(result.Error);
-		Assert.AreEqual(2, result.Matches!.Count);
-		Assert.AreEqual("Sayings of the Century", result.Matches[0].Value!["title"]!.GetValue<string>());
-		Assert.AreEqual("Sword of Honour", result.Matches[1].Value!["title"]!.GetValue<string>());
-		Assert.AreEqual(input, path.ToString());
+		Assert.Multiple(() =>
+		{
+			Assert.That(result.Error, Is.Null);
+			Assert.That(result.Matches!, Has.Count.EqualTo(2));
+			Assert.That(result.Matches![0].Value!["title"]!.GetValue<string>(), Is.EqualTo("Sayings of the Century"));
+			Assert.That(result.Matches[1].Value!["title"]!.GetValue<string>(), Is.EqualTo("Sword of Honour"));
+			Assert.That(path.ToString(), Is.EqualTo(input));
+		});
 	}
 
 	[Test]
@@ -226,10 +256,13 @@ public class ParsedGoessnerTests
 
 		var result = path.Evaluate(_instance);
 
-		Assert.IsNull(result.Error);
-		Assert.AreEqual(2, result.Matches!.Count);
-		Assert.AreEqual("Moby Dick", result.Matches[0].Value!["title"]!.GetValue<string>());
-		Assert.AreEqual("The Lord of the Rings", result.Matches[1].Value!["title"]!.GetValue<string>());
+		Assert.Multiple(() =>
+		{
+			Assert.That(result.Error, Is.Null);
+			Assert.That(result.Matches!, Has.Count.EqualTo(2));
+			Assert.That(result.Matches![0].Value!["title"]!.GetValue<string>(), Is.EqualTo("Moby Dick"));
+			Assert.That(result.Matches[1].Value!["title"]!.GetValue<string>(), Is.EqualTo("The Lord of the Rings"));
+		});
 		// the parens have been deemed unnecessary now.
 		//Assert.AreEqual(input, path.ToString());
 	}
@@ -242,11 +275,14 @@ public class ParsedGoessnerTests
 
 		var result = path.Evaluate(_instance);
 
-		Assert.IsNull(result.Error);
-		Assert.AreEqual(2, result.Matches!.Count);
-		Assert.AreEqual("Sayings of the Century", result.Matches[0].Value!["title"]!.GetValue<string>());
-		Assert.AreEqual("Moby Dick", result.Matches[1].Value!["title"]!.GetValue<string>());
-		Assert.AreEqual(input, path.ToString());
+		Assert.Multiple(() =>
+		{
+			Assert.That(result.Error, Is.Null);
+			Assert.That(result.Matches!, Has.Count.EqualTo(2));
+			Assert.That(result.Matches![0].Value!["title"]!.GetValue<string>(), Is.EqualTo("Sayings of the Century"));
+			Assert.That(result.Matches[1].Value!["title"]!.GetValue<string>(), Is.EqualTo("Moby Dick"));
+			Assert.That(path.ToString(), Is.EqualTo(input));
+		});
 	}
 
 	[Test]
@@ -257,8 +293,11 @@ public class ParsedGoessnerTests
 
 		var result = path.Evaluate(_instance);
 
-		Assert.IsNull(result.Error);
-		Assert.AreEqual(27, result.Matches!.Count);
-		Assert.AreEqual(input, path.ToString());
+		Assert.Multiple(() =>
+		{
+			Assert.That(result.Error, Is.Null);
+			Assert.That(result.Matches!, Has.Count.EqualTo(27));
+			Assert.That(path.ToString(), Is.EqualTo(input));
+		});
 	}
 }

@@ -13,10 +13,10 @@ public class DeferredExecutionTests
 
 		var result = query.Evaluate(data);
 
-		Assert.AreEqual(1, result.Matches!.Count);
+		Assert.That(result.Matches!, Has.Count.EqualTo(1));
 
 		data[0] = "sally";
 
-		Assert.AreEqual(2, result.Matches!.Count);
+		Assert.That(result.Matches!, Has.Count.EqualTo(2));
 	}
 }

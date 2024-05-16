@@ -5,6 +5,8 @@ using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.More;
 using NUnit.Framework;
+using TestHelpers;
+
 // ReSharper disable UnusedAutoPropertyAccessor.Local
 
 namespace Json.Patch.Tests;
@@ -46,7 +48,7 @@ public class PatchExtensionTests
 
 		var serialized = JsonSerializer.SerializeToNode(patch, TestEnvironment.SerializerOptions);
 
-		Assert.IsTrue(serialized.IsEquivalentTo(patchExpected));
+		Assert.That(serialized.IsEquivalentTo(patchExpected), Is.True);
 	}
 
 	[Test]
@@ -287,9 +289,12 @@ public class PatchExtensionTests
 
 		var final = patch.Apply(model, TestEnvironment.SerializerOptions);
 
-		Assert.AreEqual(0, final!.Numbers!.Length);
-		Assert.AreEqual(0, final.Strings!.Length);
-		Assert.AreEqual(0, final.InnerObjects!.Count);
+		Assert.Multiple(() =>
+		{
+			Assert.That(final!.Numbers!, Is.Empty);
+			Assert.That(final.Strings!, Is.Empty);
+			Assert.That(final.InnerObjects!, Is.Empty);
+		});
 	}
 
 	[Test]
@@ -312,15 +317,18 @@ public class PatchExtensionTests
 
 		var final = patch.Apply(model, TestEnvironment.SerializerOptions);
 
-		Assert.AreEqual(2, final!.Numbers!.Length);
-		Assert.AreEqual(1, final.Numbers[0]);
-		Assert.AreEqual(3, final.Numbers[1]);
+		Assert.Multiple(() =>
+		{
+			Assert.That(final!.Numbers!, Has.Length.EqualTo(2));
+			Assert.That(final.Numbers![0], Is.EqualTo(1));
+			Assert.That(final.Numbers[1], Is.EqualTo(3));
 
-		Assert.AreEqual(1, final.Strings!.Length);
-		Assert.AreEqual("asdf", final.Strings[0]);
+			Assert.That(final.Strings!, Has.Length.EqualTo(1));
+			Assert.That(final.Strings![0], Is.EqualTo("asdf"));
 
-		Assert.AreEqual(1, final.InnerObjects!.Count);
-		Assert.AreEqual(model.InnerObjects[1].Id, final.InnerObjects[0].Id);
+			Assert.That(final.InnerObjects!, Has.Count.EqualTo(1));
+			Assert.That(final.InnerObjects![0].Id, Is.EqualTo(model.InnerObjects[1].Id));
+		});
 	}
 
 	[Test]
@@ -341,7 +349,7 @@ public class PatchExtensionTests
 		};
 		var final = patch.Apply(model, options);
 
-		Assert.AreEqual(5, final?.Numbers?[0]);
+		Assert.That(final?.Numbers?[0], Is.EqualTo(5));
 	}
 
 	[Test]
@@ -369,7 +377,7 @@ public class PatchExtensionTests
 		// use source generated json serializer context
 		var patchJson = JsonSerializer.SerializeToNode(patch, TestEnvironment.SerializerOptions);
 
-		Assert.IsTrue(patchJson.IsEquivalentTo(patchExpected));
+		JsonAssert.AreEquivalent(patchExpected, patchJson);
 	}
 
 	private static readonly JsonSerializerOptions _indentedSerializerOptions =
@@ -390,6 +398,6 @@ public class PatchExtensionTests
 		OutputPatch(expected);
 		OutputPatch(actual);
 
-		Assert.AreEqual(expected, actual);
+		Assert.That(actual, Is.EqualTo(expected));
 	}
 }

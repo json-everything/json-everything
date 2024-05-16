@@ -225,7 +225,7 @@ public class CburgmerFeatureValidationTests
 		{
 			if (testCase.Consensus == "NOT_SUPPORTED") return;
 			var expected = JsonNode.Parse(testCase.Consensus);
-			Assert.IsTrue(expected!.AsArray().All(v => actual.Matches!.Any(m => JsonNodeEqualityComparer.Instance.Equals(v, m.Value))));
+			Assert.That(expected!.AsArray().All(v => actual.Matches!.Any(m => JsonNodeEqualityComparer.Instance.Equals(v, m.Value))), Is.True);
 		}
 	}
 
