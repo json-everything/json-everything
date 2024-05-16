@@ -27,7 +27,7 @@ public class CburgmerFeatureValidationTests
 	private static readonly Regex _documentPattern = new(@"    document: (?<value>.*)");
 	private static readonly Regex _consensusPattern = new(@"    consensus: (?<value>.*)");
 	private static readonly string[] _notSupported =
-	{
+	[
 		// dashes are not allowed in shorthand property names
 		"$.key-dash",
 		"$[?(@.key-dash == 'value')]",
@@ -105,7 +105,7 @@ public class CburgmerFeatureValidationTests
 		// big numbers not supported
 		"$[2:-113667776004:-1]",
 		"$[113667776004:2:-1]",
-	};
+	];
 
 	private static readonly JsonSerializerOptions _serializerOptions = new()
 	{

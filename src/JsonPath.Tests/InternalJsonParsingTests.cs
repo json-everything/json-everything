@@ -18,8 +18,8 @@ public class InternalJsonParsingTests
 
 	private static IEnumerable<string> GetJson()
 	{
-		return new[]
-		{
+		return
+		[
 			"-42",
 			"1+5",
 			"true",
@@ -30,6 +30,6 @@ public class InternalJsonParsingTests
 			"\"a string\"; then this",
 			"[null, true]; and some more",
 			"{\"key\": \"value\"}, then the end"
-		};
+		];
 	}
 }

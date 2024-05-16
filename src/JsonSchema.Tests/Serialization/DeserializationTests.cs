@@ -90,7 +90,7 @@ public class DeserializationTests
 			catch (Exception e)
 			{
 				HandleException(e);
-				Assert.AreNotEqual("JSON does not meet schema requirements", e.Message);
+				Assert.That(e.Message, Is.Not.EqualTo("JSON does not meet schema requirements"));
 				throw;
 			}
 		});
@@ -119,7 +119,7 @@ public class DeserializationTests
 			catch (Exception e)
 			{
 				HandleException(e);
-				Assert.AreEqual("JSON does not meet schema requirements", e.Message);
+				Assert.That(e.Message, Is.EqualTo("JSON does not meet schema requirements"));
 				throw;
 			}
 		});
@@ -366,7 +366,7 @@ public class DeserializationTests
 				catch (Exception e)
 				{
 					HandleException(e);
-					Assert.AreEqual("JSON does not meet schema requirements", e.Message);
+					Assert.That(e.Message, Is.EqualTo("JSON does not meet schema requirements"));
 					throw;
 				}
 			}

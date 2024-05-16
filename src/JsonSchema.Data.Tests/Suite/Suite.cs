@@ -29,7 +29,7 @@ public class Suite
 
 		var testsPath = System.IO.Path.Combine(TestContext.CurrentContext.WorkDirectory, testCasesPath)
 			.AdjustForPlatform();
-		if (!Directory.Exists(testsPath)) return Enumerable.Empty<TestCaseData>();
+		if (!Directory.Exists(testsPath)) return [];
 
 		var fileNames = Directory.GetFiles(testsPath, "*.json");
 		var options = new EvaluationOptions
@@ -123,7 +123,7 @@ public class Suite
 
 		var testsPath = System.IO.Path.Combine(TestContext.CurrentContext.WorkDirectory, testCasesPath)
 			.AdjustForPlatform();
-		if (!Directory.Exists(testsPath)) return Enumerable.Empty<TestCaseData>();
+		if (!Directory.Exists(testsPath)) return [];
 
 		var fileNames = Directory.GetFiles(testsPath, "*.json");
 

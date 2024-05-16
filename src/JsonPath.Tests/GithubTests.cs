@@ -38,7 +38,7 @@ public class GithubTests
 		var path = JsonPath.Parse("$[?@ >= '2023-05-01']");
 		var results = path.Evaluate(data);
 
-		Assert.AreEqual(5, results.Matches!.Count);
+		Assert.That(results.Matches!, Has.Count.EqualTo(5));
 	}
 
 	[Test]

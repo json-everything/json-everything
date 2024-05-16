@@ -326,7 +326,7 @@ public class GithubTests
 			{
 				Fetch = uri =>
 				{
-					Assert.True(map.TryGetValue(uri, out var ret), "Unexpected uri: {0}", uri);
+					Assert.That(map.TryGetValue(uri, out var ret), Is.True, $"Unexpected uri: {uri}");
 					return ret;
 				}
 			}
@@ -410,17 +410,12 @@ public class GithubTests
 
 	[SchemaKeyword(Name)]
 	[SchemaSpecVersion(SpecVersion.Draft201909 | SpecVersion.Draft202012)]
-	private class MinDateKeyword : IJsonSchemaKeyword, IEquatable<MinDateKeyword>
+	private class MinDateKeyword : IJsonSchemaKeyword
 	{
 		// ReSharper disable once InconsistentNaming
 #pragma warning disable IDE1006 // Naming Styles
 		private const string Name = "minDate";
 #pragma warning restore IDE1006 // Naming Styles
-
-		public bool Equals(MinDateKeyword? other)
-		{
-			throw new NotImplementedException();
-		}
 
 		public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
 			ReadOnlySpan<KeywordConstraint> localConstraints,
@@ -895,7 +890,7 @@ public class GithubTests
 
 		var text = "{\"foo\":null,\"bar\":null}";
 
-		Assert.AreEqual(text, JsonSerializer.Serialize(actual, TestEnvironment.SerializerOptions));
+		Assert.That(JsonSerializer.Serialize(actual, TestEnvironment.SerializerOptions), Is.EqualTo(text));
 	}
 
 	[TestCase(@"{""additionalItems"":""not-a-schema""}", 0, 33)]
@@ -922,12 +917,15 @@ public class GithubTests
 	{
 		// Reminder: per the JsonException documentation, expectedLineNumber & expectedBytePositionInLine are 0-based
 		var exception = Assert.Throws<JsonException>(() => JsonSerializer.Deserialize<JsonSchema>(schemaStr, TestEnvironment.SerializerOptions));
-		Assert.That(exception, Is.Not.Null);
-		Console.WriteLine("Expected error");
-		Console.WriteLine(schemaStr.Split('\n')[expectedLineNumber]);
-		Console.WriteLine(new string('-', expectedBytePositionInLine - 1) + '^');
-		Assert.That(exception?.LineNumber, Is.EqualTo(expectedLineNumber));
-		Assert.That(exception?.BytePositionInLine, Is.EqualTo(expectedBytePositionInLine));
+		Assert.Multiple(() =>
+		{
+			Assert.That(exception, Is.Not.Null);
+			Console.WriteLine("Expected error");
+			Console.WriteLine(schemaStr.Split('\n')[expectedLineNumber]);
+			Console.WriteLine(new string('-', expectedBytePositionInLine - 1) + '^');
+			Assert.That(exception?.LineNumber, Is.EqualTo(expectedLineNumber));
+			Assert.That(exception?.BytePositionInLine, Is.EqualTo(expectedBytePositionInLine));
+		});
 	}
 
 	[Test]
