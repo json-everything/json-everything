@@ -88,9 +88,10 @@ public static class FunctionRepository
 		return _functions.TryGetValue(name, out function);
 	}
 
-	private static void FindEvaluationMethods(IReflectiveFunctionDefinition function, Type returnType)
+	private static void FindEvaluationMethods<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods)] TFunction>(
+		TFunction function, Type returnType) where TFunction : IReflectiveFunctionDefinition
 	{
-		var functionType = function.GetType();
+		var functionType = typeof(TFunction);
 		var methods = functionType.GetMethods(BindingFlags.Public | BindingFlags.Instance)
 			.Where(m => m.Name == "Evaluate" && m.ReturnType == returnType)
 			.ToList();
