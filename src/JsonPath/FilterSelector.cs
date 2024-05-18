@@ -82,13 +82,15 @@ internal class FilterSelectorParser : ISelectorParser
 			return false;
 		}
 
-		index++; // consume ?
-		if (!ExpressionParser.TryParse(source, ref index, out var expression, options))
+		int i = index;
+		i++; // consume ?
+		if (!ExpressionParser.TryParse(source, ref i, out var expression, options))
 		{
 			selector = null;
 			return false;
 		}
 
+		index = i;
 		selector = new FilterSelector(expression);
 		return true;
 	}
