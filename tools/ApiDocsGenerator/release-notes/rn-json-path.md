@@ -4,6 +4,10 @@ title: JsonPath.Net
 icon: fas fa-tag
 order: "09.08"
 ---
+# [1.0.5](https://github.com/gregsdennis/json-everything/commit/3dac71f99ae3958482bfe9dc32e098a234a91c11) {#release-path-1.0.5}
+
+An update to the test suite revealed an issue with the filter expression parser.
+
 # [1.0.4](https://github.com/gregsdennis/json-everything/pull/731) {#release-path-1.0.4}
 
 [#728](https://github.com/gregsdennis/json-everything/issues/728) - Failure to parse escaped single quote in single-quoted string in filter expressions.  Thanks to [@ashek-simeon](https://github.com/ashek-simeon) for reporting this.
