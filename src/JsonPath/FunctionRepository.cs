@@ -16,44 +16,107 @@ public static class FunctionRepository
 
 	static FunctionRepository()
 	{
-		Register(new LengthFunction());
-		Register(new CountFunction());
-		Register(new MatchFunction());
-		Register(new SearchFunction());
-		Register(new ValueFunction());
+		RegisterValueFunction<LengthFunction>();
+		RegisterValueFunction<CountFunction>();
+		RegisterLogicalFunction<MatchFunction>();
+		RegisterLogicalFunction<SearchFunction>();
+		RegisterValueFunction<ValueFunction>();
 	}
 
 	/// <summary>
 	/// Registers a new function implementation, allowing it to be parsed.
 	/// </summary>
 	/// <param name="function">The function.</param>
+	[RequiresUnreferencedCode("Use the overloads that take a Type for AOT compatibility")]
 	public static void Register(ValueFunctionDefinition function)
 	{
-		_functions[function.Name] = function;
-
-		FindEvaluationMethods(function, typeof(JsonNode));
+		Register(function, function.GetType());
 	}
 
 	/// <summary>
 	/// Registers a new function implementation, allowing it to be parsed.
 	/// </summary>
 	/// <param name="function">The function.</param>
+	/// <param name="functionType">The type of the function.</param>
+	public static void Register(ValueFunctionDefinition function,
+		[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods)] Type functionType)
+	{
+		_functions[function.Name] = function;
+
+		FindEvaluationMethods(function, functionType, typeof(JsonNode));
+	}
+
+	/// <summary>
+	/// Registers a new function implementation, allowing it to be parsed.
+	/// </summary>
+	/// <param name="function">The function.</param>
+	[RequiresUnreferencedCode("Use the overloads that take a Type for AOT compatibility")]
 	public static void Register(LogicalFunctionDefinition function)
 	{
-		_functions[function.Name] = function;
-
-		FindEvaluationMethods(function, typeof(bool));
+		Register(function, function.GetType());
 	}
 
 	/// <summary>
 	/// Registers a new function implementation, allowing it to be parsed.
 	/// </summary>
 	/// <param name="function">The function.</param>
-	public static void Register(NodelistFunctionDefinition function)
+	/// <param name="functionType">The type of the function.</param>
+	public static void Register(LogicalFunctionDefinition function,
+		[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods)] Type functionType)
 	{
 		_functions[function.Name] = function;
 
-		FindEvaluationMethods(function, typeof(NodeList));
+		FindEvaluationMethods(function, functionType, typeof(bool));
+	}
+
+	/// <summary>
+	/// Registers a new function implementation, allowing it to be parsed.
+	/// </summary>
+	/// <param name="function">The function.</param>
+	[RequiresUnreferencedCode("Use the overloads that take a Type for AOT compatibility")]
+	public static void Register(NodelistFunctionDefinition function)
+	{
+		Register(function, function.GetType());
+	}
+
+	/// <summary>
+	/// Registers a new function implementation, allowing it to be parsed.
+	/// </summary>
+	/// <param name="function">The function.</param>
+	/// <param name="functionType">The function type.</param>
+	public static void Register(NodelistFunctionDefinition function,
+		[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods)] Type functionType)
+	{
+		_functions[function.Name] = function;
+
+		FindEvaluationMethods(function, functionType, typeof(NodeList));
+	}
+
+	/// <summary>
+	/// Registers a new function implementation, allowing it to be parsed.
+	/// </summary>
+	public static void RegisterValueFunction<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods)] T>() 
+		where T : ValueFunctionDefinition, new ()
+	{
+		Register(new T(), typeof(T));
+	}
+
+	/// <summary>
+	/// Registers a new function implementation, allowing it to be parsed.
+	/// </summary>
+	public static void RegisterLogicalFunction<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods)] T>() 
+		where T : LogicalFunctionDefinition, new()
+	{
+		Register(new T(), typeof(T));
+	}
+
+	/// <summary>
+	/// Registers a new function implementation, allowing it to be parsed.
+	/// </summary>
+	public static void RegisterNodelistFunction<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods)] T>()
+		where T : NodelistFunctionDefinition, new()
+	{
+		Register(new T(), typeof(T));
 	}
 
 	/// <summary>
@@ -88,10 +151,11 @@ public static class FunctionRepository
 		return _functions.TryGetValue(name, out function);
 	}
 
-	private static void FindEvaluationMethods<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods)] TFunction>(
-		TFunction function, Type returnType) where TFunction : IReflectiveFunctionDefinition
+	private static void FindEvaluationMethods(
+		IReflectiveFunctionDefinition function,
+		[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods)] Type functionType,
+		Type returnType)
 	{
-		var functionType = typeof(TFunction);
 		var methods = functionType.GetMethods(BindingFlags.Public | BindingFlags.Instance)
 			.Where(m => m.Name == "Evaluate" && m.ReturnType == returnType)
 			.ToList();
