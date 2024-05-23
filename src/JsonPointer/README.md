@@ -44,3 +44,7 @@ var success = pointer.TryEvaluate(element, out var result);
 // success: true
 // result: "found me"
 ```
+
+## Sponsorship
+
+If you found this library helpful and would like to promote continued development, please consider [sponsoring the maintainers](https://github.com/sponsors/gregsdennis).

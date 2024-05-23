@@ -61,3 +61,7 @@ Use the schema to evaluate and annotate data:
 var instance = JsonNode.Parse("{\"foo\":\"a value\",\"bar\":42}");
 var results = schema.Evaluate(instance);
 ```
+
+## Sponsorship
+
+If you found this library helpful and would like to promote continued development, please consider [sponsoring the maintainers](https://github.com/sponsors/gregsdennis).

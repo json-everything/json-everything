@@ -25,8 +25,8 @@ Otherwise, it's open to consideration for this project.
 <tbody>
 <tr>
 <td align="center"><a href="https://json-everything.net"><img src="Resources/json-animated.webp" alt="Try it online" title="Try it online" height="50"><br>json-everything.net</a></td>
-<td align="center"><a href="https://docs.json-everything.net"><img src="Resources/docs-icon.png" alt="Try it online" title="Try it online" height="50"><br>docs.json-everything.net</a></td>
-<td align="center"><a href="https://blog.json-everything.net"><img src="Resources/blog-icon.png" alt="Try it online" title="Try it online" height="50"><br>blog.json-everything.net</a></td>
+<td align="center"><a href="https://docs.json-everything.net"><img src="Resources/docs-icon.png" alt="Documentation" title="Documentation" height="50"><br>docs.json-everything.net</a></td>
+<td align="center"><a href="https://blog.json-everything.net"><img src="Resources/blog-icon.png" alt="Blog" title="Blog" height="50"><br>blog.json-everything.net</a></td>
 </tr>
 </tbody>
 </table>

@@ -13,3 +13,7 @@ _Yaml2JsonNode_ provides conversions between [YamlDotNet](https://www.nuget.org/
 ```c#
 var jsonNode = yamlNode.ToJsonNode();
 ```
+
+## Sponsorship
+
+If you found this library helpful and would like to promote continued development, please consider [sponsoring the maintainers](https://github.com/sponsors/gregsdennis).

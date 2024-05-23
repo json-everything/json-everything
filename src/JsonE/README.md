@@ -22,3 +22,7 @@ var result = JsonE.Evaluate(template, context);
 
 // result: 4
 ```
+
+## Sponsorship
+
+If you found this library helpful and would like to promote continued development, please consider [sponsoring the maintainers](https://github.com/sponsors/gregsdennis).

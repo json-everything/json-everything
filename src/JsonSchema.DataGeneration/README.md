@@ -15,3 +15,7 @@ var schema = JsonSchema.FromFile("myFile.json");
 var generationResult = schema.GenerateData();
 var sampleData = generationResult.Result;
 ```
+
+## Sponsorship
+
+If you found this library helpful and would like to promote continued development, please consider [sponsoring the maintainers](https://github.com/sponsors/gregsdennis).
