@@ -166,7 +166,10 @@ If you use JSON to do something that is not covered by a library in this suite o
 
 If you maintain or know of another project that extends _System.Text.Json_ to do cool things, I'd like to list it here, so please [create a general issue](https://github.com/gregsdennis/json-everything/issues/new) to let me know about it.
 
-## Contributors
+## Contributing
 
 Please see the [Code of Conduct](./CODE_OF_CONDUCT.md) and the [CONTRIBUTING](./CONTRIBUTING.md) file for more information.
 
+## Sponsorship
+
+If you found these libraries helpful and would like to promote continued development, please consider [sponsoring the maintainers](https://github.com/sponsors/gregsdennis).
