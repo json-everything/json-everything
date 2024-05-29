@@ -31,6 +31,6 @@ internal class InOperator : IBinaryComparativeOperator
 
 	public override string ToString()
 	{
-		return "in";
+		return " in ";
 	}
 }
