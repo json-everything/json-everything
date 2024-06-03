@@ -200,7 +200,14 @@ public class SchemaRegistry
 		{
 			document = Fetch(baseUri) ?? Global.Fetch(baseUri);
 			if (document is not null)
+			{
 				Register(baseUri, document);
+
+				// Fetch() returns the document but not localized to an anchor.
+				// Register() scans the document and adds it locally.
+				// Now that it's in the local registry, we need to get the target identified by any anchors.
+				document = GetFromRegistry(_registered, baseUri, anchor, isDynamic, allowLegacy);
+			}
 		}
 
 		return document;
