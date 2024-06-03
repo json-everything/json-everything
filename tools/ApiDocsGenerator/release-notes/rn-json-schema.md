@@ -4,6 +4,10 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "09.01"
 ---
+# [7.0.3](https://github.com/gregsdennis/json-everything/commit/f63f73cb0b4d1fc3158e01cac1df5b8acb5e092c) {#release-schema-7.0.3}
+
+Issue identified via [Bowtie](https://bowtie.report) where `SchemaRegistry.Fetch()` would just return the document, ignoring any anchors.
+
 # [7.0.2](https://github.com/gregsdennis/json-everything/pull/730) {#release-schema-7.0.2}
 
 [#726](https://github.com/gregsdennis/json-everything/issues/726) - [@filzrev](https://github.com/filzrev) discovered a thread-safety issue.
