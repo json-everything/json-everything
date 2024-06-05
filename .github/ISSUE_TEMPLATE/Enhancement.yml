@@ -12,6 +12,7 @@ body:
       label: Nuget Package
       description: Which package are you using?
       options:
+        - json-everything.net (playground)
         - Json.More.Net
         - JsonE.Net
         - JsonLogic

@@ -27,7 +27,7 @@ internal class MultiLookupConcurrentDictionary<TValue> : IEnumerable<KeyValuePai
 		foreach (var lookup in _keyFunctions)
 		{
 			var key = lookup(value);
-			_lookup.TryAdd(key, value);
+			_lookup.AddOrUpdate(key, value, (_, _) => value);
 		}
 	}
 

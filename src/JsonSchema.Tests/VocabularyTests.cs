@@ -413,7 +413,7 @@ public partial class VocabularyTests
 				{
 					if (!BoolValue.Value) return;
 
-					var minimum = (decimal?) 6;// context.LocalSchema.GetMinimum();
+					var minimum = (decimal?) 5;// context.LocalSchema.GetMinimum();
 
 					if (!minimum.HasValue) return;
 
@@ -458,7 +458,6 @@ public partial class VocabularyTests
 	[TestCase(8, true)]
 	[TestCase(5, false)]
 	[TestCase(5.1, true)]
-	[Ignore("This should still work, but I'd need to implement a new minimum keyword as well because keywords can't see other keywords with the constraints model.")]
 	public void Draft4ExclusiveMinimumOverride(decimal instanceValue, bool isValid)
 	{
 		try

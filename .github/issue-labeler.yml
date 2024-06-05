@@ -45,3 +45,6 @@
 
 "pkg:yaml":
   - '### Nuget Package\s*Yaml2JsonNode'
+
+"json-everything.net":
+  - '### Nuget Package\s*json-everything.net \(playground\)'
