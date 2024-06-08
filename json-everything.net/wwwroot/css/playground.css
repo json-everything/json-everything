@@ -1,0 +1,34 @@
+#layout {
+  padding: 5px;
+  position: relative;
+  flex-grow: 1;
+}
+
+.grid-panel {
+  flex: 1 1 auto;
+  border: solid 1px #CCBCD9;
+  border-radius: 5px;
+  padding: 10px !important;
+  margin: 5px;
+}
+
+.row-margin-reset {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+div::-webkit-scrollbar {
+  width: 5px !important;
+  height: 5px !important;
+}
+
+div::-webkit-scrollbar-track {
+  -webkit-box-shadow: none !important;
+  background-color: transparent;
+}
+
+div::-webkit-scrollbar-thumb {
+  background-color: #CCBCD9 !important;
+  border: 1px solid #1a1a1a !important;
+  border-radius: 2.5px !important;
+}

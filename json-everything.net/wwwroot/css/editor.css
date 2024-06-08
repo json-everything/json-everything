@@ -1,33 +1,45 @@
-.editor-input {
-    height: 600px;
-}
-
 .editor-lang-json {
-  float: right;
+  position: absolute;
+  right: 0;
+  top: 0;
+  margin: 10px;
   padding: 0px 14px;
   background: #083f2e;
   color: white;
   font-size: 90%;
   font-weight: bold;
   text-transform: uppercase;
+  z-index: 10;
 }
 
 .editor-lang-yaml {
-  float: right;
+  position: absolute;
+  right: 0;
+  top: 0;
+  margin: 10px;
   padding: 0px 14px;
   background: #043859;
   color: white;
   font-size: 90%;
   font-weight: bold;
   text-transform: uppercase;
+  z-index: 10;
 }
 
 .editor-lang-csharp {
-  float: right;
+  position: absolute;
+  right: 0;
+  top: 0;
+  margin: 10px;
   padding: 0px 14px;
   background: #d73a16;
   color: white;
   font-size: 90%;
   font-weight: bold;
   text-transform: uppercase;
+  z-index: 10;
+}
+
+.monaco-editor {
+  position: absolute !important;
 }

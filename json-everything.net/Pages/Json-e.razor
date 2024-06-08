@@ -13,74 +13,57 @@
 
 <PageTitle>JSON-e - json-everything.net</PageTitle>
 
-<div class="row mx-3 fill-remaining">
-	<div class="mh-100 scroll">
-		<div class="navbar me-2">
-			<div class="align-items-center hstack mx-2">
-				<img src="img/json-e.png" height="70" width="70" class="me-3" />
-				<h1 class="display-4">JSON-e</h1>
-				<div class="align-items-center mx-3">
-					<div>
-						Templating and transformation of JSON data
-						<br/>
-						Learn more about
-						<a href="https://json-e.js.org/" target="_blank">JSON-e <ExternalLinkIcon /></a>
-					</div>
+<div class="red col-12 me-2">
+	<div class="d-flex navbar">
+		<div class="align-items-center hstack mx-2">
+			<img src="img/json-e.png" height="70" width="70" class="me-3" />
+			<h1 class="display-4">JSON-e</h1>
+			<div class="align-items-center mx-3">
+				<div>
+					Templating and transformation of JSON data
+					<br/>
+					Learn more about
+					<a href="https://json-e.js.org/" target="_blank">JSON-e <ExternalLinkIcon /></a>
 				</div>
-				<Banner Content="JsonE.Net now supports .Net 8 and Native AOT!!" Style="margin-top:0;"></Banner>
-			</div>
-			<div class="align-items-center mt-1">
-				@foreach (var library in _libraries)
-				{
-					<NugetLibrary Library="library"/>
-				}
 			</div>
 		</div>
-		<div class="vstack gap-3 mt-4 me-3">
-			<div>
-				<div class="row">
-					<div class="col-2">
-						<div class="vstack gap-3">
-							<button class="btn btn-primary mt-2" @onclick="Run">Run</button>
-							<hr/>
-							<MarkdownSpan Content="@HelpContent.JsonEEvaluate"></MarkdownSpan>
-						</div>
+		<div class="align-items-center mt-1">
+			@foreach (var library in _libraries)
+			{
+				<NugetLibrary Library="library"/>
+			}
+		</div>
+	</div>
+</div>
+<div id="layout" class="flex-grow-1 position-relative">
+	<div class="dimgray fill-remaining">
+		<div class="inner d-flex h-100">
+			<div class="green w-25 d-flex">
+				<div class="tan grid-panel flex-grow-1 scroll">
+					<button class="btn btn-primary mt-2" @onclick="Run">Run</button>
+					<hr/>
+					<MarkdownSpan Content="@HelpContent.JsonEEvaluate"></MarkdownSpan>
+				</div>
+			</div>
+			<div class="gray w-75 d-flex flex-wrap">
+				<div class="pink w-50 d-flex flex-grow-1 h-50">
+					<div class="grid-panel flex-grow-1 position-relative">
+						<span class="editor-lang-@_templateEditorLanguage">@_templateEditorLanguage</span>
+						<StandaloneCodeEditor @ref="_templateEditor" Id="editor-schema" ConstructionOptions="BasicOptions"
+						                      CssClass="h-100" OnDidChangeModelContent="HandleTemplateChanged" />
 					</div>
-					<div class="col-10">
-						<div>
-							<div class="row">
-								<div class="col-6">
-									<label class="w-100">
-										Template (Supports JSON & YAML)
-										<span class="editor-lang-@_templateEditorLanguage">@_templateEditorLanguage</span>
-										<div class="editor-input">
-											<StandaloneCodeEditor @ref="_templateEditor" Id="editor-schema" ConstructionOptions="BasicOptions"
-														  CssClass="h-100" OnDidChangeModelContent="HandleTemplateChanged" />
-										</div>
-									</label>
-								</div>
-								<div class="col-6">
-									<label class="w-100">
-										Context (Supports JSON & YAML)
-										<span class="editor-lang-@_contextEditorLanguage">@_contextEditorLanguage</span>
-										<div class="editor-input">
-											<StandaloneCodeEditor @ref="_contextEditor" Id="editor-instance" ConstructionOptions="BasicOptions"
-														  CssClass="h-100" OnDidChangeModelContent="HandleContextChanged" />
-										</div>
-									</label>
-								</div>
-							</div>
-						</div>
-						
-						<div class="row">
-							<label class="mb-4">
-								Results
-								<div class="editor-input">
-									<StandaloneCodeEditor @ref="_outputEditor" Id="editor-output" ConstructionOptions="ReadOnlyOptions"
-									              CssClass="h-100 mb-2"/>
-								</div>
-							</label>
-						</div>
+				</div>
+				<div class="cyan w-50 d-flex flex-grow-1 h-50">
+					<div class="grid-panel flex-grow-1 position-relative">
+						<span class="editor-lang-@_contextEditorLanguage">@_contextEditorLanguage</span>
+						<StandaloneCodeEditor @ref="_contextEditor" Id="editor-instance" ConstructionOptions="BasicOptions"
+						                      CssClass="h-100" OnDidChangeModelContent="HandleContextChanged" />
+					</div>
+				</div>
+				<div class="yellow w-100 d-flex flex-grow-1 h-50">
+					<div class="grid-panel flex-grow-1">
+						<StandaloneCodeEditor @ref="_outputEditor" Id="editor-output" ConstructionOptions="ReadOnlyOptions"
+						                      CssClass="h-100 mb-2"/>
 					</div>
 				</div>
 			</div>
