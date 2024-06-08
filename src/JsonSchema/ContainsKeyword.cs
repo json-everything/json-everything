@@ -84,11 +84,15 @@ public class ContainsKeyword : IJsonSchemaKeyword, ISchemaContainer
 		if (evaluation.LocalInstance is JsonArray)
 		{
 			uint minimum = 1;
-			if (evaluation.Results.TryGetAnnotation(MinContainsKeyword.Name, out var minContainsAnnotation))
-				minimum = minContainsAnnotation!.GetValue<uint>();
 			uint? maximum = null;
-			if (evaluation.Results.TryGetAnnotation(MaxContainsKeyword.Name, out var maxContainsAnnotation))
-				maximum = maxContainsAnnotation!.GetValue<uint>();
+			if (context.EvaluatingAs >= SpecVersion.Draft201909)
+			{
+				// still need to check spec version because unknown keywords are collected as annotations.
+				if (evaluation.Results.TryGetAnnotation(MinContainsKeyword.Name, out var minContainsAnnotation))
+					minimum = minContainsAnnotation!.GetValue<uint>();
+				if (evaluation.Results.TryGetAnnotation(MaxContainsKeyword.Name, out var maxContainsAnnotation))
+					maximum = maxContainsAnnotation!.GetValue<uint>();
+			}
 
 			var validIndices = evaluation.ChildEvaluations
 				.Where(x => x.Results.IsValid)
