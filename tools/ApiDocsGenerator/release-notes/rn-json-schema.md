@@ -4,6 +4,10 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "09.01"
 ---
+# [7.0.4](https://github.com/gregsdennis/json-everything/pull/746) {#release-schema-7.0.4}
+
+`minContains` and `maxContains` annotations were still being discovered by `contains` when validating as Draft 6/7 even though `minContains` and `maxContains` are Draft 2019-90+ keywords. 
+
 # [7.0.3](https://github.com/gregsdennis/json-everything/commit/f63f73cb0b4d1fc3158e01cac1df5b8acb5e092c) {#release-schema-7.0.3}
 
 Issue identified via [Bowtie](https://bowtie.report) where `SchemaRegistry.Fetch()` would just return the document, ignoring any anchors.

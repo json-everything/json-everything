@@ -57,4 +57,25 @@ public class CrossDraftTests
 		else
 			result.AssertInvalid();
 	}
+
+	[TestCase(SpecVersion.Draft6)]
+	[TestCase(SpecVersion.Draft7)]
+	public void ContainsShouldIgnoreMinContainsForEarlierDrafts(SpecVersion version)
+	{
+		JsonSchema schema = new JsonSchemaBuilder()
+			.Type(SchemaValueType.Array)
+			.Items(new JsonSchemaBuilder()
+				.Type(SchemaValueType.Integer)
+			)
+			.Contains(new JsonSchemaBuilder().Const(4))
+			// Introduced with Draft 2019-09
+			.MinContains(2);
+
+		var instance = new JsonArray(2, 3, 4, 5);
+		var options = new EvaluationOptions { EvaluateAs = version };
+
+		var results = schema.Evaluate(instance, options);
+
+		results.AssertValid();
+	}
 }
