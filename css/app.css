@@ -20,6 +20,7 @@ body {
 main {
 	display: flex;
 	flex-direction: column;
+  flex: 1;
 }
 
 header {
@@ -28,9 +29,10 @@ header {
 }
 
 article {
-	overflow: hidden;
-	flex-grow: 1;
-	position: relative;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  position: relative;
 }
 
 .fill-remaining {
