@@ -171,8 +171,14 @@ public static class HelpContent
 
 	public const string PathEvaluate =
 		"""
-		By default, _JsonPath.Net_ operates per the specification.  The above options allow
-		the library to deviate from the specification in useful ways.
+		By default, _JsonPath.Net_ operates per the specification, [RFC 9535](https://www.rfc-editor.org/rfc/rfc9535.html).
+		The above options allow the library to deviate from the specification in useful ways.
+		""";
+
+	public const string PointerEvaluate =
+		"""
+		JSON Pointer, [RFC 9601](https://www.rfc-editor.org/rfc/rfc6901), is a syntax that enables identification of a
+		single location within JSON data.
 		""";
 
 	public const string JsonEEvaluate =
@@ -185,7 +191,22 @@ public static class HelpContent
 
 		It may also be beneficial to compare your results with the [original JavaScript playground](https://json-e.js.org/playground.html).
 
-		This playground also supports YAML input.  If either of the inputs are YAML, the output will also be YAML.
+		This playground also supports YAML input.
+		""";
+
+	public const string LogicApply =
+		"""
+		JSON Logic evaluates rule sets with optional data.
+
+		The template must be an object where the keys are the names of the operations to apply, and the data must be an object.
+		
+		The output will be displayed below.
+
+		Please read the [documentation](https://docs.json-everything.net/logic/basics/) for more information.
+
+		It may also be beneficial to compare your results with the [original JavaScript playground](https://jsonlogic.com/play.html).
+
+		This playground also supports YAML input.
 		""";
 
 	public const string PatchApply =
