@@ -26,3 +26,12 @@ select.form-control {
 .table {
 	color: rgb(175, 176, 177);
 }
+
+.row > * {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.height-fit-content {
+  height: fit-content;
+}

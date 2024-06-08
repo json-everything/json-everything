@@ -7,14 +7,8 @@
     <RootNamespace>JsonEverythingNet</RootNamespace>
 	  <NoWarn>NU1701</NoWarn>
 	  <PublishTrimmed>false</PublishTrimmed>
+    <WasmEnableWebcil>false</WasmEnableWebcil>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="wwwroot\schema\**" />
-    <Content Remove="wwwroot\schema\**" />
-    <EmbeddedResource Remove="wwwroot\schema\**" />
-    <None Remove="wwwroot\schema\**" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
@@ -42,6 +36,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="wwwroot\css\playground.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
     <Content Update="wwwroot\favicon.ico">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>

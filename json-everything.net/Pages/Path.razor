@@ -11,115 +11,114 @@
 
 <PageTitle>JSON Path - json-everything.net</PageTitle>
 
-<div class="row mx-3 fill-remaining">
-	<div class="mh-100 scroll">
-		<div class="navbar me-2">
-			<div class="align-items-center hstack mx-2">
-				<img src="img/json-path.png" height="70" width="70" class="me-3" />
-				<h1 class="display-4">JSON Path</h1>
-				<div class="align-items-center mx-3">
-					<div>
-						Query JSON data - "XPath for JSON"
-						<br/>
-						Learn more about
-						<a href="https://www.rfc-editor.org/rfc/rfc9535.html" target="_blank">JSON Path (RFC 9535)<ExternalLinkIcon/></a>
-					</div>
+<div class="red col-12 me-2">
+	<div class="d-flex navbar">
+		<div class="align-items-center hstack mx-2">
+			<img src="img/json-path.png" height="70" width="70" class="me-3" />
+			<h1 class="display-4">JSON Path</h1>
+			<div class="align-items-center mx-3">
+				<div>
+					Query JSON data - "XPath for JSON"
+					<br/>
+					Learn more about
+					<a href="https://www.rfc-editor.org/rfc/rfc9535.html" target="_blank">JSON Path (RFC 9535)<ExternalLinkIcon/></a>
 				</div>
-				<Banner Content="JsonPath.Net now supports .Net 8 and Native AOT!!" Style="margin-top:0;"></Banner>
-			</div>
-			<div class="align-items-center mt-1">
-				@foreach (var library in _libraries)
-				{
-					<NugetLibrary Library="library"/>
-				}
 			</div>
 		</div>
-		<div class="vstack gap-3 mt-4 me-3">
-			<div>
-				<div class="row">
-					<div class="col-2">
-						<EditForm Model="_options" class="vstack">
-							<label class="my-2">
-								<InputCheckbox @bind-Value="_options.TolerateExtraWhitespace" DisplayName="Tolerate extra whitespace"/>
-								Tolerate extra whitespace
-								<span class="tooltip-icon">
-									ⓘ
-									<span class="tooltip-text">
-										<MarkdownSpan Content="@HelpContent.PathExtraWhitespace"></MarkdownSpan>
-									</span>
+		<div class="align-items-center mt-1">
+			@foreach (var library in _libraries)
+			{
+				<NugetLibrary Library="library"/>
+			}
+		</div>
+	</div>
+</div>
+<div id="layout" class="flex-grow-1 position-relative">
+	<div class="dimgray fill-remaining">
+		<div class="inner d-flex h-100">
+			<div class="green w-25 d-flex">
+				<div class="tan grid-panel flex-grow-1 scroll">
+					<EditForm Model="_options" class="vstack">
+						<label class="my-2">
+							<InputCheckbox @bind-Value="_options.TolerateExtraWhitespace" DisplayName="Tolerate extra whitespace"/>
+							Tolerate extra whitespace
+							<span class="tooltip-icon">
+								ⓘ
+								<span class="tooltip-text">
+									<MarkdownSpan Content="@HelpContent.PathExtraWhitespace"></MarkdownSpan>
 								</span>
-							</label>
-							<label class="my-2">
-								<InputCheckbox @bind-Value="_options.AllowJsonConstructs" DisplayName="Allow JSON literals"/>
-								Allow JSON literals
-								<span class="tooltip-icon">
-									ⓘ
-									<span class="tooltip-text">
-										<MarkdownSpan Content="@HelpContent.PathJsonLiterals"></MarkdownSpan>
-									</span>
+							</span>
+						</label>
+						<label class="my-2">
+							<InputCheckbox @bind-Value="_options.AllowJsonConstructs" DisplayName="Allow JSON literals"/>
+							Allow JSON literals
+							<span class="tooltip-icon">
+								ⓘ
+								<span class="tooltip-text">
+									<MarkdownSpan Content="@HelpContent.PathJsonLiterals"></MarkdownSpan>
 								</span>
-							</label>
-							<label class="my-2">
-								<InputCheckbox @bind-Value="_options.AllowInOp" DisplayName="Allow in operator"/>
-								Allow <span class="font-monospace">in</span> operator
-								<span class="tooltip-icon">
-									ⓘ
-									<span class="tooltip-text">
-										<MarkdownSpan Content="@HelpContent.PathJsonInOperator"></MarkdownSpan>
-									</span>
+							</span>
+						</label>
+						<label class="my-2">
+							<InputCheckbox @bind-Value="_options.AllowInOp" DisplayName="Allow in operator"/>
+							Allow <span class="font-monospace">in</span> operator
+							<span class="tooltip-icon">
+								ⓘ
+								<span class="tooltip-text">
+									<MarkdownSpan Content="@HelpContent.PathJsonInOperator"></MarkdownSpan>
 								</span>
-							</label>
-							<label class="my-2">
-								<InputCheckbox @bind-Value="_options.AllowMathOps" DisplayName="Allow math operators"/>
-								Allow math operators
-								<span class="tooltip-icon">
-									ⓘ
-									<span class="tooltip-text">
-										<MarkdownSpan Content="@HelpContent.PathMathOperators"></MarkdownSpan>
-									</span>
+							</span>
+						</label>
+						<label class="my-2">
+							<InputCheckbox @bind-Value="_options.AllowMathOps" DisplayName="Allow math operators"/>
+							Allow math operators
+							<span class="tooltip-icon">
+								ⓘ
+								<span class="tooltip-text">
+									<MarkdownSpan Content="@HelpContent.PathMathOperators"></MarkdownSpan>
 								</span>
-							</label>
-							<label class="my-2">
-								<InputCheckbox @bind-Value="_options.AllowRelativeStart" DisplayName="Allow starting with @@"/>
-								Allow starting path with <span class="font-monospace">@@</span>
-								<span class="tooltip-icon">
-									ⓘ
-									<span class="tooltip-text">
-										<MarkdownSpan Content="@HelpContent.PathRelativeStart"></MarkdownSpan>
-									</span>
+							</span>
+						</label>
+						<label class="my-2">
+							<InputCheckbox @bind-Value="_options.AllowRelativeStart" DisplayName="Allow starting with @@"/>
+							Allow starting path with <span class="font-monospace">@@</span>
+							<span class="tooltip-icon">
+								ⓘ
+								<span class="tooltip-text">
+									<MarkdownSpan Content="@HelpContent.PathRelativeStart"></MarkdownSpan>
 								</span>
+							</span>
+						</label>
+						<button class="btn btn-primary w-100" @onclick="Evaluate">Evaluate</button>
+					</EditForm>
+					<hr/>
+					<MarkdownSpan Content="@HelpContent.PathEvaluate"></MarkdownSpan>
+				</div>
+			</div>
+			<div class="gray d-flex flex-grow-1 flex-column">
+				<div class="maroon d-flex flex-grow-1 flex-column">
+					<div class="yellow mx-2 d-flex flex-grow-1">
+						<EditForm Model="_input" class="col-12">
+							<label class="mb-2 w-100">
+								Path
+								<InputText @bind-Value="_input.Path" DisplayName="Path" class="form-control"
+								           @oninput="SavePath"/>
 							</label>
-							<button class="btn btn-primary w-100" @onclick="Evaluate">Evaluate</button>
 						</EditForm>
-						<hr/>
-						<MarkdownSpan Content="@HelpContent.PathEvaluate"></MarkdownSpan>
 					</div>
-					<div class="col-10">
-						<div class="row">
-							<EditForm Model="_input" class="col-12 mb-4">
-								<label class="my-2 w-100">
-									Path
-									<InputText @bind-Value="_input.Path" DisplayName="Default base URI" class="form-control"
-									           @oninput="SavePath"/>
-								</label>
-							</EditForm>
-						</div>
-						<div class="row">
-							<label class="col-6">
-								Data
+					<div class="palegreen d-flex h-100">
+						<div class="pink w-50 d-flex flex-grow-1">
+							<div class="grid-panel flex-grow-1 position-relative">
 								<span class="editor-lang-json">JSON</span>
-								<div class="editor-input">
-									<StandaloneCodeEditor @ref="_instanceEditor" Id="editor-instance" ConstructionOptions="BasicOptions"
-									              CssClass="h-100"/>
-								</div>
-							</Label>
-							<label class="col-6">
-								Results
-								<div class="editor-input">
-									<StandaloneCodeEditor @ref="_outputEditor" Id="editor-output" ConstructionOptions="ReadOnlyOptions"
-									              CssClass="h-100"/>
-								</div>
-							</label>
+								<StandaloneCodeEditor @ref="_instanceEditor" Id="editor-instance" ConstructionOptions="BasicOptions"
+								                      CssClass="h-100"/>
+							</div>
+						</div>
+						<div class="cyan w-50 d-flex flex-grow-1">
+							<div class="grid-panel flex-grow-1">
+								<StandaloneCodeEditor @ref="_outputEditor" Id="editor-output" ConstructionOptions="ReadOnlyOptions"
+								                      CssClass="h-100"/>
+							</div>
 						</div>
 					</div>
 				</div>
