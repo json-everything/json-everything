@@ -1,1 +1,10 @@
-[]
+[
+  {
+    "username": "microsoft",
+    "avatarUrl": "https://avatars.githubusercontent.com/u/6154722?v=4",
+    "websiteUrl": "https://opensource.microsoft.com",
+    "bubbleSize": "Large",
+    "x": -100,
+    "y": 0
+  }
+]
