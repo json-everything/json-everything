@@ -4,6 +4,10 @@ title: JsonPath.Net
 icon: fas fa-tag
 order: "09.08"
 ---
+# [1.1.1](https://github.com/gregsdennis/json-everything/pull/750) {#release-path-1.1.1}
+
+[JSON Path Test Suite #83](https://github.com/jsonpath-standard/jsonpath-compliance-test-suite/pull/83) - Fixes some order of operations issues with parsing filter expressions with boolean operators.
+
 # [1.1.0](https://github.com/gregsdennis/json-everything/pull/740) {#release-path-1.1.0}
 
 [#738](https://github.com/gregsdennis/json-everything/issues/738) - Adds additional support for AOT and trimming.  Thanks to [@jevansaks](https://github.com/jevansaks) for implementing this update.
