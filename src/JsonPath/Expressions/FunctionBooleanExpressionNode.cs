@@ -59,7 +59,7 @@ internal class FunctionBooleanExpressionNode : LogicalExpressionNode
 
 internal class FunctionBooleanExpressionParser : ILogicalExpressionParser
 {
-	public bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out LogicalExpressionNode? expression, PathParsingOptions options)
+	public bool TryParse(ReadOnlySpan<char> source, ref int index, int nestLevel, [NotNullWhen(true)] out LogicalExpressionNode? expression, PathParsingOptions options)
 	{
 		int i = index;
 		if (!FunctionExpressionParser.TryParseFunction(source, ref i, out var parameters, out var function, options))
