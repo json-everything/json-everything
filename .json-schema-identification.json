@@ -1,0 +1,56 @@
+{
+  "$schema": "https://schemas.json-schema.org/ecosystem/identification-v-0.0.1",
+  "name": "JsonSchema.Net",
+  "description": "JSON Schema support for the System.Text.Json namespace in .Net",
+  "toolingTypes": [
+    "validator",
+    "code-to-schema",
+    "schema-to-data",
+    "vocabulary-ext"
+  ],
+  "languages": [
+    "C#",
+    ".Net"
+  ],
+  "creators": [
+    {
+      "name": "Greg Dennis",
+      "email": "gregsdennis@yahoo.com",
+      "username": "gregsdennis",
+      "platform": "github"
+    }
+  ],
+  "maintainers": [
+    {
+      "name": "Greg Dennis",
+      "email": "gregsdennis@yahoo.com",
+      "username": "gregsdennis",
+      "platform": "github"
+    }
+  ],
+  "license": "MIT",
+  "source": "https://github.com/gregsdennis/json-everything",
+  "homepage": "https://json-everything.net",
+  "supportedDialects": {
+    "draft": [6, 7, "2019-09", "2020-12"],
+    "additional": [
+      {
+        "name": "OpenAPI 3.1",
+        "source": "https://spec.openapis.org/oas/v3.1.0"
+      },
+      {
+        "name": "Data Vocabulary",
+        "source": "https://docs.json-everything.net/schema/vocabs/array-ext/"
+      },
+      {
+        "name": "Array Extensions Vocabulary",
+        "source": "https://docs.json-everything.net/schema/vocabs/array-ext/"
+      }
+    ]
+  },
+  "bowtie": {
+    "identifier": "dotnet-jsonschema-net"
+  },
+  "landscape": {
+  }
+}
