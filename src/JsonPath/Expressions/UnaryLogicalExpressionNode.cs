@@ -41,13 +41,13 @@ internal class UnaryLogicalExpressionNode : LogicalExpressionNode
 
 internal class UnaryLogicalExpressionParser : ILogicalExpressionParser
 {
-	public bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out LogicalExpressionNode? expression, PathParsingOptions options)
+	public bool TryParse(ReadOnlySpan<char> source, ref int index, int nestLevel, [NotNullWhen(true)] out LogicalExpressionNode? expression, PathParsingOptions options)
 	{
 		// currently only the "not" operator is known
 		// it expects a ! then either a comparison or logical expression
 
 		var i = index;
-		var nestLevel = 0;
+		var originalNest = nestLevel; // need to get back to this
 
 		if (!source.ConsumeWhitespace(ref index))
 		{
@@ -71,7 +71,7 @@ internal class UnaryLogicalExpressionParser : ILogicalExpressionParser
 		}
 
 		// parse comparison
-		if (!BooleanResultExpressionParser.TryParse(source, ref i, out var right, options))
+		if (!BooleanResultExpressionParser.TryParse(source, ref i, nestLevel, out var right, options))
 		{
 			expression = null;
 			return false;
@@ -83,14 +83,14 @@ internal class UnaryLogicalExpressionParser : ILogicalExpressionParser
 			return false;
 		}
 
-		while (i < source.Length && source[i] == ')' && nestLevel > 0)
+		while (i < source.Length && source[i] == ')' && nestLevel > originalNest)
 		{
 			nestLevel--;
 			i++;
 		}
 		if (i == source.Length)
 			throw new PathParseException(i, "Unexpected end of input");
-		if (nestLevel != 0)
+		if (nestLevel != originalNest)
 		{
 			expression = null;
 			return false;

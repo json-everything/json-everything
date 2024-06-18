@@ -7,7 +7,7 @@ namespace Json.Path.Expressions
 	{
 		public static bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out LogicalExpressionNode? expression, PathParsingOptions options)
 		{
-			return LogicalExpressionParser.TryParse(source, ref index, out expression, options);
+			return LogicalExpressionParser.TryParse(source, ref index, 0, out expression, options);
 		}
 	}
 }

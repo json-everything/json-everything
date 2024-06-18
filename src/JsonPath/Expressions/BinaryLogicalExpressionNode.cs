@@ -24,7 +24,10 @@ internal class BinaryLogicalExpressionNode : LogicalExpressionNode
 
 	public override bool Evaluate(JsonNode? globalParameter, JsonNode? localParameter)
 	{
-		return Operator.Evaluate(Left.Evaluate(globalParameter, localParameter), Right.Evaluate(globalParameter, localParameter));
+		var left = Left.Evaluate(globalParameter, localParameter);
+		var right = Right.Evaluate(globalParameter, localParameter);
+		var result = Operator.Evaluate(left, right);
+		return result;
 	}
 
 	public override void BuildString(StringBuilder builder)
@@ -42,10 +45,10 @@ internal class BinaryLogicalExpressionNode : LogicalExpressionNode
 
 internal class BinaryLogicalExpressionParser : ILogicalExpressionParser
 {
-	public bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out LogicalExpressionNode? expression, PathParsingOptions options)
+	public bool TryParse(ReadOnlySpan<char> source, ref int index, int nestLevel, [NotNullWhen(true)] out LogicalExpressionNode? expression, PathParsingOptions options)
 	{
 		int i = index;
-		var nestLevel = 0;
+		int originalNest = nestLevel; // need to get back to this
 
 		int Precedence(IBinaryLogicalOperator op) => nestLevel * 10 + op.Precedence;
 
@@ -84,16 +87,16 @@ internal class BinaryLogicalExpressionParser : ILogicalExpressionParser
 				expression = null;
 				return false;
 			}
-			if (source[i] == ')' && nestLevel > 0)
+			if (source[i] == ')' && nestLevel > originalNest)
 			{
-				while (i < source.Length && source[i] == ')' && nestLevel > 0)
+				while (i < source.Length && source[i] == ')' && nestLevel > originalNest)
 				{
 					nestLevel--;
 					i++;
 				}
 				if (i == source.Length)
 					throw new PathParseException(i, "Unexpected end of input");
-				if (nestLevel == 0) continue;
+				if (nestLevel == originalNest) continue;
 			}
 
 			var nextNest = nestLevel;
@@ -114,7 +117,7 @@ internal class BinaryLogicalExpressionParser : ILogicalExpressionParser
 			}
 
 			// parse right
-			if (!BooleanResultExpressionParser.TryParse(source, ref i, out var right, options))
+			if (!BooleanResultExpressionParser.TryParse(source, ref i, nextNest, out var right, options))
 			{
 				// if we don't get a comparison, then the syntax is wrong
 				expression = null;
@@ -122,11 +125,11 @@ internal class BinaryLogicalExpressionParser : ILogicalExpressionParser
 			}
 
 			// this logic necessarily differs from the logic in ValueExpressionParser
-			// because the parser above reads an entire expression as "right",
+			// because the parser above reads an entire expression into "right",
 			// whereas the ValueExpressionParser only reads the next operand.
 			if (left is BinaryLogicalExpressionNode lBin && lBin.Precedence < Precedence(op))
 				lBin.Right = new BinaryLogicalExpressionNode(op, lBin.Right, right, nestLevel);
-			else if (right is BinaryLogicalExpressionNode rBin && Precedence(op) >= rBin.Precedence)
+			else if (right is BinaryLogicalExpressionNode rBin && rBin.Precedence <= Precedence(op))
 			{
 				rBin.Left = new BinaryLogicalExpressionNode(op, left, rBin.Left, nestLevel);
 				left = right;
@@ -137,7 +140,7 @@ internal class BinaryLogicalExpressionParser : ILogicalExpressionParser
 			nestLevel = nextNest;
 		}
 
-		if (nestLevel > 0)
+		if (nestLevel != originalNest)
 		{
 			expression = null;
 			return false;

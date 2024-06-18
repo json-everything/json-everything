@@ -11,9 +11,9 @@ internal abstract class BooleanResultExpressionNode : ExpressionNode, IFilterExp
 
 internal static class BooleanResultExpressionParser
 {
-	public static bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out BooleanResultExpressionNode? expression, PathParsingOptions options)
+	public static bool TryParse(ReadOnlySpan<char> source, ref int index, int nestLevel, [NotNullWhen(true)] out BooleanResultExpressionNode? expression, PathParsingOptions options)
 	{
-		if (LogicalExpressionParser.TryParse(source, ref index, out var logic, options))
+		if (LogicalExpressionParser.TryParse(source, ref index, nestLevel, out var logic, options))
 		{
 			expression = logic;
 			return true;

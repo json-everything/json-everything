@@ -87,7 +87,7 @@ internal static class FunctionExpressionParser
 			else if (parameterTypeList[parameterIndex] == FunctionType.Logical)
 			{
 
-				if (!BooleanResultExpressionParser.TryParse(source, ref i, out var expr, options))
+				if (!BooleanResultExpressionParser.TryParse(source, ref i, 0, out var expr, options))
 				{
 					arguments = null;
 					function = null;
