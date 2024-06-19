@@ -23,8 +23,8 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIcon>json-logo-256.png</PackageIcon>
-    <PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/json-everything/json-everything</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/json-everything/json-everything</RepositoryUrl>
     <PackageTags>json-patch jsonpatch json</PackageTags>
     <PackageReleaseNotes>Release notes can be found at https://docs.json-everything.net/rn-json-patch/</PackageReleaseNotes>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>

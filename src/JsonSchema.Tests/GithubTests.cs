@@ -493,7 +493,7 @@ public class GithubTests
 	public void Issue212_CouldNotResolveAnchorReference_FromFile()
 	{
 		// This validation fails because the file uses `id` instead of `$id`.
-		// See https://github.com/gregsdennis/json-everything/issues/212#issuecomment-1033423550
+		// See https://github.com/json-everything/json-everything/issues/212#issuecomment-1033423550
 		var path = Path.Combine(TestContext.CurrentContext.WorkDirectory, "Files", "issue212_schema.json")
 			.AdjustForPlatform();
 		var schema = JsonSchema.FromFile(path);

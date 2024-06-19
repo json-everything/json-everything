@@ -42,8 +42,8 @@ For these reasons, you can expect your PRs to be retargeted to a branch other th
 
 ## What Needs Doing?
 
-Anything in the [issues](https://github.com/gregsdennis/json-everything/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22) with a `help wanted` label is something that could benefit from a volunteer or two.
+Anything in the [issues](https://github.com/json-everything/json-everything/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22) with a `help wanted` label is something that could benefit from a volunteer or two.
 
-Of primary focus is translating the [resource file](https://github.com/gregsdennis/json-everything/blob/master/JsonSchema/Localization/Resources.resx) into additional languages for _JsonSchema.Net_.
+Of primary focus is translating the [resource file](https://github.com/json-everything/json-everything/blob/master/JsonSchema/Localization/Resources.resx) into additional languages for _JsonSchema.Net_.
 
 Outside of this, PRs are welcome.  As mentioned above, for larger changes or changes to the API surface, it's preferred that there be some discussion in an issue before a PR is submitted.  Mainly, I don't want you to feel like you've wasted your time if changes are requested or the PR is ultimately closed unmerged.

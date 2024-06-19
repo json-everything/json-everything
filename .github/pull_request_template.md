@@ -23,4 +23,4 @@ Depends on ___   <!-- Use if these changes require other changes to be merged fi
 
 ### Checks
 
-- [ ] I have read and understand the [Code of Conduct](https://github.com/gregsdennis/json-everything/blob/master/CODE_OF_CONDUCT.md) and [Contribution Guidelines](https://github.com/gregsdennis/json-everything/blob/master/CONTRIBUTING.md).
+- [ ] I have read and understand the [Code of Conduct](https://github.com/json-everything/json-everything/blob/master/CODE_OF_CONDUCT.md) and [Contribution Guidelines](https://github.com/json-everything/json-everything/blob/master/CONTRIBUTING.md).

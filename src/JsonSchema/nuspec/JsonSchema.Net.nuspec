@@ -6,12 +6,12 @@
     <authors>Greg Dennis</authors>
     <license type="expression">MIT</license>
     <icon>json-logo-256.png</icon>
-    <projectUrl>https://github.com/gregsdennis/json-everything</projectUrl>
+    <projectUrl>https://github.com/json-everything/json-everything</projectUrl>
     <description>JSON Schema built on the System.Text.Json namespace.</description>
     <releaseNotes>Release notes can be found at https://json-everything.net/json-schema</releaseNotes>
     <readme>README.md</readme>
     <tags>json-schema validation schema json</tags>
-    <repository type="git" url="https://github.com/gregsdennis/json-everything" />
+    <repository type="git" url="https://github.com/json-everything/json-everything" />
     <dependencies>
       <dependency id="JsonPointer.Net" version="5.0.0" exclude="Build,Analyzers" />
     </dependencies>

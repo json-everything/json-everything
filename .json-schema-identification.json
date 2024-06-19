@@ -29,7 +29,7 @@
     }
   ],
   "license": "MIT",
-  "source": "https://github.com/gregsdennis/json-everything",
+  "source": "https://github.com/json-everything/json-everything",
   "homepage": "https://json-everything.net",
   "supportedDialects": {
     "draft": [6, 7, "2019-09", "2020-12"],

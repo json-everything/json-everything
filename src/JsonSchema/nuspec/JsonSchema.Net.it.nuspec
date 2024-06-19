@@ -5,14 +5,14 @@
     <version>1.0.0.1</version>
     <title>JsonSchema.Net Locale (it)</title>
     <authors>Greg Dennis</authors>
-    <projectUrl>https://github.com/gregsdennis/json-everything</projectUrl>
+    <projectUrl>https://github.com/json-everything/json-everything</projectUrl>
     <icon>json-logo-256.png</icon>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>JsonSchema.Net Locale Italian (it)</description>
     <releaseNotes>Release notes can be found at https://json-everything.net/json-schema</releaseNotes>
     <readme>README.it.md</readme>
     <license type="expression">MIT</license>
-    <repository type="git" url="https://github.com/gregsdennis/json-everything" />
+    <repository type="git" url="https://github.com/json-everything/json-everything" />
     <language>it</language>
     <dependencies>
       <dependency id="JsonSchema.Net" version="6.0.0" />

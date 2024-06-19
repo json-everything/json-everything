@@ -22,8 +22,8 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIcon>json-logo-256.png</PackageIcon>
-    <PackageProjectUrl>https://github.com/gregsdennis/json-everything</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/gregsdennis/json-everything</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/json-everything/json-everything</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/json-everything/json-everything</RepositoryUrl>
     <PackageTags>json yaml system.text.json yamldotnet yaml.net</PackageTags>
     <PackageReleaseNotes>Release notes can be found at https://docs.json-everything.net/rn-yaml/</PackageReleaseNotes>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>

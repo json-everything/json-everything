@@ -86,7 +86,7 @@ body:
     id: terms
     attributes:
       label: Code of Conduct & Contributor Guidelines
-      description: By submitting this issue, you agree to follow our [Code of Conduct](https://github.com/gregsdennis/json-everything/blob/master/CODE_OF_CONDUCT.md) and [Contribution Guidelines](https://github.com/gregsdennis/json-everything/blob/master/CONTRIBUTING.md)
+      description: By submitting this issue, you agree to follow our [Code of Conduct](https://github.com/json-everything/json-everything/blob/master/CODE_OF_CONDUCT.md) and [Contribution Guidelines](https://github.com/json-everything/json-everything/blob/master/CONTRIBUTING.md)
       options:
         - label: I agree to follow this project's Code of Conduct and Contribution Guidelines.
           required: true
