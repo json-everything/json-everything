@@ -84,7 +84,17 @@ internal class BinaryLogicalExpressionParser : ILogicalExpressionParser
 		}
 
 		// first get a comparison
-		if (!ComparativeExpressionParser.TryParse(source, ref i, out var comp, options))
+		ComparativeExpressionNode? comp = null;
+		while (nestLevel >= originalNest && !ComparativeExpressionParser.TryParse(source, ref i, out comp, options))
+		{
+			// if we found nesting and the comparative expression parse fails,
+			// pull back to include the ( and try again.
+			nestLevel--;
+			i--;
+		}
+
+		// if none of that worked, fail
+		if (comp is null)
 		{
 			expression = null;
 			return false;

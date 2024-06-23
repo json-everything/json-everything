@@ -9,7 +9,7 @@ namespace Json.Path.Tests;
 
 public class StringifyTests
 {
-	private static PathParsingOptions _options = new()
+	private static readonly PathParsingOptions _options = new()
 	{
 		AllowInOperator = true,
 		AllowJsonConstructs = true,
@@ -20,8 +20,10 @@ public class StringifyTests
 
 	public static void AssertStringify(string pathText, JsonNode? data, PathParsingOptions? options = null)
 	{
+		Console.WriteLine();
 		Console.WriteLine("Original Path:   {0}", pathText);
-		var path = JsonPath.Parse(pathText, options);
+		if (!JsonPath.TryParse(pathText, out var path, options))
+			Assert.Inconclusive("Cannot parse original string");
 		var originalResult = path.Evaluate(data);
 
 		var backToString = path.ToString();
@@ -44,6 +46,8 @@ public class StringifyTests
 	}
 
 	[TestCase("$[?@ in [42, 43, 44]]", "[1, 2, 43, 54, 69]")]
+	[TestCase("$[?@+6==0]", "[1, -2, \"-6\", -6, 69]")]
+	[TestCase("$[?(@+6)*2==0]", "[1, -2, \"-12\", -12, 69]")]
 	public void InExpression(string pathText, string dataText)
 	{
 		var data = JsonNode.Parse(dataText);

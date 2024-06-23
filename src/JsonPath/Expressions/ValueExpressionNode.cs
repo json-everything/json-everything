@@ -61,13 +61,13 @@ internal static class ValueExpressionParser
 
 		while (i < source.Length)
 		{
-			// handle )
 			if (!source.ConsumeWhitespace(ref index))
 			{
 				expression = null;
 				return false;
 			}
 
+			// handle )
 			if (source[i] == ')' && nestLevel > 0)
 			{
 				while (i < source.Length && source[i] == ')' && nestLevel > 0)

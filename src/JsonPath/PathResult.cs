@@ -10,7 +10,7 @@ public class PathResult
 	/// <summary>
 	/// The list of matches.
 	/// </summary>
-	public NodeList? Matches { get; }
+	public NodeList Matches { get; }
 	/// <summary>
 	/// An error, if any, that occurred during evaluation.
 	/// </summary>
@@ -24,6 +24,7 @@ public class PathResult
 	[Obsolete]
 	internal PathResult(string error)
 	{
+		Matches = [];
 		Error = error;
 	}
 }

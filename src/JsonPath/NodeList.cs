@@ -1,12 +1,15 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace Json.Path;
 
 /// <summary>
 /// A collection of nodes, generally resulting from an operation or query.
 /// </summary>
+[CollectionBuilder(typeof(NodeListBuilder), nameof(NodeListBuilder.Create))]
 public class NodeList : IEnumerable<Node>
 {
 	private readonly IEnumerable<Node> _nodes;
@@ -33,6 +36,10 @@ public class NodeList : IEnumerable<Node>
 	{
 		_nodes = nodes;
 	}
+	internal NodeList(ReadOnlySpan<Node> nodes)
+	{
+		_nodes = nodes.ToArray();
+	}
 
 	/// <summary>Returns an enumerator that iterates through the collection.</summary>
 	/// <returns>An enumerator that can be used to iterate through the collection.</returns>
@@ -45,4 +52,15 @@ public class NodeList : IEnumerable<Node>
 	{
 		return GetEnumerator();
 	}
+}
+
+/// <summary>
+/// Allows collection expression initialization.
+/// </summary>
+public static class NodeListBuilder
+{
+	/// <summary>
+	/// Allows collection expression initialization.
+	/// </summary>
+	public static NodeList Create(ReadOnlySpan<Node> values) => new(values);
 }

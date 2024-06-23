@@ -189,13 +189,10 @@ internal static class UnaryLogicalOperatorParser
 		{
 			op = Operators.Not;
 			index++;
-		}
-		else
-		{
-			op = null;
-			return false;
+			return true;
 		}
 
-		return true;
+		op = null;
+		return false;
 	}
 }
