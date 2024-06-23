@@ -32,9 +32,22 @@ internal class BinaryLogicalExpressionNode : LogicalExpressionNode
 
 	public override void BuildString(StringBuilder builder)
 	{
+		var useGroup = Left is BinaryLogicalExpressionNode lBin && lBin.Precedence > Operator.Precedence;
+
+		if (useGroup)
+			builder.Append('(');
 		Left.BuildString(builder);
+		if (useGroup)
+			builder.Append(')');
 		builder.Append(Operator);
+		
+		useGroup = Right is BinaryLogicalExpressionNode rBin && rBin.Precedence > Operator.Precedence;
+
+		if (useGroup)
+			builder.Append('(');
 		Right.BuildString(builder);
+		if (useGroup)
+			builder.Append(')');
 	}
 
 	public override string ToString()

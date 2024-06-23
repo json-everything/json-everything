@@ -3,11 +3,18 @@ using System;
 using System.Text.Json.Nodes;
 using Json.More;
 using System.Text;
+using System.Text.Encodings.Web;
+using System.Text.Json;
 
 namespace Json.Path.Expressions;
 
 internal class LiteralExpressionNode : ValueExpressionNode
 {
+	private static readonly JsonSerializerOptions _options = new()
+	{
+		Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+	};
+
 	private readonly JsonNode? _value;
 
 	public LiteralExpressionNode(JsonNode? value)
@@ -22,12 +29,12 @@ internal class LiteralExpressionNode : ValueExpressionNode
 
 	public override void BuildString(StringBuilder builder)
 	{
-		builder.Append(_value.AsJsonString());
+		builder.Append(_value.AsJsonString(_options));
 	}
 
 	public override string ToString()
 	{
-		return _value.AsJsonString();
+		return _value.AsJsonString(_options);
 	}
 }
 

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using Json.More;
 using NUnit.Framework;
 
 namespace Json.Path.Tests.Suite;
@@ -41,11 +42,22 @@ public class ComplianceTestSuiteStringifyTests
 		Console.WriteLine();
 
 		var path = JsonPath.Parse(testCase.Selector);
+		var originalResult = path.Evaluate(testCase.Document);
 
 		var backToString = path.ToString();
 		Console.WriteLine(backToString);
+		if (!JsonPath.TryParse(backToString, out var newPath))
+			Assert.Inconclusive("Stringified semantics do not match original string");
 
-		if (testCase.Selector != backToString)
-			Assert.Inconclusive();
+		var newResult = newPath.Evaluate(testCase.Document);
+
+		if (originalResult.Matches.Count != newResult.Matches.Count)
+			Assert.Inconclusive("Stringified semantics do not match original string");
+
+		foreach (var (o, n) in originalResult.Matches.Zip(newResult.Matches))
+		{
+			if (!o.Value.IsEquivalentTo(n.Value))
+				Assert.Inconclusive("Stringified semantics do not match original string");
+		}
 	}
 }

@@ -23,7 +23,7 @@ internal class UnaryLogicalExpressionNode : LogicalExpressionNode
 
 	public override void BuildString(StringBuilder builder)
 	{
-		var useGroup = Value is BinaryComparativeExpressionNode or BinaryLogicalExpressionNode;
+		var useGroup = Operator is not NoOpOperator && Value is BinaryComparativeExpressionNode or BinaryLogicalExpressionNode;
 
 		builder.Append(Operator);
 		if (useGroup)
