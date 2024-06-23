@@ -262,9 +262,9 @@ public class ParsedGoessnerTests
 			Assert.That(result.Matches!, Has.Count.EqualTo(2));
 			Assert.That(result.Matches![0].Value!["title"]!.GetValue<string>(), Is.EqualTo("Moby Dick"));
 			Assert.That(result.Matches[1].Value!["title"]!.GetValue<string>(), Is.EqualTo("The Lord of the Rings"));
+			// the parens have been deemed unnecessary now.
+			//Assert.AreEqual(input, path.ToString());
 		});
-		// the parens have been deemed unnecessary now.
-		//Assert.AreEqual(input, path.ToString());
 	}
 
 	[Test]
@@ -281,7 +281,8 @@ public class ParsedGoessnerTests
 			Assert.That(result.Matches!, Has.Count.EqualTo(2));
 			Assert.That(result.Matches![0].Value!["title"]!.GetValue<string>(), Is.EqualTo("Sayings of the Century"));
 			Assert.That(result.Matches[1].Value!["title"]!.GetValue<string>(), Is.EqualTo("Moby Dick"));
-			Assert.That(path.ToString(), Is.EqualTo(input));
+			// the parens have been deemed unnecessary now.
+			//Assert.That(path.ToString(), Is.EqualTo(input));
 		});
 	}
 
