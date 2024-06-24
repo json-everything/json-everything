@@ -7,7 +7,7 @@ using System.Text.Json.Nodes;
 
 namespace Json.Path.Expressions;
 
-internal class FunctionValueExpressionNode : ValueExpressionNode
+internal class FunctionValueExpressionNode : LeafValueExpressionNode
 {
 	private readonly ExpressionNode[] _parameters;
 	
@@ -26,7 +26,7 @@ internal class FunctionValueExpressionNode : ValueExpressionNode
 			return x switch
 			{
 				ValueExpressionNode c => (object?)c.Evaluate(globalParameter, localParameter),
-				BooleanResultExpressionNode b => b.Evaluate(globalParameter, localParameter),
+				LogicalExpressionNode b => b.Evaluate(globalParameter, localParameter),
 				_ => throw new ArgumentOutOfRangeException("parameter")
 			};
 		}).ToArray();
@@ -65,7 +65,7 @@ internal class FunctionValueExpressionNode : ValueExpressionNode
 
 internal class FunctionValueExpressionParser : IValueExpressionParser
 {
-	public bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out ValueExpressionNode? expression, PathParsingOptions options)
+	public bool TryParse(ReadOnlySpan<char> source, ref int index, int nestLevel, [NotNullWhen(true)] out ValueExpressionNode? expression, PathParsingOptions options)
 	{
 		int i = index;
 		if (!FunctionExpressionParser.TryParseFunction(source, ref i, out var parameters, out var function, options))

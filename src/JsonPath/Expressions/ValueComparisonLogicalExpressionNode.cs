@@ -5,16 +5,16 @@ using System.Text.Json.Nodes;
 
 namespace Json.Path.Expressions;
 
-internal class BinaryComparativeExpressionNode : ComparativeExpressionNode
+internal class ValueComparisonLogicalExpressionNode : LeafLogicalExpressionNode
 {
-	public IBinaryComparativeOperator Operator { get; }
 	public ValueExpressionNode Left { get; }
+	public IBinaryComparativeOperator Operator { get; }
 	public ValueExpressionNode Right { get; }
 
-	public BinaryComparativeExpressionNode(IBinaryComparativeOperator op, ValueExpressionNode left, ValueExpressionNode right)
+	public ValueComparisonLogicalExpressionNode(ValueExpressionNode left, IBinaryComparativeOperator op, ValueExpressionNode right)
 	{
-		Operator = op;
 		Left = left;
+		Operator = op;
 		Right = right;
 	}
 
@@ -36,35 +36,27 @@ internal class BinaryComparativeExpressionNode : ComparativeExpressionNode
 	}
 }
 
-internal class BinaryComparativeExpressionParser : IComparativeExpressionParser
+internal class ValueComparisonLogicalExpressionParser : ILogicalExpressionParser
 {
-	public bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out ComparativeExpressionNode? expression, PathParsingOptions options)
+	public bool TryParse(ReadOnlySpan<char> source, ref int index, int nestLevel, [NotNullWhen(true)] out LogicalExpressionNode? expression, PathParsingOptions options)
 	{
 		var i = index;
-		var nestLevel = 0;
 
 		if (!source.ConsumeWhitespace(ref i))
 		{
 			expression = null;
 			return false;
 		}
-		while (i < source.Length && source[i] == '(')
-		{
-			nestLevel++;
-			i++;
-		}
-		if (i == source.Length)
-			throw new PathParseException(i, "Unexpected end of input");
 
 		// parse value
-		if (!ValueExpressionParser.TryParse(source, ref i, out var left, options))
+		if (!ValueExpressionParser.TryParse(source, ref i, 0, out var left, options))
 		{
 			expression = null;
 			return false;
 		}
 
 		// parse operator
-		if (!BinaryComparativeOperatorParser.TryParse(source, ref i, out var op))
+		if (!ComparativeOperatorParser.TryParse(source, ref i, out var op))
 		{
 			expression = null;
 			return false;
@@ -77,7 +69,7 @@ internal class BinaryComparativeExpressionParser : IComparativeExpressionParser
 		}
 
 		// parse value
-		if (!ValueExpressionParser.TryParse(source, ref i, out var right, options))
+		if (!ValueExpressionParser.TryParse(source, ref i, 0, out var right, options))
 		{
 			expression = null;
 			return false;
@@ -94,26 +86,14 @@ internal class BinaryComparativeExpressionParser : IComparativeExpressionParser
 			expression = null;
 			return false;
 		}
-		while (i < source.Length && source[i] == ')' && nestLevel > 0)
-		{
-			nestLevel--;
-			i++;
-		}
-		if (i == source.Length)
-			throw new PathParseException(i, "Unexpected end of input");
-		if (nestLevel != 0)
-		{
-			expression = null;
-			return false;
-		}
 
-		expression = new BinaryComparativeExpressionNode(op, left, right);
+		expression = new ValueComparisonLogicalExpressionNode(left, op, right);
 		index = i;
 		return true;
 	}
 
 	private static bool IsNonSingularPath(ValueExpressionNode node)
 	{
-		return node is PathExpressionNode { Path.IsSingular: false };
+		return node is PathValueExpressionNode { Path.IsSingular: false };
 	}
 }

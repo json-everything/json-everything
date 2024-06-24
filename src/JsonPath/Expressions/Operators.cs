@@ -64,7 +64,7 @@ internal static class ValueOperatorParser
 	}
 }
 
-internal static class BinaryComparativeOperatorParser
+internal static class ComparativeOperatorParser
 {
 	// .ToCharArray() used because netstandard 2.0 doesn't define implicit string -> span<char>
 	private static readonly char[] _equalTo = "==".ToCharArray();

@@ -46,8 +46,8 @@ public class StringifyTests
 	}
 
 	[TestCase("$[?@ in [42, 43, 44]]", "[1, 2, 43, 54, 69]")]
-	[TestCase("$[?@+6==0]", "[1, -2, \"-6\", -6, 69]")]
-	[TestCase("$[?(@+6)*2==0]", "[1, -2, \"-12\", -12, 69]")]
+	[TestCase("$[?@ + 6 == 0]", "[1, -2, \"-6\", -6, 69]")]
+	[TestCase("$[?(@ + 6) * 2 == 0]", "[1, -2, \"-12\", -12, 69]")]
 	public void InExpression(string pathText, string dataText)
 	{
 		var data = JsonNode.Parse(dataText);

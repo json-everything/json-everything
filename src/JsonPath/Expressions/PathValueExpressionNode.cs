@@ -5,11 +5,11 @@ using System.Text.Json.Nodes;
 
 namespace Json.Path.Expressions;
 
-internal class PathExpressionNode : ValueExpressionNode
+internal class PathValueExpressionNode : LeafValueExpressionNode
 {
 	public JsonPath Path { get; }
 
-	public PathExpressionNode(JsonPath path)
+	public PathValueExpressionNode(JsonPath path)
 	{
 		Path = path;
 	}
@@ -22,7 +22,7 @@ internal class PathExpressionNode : ValueExpressionNode
 
 		var result = Path.Evaluate(parameter);
 
-		return result.Matches ?? NodeList.Empty;
+		return result.Matches;
 	}
 
 	public override void BuildString(StringBuilder builder)
@@ -30,9 +30,9 @@ internal class PathExpressionNode : ValueExpressionNode
 		Path.BuildString(builder);
 	}
 
-	public static implicit operator PathExpressionNode(JsonPath value)
+	public static implicit operator PathValueExpressionNode(JsonPath value)
 	{
-		return new PathExpressionNode(value);
+		return new PathValueExpressionNode(value);
 	}
 
 	public override string ToString()
@@ -41,9 +41,9 @@ internal class PathExpressionNode : ValueExpressionNode
 	}
 }
 
-internal class PathExpressionParser : IValueExpressionParser
+internal class PathValueExpressionParser : IValueExpressionParser
 {
-	public bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out ValueExpressionNode? expression, PathParsingOptions options)
+	public bool TryParse(ReadOnlySpan<char> source, ref int index, int nestLevel, [NotNullWhen(true)] out ValueExpressionNode? expression, PathParsingOptions options)
 	{
 		if (!PathParser.TryParse(source, ref index, out var path, options))
 		{
@@ -51,7 +51,7 @@ internal class PathExpressionParser : IValueExpressionParser
 			return false;
 		}
 
-		expression = new PathExpressionNode(path);
+		expression = new PathValueExpressionNode(path);
 		return true;
 	}
 }

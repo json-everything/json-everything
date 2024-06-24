@@ -8,7 +8,7 @@ using System.Text.Json;
 
 namespace Json.Path.Expressions;
 
-internal class LiteralExpressionNode : ValueExpressionNode
+internal class LiteralValueExpressionNode : LeafValueExpressionNode
 {
 	private static readonly JsonSerializerOptions _options = new()
 	{
@@ -17,7 +17,7 @@ internal class LiteralExpressionNode : ValueExpressionNode
 
 	private readonly JsonNode? _value;
 
-	public LiteralExpressionNode(JsonNode? value)
+	public LiteralValueExpressionNode(JsonNode? value)
 	{
 		_value = value;
 	}
@@ -38,9 +38,9 @@ internal class LiteralExpressionNode : ValueExpressionNode
 	}
 }
 
-internal class LiteralExpressionParser : IValueExpressionParser
+internal class LiteralValueExpressionParser : IValueExpressionParser
 {
-	public bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out ValueExpressionNode? expression, PathParsingOptions options)
+	public bool TryParse(ReadOnlySpan<char> source, ref int index, int nestLevel, [NotNullWhen(true)] out ValueExpressionNode? expression, PathParsingOptions options)
 	{
 		if (!source.TryParseJson(ref index, out var node))
 		{
@@ -54,7 +54,7 @@ internal class LiteralExpressionParser : IValueExpressionParser
 			return false;
 		}
 
-		expression = new LiteralExpressionNode(node);
+		expression = new LiteralValueExpressionNode(node);
 		return true;
 	}
 }

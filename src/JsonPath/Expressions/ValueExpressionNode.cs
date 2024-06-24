@@ -9,19 +9,16 @@ internal abstract class ValueExpressionNode : ExpressionNode
 	public abstract PathValue? Evaluate(JsonNode? globalParameter, JsonNode? localParameter);
 }
 
+internal abstract class LeafValueExpressionNode : ValueExpressionNode
+{
+	// may only need this abstraction as a parser, not in the model
+}
+
 internal static class ValueExpressionParser
 {
-	private static readonly IValueExpressionParser[] _operandParsers =
-	{
-		new FunctionValueExpressionParser(),
-		new LiteralExpressionParser(),
-		new PathExpressionParser(),
-	};
-
-	public static bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out ValueExpressionNode? expression, PathParsingOptions options)
+	public static bool TryParse(ReadOnlySpan<char> source, ref int index, int nestLevel, [NotNullWhen(true)] out ValueExpressionNode? expression, PathParsingOptions options)
 	{
 		int i = index;
-		var nestLevel = 0;
 
 		int Precedence(IBinaryValueOperator op) => nestLevel * 10 + op.Precedence;
 
@@ -31,22 +28,8 @@ internal static class ValueExpressionParser
 			return false;
 		}
 
-		while (i < source.Length && source[i] == '(')
-		{
-			nestLevel++;
-			i++;
-		}
-		if (i == source.Length)
-			throw new PathParseException(i, "Unexpected end of input");
-
 		// first get an operand
-		ValueExpressionNode? left = null;
-		foreach (var parser in _operandParsers)
-		{
-			if (parser.TryParse(source, ref i, out left, options)) break;
-		}
-
-		if (left == null)
+		if (!ValueOperandParser.TryParse(source, ref i, nestLevel, out var left, options))
 		{
 			expression = null;
 			return false;
@@ -67,67 +50,73 @@ internal static class ValueExpressionParser
 				return false;
 			}
 
-			// handle )
-			if (source[i] == ')' && nestLevel > 0)
-			{
-				while (i < source.Length && source[i] == ')' && nestLevel > 0)
-				{
-					nestLevel--;
-					i++;
-				}
-				if (i == source.Length)
-					throw new PathParseException(i, "Unexpected end of input");
-				if (nestLevel == 0) continue;
-			}
-
-			var nextNest = nestLevel;
 			// parse operator
 			if (!ValueOperatorParser.TryParse(source, ref i, out var op))
 				break; // if we don't get an op, then we're done
 
-			// handle (
 			if (!source.ConsumeWhitespace(ref index))
 			{
 				expression = null;
 				return false;
 			}
 
-			if (source[i] == '(')
-			{
-				nextNest++;
-				i++;
-			}
-
 			// parse right
-			ValueExpressionNode? right = null;
-			foreach (var parser in _operandParsers)
+			if (!ValueOperandParser.TryParse(source, ref i, nestLevel, out var right, options))
 			{
-				if (parser.TryParse(source, ref i, out right, options)) break;
-			}
-
-			if (right == null)
-			{
-				// if we don't get a value, then the syntax is wrong
 				expression = null;
 				return false;
 			}
 
-			if (left is BinaryValueExpressionNode bin && bin.Precedence < Precedence(op))
-				bin.Right = new BinaryValueExpressionNode(op, bin.Right, right, nestLevel);
+			// assemble
+			if (left is CompositeValueExpressionNode bin && bin.Precedence < Precedence(op))
+				bin.Right = new CompositeValueExpressionNode(bin.Right, op, right, nestLevel);
 			else
-				left = new BinaryValueExpressionNode(op, left, right, nestLevel);
-
-			nestLevel = nextNest;
-		}
-
-		if (nestLevel > 0)
-		{
-			expression = null;
-			return false;
+				left = new CompositeValueExpressionNode(left, op, right, nestLevel);
 		}
 
 		index = i;
 		expression = left;
 		return true;
+	}
+}
+
+internal class ValueOperandParser
+{
+	private static readonly IValueExpressionParser[] _parsers =
+	{
+		new FunctionValueExpressionParser(),
+		new LiteralValueExpressionParser(),
+		new PathValueExpressionParser()
+	};
+
+	public static bool TryParse(ReadOnlySpan<char> source, ref int index, int nestLevel, [NotNullWhen(true)] out ValueExpressionNode? expression, PathParsingOptions options)
+	{
+		if (source[index] == '(')
+		{
+			int i = index + 1;
+			if (ValueExpressionParser.TryParse(source, ref i, nestLevel + 1, out var local, options))
+			{
+				if (!source.ConsumeWhitespace(ref i))
+				{
+					expression = null;
+					return false;
+				}
+
+				if (source[i] == ')')
+				{
+					index = i + 1;
+					expression = local;
+					return true;
+				}
+			}
+		}
+
+		foreach (var parser in _parsers)
+		{
+			if (parser.TryParse(source, ref index, nestLevel, out expression, options)) return true;
+		}
+
+		expression = null;
+		return false;
 	}
 }
