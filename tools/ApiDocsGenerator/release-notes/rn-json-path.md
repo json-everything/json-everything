@@ -4,6 +4,11 @@ title: JsonPath.Net
 icon: fas fa-tag
 order: "09.08"
 ---
+# [1.1.2](https://github.com/gregsdennis/json-everything/pull/750) {#release-path-1.1.2}
+
+- Improved parsing to account for a few missed scenarios involving math operations.
+- Greatly improved `.ToString()` to render a re-parsable path.
+
 # [1.1.1](https://github.com/gregsdennis/json-everything/pull/750) {#release-path-1.1.1}
 
 [JSON Path Test Suite #83](https://github.com/jsonpath-standard/jsonpath-compliance-test-suite/pull/83) - Fixes some order of operations issues with parsing filter expressions with boolean operators.
