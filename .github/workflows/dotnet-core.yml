@@ -46,7 +46,7 @@ jobs:
     if: success() || failure()
     name: Publish Unit Test Results
     permissions:
-      check: write
+      checks: write
     steps:
       - name: Download Artifacts
         uses: actions/download-artifact@v2
