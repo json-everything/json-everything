@@ -45,7 +45,7 @@ jobs:
     needs: build
     if: success() || failure()
     name: Publish Unit Test Results
-    permission:
+    permissions:
       check: write
     steps:
       - name: Download Artifacts
