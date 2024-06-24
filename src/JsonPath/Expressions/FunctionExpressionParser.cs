@@ -74,8 +74,8 @@ internal static class FunctionExpressionParser
 
 			if (parameterTypeList[parameterIndex] == FunctionType.Value)
 			{
-				if (!ValueExpressionParser.TryParse(source, ref i, out var expr, options) ||
-				    expr is PathExpressionNode { Path.IsSingular: false })
+				if (!ValueExpressionParser.TryParse(source, ref i, 0, out var expr, options) ||
+				    expr is PathValueExpressionNode { Path.IsSingular: false })
 				{
 					arguments = null;
 					function = null;
@@ -87,7 +87,7 @@ internal static class FunctionExpressionParser
 			else if (parameterTypeList[parameterIndex] == FunctionType.Logical)
 			{
 
-				if (!BooleanResultExpressionParser.TryParse(source, ref i, 0, out var expr, options))
+				if (!LogicalExpressionParser.TryParse(source, ref i, 0, out var expr, options))
 				{
 					arguments = null;
 					function = null;
@@ -98,7 +98,7 @@ internal static class FunctionExpressionParser
 			else
 			{
 				// this must return a path or function that returns nodelist
-				if (!ValueExpressionParser.TryParse(source, ref i, out var expr, options))
+				if (!ValueExpressionParser.TryParse(source, ref i, 0, out var expr, options))
 				{
 					arguments = null;
 					function = null;
@@ -107,14 +107,14 @@ internal static class FunctionExpressionParser
 
 				switch (expr)
 				{
-					case PathExpressionNode:
+					case PathValueExpressionNode:
 						arguments.Add(expr);
 						break;
 					case FunctionValueExpressionNode { Function: not NodelistFunctionDefinition }:
 						arguments = null;
 						function = null;
 						return false;
-					case FunctionValueExpressionNode funcExpr:
+					case FunctionValueExpressionNode:
 						arguments.Add(expr);
 						break;
 					default:

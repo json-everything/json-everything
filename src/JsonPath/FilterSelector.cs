@@ -17,7 +17,7 @@ public class FilterSelector : ISelector
 	/// </summary>
 	public IFilterExpression Expression { get; }
 
-	internal FilterSelector(BooleanResultExpressionNode expression)
+	internal FilterSelector(LogicalExpressionNode expression)
 	{
 		Expression = expression;
 	}

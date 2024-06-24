@@ -7,12 +7,12 @@ using System.Text.Json.Nodes;
 
 namespace Json.Path.Expressions;
 
-internal class FunctionBooleanExpressionNode : LogicalExpressionNode
+internal class FunctionLogicalExpressionNode : LogicalExpressionNode
 {
 	public LogicalFunctionDefinition Function { get; }
 	public ExpressionNode[] Parameters { get; }
 
-	public FunctionBooleanExpressionNode(LogicalFunctionDefinition function, IEnumerable<ExpressionNode> parameters)
+	public FunctionLogicalExpressionNode(LogicalFunctionDefinition function, IEnumerable<ExpressionNode> parameters)
 	{
 		Function = function;
 		Parameters = parameters.ToArray();
@@ -25,7 +25,7 @@ internal class FunctionBooleanExpressionNode : LogicalExpressionNode
 			return x switch
 			{
 				ValueExpressionNode c => (object?)c.Evaluate(globalParameter, localParameter),
-				BooleanResultExpressionNode b => b.Evaluate(globalParameter, localParameter),
+				LogicalExpressionNode b => b.Evaluate(globalParameter, localParameter),
 				_ => throw new ArgumentOutOfRangeException("parameter")
 			};
 		}).ToArray();
@@ -57,7 +57,7 @@ internal class FunctionBooleanExpressionNode : LogicalExpressionNode
 	}
 }
 
-internal class FunctionBooleanExpressionParser : ILogicalExpressionParser
+internal class FunctionLogicalExpressionParser : ILogicalExpressionParser
 {
 	public bool TryParse(ReadOnlySpan<char> source, ref int index, int nestLevel, [NotNullWhen(true)] out LogicalExpressionNode? expression, PathParsingOptions options)
 	{
@@ -74,7 +74,7 @@ internal class FunctionBooleanExpressionParser : ILogicalExpressionParser
 			return false;
 		}
 
-		expression = new FunctionBooleanExpressionNode(logicalFunc, parameters);
+		expression = new FunctionLogicalExpressionNode(logicalFunc, parameters);
 		index = i;
 		return true;
 	}

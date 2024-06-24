@@ -76,6 +76,21 @@ public class ParsingTests
 			new TestCaseData("$[?(@.foo==2+(4+5))]"),
 			new TestCaseData("$[?(@.foo==2-(4+5))]"),
 			new TestCaseData("$[?(@.foo==2*4+5)]"),
+			new TestCaseData("$[?((4+5)==@.foo)]"),
+			new TestCaseData("$[?(2*(4+5)==@.foo)]"),
+			new TestCaseData("$[?(2+(4+5)==@.foo)]"),
+			new TestCaseData("$[?(2-(4+5)==@.foo)]"),
+			new TestCaseData("$[?(2*4+5==@.foo)]"),
+			new TestCaseData("$[?@.foo==(4+5)]"),
+			new TestCaseData("$[?@.foo==2*(4+5)]"),
+			new TestCaseData("$[?@.foo==2+(4+5)]"),
+			new TestCaseData("$[?@.foo==2-(4+5)]"),
+			new TestCaseData("$[?@.foo==2*4+5]"),
+			new TestCaseData("$[?(4+5)==@.foo]"),
+			new TestCaseData("$[?2*(4+5)==@.foo]"),
+			new TestCaseData("$[?2+(4+5)==@.foo]"),
+			new TestCaseData("$[?2-(4+5)==@.foo]"),
+			new TestCaseData("$[?2*4+5==@.foo]"),
 		];
 
 	[TestCaseSource(nameof(OptionalMathCases))]

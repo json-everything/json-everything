@@ -3,16 +3,16 @@ using System.Text.Json.Nodes;
 
 namespace Json.Path.Expressions;
 
-internal class BinaryValueExpressionNode : ValueExpressionNode
+internal class CompositeValueExpressionNode : ValueExpressionNode
 {
-	public IBinaryValueOperator Operator { get; }
 	public ValueExpressionNode Left { get; }
+	public IBinaryValueOperator Operator { get; }
 	public ValueExpressionNode Right { get; set; }
 	public int NestLevel { get; }
 
 	public int Precedence => NestLevel * 10 + Operator.Precedence;
 
-	public BinaryValueExpressionNode(IBinaryValueOperator op, ValueExpressionNode left, ValueExpressionNode right, int nestLevel)
+	public CompositeValueExpressionNode(ValueExpressionNode left, IBinaryValueOperator op, ValueExpressionNode right, int nestLevel)
 	{
 		Operator = op;
 		Left = left;
@@ -27,7 +27,7 @@ internal class BinaryValueExpressionNode : ValueExpressionNode
 
 	public override void BuildString(StringBuilder builder)
 	{
-		var useGroup = Left is BinaryValueExpressionNode lBin &&
+		var useGroup = Left is CompositeValueExpressionNode lBin &&
 		               (lBin.Precedence - Precedence) % 10 > 1;
 
 		if (useGroup)
@@ -38,7 +38,7 @@ internal class BinaryValueExpressionNode : ValueExpressionNode
 	
 		builder.Append(Operator);
 
-		useGroup = Right is BinaryValueExpressionNode rBin &&
+		useGroup = Right is CompositeValueExpressionNode rBin &&
 		           (rBin.Precedence - Precedence) % 10 > 1;
 		if (useGroup)
 			builder.Append('(');

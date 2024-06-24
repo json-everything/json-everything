@@ -5,5 +5,5 @@ namespace Json.Path.Expressions;
 
 internal interface IValueExpressionParser
 {
-	bool TryParse(ReadOnlySpan<char> source, ref int index, [NotNullWhen(true)] out ValueExpressionNode? expression, PathParsingOptions options);
+	bool TryParse(ReadOnlySpan<char> source, ref int index, int nestLevel, [NotNullWhen(true)] out ValueExpressionNode? expression, PathParsingOptions options);
 }

@@ -40,12 +40,6 @@ public class ComplianceTestSuiteStringifyTests
 		Console.WriteLine(testCase);
 		Console.WriteLine();
 
-		var path = JsonPath.Parse(testCase.Selector);
-
-		var backToString = path.ToString();
-		Console.WriteLine(backToString);
-
-		if (testCase.Selector != backToString)
-			Assert.Inconclusive();
+		StringifyTests.AssertStringify(testCase.Selector, testCase.Document);
 	}
 }

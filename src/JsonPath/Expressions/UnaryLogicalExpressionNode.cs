@@ -5,12 +5,12 @@ using System.Text.Json.Nodes;
 
 namespace Json.Path.Expressions;
 
-internal class UnaryLogicalExpressionNode : LogicalExpressionNode
+internal class UnaryLogicalExpressionNode : CompositeLogicalExpressionNode
 {
 	public IUnaryLogicalOperator Operator { get; }
-	public BooleanResultExpressionNode Value { get; }
+	public LogicalExpressionNode Value { get; }
 
-	public UnaryLogicalExpressionNode(IUnaryLogicalOperator op, BooleanResultExpressionNode value)
+	public UnaryLogicalExpressionNode(IUnaryLogicalOperator op, LogicalExpressionNode value)
 	{
 		Operator = op;
 		Value = value;
@@ -23,7 +23,7 @@ internal class UnaryLogicalExpressionNode : LogicalExpressionNode
 
 	public override void BuildString(StringBuilder builder)
 	{
-		var useGroup = Value is BinaryComparativeExpressionNode or BinaryLogicalExpressionNode;
+		var useGroup = Operator is not NoOpOperator && Value is ValueComparisonLogicalExpressionNode or BinaryLogicalExpressionNode;
 
 		builder.Append(Operator);
 		if (useGroup)
@@ -47,21 +47,12 @@ internal class UnaryLogicalExpressionParser : ILogicalExpressionParser
 		// it expects a ! then either a comparison or logical expression
 
 		var i = index;
-		var originalNest = nestLevel; // need to get back to this
 
 		if (!source.ConsumeWhitespace(ref index))
 		{
 			expression = null;
 			return false;
 		}
-
-		while (i < source.Length && source[i] == '(')
-		{
-			nestLevel++;
-			i++;
-		}
-		if (i == source.Length)
-			throw new PathParseException(i, "Unexpected end of input");
 
 		// parse operator
 		if (!UnaryLogicalOperatorParser.TryParse(source, ref i, out var op))
@@ -71,26 +62,13 @@ internal class UnaryLogicalExpressionParser : ILogicalExpressionParser
 		}
 
 		// parse comparison
-		if (!BooleanResultExpressionParser.TryParse(source, ref i, nestLevel, out var right, options))
+		if (!LogicalExpressionParser.TryParse(source, ref i, nestLevel, out var right, options))
 		{
 			expression = null;
 			return false;
 		}
 
 		if (!source.ConsumeWhitespace(ref index))
-		{
-			expression = null;
-			return false;
-		}
-
-		while (i < source.Length && source[i] == ')' && nestLevel > originalNest)
-		{
-			nestLevel--;
-			i++;
-		}
-		if (i == source.Length)
-			throw new PathParseException(i, "Unexpected end of input");
-		if (nestLevel != originalNest)
 		{
 			expression = null;
 			return false;
