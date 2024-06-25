@@ -661,6 +661,9 @@ public class JsonSchema : IBaseDocument
 
 			if (newResolvable is UnrecognizedKeyword unrecognized)
 			{
+				if (!options.AllowReferencesIntoUnknownKeywords)
+					throw new InvalidOperationException($"Encountered reference into unknown keyword: {BaseUri}#{pointer}");
+
 #if NETSTANDARD2_0
 				var newPointer = pointer.GetLocal(i+1);
 #else
