@@ -121,6 +121,12 @@ public class EvaluationOptions
 	/// </summary>
 	public CultureInfo? Culture { get; set; }
 
+	/// <summary>
+	/// Gets or sets whether `$ref` is permitted to navigate into unknown keywords
+	/// where subschemas aren't expected.  Default is true.
+	/// </summary>
+	public bool AllowReferencesIntoUnknownKeywords { get; set; } = true;
+
 	internal bool Changed { get; set; }
 
 	static EvaluationOptions()
@@ -158,7 +164,8 @@ public class EvaluationOptions
 			Culture = other.Culture,
 			_ignoredAnnotationTypes = other._ignoredAnnotationTypes == null
 				? null
-				: new HashSet<Type>(other._ignoredAnnotationTypes)
+				: new HashSet<Type>(other._ignoredAnnotationTypes),
+			AllowReferencesIntoUnknownKeywords = other.AllowReferencesIntoUnknownKeywords
 		};
 		options.SchemaRegistry.CopyFrom(other.SchemaRegistry);
 		return options;
