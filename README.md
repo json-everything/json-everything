@@ -175,3 +175,7 @@ Please see the [Code of Conduct](./CODE_OF_CONDUCT.md) and the [CONTRIBUTING](./
 ## Sponsorship
 
 If you found these libraries helpful and would like to promote continued development, please consider [sponsoring the maintainers](https://github.com/sponsors/gregsdennis).
+
+## .NET Foundation
+
+This project is supported by the [.NET Foundation](https://dotnetfoundation.org).
