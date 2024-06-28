@@ -6,6 +6,10 @@ order: "09.01"
 ---
 # [7.1.0](https://github.com/gregsdennis/json-everything/pull/752) {#release-schema-7.1.0}
 
+
+
+# [7.1.0](https://github.com/gregsdennis/json-everything/pull/752) {#release-schema-7.1.0}
+
 Adds `EvaluationOptions.AllowReferencesIntoUnknownKeywords` to optionally disallow `$ref` navigation into unknown keywords.
 
 # [7.0.4](https://github.com/gregsdennis/json-everything/pull/746) {#release-schema-7.0.4}
