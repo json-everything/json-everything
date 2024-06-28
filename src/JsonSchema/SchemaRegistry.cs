@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Buffers;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace Json.Schema;
@@ -21,6 +20,15 @@ public class SchemaRegistry
 	}
 
 	private static readonly Uri _empty = new("http://everything.json/");
+
+	private static readonly Dictionary<Uri, SpecVersion> _versionLookup = new()
+	{
+		[MetaSchemas.Draft6Id] = SpecVersion.Draft6,
+		[MetaSchemas.Draft7Id] = SpecVersion.Draft7,
+		[MetaSchemas.Draft201909Id] = SpecVersion.Draft201909,
+		[MetaSchemas.Draft202012Id] = SpecVersion.Draft202012,
+		[MetaSchemas.DraftNextId] = SpecVersion.DraftNext
+	};
 
 	private readonly Dictionary<Uri, Registration> _registered = [];
 	private readonly EvaluationOptions _options;
@@ -98,6 +106,23 @@ public class SchemaRegistry
 	{
 		RegisterSchema(uri, document);
 		_options.Changed = true;
+	}
+
+	/// <summary>
+	/// Registers a new meta-schema URI and establishes a new recognized value for the
+	/// <see cref="SpecVersion"/> enumeration.
+	/// </summary>
+	/// <param name="metaSchemaUri">The meta-schema URI.</param>
+	/// <param name="specVersion">The value of the enum to associate with the meta-schema.</param>
+	/// <remarks>
+	/// **WARNING** There be dragons here.  Use only if you know what you're doing.
+	/// </remarks>
+	public static void RegisterNewSpecVersion(Uri metaSchemaUri, SpecVersion specVersion)
+	{
+		if (_versionLookup.ContainsKey(metaSchemaUri))
+			throw new ArgumentException("Overriding known specification versions is not supported.");
+
+		_versionLookup[metaSchemaUri] = specVersion;
 	}
 
 	private void RegisterSchema(Uri? uri, IBaseDocument document)
@@ -377,20 +402,13 @@ public class SchemaRegistry
 			var metaSchemaId = schemaKeyword.Schema;
 			while (metaSchemaId != null)
 			{
-				var version = metaSchemaId.OriginalString switch
-				{
-					MetaSchemas.Draft6IdValue => SpecVersion.Draft6,
-					MetaSchemas.Draft7IdValue => SpecVersion.Draft7,
-					MetaSchemas.Draft201909IdValue => SpecVersion.Draft201909,
-					MetaSchemas.Draft202012IdValue => SpecVersion.Draft202012,
-					MetaSchemas.DraftNextIdValue => SpecVersion.DraftNext,
-					_ => SpecVersion.Unspecified
-				};
-				if (version != SpecVersion.Unspecified)
+				if (_versionLookup.TryGetValue(metaSchemaId, out var version))
 				{
 					schema.DeclaredVersion = version;
 					return;
 				}
+
+				schema.DeclaredVersion = SpecVersion.Unspecified;
 
 				var metaSchema = registry.Get(metaSchemaId) as JsonSchema ??
 					throw new JsonSchemaException("Cannot resolve custom meta-schema.");
