@@ -4,6 +4,10 @@ title: JsonPointer.Net
 icon: fas fa-tag
 order: "09.10"
 ---
+# [5.0.1](https://github.com/gregsdennis/json-everything/pull/757) {#release-pointer-5.0.1}
+
+For some reason v5.0.0 was missing two methods: `.GetAncestor()` and `.GetLocal()`.  This is a republish to include those methods.
+
 # [5.0.0](https://github.com/gregsdennis/json-everything/pull/719) {#release-pointer-5.0.0}
 
 Complete overhaul of `JsonPointer` to reduce memory usage for consuming applications.
