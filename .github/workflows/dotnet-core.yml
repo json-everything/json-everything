@@ -39,6 +39,12 @@ jobs:
         with:
           name: Unit Test Results
           path: '**/*/test-results.trx'
+      - name: Upload Packages for Inspection
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: Packages
+          path: '**/*/*.nupkg'
 
   test-results:
     runs-on: ubuntu-latest
