@@ -11,6 +11,9 @@ namespace Json.Schema;
 public class EvaluationContext
 {
 	private readonly Stack<SpecVersion> _evaluatingAs = new();
+#if DEBUG
+	private JsonPointer _evaluationPath = JsonPointer.Empty;
+#endif
 
 	/// <summary>
 	/// Gets the evaluation options.
@@ -66,5 +69,19 @@ public class EvaluationContext
 	{ 
 		_evaluatingAs.Pop();
 		EvaluatingAs = _evaluatingAs.Peek();
+	}
+
+	internal void PushEvaluationPath(PointerSegment segment)
+	{
+#if DEBUG
+		_evaluationPath = _evaluationPath.Combine(segment);
+#endif
+	}
+
+	internal void PopEvaluationPath()
+	{
+#if DEBUG
+		_evaluationPath = _evaluationPath.GetAncestor(1);
+#endif
 	}
 }

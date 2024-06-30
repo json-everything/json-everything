@@ -63,7 +63,13 @@ public class PropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 	/// <returns>A constraint object.</returns>
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, ReadOnlySpan<KeywordConstraint> localConstraints, EvaluationContext context)
 	{
-		var subschemaConstraints = Properties.Select(x => x.Value.GetConstraint(_evaluationPointers[x.Key], schemaConstraint.BaseInstanceLocation, _instancePointers[x.Key], context)).ToArray();
+		var subschemaConstraints = Properties.Select(x =>
+		{
+			context.PushEvaluationPath(x.Key);
+			var constraint = x.Value.GetConstraint(_evaluationPointers[x.Key], schemaConstraint.BaseInstanceLocation, _instancePointers[x.Key], context);
+			context.PopEvaluationPath();
+			return constraint;
+		}).ToArray();
 
 		return new KeywordConstraint(Name, Evaluator)
 		{

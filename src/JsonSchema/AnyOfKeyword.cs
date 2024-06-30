@@ -69,7 +69,13 @@ public class AnyOfKeyword : IJsonSchemaKeyword, ISchemaCollector
 	/// <returns>A constraint object.</returns>
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, ReadOnlySpan<KeywordConstraint> localConstraints, EvaluationContext context)
 	{
-		var subschemaConstraints = Schemas.Select((x, i) => x.GetConstraint(JsonPointer.Create(Name, i), schemaConstraint.BaseInstanceLocation, JsonPointer.Empty, context)).ToArray();
+		var subschemaConstraints = Schemas.Select((x, i) =>
+		{
+			context.PushEvaluationPath(i);
+			var constraint = x.GetConstraint(JsonPointer.Create(Name, i), schemaConstraint.BaseInstanceLocation, JsonPointer.Empty, context);
+			context.PopEvaluationPath();
+			return constraint;
+		}).ToArray();
 
 		return new KeywordConstraint(Name, Evaluator)
 		{
