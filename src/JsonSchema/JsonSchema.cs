@@ -429,7 +429,9 @@ public class JsonSchema : IBaseDocument
 				var refKeyword = (RefKeyword?) Keywords!.FirstOrDefault(x => x is RefKeyword);
 				if (refKeyword != null)
 				{
+					context.PushEvaluationPath(RefKeyword.Name);
 					var refConstraint = refKeyword.GetConstraint(constraint, [], context);  // indirect allocation
+					context.PopEvaluationPath();
 					constraint.Constraints = [refConstraint];  // allocation
 					return;
 				}
@@ -473,7 +475,9 @@ public class JsonSchema : IBaseDocument
 				KeywordConstraint? keywordConstraint;
 				if (ShouldProcessKeyword(keyword, context.Options.ProcessCustomKeywords, version, declaredKeywordTypes))
 				{
+					context.PushEvaluationPath(keyword.Keyword());
 					keywordConstraint = keyword.GetConstraint(constraint, localConstraints[..constraintCount], context);  // indirect allocation
+					context.PopEvaluationPath();
 					localConstraints[constraintCount] = keywordConstraint;
 					constraintCount++;
 

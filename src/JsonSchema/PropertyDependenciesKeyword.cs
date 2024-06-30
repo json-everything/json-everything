@@ -57,9 +57,12 @@ public class PropertyDependenciesKeyword : IJsonSchemaKeyword, ICustomSchemaColl
 	{
 		var subschemaConstraints = Dependencies.SelectMany(property =>
 		{
+			context.PushEvaluationPath(property.Key);
 			var propertyConstraint = property.Value.Schemas.Select(requirement =>
 			{
+				context.PushEvaluationPath(requirement.Key);
 				var requirementConstraint = requirement.Value.GetConstraint(JsonPointer.Create(Name, property.Key), schemaConstraint.BaseInstanceLocation, JsonPointer.Empty, context);
+				context.PopEvaluationPath();
 				requirementConstraint.InstanceLocator = evaluation =>
 				{
 					if (evaluation.LocalInstance is not JsonObject obj ||
@@ -72,6 +75,7 @@ public class PropertyDependenciesKeyword : IJsonSchemaKeyword, ICustomSchemaColl
 
 				return requirementConstraint;
 			});
+			context.PopEvaluationPath();
 
 			return propertyConstraint;
 		}).ToArray();
