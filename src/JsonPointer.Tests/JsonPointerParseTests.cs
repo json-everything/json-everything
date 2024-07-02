@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
 
@@ -11,7 +12,6 @@ public class JsonPointerParseTests
 	{
 		get
 		{
-			// Normal
 			yield return new TestCaseData("", new string[] { });
 			yield return new TestCaseData("/foo", new[] { "foo" });
 			yield return new TestCaseData("/foo/0", new[] { "foo", "0" });
@@ -30,7 +30,12 @@ public class JsonPointerParseTests
 			yield return new TestCaseData("/i%5Cj", new[] { "i%5Cj" });
 			yield return new TestCaseData("/k%22l", new[] { "k%22l" });
 			yield return new TestCaseData("/%20", new[] { "%20" });
-			// Url
+		}
+	}
+	public static IEnumerable UrlSpecificationExamples
+	{
+		get
+		{
 			yield return new TestCaseData("#", new string[] { });
 			yield return new TestCaseData("#/foo", new[] { "foo" });
 			yield return new TestCaseData("#/foo/0", new[] { "foo", "0" });
@@ -61,6 +66,7 @@ public class JsonPointerParseTests
 	}
 
 	[TestCaseSource(nameof(SpecificationExamples))]
+	[TestCaseSource(nameof(UrlSpecificationExamples))]
 	public void Parse(string pointerString, string[] segments)
 	{
 		var pointer = JsonPointer.Parse(pointerString);
@@ -122,5 +128,14 @@ public class JsonPointerParseTests
 		var actual = pointer!.ToString();
 
 		Assert.That(actual, Is.EqualTo(expected));
+	}
+
+	[TestCaseSource(nameof(SpecificationExamples))]
+	public void CreateThenToString(string pointerString, string[] segments)
+	{
+		var pointer = JsonPointer.Create(segments.Select(x => (PointerSegment)x).ToArray());
+
+		var backToString = pointer.ToString();
+		Assert.That(backToString, Is.EqualTo(pointerString));
 	}
 }

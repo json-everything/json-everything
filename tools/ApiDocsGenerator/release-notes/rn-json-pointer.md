@@ -4,6 +4,10 @@ title: JsonPointer.Net
 icon: fas fa-tag
 order: "09.10"
 ---
+# [5.0.2](https://github.com/gregsdennis/json-everything/pull/759) {#release-pointer-5.0.2}
+
+Fixed a problem with `.ToString()` where pointers constructed using `JsonPointer.Create()` would not properly escape segments.
+
 # [5.0.1](https://github.com/gregsdennis/json-everything/pull/757) {#release-pointer-5.0.1}
 
 For some reason v5.0.0 was missing two methods: `.GetAncestor()` and `.GetLocal()`.  This is a republish to include those methods.

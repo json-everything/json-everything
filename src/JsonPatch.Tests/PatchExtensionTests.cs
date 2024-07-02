@@ -380,6 +380,80 @@ public class PatchExtensionTests
 		JsonAssert.AreEquivalent(patchExpected, patchJson);
 	}
 
+	[Test]
+	public void SlashInPropertyName()
+	{
+		var initial = JsonNode.Parse("""
+			{
+			  "spec": {
+			    "replicas": 0,
+			    "selector": {
+			      "matchLabels": {
+			        "app": "myapp"
+			      }
+			    },
+			    "template": {
+			      "metadata": {
+			        "creationTimestamp": null,
+			        "labels": {
+			          "app": "myapp"
+			        },
+			        "annotations": {
+			          "kubectl.kubernetes.io/restartedAt": "1719861246",
+			          "date": "1719861246"
+			        }
+			      }
+			    }
+			  }
+			}
+			""");
+		var final = JsonNode.Parse("""
+			{
+			  "spec": {
+			    "replicas": 0,
+			    "selector": {
+			      "matchLabels": {
+			        "app": "myapp"
+			      }
+			    },
+			    "template": {
+			      "metadata": {
+			        "creationTimestamp": null,
+			        "labels": {
+			          "app": "myapp"
+			        },
+			        "annotations": {
+			          "kubectl.kubernetes.io/restartedAt": "",
+			          "date": "1719925004"
+			        }
+			      }
+			    }
+			  }
+			}
+			""");
+		var expected = JsonSerializer.Deserialize<JsonPatch>(
+			"""
+			[
+			  {
+			    "op": "replace",
+			    "path": "/spec/template/metadata/annotations/kubectl.kubernetes.io~1restartedAt",
+			    "value": ""
+			  },
+			  {
+			    "op": "replace",
+			    "path": "/spec/template/metadata/annotations/date",
+			    "value": "1719925004"
+			  }
+			]
+			""",
+			TestEnvironment.SerializerOptions
+		);
+
+		var actual = initial.CreatePatch(final, TestEnvironment.SerializerOptions);
+
+		VerifyPatches(expected!, actual);
+	}
+
 	private static readonly JsonSerializerOptions _indentedSerializerOptions =
 		new()
 		{
