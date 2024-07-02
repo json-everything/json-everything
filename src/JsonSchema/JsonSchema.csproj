@@ -17,8 +17,8 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageId>JsonSchema.Net</PackageId>
-    <Version>7.1.1</Version>
-    <FileVersion>7.1.1</FileVersion>
+    <Version>7.1.2</Version>
+    <FileVersion>7.1.2</FileVersion>
     <AssemblyVersion>7.0.0.0</AssemblyVersion>
     <Authors>Greg Dennis</Authors>
     <Description>JSON Schema built on the System.Text.Json namespace</Description>

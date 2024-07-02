@@ -4,6 +4,10 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "09.01"
 ---
+# [7.1.2](https://github.com/gregsdennis/json-everything/pull/759) {#release-schema-7.1.2}
+
+Update to use _JsonPointer.Net_ v5.0.2.
+
 # [7.1.1](https://github.com/gregsdennis/json-everything/pull/755) {#release-schema-7.1.1}
 
 Added a backdoor to allow Graeae to support draft 4 schemas.
