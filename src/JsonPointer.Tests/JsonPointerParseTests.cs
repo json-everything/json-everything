@@ -136,6 +136,6 @@ public class JsonPointerParseTests
 		var pointer = JsonPointer.Create(segments.Select(x => (PointerSegment)x).ToArray());
 
 		var backToString = pointer.ToString();
-		Assert.That(backToString, Is.SameAs(pointerString));
+		Assert.That(backToString, Is.EqualTo(pointerString));
 	}
 }

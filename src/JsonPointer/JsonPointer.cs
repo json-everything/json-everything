@@ -471,17 +471,20 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 		if (_plain is not null) return _plain;
 
 		using var memory = MemoryPool<char>.Shared.Rent();
-		var span = memory.Memory.Span;
+		var final = memory.Memory.Span;
 		var length = 0;
 		foreach (var segment in _decodedSegments)
 		{
-			span[length] = '/';
+			final[length] = '/';
 			length++;
-			segment.AsSpan().CopyTo(span[length..]);
-			length += segment.Length;
+			var localOwner = MemoryPool<char>.Shared.Rent();
+			var local = localOwner.Memory.Span;
+			var localLength = segment.AsSpan().Encode(local);
+			local[..localLength].CopyTo(final[length..]);
+			length += localLength;
 		}
 
-		return _plain ??= span[..length].ToString();
+		return _plain ??= final[..length].ToString();
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
