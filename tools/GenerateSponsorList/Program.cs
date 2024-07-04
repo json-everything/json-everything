@@ -1,30 +1,81 @@
-﻿// See https://aka.ms/new-console-template for more information
-
-using System.Net.Http.Headers;
+﻿using System.Net.Http.Headers;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using GenerateSponsorList;
 using Microsoft.Extensions.DependencyInjection;
 
-var accessToken = Environment.GetEnvironmentVariable("GenerateSponsorList");
-if (string.IsNullOrEmpty(accessToken))
-	throw new ArgumentException("Cannot locate access token in env var `GenerateSponsorList`");
+/*  This allows for manually capturing the GQL response via wireshark and applying any data fixes
+//  See also https://github.com/ChilliCream/graphql-platform/issues/7207
+var filename = @"C:\Users\gregs\Downloads\gql-response.json";
+/*/
+var filename = args.Length == 0 ? null : args[0];
+//*/
 
-var serviceCollection = new ServiceCollection();
+List<SponsorData> sponsorData;
+if (filename is null)
+{
+	var accessToken = Environment.GetEnvironmentVariable("GenerateSponsorList");
+	if (string.IsNullOrEmpty(accessToken))
+		throw new ArgumentException("Cannot locate GitHub GraphQL API access token in env var `GenerateSponsorList`");
 
-serviceCollection
-	.AddGitHubClient()
-	.ConfigureHttpClient(client =>
+	var serviceCollection = new ServiceCollection();
+
+	serviceCollection
+		.AddGitHubClient()
+		.ConfigureHttpClient(client =>
+		{
+			client.BaseAddress = new Uri("https://api.github.com/graphql");
+			client.DefaultRequestHeaders.Authorization =
+				new AuthenticationHeaderValue("Bearer", accessToken);
+		});
+
+	IServiceProvider services = serviceCollection.BuildServiceProvider();
+
+	var client = services.GetRequiredService<IGitHubClient>();
+	var response = await client.GetSponsors.ExecuteAsync();
+
+	sponsorData = response.Data!.User!.Sponsors.Nodes!.Select(x =>
 	{
-		client.BaseAddress = new Uri("https://api.github.com/graphql");
-		client.DefaultRequestHeaders.Authorization =
-			new AuthenticationHeaderValue("Bearer", accessToken);
-	});
+		string? name = null;
+		Uri? avatar = null;
+		Uri? website = null;
+		int value = 0;
+		if (x is IGetSponsors_User_Sponsors_Nodes_User { Login: not null } user)
+		{
+			name = user.Login;
+			avatar = user.AvatarUrl;
+			website = user.WebsiteUrl;
+			value = user.SponsorshipForViewerAsSponsorable!.Tier!.MonthlyPriceInDollars;
+		}
+		else if (x is IGetSponsors_User_Sponsors_Nodes_Organization { Login: not null } org)
+		{
+			name = org.Login;
+			avatar = org.AvatarUrl;
+			website = org.WebsiteUrl;
+			value = org.SponsorshipForViewerAsSponsorable!.Tier!.MonthlyPriceInDollars;
+		}
 
-IServiceProvider services = serviceCollection.BuildServiceProvider();
+		return new SponsorData (name!, avatar!, website!, GetBubbleSize(value));
+	}).ToList();
+}
+else
+{
+	var responseContent = File.ReadAllText(filename);
+	var responseData = JsonNode.Parse(responseContent);
+	sponsorData = responseData!["data"]!["user"]!["sponsors"]!["nodes"]!.AsArray()
+		.Select(x =>
+		{
+			var name = x!["login"]!.GetValue<string>();
+			var avatar = new Uri(x["avatarUrl"]!.GetValue<string>());
+			var site = x["websiteUrl"]?.GetValue<string>();
+			var website = site == null ? null : new Uri(site);
+			var value = x["sponsorshipForViewerAsSponsorable"]!["tier"]!["monthlyPriceInDollars"]!.GetValue<int>();
 
-var client = services.GetRequiredService<IGitHubClient>();
-var response = await client.GetSponsors.ExecuteAsync();
+			return new SponsorData(name!, avatar!, website!, GetBubbleSize(value));
+		})
+		.ToList();
+}
 
 var options = new JsonSerializerOptions
 {
@@ -32,29 +83,6 @@ var options = new JsonSerializerOptions
 	PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
 	WriteIndented = true
 };
-var sponsorData = response.Data!.User!.Sponsors.Nodes!.Select(x =>
-{
-	string? name = null;
-	Uri? avatar = null;
-	Uri? website = null;
-	int value = 0;
-	if (x is IGetSponsors_User_Sponsors_Nodes_User { Login: not null } user)
-	{
-		name = user.Login;
-		avatar = user.AvatarUrl;
-		website = user.WebsiteUrl;
-		value = user.SponsorshipForViewerAsSponsorable!.Tier!.MonthlyPriceInDollars;
-	}
-	else if (x is IGetSponsors_User_Sponsors_Nodes_Organization { Login: not null } org)
-	{
-		name = org.Login;
-		avatar = org.AvatarUrl;
-		website = org.WebsiteUrl;
-		value = org.SponsorshipForViewerAsSponsorable!.Tier!.MonthlyPriceInDollars;
-	}
-
-	return new SponsorData (name!, avatar!, website!, GetBubbleSize(value));
-}).ToList();
 var allSponsorsJson = JsonSerializer.Serialize(sponsorData, options);
 Console.WriteLine(allSponsorsJson);
 
