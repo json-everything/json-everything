@@ -278,6 +278,13 @@ a.navbar-brand {
 	visibility: visible;
 }
 
+.header-tooltip {
+  top: 50px;
+  transform: translateX(-65%);
+  text-wrap: nowrap;
+  max-width: none;
+}
+
 /*--- DOCS ---*/
 .docs-pane {
 	margin: 2em auto;

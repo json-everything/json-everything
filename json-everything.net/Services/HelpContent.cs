@@ -221,4 +221,8 @@ public static class HelpContent
 		Patch generation follows an iterative strategy, preferring multiple small changes.  This may result in
 		larger patches than expected.
 		""";
+
+	public const string BlogPromo = "Stay up to date on the project";
+	public const string DocsPromo = "How to use the libraries, API documentation, and release notes";
+	public const string LearnPromo = "Guided tutorials and exercises for using the libraries";
 }
