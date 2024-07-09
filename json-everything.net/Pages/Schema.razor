@@ -73,7 +73,7 @@
 								<InputSelect @bind-Value="_options.Version" DisplayName="Spec version" class="form-control">
 									@foreach (SpecVersion version in Enum.GetValues(typeof(SpecVersion)))
 									{
-										if (version == SpecVersion.Unspecified) continue;
+										if (version is SpecVersion.Unspecified or SpecVersion.All) continue;
 										<option value="@version">@GetDescription(version)</option>
 									}
 								</InputSelect>

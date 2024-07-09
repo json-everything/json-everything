@@ -209,13 +209,11 @@
 
 		var results = path.Evaluate(instance);
 
-		var resultText = results.Error == null
-			? JsonSerializer.Serialize(results.Matches, new JsonSerializerOptions
+		var resultText = JsonSerializer.Serialize(results.Matches, new JsonSerializerOptions
 			{
 				WriteIndented = true,
 				Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-			})
-			: string.Empty;
+			});
 
 		await _outputEditor.SetValue(resultText);
 	}
