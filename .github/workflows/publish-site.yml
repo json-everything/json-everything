@@ -35,13 +35,13 @@ jobs:
         run: dotnet restore
       - name: Pre-build solution
         run: dotnet build json-everything.sln -c Release --no-restore
-      - name: Get sponsor data
-        run: |
-          cd tools/GenerateSponsorList/bin/Release/net8.0
-          dotnet GenerateSponsorList.dll
-          cp sponsor-data.json ../../../../../json-everything.net/wwwroot/data/
-        env:
-          GenerateSponsorList: ${{ secrets.GENERATE_SPONSOR_LIST }}
+      # - name: Get sponsor data
+      #   run: |
+      #     cd tools/GenerateSponsorList/bin/Release/net8.0
+      #     dotnet GenerateSponsorList.dll
+      #     cp sponsor-data.json ../../../../../json-everything.net/wwwroot/data/
+      #   env:
+      #     GenerateSponsorList: ${{ secrets.GENERATE_SPONSOR_LIST }}
       - name: Build
         run: dotnet publish json-everything.net/json-everything.net.csproj -c Release --no-restore -o bin
       - name: Add .nojekyll file
