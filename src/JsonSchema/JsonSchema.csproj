@@ -38,6 +38,15 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
+  <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+    <EmbeddedResource Include="..\..\Meta-Schemas\**\*.json" />
+    <EmbeddedResource Remove="..\..\Meta-Schemas\OpenAPI\**" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(Configuration)' == 'Release'">
+    <Compile Remove="Experiments\**\*" />
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="PolySharp" Version="1.14.1" PrivateAssets="all" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />

@@ -89,4 +89,7 @@ namespace Json.Schema;
 [JsonSerializable(typeof(bool))]
 [JsonSerializable(typeof(int[]))]
 [JsonSerializable(typeof(Uri))]
+#if DEBUG
+[JsonSerializable(typeof(Experiments.EvaluationResults), TypeInfoPropertyName = "ExperimentsEvaluationResults")]
+#endif
 internal partial class JsonSchemaSerializerContext : JsonSerializerContext;
