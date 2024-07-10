@@ -4,7 +4,6 @@ using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using GenerateSponsorList;
 using Microsoft.Extensions.DependencyInjection;
-using StrawberryShake.Serialization;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 /*  This allows for manually capturing the GQL response via wireshark and applying any data fixes
