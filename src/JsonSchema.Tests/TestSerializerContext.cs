@@ -14,4 +14,11 @@ namespace Json.Schema.Tests;
 [JsonSerializable(typeof(EvaluationResults))]
 [JsonSerializable(typeof(GithubTests.Model791))]
 [JsonSerializable(typeof(GithubTests.Model791Undecorated))]
+#if DEBUG
+[JsonSerializable(typeof(Suite.Experiments.TestCase), TypeInfoPropertyName = "ExperimentsTestCase")]
+[JsonSerializable(typeof(List<Suite.Experiments.TestCase>), TypeInfoPropertyName = "ExperimentsTestCaseList")]
+[JsonSerializable(typeof(Suite.Experiments.TestCollection), TypeInfoPropertyName = "ExperimentsTestCollection")]
+[JsonSerializable(typeof(List<Suite.Experiments.TestCollection>), TypeInfoPropertyName = "ExperimentsTestCollectionList")]
+[JsonSerializable(typeof(Experiments.EvaluationResults), TypeInfoPropertyName = "ExperimentsEvaluationResults")]
+#endif
 internal partial class TestSerializerContext : JsonSerializerContext;
