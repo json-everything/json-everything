@@ -3,7 +3,7 @@ using BenchmarkDotNet.Running;
 using Json.Benchmarks.LogicSuite;
 using Json.Benchmarks.Pointer;
 using Json.Benchmarks.SchemaSuite;
-using Json.Schema.Benchmark.Functional;
+using Json.Benchmarks.SchemaSuite.Functional;
 
 namespace Json.Benchmarks;
 
@@ -20,7 +20,7 @@ class Program
 		runner.BenchmarkSetup();
 		runner.Models();
 #else
-		var summary = BenchmarkRunner.Run<TestSuiteRunner>();
+		var summary = BenchmarkRunner.Run<FunctionalWthRefsRunner>();
 #endif
 	}
 }
