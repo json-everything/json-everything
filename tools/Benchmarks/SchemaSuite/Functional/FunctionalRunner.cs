@@ -1,7 +1,8 @@
 ﻿using System.Text.Json.Nodes;
 using BenchmarkDotNet.Attributes;
+using Json.Schema;
 
-namespace Json.Schema.Benchmark.Functional;
+namespace Json.Benchmarks.SchemaSuite.Functional;
 
 [MemoryDiagnoser]
 public class FunctionalRunner
