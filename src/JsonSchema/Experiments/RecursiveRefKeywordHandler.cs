@@ -17,7 +17,7 @@ public class RecursiveRefKeywordHandler : IKeywordHandler
 		if (reference is not "#")
 			throw new SchemaValidationException("$recursiveRef may only be '#'", context);
 
-		var search = context.Options.SchemaRegistry.GetRecursive(context.DynamicScope);
+		var search = context.Options.ExperimentalDetails.SchemaRegistry.GetRecursive(context.DynamicScope);
 		var (target, newBaseUri) = search;
 
 		var localContext = context;

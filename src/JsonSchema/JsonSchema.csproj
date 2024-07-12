@@ -38,13 +38,9 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
-  <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+  <ItemGroup>
     <EmbeddedResource Include="..\..\Meta-Schemas\**\*.json" />
     <EmbeddedResource Remove="..\..\Meta-Schemas\OpenAPI\**" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(Configuration)' == 'Release'">
-    <Compile Remove="Experiments\**\*" />
   </ItemGroup>
 
   <ItemGroup>

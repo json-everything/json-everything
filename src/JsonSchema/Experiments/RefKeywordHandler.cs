@@ -29,7 +29,7 @@ public class RefKeywordHandler : IKeywordHandler
 		JsonNode? target;
 		if (JsonPointer.TryParse(fragment, out var pointer))
 		{
-			var targetBase = context.Options.SchemaRegistry.Get(newBaseUri);
+			var targetBase = context.Options.ExperimentalDetails.SchemaRegistry.Get(newBaseUri);
 			if (!pointer.TryEvaluate(targetBase, out target))
 				throw new RefResolutionException(newBaseUri, pointer);
 		}
@@ -40,7 +40,7 @@ public class RefKeywordHandler : IKeywordHandler
 			if (!SchemaRegistry.AnchorPattern202012.IsMatch(anchor))
 				throw new SchemaValidationException($"Unrecognized fragment type `{newUri}`", context);
 
-			target = context.Options.SchemaRegistry.Get(newBaseUri, anchor, allowLegacy);
+			target = context.Options.ExperimentalDetails.SchemaRegistry.Get(newBaseUri, anchor, allowLegacy);
 		}
 
 		var localContext = context;

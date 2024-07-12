@@ -12,8 +12,10 @@ public struct KeywordEvaluation
 	public EvaluationResults[] Children { get; set; } = [];
 	public bool HasAnnotation { get; set; }
 	public JsonNode? Annotation { get; set; }
+	public string? Error { get; set; }
 
 	public KeywordEvaluation(){}
 
 	public static implicit operator KeywordEvaluation(bool valid) => new() { Valid = valid };
+	public static implicit operator KeywordEvaluation(string? error) => new() { Valid = error == null, Error = error };
 }
