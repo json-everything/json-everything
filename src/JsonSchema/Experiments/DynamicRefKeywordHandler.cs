@@ -38,7 +38,7 @@ public class DynamicRefKeywordHandler : IKeywordHandler
 		JsonNode? target;
 		if (JsonPointer.TryParse(fragment, out var pointer))
 		{
-			var targetBase = context.Options.SchemaRegistry.Get(newBaseUri);
+			var targetBase = context.Options.ExperimentalDetails.SchemaRegistry.Get(newBaseUri);
 			if (!pointer.TryEvaluate(targetBase, out target))
 				throw new RefResolutionException(newBaseUri, pointer);
 		}
@@ -48,7 +48,7 @@ public class DynamicRefKeywordHandler : IKeywordHandler
 			if (!_anchorPattern202012.IsMatch(anchor))
 				throw new SchemaValidationException($"Unrecognized fragment type `{newUri}`", context);
 
-			(target, newBaseUri) = context.Options.SchemaRegistry.Get(context.DynamicScope, newBaseUri, anchor, _requireLocalAnchor);
+			(target, newBaseUri) = context.Options.ExperimentalDetails.SchemaRegistry.Get(context.DynamicScope, newBaseUri, anchor, _requireLocalAnchor);
 		}
 
 		var localContext = context;

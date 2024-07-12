@@ -315,6 +315,35 @@ public class JsonSchema : IBaseDocument
 		return results;
 	}
 
+	public static Experiments.EvaluationResults Evaluate(JsonNode schema, JsonNode? instance, EvaluationOptions? options = null)
+	{
+		options ??= EvaluationOptions.Default;
+		options = EvaluationOptions.From(options);
+		options.InitializeExperiments();
+
+		if (schema is JsonObject objSchema)
+		{
+			if (objSchema.ContainsKey("$id"))
+				options.ExperimentalDetails.SchemaRegistry.Register(objSchema);
+			else
+			{
+				schema = objSchema = (JsonObject)objSchema.DeepClone();
+				objSchema["$id"] = options.ExperimentalDetails.SchemaRegistry.Register(objSchema).OriginalString;
+			}
+		}
+
+		var context = new Experiments.EvaluationContext
+		{
+			SchemaLocation = JsonPointer.Empty,
+			InstanceLocation = JsonPointer.Empty,
+			EvaluationPath = JsonPointer.Empty,
+			LocalInstance = instance,
+			Options = options
+		};
+
+		return context.Evaluate(schema);
+	}
+
 	private void ClearConstraints()
 	{
 		if (_subschemas is null)

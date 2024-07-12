@@ -49,7 +49,7 @@ public struct EvaluationContext
 
 		var currentBaseUri = BaseUri;
 
-		var lookup = Options.SchemaRegistry.GetUri(objSchema);
+		var lookup = Options.ExperimentalDetails.SchemaRegistry.GetUri(objSchema);
 		if (lookup is not null)
 			BaseUri = lookup;
 		else if (RefUri is not null)
@@ -62,8 +62,8 @@ public struct EvaluationContext
 		if (!NavigationRefs.Add(navigation))
 			throw new InvalidOperationException($"Encountered circular reference at schema location `{BaseUri}#{SchemaLocation}` and instance location `{InstanceLocation}`");
 
-		EvaluatingAs ??= Options.DefaultMetaSchema;
-		var resourceRoot = Options.SchemaRegistry.Get(BaseUri);
+		EvaluatingAs ??= Options.ExperimentalDetails.DefaultMetaSchema;
+		var resourceRoot = Options.ExperimentalDetails.SchemaRegistry.Get(BaseUri);
 		if (resourceRoot.TryGetValue("$schema", out var schemaNode, out _))
 		{
 			var metaSchemaId = (schemaNode as JsonValue)?.GetString();
@@ -73,7 +73,7 @@ public struct EvaluationContext
 			EvaluatingAs = metaSchemaUri;
 		}
 
-		var metaSchema = Options.SchemaRegistry.Get(EvaluatingAs);
+		var metaSchema = Options.ExperimentalDetails.SchemaRegistry.Get(EvaluatingAs);
 		var vocabHandlers = Vocabularies.GetHandlersByMetaschema(metaSchema, this);
 
 		IEnumerable<(KeyValuePair<string, JsonNode?> Keyword, IKeywordHandler? Handler)> withHandlers;
@@ -90,6 +90,7 @@ public struct EvaluationContext
 		var valid = true;
 		var evaluations = new List<KeywordEvaluation>();
 		var annotations = new Dictionary<string, JsonNode?>();
+		var errors = new Dictionary<string, string>();
 		foreach (var (keyword, handler) in withHandlers)
 		{
 			var keywordContext = this;
@@ -114,6 +115,8 @@ public struct EvaluationContext
 			evaluations.Add(keywordResult);
 			if (keywordResult.HasAnnotation)
 				annotations[keyword.Key] = keywordResult.Annotation;
+			if (keywordResult.Error is not null) 
+				errors[keyword.Key] = keywordResult.Error;
 		}
 
 		if (currentBaseUri != BaseUri)
@@ -130,7 +133,8 @@ public struct EvaluationContext
 			InstanceLocation = InstanceLocation,
 			EvaluationPath = EvaluationPath,
 			Details = evaluations.Count != 0 ? evaluations.SelectMany(x => x.Children).ToArray() : null,
-			Annotations = valid && annotations.Count != 0 ? annotations : null
+			Annotations = valid && annotations.Count != 0 ? annotations : null,
+			Errors = !valid && errors.Count != 0 ? errors : null
 		};
 	}
 }

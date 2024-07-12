@@ -1,5 +1,4 @@
-﻿#if DEBUG
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
 using NUnit.Framework;
@@ -18,7 +17,7 @@ public class LearnJsonEverythingTestFixture
 	}
 
 	[TestCaseSource(nameof(TestCases))]
-	[Ignore("Dev test for learning site")]
+	[Ignore("Dev purposes only, supports learning site")]
 	public void RunCases(JsonNode data)
 	{
 		var result = Run(data.AsObject());
@@ -52,4 +51,3 @@ public class LearnJsonEverythingTestFixture
 		return schema.Evaluate(instance, options);
 	}
 }
-#endif

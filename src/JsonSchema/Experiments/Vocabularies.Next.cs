@@ -21,7 +21,7 @@ public static partial class Vocabularies
 		new(new Uri("https://json-schema.org/draft/next/vocab/applicator"),
 			MetaSchemas.ApplicatorNext,
 			PrefixItemsKeywordHandler.Instance,
-			ItemsKeywordHandler.AllowArrays,
+			ItemsKeywordHandler.OnlySingle,
 			ContainsKeywordHandler.Instance,
 			AdditionalPropertiesKeywordHandler.Instance,
 			PropertiesKeywordHandler.Instance,

@@ -77,6 +77,13 @@ public static class MetaSchemas
 		DraftNext = Register("Json.Schema.Next.schema.json");
 		UnevaluatedNext = Register("Json.Schema.Next.unevaluated.json");
 		ValidationNext = Register("Json.Schema.Next.validation.json");
+
+
+		// The vocabs register the "only single" version of this keyword,
+		// but we want the "allow arrays" version, so we need to initialize
+		// the vocabs then re-register the items keyword.
+		_ = Vocabularies.MetaData201909;
+		KeywordRegistry.Register(ItemsKeywordHandler.AllowArrays);
 	}
 
 	private static JsonObject Register(string resourceName)

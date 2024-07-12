@@ -9,8 +9,6 @@ using Json.More;
 using NUnit.Framework;
 using TestHelpers;
 
-using ExperimentsSchema = Json.Schema.Experiments.JsonSchema; 
-using ExperimentsOptions = Json.Schema.Experiments.EvaluationOptions;
 using ExperimentsResults = Json.Schema.Experiments.EvaluationResults; 
 
 namespace Json.Schema.Tests.Suite.Experiments;
@@ -51,15 +49,16 @@ public class Validation
 			var shortFileName = Path.GetFileNameWithoutExtension(fileName);
 
 			// adjust for format
-			var options = new ExperimentsOptions();
-			options.DefaultMetaSchema = draftFolder switch
+			var options = new EvaluationOptions();
+			options.InitializeExperiments();
+			options.ExperimentalDetails.DefaultMetaSchema = draftFolder switch
 			{
 				"draft6" => MetaSchemas.Draft6Id,
 				"draft7" => MetaSchemas.Draft7Id,
 				"draft2019-09" => MetaSchemas.Draft201909Id,
 				"draft2020-12" => MetaSchemas.Draft202012Id,
 				"draft-next" => MetaSchemas.DraftNextId,
-				_ => options.DefaultMetaSchema
+				_ => options.ExperimentalDetails.DefaultMetaSchema
 			};
 			options.RequireFormatValidation = fileName.Contains("format/".AdjustForPlatform()) &&
 			                                  // uri-template will throw an exception as it's explicitly unsupported
@@ -86,6 +85,7 @@ public class Validation
 	[OneTimeSetUp]
 	public void LoadRemoteSchemas()
 	{
+		EvaluationOptions.Default.InitializeExperiments();
 		// ReSharper disable once HeuristicUnreachableCode
 		var remotesPath = Path.Combine(TestContext.CurrentContext.WorkDirectory, _useExternal ? _externalRemoteSchemasPath : _remoteSchemasPath)
 			.AdjustForPlatform();
@@ -97,12 +97,12 @@ public class Validation
 		{
 			var schema = (JsonObject)JsonNode.Parse(File.ReadAllText(fileName))!;
 			var uri = new Uri(fileName.Replace(remotesPath, "http://localhost:1234").Replace('\\', '/'));
-			ExperimentsOptions.Default.SchemaRegistry.Register(uri, schema);
+			Schema.Experiments.SchemaRegistry.Global.Register(uri, schema);
 		}
 	}
 
 	[TestCaseSource(nameof(TestCases))]
-	public void Test(TestCollection collection, TestCase test, string fileName, ExperimentsOptions options)
+	public void Test(TestCollection collection, TestCase test, string fileName, EvaluationOptions options)
 	{
 		Console.WriteLine();
 		Console.WriteLine();
@@ -122,7 +122,7 @@ public class Validation
 		ExperimentsResults result;
 		try
 		{
-			result = ExperimentsSchema.Evaluate(collection.Schema!, test.Data, options);
+			result = JsonSchema.Evaluate(collection.Schema!, test.Data, options);
 		}
 		catch (RegexParseException e)
 		{

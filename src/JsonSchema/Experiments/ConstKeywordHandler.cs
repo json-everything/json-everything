@@ -15,7 +15,13 @@ public class ConstKeywordHandler : IKeywordHandler
 
 	public KeywordEvaluation Handle(JsonNode? keywordValue, EvaluationContext context, IReadOnlyCollection<KeywordEvaluation> siblingEvaluations)
 	{
-		return context.LocalInstance.IsEquivalentTo(keywordValue);
+		var valid = context.LocalInstance.IsEquivalentTo(keywordValue);
+		return new KeywordEvaluation
+		{
+			Valid = valid,
+			Error = valid ? null : ErrorMessages.GetConst(context.Options.Culture)
+			.ReplaceToken("value", keywordValue.AsJsonString())
+		};
 	}
 
 	IEnumerable<JsonNode?> IKeywordHandler.GetSubschemas(JsonNode? keywordValue) => [];

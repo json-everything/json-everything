@@ -2,6 +2,7 @@
 using System.Buffers;
 using System.Collections.Generic;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using Json.More;
 
 namespace Json.Schema;
@@ -12,7 +13,7 @@ namespace Json.Schema;
 public static partial class JsonSchemaExtensions
 {
 	/// <summary>
-	/// Extends <see cref="JsonSchema.Evaluate"/> to take <see cref="JsonDocument"/>.
+	/// Extends <see cref="JsonSchema.Evaluate(JsonNode?, EvaluationOptions?)"/> to take <see cref="JsonDocument"/>.
 	/// </summary>
 	/// <param name="jsonSchema">The schema.</param>
 	/// <param name="jsonDocument">Instance to be evaluated.</param>
@@ -24,7 +25,7 @@ public static partial class JsonSchemaExtensions
 	}
 
 	/// <summary>
-	/// Extends <see cref="JsonSchema.Evaluate"/> to take <see cref="JsonElement"/>.
+	/// Extends <see cref="JsonSchema.Evaluate(JsonNode?, EvaluationOptions?)"/> to take <see cref="JsonElement"/>.
 	/// </summary>
 	/// <param name="jsonSchema">The schema.</param>
 	/// <param name="jsonElement">Instance to be evaluated.</param>

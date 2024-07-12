@@ -18,6 +18,8 @@ public class SchemaRegistry
 		public JsonObject? RecursiveAnchor { get; set; }
 	}
 
+	public static Uri DefaultBaseUri { get; set; } = new("https://json-everything.net/");
+
 	internal static readonly Regex AnchorPattern201909 = new("^[A-Za-z][-A-Za-z0-9.:_]*$");
 	internal static readonly Regex AnchorPattern202012 = new("^[A-Za-z_][-A-Za-z0-9._]*$");
 
@@ -36,7 +38,7 @@ public class SchemaRegistry
 	{
 		var idText = (schema["$id"] as JsonValue)?.GetString();
 
-		var id = idText is null ? GenerateId() : new Uri(JsonSchema.DefaultBaseUri, idText);
+		var id = idText is null ? GenerateId() : new Uri(DefaultBaseUri, idText);
 
 		Register(id, schema);
 
@@ -130,7 +132,7 @@ public class SchemaRegistry
 		return anchorList.GetValueOrDefault(anchor) ?? (allowLegacy ? registration.LegacyAnchors.GetValueOrDefault(anchor) : null);
 	}
 
-	private static Uri GenerateId() => new(JsonSchema.DefaultBaseUri, Guid.NewGuid().ToString("N")[..10]);
+	private static Uri GenerateId() => new(DefaultBaseUri, Guid.NewGuid().ToString("N")[..10]);
 
 	private Dictionary<Uri, Registration> Scan(Uri baseUri, JsonObject schema)
 	{

@@ -9,6 +9,12 @@ namespace Json.Schema;
 /// </summary>
 public class EvaluationOptions
 {
+	public class Experimental
+	{
+		public Experiments.SchemaRegistry SchemaRegistry { get; } = new();
+		public Uri DefaultMetaSchema { get; set; }
+	}
+
 	private HashSet<Type>? _ignoredAnnotationTypes;
 	private bool _requireFormatValidation;
 	private bool _onlyKnownFormats;
@@ -40,6 +46,8 @@ public class EvaluationOptions
 	/// automatically check the global registry as well.
 	/// </summary>
 	public SchemaRegistry SchemaRegistry { get; }
+
+	public Experimental? ExperimentalDetails { get; private set; }
 
 	/// <summary>
 	/// Specifies whether the `format` keyword should be required to provide
@@ -165,7 +173,8 @@ public class EvaluationOptions
 			_ignoredAnnotationTypes = other._ignoredAnnotationTypes == null
 				? null
 				: new HashSet<Type>(other._ignoredAnnotationTypes),
-			AllowReferencesIntoUnknownKeywords = other.AllowReferencesIntoUnknownKeywords
+			AllowReferencesIntoUnknownKeywords = other.AllowReferencesIntoUnknownKeywords,
+			ExperimentalDetails = other.ExperimentalDetails
 		};
 		options.SchemaRegistry.CopyFrom(other.SchemaRegistry);
 		return options;
@@ -205,5 +214,20 @@ public class EvaluationOptions
 	public void CollectAnnotationsFrom<T>()
 	{
 		_ignoredAnnotationTypes?.Remove(typeof(T));
+	}
+
+	internal void InitializeExperiments()
+	{
+		ExperimentalDetails ??= new()
+		{
+			DefaultMetaSchema = EvaluateAs switch
+			{
+				SpecVersion.Draft6 => Experiments.MetaSchemas.Draft6Id,
+				SpecVersion.Draft7 => Experiments.MetaSchemas.Draft7Id,
+				SpecVersion.Draft201909 => Experiments.MetaSchemas.Draft201909Id,
+				SpecVersion.DraftNext => Experiments.MetaSchemas.DraftNextId,
+				_ => Experiments.MetaSchemas.Draft202012Id
+			}
+		};
 	}
 }
