@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Text.Json.Nodes;
+using Json.Schema.Experiments;
 
 namespace Json.Schema;
 
@@ -13,6 +15,9 @@ public class EvaluationOptions
 	{
 		public Experiments.SchemaRegistry SchemaRegistry { get; } = new();
 		public Uri DefaultMetaSchema { get; set; }
+
+		private Dictionary<JsonObject, (KeyValuePair<string, JsonNode?> Keyword, IKeywordHandler? Handler)[]>? _knownHandlerSets;
+		internal Dictionary<JsonObject, (KeyValuePair<string, JsonNode?> Keyword, IKeywordHandler? Handler)[]> KnownHandlerSets => _knownHandlerSets ??= [];
 	}
 
 	private HashSet<Type>? _ignoredAnnotationTypes;
@@ -216,7 +221,7 @@ public class EvaluationOptions
 		_ignoredAnnotationTypes?.Remove(typeof(T));
 	}
 
-	internal void InitializeExperiments()
+	public void EnableExperiments()
 	{
 		ExperimentalDetails ??= new()
 		{

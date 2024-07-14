@@ -49,7 +49,7 @@ public struct EvaluationContext
 
 		var currentBaseUri = BaseUri;
 
-		var lookup = Options.ExperimentalDetails.SchemaRegistry.GetUri(objSchema);
+		var lookup = Options.ExperimentalDetails!.SchemaRegistry.GetUri(objSchema);
 		if (lookup is not null)
 			BaseUri = lookup;
 		else if (RefUri is not null)
@@ -58,34 +58,38 @@ public struct EvaluationContext
 		if (currentBaseUri != BaseUri) 
 			DynamicScope.Push(BaseUri);
 
-		var navigation = (localSchema, LocalInstance);
+		var navigation = (objSchema, LocalInstance);
 		if (!NavigationRefs.Add(navigation))
 			throw new InvalidOperationException($"Encountered circular reference at schema location `{BaseUri}#{SchemaLocation}` and instance location `{InstanceLocation}`");
 
-		EvaluatingAs ??= Options.ExperimentalDetails.DefaultMetaSchema;
-		var resourceRoot = Options.ExperimentalDetails.SchemaRegistry.Get(BaseUri);
-		if (resourceRoot.TryGetValue("$schema", out var schemaNode, out _))
+		if (!Options.ExperimentalDetails.KnownHandlerSets.TryGetValue(objSchema, out var withHandlers))
 		{
-			var metaSchemaId = (schemaNode as JsonValue)?.GetString();
-			if (metaSchemaId is null || !Uri.TryCreate(metaSchemaId, UriKind.Absolute, out var metaSchemaUri))
-				throw new SchemaValidationException("$schema must be a valid URI", this);
+			EvaluatingAs ??= Options.ExperimentalDetails.DefaultMetaSchema;
+			var resourceRoot = Options.ExperimentalDetails.SchemaRegistry.Get(BaseUri);
+			if (resourceRoot.TryGetValue("$schema", out var schemaNode, out _))
+			{
+				var metaSchemaId = (schemaNode as JsonValue)?.GetString();
+				if (metaSchemaId is null || !Uri.TryCreate(metaSchemaId, UriKind.Absolute, out var metaSchemaUri))
+					throw new SchemaValidationException("$schema must be a valid URI", this);
 
-			EvaluatingAs = metaSchemaUri;
+				EvaluatingAs = metaSchemaUri;
+			}
+
+			var metaSchema = Options.ExperimentalDetails.SchemaRegistry.Get(EvaluatingAs);
+			var vocabHandlers = Vocabularies.GetHandlersByMetaschema(metaSchema, this);
+
+			if (objSchema.ContainsKey("$ref") &&
+			    (EvaluatingAs == MetaSchemas.Draft6Id || EvaluatingAs == MetaSchemas.Draft7Id))
+			{
+				if (currentBaseUri is not null && objSchema.ContainsKey("$id"))
+					BaseUri = currentBaseUri;
+				withHandlers = [(objSchema.Single(x => x.Key == "$ref"), RefKeywordHandler.Instance)];
+			}
+			else
+				withHandlers = KeywordRegistry.GetHandlers(objSchema, vocabHandlers).ToArray(); // also orders the handlers by priority
+
+			Options.ExperimentalDetails.KnownHandlerSets[objSchema] = withHandlers;
 		}
-
-		var metaSchema = Options.ExperimentalDetails.SchemaRegistry.Get(EvaluatingAs);
-		var vocabHandlers = Vocabularies.GetHandlersByMetaschema(metaSchema, this);
-
-		IEnumerable<(KeyValuePair<string, JsonNode?> Keyword, IKeywordHandler? Handler)> withHandlers;
-		if (objSchema.ContainsKey("$ref") &&
-		    (EvaluatingAs == MetaSchemas.Draft6Id || EvaluatingAs == MetaSchemas.Draft7Id))
-		{
-			if (currentBaseUri is not null && objSchema.ContainsKey("$id"))
-				BaseUri = currentBaseUri;
-			withHandlers = [(objSchema.Single(x => x.Key == "$ref"), RefKeywordHandler.Instance)];
-		}
-		else
-			withHandlers = KeywordRegistry.GetHandlers(objSchema, vocabHandlers); // also orders the handlers by priority
 
 		var valid = true;
 		var evaluations = new List<KeywordEvaluation>();

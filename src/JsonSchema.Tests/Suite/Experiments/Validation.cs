@@ -50,8 +50,8 @@ public class Validation
 
 			// adjust for format
 			var options = new EvaluationOptions();
-			options.InitializeExperiments();
-			options.ExperimentalDetails.DefaultMetaSchema = draftFolder switch
+			options.EnableExperiments();
+			options.ExperimentalDetails!.DefaultMetaSchema = draftFolder switch
 			{
 				"draft6" => MetaSchemas.Draft6Id,
 				"draft7" => MetaSchemas.Draft7Id,
@@ -85,7 +85,7 @@ public class Validation
 	[OneTimeSetUp]
 	public void LoadRemoteSchemas()
 	{
-		EvaluationOptions.Default.InitializeExperiments();
+		EvaluationOptions.Default.EnableExperiments();
 		// ReSharper disable once HeuristicUnreachableCode
 		var remotesPath = Path.Combine(TestContext.CurrentContext.WorkDirectory, _useExternal ? _externalRemoteSchemasPath : _remoteSchemasPath)
 			.AdjustForPlatform();

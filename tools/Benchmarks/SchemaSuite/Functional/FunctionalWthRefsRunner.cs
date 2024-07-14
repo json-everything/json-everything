@@ -19,50 +19,8 @@ public class FunctionalWthRefsRunner
 		  },
 		  "required": [ "key" ],
 		  "oneOf": [
-		    {
-		      "if": {
-		        "properties": { "key": { "const": "bar" } }
-		      },
-		      "then": { "$ref": "#/$defs/bar" }
-		    },
-		    {
-		      "if": {
-		        "properties": { "key": { "const": "baz" } }
-		      },
-		      "then": { "$ref": "#/$defs/baz" }
-		    },
-		    {
-		      "if": {
-		        "properties": { "key": { "const": "quux" } }
-		      },
-		      "then": { "$ref": "#/$defs/quux" }
-		    }
 		  ],
 		  "$defs": {
-		    "foo": {
-		      "properties": {
-		        "foo": { "$ref": "#" }
-		      },
-		      "required": ["foo"]
-		    },
-		    "bar": {
-		      "properties": {
-		        "bar": { "$ref": "#" }
-		      },
-		      "required": ["bar"]
-		    },
-		    "baz": {
-		      "properties": {
-		        "baz": { "$ref": "#" }
-		      },
-		      "required": ["baz"]
-		    },
-		    "quux": {
-		      "properties": {
-		        "quux": { "$ref": "#" }
-		      },
-		      "required": ["quux"]
-		    }
 		  }
 		}
 		""";
@@ -82,7 +40,7 @@ public class FunctionalWthRefsRunner
 	[Params(1,10,50)]
 	public int ValidationCount { get; set; }
 
-	[Params(1,5,10,20,30,40,50)]
+	[Params(1,5,10,50)]
 	public int OptionCount { get; set; }
 
 	[GlobalSetup]
@@ -103,6 +61,8 @@ public class FunctionalWthRefsRunner
 		_schemas[30] = CreateEntry(30);
 		_schemas[40] = CreateEntry(40);
 		_schemas[50] = CreateEntry(50);
+
+		EvaluationOptions.Default.EnableExperiments();
 	}
 
 	private static JsonNode BuildSchema(int optionCount)

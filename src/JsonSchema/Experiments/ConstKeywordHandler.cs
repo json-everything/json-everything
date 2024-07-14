@@ -19,8 +19,10 @@ public class ConstKeywordHandler : IKeywordHandler
 		return new KeywordEvaluation
 		{
 			Valid = valid,
-			Error = valid ? null : ErrorMessages.GetConst(context.Options.Culture)
-			.ReplaceToken("value", keywordValue.AsJsonString())
+			Error = valid
+				? null
+				: ErrorMessages.GetConst(context.Options.Culture)
+					.ReplaceToken("value", keywordValue.AsJsonString())
 		};
 	}
 
