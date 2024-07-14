@@ -317,9 +317,11 @@ public class JsonSchema : IBaseDocument
 
 	public static Experiments.EvaluationResults Evaluate(JsonNode schema, JsonNode? instance, EvaluationOptions? options = null)
 	{
+		if (options is {ExperimentalDetails: null})
+			throw new InvalidOperationException("Experimental functionality must be enabled first");
+
 		options ??= EvaluationOptions.Default;
 		options = EvaluationOptions.From(options);
-		options.InitializeExperiments();
 
 		if (schema is JsonObject objSchema)
 		{
