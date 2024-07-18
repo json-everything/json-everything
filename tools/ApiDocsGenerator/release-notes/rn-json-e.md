@@ -4,6 +4,10 @@ title: JsonE.Net
 icon: fas fa-tag
 order: "09.12"
 ---
+# [2.1.2](https://github.com/gregsdennis/json-everything/pull/714) {#release-e-2.1.2}
+
+`InterpreterException` now derives from `JsonEException` like all of the other exceptions.
+
 # [2.1.1](https://github.com/gregsdennis/json-everything/pull/714) {#release-e-2.1.1}
 
 [#713](https://github.com/gregsdennis/json-everything/issues/713) - Fixes an issue where branches of `$if` and `$switch` would be evaluated whether they were needed or not.  Thanks to [@mi25iw](https://github.com/mi25iw) for finding and fixing this.
