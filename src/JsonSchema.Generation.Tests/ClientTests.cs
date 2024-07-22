@@ -363,4 +363,62 @@ public class ClientTests
 
 		Assert.That(schemaJson.IsEquivalentTo(expected), Is.True);
 	}
+
+	public class Issue767_PropertyLevelComments
+	{
+		public class NestedType
+		{
+			/// <summary>
+			/// The names
+			/// </summary>
+			public List<string> Names { get; set; } = [];
+
+			/// <summary>
+			/// The descriptions
+			/// </summary>
+			public List<string> Descriptions { get; set; } = [];
+
+			public class NestedNestedType
+			{
+				/// <summary>
+				/// The nested names
+				/// </summary>
+				public List<string> NestedNames { get; set; } = [];
+			}
+
+			/// <summary>
+			/// Next level stuff
+			/// </summary>
+			public NestedNestedType NestedNested = new();
+		}
+
+		/// <summary>
+		/// The nested type
+		/// </summary>
+		public NestedType? Nested = new();
+	}
+
+
+	[Test]
+	public void Issue767_PropertyDescriptionFromXmlComments()
+	{
+		var expected = JsonNode.Parse(
+			"""
+			{
+			  "type": "object",
+			  "properties": {
+			    "Apr": {
+			      "type": ["number", "null"],
+			      "multipleOf": 0.1
+			    }
+			  }
+			}
+			""");
+
+		JsonSchema schema = new JsonSchemaBuilder().FromType<Issue767_PropertyLevelComments>();
+		var schemaJson = JsonSerializer.SerializeToNode(schema, TestSerializerContext.Default.JsonSchema);
+		Console.WriteLine(schemaJson);
+
+		Assert.That(schemaJson.IsEquivalentTo(expected), Is.True);
+	}
 }
