@@ -4,6 +4,10 @@ title: Json.More.Net
 icon: fas fa-tag
 order: "09.13"
 ---
+# [2.0.2](https://github.com/gregsdennis/json-everything/commit/782198a80220fc2e54dfe3e01c2e4da54ab4cad7) {#release-more-2.0.2}
+
+Updating _System.Text.Json_ to 8.0.4 due to a vulnerability.
+
 # [2.0.1.x](https://github.com/gregsdennis/json-everything/pull/712) {#release-more-2.0.1.x}
 
 [#711](https://github.com/gregsdennis/json-everything/issues/711) - Nuget package meta-data updates; no functional changes from previous version.

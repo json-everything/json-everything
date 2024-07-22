@@ -4,6 +4,10 @@ title: Yaml2JsonNode
 icon: fas fa-tag
 order: "09.13"
 ---
+# [2.1.1](https://github.com/gregsdennis/json-everything/commit/782198a80220fc2e54dfe3e01c2e4da54ab4cad7) {#release-yaml-2.1.1}
+
+Updating _System.Text.Json_ to 8.0.4 due to a vulnerability.
+
 # [2.1.0](https://github.com/gregsdennis/json-everything/commit/7c20af32520ade11cf09edd3b90fbdace9905b84) {#release-yaml-2.1.0}
 
 Updated to latest YamlDotNet (v12.2.1 to v15.1.2).
