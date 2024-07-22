@@ -18,6 +18,7 @@ public class LearnJsonEverythingTestFixture
 	}
 
 	[TestCaseSource(nameof(TestCases))]
+	[Ignore("Dev test for learning site")]
 	public void RunCases(JsonNode data)
 	{
 		var result = Run(data.AsObject());
