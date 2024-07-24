@@ -369,31 +369,31 @@ public class ClientTests
 		public class NestedType
 		{
 			/// <summary>
-			/// The names
+			/// Names property on NestedType
 			/// </summary>
 			public List<string> Names { get; set; } = [];
 
 			/// <summary>
-			/// The descriptions
+			/// Descriptions property on NestedType
 			/// </summary>
 			public List<string> Descriptions { get; set; } = [];
 
 			public class NestedNestedType
 			{
 				/// <summary>
-				/// The nested names
+				/// NestedNames property on NestedNestedType (double-nested)
 				/// </summary>
 				public List<string> NestedNames { get; set; } = [];
 			}
 
 			/// <summary>
-			/// Next level stuff
+			/// NestedNested property on NestedType
 			/// </summary>
 			public NestedNestedType NestedNested = new();
 		}
 
 		/// <summary>
-		/// The nested type
+		/// Nested property on Issue767_PropertyLevelComments
 		/// </summary>
 		public NestedType? Nested = new();
 	}
@@ -407,15 +407,46 @@ public class ClientTests
 			{
 			  "type": "object",
 			  "properties": {
-			    "Apr": {
-			      "type": ["number", "null"],
-			      "multipleOf": 0.1
+			    "Nested": {
+			      "type": "object",
+			      "properties": {
+			        "NestedNested": {
+			          "type": "object",
+			          "properties": {
+			            "NestedNames": {
+			              "type": "array",
+			              "items": {
+			                "type": "string"
+			              },
+			              "description": "NestedNames property on NestedNestedType (double-nested)"
+			            }
+			          },
+			          "description": "NestedNested property on NestedType"
+			        },
+			        "Names": {
+			          "type": "array",
+			          "items": {
+			            "type": "string"
+			          },
+			          "description": "Names property on NestedType"
+			        },
+			        "Descriptions": {
+			          "type": "array",
+			          "items": {
+			            "type": "string"
+			          },
+			          "description": "Descriptions property on NestedType"
+			        }
+			      },
+			      "description": "Nested property on Issue767_PropertyLevelComments"
 			    }
 			  }
 			}
 			""");
 
-		JsonSchema schema = new JsonSchemaBuilder().FromType<Issue767_PropertyLevelComments>();
+		var options = new SchemaGeneratorConfiguration { Optimize = false };
+		options.RegisterXmlCommentFile<Issue767_PropertyLevelComments>("JsonSchema.Net.Generation.Tests.xml");
+		JsonSchema schema = new JsonSchemaBuilder().FromType<Issue767_PropertyLevelComments>(options);
 		var schemaJson = JsonSerializer.SerializeToNode(schema, TestSerializerContext.Default.JsonSchema);
 		Console.WriteLine(schemaJson);
 
