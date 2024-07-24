@@ -8,7 +8,7 @@ order: "09.05"
 
 Updated to use _JsonSchema.Net_ v7.0.0, which contains breaking changes ([release notes](/rn-json-schema/#release-schema-7.0.0)).
 
-[#767](https://github.com/gregsdennis/json-everything/issues/767) - Missing `description` keyword from XML comments on multi-nested types.
+[#767](https://github.com/gregsdennis/json-everything/issues/767) - Missing `description` keyword from XML comments on multi-nested types.  Thanks to [@parnic-sks](https://github.com/parnic-sks) for reporting this.
 
 # [4.3.0.x](https://github.com/gregsdennis/json-everything/pull/712) {#release-schemagen-4.3.0.x}
 
