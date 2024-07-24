@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Json.Schema.Generation.XmlComments;
@@ -176,7 +177,7 @@ internal static class XmlDocId
 
 		var args = type.GetGenericArguments();
 		string fullTypeName;
-		var typeNamespace = type.Namespace == null ? "" : $"{type.Namespace}.";
+		var typeNamespace = type.Namespace == null ? "" : $"{type.Namespace}";
 		var outString = isOut ? "@" : "";
 
 		if (type.MemberType == MemberTypes.TypeInfo &&
@@ -186,15 +187,22 @@ internal static class XmlDocId
 			var paramString = string.Join(",",
 				args.Select(o => GetTypeXmlId(o, false, isMethodParameter, genericClassParams)));
 			var typeName = Regex.Replace(type.Name, "`[0-9]+", "{" + paramString + "}");
-			fullTypeName = $"{typeNamespace}{typeName}{outString}";
+			fullTypeName = $"{typeNamespace}.{typeName}{outString}";
 		}
 		else if (type.IsNested)
 		{
-			fullTypeName = $"{typeNamespace}{type.DeclaringType!.Name}.{type.Name}{outString}";
+			var current = type;
+			var nestedStructure = string.Empty;
+			while (current!.IsNested)
+			{
+				nestedStructure = $".{current.DeclaringType!.Name}{nestedStructure}";
+				current = current.DeclaringType;
+			}
+			fullTypeName = $"{typeNamespace}{nestedStructure}.{type.Name}{outString}";
 		}
 		else
 		{
-			fullTypeName = $"{typeNamespace}{type.Name}{outString}";
+			fullTypeName = $"{typeNamespace}.{type.Name}{outString}";
 		}
 
 		fullTypeName = fullTypeName.Replace("&", "");

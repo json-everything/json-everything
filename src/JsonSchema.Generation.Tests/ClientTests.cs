@@ -363,4 +363,110 @@ public class ClientTests
 
 		Assert.That(schemaJson.IsEquivalentTo(expected), Is.True);
 	}
+
+	public class Issue767_PropertyLevelComments
+	{
+		public class NestedType
+		{
+			/// <summary>
+			/// Names property on NestedType
+			/// </summary>
+			public List<string> Names { get; set; } = [];
+
+			/// <summary>
+			/// Descriptions property on NestedType
+			/// </summary>
+			public List<string> Descriptions { get; set; } = [];
+
+			public class NestedNestedType
+			{
+				/// <summary>
+				/// NestedNames property on NestedNestedType (double-nested)
+				/// </summary>
+				public List<string> NestedNames { get; set; } = [];
+			}
+
+			/// <summary>
+			/// NestedNested property on NestedType
+			/// </summary>
+			public NestedNestedType NestedNested = new();
+		}
+
+		/// <summary>
+		/// Nested property on Issue767_PropertyLevelComments
+		/// </summary>
+		public NestedType? Nested = new();
+	}
+
+
+	[Test]
+	public void Issue767_PropertyDescriptionFromXmlComments()
+	{
+		var expected = JsonNode.Parse(
+			"""
+			{
+			  "type": "object",
+			  "properties": {
+			    "Nested": {
+			      "type": "object",
+			      "properties": {
+			        "NestedNested": {
+			          "$ref": "#/$defs/nestedNestedTypeInNestedTypeInIssue767PropertyLevelCommentsInClientTests"
+			        },
+			        "Names": {
+			          "$ref": "#/$defs/listOfString1"
+			        },
+			        "Descriptions": {
+			          "$ref": "#/$defs/listOfString2"
+			        }
+			      },
+			      "description": "Nested property on Issue767_PropertyLevelComments"
+			    }
+			  },
+			  "$defs": {
+			    "nestedNestedTypeInNestedTypeInIssue767PropertyLevelCommentsInClientTests": {
+			      "type": "object",
+			      "properties": {
+			        "NestedNames": {
+			          "$ref": "#/$defs/listOfString"
+			        }
+			      },
+			      "description": "NestedNested property on NestedType"
+			    },
+			    "listOfString": {
+			      "type": "array",
+			      "items": {
+			        "type": "string",
+			        "description": "NestedNames property on NestedNestedType (double-nested)"
+			      },
+			      "description": "NestedNames property on NestedNestedType (double-nested)"
+			    },
+			    "listOfString1": {
+			      "type": "array",
+			      "items": {
+			        "type": "string",
+			        "description": "Names property on NestedType"
+			      },
+			      "description": "Names property on NestedType"
+			    },
+			    "listOfString2": {
+			      "type": "array",
+			      "items": {
+			        "type": "string",
+			        "description": "Descriptions property on NestedType"
+			      },
+			      "description": "Descriptions property on NestedType"
+			    }
+			  }
+			}
+			""");
+
+		var options = new SchemaGeneratorConfiguration { Optimize = true };
+		options.RegisterXmlCommentFile<Issue767_PropertyLevelComments>("JsonSchema.Net.Generation.Tests.xml");
+		JsonSchema schema = new JsonSchemaBuilder().FromType<Issue767_PropertyLevelComments>(options);
+		var schemaJson = JsonSerializer.SerializeToNode(schema, TestSerializerContext.Default.JsonSchema);
+		Console.WriteLine(schemaJson);
+
+		Assert.That(schemaJson.IsEquivalentTo(expected), Is.True);
+	}
 }

@@ -4,9 +4,11 @@ title: JsonSchema.Net.Generation
 icon: fas fa-tag
 order: "09.05"
 ---
-# [4.4.0](https://github.com/gregsdennis/json-everything/pull/719) {#release-schemagen-4.4.0}
+# [4.4.0](https://github.com/gregsdennis/json-everything/pull/770) {#release-schemagen-4.4.0}
 
 Updated to use _JsonSchema.Net_ v7.0.0, which contains breaking changes ([release notes](/rn-json-schema/#release-schema-7.0.0)).
+
+[#767](https://github.com/gregsdennis/json-everything/issues/767) - Missing `description` keyword from XML comments on multi-nested types.  Thanks to [@parnic-sks](https://github.com/parnic-sks) for reporting this.
 
 # [4.3.0.x](https://github.com/gregsdennis/json-everything/pull/712) {#release-schemagen-4.3.0.x}
 
