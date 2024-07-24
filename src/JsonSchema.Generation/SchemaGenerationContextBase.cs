@@ -94,8 +94,13 @@ public abstract class SchemaGenerationContextBase
 
 		var configuration = SchemaGeneratorConfiguration.Current;
 
-		var generator = configuration.Generators.FirstOrDefault(x => x.Handles(Type)) ?? GeneratorRegistry.Get(Type);
-		generator?.AddConstraints(this);
+		if (configuration.ExternalReferences.TryGetValue(Type, out var uri))
+			Intents.Add(new RefIntent(uri));
+		else
+		{
+			var generator = configuration.Generators.FirstOrDefault(x => x.Handles(Type)) ?? GeneratorRegistry.Get(Type);
+			generator?.AddConstraints(this);
+		}
 
 		AttributeHandler.HandleAttributes(this);
 

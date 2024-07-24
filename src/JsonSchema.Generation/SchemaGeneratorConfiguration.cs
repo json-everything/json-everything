@@ -83,7 +83,7 @@ public class SchemaGeneratorConfiguration
 	/// </summary>
 	public SchemaGeneratorConfiguration()
 	{
-		XmlReader = new DocXmlReader(assembly => _xmlCommentsFiles.TryGetValue(assembly.FullName, out var path) ? path : null);
+		XmlReader = new DocXmlReader(assembly => _xmlCommentsFiles.TryGetValue(assembly.FullName!, out var path) ? path : null);
 	}
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
@@ -95,6 +95,6 @@ public class SchemaGeneratorConfiguration
 	public void RegisterXmlCommentFile<T>(string filename)
 	{
 		var assembly = typeof(T).Assembly;
-		_xmlCommentsFiles[assembly.FullName] = filename;
+		_xmlCommentsFiles[assembly.FullName!] = filename;
 	}
 }
