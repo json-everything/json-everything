@@ -411,40 +411,57 @@ public class ClientTests
 			      "type": "object",
 			      "properties": {
 			        "NestedNested": {
-			          "type": "object",
-			          "properties": {
-			            "NestedNames": {
-			              "type": "array",
-			              "items": {
-			                "type": "string"
-			              },
-			              "description": "NestedNames property on NestedNestedType (double-nested)"
-			            }
-			          },
-			          "description": "NestedNested property on NestedType"
+			          "$ref": "#/$defs/nestedNestedTypeInNestedTypeInIssue767PropertyLevelCommentsInClientTests"
 			        },
 			        "Names": {
-			          "type": "array",
-			          "items": {
-			            "type": "string"
-			          },
-			          "description": "Names property on NestedType"
+			          "$ref": "#/$defs/listOfString1"
 			        },
 			        "Descriptions": {
-			          "type": "array",
-			          "items": {
-			            "type": "string"
-			          },
-			          "description": "Descriptions property on NestedType"
+			          "$ref": "#/$defs/listOfString2"
 			        }
 			      },
 			      "description": "Nested property on Issue767_PropertyLevelComments"
+			    }
+			  },
+			  "$defs": {
+			    "nestedNestedTypeInNestedTypeInIssue767PropertyLevelCommentsInClientTests": {
+			      "type": "object",
+			      "properties": {
+			        "NestedNames": {
+			          "$ref": "#/$defs/listOfString"
+			        }
+			      },
+			      "description": "NestedNested property on NestedType"
+			    },
+			    "listOfString": {
+			      "type": "array",
+			      "items": {
+			        "type": "string",
+			        "description": "NestedNames property on NestedNestedType (double-nested)"
+			      },
+			      "description": "NestedNames property on NestedNestedType (double-nested)"
+			    },
+			    "listOfString1": {
+			      "type": "array",
+			      "items": {
+			        "type": "string",
+			        "description": "Names property on NestedType"
+			      },
+			      "description": "Names property on NestedType"
+			    },
+			    "listOfString2": {
+			      "type": "array",
+			      "items": {
+			        "type": "string",
+			        "description": "Descriptions property on NestedType"
+			      },
+			      "description": "Descriptions property on NestedType"
 			    }
 			  }
 			}
 			""");
 
-		var options = new SchemaGeneratorConfiguration { Optimize = false };
+		var options = new SchemaGeneratorConfiguration { Optimize = true };
 		options.RegisterXmlCommentFile<Issue767_PropertyLevelComments>("JsonSchema.Net.Generation.Tests.xml");
 		JsonSchema schema = new JsonSchemaBuilder().FromType<Issue767_PropertyLevelComments>(options);
 		var schemaJson = JsonSerializer.SerializeToNode(schema, TestSerializerContext.Default.JsonSchema);
