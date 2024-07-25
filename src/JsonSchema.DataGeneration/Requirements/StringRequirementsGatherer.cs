@@ -32,7 +32,7 @@ internal class StringRequirementsGatherer : IRequirementsGatherer
 			supportsStrings = true;
 		}
 
-		var pattern = schema.Keywords?.OfType<PatternKeyword>().FirstOrDefault()?.Value;
+		var pattern = schema.Keywords?.OfType<PatternKeyword>().FirstOrDefault()?.Pattern;
 		if (pattern != null)
 		{
 			//context.Patterns ??= new List<Regex>();

@@ -25,43 +25,56 @@ namespace Json.Schema;
 [JsonConverter(typeof(PatternPropertiesKeywordJsonConverter))]
 public class PatternPropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 {
-	private readonly Dictionary<Regex, JsonPointer> _evaluationPointers;
-	private readonly Dictionary<string, JsonSchema> _schemas;
+	private readonly IReadOnlyDictionary<string, (RegexOrPattern Regex, JsonPointer Pointer, JsonSchema Schema)> _patternsLookup;
 
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
 	public const string Name = "patternProperties";
 
-	/// <summary>
-	/// The pattern-keyed schemas.
-	/// </summary>
-	public IReadOnlyDictionary<Regex, JsonSchema> Patterns { get; }
-	/// <summary>
-	/// If any pattern is invalid or unsupported by <see cref="Regex"/>, it will appear here.
-	/// </summary>
-	/// <remarks>
-	/// All validations will fail if this is populated.
-	/// </remarks>
-	public IReadOnlyList<string>? InvalidPatterns { get; }
+	private Dictionary<string, JsonSchema>? _patterns;
 
-	IReadOnlyDictionary<string, JsonSchema> IKeyedSchemaCollector.Schemas => _schemas;
+	/// <summary>
+	/// The patterns of this PatternPropertiesKeyword
+	/// </summary>
+	public IReadOnlyDictionary<string, JsonSchema> Patterns => _patterns ??= _patternsLookup.ToDictionary(x => x.Key, x => x.Value.Schema);
+
+	IReadOnlyDictionary<string, JsonSchema> IKeyedSchemaCollector.Schemas => Patterns;
 
 	/// <summary>
 	/// Creates a new <see cref="PatternPropertiesKeyword"/>.
 	/// </summary>
 	/// <param name="values">The pattern-keyed schemas.</param>
-	public PatternPropertiesKeyword(IReadOnlyDictionary<Regex, JsonSchema> values)
+	public PatternPropertiesKeyword(IEnumerable<KeyValuePair<string, JsonSchema>> values)
 	{
-		Patterns = values ?? throw new ArgumentNullException(nameof(values));
-
-		_evaluationPointers = values.ToDictionary(x => x.Key, x => JsonPointer.Create(Name, x.Key.ToString()));
-		_schemas = Patterns.ToDictionary(x => x.Key.ToString(), x => x.Value);
+		_patternsLookup = values.ToDictionary(x => x.Key, x => (new RegexOrPattern(x.Key), JsonPointer.Create(Name, x.Key), x.Value), StringComparer.Ordinal);
 	}
-	internal PatternPropertiesKeyword(IReadOnlyDictionary<Regex, JsonSchema> values, IReadOnlyList<string> invalidPatterns)
-		: this(values)
+
+	/// <summary>
+	/// Creates a new <see cref="PatternPropertiesKeyword"/>.
+	/// </summary>
+	/// <param name="values">The pattern-keyed schemas.</param>
+	public PatternPropertiesKeyword(IEnumerable<(string Pattern, JsonSchema Schema)> values)
 	{
-		InvalidPatterns = invalidPatterns;
+		_patternsLookup = values.ToDictionary(x => x.Pattern, x => (new RegexOrPattern(x.Pattern), JsonPointer.Create(Name, x.Pattern), x.Schema), StringComparer.Ordinal);
+	}
+
+	/// <summary>
+	/// Creates a new <see cref="PatternPropertiesKeyword"/>.
+	/// </summary>
+	/// <param name="values">The pattern-keyed schemas.</param>
+	public PatternPropertiesKeyword(IEnumerable<(Regex Pattern, JsonSchema Schema)> values)
+	{
+		_patternsLookup = values.ToDictionary(x => x.Pattern.ToString(), x => (new RegexOrPattern(x.Pattern), JsonPointer.Create(Name, x.Pattern.ToString()), x.Schema), StringComparer.Ordinal);
+	}
+
+	/// <summary>
+	/// Creates a new <see cref="PatternPropertiesKeyword"/>.
+	/// </summary>
+	/// <param name="values">The pattern-keyed schemas.</param>
+	public PatternPropertiesKeyword(IEnumerable<KeyValuePair<Regex, JsonSchema>> values)
+	{
+		_patternsLookup = values.ToDictionary(x => x.Key.ToString(), x => (new RegexOrPattern(x.Key), JsonPointer.Create(Name, x.Key.ToString()), x.Value), StringComparer.Ordinal);
 	}
 
 	/// <summary>
@@ -76,16 +89,19 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollecto
 	/// <returns>A constraint object.</returns>
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, ReadOnlySpan<KeywordConstraint> localConstraints, EvaluationContext context)
 	{
-		var subschemaConstraints = Patterns.Select(pattern =>
+		var subschemaConstraints = _patternsLookup.Select(kvp =>
 		{
-			context.PushEvaluationPath(pattern.Key.ToString());
-			var subschemaConstraint = pattern.Value.GetConstraint(_evaluationPointers[pattern.Key], schemaConstraint.BaseInstanceLocation, JsonPointer.Empty, context);
+			var key = kvp.Key;
+			var (regex, pointer, schema) = kvp.Value;
+
+			context.PushEvaluationPath(key);
+			var subschemaConstraint = schema.GetConstraint(pointer, schemaConstraint.BaseInstanceLocation, JsonPointer.Empty, context);
 			context.PopEvaluationPath();
 			subschemaConstraint.InstanceLocator = evaluation =>
 			{
 				if (evaluation.LocalInstance is not JsonObject obj) return [];
 
-				var properties = obj.Select(x => x.Key).Where(x => pattern.Key.IsMatch(x));
+				var properties = obj.Select(x => x.Key).Where(x => regex.IsMatch(x));
 
 				return properties.Select(x => JsonPointer.Create(x));
 			};
@@ -102,10 +118,12 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollecto
 	private static void Evaluator(KeywordEvaluation evaluation, EvaluationContext context)
 	{
 		evaluation.Results.SetAnnotation(Name, evaluation.ChildEvaluations.Select(x => (JsonNode)x.RelativeInstanceLocation[0]).ToJsonArray());
-		
+
 		if (!evaluation.ChildEvaluations.All(x => x.Results.IsValid))
 			evaluation.Results.Fail();
 	}
+
+	internal IEnumerable<(string Pattern, JsonSchema Schema)> EnumeratePropertyPatterns() => _patternsLookup.Select(x => (x.Key, x.Value.Schema));
 }
 
 /// <summary>
@@ -124,21 +142,7 @@ public sealed class PatternPropertiesKeywordJsonConverter : WeaklyTypedJsonConve
 			throw new JsonException("Expected object");
 
 		var patternProps = options.ReadDictionary(ref reader, JsonSchemaSerializerContext.Default.JsonSchema)!;
-		var schemas = new Dictionary<Regex, JsonSchema>();
-		var invalidProps = new List<string>();
-		foreach (var prop in patternProps)
-		{
-			try
-			{
-				var regex = new Regex(prop.Key, RegexOptions.ECMAScript | RegexOptions.Compiled);
-				schemas.Add(regex, prop.Value);
-			}
-			catch
-			{
-				invalidProps.Add(prop.Key);
-			}
-		}
-		return new PatternPropertiesKeyword(schemas, invalidProps);
+		return new PatternPropertiesKeyword(patternProps);
 	}
 
 	/// <summary>Writes a specified value as JSON.</summary>
@@ -148,10 +152,10 @@ public sealed class PatternPropertiesKeywordJsonConverter : WeaklyTypedJsonConve
 	public override void Write(Utf8JsonWriter writer, PatternPropertiesKeyword value, JsonSerializerOptions options)
 	{
 		writer.WriteStartObject();
-		foreach (var schema in value.Patterns)
+		foreach (var (pattern, schema) in value.EnumeratePropertyPatterns())
 		{
-			writer.WritePropertyName(schema.Key.ToString());
-			options.Write(writer, schema.Value, JsonSchemaSerializerContext.Default.JsonSchema);
+			writer.WritePropertyName(pattern);
+			options.Write(writer, schema, JsonSchemaSerializerContext.Default.JsonSchema);
 		}
 		writer.WriteEndObject();
 	}
