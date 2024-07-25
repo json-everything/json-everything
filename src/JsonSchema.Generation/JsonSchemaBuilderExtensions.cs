@@ -34,7 +34,7 @@ public static class JsonSchemaBuilderExtensions
 		SchemaGeneratorConfiguration.Current = configuration ?? new SchemaGeneratorConfiguration();
 
 		SchemaGenerationContextCache.Clear();
-		var context = SchemaGenerationContextCache.Get(type);
+		var context = SchemaGenerationContextCache.GetRoot(type);
 
 		if (SchemaGeneratorConfiguration.Current.Optimize)
 			SchemaGenerationContextOptimizer.Optimize();

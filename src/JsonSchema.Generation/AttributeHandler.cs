@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json.Serialization;
+using Json.Schema.Generation.Intents;
 
 namespace Json.Schema.Generation;
 
@@ -70,10 +71,12 @@ public static class AttributeHandler
 
 		var attributes = context.GetAttributes().ToList();
 
-		handlers = handlers.Concat(attributes.OfType<IAttributeHandler>());
+		handlers = handlers.Concat(attributes.OfType<IAttributeHandler>()).ToArray();
 
 		foreach (var handler in handlers)
 		{
+			if (handler is IdAttribute && context.Intents.Any(x => x is RefIntent)) continue;
+
 			var attribute = handler as Attribute;
 			if (attribute == null)
 			{

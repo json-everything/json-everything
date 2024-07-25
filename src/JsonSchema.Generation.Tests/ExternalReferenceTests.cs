@@ -4,6 +4,9 @@ namespace Json.Schema.Generation.Tests;
 
 public class ExternalReferenceTests
 {
+	private const string ExternalSchemaUri = "https://test.json-everything.net/has-external-schema";
+	private const string GeneratedSchemaUri = "https://test.json-everything.net/uses-external-schema";
+
 	internal class HasExternalSchema
 	{
 		public int Value { get; set; }
@@ -20,14 +23,14 @@ public class ExternalReferenceTests
 		JsonSchema expected = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Object)
 			.Properties(
-				("ShouldRef", new JsonSchemaBuilder().Ref("https://test.json-everything.net/has-external-schema"))
+				("ShouldRef", new JsonSchemaBuilder().Ref(ExternalSchemaUri))
 			);
 
 		var config = new SchemaGeneratorConfiguration
 		{
 			ExternalReferences =
 			{
-				[typeof(HasExternalSchema)] = new("https://test.json-everything.net/has-external-schema")
+				[typeof(HasExternalSchema)] = new(ExternalSchemaUri)
 			}
 		};
 
@@ -51,7 +54,7 @@ public class ExternalReferenceTests
 			.Type(SchemaValueType.Object)
 			.Properties(
 				("ShouldRef", new JsonSchemaBuilder()
-					.Ref("https://test.json-everything.net/has-external-schema")
+					.Ref(ExternalSchemaUri)
 					.Title("this one has attributes")
 				)
 			)
@@ -61,11 +64,38 @@ public class ExternalReferenceTests
 		{
 			ExternalReferences =
 			{
-				[typeof(HasExternalSchema)] = new("https://test.json-everything.net/has-external-schema")
+				[typeof(HasExternalSchema)] = new(ExternalSchemaUri)
 			}
 		};
 
 		JsonSchema actual = new JsonSchemaBuilder().FromType<RefWithAttributes>(config);
+
+		AssertionExtensions.AssertEqual(expected, actual);
+	}
+
+	[Id(ExternalSchemaUri)]
+	internal class HasExternalSchemaUsingIdAttribute
+	{
+		public int Value { get; set; }
+	}
+
+	[Id(GeneratedSchemaUri)]
+	internal class ShouldRefToExternalSchemaUsingIdAttribute
+	{
+		public HasExternalSchemaUsingIdAttribute ShouldRef { get; set; }
+	}
+
+	[Test]
+	public void GeneratesRefForExternalReferenceUsingIdAttribute()
+	{
+		JsonSchema expected = new JsonSchemaBuilder()
+			.Id(GeneratedSchemaUri)
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("ShouldRef", new JsonSchemaBuilder().Ref(ExternalSchemaUri))
+			);
+
+		JsonSchema actual = new JsonSchemaBuilder().FromType<ShouldRefToExternalSchemaUsingIdAttribute>();
 
 		AssertionExtensions.AssertEqual(expected, actual);
 	}
