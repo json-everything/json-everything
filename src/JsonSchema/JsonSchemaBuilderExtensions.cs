@@ -682,7 +682,7 @@ public static class JsonSchemaBuilderExtensions
 	/// Add a `pattern` keyword.
 	/// </summary>
 	/// <param name="builder">The builder.</param>
-	/// <param name="pattern">The pattern to match.</param>
+	/// <param name="pattern">The Regex instance to match.</param>
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder Pattern(this JsonSchemaBuilder builder, Regex pattern)
 	{
@@ -698,7 +698,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder Pattern(this JsonSchemaBuilder builder, [StringSyntax(StringSyntaxAttribute.Regex)] string pattern)
 	{
-		builder.Add(new PatternKeyword(new Regex(pattern, RegexOptions.ECMAScript | RegexOptions.Compiled)));
+		builder.Add(new PatternKeyword(pattern));
 		return builder;
 	}
 
@@ -722,7 +722,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder PatternProperties(this JsonSchemaBuilder builder, params (Regex pattern, JsonSchema schema)[] props)
 	{
-		builder.Add(new PatternPropertiesKeyword(props.ToDictionary(x => x.pattern, x => x.schema)));
+		builder.Add(new PatternPropertiesKeyword(props));
 		return builder;
 	}
 
@@ -734,7 +734,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder PatternProperties(this JsonSchemaBuilder builder, IReadOnlyDictionary<string, JsonSchema> props)
 	{
-		builder.Add(new PatternPropertiesKeyword(props.ToDictionary(x => new Regex(x.Key), x => x.Value)));
+		builder.Add(new PatternPropertiesKeyword(props));
 		return builder;
 	}
 
@@ -746,7 +746,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder PatternProperties(this JsonSchemaBuilder builder, params (string pattern, JsonSchema schema)[] props)
 	{
-		builder.Add(new PatternPropertiesKeyword(props.ToDictionary(x => new Regex(x.pattern), x => x.schema)));
+		builder.Add(new PatternPropertiesKeyword(props));
 		return builder;
 	}
 

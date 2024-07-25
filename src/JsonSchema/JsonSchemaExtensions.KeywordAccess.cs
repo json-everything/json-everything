@@ -365,18 +365,19 @@ public static partial class JsonSchemaExtensions
 	/// <summary>
 	/// Gets the value of `pattern` if the keyword exists.
 	/// </summary>
-	public static Regex? GetPattern(this JsonSchema schema)
+	public static string GetPattern(this JsonSchema schema)
 	{
-		return schema.TryGetKeyword<PatternKeyword>(PatternKeyword.Name, out var k) ? k.Value : null;
+		return schema.TryGetKeyword<PatternKeyword>(PatternKeyword.Name, out var k) ? k.Pattern : null;
 	}
 
 	/// <summary>
 	/// Gets the schemas in `patternProperties` if the keyword exists.
 	/// </summary>
-	public static IReadOnlyDictionary<Regex, JsonSchema>? GetPatternProperties(this JsonSchema schema)
+	public static IReadOnlyDictionary<string, JsonSchema>? GetPatternProperties(this JsonSchema schema)
 	{
 		return schema.TryGetKeyword<PatternPropertiesKeyword>(PatternPropertiesKeyword.Name, out var k) ? k.Patterns : null;
 	}
+
 
 	/// <summary>
 	/// Gets the schemas in `prefixItems` if the keyword exists.

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -23,39 +24,38 @@ namespace Json.Schema;
 [JsonConverter(typeof(PatternKeywordJsonConverter))]
 public class PatternKeyword : IJsonSchemaKeyword
 {
+
+
+	private readonly RegexOrPattern _regexOrPattern;
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
 	public const string Name = "pattern";
 
-	/// <summary>
-	/// The regular expression.
-	/// </summary>
-	public Regex Value { get; }
-	/// <summary>
-	/// If the pattern is invalid or unsupported by <see cref="Regex"/>, it will appear here.
-	/// </summary>
-	/// <remarks>
-	/// All validations will fail if this is populated.
-	/// </remarks>
-	public string? InvalidPattern { get; }
+	public string Pattern => _regexOrPattern;
+
 
 	/// <summary>
-	/// Creates a new <see cref="PatternKeyword"/>.
+	/// Creates a new <see cref="PatternKeyword"/> based on a regular expression pattern.
 	/// </summary>
-	/// <param name="value">The regular expression.</param>
+	/// <param name="pattern"></param>
+	/// <exception cref="ArgumentNullException"></exception>
+	public PatternKeyword([StringSyntax(StringSyntaxAttribute.Regex)] string pattern)
+	{
+		_regexOrPattern = pattern ?? throw new ArgumentNullException(nameof(pattern));
+	}
+
+	/// <summary>
+	/// Creates a new <see cref="PatternKeyword"/> based on a regular expression instance.
+	/// </summary>
+	/// <param name="value"></param>
+	/// <exception cref="ArgumentNullException"></exception>
 	public PatternKeyword(Regex value)
 	{
-		Value = value ?? throw new ArgumentNullException(nameof(value));
+		_regexOrPattern = value ?? throw new ArgumentNullException(nameof(value));
 	}
 
-	private PatternKeyword(string invalidPattern)
-	{
-		InvalidPattern = invalidPattern;
-		Value = new Regex($"^{Guid.NewGuid():N}$");
-	}
-
-	internal static PatternKeyword InvalidRegex(string pattern) => new(pattern);
 
 	/// <summary>
 	/// Builds a constraint object for a keyword.
@@ -84,10 +84,11 @@ public class PatternKeyword : IJsonSchemaKeyword
 		}
 
 		var str = evaluation.LocalInstance!.GetValue<string>();
-		if (!Value.IsMatch(str))
+		
+		if (!_regexOrPattern.IsMatch(str))
 			evaluation.Results.Fail(Name, ErrorMessages.GetPattern(context.Options.Culture)
 				.ReplaceToken("received", str)
-				.ReplaceToken("pattern", Value.ToString()));
+				.ReplaceToken("pattern", _regexOrPattern.ToString()));
 	}
 }
 
@@ -107,16 +108,7 @@ public sealed class PatternKeywordJsonConverter : WeaklyTypedJsonConverter<Patte
 			throw new JsonException("Expected string");
 
 		var str = reader.GetString()!;
-		try
-		{
-			var regex = new Regex(str, RegexOptions.ECMAScript | RegexOptions.Compiled);
-
-			return new PatternKeyword(regex);
-		}
-		catch
-		{
-			return PatternKeyword.InvalidRegex(str);
-		}
+		return new PatternKeyword(str);
 	}
 
 	/// <summary>Writes a specified value as JSON.</summary>
@@ -125,7 +117,7 @@ public sealed class PatternKeywordJsonConverter : WeaklyTypedJsonConverter<Patte
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, PatternKeyword value, JsonSerializerOptions options)
 	{
-		writer.WriteStringValue(value.Value.ToString());
+		writer.WriteStringValue(value.Pattern);
 	}
 }
 

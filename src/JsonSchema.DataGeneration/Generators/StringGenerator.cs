@@ -66,7 +66,7 @@ internal class StringGenerator : IDataGenerator
 			//if (context.AntiPatterns != null)
 			//	overallRegex += HelperExtensions.Forbid(context.AntiPatterns.Select(x => x.ToString()));
 			if (context.Pattern != null)
-				overallRegex = context.Pattern.ToString();
+				overallRegex = context.Pattern;
 
 			Console.WriteLine(overallRegex);
 
