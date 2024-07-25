@@ -10,7 +10,7 @@ namespace Json.Schema;
 /// <summary>
 /// The formats supported by JSON Schema base specifications.
 /// </summary>
-public static class Formats
+public static partial class Formats
 {
 	private static readonly ConcurrentDictionary<string, Format> _registry;
 	private static readonly string[] _timeFormats =
@@ -26,8 +26,16 @@ public static class Formats
 		"HH':'mm':'ss"
 	};
 
-	//from built from https://regex101.com/r/qH0sU7/1, edited to support all date+time examples in https://ijmacd.github.io/rfc3339-iso8601/
-	private static readonly Regex _dateTimeRegex = new Regex(@"^((?:(\d{4}-\d{2}-\d{2})([Tt_]| )(\d{2}:\d{2}:\d{2}(?:\.\d+)?))([Zz]|[\+-]\d{2}:\d{2}))$", RegexOptions.Compiled, TimeSpan.FromSeconds(5));
+#if NET7_0_OR_GREATER
+	[GeneratedRegex(@"^((?:(\d{4}-\d{2}-\d{2})([Tt_]| )(\d{2}:\d{2}:\d{2}(?:\.\d+)?))([Zz]|[\+-]\d{2}:\d{2}))$", RegexOptions.Compiled, 250)]
+	private static partial Regex DateTimeRegex();
+#else
+//from built from https://regex101.com/r/qH0sU7/1, edited to support all date+time examples in https://ijmacd.github.io/rfc3339-iso8601/
+	private static readonly Regex _dateTimeRegex = new Regex(@"^((?:(\d{4}-\d{2}-\d{2})([Tt_]| )(\d{2}:\d{2}:\d{2}(?:\.\d+)?))([Zz]|[\+-]\d{2}:\d{2}))$", RegexOptions.Compiled, TimeSpan.FromMilliseconds(250));
+
+	private static Regex DateTimeRegex()=>_dateTimeRegex;
+#endif
+
 
 	/// <summary>
 	/// Defines the `date` format.
@@ -45,10 +53,23 @@ public static class Formats
 	/// Defines the `email` format.
 	/// </summary>
 	public static readonly Format Email = new PredicateFormat("email", CheckEmail);
+
+
+#if NET7_0_OR_GREATER
+	[GeneratedRegex("^[a-zA-Z][-.a-zA-Z0-9]{0,22}[a-zA-Z0-9]$", RegexOptions.Compiled, 250)]
+	private static partial Regex HostnameRegex();
+#else
+//from built from https://regex101.com/r/qH0sU7/1, edited to support all date+time examples in https://ijmacd.github.io/rfc3339-iso8601/
+	private static readonly Regex _hostnameRegex = new Regex("^[a-zA-Z][-.a-zA-Z0-9]{0,22}[a-zA-Z0-9]$", RegexOptions.Compiled, TimeSpan.FromMilliseconds(250));
+
+	private static Regex HostnameRegex()=>_hostnameRegex;
+#endif
+
+
 	/// <summary>
 	/// Defines the `hostname` format.
 	/// </summary>
-	public static readonly Format Hostname = new RegexFormat("hostname", "^[a-zA-Z][-.a-zA-Z0-9]{0,22}[a-zA-Z0-9]$");
+	public static readonly Format Hostname = new RegexFormat("hostname", HostnameRegex());
 	/// <summary>
 	/// Defines the `idn-email` format.
 	/// </summary>
@@ -205,6 +226,26 @@ public static class Formats
 		return Pointer.RelativeJsonPointer.TryParse(node!.GetValue<string>(), out _);
 	}
 
+#if NET7_0_OR_GREATER
+	[GeneratedRegex(@"(@)(.+)$", RegexOptions.Compiled, 250)]
+	private static partial Regex NormalizeDomainRegex();
+
+	[GeneratedRegex("^(?(\")(\".+?(?<!\\\\)\"@)|(([0-9a-z]((\\.(?!\\.))|[-!#\\$%&'\\*\\+/=\\?\\^`\\{\\}\\|~\\w])*)(?<=[0-9a-z])@))(?(\\[)(\\[(\\d{1,3}\\.){3}\\d{1,3}\\])|(([0-9a-z][-0-9a-z]*[0-9a-z]*\\.)+[a-z0-9][\\-a-z0-9]{0,22}[a-z0-9]))$", RegexOptions.Compiled| RegexOptions.IgnoreCase, 250)]
+	private static partial Regex EmailFormatRegex();
+#else
+//from built from https://regex101.com/r/qH0sU7/1, edited to support all date+time examples in https://ijmacd.github.io/rfc3339-iso8601/
+	private static readonly Regex _normalizeDomainRegex = new Regex(@"(@)(.+)$", RegexOptions.Compiled, TimeSpan.FromMilliseconds(250));
+
+	private static Regex NormalizeDomainRegex()=>_normalizeDomainRegex;
+
+	private static readonly Regex _emailFormatRegex =
+		new Regex(
+			"^(?(\")(\".+?(?<!\\\\)\"@)|(([0-9a-z]((\\.(?!\\.))|[-!#\\$%&'\\*\\+/=\\?\\^`\\{\\}\\|~\\w])*)(?<=[0-9a-z])@))(?(\\[)(\\[(\\d{1,3}\\.){3}\\d{1,3}\\])|(([0-9a-z][-0-9a-z]*[0-9a-z]*\\.)+[a-z0-9][\\-a-z0-9]{0,22}[a-z0-9]))$",
+			RegexOptions.Compiled | RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(250));
+private static Regex EmailFormatRegex() => _emailFormatRegex;
+#endif
+
+
 	// source: https://docs.microsoft.com/en-us/dotnet/standard/base-types/how-to-verify-that-strings-are-in-valid-email-format
 	private static bool CheckEmail(JsonNode? node)
 	{
@@ -217,7 +258,7 @@ public static class Formats
 		try
 		{
 			// Normalize the domain
-			email = System.Text.RegularExpressions.Regex.Replace(email, @"(@)(.+)$", DomainMapper, RegexOptions.None, TimeSpan.FromMilliseconds(200));
+			email = NormalizeDomainRegex().Replace(email, DomainMapper);
 		}
 		catch (RegexMatchTimeoutException)
 		{
@@ -230,9 +271,7 @@ public static class Formats
 
 		try
 		{
-			return System.Text.RegularExpressions.Regex.IsMatch(email,
-				"^(?(\")(\".+?(?<!\\\\)\"@)|(([0-9a-z]((\\.(?!\\.))|[-!#\\$%&'\\*\\+/=\\?\\^`\\{\\}\\|~\\w])*)(?<=[0-9a-z])@))(?(\\[)(\\[(\\d{1,3}\\.){3}\\d{1,3}\\])|(([0-9a-z][-0-9a-z]*[0-9a-z]*\\.)+[a-z0-9][\\-a-z0-9]{0,22}[a-z0-9]))$",
-				RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(250));
+			return EmailFormatRegex().IsMatch(email);
 		}
 		catch (RegexMatchTimeoutException)
 		{
@@ -289,7 +328,7 @@ public static class Formats
 		//date-times with very high precision don't get matched by TryParseExact but are still actually parsable.
 		//We use a fallback to catch these cases
 
-		var match = _dateTimeRegex.Match(dateString);
+		var match = DateTimeRegex().Match(dateString);
 		return match.Success;
 
 	}
@@ -335,7 +374,7 @@ public static class Formats
 
 		try
 		{
-			_ = new Regex(node!.GetValue<string>());
+			_ = new Regex(node!.GetValue<string>(), RegexOptions.ECMAScript);
 			return true;
 		}
 		catch

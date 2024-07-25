@@ -18,14 +18,27 @@ namespace Json.Schema;
 [Vocabulary(Vocabularies.Core202012Id)]
 [Vocabulary(Vocabularies.CoreNextId)]
 [JsonConverter(typeof(AnchorKeywordJsonConverter))]
-public class AnchorKeyword : IJsonSchemaKeyword
+public partial class AnchorKeyword : IJsonSchemaKeyword
 {
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
 	public const string Name = "$anchor";
-	internal static readonly Regex AnchorPattern201909 = new("^[A-Za-z][-A-Za-z0-9.:_]*$");
-	internal static readonly Regex AnchorPattern202012 = new("^[A-Za-z_][-A-Za-z0-9._]*$");
+
+
+#if NET7_0_OR_GREATER
+	[GeneratedRegex("^[A-Za-z][-A-Za-z0-9.:_]*$", RegexOptions.Compiled)]
+	private static partial Regex GetAnchorPattern201909Regex();
+	internal static Regex AnchorPattern201909 => GetAnchorPattern201909Regex();
+
+	[GeneratedRegex("^[A-Za-z_][-A-Za-z0-9._]*$", RegexOptions.Compiled)]
+	private static partial Regex GetAnchorPattern202012Regex();
+	internal static Regex AnchorPattern202012 => GetAnchorPattern202012Regex();
+
+#else
+	internal static readonly Regex AnchorPattern201909 = new("^[A-Za-z][-A-Za-z0-9.:_]*$", RegexOptions.Compiled);
+	internal static readonly Regex AnchorPattern202012 = new("^[A-Za-z_][-A-Za-z0-9._]*$", RegexOptions.Compiled);
+#endif
 
 	/// <summary>
 	/// The value of the anchor.
