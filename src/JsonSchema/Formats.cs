@@ -59,7 +59,6 @@ public static partial class Formats
 	[GeneratedRegex("^[a-zA-Z][-.a-zA-Z0-9]{0,22}[a-zA-Z0-9]$", RegexOptions.Compiled, 250)]
 	private static partial Regex HostnameRegex();
 #else
-//from built from https://regex101.com/r/qH0sU7/1, edited to support all date+time examples in https://ijmacd.github.io/rfc3339-iso8601/
 	private static readonly Regex _hostnameRegex = new Regex("^[a-zA-Z][-.a-zA-Z0-9]{0,22}[a-zA-Z0-9]$", RegexOptions.Compiled, TimeSpan.FromMilliseconds(250));
 
 	private static Regex HostnameRegex()=>_hostnameRegex;
@@ -233,7 +232,6 @@ public static partial class Formats
 	[GeneratedRegex("^(?(\")(\".+?(?<!\\\\)\"@)|(([0-9a-z]((\\.(?!\\.))|[-!#\\$%&'\\*\\+/=\\?\\^`\\{\\}\\|~\\w])*)(?<=[0-9a-z])@))(?(\\[)(\\[(\\d{1,3}\\.){3}\\d{1,3}\\])|(([0-9a-z][-0-9a-z]*[0-9a-z]*\\.)+[a-z0-9][\\-a-z0-9]{0,22}[a-z0-9]))$", RegexOptions.Compiled| RegexOptions.IgnoreCase, 250)]
 	private static partial Regex EmailFormatRegex();
 #else
-//from built from https://regex101.com/r/qH0sU7/1, edited to support all date+time examples in https://ijmacd.github.io/rfc3339-iso8601/
 	private static readonly Regex _normalizeDomainRegex = new Regex(@"(@)(.+)$", RegexOptions.Compiled, TimeSpan.FromMilliseconds(250));
 
 	private static Regex NormalizeDomainRegex()=>_normalizeDomainRegex;
