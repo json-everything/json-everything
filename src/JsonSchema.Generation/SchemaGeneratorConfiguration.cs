@@ -71,6 +71,12 @@ public class SchemaGeneratorConfiguration
 	/// </summary>
 	public bool StrictConditionals { get; set; }
 
+	/// <summary>
+	/// Allows mapping of types to external schema `$id`s.  When encountering one
+	/// of these types, a `$ref` keyword will be generated instead of a full schema.
+	/// </summary>
+	public Dictionary<Type, Uri> ExternalReferences { get; } = [];
+
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 	/// <summary>
 	/// Creates a new <see cref="SchemaGeneratorConfiguration"/>.

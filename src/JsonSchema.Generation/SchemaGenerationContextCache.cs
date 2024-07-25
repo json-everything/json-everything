@@ -35,6 +35,16 @@ public static class SchemaGenerationContextCache
 	/// </remarks>
 	public static SchemaGenerationContextBase Get(Type type, List<Attribute>? memberAttributes = null)
 	{
+		return Get(type, memberAttributes, false);
+	}
+
+	internal static SchemaGenerationContextBase GetRoot(Type type, List<Attribute>? memberAttributes = null)
+	{
+		return Get(type, memberAttributes, true);
+	}
+
+	private static SchemaGenerationContextBase Get(Type type, List<Attribute>? memberAttributes, bool isRoot)
+	{
 		var hash = CalculateHash(type, memberAttributes?.WhereHandled());
 		if (!Cache.TryGetValue(hash, out var context))
 		{
@@ -49,7 +59,7 @@ public static class SchemaGenerationContextCache
 			}
 			else
 			{
-				context = new TypeGenerationContext(type);
+				context = new TypeGenerationContext(type) { IsRoot = isRoot };
 				var comments = SchemaGeneratorConfiguration.Current.XmlReader.GetTypeComments(type);
 				if (!string.IsNullOrWhiteSpace(comments.Summary))
 					context.Intents.Add(new DescriptionIntent(comments.Summary!));

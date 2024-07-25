@@ -48,6 +48,7 @@ public abstract class SchemaGenerationContextBase
 	public int Hash { get; set; }
 
 	internal IComparer<MemberInfo> DeclarationOrderComparer => _memberInfoComparer ??= GetComparer(Type);
+	internal bool IsRoot { get; init; }
 
 	/// <summary>
 	/// Creates a new context.
@@ -94,8 +95,27 @@ public abstract class SchemaGenerationContextBase
 
 		var configuration = SchemaGeneratorConfiguration.Current;
 
-		var generator = configuration.Generators.FirstOrDefault(x => x.Handles(Type)) ?? GeneratorRegistry.Get(Type);
-		generator?.AddConstraints(this);
+		if (configuration.ExternalReferences.TryGetValue(Type, out var uri))
+			Intents.Add(new RefIntent(uri));
+		else
+		{
+			var runGenerator = true;
+			if (!IsRoot && this is TypeGenerationContext typeContext)
+			{
+				var idAttribute = (IdAttribute?)typeContext.GetAttributes().SingleOrDefault(x => x is IdAttribute);
+				if (idAttribute is not null)
+				{
+					Intents.Add(new RefIntent(idAttribute.Uri));
+					runGenerator = false;
+				}
+			}
+
+			if (runGenerator)
+			{
+				var generator = configuration.Generators.FirstOrDefault(x => x.Handles(Type)) ?? GeneratorRegistry.Get(Type);
+				generator?.AddConstraints(this);
+			}
+		}
 
 		AttributeHandler.HandleAttributes(this);
 
