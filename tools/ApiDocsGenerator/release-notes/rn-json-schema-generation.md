@@ -4,6 +4,13 @@ title: JsonSchema.Net.Generation
 icon: fas fa-tag
 order: "09.05"
 ---
+# [4.4.0](https://github.com/gregsdennis/json-everything/pull/772) {#release-schemagen-4.5.0}
+
+[#768](https://github.com/gregsdennis/json-everything/issues/768) - Added two ways to allow external references.  Thanks to [@luisjones](https://github.com/luisjones) for suggesting the idea.
+
+- Added `[Id]` attribute
+- Added `SchemaGenerationConfiguration.ExternalReferences`
+
 # [4.4.0](https://github.com/gregsdennis/json-everything/pull/770) {#release-schemagen-4.4.0}
 
 Updated to use _JsonSchema.Net_ v7.0.0, which contains breaking changes ([release notes](/rn-json-schema/#release-schema-7.0.0)).
