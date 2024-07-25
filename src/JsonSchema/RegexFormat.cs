@@ -50,7 +50,7 @@ public class RegexFormat : Format
 		var str = node!.GetValue<string>();
 		var isMatch =  _regex.IsMatch(str);
 
-		if (isMatch)
+		if (!isMatch)
 		{
 			errorMessage = $"Value is not a match for the format '{Key}'.";
 			return false;
