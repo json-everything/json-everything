@@ -501,7 +501,8 @@ namespace JsonEverythingTemp;
 
 	private async Task HandleSchemaChanged()
 	{
-		_schemaEditorLanguage = await _schemaEditor.DetectLanguage(JsRuntime);
+		if (_operation != SchemaOperations.GenerateSchema)
+			_schemaEditorLanguage = await _schemaEditor.DetectLanguage(JsRuntime);
 	}
 
 	private async Task LoadSavedSchema()

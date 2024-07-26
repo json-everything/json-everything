@@ -1,5 +1,4 @@
 ﻿using System.Text.Json.Nodes;
-using BlazorMonaco;
 using BlazorMonaco.Editor;
 using Microsoft.JSInterop;
 using Yaml2JsonNode;
@@ -30,7 +29,7 @@ public static class EditorExtensions
 			await editor.SetLanguageAsync("json", jsRuntime);
 			return "json";
 		}
-		else if (TryParseYaml(text))
+		if (TryParseYaml(text))
 		{
 			await editor.UpdateOptions(new EditorUpdateOptions { TabSize = 2 });
 			await editor.SetLanguageAsync("yaml", jsRuntime);
