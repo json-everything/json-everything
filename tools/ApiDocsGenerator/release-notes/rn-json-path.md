@@ -4,6 +4,12 @@ title: JsonPath.Net
 icon: fas fa-tag
 order: "09.08"
 ---
+# [1.1.3](https://github.com/gregsdennis/json-everything/pull/774) {#release-path-1.1.3}
+
+[JSON Path Test Suite #86](https://github.com/jsonpath-standard/jsonpath-compliance-test-suite/pull/86) - Invalid `\u` escapes will error correctly.  Previously, an unexpected exception would be thrown.
+
+[JSON Path Test Suite #84](https://github.com/jsonpath-standard/jsonpath-compliance-test-suite/pull/84) - Equality comparisons (`==` and `!=`) between `Nothing` and empty nodelists incorrectly returning false.
+
 # [1.1.2](https://github.com/gregsdennis/json-everything/pull/750) {#release-path-1.1.2}
 
 - Improved parsing to account for a few missed scenarios involving math operations.
