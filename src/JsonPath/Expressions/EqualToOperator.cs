@@ -11,9 +11,11 @@ internal class EqualToOperator : IBinaryComparativeOperator
 		if (left is null) return right is null;
 		if (right is null) return false;
 
-		if (!left.TryGetJson(out var lNode) ||
-		    !right.TryGetJson(out var rNode))
-			return false;
+		var lSuccess = left.TryGetJson(out var lNode) && !ReferenceEquals(lNode, ValueFunctionDefinition.Nothing);
+		var rSuccess = right.TryGetJson(out var rNode) && !ReferenceEquals(rNode, ValueFunctionDefinition.Nothing);
+
+		if (!lSuccess && !rSuccess) return true;
+		if (!lSuccess || !rSuccess) return false;
 
 		return lNode.IsEquivalentTo(rNode);
 	}

@@ -173,7 +173,6 @@ internal class NameSelectorParser : ISelectorParser
 				i++;
 				break;
 			case 'u':
-			case 'U':
 				var hexStart = i;
 				while (ReadHexCode(source, ref i) && source[i] == '\\')
 				{
@@ -203,12 +202,13 @@ internal class NameSelectorParser : ISelectorParser
 	private static bool ReadHexCode(ReadOnlySpan<char> source, ref int i)
 	{
 		// reads uXXXX
-		if (source[i] is not 'u' or 'U') return false;
+		if (source[i] != 'u') return false;
 
-		i++; // consume u
-		if (source[i..(i + 4)].ToArray().All(x => char.ToUpper(x) is (>= 'A' and <= 'F') or (>= '0' and <= '9')))
+		var j = i;
+		j++; // consume u
+		if (j + 4 <= source.Length && source[j..(j + 4)].ToArray().All(x => char.ToUpper(x) is (>= 'A' and <= 'F') or (>= '0' and <= '9')))
 		{
-			i += 4;
+			i = j + 4;
 			return true;
 		}
 

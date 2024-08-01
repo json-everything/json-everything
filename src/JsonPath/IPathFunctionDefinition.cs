@@ -32,10 +32,7 @@ public abstract partial class ValueFunctionDefinition : IReflectiveFunctionDefin
 	private class NothingValue;
 
 	[JsonSerializable(typeof(NothingValue))]
-	private partial class NothingValueContext : JsonSerializerContext
-	{
-
-	}
+	private partial class NothingValueContext : JsonSerializerContext;
 
 	/// <summary>
 	/// Represents the absence of a JSON value and is distinct from any JSON value, including null.
