@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 
 namespace Json.Path;
@@ -188,7 +189,7 @@ internal class NameSelectorParser : ISelectorParser
 					var hexEncodedChars = JsonNode.Parse($"\"{source[(hexStart-1)..i].ToString()}\"")!;
 					sb.Append(hexEncodedChars.GetValue<string>());
 				}
-				catch (InvalidOperationException)
+				catch (Exception e) when (e  is InvalidOperationException or JsonException)
 				{
 					return false;
 				}
