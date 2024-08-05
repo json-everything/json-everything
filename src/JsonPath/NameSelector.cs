@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 
 namespace Json.Path;
@@ -182,8 +183,16 @@ internal class NameSelectorParser : ISelectorParser
 				if (hexStart == i) return false;
 
 				// this is simpler than trying to parse and calc surrogates myself.
-				var hexEncodedChars = JsonNode.Parse($"\"{source[(hexStart-1)..i].ToString()}\"")!;
-				sb.Append(hexEncodedChars.GetValue<string>());
+				// but it does throw an InvalidOperationException when the encoded char is invalid...
+				try
+				{
+					var hexEncodedChars = JsonNode.Parse($"\"{source[(hexStart-1)..i].ToString()}\"")!;
+					sb.Append(hexEncodedChars.GetValue<string>());
+				}
+				catch (Exception e) when (e  is InvalidOperationException or JsonException)
+				{
+					return false;
+				}
 				break;
 			default:
 				if (source[i] == quoteChar)

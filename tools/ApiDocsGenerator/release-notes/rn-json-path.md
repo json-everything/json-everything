@@ -4,11 +4,22 @@ title: JsonPath.Net
 icon: fas fa-tag
 order: "09.08"
 ---
+# [1.1.4](https://github.com/gregsdennis/json-everything/pull/775) {#release-path-1.1.4}
+
+Some of these new tests found bugs.
+
+- [JSON Path Test Suite #87](https://github.com/jsonpath-standard/jsonpath-compliance-test-suite/pull/87) - Invalid surrogate pairs.
+- [JSON Path Test Suite #88](https://github.com/jsonpath-standard/jsonpath-compliance-test-suite/pull/88) - Unescaped delete char (JSON Path should support it).
+- [JSON Path Test Suite #89](https://github.com/jsonpath-standard/jsonpath-compliance-test-suite/pull/89) - Invalid and uncommon filter literal values.
+- [JSON Path Test Suite #90](https://github.com/jsonpath-standard/jsonpath-compliance-test-suite/pull/90) - Numeric value boundary checking.
+
+Thanks to [@Marcono1234](https://github.com/Marcono1234) for adding all of these fantastic tests (and the ones for 1.1.3) to the JSON Path Test Suite!
+
+
 # [1.1.3](https://github.com/gregsdennis/json-everything/pull/774) {#release-path-1.1.3}
 
-[JSON Path Test Suite #86](https://github.com/jsonpath-standard/jsonpath-compliance-test-suite/pull/86) - Invalid `\u` escapes will error correctly.  Previously, an unexpected exception would be thrown.
-
-[JSON Path Test Suite #84](https://github.com/jsonpath-standard/jsonpath-compliance-test-suite/pull/84) - Equality comparisons (`==` and `!=`) between `Nothing` and empty nodelists incorrectly returning false.
+- [JSON Path Test Suite #86](https://github.com/jsonpath-standard/jsonpath-compliance-test-suite/pull/86) - Invalid `\u` escapes will error correctly.  Previously, an unexpected exception would be thrown.
+- [JSON Path Test Suite #84](https://github.com/jsonpath-standard/jsonpath-compliance-test-suite/pull/84) - Equality comparisons (`==` and `!=`) between `Nothing` and empty nodelists incorrectly returning false.
 
 # [1.1.2](https://github.com/gregsdennis/json-everything/pull/750) {#release-path-1.1.2}
 

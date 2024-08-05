@@ -20,6 +20,9 @@ internal static class SpanExtensions
 		//throw new PathParseException(i, "Characters in the range U+0000..U+001F are disallowed");
 	}
 
+	private const long _minInteger = -(2L << 52); // -(2^53)
+	private const long _maxInteger = 2L << 52; // 2^53
+
 	public static bool TryGetInt(this ReadOnlySpan<char> span, ref int index, out int value)
 	{
 		var negative = false;
@@ -47,7 +50,7 @@ internal static class SpanExtensions
 			if (!overflowed)
 			{
 				parsedValue = parsedValue * 10 + span[i] - '0';
-				overflowed = parsedValue is <= -2L << 53 or >= 2L << 53;
+				overflowed = parsedValue is <= _minInteger or >= _maxInteger;
 			}
 
 			i++;
@@ -55,7 +58,11 @@ internal static class SpanExtensions
 
 		if (overflowed) return false;
 
-		if (negative) parsedValue = -parsedValue;
+		if (negative)
+		{
+			if (parsedValue == 0) return false;
+			parsedValue = -parsedValue;
+		}
 
 		index = i;
 		value = (int)Math.Min(int.MaxValue, Math.Max(int.MinValue, parsedValue));
@@ -98,10 +105,10 @@ internal static class SpanExtensions
 					end = i;
 					var allowDash = true;
 					while (end < span.Length && (span[end].In('0'..('9' + 1)) ||
-												 span[end].In('e', '.', '-', '+')))
+												 span[end].In('e', 'E', '.', '-', '+')))
 					{
 						if (!allowDash && span[end] is '-' or '+') break;
-						allowDash = span[end] == 'e';
+						allowDash = span[end] is 'e' or 'E';
 						end++;
 					}
 					break;
