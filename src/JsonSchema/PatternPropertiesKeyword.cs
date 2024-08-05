@@ -32,14 +32,23 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollecto
 	/// </summary>
 	public const string Name = "patternProperties";
 
-	private Dictionary<string, JsonSchema>? _patterns;
+	private Dictionary<string, JsonSchema>? _patternValues;
+	
+	private Dictionary<Regex, JsonSchema>? _patterns;
 
 	/// <summary>
-	/// The patterns of this PatternPropertiesKeyword
+	/// The pattern values of this PatternPropertiesKeyword
 	/// </summary>
-	public IReadOnlyDictionary<string, JsonSchema> Patterns => _patterns ??= _patternsLookup.ToDictionary(x => x.Key, x => x.Value.Schema);
+	public IReadOnlyDictionary<string, JsonSchema> PatternValues => _patternValues ??= _patternsLookup.ToDictionary(x => x.Key, x => x.Value.Schema);
+	
+	/// <summary>
+	/// The regex patterns of this PatternPropertiesKeyword
+	/// </summary>
+	[Obsolete($"Please use the '{nameof(PatternValues)}' instead.")]
+	public IReadOnlyDictionary<Regex, JsonSchema> Patterns => _patterns ??= _patternsLookup.ToDictionary(x => x.Value.Regex.ToRegex(), x => x.Value.Schema);
 
-	IReadOnlyDictionary<string, JsonSchema> IKeyedSchemaCollector.Schemas => Patterns;
+
+	IReadOnlyDictionary<string, JsonSchema> IKeyedSchemaCollector.Schemas => PatternValues;
 
 	/// <summary>
 	/// Creates a new <see cref="PatternPropertiesKeyword"/>.
