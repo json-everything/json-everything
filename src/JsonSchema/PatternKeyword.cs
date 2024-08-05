@@ -35,6 +35,12 @@ public class PatternKeyword : IJsonSchemaKeyword
 
 	public string Pattern => _regexOrPattern;
 
+	/// <summary>
+	/// Returns the Regex Value of the keyword
+	/// </summary>
+	[Obsolete($"Please use the '{nameof(Pattern)}' property instead.")]
+	public Regex Value => _regexOrPattern.ToRegex();
+
 
 	/// <summary>
 	/// Creates a new <see cref="PatternKeyword"/> based on a regular expression pattern.
