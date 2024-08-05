@@ -4,7 +4,7 @@ title: JsonPath.Net
 icon: fas fa-tag
 order: "09.08"
 ---
-# [1.1.4](https://github.com/gregsdennis/json-everything/pull/774) {#release-path-1.1.3}
+# [1.1.4](https://github.com/gregsdennis/json-everything/pull/775) {#release-path-1.1.4}
 
 Some of these new tests found bugs.
 
