@@ -33,7 +33,6 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollecto
 	public const string Name = "patternProperties";
 
 	private Dictionary<string, JsonSchema>? _patternValues;
-	
 	private Dictionary<Regex, JsonSchema>? _patterns;
 
 	/// <summary>
@@ -46,7 +45,6 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollecto
 	/// </summary>
 	[Obsolete($"Please use the '{nameof(PatternValues)}' instead.")]
 	public IReadOnlyDictionary<Regex, JsonSchema> Patterns => _patterns ??= _patternsLookup.ToDictionary(x => x.Value.Regex.ToRegex(), x => x.Value.Schema);
-
 
 	IReadOnlyDictionary<string, JsonSchema> IKeyedSchemaCollector.Schemas => PatternValues;
 
@@ -63,27 +61,19 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollecto
 	/// Creates a new <see cref="PatternPropertiesKeyword"/>.
 	/// </summary>
 	/// <param name="values">The pattern-keyed schemas.</param>
-	public PatternPropertiesKeyword(IEnumerable<(string Pattern, JsonSchema Schema)> values)
+	public PatternPropertiesKeyword(IEnumerable<KeyValuePair<Regex, JsonSchema>> values)
+	{
+		_patternsLookup = values.ToDictionary(x => x.Key.ToString(), x => (new RegexOrPattern(x.Key), JsonPointer.Create(Name, x.Key.ToString()), x.Value), StringComparer.Ordinal);
+	}
+
+	internal PatternPropertiesKeyword(IEnumerable<(string Pattern, JsonSchema Schema)> values)
 	{
 		_patternsLookup = values.ToDictionary(x => x.Pattern, x => (new RegexOrPattern(x.Pattern), JsonPointer.Create(Name, x.Pattern), x.Schema), StringComparer.Ordinal);
 	}
 
-	/// <summary>
-	/// Creates a new <see cref="PatternPropertiesKeyword"/>.
-	/// </summary>
-	/// <param name="values">The pattern-keyed schemas.</param>
-	public PatternPropertiesKeyword(IEnumerable<(Regex Pattern, JsonSchema Schema)> values)
+	internal PatternPropertiesKeyword(IEnumerable<(Regex Pattern, JsonSchema Schema)> values)
 	{
 		_patternsLookup = values.ToDictionary(x => x.Pattern.ToString(), x => (new RegexOrPattern(x.Pattern), JsonPointer.Create(Name, x.Pattern.ToString()), x.Schema), StringComparer.Ordinal);
-	}
-
-	/// <summary>
-	/// Creates a new <see cref="PatternPropertiesKeyword"/>.
-	/// </summary>
-	/// <param name="values">The pattern-keyed schemas.</param>
-	public PatternPropertiesKeyword(IEnumerable<KeyValuePair<Regex, JsonSchema>> values)
-	{
-		_patternsLookup = values.ToDictionary(x => x.Key.ToString(), x => (new RegexOrPattern(x.Key), JsonPointer.Create(Name, x.Key.ToString()), x.Value), StringComparer.Ordinal);
 	}
 
 	/// <summary>

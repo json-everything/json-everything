@@ -3,17 +3,14 @@ using System.Text.RegularExpressions;
 
 namespace Json.Schema;
 
-/// <summary>
-/// a union type based on either a Regex instance or a Pattern
-/// </summary>
-internal readonly struct RegexOrPattern
+internal readonly struct RegexOrPattern : IEquatable<RegexOrPattern>
 {
 	private readonly string _pattern;
-	private readonly Regex _regex;
+	private readonly Regex? _regex;
 
 	public RegexOrPattern(string pattern)
 	{
-		_pattern = pattern?.Replace("{Letter}", "{L}").Replace("{digit}", "{Nd}") ?? throw new ArgumentNullException(nameof(pattern));
+		_pattern = pattern.Replace("{Letter}", "{L}").Replace("{digit}", "{Nd}") ?? throw new ArgumentNullException(nameof(pattern));
 	}
 
 	public RegexOrPattern(Regex regex)
@@ -23,58 +20,24 @@ internal readonly struct RegexOrPattern
 		_regex = regex;
 	}
 
-	/// <summary>
-	/// Determines is the string matches the specified pattern.
-	/// </summary>
-	/// <param name="str"></param>
-	/// <returns></returns>
-	public bool IsMatch(string str)
-	{
-		return _regex?.IsMatch(str) ?? Regex.IsMatch(str, _pattern, RegexOptions.Compiled | RegexOptions.ECMAScript, TimeSpan.FromSeconds(5));
-	}
+	public bool IsMatch(string str) => _regex?.IsMatch(str) ?? Regex.IsMatch(str, _pattern, RegexOptions.Compiled | RegexOptions.ECMAScript, TimeSpan.FromSeconds(5));
+
+	public Regex ToRegex() => _regex ?? new Regex(_pattern, RegexOptions.ECMAScript, TimeSpan.FromSeconds(5));
 
 	public static implicit operator string(RegexOrPattern regexOrPattern)
 	{
 		return regexOrPattern.ToString();
 	}
 
-	public static implicit operator RegexOrPattern(string pattern)
-	{
-		return new RegexOrPattern(pattern);
-	}
+	public static implicit operator RegexOrPattern(string pattern) => new(pattern);
 
-	public static implicit operator RegexOrPattern(Regex regex)
-	{
-		return new RegexOrPattern(regex);
-	}
+	public static implicit operator RegexOrPattern(Regex regex) => new(regex);
 
-	public override bool Equals(object? obj)
-	{
-		return obj is RegexOrPattern other && Equals(other);
-	}
+	public override bool Equals(object? obj) => obj is RegexOrPattern other && Equals(other);
 
-	public bool Equals(RegexOrPattern other)
-	{
-		return string.Equals(_pattern, other._pattern, StringComparison.Ordinal);
-	}
+	public bool Equals(RegexOrPattern other) => string.Equals(_pattern, other._pattern, StringComparison.Ordinal);
 
-	public override int GetHashCode()
-	{
-		return _pattern.GetHashCode();
-	}
+	public override int GetHashCode() => _pattern.GetHashCode();
 
-	/// <summary>
-	/// Will return the original Regex that created this instance, or it will return a new Regex based on the pattern.
-	/// </summary>
-	/// <returns></returns>
-	public Regex ToRegex() => _regex ?? new Regex(_pattern, RegexOptions.ECMAScript, TimeSpan.FromSeconds(5));
-
-	/// <summary>
-	/// Returns the regex pattern
-	/// </summary>
-	/// <returns></returns>
-	public override string ToString()
-	{
-		return _pattern;
-	}
+	public override string ToString() => _pattern;
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
@@ -25,7 +24,6 @@ public partial class AnchorKeyword : IJsonSchemaKeyword
 	/// </summary>
 	public const string Name = "$anchor";
 
-
 #if NET7_0_OR_GREATER
 	[GeneratedRegex("^[A-Za-z][-A-Za-z0-9.:_]*$", RegexOptions.Compiled)]
 	private static partial Regex GetAnchorPattern201909Regex();
@@ -34,7 +32,6 @@ public partial class AnchorKeyword : IJsonSchemaKeyword
 	[GeneratedRegex("^[A-Za-z_][-A-Za-z0-9._]*$", RegexOptions.Compiled)]
 	private static partial Regex GetAnchorPattern202012Regex();
 	internal static Regex AnchorPattern202012 => GetAnchorPattern202012Regex();
-
 #else
 	internal static readonly Regex AnchorPattern201909 = new("^[A-Za-z][-A-Za-z0-9.:_]*$", RegexOptions.Compiled);
 	internal static readonly Regex AnchorPattern202012 = new("^[A-Za-z_][-A-Za-z0-9._]*$", RegexOptions.Compiled);

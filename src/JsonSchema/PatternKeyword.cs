@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text.Json;
@@ -24,8 +23,6 @@ namespace Json.Schema;
 [JsonConverter(typeof(PatternKeywordJsonConverter))]
 public class PatternKeyword : IJsonSchemaKeyword
 {
-
-
 	private readonly RegexOrPattern _regexOrPattern;
 
 	/// <summary>
@@ -33,24 +30,16 @@ public class PatternKeyword : IJsonSchemaKeyword
 	/// </summary>
 	public const string Name = "pattern";
 
+	/// <summary>
+	/// The regular expression.
+	/// </summary>
 	public string Pattern => _regexOrPattern;
 
 	/// <summary>
-	/// Returns the Regex Value of the keyword
+	/// Returns the Regex Value of the keyword.
 	/// </summary>
 	[Obsolete($"Please use the '{nameof(Pattern)}' property instead.")]
 	public Regex Value => _regexOrPattern.ToRegex();
-
-
-	/// <summary>
-	/// Creates a new <see cref="PatternKeyword"/> based on a regular expression pattern.
-	/// </summary>
-	/// <param name="pattern"></param>
-	/// <exception cref="ArgumentNullException"></exception>
-	public PatternKeyword([StringSyntax(StringSyntaxAttribute.Regex)] string pattern)
-	{
-		_regexOrPattern = pattern ?? throw new ArgumentNullException(nameof(pattern));
-	}
 
 	/// <summary>
 	/// Creates a new <see cref="PatternKeyword"/> based on a regular expression instance.
@@ -62,6 +51,15 @@ public class PatternKeyword : IJsonSchemaKeyword
 		_regexOrPattern = value ?? throw new ArgumentNullException(nameof(value));
 	}
 
+	/// <summary>
+	/// Creates a new <see cref="PatternKeyword"/> based on a regular expression pattern.
+	/// </summary>
+	/// <param name="pattern"></param>
+	/// <exception cref="ArgumentNullException"></exception>
+	public PatternKeyword([StringSyntax(StringSyntaxAttribute.Regex)] string pattern)
+	{
+		_regexOrPattern = pattern ?? throw new ArgumentNullException(nameof(pattern));
+	}
 
 	/// <summary>
 	/// Builds a constraint object for a keyword.

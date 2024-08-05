@@ -31,9 +31,9 @@ public static partial class Formats
 	private static partial Regex DateTimeRegex();
 #else
 //from built from https://regex101.com/r/qH0sU7/1, edited to support all date+time examples in https://ijmacd.github.io/rfc3339-iso8601/
-	private static readonly Regex _dateTimeRegex = new Regex(@"^((?:(\d{4}-\d{2}-\d{2})([Tt_]| )(\d{2}:\d{2}:\d{2}(?:\.\d+)?))([Zz]|[\+-]\d{2}:\d{2}))$", RegexOptions.Compiled, TimeSpan.FromMilliseconds(250));
+	private static readonly Regex _dateTimeRegex = new(@"^((?:(\d{4}-\d{2}-\d{2})([Tt_]| )(\d{2}:\d{2}:\d{2}(?:\.\d+)?))([Zz]|[\+-]\d{2}:\d{2}))$", RegexOptions.Compiled, TimeSpan.FromMilliseconds(250));
 
-	private static Regex DateTimeRegex()=>_dateTimeRegex;
+	private static Regex DateTimeRegex() => _dateTimeRegex;
 #endif
 
 
@@ -59,9 +59,9 @@ public static partial class Formats
 	[GeneratedRegex("^[a-zA-Z][-.a-zA-Z0-9]{0,22}[a-zA-Z0-9]$", RegexOptions.Compiled, 250)]
 	private static partial Regex HostnameRegex();
 #else
-	private static readonly Regex _hostnameRegex = new Regex("^[a-zA-Z][-.a-zA-Z0-9]{0,22}[a-zA-Z0-9]$", RegexOptions.Compiled, TimeSpan.FromMilliseconds(250));
+	private static readonly Regex _hostnameRegex = new("^[a-zA-Z][-.a-zA-Z0-9]{0,22}[a-zA-Z0-9]$", RegexOptions.Compiled, TimeSpan.FromMilliseconds(250));
 
-	private static Regex HostnameRegex()=>_hostnameRegex;
+	private static Regex HostnameRegex() => _hostnameRegex;
 #endif
 
 
@@ -232,15 +232,15 @@ public static partial class Formats
 	[GeneratedRegex("^(?(\")(\".+?(?<!\\\\)\"@)|(([0-9a-z]((\\.(?!\\.))|[-!#\\$%&'\\*\\+/=\\?\\^`\\{\\}\\|~\\w])*)(?<=[0-9a-z])@))(?(\\[)(\\[(\\d{1,3}\\.){3}\\d{1,3}\\])|(([0-9a-z][-0-9a-z]*[0-9a-z]*\\.)+[a-z0-9][\\-a-z0-9]{0,22}[a-z0-9]))$", RegexOptions.Compiled| RegexOptions.IgnoreCase, 250)]
 	private static partial Regex EmailFormatRegex();
 #else
-	private static readonly Regex _normalizeDomainRegex = new Regex(@"(@)(.+)$", RegexOptions.Compiled, TimeSpan.FromMilliseconds(250));
+	private static readonly Regex _normalizeDomainRegex = new(@"(@)(.+)$", RegexOptions.Compiled, TimeSpan.FromMilliseconds(250));
 
-	private static Regex NormalizeDomainRegex()=>_normalizeDomainRegex;
+	private static Regex NormalizeDomainRegex() => _normalizeDomainRegex;
 
 	private static readonly Regex _emailFormatRegex =
-		new Regex(
-			"^(?(\")(\".+?(?<!\\\\)\"@)|(([0-9a-z]((\\.(?!\\.))|[-!#\\$%&'\\*\\+/=\\?\\^`\\{\\}\\|~\\w])*)(?<=[0-9a-z])@))(?(\\[)(\\[(\\d{1,3}\\.){3}\\d{1,3}\\])|(([0-9a-z][-0-9a-z]*[0-9a-z]*\\.)+[a-z0-9][\\-a-z0-9]{0,22}[a-z0-9]))$",
+		new("^(?(\")(\".+?(?<!\\\\)\"@)|(([0-9a-z]((\\.(?!\\.))|[-!#\\$%&'\\*\\+/=\\?\\^`\\{\\}\\|~\\w])*)(?<=[0-9a-z])@))(?(\\[)(\\[(\\d{1,3}\\.){3}\\d{1,3}\\])|(([0-9a-z][-0-9a-z]*[0-9a-z]*\\.)+[a-z0-9][\\-a-z0-9]{0,22}[a-z0-9]))$",
 			RegexOptions.Compiled | RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(250));
-private static Regex EmailFormatRegex() => _emailFormatRegex;
+
+	private static Regex EmailFormatRegex() => _emailFormatRegex;
 #endif
 
 
@@ -323,9 +323,8 @@ private static Regex EmailFormatRegex() => _emailFormatRegex;
 			if (canParseExact) return true;
 		}
 
-		//date-times with very high precision don't get matched by TryParseExact but are still actually parsable.
-		//We use a fallback to catch these cases
-
+		// date-times with very high precision don't get matched by TryParseExact but are still actually parsable.
+		// We use a fallback to catch these cases
 		var match = DateTimeRegex().Match(dateString);
 		return match.Success;
 
