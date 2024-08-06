@@ -46,6 +46,12 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollecto
 	[Obsolete($"Please use the '{nameof(PatternValues)}' instead.")]
 	public IReadOnlyDictionary<Regex, JsonSchema> Patterns => _patterns ??= _patternsLookup.ToDictionary(x => x.Value.Regex.ToRegex(), x => x.Value.Schema);
 
+	/// <remarks>
+	/// (obsolete) All validations will fail if this is populated.
+	/// </remarks>
+	[Obsolete("This property is not used and will be removed with the next major version.")]
+	public IReadOnlyList<string>? InvalidPatterns { get; }
+
 	IReadOnlyDictionary<string, JsonSchema> IKeyedSchemaCollector.Schemas => PatternValues;
 
 	/// <summary>

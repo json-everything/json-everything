@@ -41,6 +41,12 @@ public class PatternKeyword : IJsonSchemaKeyword
 	[Obsolete($"Please use the '{nameof(Pattern)}' property instead.")]
 	public Regex Value => _regexOrPattern.ToRegex();
 
+	/// <remarks>
+	/// (obsolete) All validations will fail if this is populated.
+	/// </remarks>
+	[Obsolete("This property is not used and will be removed with the next major version.")]
+	public string? InvalidPattern { get; }
+
 	/// <summary>
 	/// Creates a new <see cref="PatternKeyword"/> based on a regular expression instance.
 	/// </summary>

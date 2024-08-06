@@ -1,13 +1,16 @@
-﻿using System.Text.Json;
-using System.Text.Json.Nodes;
+﻿using System;
+using System.Text.Json;
+using System.Text.RegularExpressions;
 using NUnit.Framework;
 
 namespace Json.Schema.Tests;
 
 public class PatternTests
 {
+	// attempting to use the `.Pattern()` builder method with a bad regex doesn't compile, so... yea!
+
 	[Test]
-	public void DeserializingInvalidPatternDoesNotThrow()
+	public void DeserializingInvalidPatternThrows()
 	{
 		var schemaText =
 			"""
@@ -16,16 +19,11 @@ public class PatternTests
 			}
 			""";
 
-		var schema = JsonSerializer.Deserialize(schemaText, TestSerializerContext.Default.JsonSchema)!;
-
-		JsonNode instance = "some string";
-
-		var result = schema.Evaluate(instance);
-
-		result.AssertInvalid();
+		Assert.Throws<RegexParseException>(() => JsonSerializer.Deserialize(schemaText, TestSerializerContext.Default.JsonSchema));
 	}
+
 	[Test]
-	public void DeserializingInvalidPatternPropertyDoesNotThrow()
+	public void DeserializingInvalidPatternPropertyThrows()
 	{
 		var schemaText =
 			"""
@@ -36,17 +34,6 @@ public class PatternTests
 			}
 			""";
 
-		var schema = JsonSerializer.Deserialize(schemaText, TestSerializerContext.Default.JsonSchema)!;
-
-		var instance = JsonNode.Parse(
-			"""
-			{
-			  "abc": 42
-			}
-			""");
-
-		var result = schema.Evaluate(instance);
-
-		result.AssertValid(); // property doesn't match because it's invalid
+		Assert.Throws<RegexParseException>(() => JsonSerializer.Deserialize(schemaText, TestSerializerContext.Default.JsonSchema));
 	}
 }
