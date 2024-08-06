@@ -29,7 +29,7 @@ Benchmark showing performance of parsing various pointer strings before and afte
 
 ## Architecture change
 
-`JsonPointer` is now a struct which holds the complete pointer string.  Segments are now exposed via an indexer and return `ReadOnlySpan<char>`s which contain the JSON-Pointer-encoded segment.  Use `JsonPointer.SegmentEquals()` for zero-allocation string comparisons or the `.GetSegmentName()` to decode to a string.
+`JsonPointer` now holds the complete pointer string instead of individual segments.  Segments are now exposed via an indexer and return `ReadOnlySpan<char>`s which contain the JSON-Pointer-encoded segment.  Use `JsonPointer.SegmentEquals()` for zero-allocation string comparisons or the `.GetSegmentName()` to decode to a string.
 
 `RelativeJsonPointer` as likewise been updated to a struct.
 
