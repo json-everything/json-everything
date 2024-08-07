@@ -9,7 +9,7 @@ namespace Json.Schema;
 /// </summary>
 public class RegexFormat : Format
 {
-	private readonly Regex _regex;
+	private readonly RegexOrPattern _regex;
 
 	/// <summary>
 	/// Creates a new <see cref="RegexFormat"/>.
@@ -19,7 +19,18 @@ public class RegexFormat : Format
 	public RegexFormat(string key, [StringSyntax(StringSyntaxAttribute.Regex)] string regex)
 		: base(key)
 	{
-		_regex = new Regex(regex, RegexOptions.ECMAScript | RegexOptions.Compiled);
+		_regex = regex;
+	}
+
+	/// <summary>
+	/// Creates a new <see cref="RegexFormat"/>.
+	/// </summary>
+	/// <param name="key">The format key.</param>
+	/// <param name="regex">The regular expression.</param>
+	public RegexFormat(string key, Regex regex)
+		: base(key)
+	{
+		_regex = regex;
 	}
 
 	/// <summary>
@@ -37,15 +48,15 @@ public class RegexFormat : Format
 		}
 
 		var str = node!.GetValue<string>();
-		var matches = _regex.Match(str);
+		var isMatch =  _regex.IsMatch(str);
 
-		if (matches.Value != str)
+		if (!isMatch)
 		{
 			errorMessage = $"Value is not a match for the format '{Key}'.";
 			return false;
 		}
 
 		errorMessage = null;
-		return matches.Value == str;
+		return isMatch;
 	}
 }

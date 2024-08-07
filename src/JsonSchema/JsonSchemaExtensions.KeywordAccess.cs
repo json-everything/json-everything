@@ -363,20 +363,39 @@ public static partial class JsonSchemaExtensions
 	}
 
 	/// <summary>
-	/// Gets the value of `pattern` if the keyword exists.
+	/// Gets the Regex of `pattern` if the keyword exists.
 	/// </summary>
+	[Obsolete($"Please use '{nameof(GetPatternValue)}' instead.")]
 	public static Regex? GetPattern(this JsonSchema schema)
 	{
 		return schema.TryGetKeyword<PatternKeyword>(PatternKeyword.Name, out var k) ? k.Value : null;
 	}
 
 	/// <summary>
+	/// Gets the value of `pattern` if the keyword exists.
+	/// </summary>
+	public static string? GetPatternValue(this JsonSchema schema)
+	{
+		return schema.TryGetKeyword<PatternKeyword>(PatternKeyword.Name, out var k) ? k.Pattern : null;
+	}
+
+	/// <summary>
 	/// Gets the schemas in `patternProperties` if the keyword exists.
 	/// </summary>
+	[Obsolete($"Please use '{nameof(GetPatternPropertiesValues)}' instead.")]
 	public static IReadOnlyDictionary<Regex, JsonSchema>? GetPatternProperties(this JsonSchema schema)
 	{
 		return schema.TryGetKeyword<PatternPropertiesKeyword>(PatternPropertiesKeyword.Name, out var k) ? k.Patterns : null;
 	}
+
+	/// <summary>
+	/// Gets the schemas in `patternProperties` if the keyword exists.
+	/// </summary>
+	public static IReadOnlyDictionary<string, JsonSchema>? GetPatternPropertiesValues(this JsonSchema schema)
+	{
+		return schema.TryGetKeyword<PatternPropertiesKeyword>(PatternPropertiesKeyword.Name, out var k) ? k.PatternValues : null;
+	}
+
 
 	/// <summary>
 	/// Gets the schemas in `prefixItems` if the keyword exists.

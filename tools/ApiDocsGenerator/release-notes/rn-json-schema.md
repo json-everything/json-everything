@@ -4,6 +4,15 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "09.01"
 ---
+# [7.2.0](https://github.com/gregsdennis/json-everything/pull/776) {#release-schema-7.2.0}
+
+[#773](https://github.com/gregsdennis/json-everything/issues/773) - [@rikbosch](https://github.com/rikbosch) recommended and patched a performance improvement around regular expression handling.
+
+Adds new methods which access patterns with strings instead of `Regex` instances.  This allows the `Regex` class to handle caching, which can reduce memory usage in various cases including using the same patterns across multiple schemas.
+
+> `PatternKeyword.InvalidPattern` and `PatternProperties.InvalidPatterns` are no longer used.  Deserialization of invalid patterns will now throw `RegexParseException`, which aligns better with the `JsonSchemaBuilder` experience (invalid patterns passed to `.Pattern()` or `.PatternProperties` will not compile).
+{: .prompt-warning }
+
 # [7.1.2](https://github.com/gregsdennis/json-everything/pull/759) {#release-schema-7.1.2}
 
 Update to use _JsonPointer.Net_ v5.0.2.

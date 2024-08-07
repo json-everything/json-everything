@@ -31,7 +31,7 @@ internal class RequirementsContext
 	// https://www.ocpsoft.org/tutorials/regular-expressions/and-in-regex/
 	//public List<Regex>? Patterns { get; set; }
 	//public List<Regex>? AntiPatterns { get; set; }
-	public Regex? Pattern { get; set; }
+	public string? Pattern { get; set; }
 	public string? Format { get; set; }
 
 	public List<RequirementsContext>? SequentialItems { get; set; }
