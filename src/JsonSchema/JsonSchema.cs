@@ -345,6 +345,13 @@ public class JsonSchema : IBaseDocument
 			}
 		}
 
+		if (_subschemas is null)
+		{
+			using var owner = MemoryPool<JsonSchema>.Shared.Rent(CountSubschemas());
+			_ = GetSubschemas(owner);
+			if (_subschemas is null) return false;
+		}
+
 		foreach (var subschema in _subschemas!)
 		{
 			if (subschema.IsDynamic())
