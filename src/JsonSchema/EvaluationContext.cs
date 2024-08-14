@@ -50,15 +50,6 @@ public class EvaluationContext
 		Scope = new DynamicScope(initialScope);
 	}
 
-	internal static IEnumerable<IJsonSchemaKeyword> GetKeywordsToProcess(JsonSchema schema, EvaluationOptions options)
-	{
-		if (options.ProcessCustomKeywords ||
-		    schema.Dialect == null) return schema.Keywords!;
-
-		var vocabKeywordTypes = schema.Dialect.SelectMany(x => x?.Keywords ?? []);
-		return schema.Keywords!.Where(x => vocabKeywordTypes.Contains(x.GetType()));
-	}
-
 	internal void PushEvaluatingAs(SpecVersion version)
 	{
 		_evaluatingAs.Push(version);

@@ -377,7 +377,7 @@ public class SchemaRegistry
 				registration.Anchors[anchor] = currentSchema;
 			}
 
-			using var owner = MemoryPool<JsonSchema>.Shared.Rent();
+			using var owner = MemoryPool<JsonSchema>.Shared.Rent(currentSchema.CountSubschemas());
 			foreach (var subschema in currentSchema.GetSubschemas(owner))
 			{
 				if (subschema.BoolValue.HasValue) continue;
