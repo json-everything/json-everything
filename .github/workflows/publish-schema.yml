@@ -119,10 +119,7 @@ jobs:
         run: |
           # matrix var includes "src/JsonSchema/nuspec/"
           ls -lR artifacts/JsonSchema
-          echo ${{ matrix.nuspec }}
-          echo ${{ matrix.nuspec }} | sed 's/^.\{4\}//'
           NUSPEC_NAME="$(echo ${{ matrix.nuspec }} | sed 's/^.\{4\}//')"
-          echo ${NUSPEC_NAME}
           nuget pack artifacts/${NUSPEC_NAME} -OutputDirectory nupkg/
       - name: push
         run: |
