@@ -122,6 +122,7 @@ jobs:
           echo ${{ matrix.nuspec }}
           echo ${{ matrix.nuspec }} | sed 's/^.\{4\}//'
           NUSPEC_NAME=${{ matrix.nuspec }} | sed 's/^.\{4\}//'
+          echo ${NUSPEC_NAME}
           nuget pack artifacts/${NUSPEC_NAME} -OutputDirectory nupkg/
       - name: push
         run: |
