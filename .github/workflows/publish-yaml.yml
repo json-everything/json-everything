@@ -5,8 +5,13 @@ on:
     branches:
       - master # Default release branch
     paths:
+      - .github/workflows/publish-yaml.yml
       - src/Yaml2JsonNode/**
   workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
 
 jobs:
   publish:

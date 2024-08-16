@@ -5,8 +5,13 @@ on:
     branches:
       - master # Default release branch
     paths:
+      - .github/workflows/publish-schema-gen.yml
       - src/JsonSchema.Generation/**
   workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
 
 jobs:
   publish:
