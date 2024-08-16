@@ -4,6 +4,10 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "09.01"
 ---
+# [7.2.1](https://github.com/gregsdennis/json-everything/pull/781) {#release-schema-7.2.1}
+
+[#778](https://github.com/gregsdennis/json-everything/issues/778) - Addresses a potential `IndexOutOfRangeException` that could occur for large schemas.  Thanks to [@Laniusexcubitor](https://github.com/Laniusexcubitor) for bouncing ideas and testing.
+
 # [7.2.0](https://github.com/gregsdennis/json-everything/pull/776) {#release-schema-7.2.0}
 
 [#773](https://github.com/gregsdennis/json-everything/issues/773) - [@rikbosch](https://github.com/rikbosch) recommended and patched a performance improvement around regular expression handling.

@@ -317,8 +317,14 @@ public class JsonSchema : IBaseDocument
 
 	private void ClearConstraints()
 	{
-		using var owner = MemoryPool<JsonSchema>.Shared.Rent();
-		foreach (var subschema in GetSubschemas(owner))
+		if (_subschemas is null)
+		{
+			using var owner = MemoryPool<JsonSchema>.Shared.Rent(CountSubschemas());
+			_ = GetSubschemas(owner);
+			if (_subschemas is null) return;
+		}
+
+		foreach (var subschema in _subschemas!)
 		{
 			subschema.ClearConstraints();
 		}
@@ -339,8 +345,14 @@ public class JsonSchema : IBaseDocument
 			}
 		}
 
-		using var owner = MemoryPool<JsonSchema>.Shared.Rent();
-		foreach (var subschema in GetSubschemas(owner))
+		if (_subschemas is null)
+		{
+			using var owner = MemoryPool<JsonSchema>.Shared.Rent(CountSubschemas());
+			_ = GetSubschemas(owner);
+			if (_subschemas is null) return false;
+		}
+
+		foreach (var subschema in _subschemas!)
 		{
 			if (subschema.IsDynamic())
 			{
@@ -526,13 +538,37 @@ public class JsonSchema : IBaseDocument
 		return keyword.SupportsVersion(preferredVersion);
 	}
 
+	private JsonSchema[]? _subschemas;
+
+	internal int CountSubschemas()
+	{
+		if (BoolValue.HasValue) return 0;
+		if (_subschemas is not null) return _subschemas.Length;
+
+		return Keywords!.Sum(CountSubschemas);
+	}
+
+	private static int CountSubschemas(IJsonSchemaKeyword keyword)
+	{
+		return keyword switch
+		{
+			// ReSharper disable once RedundantAlwaysMatchSubpattern
+			ISchemaContainer { Schema: not null } container => 1 + container.Schema.CountSubschemas(),
+			ISchemaCollector collector => collector.Schemas.Count + collector.Schemas.Sum(x => x.CountSubschemas()),
+			IKeyedSchemaCollector collector => collector.Schemas.Count + collector.Schemas.Values.Sum(x => x.CountSubschemas()),
+			ICustomSchemaCollector collector => collector.Schemas.Count() + collector.Schemas.Sum(x => x.CountSubschemas()),
+			_ => 0
+		};
+	}
+
 	internal ReadOnlySpan<JsonSchema> GetSubschemas(IMemoryOwner<JsonSchema> owner)
 	{
 		if (BoolValue.HasValue) return [];
+		if (_subschemas is not null) return _subschemas;
 
 		var span = owner.Memory.Span;
 
-		using var keywordOwner = MemoryPool<JsonSchema>.Shared.Rent();
+		using var keywordOwner = MemoryPool<JsonSchema>.Shared.Rent(100000);
 		var i = 0;
 		foreach (var keyword in Keywords!)
 		{
@@ -542,6 +578,8 @@ public class JsonSchema : IBaseDocument
 				i++;
 			}
 		}
+
+		_subschemas = i == 0 ? [] : span[..i].ToArray();
 
 		return i == 0 ? [] : span[..i];
 	}
