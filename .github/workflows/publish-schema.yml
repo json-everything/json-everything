@@ -83,13 +83,13 @@ jobs:
           ls nupkg/
           nuget push nupkg/${PKG_NAME} -Source https://api.nuget.org/v3/index.json -SkipDuplicate
       - name: create tag
-        run: |
-          git tag schema-v${{ needs.build.outputs.version }}
-          git push schema-v${{ needs.build.outputs.version }}
-        # uses: rickstaa/action-create-tag@v1
-        # with:
-        #   tag: schema-v${{ needs.build.outputs.version }}
-        #   tag_exists_error: false
+        # run: |
+        #   git tag schema-v${{ needs.build.outputs.version }}
+        #   git push schema-v${{ needs.build.outputs.version }}
+        uses: rickstaa/action-create-tag@v1
+        with:
+          tag: schema-v${{ needs.build.outputs.version }}
+          tag_exists_error: false
       - name: archive packages
         uses: actions/upload-artifact@v4
         with:
