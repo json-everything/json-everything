@@ -126,7 +126,7 @@ jobs:
       - name: archive packages
         uses: actions/upload-artifact@v4
         with:
-          name: archive-packages-localizations
+          name: archive-packages-${{ matrix.nuspec }}
           path: |
             **/*.nupkg
             **/*.snupkg
