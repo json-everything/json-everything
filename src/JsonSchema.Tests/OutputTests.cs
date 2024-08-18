@@ -503,7 +503,7 @@ public class OutputTests
 	public void AdditionalItemsDoesNotGiveExtraErrors()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
-			.Items(new JsonSchema[] { true, false })
+			.Items([true, false ])
 			.AdditionalItems(false);
 
 		var instance = JsonNode.Parse("[1,2]");
@@ -521,7 +521,7 @@ public class OutputTests
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Schema(MetaSchemas.Draft201909Id)
-			.Items(new JsonSchema[] { true, false })
+			.Items([true, false])
 			.UnevaluatedItems(false);
 
 		var instance = JsonNode.Parse("[1,2]");

@@ -117,7 +117,7 @@ public class UnevaluatedItemsKeyword : IJsonSchemaKeyword, ISchemaContainer
 
 		var childEvaluations = indicesToEvaluate
 			.Select(i => (Index: i, Constraint: Schema.GetConstraint(JsonPointer.Create(Name), evaluation.Results.InstanceLocation, JsonPointer.Create(i), context)))
-			.Select(x => x.Constraint.BuildEvaluation(array[x.Index], evaluation.Results.InstanceLocation.Combine(x.Index), evaluation.Results.EvaluationPath, context.Options))
+			.Select(x => x.Constraint.BuildEvaluation(array[x.Index], evaluation.Results.InstanceLocation, evaluation.Results.EvaluationPath, context.Options))
 			.ToArray();
 
 		evaluation.ChildEvaluations = childEvaluations;
