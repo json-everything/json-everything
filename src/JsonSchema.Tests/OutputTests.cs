@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using Json.Pointer;
 using NUnit.Framework;
 
 namespace Json.Schema.Tests;
@@ -461,10 +463,47 @@ public class OutputTests
 	}
 
 	[Test]
+	public void UnevaluatedPropertiesGivesCorrectInstanceLocation()
+	{
+		JsonSchema schema = new JsonSchemaBuilder()
+			.Properties(("foo", true))
+			.UnevaluatedProperties(false);
+
+		var instance = JsonNode.Parse("{\"foo\": null, \"bar\": null}");
+
+		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
+
+		var serialized = JsonSerializer.Serialize(result, TestEnvironment.TestOutputSerializerOptions);
+		Console.WriteLine(serialized);
+
+		var unevaluatedPropertiesResult = result.Details.Single(x => x.EvaluationPath.Equals(JsonPointer.Create("unevaluatedProperties")));
+		Assert.That(unevaluatedPropertiesResult.InstanceLocation.ToString(), Is.EqualTo("/bar"));
+	}
+
+
+	[Test]
+	public void UnevaluatedItemsGivesCorrectInstanceLocation()
+	{
+		JsonSchema schema = new JsonSchemaBuilder()
+			.PrefixItems(true)
+			.UnevaluatedItems(false);
+
+		var instance = JsonNode.Parse("[1, 2]");
+
+		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
+
+		var serialized = JsonSerializer.Serialize(result, TestEnvironment.TestOutputSerializerOptions);
+		Console.WriteLine(serialized);
+
+		var unevaluatedPropertiesResult = result.Details.Single(x => x.EvaluationPath.Equals(JsonPointer.Create("unevaluatedItems")));
+		Assert.That(unevaluatedPropertiesResult.InstanceLocation.ToString(), Is.EqualTo("/1"));
+	}
+
+	[Test]
 	public void AdditionalItemsDoesNotGiveExtraErrors()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
-			.Items(new JsonSchema[] { true, false })
+			.Items([true, false ])
 			.AdditionalItems(false);
 
 		var instance = JsonNode.Parse("[1,2]");
@@ -482,7 +521,7 @@ public class OutputTests
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Schema(MetaSchemas.Draft201909Id)
-			.Items(new JsonSchema[] { true, false })
+			.Items([true, false])
 			.UnevaluatedItems(false);
 
 		var instance = JsonNode.Parse("[1,2]");

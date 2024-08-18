@@ -98,7 +98,7 @@ public class UnevaluatedPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer
 
 		var childEvaluations = properties
 			.Select(x => (Name: x, Constraint: Schema.GetConstraint(JsonPointer.Create(Name), evaluation.Results.InstanceLocation, JsonPointer.Create(x), context)))
-			.Select(x => x.Constraint.BuildEvaluation(obj[x.Name], evaluation.Results.InstanceLocation.Combine(x.Name), evaluation.Results.EvaluationPath, context.Options))
+			.Select(x => x.Constraint.BuildEvaluation(obj[x.Name], evaluation.Results.InstanceLocation, evaluation.Results.EvaluationPath, context.Options))
 			.ToArray();
 
 		evaluation.ChildEvaluations = childEvaluations;

@@ -4,6 +4,10 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "09.01"
 ---
+# [7.2.2](https://github.com/gregsdennis/json-everything/pull/782) {#release-schema-7.2.2}
+
+Fixes an issue with `unevaluated*` keyword output where the instance location would contain repeated pointer segments.
+
 # [7.2.1](https://github.com/gregsdennis/json-everything/pull/781) {#release-schema-7.2.1}
 
 [#778](https://github.com/gregsdennis/json-everything/issues/778) - Addresses a potential `IndexOutOfRangeException` that could occur for large schemas.  Thanks to [@Laniusexcubitor](https://github.com/Laniusexcubitor) for bouncing ideas and testing.
