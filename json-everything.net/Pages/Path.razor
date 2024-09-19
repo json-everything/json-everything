@@ -6,6 +6,7 @@
 @using System.Text.Encodings.Web
 @using System.Text.Json.Nodes
 @using BlazorMonaco.Editor
+@using Microsoft.AspNetCore.Components
 
 @inject DataManager DataManager;
 
@@ -28,7 +29,7 @@
 		<div class="align-items-center mt-1">
 			@foreach (var library in _libraries)
 			{
-				<NugetLibrary Library="library"/>
+				<NugetLibrary Library="@library"/>
 			}
 		</div>
 	</div>

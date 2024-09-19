@@ -43,7 +43,7 @@ jobs:
           version="$(grep '<Version' src/JsonSchema/JsonSchema.csproj | cut -f2 -d'>'|cut -f1 -d'<')"
           echo $version
           echo "version=$version" >> $GITHUB_OUTPUT
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: build-output
           path: |
@@ -130,4 +130,3 @@ jobs:
           path: |
             **/*.nupkg
             **/*.snupkg
-          if-no-files-found: error
