@@ -56,7 +56,7 @@ jobs:
       pull-requests: write
     steps:
       - name: Download Artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           path: artifacts
       - name: Publish Unit Test Results
@@ -74,7 +74,7 @@ jobs:
       - name: Extract Branch Name
         run: echo "BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
       - name: Download Artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           path: artifacts
       - name: Get badge details
