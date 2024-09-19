@@ -180,7 +180,7 @@ internal static class PathParser
 		{
 			i++; // consume .
 
-			if (i < source.Length)
+			if (i >= source.Length)
 			{
 				segment = null;
 				return false;

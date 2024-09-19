@@ -58,6 +58,6 @@ public class GithubTests
 	{
 		var pathText = "$.";
 
-		Assert.That(JsonPath.TryParse(pathText, out _), Is.True);
+		Assert.That(JsonPath.TryParse(pathText, out _), Is.False);
 	}
 }
