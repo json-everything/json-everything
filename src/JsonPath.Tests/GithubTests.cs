@@ -52,4 +52,12 @@ public class GithubTests
 			Assert.That(path, Is.Null);
 		});
 	}
+
+	[Test]
+	public void Issue787_DotSyntaxWithoutName()
+	{
+		var pathText = "$.";
+
+		JsonPath.TryParse(pathText, out var path);
+	}
 }
