@@ -54,10 +54,10 @@ public class GithubTests
 	}
 
 	[Test]
-	public void Issue787_DotSyntaxWithoutName()
+	public void Issue787_DotSyntaxWithoutNameThrowsInTryParse()
 	{
 		var pathText = "$.";
 
-		JsonPath.TryParse(pathText, out var path);
+		Assert.That(JsonPath.TryParse(pathText, out _), Is.True);
 	}
 }

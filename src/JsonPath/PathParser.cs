@@ -180,6 +180,12 @@ internal static class PathParser
 		{
 			i++; // consume .
 
+			if (i < source.Length)
+			{
+				segment = null;
+				return false;
+			}
+
 			if (source[i] == '.')
 			{
 				isRecursive = true;
