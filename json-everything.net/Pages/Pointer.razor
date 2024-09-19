@@ -5,6 +5,7 @@
 @using EditorOptions = JsonEverythingNet.Services.EditorOptions
 @using System.Text.Encodings.Web
 @using BlazorMonaco.Editor
+@using Microsoft.AspNetCore.Components
 
 @inject DataManager DataManager;
 
@@ -27,7 +28,7 @@
 		<div class="align-items-center mt-1">
 			@foreach (var library in _libraries)
 			{
-				<NugetLibrary Library="library"/>
+				<NugetLibrary Library="@library"/>
 			}
 		</div>
 	</div>

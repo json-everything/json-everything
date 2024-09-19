@@ -4,6 +4,10 @@ title: JsonPath.Net
 icon: fas fa-tag
 order: "09.08"
 ---
+# [1.1.5](https://github.com/gregsdennis/json-everything/pull/788) {#release-path-1.1.5}
+
+[#787](https://github.com/gregsdennis/json-everything/issues/787) - ``.TryParse()`` would throw when encountering a `.`-selector at the end of the string.  Thanks to [@Nexiimil](https://github.com/Nexiimil) for reporting this.
+
 # [1.1.4](https://github.com/gregsdennis/json-everything/pull/775) {#release-path-1.1.4}
 
 Some of these new tests found bugs.
