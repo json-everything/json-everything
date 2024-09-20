@@ -1060,37 +1060,48 @@ public class GithubTests
 	[Test]
 	public void Issue791_DecoratedClass()
 	{
+		Verify791();
+
 		Run791<Model791>();
 	}
 
 	[Test]
 	public void Issue791_UndecoratedClass()
 	{
-		ValidatingJsonConverter.MapType<Model791Undecorated>(MyModelSchema);
+		ValidatingJsonConverter.MapType<Model791Undecorated>(Model791Schema);
 		Run791<Model791Undecorated>();
+	}
+
+	private static void Verify791()
+	{
+		var jsonText = @"{ ""Foo"": ""foo"",  ""Bar"": -42 }";
+		var node = JsonNode.Parse(jsonText);
+
+		var results = Model791Schema.Evaluate(node, new EvaluationOptions { OutputFormat = OutputFormat.List });
+		Console.WriteLine(JsonSerializer.Serialize(results, TestEnvironment.TestOutputSerializerOptions));
 	}
 
 	private static void Run791<T>()
 	{
 		var jsonText = @"{ ""Foo"": ""foo"",  ""Bar"": -42 }";
 		var converter = new ValidatingJsonConverter { OutputFormat = OutputFormat.List };
-		var options = new JsonSerializerOptions { Converters = { converter } };
+		var options = new JsonSerializerOptions(TestEnvironment.TestOutputSerializerOptions) { Converters = { converter } };
 		var ex = Assert.Throws<JsonException>(() => JsonSerializer.Deserialize<T>(jsonText, options));
 		var result = ex.Data["validation"] as EvaluationResults;
 		Assert.That(result, Is.Not.Null);
-		Assert.That(result.Details.Count, Is.GreaterThan(0));
+		Assert.That(result.Details, Has.Count.GreaterThan(0));
 	}
 
-	[JsonSchema(typeof(GithubTests), nameof(MyModelSchema))]
+	[JsonSchema(typeof(GithubTests), nameof(Model791Schema))]
 	// ReSharper disable ClassNeverInstantiated.Local
-	private class Model791
+	public class Model791
 	{
 		public string Foo { get; set; }
 		public int Bar { get; set; }
 		public DateTime Baz { get; set; }
 	}
 
-	private class Model791Undecorated
+	public class Model791Undecorated
 	{
 		public string Foo { get; set; }
 		public int Bar { get; set; }
@@ -1098,7 +1109,7 @@ public class GithubTests
 	}
 	// ReSharper restore ClassNeverInstantiated.Local
 
-	public static readonly JsonSchema MyModelSchema =
+	public static readonly JsonSchema Model791Schema =
 		new JsonSchemaBuilder()
 			.Type(SchemaValueType.Object)
 			.Properties(
