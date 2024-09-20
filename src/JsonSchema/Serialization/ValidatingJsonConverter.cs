@@ -66,7 +66,12 @@ public class ValidatingJsonConverter : JsonConverterFactory
 	public override JsonConverter? CreateConverter(Type typeToConvert, JsonSerializerOptions options)
 	{
 		// at this point, we know that we should have a converter, so we don't need to check for null
-		if (_cache.TryGetValue(typeToConvert, out var converter)) return converter;
+		if (_cache.TryGetValue(typeToConvert, out var converter))
+		{
+			// override its options using this converter's options
+			SetOptions(converter!);
+			return converter;
+		}
 
 		var schemaAttribute = (JsonSchemaAttribute)typeToConvert.GetCustomAttributes(typeof(JsonSchemaAttribute)).Single();
 		var schema = schemaAttribute.Schema;
@@ -74,7 +79,7 @@ public class ValidatingJsonConverter : JsonConverterFactory
 		return CreateConverter(typeToConvert, schema);
 	}
 
-	private JsonConverter? CreateConverter(Type typeToConvert, JsonSchema schema)
+	private JsonConverter CreateConverter(Type typeToConvert, JsonSchema schema)
 	{
 		var converterType = typeof(ValidatingJsonConverter<>).MakeGenericType(typeToConvert);
 
@@ -91,13 +96,18 @@ public class ValidatingJsonConverter : JsonConverterFactory
 		};
 		var converter = (JsonConverter)Activator.CreateInstance(converterType, schema, optionsFactory)!;
 
-		var validatingConverter = (IValidatingJsonConverter)converter;
-		validatingConverter.OutputFormat = OutputFormat ?? Schema.OutputFormat.Flag;
-		validatingConverter.RequireFormatValidation = RequireFormatValidation ?? false;
+		SetOptions(converter);
 
 		_cache[typeToConvert] = converter;
 
 		return converter;
+	}
+
+	private void SetOptions(JsonConverter converter)
+	{
+		var validatingConverter = (IValidatingJsonConverter)converter;
+		validatingConverter.OutputFormat = OutputFormat ?? Schema.OutputFormat.Flag;
+		validatingConverter.RequireFormatValidation = RequireFormatValidation ?? false;
 	}
 }
 

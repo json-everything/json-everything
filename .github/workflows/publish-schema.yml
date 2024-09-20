@@ -94,7 +94,6 @@ jobs:
           path: |
             **/*.nupkg
             **/*.snupkg
-          if-no-files-found: error
   publish-localizations:
     needs: build
     name: pack & publish localizations
