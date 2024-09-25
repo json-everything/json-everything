@@ -29,8 +29,8 @@ internal class EnumGenerator : ISchemaGenerator
 			return ignoreAttribute == null;
 		};
 
-		var vs = values.Where(ShouldIncludeMember);
+		var includedValues = values.Where(ShouldIncludeMember);
 
-		context.Intents.Add(new EnumIntent(vs));
+		context.Intents.Add(new EnumIntent(includedValues));
 	}
 }
