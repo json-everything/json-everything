@@ -140,10 +140,10 @@ public class SchemaGenerationTests
 		Ignore_ExcludesTrumpsIgnore,
 
 		[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-		NeverIgnoreWhenWritingDefault,
+		DontIgnoreThisWhenWritingDefault,
 
 		[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-		NeverIgnoreWhenWritingNull,
+		DontIgnoreThisWhenWritingNull,
 	}
 
 	// ReSharper disable once ClassNeverInstantiated.Local
@@ -257,7 +257,8 @@ public class SchemaGenerationTests
 			.Type(SchemaValueType.Object)
 			.Properties(
 				("_value", new JsonSchemaBuilder().Type(SchemaValueType.Integer)),
-				("EnumProp", new JsonSchemaBuilder().Enum("DontIgnoreThis", "NeverIgnoreWhenWritingDefault", "NeverIgnoreWhenWritingNull")),
+				("EnumProp", new JsonSchemaBuilder()
+					.Enum("DontIgnoreThis", "DontIgnoreThisWhenWritingDefault", "DontIgnoreThisWhenWritingNull")),
 				("Integer", new JsonSchemaBuilder()
 					.Type(SchemaValueType.Integer)
 					.Minimum(5)
