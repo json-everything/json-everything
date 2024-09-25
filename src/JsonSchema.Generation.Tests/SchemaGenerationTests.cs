@@ -120,6 +120,32 @@ public class SchemaGenerationTests
 		AssertEqual(expected, actual);
 	}
 
+	private enum GenerationTargetEnumeration
+	{
+		[JsonIgnore]
+		IgnoreThis,
+
+		[JsonIgnore(Condition = JsonIgnoreCondition.Never)]
+		DontIgnoreThis,
+
+		[JsonExclude]
+		IgnoreThisWithJsonExclude,
+
+		[JsonIgnore]
+		[JsonExclude]
+		IgnoreThisBoth,
+
+		[JsonIgnore(Condition = JsonIgnoreCondition.Never)]
+		[JsonExclude]
+		Ignore_ExcludesTrumpsIgnore,
+
+		[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+		NeverIgnoreWhenWritingDefault,
+
+		[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+		NeverIgnoreWhenWritingNull,
+	}
+
 	// ReSharper disable once ClassNeverInstantiated.Local
 	// ReSharper disable UnusedMember.Local
 	private class GenerationTarget
@@ -130,6 +156,8 @@ public class SchemaGenerationTests
 
 		private int _notIncluded;
 #pragma warning restore 169
+
+		public GenerationTargetEnumeration EnumProp { get; set; }
 
 		[Required]
 		[Minimum(5)]
@@ -229,6 +257,7 @@ public class SchemaGenerationTests
 			.Type(SchemaValueType.Object)
 			.Properties(
 				("_value", new JsonSchemaBuilder().Type(SchemaValueType.Integer)),
+				("EnumProp", new JsonSchemaBuilder().Enum("DontIgnoreThis", "NeverIgnoreWhenWritingDefault", "NeverIgnoreWhenWritingNull")),
 				("Integer", new JsonSchemaBuilder()
 					.Type(SchemaValueType.Integer)
 					.Minimum(5)
