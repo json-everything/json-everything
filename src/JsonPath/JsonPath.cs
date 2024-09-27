@@ -99,7 +99,7 @@ public class JsonPath
 		source = source.Trim();
 
 		int index = 0;
-		if (!PathParser.TryParse(source.AsSpan(), ref index, out path, options, true)) return false;
+		if (!PathParser.TryParse(source.AsSpan(), ref index, out path, options, !options.AllowRelativePathStart)) return false;
 		if (index != source.Length)
 		{
 			path = null;
