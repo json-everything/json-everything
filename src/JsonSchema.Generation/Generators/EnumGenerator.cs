@@ -14,7 +14,6 @@ internal class EnumGenerator : ISchemaGenerator
 
 	public void AddConstraints(SchemaGenerationContextBase context)
 	{
-		var values = Enum.GetNames(context.Type).ToList();
 		bool ShouldIncludeMember(string enumValue)
 		{
 			var fieldInfo = context.Type.GetField(enumValue);
@@ -29,8 +28,7 @@ internal class EnumGenerator : ISchemaGenerator
 			return ignoreAttribute == null;
 		};
 
-		var includedValues = values.Where(ShouldIncludeMember);
-
+		var includedValues = Enum.GetNames(context.Type).Where(ShouldIncludeMember).ToList();
 		context.Intents.Add(new EnumIntent(includedValues));
 	}
 }
