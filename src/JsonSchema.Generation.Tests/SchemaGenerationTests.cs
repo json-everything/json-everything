@@ -133,11 +133,15 @@ public class SchemaGenerationTests
 
 		[JsonIgnore]
 		[JsonExclude]
-		IgnoreThisBoth,
+		IgnoreAndExcludeThis,
 
 		[JsonIgnore(Condition = JsonIgnoreCondition.Never)]
 		[JsonExclude]
-		Ignore_ExcludesTrumpsIgnore,
+		ExcludeTrumpsIgnore,
+
+		[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+		[JsonExclude]
+		ExcludeTrumpsIgnoreWhenWritingDefault,
 
 		[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
 		DontIgnoreThisWhenWritingDefault,
@@ -212,15 +216,15 @@ public class SchemaGenerationTests
 
 		[JsonIgnore]
 		[JsonExclude]
-		public double IgnoreThisBoth { get; set; }
+		public double IgnoreAndExcludeThis { get; set; }
 
 		[JsonIgnore(Condition = JsonIgnoreCondition.Never)]
 		[JsonExclude]
-		public double Ignore_ExcludesTrumpsIgnore { get; set; }
+		public double ExcludeTrumpsIgnore { get; set; }
 
 		[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
 		[JsonExclude]
-		public double Ignore_ExcludesTrumpsIgnoreWhenWritingDefault { get; set; }
+		public double ExcludeTrumpsIgnoreWhenWritingDefault { get; set; }
 
 
 		[JsonPropertyName("rename-this")]
