@@ -120,6 +120,36 @@ public class SchemaGenerationTests
 		AssertEqual(expected, actual);
 	}
 
+	private enum GenerationTargetEnumeration
+	{
+		[JsonIgnore]
+		IgnoreThis,
+
+		[JsonIgnore(Condition = JsonIgnoreCondition.Never)]
+		DontIgnoreThis,
+
+		[JsonExclude]
+		IgnoreThisWithJsonExclude,
+
+		[JsonIgnore]
+		[JsonExclude]
+		IgnoreAndExcludeThis,
+
+		[JsonIgnore(Condition = JsonIgnoreCondition.Never)]
+		[JsonExclude]
+		ExcludeTrumpsIgnore,
+
+		[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+		[JsonExclude]
+		ExcludeTrumpsIgnoreWhenWritingDefault,
+
+		[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+		DontIgnoreThisWhenWritingDefault,
+
+		[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+		DontIgnoreThisWhenWritingNull,
+	}
+
 	// ReSharper disable once ClassNeverInstantiated.Local
 	// ReSharper disable UnusedMember.Local
 	private class GenerationTarget
@@ -130,6 +160,8 @@ public class SchemaGenerationTests
 
 		private int _notIncluded;
 #pragma warning restore 169
+
+		public GenerationTargetEnumeration EnumProp { get; set; }
 
 		[Required]
 		[Minimum(5)]
@@ -184,15 +216,15 @@ public class SchemaGenerationTests
 
 		[JsonIgnore]
 		[JsonExclude]
-		public double IgnoreThisBoth { get; set; }
+		public double IgnoreAndExcludeThis { get; set; }
 
 		[JsonIgnore(Condition = JsonIgnoreCondition.Never)]
 		[JsonExclude]
-		public double Ignore_ExcludesTrumpsIgnore { get; set; }
+		public double ExcludeTrumpsIgnore { get; set; }
 
 		[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
 		[JsonExclude]
-		public double Ignore_ExcludesTrumpsIgnoreWhenWritingDefault { get; set; }
+		public double ExcludeTrumpsIgnoreWhenWritingDefault { get; set; }
 
 
 		[JsonPropertyName("rename-this")]
@@ -229,6 +261,8 @@ public class SchemaGenerationTests
 			.Type(SchemaValueType.Object)
 			.Properties(
 				("_value", new JsonSchemaBuilder().Type(SchemaValueType.Integer)),
+				("EnumProp", new JsonSchemaBuilder()
+					.Enum("DontIgnoreThis", "DontIgnoreThisWhenWritingDefault", "DontIgnoreThisWhenWritingNull")),
 				("Integer", new JsonSchemaBuilder()
 					.Type(SchemaValueType.Integer)
 					.Minimum(5)
