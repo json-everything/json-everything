@@ -4,6 +4,10 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "09.01"
 ---
+# [7.2.3](https://github.com/gregsdennis/json-everything/pull/792) {#release-schema-7.2.3}
+
+[#791](https://github.com/gregsdennis/json-everything/issues/791) - Fixes an issue with `ValidatingConverter` where options weren't being honored for explicitly mapped types.  Thanks to [@pian0](https://github.com/pian0) for reporting and creating replicating tests.
+
 # [7.2.2](https://github.com/gregsdennis/json-everything/pull/782) {#release-schema-7.2.2}
 
 Fixes an issue with `unevaluated*` keyword output where the instance location would contain repeated pointer segments.

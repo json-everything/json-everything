@@ -19,7 +19,7 @@ public class JsonPath
 	/// <summary>
 	/// Gets a JSON Path with only a global root and no selectors, namely `$`.
 	/// </summary>
-	public static JsonPath Root { get; } = new(PathScope.Global, Enumerable.Empty<PathSegment>());
+	public static JsonPath Root { get; } = new(PathScope.Global, []);
 
 	/// <summary>
 	/// Gets the scope of the path.
@@ -117,7 +117,7 @@ public class JsonPath
 	/// <returns>The results of the evaluation.</returns>
 	public PathResult Evaluate(JsonNode? root, PathEvaluationOptions? options = null)
 	{
-		IEnumerable<Node> currentMatches = new[] { new Node(root, Root) };
+		IEnumerable<Node> currentMatches = [new(root, Root)];
 
 		foreach (var segment in Segments)
 		{
