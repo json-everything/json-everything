@@ -4,6 +4,10 @@ title: JsonPath.Net
 icon: fas fa-tag
 order: "09.08"
 ---
+# [1.1.6](https://github.com/gregsdennis/json-everything/pull/797) {#release-path-1.1.6}
+
+[#797](https://github.com/gregsdennis/json-everything/pull/797) - ``.TryParse()`` does not respect `PathParsingOptions.AllowRelativeStart`.  Thanks to [@mikechristiansenvae](https://github.com/mikechristiansenvae) for reporting and fixing this.
+
 # [1.1.5](https://github.com/gregsdennis/json-everything/pull/788) {#release-path-1.1.5}
 
 [#787](https://github.com/gregsdennis/json-everything/issues/787) - ``.TryParse()`` would throw when encountering a `.`-selector at the end of the string.  Thanks to [@Nexiimil](https://github.com/Nexiimil) for reporting this.
