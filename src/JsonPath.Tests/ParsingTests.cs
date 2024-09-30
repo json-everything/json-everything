@@ -139,4 +139,19 @@ public class ParsingTests
 	{
 		Assert.Throws<PathParseException>(() => JsonPath.Parse(path));
 	}
+
+
+
+	[TestCaseSource(nameof(SuccessCases))]
+	public void ParseRelativeStarts(string path)
+	{
+		path = $"@{path[1..]}"; // Turn the absolute path into a relative path
+		Assert.DoesNotThrow(() => JsonPath.Parse(path, new PathParsingOptions(){AllowRelativePathStart = true}));
+	}
+	[TestCaseSource(nameof(SuccessCases))]
+	public void TryParseRelativeStarts(string path)
+	{
+		path = $"@{path[1..]}"; // Turn the absolute path into a relative path
+		Assert.That(JsonPath.TryParse(path, out _, new PathParsingOptions(){AllowRelativePathStart = true}));
+	}
 }
