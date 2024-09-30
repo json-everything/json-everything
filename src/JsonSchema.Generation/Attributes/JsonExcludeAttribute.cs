@@ -9,7 +9,7 @@ namespace Json.Schema.Generation;
 /// <remarks>
 /// This attribute functions exactly the same as the <see cref="JsonIgnoreAttribute"/>.  It
 /// is included separately to support the case where the model should be serialized with
-/// a property but schema generation should ignore it.
+/// a property or enum member but schema generation should ignore it.
 /// </remarks>
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
 public sealed class JsonExcludeAttribute : JsonAttribute
