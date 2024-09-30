@@ -4,7 +4,11 @@ title: JsonSchema.Net.Generation
 icon: fas fa-tag
 order: "09.05"
 ---
-# [4.4.0](https://github.com/gregsdennis/json-everything/pull/772) {#release-schemagen-4.5.0}
+# [4.5.1](https://github.com/gregsdennis/json-everything/pull/796) {#release-schemagen-4.5.1}
+
+[#795](https://github.com/gregsdennis/json-everything/issues/795) - Added support for `[JsonExclude]` and `[JsonIgnore]` (_System.Text.Json_) for enum members.  Thanks to [@2BitSalute](https://github.com/2BitSalute) for suggesting and implementing the idea.
+
+# [4.5.0](https://github.com/gregsdennis/json-everything/pull/772) {#release-schemagen-4.5.0}
 
 [#768](https://github.com/gregsdennis/json-everything/issues/768) - Added two ways to allow external references.  Thanks to [@luisjones](https://github.com/luisjones) for suggesting the idea.
 
