@@ -8,8 +8,6 @@ on:
       - .github/workflows/publish-schema-sign.yml
       - src/JsonSchema/**
   pull_request:
-    branches:
-      - sign-packages
   workflow_dispatch:
 
 permissions:
