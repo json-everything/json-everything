@@ -105,11 +105,11 @@ jobs:
     steps:
 
     # Download signing configuration and artifacts
-    - name: Download signing config
-      uses: actions/download-artifact@v3
-      with:
-        name: config
-        path: config
+    # - name: Download signing config
+    #   uses: actions/download-artifact@v3
+    #   with:
+    #     name: config
+    #     path: config
         
     - name: Download build artifacts
       uses: actions/download-artifact@v3
