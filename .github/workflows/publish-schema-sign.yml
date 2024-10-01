@@ -92,9 +92,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: archive-packages-core
-          path: |
-            **/*.nupkg
-            **/*.snupkg
+          path: nupkg/*
   sign:
     needs: pack
     runs-on: windows-latest # Code signing must run on a Windows agent for Authenticode signing (dll/exe)
