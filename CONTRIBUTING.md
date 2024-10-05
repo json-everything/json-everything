@@ -32,6 +32,12 @@ I use Visual Studio Community with Resharper, and I try to keep everything updat
 
 Jetbrains Rider (comes with the Resharper stuff built-in), VS Code with your favorite extensions, or any basic text editor and a command line would work just fine.  You do you.
 
+## Running Tests
+
+The tests can be run with any runner.  They do have quite a lot of output, which caused some problems with the results analyzer in the server build.
+
+To address this, the test output has been disabled, but it can be re-enabled locally by setting the `JSON_EVERYTHING_TEST_OUTPUT` environment variable to "True".
+
 ## Code Style & Releases
 
 Whie I do have an `.editorconfig` that most editors should respect, please feel free to add any code contributions using your own coding style.  Trying to conform to someone else's style can be a headache and confusing, and I prefer working code over pretty code.  I find it's easier for contributors if I make my own style adjustments after a contribution rather than forcing conformance to my preferences.
