@@ -16,6 +16,6 @@ internal class NegateOperator : IUnaryOperator
 
 	public override string ToString()
 	{
-		return "!";
+		return "-";
 	}
 }

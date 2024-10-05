@@ -16,6 +16,6 @@ internal class PosateOperator : IUnaryOperator
 
 	public override string ToString()
 	{
-		return "!";
+		return "+";
 	}
 }
