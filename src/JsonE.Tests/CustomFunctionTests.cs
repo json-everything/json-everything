@@ -29,6 +29,6 @@ public class CustomFunctionTests
 
 		var result = JsonE.Evaluate(template, context);
 
-		Console.WriteLine(result);
+		Assert.That(result.IsEquivalentTo(2), Is.True);
 	}
 }
