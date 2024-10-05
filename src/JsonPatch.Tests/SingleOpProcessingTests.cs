@@ -1,8 +1,8 @@
-using System;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Json.More;
 using NUnit.Framework;
+using TestHelpers;
 
 namespace Json.Patch.Tests;
 
@@ -58,7 +58,7 @@ public class SingleOpProcessingTests
 
 		var actual = patch.Apply(element);
 
-		Console.WriteLine(actual.Result.AsJsonString());
+		TestConsole.WriteLine(actual.Result.AsJsonString());
 
 		Assert.Multiple(() =>
 		{
@@ -79,7 +79,7 @@ public class SingleOpProcessingTests
 
 		var actual = patch.Apply(element);
 
-		Console.WriteLine(actual.Result.AsJsonString());
+		TestConsole.WriteLine(actual.Result.AsJsonString());
 
 		Assert.Multiple(() =>
 		{
@@ -99,7 +99,7 @@ public class SingleOpProcessingTests
 
 		var actual = patch.Apply(element);
 
-		Console.WriteLine(actual.Result.AsJsonString());
+		TestConsole.WriteLine(actual.Result.AsJsonString());
 
 		Assert.That(actual.Error, Is.EqualTo("Target path `/inserted/hello` could not be reached."));
 	}

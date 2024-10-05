@@ -90,14 +90,14 @@ public class SuiteRunner
 
 	private static void OutputTest(Test test)
 	{
-		Console.WriteLine();
-		Console.WriteLine($"Title:    {test.Title}");
-		Console.WriteLine($"Template: {test.Template.AsJsonString(TestEnvironment.SerializerOptions)}");
-		Console.WriteLine($"Context:  {test.Context.AsJsonString(TestEnvironment.SerializerOptions)}");
+		TestConsole.WriteLine();
+		TestConsole.WriteLine($"Title:    {test.Title}");
+		TestConsole.WriteLine($"Template: {test.Template.AsJsonString(TestEnvironment.SerializerOptions)}");
+		TestConsole.WriteLine($"Context:  {test.Context.AsJsonString(TestEnvironment.SerializerOptions)}");
 		if (test.HasError)
-			Console.WriteLine($"Error:    {test.ErrorNode.AsJsonString(TestEnvironment.SerializerOptions)}");
+			TestConsole.WriteLine($"Error:    {test.ErrorNode.AsJsonString(TestEnvironment.SerializerOptions)}");
 		else
-			Console.WriteLine($"Result:   {test.Expected.AsJsonString(TestEnvironment.SerializerOptions)}");
+			TestConsole.WriteLine($"Result:   {test.Expected.AsJsonString(TestEnvironment.SerializerOptions)}");
 	}
 }
 

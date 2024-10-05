@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.Json;
 using Json.More;
 using NUnit.Framework;
+using TestHelpers;
 
 namespace Json.Path.Tests.Suite;
 
@@ -34,10 +35,10 @@ public class ComplianceTestSuiteTests
 		if (_notSupported.Contains(testCase.Name))
 			Assert.Inconclusive("This case will not be supported.");
 
-		Console.WriteLine();
-		Console.WriteLine();
-		Console.WriteLine(testCase);
-		Console.WriteLine();
+		TestConsole.WriteLine();
+		TestConsole.WriteLine();
+		TestConsole.WriteLine(testCase);
+		TestConsole.WriteLine();
 
 		if (testCase.InvalidSelector)
 		{
@@ -48,14 +49,14 @@ public class ComplianceTestSuiteTests
 			}
 			catch (Exception e)
 			{
-				Console.WriteLine(e);
+				TestConsole.WriteLine(e);
 				Assert.Fail("TryParse() threw an exception");
 				throw; // this will never run, but the compiler doesn't know that Assert.Fail() will always throw.
 			}
 			Assert.That(tryParseResult, Is.False);
 
 			var exception = Assert.Throws<PathParseException>(() => JsonPath.Parse(testCase.Selector));
-			Console.WriteLine($"Error: {exception!.Message}");
+			TestConsole.WriteLine($"Error: {exception!.Message}");
 			return;
 		}
 		
@@ -72,9 +73,9 @@ public class ComplianceTestSuiteTests
 		var actual = path.Evaluate(testCase.Document);
 
 		var actualValues = actual.Matches!.Select(m => m.Value).ToJsonArray();
-		Console.WriteLine($"Actual (values): {JsonSerializer.Serialize(actualValues, SerializerOptions.Default)}");
-		Console.WriteLine();
-		Console.WriteLine($"Actual: {JsonSerializer.Serialize(actual, SerializerOptions.Default)}");
+		TestConsole.WriteLine($"Actual (values): {JsonSerializer.Serialize(actualValues, SerializerOptions.Default)}");
+		TestConsole.WriteLine();
+		TestConsole.WriteLine($"Actual: {JsonSerializer.Serialize(actual, SerializerOptions.Default)}");
 		if (testCase.InvalidSelector)
 			Assert.Fail($"{testCase.Selector} is not a valid path.");
 

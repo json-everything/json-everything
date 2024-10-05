@@ -10,7 +10,9 @@
 		<SignAssembly>true</SignAssembly>
 		<AssemblyOriginatorKeyFile>../../json-everything.snk</AssemblyOriginatorKeyFile>
 		<Nullable>enable</Nullable>
-	</PropertyGroup>
+
+    <PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
+  </PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="FluentAssertions" Version="6.12.1" />

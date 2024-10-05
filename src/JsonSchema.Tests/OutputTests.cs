@@ -1,9 +1,9 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Json.Pointer;
 using NUnit.Framework;
+using TestHelpers;
 
 namespace Json.Schema.Tests;
 
@@ -414,7 +414,7 @@ public class OutputTests
 		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
 
 		var serialized = JsonSerializer.Serialize(result, TestEnvironment.TestOutputSerializerOptions);
-		Console.WriteLine(serialized);
+		TestConsole.WriteLine(serialized);
 
 		Assert.That(serialized, Does.Not.Contain("additionalProperties"));
 	}
@@ -433,7 +433,7 @@ public class OutputTests
 		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
 
 		var serialized = JsonSerializer.Serialize(result, TestEnvironment.TestOutputSerializerOptions);
-		Console.WriteLine(serialized);
+		TestConsole.WriteLine(serialized);
 
 		Assert.That(serialized, Does.Not.Contain("unevaluatedProperties"));
 	}
@@ -457,7 +457,7 @@ public class OutputTests
 		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
 
 		var serialized = JsonSerializer.Serialize(result, TestEnvironment.TestOutputSerializerOptions);
-		Console.WriteLine(serialized);
+		TestConsole.WriteLine(serialized);
 
 		Assert.That(serialized, Does.Contain("unevaluatedProperties"));
 	}
@@ -474,7 +474,7 @@ public class OutputTests
 		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
 
 		var serialized = JsonSerializer.Serialize(result, TestEnvironment.TestOutputSerializerOptions);
-		Console.WriteLine(serialized);
+		TestConsole.WriteLine(serialized);
 
 		var unevaluatedPropertiesResult = result.Details.Single(x => x.EvaluationPath.Equals(JsonPointer.Create("unevaluatedProperties")));
 		Assert.That(unevaluatedPropertiesResult.InstanceLocation.ToString(), Is.EqualTo("/bar"));
@@ -493,7 +493,7 @@ public class OutputTests
 		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
 
 		var serialized = JsonSerializer.Serialize(result, TestEnvironment.TestOutputSerializerOptions);
-		Console.WriteLine(serialized);
+		TestConsole.WriteLine(serialized);
 
 		var unevaluatedPropertiesResult = result.Details.Single(x => x.EvaluationPath.Equals(JsonPointer.Create("unevaluatedItems")));
 		Assert.That(unevaluatedPropertiesResult.InstanceLocation.ToString(), Is.EqualTo("/1"));
@@ -511,7 +511,7 @@ public class OutputTests
 		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
 
 		var serialized = JsonSerializer.Serialize(result, TestEnvironment.TestOutputSerializerOptions);
-		Console.WriteLine(serialized);
+		TestConsole.WriteLine(serialized);
 
 		Assert.That(serialized, Does.Not.Contain("additionalItems"));
 	}
@@ -529,7 +529,7 @@ public class OutputTests
 		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
 
 		var serialized = JsonSerializer.Serialize(result, TestEnvironment.TestOutputSerializerOptions);
-		Console.WriteLine(serialized);
+		TestConsole.WriteLine(serialized);
 
 		Assert.That(serialized, Does.Not.Contain("unevaluatedItems"));
 	}
@@ -622,20 +622,20 @@ public class OutputTests
 		};
 		var result = schema.Evaluate(failing, validationOptions);
 
-		Console.WriteLine(JsonSerializer.Serialize(result, TestEnvironment.TestOutputSerializerOptions));
-		Console.WriteLine();
+		TestConsole.WriteLine(JsonSerializer.Serialize(result, TestEnvironment.TestOutputSerializerOptions));
+		TestConsole.WriteLine();
 
 		result.ToList();
-		Console.WriteLine(JsonSerializer.Serialize(result, TestEnvironment.TestOutputSerializerOptions));
-		Console.WriteLine();
+		TestConsole.WriteLine(JsonSerializer.Serialize(result, TestEnvironment.TestOutputSerializerOptions));
+		TestConsole.WriteLine();
 
 		result = schema.Evaluate(passing, validationOptions);
 
-		Console.WriteLine(JsonSerializer.Serialize(result, TestEnvironment.TestOutputSerializerOptions));
-		Console.WriteLine();
+		TestConsole.WriteLine(JsonSerializer.Serialize(result, TestEnvironment.TestOutputSerializerOptions));
+		TestConsole.WriteLine();
 
 		result.ToList();
-		Console.WriteLine(JsonSerializer.Serialize(result, TestEnvironment.TestOutputSerializerOptions));
+		TestConsole.WriteLine(JsonSerializer.Serialize(result, TestEnvironment.TestOutputSerializerOptions));
 	}
 
 	[Test]
@@ -712,7 +712,7 @@ public class OutputTests
 
 		//result.ToBasic();
 
-		Console.WriteLine(JsonSerializer.Serialize(result, TestEnvironment.TestOutputSerializerOptions));
+		TestConsole.WriteLine(JsonSerializer.Serialize(result, TestEnvironment.TestOutputSerializerOptions));
 	}
 
 	[Test]
@@ -774,10 +774,10 @@ public class OutputTests
 		options.IgnoreAnnotationsFrom<PropertiesKeyword>();
 		var result = schema.Evaluate(instance, options);
 
-		Console.WriteLine(JsonSerializer.Serialize(schema, TestEnvironment.TestOutputSerializerOptions));
-		Console.WriteLine();
-		Console.WriteLine(JsonSerializer.Serialize((JsonNode?)instance, TestEnvironment.TestOutputSerializerOptions));
-		Console.WriteLine();
+		TestConsole.WriteLine(JsonSerializer.Serialize(schema, TestEnvironment.TestOutputSerializerOptions));
+		TestConsole.WriteLine();
+		TestConsole.WriteLine(JsonSerializer.Serialize((JsonNode?)instance, TestEnvironment.TestOutputSerializerOptions));
+		TestConsole.WriteLine();
 
 		result.AssertValid(expected);
 	}

@@ -7,6 +7,7 @@ using System.Text.Json;
 using Json.More;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
+using TestHelpers;
 
 namespace Json.Patch.Tests.Suite;
 
@@ -55,15 +56,15 @@ public class JsonPatchTestSuite
 			}
 			catch (Exception e)
 			{
-				Console.WriteLine();
-				Console.WriteLine(fileName);
-				Console.WriteLine(JsonSerializer.Serialize(test, TestEnvironment.SerializerOptions));
-				Console.WriteLine(e.Message);
-				Console.WriteLine(e.StackTrace);
+				TestConsole.WriteLine();
+				TestConsole.WriteLine(fileName);
+				TestConsole.WriteLine(JsonSerializer.Serialize(test, TestEnvironment.SerializerOptions));
+				TestConsole.WriteLine(e.Message);
+				TestConsole.WriteLine(e.StackTrace);
 				if (result != null)
 				{
-					Console.WriteLine(result.Result.AsJsonString(TestEnvironment.SerializerOptions));
-					Console.WriteLine(result.Error);
+					TestConsole.WriteLine(result.Result.AsJsonString(TestEnvironment.SerializerOptions));
+					TestConsole.WriteLine(result.Error);
 				}
 				if (isOptional)
 					Assert.Inconclusive("This is an acceptable failure.  Test case failed, but was marked as 'disabled'.");

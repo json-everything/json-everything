@@ -103,24 +103,24 @@ public class ValidationOptimized
 	[TestCaseSource(nameof(TestCases))]
 	public void Test(TestCollection collection, TestCase test, string fileName, EvaluationOptions options)
 	{
-		Console.WriteLine();
-		Console.WriteLine();
-		Console.WriteLine(fileName);
-		Console.WriteLine(collection.Description);
-		Console.WriteLine(test.Description);
-		Console.WriteLine(test.Valid ? "valid" : "invalid");
-		Console.WriteLine();
-		Console.WriteLine(JsonSerializer.Serialize(collection.Schema, TestEnvironment.TestOutputSerializerOptions));
-		Console.WriteLine();
-		Console.WriteLine(test.Data.AsJsonString());
-		Console.WriteLine();
+		TestConsole.WriteLine();
+		TestConsole.WriteLine();
+		TestConsole.WriteLine(fileName);
+		TestConsole.WriteLine(collection.Description);
+		TestConsole.WriteLine(test.Description);
+		TestConsole.WriteLine(test.Valid ? "valid" : "invalid");
+		TestConsole.WriteLine();
+		TestConsole.WriteLine(JsonSerializer.Serialize(collection.Schema, TestEnvironment.TestOutputSerializerOptions));
+		TestConsole.WriteLine();
+		TestConsole.WriteLine(test.Data.AsJsonString());
+		TestConsole.WriteLine();
 
 		if (!InstanceIsDeserializable(test.Data))
 			Assert.Inconclusive("Instance not deserializable");
 
 		var result = collection.Schema.Evaluate(test.Data, options);
 		//result.ToBasic();
-		Console.WriteLine(JsonSerializer.Serialize(result, TestEnvironment.TestOutputSerializerOptions));
+		TestConsole.WriteLine(JsonSerializer.Serialize(result, TestEnvironment.TestOutputSerializerOptions));
 
 		if (collection.IsOptional && result.IsValid != test.Valid)
 			Assert.Inconclusive("Test optional");
@@ -146,7 +146,7 @@ public class ValidationOptimized
 		}
 		catch (Exception e)
 		{
-			Console.WriteLine(e.Message);
+			TestConsole.WriteLine(e.Message);
 			return false;
 		}
 	}

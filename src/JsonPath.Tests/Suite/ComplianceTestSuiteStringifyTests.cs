@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using NUnit.Framework;
+using TestHelpers;
 
 namespace Json.Path.Tests.Suite;
 
@@ -35,10 +35,10 @@ public class ComplianceTestSuiteStringifyTests
 	[TestCaseSource(nameof(TestCases))]
 	public void Stringify(ComplianceTestCase testCase)
 	{
-		Console.WriteLine();
-		Console.WriteLine();
-		Console.WriteLine(testCase);
-		Console.WriteLine();
+		TestConsole.WriteLine();
+		TestConsole.WriteLine();
+		TestConsole.WriteLine(testCase);
+		TestConsole.WriteLine();
 
 		StringifyTests.AssertStringify(testCase.Selector, testCase.Document);
 	}

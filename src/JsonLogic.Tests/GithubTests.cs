@@ -183,7 +183,7 @@ public class GithubTests
 
 		var result = rule.Apply(data);
 
-		Console.WriteLine(result.AsJsonString());
+		TestConsole.WriteLine(result.AsJsonString());
 
 		JsonAssert.IsTrue(result);
 	}

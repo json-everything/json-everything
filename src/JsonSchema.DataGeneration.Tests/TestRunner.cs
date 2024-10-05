@@ -4,6 +4,7 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using NUnit.Framework;
+using TestHelpers;
 
 namespace Json.Schema.DataGeneration.Tests;
 
@@ -24,9 +25,9 @@ public static class TestRunner
 		var result = schema.GenerateData(options);
 
 		Assert.That(result.IsSuccess, Is.True, "failed generation");
-		Console.WriteLine(JsonSerializer.Serialize(result.Result, SerializerOptions));
+		TestConsole.WriteLine(JsonSerializer.Serialize(result.Result, SerializerOptions));
 		var validation = schema.Evaluate(result.Result, options);
-		Console.WriteLine(JsonSerializer.Serialize(validation, SerializerOptions));
+		TestConsole.WriteLine(JsonSerializer.Serialize(validation, SerializerOptions));
 		Assert.That(validation.IsValid, Is.True, "failed validation");
 	}
 
@@ -34,9 +35,9 @@ public static class TestRunner
 	{
 		var result = schema.GenerateData(options);
 
-		Console.WriteLine(result.ErrorMessage);
+		TestConsole.WriteLine(result.ErrorMessage);
 		if (result.IsSuccess)
-			Console.WriteLine(JsonSerializer.Serialize(result.Result, SerializerOptions));
+			TestConsole.WriteLine(JsonSerializer.Serialize(result.Result, SerializerOptions));
 		Assert.That(result.IsSuccess, Is.False, "generation succeeded");
 	}
 

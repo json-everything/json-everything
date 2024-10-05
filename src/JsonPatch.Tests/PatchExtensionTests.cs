@@ -464,7 +464,7 @@ public class PatchExtensionTests
 
 	private static void OutputPatch(JsonPatch patch)
 	{
-		Console.WriteLine(JsonSerializer.Serialize(patch, _indentedSerializerOptions));
+		TestConsole.WriteLine(JsonSerializer.Serialize(patch, _indentedSerializerOptions));
 	}
 
 	private static void VerifyPatches(JsonPatch expected, JsonPatch actual)

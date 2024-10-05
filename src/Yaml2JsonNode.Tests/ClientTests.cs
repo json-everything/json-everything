@@ -22,13 +22,13 @@ public class ClientTests
 		var jsonRoundTripped = YamlSerializer.Parse(yamlText).Single().ToJsonNode();
 		var jsonRoundText = jsonRoundTripped!.ToJsonString();
 
-		Console.WriteLine("# jsonText:");
-		Console.WriteLine(jsonText);
-		Console.WriteLine();
-		Console.WriteLine("# yamlText:");
-		Console.WriteLine(yamlText);
-		Console.WriteLine("# jsonRoundText:");
-		Console.WriteLine(jsonRoundText);
+		TestConsole.WriteLine("# jsonText:");
+		TestConsole.WriteLine(jsonText);
+		TestConsole.WriteLine();
+		TestConsole.WriteLine("# yamlText:");
+		TestConsole.WriteLine(yamlText);
+		TestConsole.WriteLine("# jsonRoundText:");
+		TestConsole.WriteLine(jsonRoundText);
 
 		JsonAssert.AreEquivalent(json, jsonRoundTripped);
 	}
@@ -50,7 +50,7 @@ public class ClientTests
 		serializer.Serialize(writer, yamlObject);
 		var text = writer.ToString();
 
-		Console.WriteLine(text);
+		TestConsole.WriteLine(text);
 	}
 
 	[Test]
@@ -128,7 +128,7 @@ rawValTrim: |-
 
 		var actual = yamlDoc.ToJsonNode();
 
-		Console.WriteLine(actual.AsJsonString(new JsonSerializerOptions { WriteIndented = true }));
+		TestConsole.WriteLine(actual.AsJsonString(new JsonSerializerOptions { WriteIndented = true }));
 
 		JsonAssert.AreEquivalent(expected, actual);
 	}

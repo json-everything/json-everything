@@ -35,7 +35,7 @@ public class Spelling
 			{
 				content ??= await File.ReadAllTextAsync(testsPath);
 
-				Console.WriteLine(e);
+				TestConsole.WriteLine(e);
 			}
 			return content;
 
@@ -56,8 +56,8 @@ public class Spelling
 
 		if (node.IsEquivalentTo(serialized)) return;
 
-		Console.WriteLine($"Expected: {node.AsJsonString(TestSerializerContext.Default.Options)}");
-		Console.WriteLine($"Actual:   {serialized.AsJsonString(TestSerializerContext.Default.Options)}");
+		TestConsole.WriteLine($"Expected: {node.AsJsonString(TestSerializerContext.Default.Options)}");
+		TestConsole.WriteLine($"Actual:   {serialized.AsJsonString(TestSerializerContext.Default.Options)}");
 		Assert.Inconclusive();
 	}
 }

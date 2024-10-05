@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using NUnit.Framework;
+using TestHelpers;
 
 namespace Json.Path.Tests;
 
@@ -8,95 +8,95 @@ public class ParsingTests
 {
 	public static IEnumerable<TestCaseData> SuccessCases =>
 		[
-			new TestCaseData("$['foo']"),
-			new TestCaseData("$[ 'foo']"),
-			new TestCaseData("$['foo' ]"),
+			new("$['foo']"),
+			new("$[ 'foo']"),
+			new("$['foo' ]"),
 
-			new TestCaseData("$[1]"),
-			new TestCaseData("$[ 1]"),
-			new TestCaseData("$[1 ]"),
-			new TestCaseData("$[42]"),
-			new TestCaseData("$[-1]"),
-			new TestCaseData("$[-42]"),
+			new("$[1]"),
+			new("$[ 1]"),
+			new("$[1 ]"),
+			new("$[42]"),
+			new("$[-1]"),
+			new("$[-42]"),
 
-			new TestCaseData("$[*]"),
-			new TestCaseData("$[ *]"),
-			new TestCaseData("$[* ]"),
+			new("$[*]"),
+			new("$[ *]"),
+			new("$[* ]"),
 
-			new TestCaseData("$[:]"),
-			new TestCaseData("$[1:]"),
-			new TestCaseData("$[1::]"),
-			new TestCaseData("$[1:2]"),
-			new TestCaseData("$[1:2:]"),
-			new TestCaseData("$[1::3]"),
-			new TestCaseData("$[1:2:3]"),
-			new TestCaseData("$[-1:2:3]"),
-			new TestCaseData("$[1:-2:3]"),
-			new TestCaseData("$[1:2:-3]"),
-			new TestCaseData("$[ 1:2:3]"),
-			new TestCaseData("$[1 :2:3]"),
-			new TestCaseData("$[1: 2:3]"),
-			new TestCaseData("$[1:2 :3]"),
-			new TestCaseData("$[1:2: 3]"),
-			new TestCaseData("$[1:2:3 ]"),
+			new("$[:]"),
+			new("$[1:]"),
+			new("$[1::]"),
+			new("$[1:2]"),
+			new("$[1:2:]"),
+			new("$[1::3]"),
+			new("$[1:2:3]"),
+			new("$[-1:2:3]"),
+			new("$[1:-2:3]"),
+			new("$[1:2:-3]"),
+			new("$[ 1:2:3]"),
+			new("$[1 :2:3]"),
+			new("$[1: 2:3]"),
+			new("$[1:2 :3]"),
+			new("$[1:2: 3]"),
+			new("$[1:2:3 ]"),
 
-			new TestCaseData("$.foo"),
+			new("$.foo"),
 
-			new TestCaseData("$.*"),
+			new("$.*"),
 
-			new TestCaseData("$..foo"),
-			new TestCaseData("$..*"),
-			new TestCaseData("$..[1]"),
-			new TestCaseData("$..[1,2]"),
+			new("$..foo"),
+			new("$..*"),
+			new("$..[1]"),
+			new("$..[1,2]"),
 
-			new TestCaseData("$[?@.foo]"),
-			new TestCaseData("$[?(@.foo)]"),
-			new TestCaseData("$[?(@.foo && @.bar)]"),
-			new TestCaseData("$[?(@.foo && @.bar || @.baz)]"),
-			new TestCaseData("$[?(@.foo || @.bar && @.baz)]"),
-			new TestCaseData("$[?(!@.foo)]"),
-			new TestCaseData("$[?(@.foo && !@.bar)]"),
-			new TestCaseData("$[?!(@.foo == false)]"),
-			new TestCaseData("$[?(@.foo == false)]"),
-			new TestCaseData("$[?(@['name'] == null || @['name'] == 'abc')]"),
+			new("$[?@.foo]"),
+			new("$[?(@.foo)]"),
+			new("$[?(@.foo && @.bar)]"),
+			new("$[?(@.foo && @.bar || @.baz)]"),
+			new("$[?(@.foo || @.bar && @.baz)]"),
+			new("$[?(!@.foo)]"),
+			new("$[?(@.foo && !@.bar)]"),
+			new("$[?!(@.foo == false)]"),
+			new("$[?(@.foo == false)]"),
+			new("$[?(@['name'] == null || @['name'] == 'abc')]"),
 
-			new TestCaseData("$[1,'foo',1:2:3,*]"),
+			new("$[1,'foo',1:2:3,*]"),
 		];
 
 	[TestCaseSource(nameof(SuccessCases))]
 	public void ParseSuccess(string path)
 	{
-		Console.WriteLine(JsonPath.Parse(path));
+		TestConsole.WriteLine(JsonPath.Parse(path));
 	}
 
 	public static IEnumerable<TestCaseData> OptionalMathCases =>
 		[
-			new TestCaseData("$[?(@.foo==(4+5))]"),
-			new TestCaseData("$[?(@.foo==2*(4+5))]"),
-			new TestCaseData("$[?(@.foo==2+(4+5))]"),
-			new TestCaseData("$[?(@.foo==2-(4+5))]"),
-			new TestCaseData("$[?(@.foo==2*4+5)]"),
-			new TestCaseData("$[?((4+5)==@.foo)]"),
-			new TestCaseData("$[?(2*(4+5)==@.foo)]"),
-			new TestCaseData("$[?(2+(4+5)==@.foo)]"),
-			new TestCaseData("$[?(2-(4+5)==@.foo)]"),
-			new TestCaseData("$[?(2*4+5==@.foo)]"),
-			new TestCaseData("$[?@.foo==(4+5)]"),
-			new TestCaseData("$[?@.foo==2*(4+5)]"),
-			new TestCaseData("$[?@.foo==2+(4+5)]"),
-			new TestCaseData("$[?@.foo==2-(4+5)]"),
-			new TestCaseData("$[?@.foo==2*4+5]"),
-			new TestCaseData("$[?(4+5)==@.foo]"),
-			new TestCaseData("$[?2*(4+5)==@.foo]"),
-			new TestCaseData("$[?2+(4+5)==@.foo]"),
-			new TestCaseData("$[?2-(4+5)==@.foo]"),
-			new TestCaseData("$[?2*4+5==@.foo]"),
+			new("$[?(@.foo==(4+5))]"),
+			new("$[?(@.foo==2*(4+5))]"),
+			new("$[?(@.foo==2+(4+5))]"),
+			new("$[?(@.foo==2-(4+5))]"),
+			new("$[?(@.foo==2*4+5)]"),
+			new("$[?((4+5)==@.foo)]"),
+			new("$[?(2*(4+5)==@.foo)]"),
+			new("$[?(2+(4+5)==@.foo)]"),
+			new("$[?(2-(4+5)==@.foo)]"),
+			new("$[?(2*4+5==@.foo)]"),
+			new("$[?@.foo==(4+5)]"),
+			new("$[?@.foo==2*(4+5)]"),
+			new("$[?@.foo==2+(4+5)]"),
+			new("$[?@.foo==2-(4+5)]"),
+			new("$[?@.foo==2*4+5]"),
+			new("$[?(4+5)==@.foo]"),
+			new("$[?2*(4+5)==@.foo]"),
+			new("$[?2+(4+5)==@.foo]"),
+			new("$[?2-(4+5)==@.foo]"),
+			new("$[?2*4+5==@.foo]"),
 		];
 
 	[TestCaseSource(nameof(OptionalMathCases))]
 	public void ParseMathWithOptions(string path)
 	{
-		Console.WriteLine(JsonPath.Parse(path, new PathParsingOptions{AllowMathOperations = true}));
+		TestConsole.WriteLine(JsonPath.Parse(path, new PathParsingOptions{AllowMathOperations = true}));
 	}
 
 	[TestCaseSource(nameof(OptionalMathCases))]
@@ -107,14 +107,14 @@ public class ParsingTests
 
 	public static IEnumerable<TestCaseData> OptionalJsonLiteralCases =>
 		[
-			new TestCaseData("$[?@.foo==[1,2,3]]"),
-			new TestCaseData("$[?@.foo=={\"bar\":\"object\"}]"),
+			new("$[?@.foo==[1,2,3]]"),
+			new("$[?@.foo=={\"bar\":\"object\"}]"),
 		];
 
 	[TestCaseSource(nameof(OptionalJsonLiteralCases))]
 	public void ParseLiteralWithOptions(string path)
 	{
-		Console.WriteLine(JsonPath.Parse(path, new PathParsingOptions{AllowJsonConstructs = true}));
+		TestConsole.WriteLine(JsonPath.Parse(path, new PathParsingOptions{AllowJsonConstructs = true}));
 	}
 
 	[TestCaseSource(nameof(OptionalJsonLiteralCases))]
@@ -125,13 +125,13 @@ public class ParsingTests
 
 	public static IEnumerable<TestCaseData> OptionalInOpCases =>
 		[
-			new TestCaseData("$[?5 in @.foo]"),
+			new("$[?5 in @.foo]"),
 		];
 
 	[TestCaseSource(nameof(OptionalInOpCases))]
 	public void ParseInOpWithOptions(string path)
 	{
-		Console.WriteLine(JsonPath.Parse(path, new PathParsingOptions{AllowInOperator = true}));
+		TestConsole.WriteLine(JsonPath.Parse(path, new PathParsingOptions{AllowInOperator = true}));
 	}
 
 	[TestCaseSource(nameof(OptionalInOpCases))]

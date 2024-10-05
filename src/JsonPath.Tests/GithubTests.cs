@@ -1,6 +1,6 @@
-﻿using System;
-using System.Text.Json.Nodes;
+﻿using System.Text.Json.Nodes;
 using NUnit.Framework;
+using TestHelpers;
 
 namespace Json.Path.Tests;
 
@@ -19,7 +19,7 @@ public class GithubTests
 	public void Issue150_ParseFailsWhenExpressionContainsLiteralNumberWith9(string pathText)
 	{
 		var path = JsonPath.Parse(pathText);
-		Console.WriteLine(path);
+		TestConsole.WriteLine(path);
 	}
 
 	[Test]

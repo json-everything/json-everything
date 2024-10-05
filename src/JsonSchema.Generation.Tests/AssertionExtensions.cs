@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text.Json;
+﻿using System.Text.Json;
 using TestHelpers;
 
 // ReSharper disable LocalizableElement
@@ -10,25 +9,25 @@ public static class AssertionExtensions
 {
 	public static void AssertEqual(JsonSchema expected, JsonSchema actual)
 	{
-		Console.WriteLine("Expected");
+		TestConsole.WriteLine("Expected");
 		var expectedAsNode = JsonSerializer.SerializeToNode(expected, TestSerializerContext.Default.JsonSchema);
-		Console.WriteLine(expectedAsNode);
-		Console.WriteLine();
-		Console.WriteLine("Actual");
+		TestConsole.WriteLine(expectedAsNode);
+		TestConsole.WriteLine();
+		TestConsole.WriteLine("Actual");
 		var actualAsNode = JsonSerializer.SerializeToNode(actual, TestSerializerContext.Default.JsonSchema);
-		Console.WriteLine(actualAsNode);
+		TestConsole.WriteLine(actualAsNode);
 		JsonAssert.AreEquivalent(expectedAsNode, actualAsNode);
 	}
 
 	public static void AssertEqual(PropertiesKeyword expected, PropertiesKeyword actual)
 	{
-		Console.WriteLine("Expected");
+		TestConsole.WriteLine("Expected");
 		var expectedAsNode = JsonSerializer.SerializeToNode(expected, TestSerializerContext.Default.PropertiesKeyword);
-		Console.WriteLine(expectedAsNode);
-		Console.WriteLine();
-		Console.WriteLine("Actual");
+		TestConsole.WriteLine(expectedAsNode);
+		TestConsole.WriteLine();
+		TestConsole.WriteLine("Actual");
 		var actualAsNode = JsonSerializer.SerializeToNode(actual, TestSerializerContext.Default.PropertiesKeyword);
-		Console.WriteLine(actualAsNode);
+		TestConsole.WriteLine(actualAsNode);
 		JsonAssert.AreEquivalent(expectedAsNode, actualAsNode);
 	}
 

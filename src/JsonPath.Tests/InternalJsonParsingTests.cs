@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using NUnit.Framework;
+using TestHelpers;
 
 namespace Json.Path.Tests;
 
@@ -13,7 +14,7 @@ public class InternalJsonParsingTests
 		if (!json.AsSpan().TryParseJson(ref i, out var node))
 			Assert.Fail();
 
-		Console.WriteLine(node);
+		TestConsole.WriteLine(node);
 	}
 
 	private static IEnumerable<string> GetJson()

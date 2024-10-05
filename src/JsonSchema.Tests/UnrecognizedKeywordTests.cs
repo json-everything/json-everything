@@ -117,7 +117,7 @@ public class UnrecognizedKeywordTests
 			WriteIndented = true,
 			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
 		};
-		Console.WriteLine(JsonSerializer.Serialize(result, serializerOptions));
+		TestConsole.WriteLine(JsonSerializer.Serialize(result, serializerOptions));
 
 		result.AssertValid();
 		Assert.That(result.Annotations!, Has.Count.EqualTo(1));

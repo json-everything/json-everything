@@ -1,9 +1,9 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Json.More;
 using NUnit.Framework;
+using TestHelpers;
 
 namespace Json.Path.Tests;
 
@@ -20,20 +20,20 @@ public class StringifyTests
 
 	public static void AssertStringify(string pathText, JsonNode? data, PathParsingOptions? options = null)
 	{
-		Console.WriteLine();
-		Console.WriteLine("Original Path:   {0}", pathText);
+		TestConsole.WriteLine();
+		TestConsole.WriteLine("Original Path:   {0}", pathText);
 		if (!JsonPath.TryParse(pathText, out var path, options))
 			Assert.Inconclusive("Cannot parse original string");
 		var originalResult = path.Evaluate(data);
 
 		var backToString = path.ToString();
-		Console.WriteLine("New Path:        {0}", backToString);
+		TestConsole.WriteLine("New Path:        {0}", backToString);
 		if (!JsonPath.TryParse(backToString, out var newPath, options))
 			Assert.Inconclusive("Stringified semantics do not match original string");
 
 		var newResult = newPath.Evaluate(data);
-		Console.WriteLine("Original Result: {0}", JsonSerializer.Serialize(originalResult.Matches.Select(x => x.Value)));
-		Console.WriteLine("New Result:      {0}", JsonSerializer.Serialize(newResult.Matches.Select(x => x.Value)));
+		TestConsole.WriteLine("Original Result: {0}", JsonSerializer.Serialize(originalResult.Matches.Select(x => x.Value)));
+		TestConsole.WriteLine("New Result:      {0}", JsonSerializer.Serialize(newResult.Matches.Select(x => x.Value)));
 
 		if (originalResult.Matches.Count != newResult.Matches.Count)
 			Assert.Inconclusive("Stringified semantics do not match original string");

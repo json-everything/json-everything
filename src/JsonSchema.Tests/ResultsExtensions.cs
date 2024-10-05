@@ -1,10 +1,10 @@
-using System;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Json.More;
 using Json.Pointer;
 using NUnit.Framework;
+using TestHelpers;
 
 namespace Json.Schema.Tests;
 
@@ -12,7 +12,7 @@ public static class ResultsExtensions
 {
 	public static void AssertInvalid(this EvaluationResults results, string? expected = null)
 	{
-		Console.WriteLine(JsonSerializer.Serialize(results, TestEnvironment.TestOutputSerializerOptions));
+		TestConsole.WriteLine(JsonSerializer.Serialize(results, TestEnvironment.TestOutputSerializerOptions));
 
 		Assert.That(results.IsValid, Is.False);
 		AssertEquivalent(results, expected);
@@ -21,7 +21,7 @@ public static class ResultsExtensions
 	public static void AssertValid(this EvaluationResults results, string? expected = null, bool hideIfPassed = false)
 	{
 		if (!hideIfPassed || !results.IsValid)
-			Console.WriteLine(JsonSerializer.Serialize(results, TestEnvironment.TestOutputSerializerOptions));
+			TestConsole.WriteLine(JsonSerializer.Serialize(results, TestEnvironment.TestOutputSerializerOptions));
 
 		Assert.That(results.IsValid, Is.True);
 		AssertEquivalent(results, expected);

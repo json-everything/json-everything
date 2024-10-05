@@ -1,8 +1,8 @@
-﻿using System;
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.Json.Nodes;
 using Json.Schema.Tests;
 using NUnit.Framework;
+using TestHelpers;
 
 namespace Json.Schema.OpenApi.Tests;
 
@@ -169,7 +169,7 @@ public class GithubTests
 		var options = new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical };
 		var result = schema.Evaluate(json, options);
 
-		Console.WriteLine(JsonSerializer.Serialize(schema, TestEnvironment.SerializerOptions));
+		TestConsole.WriteLine(JsonSerializer.Serialize(schema, TestEnvironment.SerializerOptions));
 
 		result.AssertInvalid();
 	}
