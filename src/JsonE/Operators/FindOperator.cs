@@ -16,16 +16,17 @@ internal class FindOperator : IOperator
 	public JsonNode? Evaluate(JsonNode? template, EvaluationContext context)
 	{
 		var obj = template!.AsObject();
+		obj.VerifyPropertyCount(Name, 2);
 		obj.VerifyNoUndefinedProperties(Name, _eachForm);
 	
 		var value = JsonE.Evaluate(obj[Name], context);
 
 		var eachEntry = obj.FirstOrDefault(x => x.Key != Name);
 		if (eachEntry.Value is not JsonValue eachValue)
-			throw new TemplateException($"each can evaluate string expressions only");
+			throw new TemplateException("each can evaluate string expressions only");
 		var eachTemplate = eachValue.GetString();
 		if (eachTemplate is null)
-			throw new TemplateException($"each can evaluate string expressions only");
+			throw new TemplateException("each can evaluate string expressions only");
 
 		if (value is not JsonArray array)
 			throw new TemplateException(CommonErrors.IncorrectValueType(Name, "an array"));

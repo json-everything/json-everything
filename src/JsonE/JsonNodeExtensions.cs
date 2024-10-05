@@ -72,6 +72,12 @@ internal static class JsonNodeExtensions
 			throw new TemplateException(CommonErrors.UndefinedProperties(op, undefinedKeys));
 	}
 
+	public static void VerifyPropertyCount(this JsonObject obj, string op, int expectedCount)
+	{
+		if (obj.Count != expectedCount)
+			throw new TemplateException(CommonErrors.IncorrectOperatorArgCount(op, expectedCount));
+	}
+
 	public static void ValidateNotReturningFunction(this JsonNode? result)
 	{
 		var queue = new Queue<JsonNode?>();

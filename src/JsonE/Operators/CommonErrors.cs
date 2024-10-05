@@ -10,7 +10,7 @@ internal static class CommonErrors
 		$"{op} has undefined properties: {string.Join(" ", extraProperties.OrderBy(x => x, StringComparer.InvariantCultureIgnoreCase))}";
 
 	public static string IncorrectOperatorArgCount(string op, int expectedCount) => 
-		$"{op} must have exactly {expectedCount} properties";
+		$"{op} must have exactly {expectedCount.ToWords()} properties";
 
 	public static string IncorrectValueType(string op, string expectedType) =>
 		$"{op} value must evaluate to {expectedType}";
@@ -32,4 +32,7 @@ internal static class CommonErrors
 	public static string WrongToken(char token, params string[] expected) => $"Found: {token} token, expected one of: {string.Join(",", expected)}";
 
 	public static string EndOfInput() => "Unexpected end of input";
+
+	private static readonly List<string> _words = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"]; // probably shouldn't need more than this.
+	private static string ToWords(this int count) => _words[count];
 }

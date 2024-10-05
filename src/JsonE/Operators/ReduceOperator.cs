@@ -14,6 +14,7 @@ internal class ReduceOperator : IOperator
 	public JsonNode? Evaluate(JsonNode? template, EvaluationContext context)
 	{
 		var obj = template!.AsObject();
+		obj.VerifyPropertyCount(Name, 3);
 		obj.VerifyNoUndefinedProperties(Name, "initial", _byForm);
 
 		var value = JsonE.Evaluate(obj[Name], context);
