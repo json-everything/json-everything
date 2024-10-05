@@ -100,16 +100,16 @@ public class Output
 	[TestCaseSource(nameof(TestCases))]
 	public void Test(TestCollection collection, TestCase test, string format, string fileName, EvaluationOptions options)
 	{
-		Console.WriteLine();
-		Console.WriteLine();
-		Console.WriteLine(fileName);
-		Console.WriteLine(collection.Description);
-		Console.WriteLine(test.Description);
-		Console.WriteLine();
-		Console.WriteLine(JsonSerializer.Serialize(collection.Schema, TestEnvironment.TestOutputSerializerOptions));
-		Console.WriteLine();
-		Console.WriteLine(test.Data.AsJsonString());
-		Console.WriteLine();
+		TestConsole.WriteLine();
+		TestConsole.WriteLine();
+		TestConsole.WriteLine(fileName);
+		TestConsole.WriteLine(collection.Description);
+		TestConsole.WriteLine(test.Description);
+		TestConsole.WriteLine();
+		TestConsole.WriteLine(JsonSerializer.Serialize(collection.Schema, TestEnvironment.TestOutputSerializerOptions));
+		TestConsole.WriteLine();
+		TestConsole.WriteLine(test.Data.AsJsonString());
+		TestConsole.WriteLine();
 
 		if (!InstanceIsDeserializable(test.Data))
 			Assert.Inconclusive("Instance not deserializable");
@@ -132,8 +132,8 @@ public class Output
 			Converters = { converter }
 		};
 		var serializedResult = JsonSerializer.SerializeToNode(result, optionsWithConverters);
-		Console.WriteLine(JsonSerializer.Serialize(serializedResult, TestEnvironment.TestOutputSerializerOptions));
-		Console.WriteLine();
+		TestConsole.WriteLine(JsonSerializer.Serialize(serializedResult, TestEnvironment.TestOutputSerializerOptions));
+		TestConsole.WriteLine();
 
 
 		var outputSchema = test.Output![format];
@@ -146,7 +146,7 @@ public class Output
 		{
 			if (!result.IsValid)
 			{
-				Console.WriteLine(JsonSerializer.Serialize(result, TestEnvironment.TestOutputSerializerOptions));
+				TestConsole.WriteLine(JsonSerializer.Serialize(result, TestEnvironment.TestOutputSerializerOptions));
 				Assert.Inconclusive("not fully supported");
 			}
 
@@ -175,7 +175,7 @@ public class Output
 		}
 		catch (Exception e)
 		{
-			Console.WriteLine(e.Message);
+			TestConsole.WriteLine(e.Message);
 			return false;
 		}
 	}

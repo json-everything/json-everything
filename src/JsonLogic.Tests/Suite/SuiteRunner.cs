@@ -34,7 +34,7 @@ public class SuiteRunner
 			{
 				content ??= await File.ReadAllTextAsync(testsPath);
 
-				Console.WriteLine(e);
+				TestConsole.WriteLine(e);
 			}
 			return content;
 

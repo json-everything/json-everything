@@ -65,20 +65,20 @@ public class SelfValidationTest
 
 			try
 			{
-				Console.WriteLine("Asserting schema equality");
+				TestConsole.WriteLine("Asserting schema equality");
 				var asNode = JsonSerializer.SerializeToNode(schema, TestEnvironment.SerializerOptions);
 				var onlineAsNode = JsonSerializer.SerializeToNode(onlineSchema, TestEnvironment.SerializerOptions);
 				Assert.That(() => asNode.IsEquivalentTo(onlineAsNode));
 
-				Console.WriteLine("Validating local against online");
+				TestConsole.WriteLine("Validating local against online");
 				onlineValidation.AssertValid();
-				Console.WriteLine("Validating online against local");
+				TestConsole.WriteLine("Validating online against local");
 				localValidation.AssertValid();
 			}
 			catch (Exception)
 			{
-				Console.WriteLine("Online {0}", onlineSchemaJson);
-				Console.WriteLine("Local {0}", localSchemaJson);
+				TestConsole.WriteLine("Online {0}", onlineSchemaJson);
+				TestConsole.WriteLine("Local {0}", localSchemaJson);
 				throw;
 			}
 		}
@@ -106,7 +106,7 @@ public class SelfValidationTest
 	public void RoundTrip(JsonSchema schema)
 	{
 		var json = JsonSerializer.Serialize(schema, TestEnvironment.TestOutputSerializerOptions);
-		Console.WriteLine(json);
+		TestConsole.WriteLine(json);
 		var returnTrip = JsonSerializer.Deserialize<JsonSchema>(json, TestEnvironment.SerializerOptions);
 
 		var asNode = JsonSerializer.SerializeToNode(schema, TestEnvironment.SerializerOptions);

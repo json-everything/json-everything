@@ -2,6 +2,7 @@ using System;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using NUnit.Framework;
+using TestHelpers;
 
 namespace Json.Schema.Tests;
 
@@ -177,7 +178,7 @@ public class FormatTests
 			RequireFormatValidation = true
 		});
 
-		Console.WriteLine(JsonSerializer.Serialize(results, TestEnvironment.TestOutputSerializerOptions));
+		TestConsole.WriteLine(JsonSerializer.Serialize(results, TestEnvironment.TestOutputSerializerOptions));
 		Assert.That(results.IsValid, Is.EqualTo(isValid));
 	}
 }

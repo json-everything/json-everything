@@ -1,6 +1,6 @@
-﻿using System;
-using System.Text.Json;
+﻿using System.Text.Json;
 using NUnit.Framework;
+using TestHelpers;
 
 namespace Json.Schema.Generation.Tests;
 
@@ -101,7 +101,7 @@ public class CommentsTests
 
 		JsonSchema schema = new JsonSchemaBuilder().FromType<TypeAndSingleMemberCommentedModel>(config);
 
-		Console.WriteLine(JsonSerializer.Serialize(schema, TestEnvironment.SerializerOptions));
+		TestConsole.WriteLine(JsonSerializer.Serialize(schema, TestEnvironment.SerializerOptions));
 
 		Assert.Multiple(() =>
 		{

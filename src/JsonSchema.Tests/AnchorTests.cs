@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.Json.Nodes;
-using System.Threading.Tasks;
 using NUnit.Framework;
+using TestHelpers;
 
 namespace Json.Schema.Tests;
 
@@ -85,8 +82,8 @@ public class AnchorTests
 		}
 		catch (Exception e)
 		{
-			Console.WriteLine("failed during deserialization");
-			Console.WriteLine(e);
+			TestConsole.WriteLine("failed during deserialization");
+			TestConsole.WriteLine(e);
 			return;
 		}
 
@@ -99,8 +96,8 @@ public class AnchorTests
 		}
 		catch (Exception e)
 		{
-			Console.WriteLine("failed during evaluation");
-			Console.WriteLine(e);
+			TestConsole.WriteLine("failed during evaluation");
+			TestConsole.WriteLine(e);
 			return;
 		}
 

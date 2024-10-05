@@ -4,6 +4,7 @@ using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.More;
 using Json.Schema;
+using TestHelpers;
 
 //using Json.Schema;
 // ReSharper disable ConditionIsAlwaysTrueOrFalse
@@ -130,12 +131,12 @@ public class JsonPatchTestJsonConverter : WeaklyTypedJsonConverter<JsonPatchTest
 				};
 			}
 
-			Console.WriteLine(JsonSerializer.Serialize(results, TestEnvironment.SerializerOptions));
+			TestConsole.WriteLine(JsonSerializer.Serialize(results, TestEnvironment.SerializerOptions));
 			return null;
 		}
 		catch (Exception e) when(e is JsonException or ArgumentException)
 		{
-			Console.WriteLine(e);
+			TestConsole.WriteLine(e);
 			return null;
 		}
 	}

@@ -7,6 +7,7 @@ using Json.More;
 using Json.Pointer;
 using Json.Schema.Tests;
 using NUnit.Framework;
+using TestHelpers;
 
 namespace Json.Schema.OpenApi.Tests;
 
@@ -27,8 +28,8 @@ public class SpecExampleTests
 		var onlineSchema = JsonSerializer.Deserialize<JsonSchema>(onlineSchemaJson, TestEnvironment.SerializerOptions);
 
 		var options = new JsonSerializerOptions(TestEnvironment.SerializerOptions) { WriteIndented = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping };
-		Console.WriteLine(JsonSerializer.Serialize(onlineSchema, options));
-		Console.WriteLine(JsonSerializer.Serialize(MetaSchemas.DocumentSchema, options));
+		TestConsole.WriteLine(JsonSerializer.Serialize(onlineSchema, options));
+		TestConsole.WriteLine(JsonSerializer.Serialize(MetaSchemas.DocumentSchema, options));
 
 		var asNode = JsonSerializer.SerializeToNode(MetaSchemas.DocumentSchema, TestEnvironment.SerializerOptions);
 		var onlineAsNode = JsonSerializer.SerializeToNode(onlineSchema, TestEnvironment.SerializerOptions);

@@ -5,6 +5,7 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using Json.Schema.Serialization;
 using NUnit.Framework;
+using TestHelpers;
 using RangeAttribute = System.ComponentModel.DataAnnotations.RangeAttribute;
 
 namespace Json.Schema.Tests.Serialization;
@@ -85,7 +86,7 @@ public class DeserializationTests
 
 				var model = JsonSerializer.Deserialize<Foo>(jsonText, _options);
 
-				Console.WriteLine(JsonSerializer.Serialize(model, _options));
+				TestConsole.WriteLine(JsonSerializer.Serialize(model, _options));
 			}
 			catch (Exception e)
 			{
@@ -114,7 +115,7 @@ public class DeserializationTests
 
 				var model = JsonSerializer.Deserialize<FooWithSchema>(jsonText, _options);
 
-				Console.WriteLine(JsonSerializer.Serialize(model, _options));
+				TestConsole.WriteLine(JsonSerializer.Serialize(model, _options));
 			}
 			catch (Exception e)
 			{
@@ -142,7 +143,7 @@ public class DeserializationTests
 
 			var model = JsonSerializer.Deserialize<Foo>(jsonText, _options);
 
-			Console.WriteLine(JsonSerializer.Serialize(model, _options));
+			TestConsole.WriteLine(JsonSerializer.Serialize(model, _options));
 		}
 		catch (Exception e)
 		{
@@ -166,7 +167,7 @@ public class DeserializationTests
 
 			var model = JsonSerializer.Deserialize<Foo>(jsonText, _options);
 
-			Console.WriteLine(JsonSerializer.Serialize(model, _options));
+			TestConsole.WriteLine(JsonSerializer.Serialize(model, _options));
 		}
 		catch (Exception e)
 		{
@@ -193,7 +194,7 @@ public class DeserializationTests
 
 				var model = JsonSerializer.Deserialize<FooWithSchema>(jsonText, _options);
 
-				Console.WriteLine(JsonSerializer.Serialize(model, _options));
+				TestConsole.WriteLine(JsonSerializer.Serialize(model, _options));
 			}
 			catch (Exception e)
 			{
@@ -220,7 +221,7 @@ public class DeserializationTests
 
 				var model = JsonSerializer.Deserialize<FooWithSchema>(jsonText, _options);
 
-				Console.WriteLine(JsonSerializer.Serialize(model, _options));
+				TestConsole.WriteLine(JsonSerializer.Serialize(model, _options));
 			}
 			catch (Exception e)
 			{
@@ -245,7 +246,7 @@ public class DeserializationTests
 
 			var model = JsonSerializer.Deserialize<Foo>(jsonText, _options);
 
-			Console.WriteLine(JsonSerializer.Serialize(model, _options));
+			TestConsole.WriteLine(JsonSerializer.Serialize(model, _options));
 		}
 		catch (Exception e)
 		{
@@ -269,7 +270,7 @@ public class DeserializationTests
 
 			var model = JsonSerializer.Deserialize<FooWithSchema>(jsonText, _options);
 
-			Console.WriteLine(JsonSerializer.Serialize(model, _options));
+			TestConsole.WriteLine(JsonSerializer.Serialize(model, _options));
 		}
 		catch (Exception e)
 		{
@@ -300,7 +301,7 @@ public class DeserializationTests
 
 				var model = JsonSerializer.Deserialize<FooWithSchema>(jsonText, options);
 
-				Console.WriteLine(JsonSerializer.Serialize(model, options));
+				TestConsole.WriteLine(JsonSerializer.Serialize(model, options));
 			}
 		}
 		catch (Exception e)
@@ -330,7 +331,7 @@ public class DeserializationTests
 
 			var model = JsonSerializer.Deserialize<Point>(jsonText, options);
 
-			Console.WriteLine(JsonSerializer.Serialize(model, options));
+			TestConsole.WriteLine(JsonSerializer.Serialize(model, options));
 		}
 		catch (Exception e)
 		{
@@ -361,7 +362,7 @@ public class DeserializationTests
 
 					var model = JsonSerializer.Deserialize<Point>(jsonText, options);
 
-					Console.WriteLine(JsonSerializer.Serialize(model, options));
+					TestConsole.WriteLine(JsonSerializer.Serialize(model, options));
 				}
 				catch (Exception e)
 				{
@@ -379,12 +380,12 @@ public class DeserializationTests
 	/// </summary>
 	private static void HandleException(Exception e)
 	{
-		Console.WriteLine(e);
-		Console.WriteLine();
+		TestConsole.WriteLine(e);
+		TestConsole.WriteLine();
 		if (e.Data.Contains("validation"))
 		{
 			var validation = (EvaluationResults)e.Data["validation"]!;
-			Console.WriteLine(JsonSerializer.Serialize(validation, _options));
+			TestConsole.WriteLine(JsonSerializer.Serialize(validation, _options));
 		}
 	}
 }

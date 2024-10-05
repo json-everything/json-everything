@@ -6,6 +6,7 @@ using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.More;
 using NUnit.Framework;
+using TestHelpers;
 
 namespace Json.Schema.Tests;
 
@@ -220,10 +221,10 @@ public partial class VocabularyTests
 		};
 		options.SchemaRegistry.Register(DatesMetaSchema);
 
-		Console.WriteLine(JsonSerializer.Serialize(schema, _serializerOptions));
-		Console.WriteLine();
-		Console.WriteLine(instance);
-		Console.WriteLine();
+		TestConsole.WriteLine(JsonSerializer.Serialize(schema, _serializerOptions));
+		TestConsole.WriteLine();
+		TestConsole.WriteLine(instance);
+		TestConsole.WriteLine();
 
 		Assert.Throws<JsonSchemaException>(() => schema.Evaluate(instance, options));
 	}
@@ -240,10 +241,10 @@ public partial class VocabularyTests
 		options.SchemaRegistry.Register(DatesMetaSchema);
 		var results = schema.Evaluate(instance, options);
 
-		Console.WriteLine(JsonSerializer.Serialize(schema, _serializerOptions));
-		Console.WriteLine();
-		Console.WriteLine(instance);
-		Console.WriteLine();
+		TestConsole.WriteLine(JsonSerializer.Serialize(schema, _serializerOptions));
+		TestConsole.WriteLine();
+		TestConsole.WriteLine(instance);
+		TestConsole.WriteLine();
 
 		results.AssertValid();
 	}
@@ -258,10 +259,10 @@ public partial class VocabularyTests
 
 		var results = schema.Evaluate(instance);
 
-		Console.WriteLine(JsonSerializer.Serialize(schema, _serializerOptions));
-		Console.WriteLine();
-		Console.WriteLine(instance);
-		Console.WriteLine();
+		TestConsole.WriteLine(JsonSerializer.Serialize(schema, _serializerOptions));
+		TestConsole.WriteLine();
+		TestConsole.WriteLine(instance);
+		TestConsole.WriteLine();
 
 		results.AssertValid();
 	}
@@ -280,10 +281,10 @@ public partial class VocabularyTests
 			OutputFormat = OutputFormat.List
 		});
 
-		Console.WriteLine(JsonSerializer.Serialize(schema, _serializerOptions));
-		Console.WriteLine();
-		Console.WriteLine(instance);
-		Console.WriteLine();
+		TestConsole.WriteLine(JsonSerializer.Serialize(schema, _serializerOptions));
+		TestConsole.WriteLine();
+		TestConsole.WriteLine(instance);
+		TestConsole.WriteLine();
 
 		results.AssertInvalid();
 	}
@@ -298,10 +299,10 @@ public partial class VocabularyTests
 
 		var results = schema.Evaluate(instance);
 
-		Console.WriteLine(JsonSerializer.Serialize(schema, _serializerOptions));
-		Console.WriteLine();
-		Console.WriteLine(instance);
-		Console.WriteLine();
+		TestConsole.WriteLine(JsonSerializer.Serialize(schema, _serializerOptions));
+		TestConsole.WriteLine();
+		TestConsole.WriteLine(instance);
+		TestConsole.WriteLine();
 
 		results.AssertInvalid();
 	}
@@ -325,10 +326,10 @@ public partial class VocabularyTests
 			VocabularyRegistry.Register(DatesVocabulary);
 			var results = schema.Evaluate(instance, options);
 
-			Console.WriteLine(JsonSerializer.Serialize(schema, _serializerOptions));
-			Console.WriteLine();
-			Console.WriteLine(instance);
-			Console.WriteLine();
+			TestConsole.WriteLine(JsonSerializer.Serialize(schema, _serializerOptions));
+			TestConsole.WriteLine();
+			TestConsole.WriteLine(instance);
+			TestConsole.WriteLine();
 
 			results.AssertValid();
 		}
@@ -348,8 +349,8 @@ public partial class VocabularyTests
 		var schemaAsJson = JsonNode.Parse(JsonSerializer.Serialize(schema, _basicOptions));
 		var results = DatesMetaSchema.Evaluate(schemaAsJson, new EvaluationOptions{OutputFormat = OutputFormat.List});
 
-		Console.WriteLine(schemaAsJson);
-		Console.WriteLine();
+		TestConsole.WriteLine(schemaAsJson);
+		TestConsole.WriteLine();
 
 		results.AssertInvalid();
 	}
@@ -368,8 +369,8 @@ public partial class VocabularyTests
 			VocabularyRegistry.Register(DatesVocabulary);
 			var results = DatesMetaSchema.Evaluate(schemaAsJson, options);
 
-			Console.WriteLine(schemaAsJson);
-			Console.WriteLine();
+			TestConsole.WriteLine(schemaAsJson);
+			TestConsole.WriteLine();
 
 			results.AssertValid();
 		}

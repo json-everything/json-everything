@@ -1,8 +1,7 @@
-using System;
 using System.Text.Json;
 using Json.Schema.Generation.Intents;
 using NUnit.Framework;
-
+using TestHelpers;
 using static Json.Schema.Generation.Tests.AssertionExtensions;
 // ReSharper disable ClassNeverInstantiated.Local
 
@@ -55,8 +54,8 @@ public class RefinerTests
 
 		JsonSchema actual = new JsonSchemaBuilder().FromType<ThreeProps>(configuration);
 
-		Console.WriteLine(JsonSerializer.Serialize(expected, TestEnvironment.SerializerOptions));
-		Console.WriteLine(JsonSerializer.Serialize(actual, TestEnvironment.SerializerOptions));
+		TestConsole.WriteLine(JsonSerializer.Serialize(expected, TestEnvironment.SerializerOptions));
+		TestConsole.WriteLine(JsonSerializer.Serialize(actual, TestEnvironment.SerializerOptions));
 		AssertEqual(expected, actual);
 	}
 
@@ -77,8 +76,8 @@ public class RefinerTests
 
 		JsonSchema actual = new JsonSchemaBuilder().FromType<TwoProps>(configuration);
 
-		Console.WriteLine(JsonSerializer.Serialize(expected, TestEnvironment.SerializerOptions));
-		Console.WriteLine(JsonSerializer.Serialize(actual, TestEnvironment.SerializerOptions));
+		TestConsole.WriteLine(JsonSerializer.Serialize(expected, TestEnvironment.SerializerOptions));
+		TestConsole.WriteLine(JsonSerializer.Serialize(actual, TestEnvironment.SerializerOptions));
 		AssertEqual(expected, actual);
 	}
 }

@@ -39,7 +39,7 @@ public class Tests
 
 		var theirJson = JsonNode.Parse(yaml.RootNode.SerializeToJson());
 
-		Console.WriteLine(myJson.AsJsonString(_serializerOptions));
+		TestConsole.WriteLine(myJson.AsJsonString(_serializerOptions));
 
 		JsonAssert.AreEquivalent(theirJson, myJson);
 	}

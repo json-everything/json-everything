@@ -1,7 +1,7 @@
-﻿using System;
-using System.Text.Json;
+﻿using System.Text.Json;
 using Json.Schema.Tests;
 using NUnit.Framework;
+using TestHelpers;
 
 namespace Json.Schema.DataGeneration.Tests;
 
@@ -53,8 +53,8 @@ internal class GithubTests
 			var generationResult = schema.GenerateData();
 			var sampleData = generationResult.Result;
 
-			Console.WriteLine("Generated data result: " + sampleData);
-			Console.WriteLine(JsonSerializer.Serialize(generationResult, TestRunner.SerializerOptions));
+			TestConsole.WriteLine("Generated data result: " + sampleData);
+			TestConsole.WriteLine(JsonSerializer.Serialize(generationResult, TestRunner.SerializerOptions));
 		}
 	}
 
@@ -78,7 +78,7 @@ internal class GithubTests
 			.Build();
 
 		var generationResult = schema.GenerateData();
-		Console.WriteLine(JsonSerializer.Serialize(generationResult.Result, TestRunner.SerializerOptions));
+		TestConsole.WriteLine(JsonSerializer.Serialize(generationResult.Result, TestRunner.SerializerOptions));
 
 		var result = schema.Evaluate(generationResult.Result);
 
@@ -105,7 +105,7 @@ internal class GithubTests
 			.Build();
 
 		var generationResult = schema.GenerateData();
-		Console.WriteLine(JsonSerializer.Serialize(generationResult.Result, TestRunner.SerializerOptions));
+		TestConsole.WriteLine(JsonSerializer.Serialize(generationResult.Result, TestRunner.SerializerOptions));
 
 		var result = schema.Evaluate(generationResult.Result);
 
@@ -132,7 +132,7 @@ internal class GithubTests
 			.Build();
 
 		var generationResult = schema.GenerateData();
-		Console.WriteLine(JsonSerializer.Serialize(generationResult.Result, TestRunner.SerializerOptions));
+		TestConsole.WriteLine(JsonSerializer.Serialize(generationResult.Result, TestRunner.SerializerOptions));
 
 		var result = schema.Evaluate(generationResult.Result);
 
@@ -153,7 +153,7 @@ internal class GithubTests
 			.Build();
 
 		var generationResult = schema.GenerateData();
-		Console.WriteLine(JsonSerializer.Serialize(generationResult.Result, TestRunner.SerializerOptions));
+		TestConsole.WriteLine(JsonSerializer.Serialize(generationResult.Result, TestRunner.SerializerOptions));
 
 		var result = schema.Evaluate(generationResult.Result);
 
@@ -181,7 +181,7 @@ internal class GithubTests
 			.Build();
 
 		var generationResult = schema.GenerateData();
-		Console.WriteLine(JsonSerializer.Serialize(generationResult.Result, TestRunner.SerializerOptions));
+		TestConsole.WriteLine(JsonSerializer.Serialize(generationResult.Result, TestRunner.SerializerOptions));
 
 		var result = schema.Evaluate(generationResult.Result);
 

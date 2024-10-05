@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Json.More;
 using NUnit.Framework;
+using TestHelpers;
 
 namespace Json.Path.Tests.Suite;
 
@@ -178,10 +179,10 @@ public class CburgmerFeatureValidationTests
 	[TestCaseSource(nameof(TestCases))]
 	public void Run(CburgmerTestCase testCase)
 	{
-		Console.WriteLine();
-		Console.WriteLine();
-		Console.WriteLine(testCase);
-		Console.WriteLine();
+		TestConsole.WriteLine();
+		TestConsole.WriteLine();
+		TestConsole.WriteLine(testCase);
+		TestConsole.WriteLine();
 
 		PathResult? actual = null;
 
@@ -199,7 +200,7 @@ public class CburgmerFeatureValidationTests
 		if (actual == null)
 		{
 			if (exception != null)
-				Console.WriteLine(exception);
+				TestConsole.WriteLine(exception);
 
 			if (testCase.Consensus == "NOT_SUPPORTED") return;
 
@@ -216,9 +217,9 @@ public class CburgmerFeatureValidationTests
 			Assert.Fail($"Could not parse path: {testCase.PathString}");
 		}
 
-		Console.WriteLine($"Actual (values): {JsonSerializer.Serialize(actual!.Matches!.Select(x => x.Value), _linearSerializerOptions)}");
-		Console.WriteLine();
-		Console.WriteLine($"Actual: {JsonSerializer.Serialize(actual, _serializerOptions)}");
+		TestConsole.WriteLine($"Actual (values): {JsonSerializer.Serialize(actual!.Matches!.Select(x => x.Value), _linearSerializerOptions)}");
+		TestConsole.WriteLine();
+		TestConsole.WriteLine($"Actual: {JsonSerializer.Serialize(actual, _serializerOptions)}");
 		if (testCase.Consensus == null)
 			Assert.Inconclusive("Test case has no consensus result.  Cannot validate.");
 		else

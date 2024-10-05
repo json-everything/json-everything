@@ -217,7 +217,7 @@ public class GithubTests
 		var element = JsonNode.Parse(instance);
 
 		var val = schema.Evaluate(element, opts);
-		Console.WriteLine("Elem `{0}` got validation `{1}`", instance, val.IsValid);
+		TestConsole.WriteLine("Elem `{0}` got validation `{1}`", instance, val.IsValid);
 		if (isValid) val.AssertValid();
 		else val.AssertInvalid();
 	}
@@ -657,7 +657,7 @@ public class GithubTests
 			}
 			catch (Exception e)
 			{
-				Console.WriteLine(e);
+				TestConsole.WriteLine(e);
 				throw;
 			}
 
@@ -921,9 +921,9 @@ public class GithubTests
 		Assert.Multiple(() =>
 		{
 			Assert.That(exception, Is.Not.Null);
-			Console.WriteLine("Expected error");
-			Console.WriteLine(schemaStr.Split('\n')[expectedLineNumber]);
-			Console.WriteLine(new string('-', expectedBytePositionInLine - 1) + '^');
+			TestConsole.WriteLine("Expected error");
+			TestConsole.WriteLine(schemaStr.Split('\n')[expectedLineNumber]);
+			TestConsole.WriteLine(new string('-', expectedBytePositionInLine - 1) + '^');
 			Assert.That(exception?.LineNumber, Is.EqualTo(expectedLineNumber));
 			Assert.That(exception?.BytePositionInLine, Is.EqualTo(expectedBytePositionInLine));
 		});
@@ -1048,7 +1048,7 @@ public class GithubTests
 				.Properties(("bar", subschema))
 				.Build();
 
-			Console.WriteLine(JsonSerializer.Serialize(schema));
+			TestConsole.WriteLine(JsonSerializer.Serialize(schema));
 		}
 		finally
 		{
@@ -1078,7 +1078,7 @@ public class GithubTests
 		var node = JsonNode.Parse(jsonText);
 
 		var results = Model791Schema.Evaluate(node, new EvaluationOptions { OutputFormat = OutputFormat.List });
-		Console.WriteLine(JsonSerializer.Serialize(results, TestEnvironment.TestOutputSerializerOptions));
+		TestConsole.WriteLine(JsonSerializer.Serialize(results, TestEnvironment.TestOutputSerializerOptions));
 	}
 
 	private static void Run791<T>()
