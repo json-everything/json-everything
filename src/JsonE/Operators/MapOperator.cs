@@ -13,7 +13,7 @@ internal class MapOperator : IOperator
 	public JsonNode? Evaluate(JsonNode? template, EvaluationContext context)
 	{
 		var obj = template!.AsObject();
-		obj.VerifyPropertyCount(Name, 3);
+		obj.VerifyPropertyCount(Name, 2);
 		obj.VerifyNoUndefinedProperties(Name, _byForm);
 	
 		var value = JsonE.Evaluate(obj[Name], context);
