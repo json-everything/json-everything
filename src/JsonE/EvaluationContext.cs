@@ -25,6 +25,7 @@ public class EvaluationContext
 			["max"] = new MaxFunction(),
 			["min"] = new MinFunction(),
 			["number"] = new NumberFunction(),
+			["range"] = new RangeFunction(),
 			["rstrip"] = new RStripFunction(),
 			["split"] = new SplitFunction(),
 			["sqrt"] = new SqrtFunction(),

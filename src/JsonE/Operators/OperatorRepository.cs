@@ -21,6 +21,7 @@ internal static class OperatorRepository
 		[MatchOperator.Name] = new MatchOperator(),
 		[MergeOperator.Name] = new MergeOperator(),
 		[MergeDeepOperator.Name] = new MergeDeepOperator(),
+		[ReduceOperator.Name] = new ReduceOperator(),
 		[ReverseOperator.Name] = new ReverseOperator(),
 		[SortOperator.Name] = new SortOperator(),
 		[SwitchOperator.Name] = new SwitchOperator(),

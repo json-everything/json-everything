@@ -4,6 +4,10 @@ title: JsonE.Net
 icon: fas fa-tag
 order: "09.12"
 ---
+# [2.2.0](https://github.com/gregsdennis/json-everything/pull/805) {#release-e-2.2.0}
+
+Adds the newly introduced `$reduce` operator and `range()` functions.
+
 # [2.1.2](https://github.com/gregsdennis/json-everything/commits/6a426380c5597312945d4e743d44c3f530f7f18e) {#release-e-2.1.2}
 
 `InterpreterException` now derives from `JsonEException` like all of the other exceptions.

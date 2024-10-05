@@ -10,6 +10,25 @@ namespace Json.JsonE;
 
 internal static class JsonNodeExtensions
 {
+	public class Stringish
+	{
+		public string? Exact { get; }
+		public Regex? Pattern { get; }
+
+		public Stringish(string a) => Exact = a;
+		public Stringish(Regex b) => Pattern = b;
+
+		public bool Matches(string content)
+		{
+			return Exact is not null
+				? content == Exact
+				: Pattern!.IsMatch(content);
+		}
+
+		public static implicit operator Stringish(string exact) => new(exact);
+		public static implicit operator Stringish(Regex pattern) => new(pattern);
+	}
+
 	private static readonly JsonNode? _emptyString = string.Empty;
 	private static readonly JsonNode? _zero = 0;
 	private static readonly JsonNode? _false = false;
@@ -46,18 +65,17 @@ internal static class JsonNodeExtensions
 		};
 	}
 
-	public static void VerifyNoUndefinedProperties(this JsonObject obj, string op, params string[] additionalKeys)
+	public static void VerifyNoUndefinedProperties(this JsonObject obj, string op, params Stringish[] additionalKeys)
 	{
-		var undefinedKeys = obj.Select(x => x.Key).Where(x => x != op && !additionalKeys.Contains(x)).ToArray();
+		var undefinedKeys = obj.Select(x => x.Key).Where(x => x != op && !additionalKeys.Any(y => y.Matches(x))).ToArray();
 		if (undefinedKeys.Length != 0)
 			throw new TemplateException(CommonErrors.UndefinedProperties(op, undefinedKeys));
 	}
 
-	public static void VerifyNoUndefinedProperties(this JsonObject obj, string op, Regex additionalKey)
+	public static void VerifyPropertyCount(this JsonObject obj, string op, int expectedCount)
 	{
-		var undefinedKeys = obj.Select(x => x.Key).Where(x => x != op && !additionalKey.IsMatch(x)).ToArray();
-		if (undefinedKeys.Length != 0)
-			throw new TemplateException(CommonErrors.UndefinedProperties(op, undefinedKeys));
+		if (obj.Count != expectedCount)
+			throw new TemplateException(CommonErrors.IncorrectOperatorArgCount(op, expectedCount));
 	}
 
 	public static void ValidateNotReturningFunction(this JsonNode? result)
