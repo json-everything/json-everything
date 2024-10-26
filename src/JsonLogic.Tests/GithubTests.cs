@@ -25,11 +25,11 @@ public class GithubTests
 		);
 		var json = JsonNode.Parse(@"{
    ""data"": {
-    ""sub"": [
-      {
-        ""element"": ""12345""
-      }
-    ]
+	""sub"": [
+	  {
+		""element"": ""12345""
+	  }
+	]
   }
 }");
 
@@ -50,11 +50,11 @@ public class GithubTests
 		);
 		var json = JsonNode.Parse(@"{
    ""data"": {
-    ""sub"": [
-      {
-        ""element"": ""12346""
-      }
-    ]
+	""sub"": [
+	  {
+		""element"": ""12346""
+	  }
+	]
   }
 }");
 
@@ -130,8 +130,8 @@ public class GithubTests
 	{
 		var node = JsonNode.Parse(@"{
   ""=="": [
-    {""var"": ""value""},
-    null
+	{""var"": ""value""},
+	null
   ]
 }");
 
@@ -186,5 +186,73 @@ public class GithubTests
 		TestConsole.WriteLine(result.AsJsonString());
 
 		JsonAssert.IsTrue(result);
+	}
+
+	[Test]
+	public void Issue807_NestedVar()
+	{
+		var rule =
+			Multiply(
+				Variable("amount"),
+				Variable(Variable("target_currency")),
+				Divide(1,
+					Variable(Variable("source_currency"))));
+
+		var data = JsonNode.Parse(@"{
+	""amount"": ""100"",
+	""source_currency"": ""GBP"",
+	""target_currency"": ""EUR"",
+	""GBP"": ""1.1"",
+	""EUR"": ""0.8""
+}");
+
+		var result = rule.Apply(data);
+
+		TestConsole.WriteLine(result.AsJsonString());
+
+		var actual = Math.Round(result!.GetValue<decimal>(), 6);
+
+		Assert.That(actual, Is.EqualTo(72.727273m));
+	}
+
+	[Test]
+	public void Issue807_NestedVar_Parsed()
+	{
+		var rule = JsonSerializer.Deserialize<Rule>(
+			"""
+			{
+			  "*": [{
+			      "var": "amount"
+			    }, {
+			      "var": {
+			        "var": "target_currency"
+			      }
+			    }, {
+			      "/": ["1", {
+			          "var": {
+			            "var": "source_currency"
+			          }
+			        }
+			      ]
+			    }
+			  ]
+			}
+			""", TestEnvironment.SerializerOptions);
+
+		var data = JsonNode.Parse(@"{
+	""amount"": ""100"",
+	""source_currency"": ""GBP"",
+	""target_currency"": ""EUR"",
+	""GBP"": ""1.1"",
+	""EUR"": ""0.8""
+}");
+
+		var result = rule.Apply(data);
+
+		TestConsole.WriteLine(result.AsJsonString());
+
+		var actual = Math.Round(result!.GetValue<decimal>(), 6);
+
+		Assert.That(actual, Is.EqualTo(72.727273m));
 	}
 }
