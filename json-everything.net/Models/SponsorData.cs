@@ -2,7 +2,7 @@
 
 public record SponsorData
 {
-	public string Username { get; set; }
+	public string? Username { get; set; }
 	public Uri? AvatarUrl { get; set; }
 	public Uri? WebsiteUrl { get; set; }
 	public BubbleSize BubbleSize { get; set; }

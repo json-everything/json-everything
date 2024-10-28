@@ -309,7 +309,20 @@ public static class JsonLogic
 	/// <summary>
 	/// Creates a `var` rule that accesses data.
 	/// </summary>
-	/// <param name="path"></param>
+	/// <param name="input">A rule that produces the dot-delimited path.</param>
+	/// <returns>A variable rule.</returns>
+	public static Rule Variable(Rule input) => new VariableRule(input);
+	/// <summary>
+	/// Creates a `var` rule that accesses data.
+	/// </summary>
+	/// <param name="input">A rule that produces the dot-delimited path.</param>
+	/// <param name="defaultValue">A default value to use if the path is not found.</param>
+	/// <returns>A variable rule.</returns>
+	public static Rule Variable(Rule input, Rule defaultValue) => new VariableRule(input, defaultValue);
+	/// <summary>
+	/// Creates a `var` rule that accesses data.
+	/// </summary>
+	/// <param name="path">The dot-delimited path.</param>
 	/// <returns>A variable rule.</returns>
 	public static Rule Variable(string path) => new VariableRule(Literal(path));
 	/// <summary>

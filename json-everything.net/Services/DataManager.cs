@@ -26,7 +26,7 @@ public class DataManager
 
 		value = await _localStorage.GetItemAsync<string>(key);
 
-		_cache[key] = value;
+		_cache[key] = value!;
 
 		return value;
 	}

@@ -34,13 +34,8 @@ public class JsonPathIdentifier : IDataResourceIdentifier
 	public bool TryResolve(KeywordEvaluation evaluation, SchemaRegistry registry, out JsonNode? value)
 	{
 		var results = Query.Evaluate(evaluation.LocalInstance);
-		if (results.Error == null)
-		{
-			value = null;
-			return false;
-		}
 
-		value = results.Matches!.Select(x => x.Value).ToJsonArray();
+		value = results.Matches.Select(x => x.Value).ToJsonArray();
 		return true;
 	}
 }
