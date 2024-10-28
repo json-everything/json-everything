@@ -247,7 +247,7 @@ public class GithubTests
 	""EUR"": ""0.8""
 }");
 
-		var result = rule.Apply(data);
+		var result = rule!.Apply(data);
 
 		TestConsole.WriteLine(result.AsJsonString());
 
