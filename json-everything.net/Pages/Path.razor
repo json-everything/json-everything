@@ -12,33 +12,28 @@
 
 <PageTitle>JSON Path - json-everything.net</PageTitle>
 
-<div class="red col-12 me-2">
-	<div class="d-flex navbar">
-		<div class="align-items-center hstack mx-2">
-			<img src="img/json-path.png" height="70" width="70" class="me-3" />
-			<h1 class="display-4">JSON Path</h1>
-			<div class="align-items-center mx-3">
-				<div>
-					Query JSON data - "XPath for JSON"
-					<br/>
-					Learn more about
-					<a href="https://www.rfc-editor.org/rfc/rfc9535.html" target="_blank">JSON Path (RFC 9535)<ExternalLinkIcon/></a>
-				</div>
-			</div>
-		</div>
-		<div class="align-items-center mt-1">
-			@foreach (var library in _libraries)
-			{
-				<NugetLibrary Library="@library"/>
-			}
-		</div>
-	</div>
-</div>
 <div id="layout" class="flex-grow-1 position-relative">
 	<div class="dimgray fill-remaining">
 		<div class="inner d-flex h-100">
 			<div class="green w-25 d-flex">
 				<div class="tan grid-panel flex-grow-1 scroll">
+					<div class="align-items-center hstack mx-2">
+						<img src="img/json-path.png" height="70" width="70" class="me-3" />
+						<h1 class="display-4">JSON Path</h1>
+					</div>
+					<div class="align-items-center mx-3">
+						<div>
+							Query JSON data - "XPath for JSON". Learn more about
+							<a href="https://www.rfc-editor.org/rfc/rfc9535.html" target="_blank">JSON Path (RFC 9535)<ExternalLinkIcon/></a>
+						</div>
+					</div>
+					<div class="align-items-center mt-1">
+						@foreach (var library in _libraries)
+						{
+						<NugetLibrary Library="@library"/>
+						}
+					</div>
+					<hr />
 					<EditForm Model="_options" class="vstack">
 						<label class="my-2">
 							<InputCheckbox @bind-Value="_options.TolerateExtraWhitespace" DisplayName="Tolerate extra whitespace"/>

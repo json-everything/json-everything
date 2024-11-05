@@ -11,33 +11,28 @@
 
 <PageTitle>JSON Pointer - json-everything.net</PageTitle>
 
-<div class="red col-12 me-2">
-	<div class="d-flex navbar">
-		<div class="align-items-center hstack mx-2">
-			<img src="img/json-pointer.png" height="70" width="70" class="me-3" />
-			<h1 class="display-4">JSON Pointer</h1>
-			<div class="align-items-center mx-3">
-				<div>
-					Identify specific locations within JSON data
-					<br/>
-					Learn more about
-					<a href="https://datatracker.ietf.org/doc/html/rfc6901" target="_blank">JSON Pointer <ExternalLinkIcon/></a>
-				</div>
-			</div>
-		</div>
-		<div class="align-items-center mt-1">
-			@foreach (var library in _libraries)
-			{
-				<NugetLibrary Library="@library"/>
-			}
-		</div>
-	</div>
-</div>
 <div id="layout" class="flex-grow-1 position-relative">
 	<div class="dimgray fill-remaining">
 		<div class="inner d-flex h-100">
 			<div class="green w-25 d-flex">
 				<div class="tan grid-panel flex-grow-1 scroll">
+					<div class="align-items-center hstack mx-2">
+						<img src="img/json-pointer.png" height="70" width="70" class="me-3" />
+						<h1 class="display-4">JSON Pointer</h1>
+					</div>
+					<div class="align-items-center mx-3">
+						<div>
+							Identify specific locations within JSON data. Learn more about
+							<a href="https://datatracker.ietf.org/doc/html/rfc6901" target="_blank">JSON Pointer <ExternalLinkIcon/></a>
+						</div>
+					</div>
+					<div class="align-items-center mt-1">
+						@foreach (var library in _libraries)
+						{
+						<NugetLibrary Library="@library"/>
+						}
+					</div>
+					<hr />
 					<button class="btn btn-primary w-100" @onclick="Evaluate">Evaluate</button>
 					<hr/>
 					<MarkdownSpan Content="@HelpContent.PointerEvaluate"></MarkdownSpan>
@@ -46,8 +41,8 @@
 			<div class="gray d-flex flex-grow-1 flex-column">
 				<div class="maroon d-flex flex-grow-1 flex-column">
 					<div class="yellow mx-2 d-flex flex-grow-1">
-						<EditForm Model="_input" class="col-12 mb-4">
-							<label class="my-2 w-100">
+						<EditForm Model="_input" class="col-12">
+							<label class="mb-2 w-100">
 								Pointer
 								<InputText @bind-Value="_input.Pointer" DisplayName="Default base URI" class="form-control"
 								           @oninput="SavePath"/>
