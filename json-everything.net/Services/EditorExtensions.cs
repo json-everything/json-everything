@@ -21,9 +21,9 @@ public static class EditorExtensions
 
 	public static async Task<string> DetectLanguage(this StandaloneCodeEditor editor, IJSRuntime jsRuntime)
 	{
-		var text = await editor.GetValue();
+		var text = (await editor.GetValue())?.Trim();
 
-		if (TryParseJson(text))
+		if (text is null || text[0] is '{' or '[' or '"' || TryParseJson(text))
 		{
 			await editor.UpdateOptions(new EditorUpdateOptions { TabSize = 2 });
 			await editor.SetLanguageAsync("json", jsRuntime);
