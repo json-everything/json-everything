@@ -20,4 +20,5 @@ namespace Json.Schema.Tests;
 [JsonSerializable(typeof(Suite.Experiments.TestCollection), TypeInfoPropertyName = "ExperimentsTestCollection")]
 [JsonSerializable(typeof(List<Suite.Experiments.TestCollection>), TypeInfoPropertyName = "ExperimentsTestCollectionList")]
 [JsonSerializable(typeof(Experiments.EvaluationResults), TypeInfoPropertyName = "ExperimentsEvaluationResults")]
+#endif
 internal partial class TestSerializerContext : JsonSerializerContext;
