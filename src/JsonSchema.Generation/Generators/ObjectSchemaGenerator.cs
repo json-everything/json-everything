@@ -103,7 +103,11 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 			else
 				props.Add(name, memberContext);
 
-			if (unconditionalAttributes.OfType<RequiredAttribute>().Any())
+			if (unconditionalAttributes.OfType<RequiredAttribute>().Any()
+#if NET7_0_OR_GREATER
+				|| unconditionalAttributes.OfType<System.Runtime.CompilerServices.RequiredMemberAttribute>().Any()
+#endif
+				)
 				required.Add(name);
 
 			foreach (var conditionalRequiredAttribute in localConditionalAttributes.OfType<RequiredAttribute>())
