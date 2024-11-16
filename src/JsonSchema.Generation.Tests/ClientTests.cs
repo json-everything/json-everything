@@ -469,4 +469,61 @@ public class ClientTests
 
 		Assert.That(schemaJson.IsEquivalentTo(expected), Is.True);
 	}
+
+#if NET8_0_OR_GREATER
+	private const string ExternalSchemaUri = "https://test.json-everything.net/has-external-schema";
+	private const string GeneratedSchemaUri = "https://test.json-everything.net/uses-external-schema";
+
+	[Id(ExternalSchemaUri)]
+	internal class HasExternalSchemaUsingIdAttribute
+	{
+		public int Value { get; set; }
+	}
+
+	[Id(GeneratedSchemaUri)]
+	internal class ShouldRefToExternalSchemaUsingIdAttributeWithRequiredKeyword
+	{
+		// it is this required keyword that prevents the $ref
+		public required HasExternalSchemaUsingIdAttribute ShouldRef { get; set; }
+	}
+
+	[Id(GeneratedSchemaUri)]
+	internal class ShouldRefToExternalSchemaUsingIdAttributeWithRequiredAttribute
+	{
+		[Required]
+		public HasExternalSchemaUsingIdAttribute ShouldRef { get; set; }
+	}
+
+	[Test]
+	public void Issue815_UsingCSharpRequiredKeyword()
+	{
+		JsonSchema expected = new JsonSchemaBuilder()
+			.Id(GeneratedSchemaUri)
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("ShouldRef", new JsonSchemaBuilder().Ref(ExternalSchemaUri))
+			)
+			.Required("ShouldRef");
+
+		JsonSchema actual = new JsonSchemaBuilder().FromType<ShouldRefToExternalSchemaUsingIdAttributeWithRequiredKeyword>();
+
+		AssertEqual(expected, actual);
+	}
+
+	[Test]
+	public void Issue815_UsingRequiredAttribute()
+	{
+		JsonSchema expected = new JsonSchemaBuilder()
+			.Id(GeneratedSchemaUri)
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("ShouldRef", new JsonSchemaBuilder().Ref(ExternalSchemaUri))
+			)
+			.Required("ShouldRef");
+
+		JsonSchema actual = new JsonSchemaBuilder().FromType<ShouldRefToExternalSchemaUsingIdAttributeWithRequiredKeyword>();
+
+		AssertEqual(expected, actual);
+	}
+#endif
 }

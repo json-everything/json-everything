@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Json.Schema.Generation.Intents;
 
 namespace Json.Schema.Generation;
@@ -45,12 +46,13 @@ public static class SchemaGenerationContextCache
 
 	private static SchemaGenerationContextBase Get(Type type, List<Attribute>? memberAttributes, bool isRoot)
 	{
-		var hash = CalculateHash(type, memberAttributes?.WhereHandled());
+		var handledAttributes = memberAttributes?.WhereHandled().ToList();
+		var hash = CalculateHash(type, handledAttributes);
 		if (!Cache.TryGetValue(hash, out var context))
 		{
-			if (memberAttributes != null && memberAttributes.Count != 0)
+			if (handledAttributes != null && handledAttributes.Count != 0)
 			{
-				var memberContext = new MemberGenerationContext(type, memberAttributes);
+				var memberContext = new MemberGenerationContext(type, memberAttributes!);
 				context = memberContext;
 				Cache[hash] = memberContext;
 				memberContext.BasedOn = Get(type);
