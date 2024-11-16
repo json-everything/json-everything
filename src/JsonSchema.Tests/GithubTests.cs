@@ -1092,8 +1092,9 @@ public class GithubTests
 		Assert.That(result.Details, Has.Count.GreaterThan(0));
 	}
 
-	[JsonSchema(typeof(GithubTests), nameof(Model791Schema))]
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 	// ReSharper disable ClassNeverInstantiated.Local
+	[JsonSchema(typeof(GithubTests), nameof(Model791Schema))]
 	public class Model791
 	{
 		public string Foo { get; set; }
@@ -1108,6 +1109,7 @@ public class GithubTests
 		public DateTime Baz { get; set; }
 	}
 	// ReSharper restore ClassNeverInstantiated.Local
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 
 	public static readonly JsonSchema Model791Schema =
 		new JsonSchemaBuilder()

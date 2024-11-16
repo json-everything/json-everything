@@ -4,6 +4,10 @@ title: JsonLogic
 icon: fas fa-tag
 order: "09.11"
 ---
+# [5.3.0](https://github.com/gregsdennis/json-everything/pull/808) {#release-logic-5.3.0}
+
+[#807](https://github.com/gregsdennis/json-everything/issues/807) - Added `JsonLogic.Variable()` overload that takes a rule as a parameter instead of just a variable path string.
+
 # [5.2.1](https://github.com/gregsdennis/json-everything/pull/717) {#release-logic-5.2.1}
 
 Fixed an exception message.
