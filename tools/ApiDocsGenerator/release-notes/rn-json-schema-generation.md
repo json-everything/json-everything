@@ -4,7 +4,11 @@ title: JsonSchema.Net.Generation
 icon: fas fa-tag
 order: "09.05"
 ---
-# [2.3.0](https://github.com/gregsdennis/json-everything/pull/822) {#release-e-2.3.0}
+# [4.6.1](https://github.com/gregsdennis/json-everything/pull/817) {#release-schemagen-4.6.1}
+
+[#815](https://github.com/gregsdennis/json-everything/issues/816) - Added support for C# `required` keyword (.Net 7+).  The keyword will now generate a JSON Schema `required` keyword for the appropriate properties.  Thanks to [@epenelle-genetec](https://github.com/epenelle-genetec) for finding and suggesting the solution.
+
+# [4.6.0](https://github.com/gregsdennis/json-everything/pull/822) {#release-schemagen-4.6.0}
 
 Add .Net 9.0 support.
 
