@@ -28,11 +28,11 @@ public class NewSuiteRunner
 
 				content = await response.Content.ReadAsStringAsync();
 
-				await File.WriteAllTextAsync(testsPath, content);
+				File.WriteAllText(testsPath, content);
 			}
 			catch (Exception e)
 			{
-				content ??= await File.ReadAllTextAsync(testsPath);
+				content ??= File.ReadAllText(testsPath);
 
 				TestConsole.WriteLine(e);
 			}

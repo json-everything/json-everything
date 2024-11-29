@@ -13,7 +13,7 @@
 	<!-- Microsoft.CodeAnalysis.Analyzers is a downgrade reference to avoid
 		 an analyzer error present in v3.3.4+.
 		 See https://github.com/dotnet/roslyn-analyzers/issues/6395-->
-    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4">
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

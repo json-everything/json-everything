@@ -43,7 +43,7 @@ public class SerializerTests
 
 		protected bool Equals(Foo other)
 		{
-			var listEqual = ListOfInts.Zip(other.ListOfInts)
+			var listEqual = ListOfInts.Zip(other.ListOfInts, (x,y) => (First: x, Second: y))
 				.All(x => x.First == x.Second);
 			var joinedMap = MapOfStrings.Join(other.MapOfStrings,
 				x => x.Key,
@@ -72,7 +72,18 @@ public class SerializerTests
 
 		public override int GetHashCode()
 		{
-			return HashCode.Combine(StringProp, IntProp, DecimalProp, DoubleProp, BoolProp, ListOfInts, MapOfStrings, NestedObject);
+			unchecked
+			{
+				var hashCode = StringProp.GetHashCode();
+				hashCode = (hashCode * 397) ^ IntProp;
+				hashCode = (hashCode * 397) ^ DecimalProp.GetHashCode();
+				hashCode = (hashCode * 397) ^ DoubleProp.GetHashCode();
+				hashCode = (hashCode * 397) ^ BoolProp.GetHashCode();
+				hashCode = (hashCode * 397) ^ ListOfInts.GetHashCode();
+				hashCode = (hashCode * 397) ^ MapOfStrings.GetHashCode();
+				hashCode = (hashCode * 397) ^ NestedObject.GetHashCode();
+				return hashCode;
+			}
 		}
 	}
 
