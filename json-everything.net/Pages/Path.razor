@@ -132,10 +132,7 @@
 
 	private readonly PathOptionsModel _options = new();
 
-	private readonly List<LibraryVersion> _libraries = new()
-	{
-		LibraryVersion.GetFor<JsonPath>(),
-	};
+	private readonly List<LibraryVersion> _libraries = [LibraryVersion.GetFor<JsonPath>()];
 #pragma warning restore CS8618
 
 	private class InputModel

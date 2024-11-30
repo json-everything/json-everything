@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 #pragma warning disable IL2026
+#pragma warning disable IL2111
+#pragma warning disable IL2075
 
 namespace Json.Schema.Generation.DataAnnotations;
 

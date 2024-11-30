@@ -38,7 +38,7 @@
 
   <ItemGroup>
     <PackageReference Include="PolySharp" Version="1.15.0" PrivateAssets="all" />
-    <PackageReference Include="YamlDotNet" Version="15.1.4" />
+    <PackageReference Include="YamlDotNet" Version="16.2.0" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
   </ItemGroup>
 

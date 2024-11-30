@@ -5,12 +5,12 @@ namespace JsonEverythingNet.Services;
 public class DataManager
 {
 	private readonly ILocalStorageService _localStorage;
-	private readonly Dictionary<string, string> _cache;
+	private readonly Dictionary<string, string?> _cache;
 
 	public DataManager(ILocalStorageService localStorage)
 	{
 		_localStorage = localStorage;
-		_cache = new Dictionary<string, string>();
+		_cache = new Dictionary<string, string?>();
 	}
 
 	public async Task Set(string key, string value)

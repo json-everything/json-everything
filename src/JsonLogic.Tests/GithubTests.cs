@@ -255,4 +255,17 @@ public class GithubTests
 
 		Assert.That(actual, Is.EqualTo(72.727273m));
 	}
+
+	[Test]
+	public void Issue820_NotArrayWithMultipleValues()
+	{
+		var rule = JsonNode.Parse("{ \"!\": [{ \"var\": \"a\" }, false] }");
+		var data = new JsonObject();
+
+		var result = Apply(rule, data);
+
+		TestConsole.WriteLine(result.AsJsonString());
+
+		JsonAssert.IsTrue(result);
+	}
 }
