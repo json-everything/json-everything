@@ -5,12 +5,15 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Jobs;
 using Json.More;
 using Json.Schema;
 
 namespace Json.Benchmarks.SchemaSuite;
 
 [MemoryDiagnoser]
+[SimpleJob(RuntimeMoniker.Net80, baseline:true)]
+[SimpleJob(RuntimeMoniker.Net90)]
 public class TestSuiteRunner
 {
 	private const string _benchmarkOffset = @"../../../../../";
@@ -106,7 +109,9 @@ public class TestSuiteRunner
 
 	[Benchmark]
 	[Arguments(1)]
+	[Arguments(5)]
 	[Arguments(10)]
+	//[Arguments(50)]
 	public int StatusQuo(int n)
 	{
 		int i = 0;
