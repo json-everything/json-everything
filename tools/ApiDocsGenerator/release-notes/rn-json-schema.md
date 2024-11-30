@@ -4,6 +4,10 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "09.01"
 ---
+# [7.3.0](https://github.com/gregsdennis/json-everything/pull/822) {#release-schema-7.3.0}
+
+Add .Net 9.0 support.
+
 # [7.2.3](https://github.com/gregsdennis/json-everything/pull/792) {#release-schema-7.2.3}
 
 [#791](https://github.com/gregsdennis/json-everything/issues/791) - Fixes an issue with `ValidatingConverter` where options weren't being honored for explicitly mapped types.  Thanks to [@pian0](https://github.com/pian0) for reporting and creating replicating tests.

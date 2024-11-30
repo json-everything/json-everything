@@ -4,6 +4,10 @@ title: JsonPointer.Net
 icon: fas fa-tag
 order: "09.10"
 ---
+# [5.1.0](https://github.com/gregsdennis/json-everything/pull/822) {#release-e-5.1.0}
+
+Add .Net 9.0 support.
+
 # [5.0.2](https://github.com/gregsdennis/json-everything/pull/759) {#release-pointer-5.0.2}
 
 Fixed a problem with `.ToString()` where pointers constructed using `JsonPointer.Create()` would not properly escape segments.

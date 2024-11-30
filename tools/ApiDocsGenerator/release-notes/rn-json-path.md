@@ -4,6 +4,12 @@ title: JsonPath.Net
 icon: fas fa-tag
 order: "09.08"
 ---
+# [2.0.0](https://github.com/gregsdennis/json-everything/pull/822) {#release-path-2.0.0}
+
+- Add .Net 9.0 support.
+- Remove `JsonResult.Error` (obsolete)
+- [#821](https://github.com/gregsdennis/json-everything/issues/821) - Fix support for nodelist functions when used as an existence test.
+
 # [1.1.6](https://github.com/gregsdennis/json-everything/pull/797) {#release-path-1.1.6}
 
 [#797](https://github.com/gregsdennis/json-everything/pull/797) - ``.TryParse()`` does not respect `PathParsingOptions.AllowRelativeStart`.  Thanks to [@mikechristiansenvae](https://github.com/mikechristiansenvae) for reporting and fixing this.
