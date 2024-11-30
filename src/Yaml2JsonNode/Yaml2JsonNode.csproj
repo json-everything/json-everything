@@ -14,8 +14,8 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageId>Yaml2JsonNode</PackageId>
-    <Version>2.1.1</Version>
-    <FileVersion>2.1.1</FileVersion>
+    <Version>2.2.0</Version>
+    <FileVersion>2.2.0</FileVersion>
     <AssemblyVersion>2.0.0.0</AssemblyVersion>
     <Authors>Greg Dennis</Authors>
     <Description>Allows conversion of YamlDotNet's YAML models to JsonNodes</Description>

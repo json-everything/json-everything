@@ -15,8 +15,8 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <Version>2.2.0</Version>
-    <FileVersion>2.2.0</FileVersion>
+    <Version>2.4.0</Version>
+    <FileVersion>2.4.0</FileVersion>
     <AssemblyVersion>2.0.0.0</AssemblyVersion>
     <Authors>Greg Dennis</Authors>
     <Description>JSON-e built on the System.Text.Json namespace</Description>
