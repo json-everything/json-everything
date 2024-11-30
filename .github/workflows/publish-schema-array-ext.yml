@@ -22,7 +22,7 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 9.0.x
       # Publish
       - name: publish schema array ext
         id: publish_schema_array_ext
