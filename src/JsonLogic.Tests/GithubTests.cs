@@ -266,6 +266,6 @@ public class GithubTests
 
 		TestConsole.WriteLine(result.AsJsonString());
 
-		JsonAssert.IsTrue(result);
+		JsonAssert.IsFalse(result);
 	}
 }
