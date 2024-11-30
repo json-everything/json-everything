@@ -52,8 +52,8 @@ public class ExpressionTests
 	{
 		FunctionRepository.RegisterNodelistFunction<NoOpFunction>();
 
-		// should do the same thing as $[?@]
-		var path = JsonPath.Parse("$[?noop(@)]");
+		// should do the same thing as $[?@.*]
+		var path = JsonPath.Parse("$[?noop(@.*)]");
 		var data = JsonNode.Parse(
 			"""
 			[
@@ -70,9 +70,9 @@ public class ExpressionTests
 		var expected = JsonNode.Parse(
 			"""
 			[
-			{"foo": 9},
-			{"foo": 18, "bar": false},
-			["yes", "no", 0]
+			  {"foo": 9},
+			  {"foo": 18, "bar": false},
+			  ["yes", "no", 0]
 			]
 			""");
 
