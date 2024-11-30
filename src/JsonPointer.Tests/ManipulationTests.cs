@@ -12,7 +12,7 @@ public class ManipulationTests
 	{
 		var pointer = JsonPointer.Parse(original);
 
-#if NET6_0
+#if NET481
 		var actual = pointer.GetAncestor(levels);
 #else
 		var actual = pointer[..^levels];
@@ -29,7 +29,7 @@ public class ManipulationTests
 	{
 		var pointer = JsonPointer.Parse(original);
 
-#if NET6_0
+#if NET481
 		var actual = pointer.GetLocal(skip);
 #else
 		var actual = pointer[skip..];

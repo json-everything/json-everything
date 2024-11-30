@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
 using Json.More;
+#pragma warning disable IL2075
 
 namespace Json.Schema.Generation;
 

@@ -4,6 +4,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using Json.Path;
 using Json.Pointer;
+using TestHelpers;
 
 namespace Json.Schema.OpenApi.Tests;
 
@@ -53,15 +54,12 @@ public class OpenApiDoc : IBaseDocument
 
 		// Search the document for other places a schema might be hiding
 		var otherSchemaLocations = _schemasQuery.Evaluate(definition);
-		if (otherSchemaLocations.Matches != null)
+		foreach (var match in otherSchemaLocations.Matches)
 		{
-			foreach (var match in otherSchemaLocations.Matches)
-			{
-				var location = ConvertToPointer(match.Location!);
-				var schema = match.Value.Deserialize<JsonSchema>(TestEnvironment.SerializerOptions)!;
-				schema.BaseUri = BaseUri;
-				_lookup[location] = schema;
-			}
+			var location = ConvertToPointer(match.Location!);
+			var schema = match.Value.Deserialize<JsonSchema>(TestEnvironment.SerializerOptions)!;
+			schema.BaseUri = BaseUri;
+			_lookup[location] = schema;
 		}
 	}
 

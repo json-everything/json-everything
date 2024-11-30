@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text.Json.Serialization;
 using Json.Schema.Generation.Intents;
+#pragma warning disable IL2075
 
 namespace Json.Schema.Generation.Generators;
 

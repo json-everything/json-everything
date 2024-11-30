@@ -19,7 +19,11 @@ public class PatternTests
 			}
 			""";
 
+#if NET481
+		Assert.Throws<ArgumentException>(() => JsonSerializer.Deserialize(schemaText, TestSerializerContext.Default.JsonSchema));
+#else
 		Assert.Throws<RegexParseException>(() => JsonSerializer.Deserialize(schemaText, TestSerializerContext.Default.JsonSchema));
+#endif
 	}
 
 	[Test]
@@ -34,6 +38,11 @@ public class PatternTests
 			}
 			""";
 
+
+#if NET481
+		Assert.Throws<ArgumentException>(() => JsonSerializer.Deserialize(schemaText, TestSerializerContext.Default.JsonSchema));
+#else
 		Assert.Throws<RegexParseException>(() => JsonSerializer.Deserialize(schemaText, TestSerializerContext.Default.JsonSchema));
+#endif
 	}
 }

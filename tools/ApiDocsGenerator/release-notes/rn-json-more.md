@@ -4,6 +4,10 @@ title: Json.More.Net
 icon: fas fa-tag
 order: "09.13"
 ---
+# [2.1.0](https://github.com/gregsdennis/json-everything/pull/822) {#release-more-2.1.0}
+
+Add .Net 9.0 support.
+
 # [2.0.2](https://github.com/gregsdennis/json-everything/commit/782198a80220fc2e54dfe3e01c2e4da54ab4cad7) {#release-more-2.0.2}
 
 Updating _System.Text.Json_ to 8.0.4 due to a vulnerability.

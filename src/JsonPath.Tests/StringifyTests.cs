@@ -38,7 +38,7 @@ public class StringifyTests
 		if (originalResult.Matches.Count != newResult.Matches.Count)
 			Assert.Inconclusive("Stringified semantics do not match original string");
 
-		foreach (var (o, n) in originalResult.Matches.Zip(newResult.Matches))
+		foreach (var (o, n) in originalResult.Matches.Zip(newResult.Matches, (x, y) => (x, y)))
 		{
 			if (!o.Value.IsEquivalentTo(n.Value))
 				Assert.Inconclusive("Stringified semantics do not match original string");

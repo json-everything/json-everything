@@ -4,6 +4,10 @@ title: JsonE.Net
 icon: fas fa-tag
 order: "09.12"
 ---
+# [2.3.0](https://github.com/gregsdennis/json-everything/pull/822) {#release-e-2.3.0}
+
+Add .Net 9.0 support.
+
 # [2.2.0](https://github.com/gregsdennis/json-everything/pull/805) {#release-e-2.2.0}
 
 Adds the newly introduced `$reduce` operator and `range()` functions.

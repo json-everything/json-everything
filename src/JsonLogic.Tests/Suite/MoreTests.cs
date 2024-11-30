@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using System.Text.Json;
-using System.Threading.Tasks;
 using Json.More;
 using NUnit.Framework;
 using TestHelpers;
@@ -13,16 +12,13 @@ public class MoreTests
 {
 	public static IEnumerable<TestCaseData> Suite()
 	{
-		return Task.Run(async () =>
-		{
-			var testsPath = Path.Combine(TestContext.CurrentContext.WorkDirectory, "Files\\more-tests.json").AdjustForPlatform();
+		var testsPath = Path.Combine(TestContext.CurrentContext.WorkDirectory, "Files\\more-tests.json").AdjustForPlatform();
 
-			var content = await File.ReadAllTextAsync(testsPath);
+		var content = File.ReadAllText(testsPath);
 
-			var testSuite = JsonSerializer.Deserialize(content, TestSerializerContext.Default.TestSuite);
+		var testSuite = JsonSerializer.Deserialize(content, TestSerializerContext.Default.TestSuite);
 
-			return testSuite!.Tests.Select(t => new TestCaseData(t) { TestName = $"{t.Logic}  |  {t.Data.AsJsonString()}  |  {t.Expected.AsJsonString()}" });
-		}).Result;
+		return testSuite!.Tests.Select(t => new TestCaseData(t) { TestName = $"{t.Logic}  |  {t.Data.AsJsonString()}  |  {t.Expected.AsJsonString()}" });
 	}
 
 	[TestCaseSource(nameof(Suite))]

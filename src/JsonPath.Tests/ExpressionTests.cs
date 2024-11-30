@@ -31,7 +31,52 @@ public class ExpressionTests
 		var path = JsonPath.Parse(pathString, new PathParsingOptions { AllowMathOperations = true });
 		var expected = JsonNode.Parse(expectedString);
 
-		var actual = path.Evaluate(target).Matches!.Select(x => x.Value).ToJsonArray();
+		var actual = path.Evaluate(target).Matches.Select(x => x.Value).ToJsonArray();
+
+		JsonAssert.AreEquivalent(expected, actual);
+	}
+
+	public class NoOpFunction : NodelistFunctionDefinition
+	{
+		public override string Name => "noop";
+
+		public NodeList? Evaluate(NodeList? nodeList)
+		{
+			return nodeList;
+		}
+
+	}
+
+	[Test]
+	public void ExpressionWithNoOpFunctionWorks()
+	{
+		FunctionRepository.RegisterNodelistFunction<NoOpFunction>();
+
+		// should do the same thing as $[?@.*]
+		var path = JsonPath.Parse("$[?noop(@.*)]");
+		var data = JsonNode.Parse(
+			"""
+			[
+			  {"foo": 9},
+			  {"foo": 18, "bar": false},
+			  {},
+			  42,
+			  ["yes", "no", 0],
+			  true,
+			  null
+			]
+			""");
+
+		var expected = JsonNode.Parse(
+			"""
+			[
+			  {"foo": 9},
+			  {"foo": 18, "bar": false},
+			  ["yes", "no", 0]
+			]
+			""");
+
+		var actual = path.Evaluate(data).Matches.Select(x => x.Value).ToJsonArray();
 
 		JsonAssert.AreEquivalent(expected, actual);
 	}

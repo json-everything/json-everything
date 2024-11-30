@@ -9,10 +9,10 @@ namespace Json.Path.Expressions;
 
 internal class FunctionLogicalExpressionNode : LogicalExpressionNode
 {
-	public LogicalFunctionDefinition Function { get; }
+	public IPathFunctionDefinition Function { get; }
 	public ExpressionNode[] Parameters { get; }
 
-	public FunctionLogicalExpressionNode(LogicalFunctionDefinition function, IEnumerable<ExpressionNode> parameters)
+	public FunctionLogicalExpressionNode(IPathFunctionDefinition function, IEnumerable<ExpressionNode> parameters)
 	{
 		Function = function;
 		Parameters = parameters.ToArray();
@@ -30,7 +30,12 @@ internal class FunctionLogicalExpressionNode : LogicalExpressionNode
 			};
 		}).ToArray();
 
-		return Function.Invoke(parameterValues) == true;
+		return Function switch
+		{
+			NodelistFunctionDefinition nFunc => nFunc.Invoke(parameterValues)?.Count != 0,
+			LogicalFunctionDefinition lFunc => lFunc.Invoke(parameterValues) == true,
+			_ => throw new ArgumentException("This shouldn't happen.  Logical functions are not valid here.")
+		};
 	}
 
 	public override void BuildString(StringBuilder builder)
@@ -68,13 +73,13 @@ internal class FunctionLogicalExpressionParser : ILogicalExpressionParser
 			return false;
 		}
 
-		if (function is not LogicalFunctionDefinition logicalFunc)
+		if (function is ValueFunctionDefinition)
 		{
 			expression = null;
 			return false;
 		}
 
-		expression = new FunctionLogicalExpressionNode(logicalFunc, parameters);
+		expression = new FunctionLogicalExpressionNode(function, parameters);
 		index = i;
 		return true;
 	}

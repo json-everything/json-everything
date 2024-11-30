@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-  	<TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
+  	<TargetFrameworks>netstandard2.0;net8.0;net9.0</TargetFrameworks>
     <Configurations>Debug;Release;Localization</Configurations>
     <DefineConstants>$(DefineConstants)TRACE</DefineConstants>
     <LangVersion>latest</LangVersion>
@@ -17,8 +17,8 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageId>JsonSchema.Net</PackageId>
-    <Version>7.2.3</Version>
-    <FileVersion>7.2.3</FileVersion>
+    <Version>7.3.0</Version>
+    <FileVersion>7.3.0</FileVersion>
     <AssemblyVersion>7.0.0.0</AssemblyVersion>
     <Authors>Greg Dennis</Authors>
     <Description>JSON Schema built on the System.Text.Json namespace</Description>
@@ -39,7 +39,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="PolySharp" Version="1.14.1" PrivateAssets="all" />
+    <PackageReference Include="PolySharp" Version="1.15.0" PrivateAssets="all" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
   </ItemGroup>
 
