@@ -4,6 +4,10 @@ title: JsonPatch.Net
 icon: fas fa-tag
 order: "09.09"
 ---
+# [3.2.2](https://github.com/gregsdennis/json-everything/pull/827) {#release-patch-3.2.2}
+
+- [#825](https://github.com/gregsdennis/json-everything/issues/825) - Copy not working when `to` pointer ends with `-`.  (Cannot copy to end of array.)
+
 # [3.2.1](https://github.com/gregsdennis/json-everything/pull/827) {#release-patch-3.2.1}
 
 - [#825](https://github.com/gregsdennis/json-everything/issues/825) - Move not working when `to` pointer ends with `-`.  (Cannot move to end of array.)
