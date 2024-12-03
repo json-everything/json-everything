@@ -47,7 +47,7 @@ internal class CopyOperationHandler : IPatchOperationHandler
 					? i
 					: throw new ArgumentException("Expected integer");
 			if (0 < index || index < arrTarget.Count)
-				arrTarget[index] = data?.DeepClone();
+				arrTarget.Insert(index, data?.DeepClone());
 			else if (index == arrTarget.Count)
 				arrTarget.Add(data?.DeepClone());
 		}

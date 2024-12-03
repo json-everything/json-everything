@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
@@ -207,5 +208,59 @@ public class GithubTests
 		var patchResult = jsonPatch.Apply(target);
 
 		Assert.That(expected.IsEquivalentTo(patchResult.Result), Is.True);
+	}
+
+	[Test]
+	public void MoveShouldMoveItemAround()
+	{
+		var jsonModel = new JsonObject
+		{
+			["Items"] = new JsonArray(1, 2, 3, 4, 5)
+		};
+
+		var doc = new JsonPatch(
+			PatchOperation.Move(
+				JsonPointer.Parse("/Items/2"),
+				JsonPointer.Parse("/Items/-")));
+
+		var result = doc.Apply(jsonModel);
+
+		Assert.That(result.Error, Is.Null);
+		Assert.That(result.Result!["Items"]!.AsArray()[^1].IsEquivalentTo(3));
+	}
+
+	[Test]
+	public void CopyShouldCopyValuesToTarget()
+	{
+		var jsonModel = new JsonObject
+		{
+			["Items"] = new JsonArray(1, 2, 3, 4, 5)
+		};
+		var expected = new JsonObject
+		{
+			["Items"] = new JsonArray(3, 1, 2, 3, 4, 5)
+		};
+
+		var addDoc = new JsonPatch(
+			PatchOperation.Add(
+				JsonPointer.Parse("/Items/0"),
+				JsonNode.Parse("3")));
+
+		var addResult = addDoc.Apply(jsonModel);
+
+		Assert.That(addResult.Error, Is.Null);
+		Console.WriteLine(addResult.Result.AsJsonString());
+		Assert.That(addResult.Result.IsEquivalentTo(expected));
+
+		var copyDoc = new JsonPatch(
+			PatchOperation.Copy(
+				JsonPointer.Parse("/Items/2"),
+				JsonPointer.Parse("/Items/0")));
+
+		var copyResult = copyDoc.Apply(jsonModel);
+
+		Assert.That(copyResult.Error, Is.Null);
+		Console.WriteLine(copyResult.Result.AsJsonString());
+		Assert.That(copyResult.Result.IsEquivalentTo(expected));
 	}
 }

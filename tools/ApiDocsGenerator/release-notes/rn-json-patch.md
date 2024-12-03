@@ -4,6 +4,13 @@ title: JsonPatch.Net
 icon: fas fa-tag
 order: "09.09"
 ---
+# [3.2.1](https://github.com/gregsdennis/json-everything/pull/827) {#release-patch-3.2.1}
+
+- [#825](https://github.com/gregsdennis/json-everything/issues/825) - Move not working when `to` pointer ends with `-`.  (Cannot move to end of array.)
+- [#826](https://github.com/gregsdennis/json-everything/issues/826) - Copy should insert values, not overwrite them.
+
+Thanks to [@vimateck](https://github.com/vimateck) for reporting and identifying the sources for these issues.
+
 # [3.2.0](https://github.com/gregsdennis/json-everything/pull/822) {#release-patch-3.2.0}
 
 Add .Net 9.0 support.
