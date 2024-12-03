@@ -41,7 +41,7 @@ internal class CopyOperationHandler : IPatchOperationHandler
 
 		if (target is JsonArray arrTarget)
 		{
-			var index = lastPathSegment.Length == 0 && lastPathSegment[0] == '-'
+			var index = lastPathSegment.Length != 0 && lastPathSegment[0] == '-'
 				? arrTarget.Count
 				: int.TryParse(lastPathSegment, out var i)
 					? i
