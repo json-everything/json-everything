@@ -37,7 +37,7 @@ internal class MoveOperationHandler : IPatchOperationHandler
 			objSource.Remove(lastFromSegment);
 		else if (source is JsonArray arrSource)
 		{
-			var index = lastFromSegment.Length == 0 && lastFromSegment[0] == '-'
+			var index = lastFromSegment.Length != 0 && lastFromSegment[0] == '-'
 				? arrSource.Count
 				: int.TryParse(lastFromSegment, out var i)
 					? i
@@ -61,7 +61,7 @@ internal class MoveOperationHandler : IPatchOperationHandler
 		if (target is JsonArray arrTarget)
 		{
 			int index;
-			if (lastPathSegment.Length == 0 && lastPathSegment[0] == '-')
+			if (lastPathSegment.Length != 0 && lastPathSegment[0] == '-')
 				index = arrTarget.Count;
 			else if (!int.TryParse(lastPathSegment, out index))
 			{

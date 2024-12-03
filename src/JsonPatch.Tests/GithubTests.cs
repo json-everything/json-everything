@@ -208,4 +208,23 @@ public class GithubTests
 
 		Assert.That(expected.IsEquivalentTo(patchResult.Result), Is.True);
 	}
+
+	[Test]
+	public void MoveShouldMoveItemAround()
+	{
+		var jsonModel = new JsonObject
+		{
+			["Items"] = new JsonArray(1, 2, 3, 4, 5)
+		};
+
+		var doc = new JsonPatch(
+			PatchOperation.Move(
+				JsonPointer.Parse("/Items/2"),
+				JsonPointer.Parse("/Items/-")));
+
+		var result = doc.Apply(jsonModel);
+
+		Assert.That(result.Error, Is.Null);
+		Assert.That(result.Result!["Items"]!.AsArray()[^1].IsEquivalentTo(3));
+	}
 }
