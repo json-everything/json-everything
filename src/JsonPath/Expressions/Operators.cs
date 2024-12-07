@@ -18,13 +18,10 @@ internal static class Operators
 	public static readonly IBinaryComparativeOperator GreaterThanOrEqualTo = new GreaterThanOrEqualToOperator();
 	public static readonly IBinaryComparativeOperator In = new InOperator();
 
-	public static readonly IUnaryComparativeOperator Exists = new ExistsOperator();
-
 	public static readonly IBinaryLogicalOperator And = new AndOperator();
 	public static readonly IBinaryLogicalOperator Or = new OrOperator();
 
 	public static readonly IUnaryLogicalOperator Not = new NotOperator();
-	public static readonly IUnaryLogicalOperator NoOp = new NoOpOperator();
 }
 
 internal static class ValueOperatorParser
