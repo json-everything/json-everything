@@ -35,7 +35,7 @@ jobs:
       #     path: 'tools/ApiDocsGenerator/bin/Release/net6.0/**/*'
       - name: Generate docs
         run: |
-          mkdir -p doc-tool && cp -r tools/ApiDocsGenerator/bin/Release/net9.0/. doc-tool
+          mkdir -p doc-tool && cp -r tools/ApiDocsGenerator/bin/Release/net9.0/ doc-tool
           rm -rf ./json-everything-docs/_docs/api/*/
           cd ./doc-tool
           dotnet ApiDocsGenerator.dll "../json-everything-docs/_docs"
