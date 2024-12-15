@@ -53,7 +53,7 @@ public class ExpressionTests
 		FunctionRepository.RegisterNodelistFunction<NoOpFunction>();
 
 		// should do the same thing as $[?@.*]
-		var path = JsonPath.Parse("$[?noop(@.*)]");
+		var path = JsonPath.Parse("$[?noop(noop(@.*))]");
 		var data = JsonNode.Parse(
 			"""
 			[
