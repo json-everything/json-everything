@@ -108,13 +108,7 @@ internal static class FunctionExpressionParser
 				switch (expr)
 				{
 					case PathValueExpressionNode:
-						arguments.Add(expr);
-						break;
-					case FunctionValueExpressionNode { Function: not NodelistFunctionDefinition }:
-						arguments = null;
-						function = null;
-						return false;
-					case FunctionValueExpressionNode:
+					case FunctionValueExpressionNode { Function: NodelistFunctionDefinition }:
 						arguments.Add(expr);
 						break;
 					default:
