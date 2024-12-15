@@ -33,8 +33,8 @@ internal class ReplaceOperationHandler : IPatchOperationHandler
 		if (target is JsonArray arrTarget)
 		{
 			int index;
-			if (lastPathSegment.Length == 0 && lastPathSegment[0] == '-')
-				index = arrTarget.Count;
+			if (lastPathSegment.Length != 0 && lastPathSegment[0] == '-')
+				index = arrTarget.Count - 1;
 			else if (!int.TryParse(lastPathSegment, out index))
 			{
 				context.Message = $"Target path `{operation.Path}` could not be reached.";
@@ -42,8 +42,6 @@ internal class ReplaceOperationHandler : IPatchOperationHandler
 			}
 			if (0 <= index && index < arrTarget.Count)
 				arrTarget[index] = operation.Value?.DeepClone();
-			else if (index == arrTarget.Count)
-				arrTarget.Add(operation.Value?.DeepClone());
 			else
 				context.Message = "Path indicates an index greater than the bounds of the array";
 		}

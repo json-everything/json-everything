@@ -29,7 +29,7 @@ internal class RemoveOperationHandler : IPatchOperationHandler
 			objSource.Remove(lastPathSegment);
 		else if (source is JsonArray arrSource)
 		{
-			var index = lastPathSegment.Length == 0 && lastPathSegment[0] == '-'
+			var index = lastPathSegment.Length != 0 && lastPathSegment[0] == '-'
 				? arrSource.Count - 1
 				: int.TryParse(lastPathSegment, out var i)
 					? i

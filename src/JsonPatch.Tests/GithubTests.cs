@@ -211,7 +211,7 @@ public class GithubTests
 	}
 
 	[Test]
-	public void MoveShouldMoveItemAround()
+	public void Issue825_MoveShouldMoveItemToTheEndOfArray()
 	{
 		var jsonModel = new JsonObject
 		{
@@ -226,11 +226,77 @@ public class GithubTests
 		var result = doc.Apply(jsonModel);
 
 		Assert.That(result.Error, Is.Null);
-		Assert.That(result.Result!["Items"]!.AsArray()[^1].IsEquivalentTo(3));
+
+		var jsonArray = result.Result!["Items"]!.AsArray();
+		Assert.That(jsonArray, Has.Count.EqualTo(5));
+		Assert.That(jsonArray[^1].IsEquivalentTo(3));
 	}
 
 	[Test]
-	public void CopyShouldCopyValuesToTarget()
+	public void Issue825_CopyShouldCopyItemToEndOfArray()
+	{
+		var jsonModel = new JsonObject
+		{
+			["Items"] = new JsonArray(1, 2, 3, 4, 5)
+		};
+
+		var doc = new JsonPatch(
+			PatchOperation.Copy(
+				JsonPointer.Parse("/Items/2"),
+				JsonPointer.Parse("/Items/-")));
+
+		var result = doc.Apply(jsonModel);
+
+		Assert.That(result.Error, Is.Null);
+
+		var jsonArray = result.Result!["Items"]!.AsArray();
+		Assert.That(jsonArray, Has.Count.EqualTo(6));
+		Assert.That(jsonArray[^1].IsEquivalentTo(3));
+	}
+
+	[Test]
+	public void Issue825_RemoveShouldRemoveItemAtEndOfArray()
+	{
+		var jsonModel = new JsonObject
+		{
+			["Items"] = new JsonArray(1, 2, 3, 4, 5)
+		};
+
+		var doc = new JsonPatch(PatchOperation.Remove(JsonPointer.Parse("/Items/-")));
+
+		var result = doc.Apply(jsonModel);
+
+		Assert.That(result.Error, Is.Null);
+
+		var jsonArray = result.Result!["Items"]!.AsArray();
+		Assert.That(jsonArray, Has.Count.EqualTo(4));
+		Assert.That(jsonArray[^1].IsEquivalentTo(4));
+	}
+
+	[TestCase("/Items/-")]
+	[TestCase("/Items/4")]
+	public void Issue825_ReplaceShouldReplaceItemToEndOfArray(string path)
+	{
+		var jsonModel = new JsonObject
+		{
+			["Items"] = new JsonArray(1, 2, 3, 4, 5)
+		};
+
+		var doc = new JsonPatch(PatchOperation.Replace(
+			JsonPointer.Parse(path),
+			JsonNode.Parse("6")));
+
+		var result = doc.Apply(jsonModel);
+
+		Assert.That(result.Error, Is.Null);
+
+		var jsonArray = result.Result!["Items"]!.AsArray();
+		Assert.That(jsonArray, Has.Count.EqualTo(5));
+		Assert.That(jsonArray[^1].IsEquivalentTo(6));
+	}
+
+	[Test]
+	public void Issue826_CopyShouldCopyValuesToTarget()
 	{
 		var jsonModel = new JsonObject
 		{
