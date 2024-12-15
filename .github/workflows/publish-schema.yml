@@ -18,7 +18,7 @@ jobs:
     name: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - id: get-localized-nuspecs
         run: |
           NUSPEC_FILES=$(echo -n '[' ; ls src/JsonSchema/nuspec/JsonSchema.Net.*.nuspec --format=commas|sed -e 's/^/\"/'|sed -e 's/,$/\",/'|sed -e 's/\([^,]\)$/\1\"\]/'|sed -e 's/, /\",\"/g')
@@ -57,7 +57,7 @@ jobs:
     name: pack & publish core
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Download Artifacts
         uses: actions/download-artifact@v4
         with:
