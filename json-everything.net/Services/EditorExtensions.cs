@@ -23,7 +23,7 @@ public static class EditorExtensions
 	{
 		var text = (await editor.GetValue())?.Trim();
 
-		if (text is null || text[0] is '{' or '[' or '"' || TryParseJson(text))
+		if (string.IsNullOrEmpty(text) || text[0] is '{' or '[' or '"' || TryParseJson(text))
 		{
 			await editor.UpdateOptions(new EditorUpdateOptions { TabSize = 2 });
 			await editor.SetLanguageAsync("json", jsRuntime);
