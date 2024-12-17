@@ -44,7 +44,6 @@ public class ExpressionTests
 		{
 			return nodeList;
 		}
-
 	}
 
 	[Test]
@@ -54,6 +53,40 @@ public class ExpressionTests
 
 		// should do the same thing as $[?@.*]
 		var path = JsonPath.Parse("$[?noop(@.*)]");
+		var data = JsonNode.Parse(
+			"""
+			[
+			  {"foo": 9},
+			  {"foo": 18, "bar": false},
+			  {},
+			  42,
+			  ["yes", "no", 0],
+			  true,
+			  null
+			]
+			""");
+
+		var expected = JsonNode.Parse(
+			"""
+			[
+			  {"foo": 9},
+			  {"foo": 18, "bar": false},
+			  ["yes", "no", 0]
+			]
+			""");
+
+		var actual = path.Evaluate(data).Matches.Select(x => x.Value).ToJsonArray();
+
+		JsonAssert.AreEquivalent(expected, actual);
+	}
+
+	[Test]
+	public void ExpressionWithNestedNoOpFunctionWorks()
+	{
+		FunctionRepository.RegisterNodelistFunction<NoOpFunction>();
+
+		// should do the same thing as $[?@.*]
+		var path = JsonPath.Parse("$[?noop(noop(noop(@.*)))]");
 		var data = JsonNode.Parse(
 			"""
 			[
