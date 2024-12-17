@@ -74,14 +74,14 @@ internal class FunctionValueExpressionParser : IValueExpressionParser
 			return false;
 		}
 
-		if (function is not ValueFunctionDefinition valueFunction)
+		if (function is LogicalFunctionDefinition)
 		{
 			expression = null;
 			return false;
 		}
 
 		index = i;
-		expression = new FunctionValueExpressionNode(valueFunction, parameters);
+		expression = new FunctionValueExpressionNode(function, parameters);
 		return true;
 	}
 }
