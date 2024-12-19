@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package>
+  <metadata minClientVersion="2.12">
+    <id>JsonSchema.Net</id>
+    <version>0.0.1</version>
+    <authors>Greg Dennis</authors>
+    <license type="expression">MIT</license>
+    <icon>json-logo-256.png</icon>
+    <projectUrl>https://github.com/json-everything/json-everything</projectUrl>
+    <description>JSON Schema built on the System.Text.Json namespace.</description>
+    <releaseNotes>Release notes can be found at https://json-everything.net/json-schema</releaseNotes>
+    <readme>README.md</readme>
+    <tags>json-schema validation schema json</tags>
+    <repository type="git" url="https://github.com/json-everything/json-everything" />
+    <dependencies>
+      <dependency id="JsonPointer.Net" version="5.0.0" exclude="Build,Analyzers" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="..\JsonSchema.Net.dll" target="lib\netstandard2.0" />
+    <file src="..\JsonSchema.Net.xml" target="lib\netstandard2.0" />
+    <file src="..\JsonSchema.Net.pdb" target="lib\netstandard2.0" />
+    <file src="..\..\net8.0\JsonSchema.Net.dll" target="lib\net8.0" />
+    <file src="..\..\net8.0\JsonSchema.Net.xml" target="lib\net8.0" />
+    <file src="..\..\net8.0\JsonSchema.Net.pdb" target="lib\net8.0" />
+    <file src="..\json-logo-256.png" target="json-logo-256.png" />
+    <file src="..\README.md" target="\" />
+  </files>
+</package>
