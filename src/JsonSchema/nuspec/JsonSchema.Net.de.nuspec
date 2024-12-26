@@ -2,7 +2,7 @@
 <package>
   <metadata minClientVersion="2.12">
     <id>JsonSchema.Net</id>
-    <version>0.0.1</version>
+    <version>1.0.0</version>
     <authors>Greg Dennis</authors>
     <license type="expression">MIT</license>
     <icon>json-logo-256.png</icon>
@@ -17,13 +17,8 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="..\JsonSchema.Net.dll" target="lib\netstandard2.0" />
-    <file src="..\JsonSchema.Net.xml" target="lib\netstandard2.0" />
-    <file src="..\JsonSchema.Net.pdb" target="lib\netstandard2.0" />
-    <file src="..\..\net8.0\JsonSchema.Net.dll" target="lib\net8.0" />
-    <file src="..\..\net8.0\JsonSchema.Net.xml" target="lib\net8.0" />
-    <file src="..\..\net8.0\JsonSchema.Net.pdb" target="lib\net8.0" />
-    <file src="..\json-logo-256.png" target="json-logo-256.png" />
-    <file src="..\README.md" target="\" />
+    <file src="..\bin\Release\netstandard2.0\de\JsonSchema.Net.resources.dll" target="lib\netstandard2.0\de" />
+    <file src="..\bin\Release\netstandard2.0\json-logo-256.png" target="json-logo-256.png" />
+    <file src="README.de.md" target="\" />
   </files>
 </package>
