@@ -4,6 +4,10 @@ title: JsonPath.Net
 icon: fas fa-tag
 order: "09.08"
 ---
+# [2.0.1](https://github.com/gregsdennis/json-everything/pull/842) {#release-path-2.0.1}
+
+[#837](https://github.com/gregsdennis/json-everything/pull/837) - Support for nested nodelist functions.  Thanks to [@He-Pin](https://github.com/He-Pin) for reporting and fixing this.
+
 # [2.0.0](https://github.com/gregsdennis/json-everything/pull/822) {#release-path-2.0.0}
 
 - Add .Net 9.0 support.
@@ -12,11 +16,11 @@ order: "09.08"
 
 # [1.1.6](https://github.com/gregsdennis/json-everything/pull/797) {#release-path-1.1.6}
 
-[#797](https://github.com/gregsdennis/json-everything/pull/797) - ``.TryParse()`` does not respect `PathParsingOptions.AllowRelativeStart`.  Thanks to [@mikechristiansenvae](https://github.com/mikechristiansenvae) for reporting and fixing this.
+[#797](https://github.com/gregsdennis/json-everything/pull/797) - `.TryParse()` does not respect `PathParsingOptions.AllowRelativeStart`.  Thanks to [@mikechristiansenvae](https://github.com/mikechristiansenvae) for reporting and fixing this.
 
 # [1.1.5](https://github.com/gregsdennis/json-everything/pull/788) {#release-path-1.1.5}
 
-[#787](https://github.com/gregsdennis/json-everything/issues/787) - ``.TryParse()`` would throw when encountering a `.`-selector at the end of the string.  Thanks to [@Nexiimil](https://github.com/Nexiimil) for reporting this.
+[#787](https://github.com/gregsdennis/json-everything/issues/787) - `.TryParse()` would throw when encountering a `.`-selector at the end of the string.  Thanks to [@Nexiimil](https://github.com/Nexiimil) for reporting this.
 
 # [1.1.4](https://github.com/gregsdennis/json-everything/pull/775) {#release-path-1.1.4}
 
