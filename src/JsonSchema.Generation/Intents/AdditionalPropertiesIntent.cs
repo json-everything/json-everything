@@ -26,8 +26,8 @@ public class AdditionalPropertiesIntent : ISchemaKeywordIntent, IContextContaine
 	/// <param name="newContext">The new context.</param>
 	public void Replace(int hashCode, SchemaGenerationContextBase newContext)
 	{
-		if (Context.Hash == hashCode)
-			Context = newContext;
+		//if (Context.Hash == hashCode)
+		//	Context = newContext;
 	}
 
 	/// <summary>

@@ -29,11 +29,11 @@ public class PropertiesIntent : ISchemaKeywordIntent, IContextContainer
 	/// <param name="newContext">The new context.</param>
 	public void Replace(int hashCode, SchemaGenerationContextBase newContext)
 	{
-		foreach (var property in Properties.ToList())
-		{
-			if (property.Value.Hash == hashCode)
-				Properties[property.Key] = newContext;
-		}
+		//foreach (var property in Properties.ToList())
+		//{
+		//	if (property.Value.Hash == hashCode)
+		//		Properties[property.Key] = newContext;
+		//}
 	}
 
 	/// <summary>

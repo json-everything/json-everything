@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
@@ -13,9 +14,19 @@ namespace Json.Schema.Generation;
 [DebuggerDisplay("{DebuggerDisplay}")]
 public class TypeGenerationContext : SchemaGenerationContextBase
 {
+	private IComparer<MemberInfo>? _memberInfoComparer;
+
+	/// <summary>
+	/// The type.
+	/// </summary>
+	public override Type Type { get; }
+
+	internal IComparer<MemberInfo> DeclarationOrderComparer => _memberInfoComparer ??= GetComparer(Type);
+
 	internal TypeGenerationContext(Type type)
-		: base(type)
 	{
+		Type = type;
+		DebuggerDisplay = type.CSharpName();
 	}
 
 	internal override void GenerateIntents()
@@ -54,5 +65,14 @@ public class TypeGenerationContext : SchemaGenerationContextBase
 		{
 			refiner.Run(this);
 		}
+	}
+
+	private static IComparer<MemberInfo> GetComparer(Type type)
+	{
+		var comparerType = typeof(MemberInfoMetadataTokenComparer<>).MakeGenericType(type);
+		var property = comparerType.GetProperty("Instance", BindingFlags.Static | BindingFlags.Public);
+		var comparer = property!.GetValue(null);
+
+		return (IComparer<MemberInfo>)comparer!;
 	}
 }

@@ -28,26 +28,6 @@ public static class TypeExtensions
 		        typeof(IEnumerable).IsAssignableFrom(type));
 	}
 
-	internal static int GetAttributeSetHashCode(this IEnumerable<Attribute> items)
-	{
-		var eligible = items.Where(a => a is not JsonPropertyNameAttribute and not RequiredAttribute)
-			.OrderBy(x => x.GetType().AssemblyQualifiedName);
-		unchecked
-		{
-			var hashCode = 0;
-			foreach (var attribute in eligible)
-			{
-				var properties = attribute.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
-					.OrderBy(x => x.Name);
-				var propertyHash = properties.Aggregate(0, (c, p) => (c * 397) ^ (p.GetValue(attribute)?.GetHashCode() ?? 0));
-
-				hashCode = (hashCode * 397) ^ attribute.GetType().GetHashCode();
-				hashCode = (hashCode * 397) ^ propertyHash;
-			}
-			return hashCode;
-		}
-	}
-
 	internal static Type GetMemberType(this MemberInfo info) =>
 		info switch
 		{
@@ -72,6 +52,7 @@ public static class TypeExtensions
 			_ => throw new NotSupportedException($"Cannot get writability of {info.GetType()}")
 		};
 
+	// ReSharper disable once IdentifierTypo
 	private static readonly Dictionary<Type, string> _keywordedTypes =
 		new()
 		{
@@ -89,6 +70,8 @@ public static class TypeExtensions
 			[typeof(char)] = "char",
 			[typeof(bool)] = "bool",
 		};
+
+	internal static bool IsKnownType(this Type type) => _keywordedTypes.ContainsKey(type);
 
 	internal static string CSharpName(this Type type, StringBuilder? sb = null)
 	{

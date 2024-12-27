@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using Json.Schema.Generation.Intents;
-using Json.Schema.Generation.Refiners;
 
 namespace Json.Schema.Generation;
 
@@ -15,8 +11,6 @@ public abstract class SchemaGenerationContextBase
 	internal class TrueType;
 
 	internal class FalseType;
-
-	private IComparer<MemberInfo>? _memberInfoComparer;
 
 	/// <summary>
 	/// Represents a true schema.
@@ -30,7 +24,7 @@ public abstract class SchemaGenerationContextBase
 	/// <summary>
 	/// The type.
 	/// </summary>
-	public Type Type { get; }
+	public abstract Type Type { get; }
 
 	/// <summary>
 	/// The number of times this context has been referenced.
@@ -42,23 +36,7 @@ public abstract class SchemaGenerationContextBase
 	/// </summary>
 	public List<ISchemaKeywordIntent> Intents { get; } = [];
 
-	/// <summary>
-	/// A calculated hash value that represents and identifies this context.
-	/// </summary>
-	public int Hash { get; set; }
-
-	internal IComparer<MemberInfo> DeclarationOrderComparer => _memberInfoComparer ??= GetComparer(Type);
 	internal bool IsRoot { get; init; }
-
-	/// <summary>
-	/// Creates a new context.
-	/// </summary>
-	/// <param name="type">The type represented by the context.</param>
-	protected SchemaGenerationContextBase(Type type)
-	{
-		Type = type;
-		DebuggerDisplay = Type.CSharpName();
-	}
 
 #pragma warning disable CS8618
 	private protected SchemaGenerationContextBase()
@@ -90,15 +68,6 @@ public abstract class SchemaGenerationContextBase
 	}
 
 	internal abstract void GenerateIntents();
-
-	private static IComparer<MemberInfo> GetComparer(Type type)
-	{
-		var comparerType = typeof(MemberInfoMetadataTokenComparer<>).MakeGenericType(type);
-		var property = comparerType.GetProperty("Instance", BindingFlags.Static | BindingFlags.Public);
-		var comparer = property!.GetValue(null);
-
-		return (IComparer<MemberInfo>)comparer!;
-	}
 	
-	internal string DebuggerDisplay { get; set; }
+	internal string DebuggerDisplay { get; init; }
 }

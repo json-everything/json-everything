@@ -17,17 +17,19 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 
 	public void AddConstraints(SchemaGenerationContextBase context)
 	{
-		if (context.Type == typeof(object)) return;
+		if (context is not TypeGenerationContext typeContext) return;
 
-		context.Intents.Add(new TypeIntent(SchemaValueType.Object));
+		if (typeContext.Type == typeof(object)) return;
+
+		typeContext.Intents.Add(new TypeIntent(SchemaValueType.Object));
 
 		var props = new Dictionary<string, SchemaGenerationContextBase>();
 		var required = new List<string>();
-		var propertiesToGenerate = context.Type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
-		var fieldsToGenerate = context.Type.GetFields(BindingFlags.Public | BindingFlags.Instance);
-		var hiddenPropertiesToGenerate = context.Type.GetProperties(BindingFlags.NonPublic | BindingFlags.Instance)
+		var propertiesToGenerate = typeContext.Type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+		var fieldsToGenerate = typeContext.Type.GetFields(BindingFlags.Public | BindingFlags.Instance);
+		var hiddenPropertiesToGenerate = typeContext.Type.GetProperties(BindingFlags.NonPublic | BindingFlags.Instance)
 			.Where(p => p.GetCustomAttribute<JsonIncludeAttribute>() != null);
-		var hiddenFieldsToGenerate = context.Type.GetFields(BindingFlags.NonPublic | BindingFlags.Instance)
+		var hiddenFieldsToGenerate = typeContext.Type.GetFields(BindingFlags.NonPublic | BindingFlags.Instance)
 			.Where(p => p.GetCustomAttribute<JsonIncludeAttribute>() != null);
 		var membersToGenerate = propertiesToGenerate.Cast<MemberInfo>()
 			.Concat(fieldsToGenerate)
@@ -37,7 +39,7 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 
 		membersToGenerate = SchemaGeneratorConfiguration.Current.PropertyOrder switch
 		{
-			PropertyOrder.AsDeclared => [.. membersToGenerate.OrderBy(m => m, context.DeclarationOrderComparer)],
+			PropertyOrder.AsDeclared => [.. membersToGenerate.OrderBy(m => m, typeContext.DeclarationOrderComparer)],
 			PropertyOrder.ByName => [.. membersToGenerate.OrderBy(m => m.Name)],
 			_ => membersToGenerate
 		};
@@ -76,8 +78,8 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 			if (member.IsWriteOnly() && !unconditionalAttributes.OfType<WriteOnlyAttribute>().Any())
 				unconditionalAttributes.Add(new WriteOnlyAttribute(true));
 
-			var typeContext = SchemaGenerationContextCache.Get(member.GetMemberType());
-			var memberContext = new MemberGenerationContext(typeContext.Type, unconditionalAttributes);
+			var memberTypeContext = SchemaGenerationContextCache.Get(member.GetMemberType());
+			var memberContext = new MemberGenerationContext(memberTypeContext, unconditionalAttributes);
 
 			var name = SchemaGeneratorConfiguration.Current.PropertyNameResolver!(member);
 			var nameAttribute = unconditionalAttributes.OfType<JsonPropertyNameAttribute>().FirstOrDefault();

@@ -29,7 +29,7 @@ internal class ArraySchemaGenerator : ISchemaGenerator
 				?.GetGenericArguments().First();
 
 		if (itemType == null) return;
-		var itemContext = SchemaGenerationContextCache.Get(itemType);
+		SchemaGenerationContextBase itemContext = SchemaGenerationContextCache.Get(itemType);
 		if (context is MemberGenerationContext memberContext && memberContext.Attributes.Count != 0)
 		{
 			itemContext = new MemberGenerationContext(itemContext, memberContext.Attributes);

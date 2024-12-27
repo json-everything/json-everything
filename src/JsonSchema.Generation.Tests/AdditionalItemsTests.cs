@@ -56,7 +56,7 @@ public class AdditionalItemsTests
 		AssertEqual(expected, actual);
 	}
 
-	private class PropClass : List<int>
+	private class IntList : List<int>
 	{
 		public string Bar { get; set; }
 	}
@@ -64,7 +64,7 @@ public class AdditionalItemsTests
 	private class AdditionalItemsOnProp
 	{
 		[AdditionalItems(false)]
-		public PropClass Foo { get; set; }
+		public IntList Foo { get; set; }
 	}
 
 	[Test]

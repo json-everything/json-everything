@@ -40,19 +40,19 @@ public static class SchemaGenerationContextOptimizer
 			{
 				foreach (var intent in context.Intents.OfType<IContextContainer>())
 				{
-					intent.Replace(def.Hash, refContext);
+					//intent.Replace(def.Hash, refContext);
 				}
 
 				if (ReferenceEquals(def, context)) continue;
 
-				if (context is MemberGenerationContext memberContext)
-				{
-					if (def.Hash == memberContext.Hash)
-					{
-						context.Intents.Clear();
-						context.Intents.Add(refIntent);
-					}
-				}
+				//if (context is MemberGenerationContext memberContext)
+				//{
+				//	if (def.Hash == memberContext.Hash)
+				//	{
+				//		context.Intents.Clear();
+				//		context.Intents.Add(refIntent);
+				//	}
+				//}
 			}
 			if (ReferenceEquals(def, root)) continue;
 			defs[name] = def;

@@ -24,11 +24,13 @@ internal class NullabilityRefiner : ISchemaRefiner
 		var nullableAttribute = attributes.OfType<NullableAttribute>().FirstOrDefault();
 		var nullabilityOverride = nullableAttribute?.IsNullable;
 
+		var typeIsNullableValueType = context.Type.IsNullableValueType();
+
 		if (nullabilityOverride.HasValue)
 		{
 			if (nullabilityOverride.Value)
 			{
-				if (context.Type.IsNullableValueType())
+				if (typeIsNullableValueType)
 					ReplaceTypeWithNullableIntent(context, typeIntent);
 				else
 					typeIntent.Type |= SchemaValueType.Null;
@@ -39,7 +41,7 @@ internal class NullabilityRefiner : ISchemaRefiner
 		}
 
 		if (SchemaGeneratorConfiguration.Current.Nullability.HasFlag(Nullability.AllowForNullableValueTypes) &&
-		    context.Type.IsNullableValueType()) 
+		    typeIsNullableValueType) 
 			ReplaceTypeWithNullableIntent(context, typeIntent);
 
 		if (SchemaGeneratorConfiguration.Current.Nullability.HasFlag(Nullability.AllowForReferenceTypes) &&
