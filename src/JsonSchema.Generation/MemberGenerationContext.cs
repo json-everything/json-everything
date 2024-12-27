@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Json.Schema.Generation.Refiners;
+using Json.Schema.Generation.Intents;
 
 namespace Json.Schema.Generation;
 
@@ -14,7 +16,7 @@ public class MemberGenerationContext : SchemaGenerationContextBase
 	/// <summary>
 	/// Gets the context this is based on.
 	/// </summary>
-	public SchemaGenerationContextBase BasedOn { get; internal set; }
+	public SchemaGenerationContextBase BasedOn { get; }
 
 	/// <summary>
 	/// Gets the set of member attributes.
@@ -31,6 +33,8 @@ public class MemberGenerationContext : SchemaGenerationContextBase
 			BasedOn.ReferenceCount--;
 
 		DebuggerDisplay = Type.CSharpName() + $"[{string.Join(",", attributes.Select(x => x.GetType().CSharpName().Replace("Attribute", string.Empty)))}]";
+
+		GenerateIntents();
 	}
 
 #pragma warning disable CS8618
@@ -40,6 +44,32 @@ public class MemberGenerationContext : SchemaGenerationContextBase
 		Attributes = attributes;
 
 		DebuggerDisplay = Type.CSharpName() + $"[{string.Join(",", attributes.Select(x => x.GetType().CSharpName().Replace("Attribute", string.Empty)))}]";
+
+		GenerateIntents();
 	}
 #pragma warning restore CS8618
+
+	internal override void GenerateIntents()
+	{
+		if (ReferenceEquals(this, True) || ReferenceEquals(this, False)) return;
+
+		var configuration = SchemaGeneratorConfiguration.Current;
+
+		var runGenerator = true;
+
+		if (runGenerator)
+		{
+			var generator = configuration.Generators.FirstOrDefault(x => x.Handles(Type)) ?? GeneratorRegistry.Get(Type);
+			generator?.AddConstraints(this);
+		}
+
+		AttributeHandler.HandleAttributes(this);
+
+		var refiners = configuration.Refiners.ToList();
+		refiners.Add(NullabilityRefiner.Instance);
+		foreach (var refiner in refiners.Where(x => x.ShouldRun(this)))
+		{
+			refiner.Run(this);
+		}
+	}
 }

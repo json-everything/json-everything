@@ -76,7 +76,8 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 			if (member.IsWriteOnly() && !unconditionalAttributes.OfType<WriteOnlyAttribute>().Any())
 				unconditionalAttributes.Add(new WriteOnlyAttribute(true));
 
-			var memberContext = SchemaGenerationContextCache.Get(member.GetMemberType(), unconditionalAttributes);
+			var typeContext = SchemaGenerationContextCache.Get(member.GetMemberType());
+			var memberContext = new MemberGenerationContext(typeContext.Type, unconditionalAttributes);
 
 			var name = SchemaGeneratorConfiguration.Current.PropertyNameResolver!(member);
 			var nameAttribute = unconditionalAttributes.OfType<JsonPropertyNameAttribute>().FirstOrDefault();
@@ -85,8 +86,6 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 
 			if (unconditionalAttributes.OfType<ObsoleteAttribute>().Any())
 			{
-				if (memberContext is TypeGenerationContext)
-					memberContext = new MemberGenerationContext(memberContext, []);
 				memberContext.Intents.Add(new DeprecatedIntent(true));
 			}
 
@@ -254,11 +253,10 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 				required.Add(name);
 		}
 
-		var ifIntent = new IfIntent(new ISchemaKeywordIntent[]
-		{
+		var ifIntent = new IfIntent([
 			new PropertiesIntent(properties),
 			new RequiredIntent(required)
-		});
+		]);
 
 		return ifIntent;
 	}
