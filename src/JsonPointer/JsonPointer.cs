@@ -205,6 +205,9 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 	/// <remarks>This method creates un-encoded pointers only.</remarks>
 	public static JsonPointer Create(params PointerSegment[] segments)
 	{
+#if NET9_0_OR_GREATER
+		return Create(segments.AsSpan());
+#else
 		var array = new string[segments.Length];
 
 		for (var i = 0; i < segments.Length; i++)
@@ -213,7 +216,30 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 		}
 
 		return new JsonPointer(array);
+#endif
 	}
+
+#if NET9_0_OR_GREATER
+
+	/// <summary>
+	/// Creates a new JSON Pointer from a collection of segments.
+	/// </summary>
+	/// <param name="segments">A collection of segments.</param>
+	/// <returns>The JSON Pointer.</returns>
+	/// <remarks>This method creates un-encoded pointers only.</remarks>
+	public static JsonPointer Create(params ReadOnlySpan<PointerSegment> segments)
+	{
+		var array = new string[segments.Length];
+		
+		for (var i = 0; i < segments.Length; i++)
+		{
+			array[i] = segments[i].Value;
+		}
+
+		return new JsonPointer(array);
+	}
+
+#endif
 
 	/// <summary>
 	/// Generates a JSON Pointer from a lambda expression.
@@ -295,7 +321,11 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 
 		i++;
 
+#if NET9_0_OR_GREATER
+		return Create(segments[i..]);
+#else
 		return Create(segments[i..].ToArray());
+#endif
 	}
 
 	/// <summary>
