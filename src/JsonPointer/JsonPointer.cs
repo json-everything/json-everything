@@ -352,6 +352,33 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 	/// <returns>A new pointer.</returns>
 	public JsonPointer Combine(params PointerSegment[] additionalSegments)
 	{
+#if NET9_0_OR_GREATER
+		return Combine(additionalSegments.AsSpan());
+#else
+		if (additionalSegments.Length == 0) return this;
+		if (_decodedSegments.Length == 0) return Create(additionalSegments);
+
+		var array = new string[_decodedSegments.Length + additionalSegments.Length];
+		Array.Copy(_decodedSegments, array, _decodedSegments.Length);
+
+		for (int i = 0; i < additionalSegments.Length; i++)
+		{
+			array[_decodedSegments.Length + i] = additionalSegments[i].Value;
+		}
+
+		return new JsonPointer(array);
+#endif
+	}
+
+#if NET9_0_OR_GREATER
+
+	/// <summary>
+	/// Concatenates additional segments onto the current pointer.
+	/// </summary>
+	/// <param name="additionalSegments">The additional segments.</param>
+	/// <returns>A new pointer.</returns>
+	public JsonPointer Combine(params ReadOnlySpan<PointerSegment> additionalSegments)
+	{
 		if (additionalSegments.Length == 0) return this;
 		if (_decodedSegments.Length == 0) return Create(additionalSegments);
 
@@ -365,6 +392,8 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 
 		return new JsonPointer(array);
 	}
+
+#endif
 
 	/// <summary>
 	/// Creates a new pointer retaining the starting segments.
