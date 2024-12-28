@@ -4,6 +4,10 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "09.01"
 ---
+# [7.3.1](https://github.com/gregsdennis/json-everything/pull/822) {#release-schema-7.3.1}
+
+[#844](https://github.com/gregsdennis/json-everything/issues/844) - Nuspec for this library is manually mananged and gets left behind if a listed dependency is updated.  Added a test to prevent this from happening again.  Updates the dependency on _JsonPointer.Net_ to current latest (v5.1.0).
+
 # [7.3.0](https://github.com/gregsdennis/json-everything/pull/822) {#release-schema-7.3.0}
 
 Add .Net 9.0 support.
