@@ -64,6 +64,40 @@ public class NullabilityTests
 		public int Property { get; set; }
 	}
 
+	public class NullableEnumMember
+	{
+		public DayOfWeek? Property { get; set; }
+	}
+
+	public class NullableEnumMemberWithNull
+	{
+		[Nullable(true)]
+		public DayOfWeek? Property { get; set; }
+	}
+
+	public class NullableEnumMemberWithNotNull
+	{
+		[Nullable(false)]
+		public DayOfWeek? Property { get; set; }
+	}
+
+	public class EnumMember
+	{
+		public DayOfWeek Property { get; set; }
+	}
+
+	public class EnumMemberWithNull
+	{
+		[Nullable(true)]
+		public DayOfWeek Property { get; set; }
+	}
+
+	public class EnumMemberWithNotNull
+	{
+		[Nullable(false)]
+		public DayOfWeek Property { get; set; }
+	}
+
 	private static readonly Nullability Disabled = Nullability.Disabled;
 	private static readonly Nullability AllowForReferenceTypes = Nullability.AllowForReferenceTypes;
 	private static readonly Nullability AllowForNullableValueTypes = Nullability.AllowForNullableValueTypes;
@@ -145,6 +179,55 @@ public class NullabilityTests
 		AssertEqual(expected, actual);
 	}
 
+	public static IEnumerable<TestCaseData> EnumMemberCases
+	{
+		get
+		{
+			yield return new TestCaseData(Disabled, typeof(EnumMember), false);
+			yield return new TestCaseData(Disabled, typeof(EnumMemberWithNull), true);
+			yield return new TestCaseData(Disabled, typeof(EnumMemberWithNotNull), false);
+			yield return new TestCaseData(AllowForNullableValueTypes, typeof(EnumMember), false);
+			yield return new TestCaseData(AllowForNullableValueTypes, typeof(EnumMemberWithNull), true);
+			yield return new TestCaseData(AllowForNullableValueTypes, typeof(EnumMemberWithNotNull), false);
+			yield return new TestCaseData(AllowForAllTypes, typeof(EnumMember), false);
+			yield return new TestCaseData(AllowForAllTypes, typeof(EnumMemberWithNull), true);
+			yield return new TestCaseData(AllowForAllTypes, typeof(EnumMemberWithNotNull), false);
+			yield return new TestCaseData(AllowForReferenceTypes, typeof(EnumMember), false);
+			yield return new TestCaseData(AllowForReferenceTypes, typeof(EnumMemberWithNull), true);
+			yield return new TestCaseData(AllowForReferenceTypes, typeof(EnumMemberWithNotNull), false);
+		}
+	}
+
+	[TestCaseSource(nameof(EnumMemberCases))]
+	public void EnumMemberNullability(Nullability nullability, Type type, bool containsNull)
+	{
+		var config = new SchemaGeneratorConfiguration
+		{
+			Nullability = nullability
+		};
+
+		var values = Enum.GetNames(typeof(DayOfWeek)).ToList();
+		if (containsNull)
+			values.Add(null!);
+		// Nullability affects root schema so only PropertiesKeywords are compared
+		var expected = new JsonSchemaBuilder()
+			.Properties(
+				(nameof(ReferenceMember.Property), new JsonSchemaBuilder().Enum(values)))
+			.Build()
+			.Keywords!
+			.OfType<PropertiesKeyword>()
+			.First();
+
+		var actual = new JsonSchemaBuilder()
+			.FromType(type, config)
+			.Build()
+			.Keywords!
+			.OfType<PropertiesKeyword>()
+			.First();
+
+		AssertEqual(expected, actual);
+	}
+
 	public static IEnumerable<TestCaseData> TypeCases
 	{
 		get
@@ -163,7 +246,6 @@ public class NullabilityTests
 			yield return new TestCaseData(AllowForNullableValueTypes, typeof(int), Integer);
 			yield return new TestCaseData(AllowForAllTypes, typeof(int), Integer);
 			yield return new TestCaseData(AllowForReferenceTypes, typeof(int), Integer);
-
 		}
 	}
 
@@ -177,6 +259,45 @@ public class NullabilityTests
 
 		var expected = new JsonSchemaBuilder()
 			.Type(valueType)
+			.Build();
+
+		var actual = new JsonSchemaBuilder()
+			.FromType(type, config)
+			.Build();
+
+		AssertEqual(expected, actual);
+	}
+
+	public static IEnumerable<TestCaseData> EnumTypeCases
+	{
+		get
+		{
+			yield return new TestCaseData(Disabled, typeof(DayOfWeek?), false);
+			yield return new TestCaseData(AllowForNullableValueTypes, typeof(DayOfWeek?), true);
+			yield return new TestCaseData(AllowForAllTypes, typeof(DayOfWeek?), true);
+			yield return new TestCaseData(AllowForReferenceTypes, typeof(DayOfWeek?), false);
+
+			yield return new TestCaseData(Disabled, typeof(DayOfWeek), false);
+			yield return new TestCaseData(AllowForNullableValueTypes, typeof(DayOfWeek), false);
+			yield return new TestCaseData(AllowForAllTypes, typeof(DayOfWeek), false);
+			yield return new TestCaseData(AllowForReferenceTypes, typeof(DayOfWeek), false);
+		}
+	}
+
+	[TestCaseSource(nameof(EnumTypeCases))]
+	public void EnumTypeNullability(Nullability nullability, Type type, bool containsNull)
+	{
+		var config = new SchemaGeneratorConfiguration
+		{
+			Nullability = nullability
+		};
+
+		var values = Enum.GetNames(typeof(DayOfWeek)).ToList();
+		if (containsNull)
+			values.Add(null!);
+
+		var expected = new JsonSchemaBuilder()
+			.Enum(values)
 			.Build();
 
 		var actual = new JsonSchemaBuilder()
@@ -263,6 +384,63 @@ public class NullabilityTests
 				Nullability = AllowForNullableValueTypes,
 				Optimize = false
 			})
+			.Build();
+
+		AssertEqual(expected, actual);
+	}
+
+	private class NullableDateTime
+	{
+		[Nullable(true)]
+		public DateTime? Property { get; set; }
+	}
+
+	[Test]
+	public void NullableStruct()
+	{
+		var expected = new JsonSchemaBuilder()
+			.AnyOf(
+				new JsonSchemaBuilder().Ref("#/$defs/dateTime"),
+				new JsonSchemaBuilder().Type(SchemaValueType.Null)
+			)
+			.Definitions(
+				("dateTime", new JsonSchemaBuilder()
+					.Type(SchemaValueType.String)
+					.Format(Formats.DateTime)
+				));
+
+		var actual = new JsonSchemaBuilder()
+			.FromType<NullableDateTime>()
+			.Build();
+
+		AssertEqual(expected, actual);
+	}
+
+	private class NullableDateTimeWithDescription
+	{
+		[Nullable(true)]
+		[Description("description")]
+		public DateTime? Property { get; set; }
+	}
+
+	[Test]
+	public void NullableStructWithAnotherAttribute()
+	{
+		var expected = new JsonSchemaBuilder()
+			.AnyOf(
+				new JsonSchemaBuilder()
+					.Ref("#/$defs/dateTime")
+					.Description("description"),
+				new JsonSchemaBuilder().Type(SchemaValueType.Null)
+			)
+			.Definitions(
+				("dateTime", new JsonSchemaBuilder()
+					.Type(SchemaValueType.String)
+					.Format(Formats.DateTime)
+				));
+
+		var actual = new JsonSchemaBuilder()
+			.FromType<NullableDateTimeWithDescription>()
 			.Build();
 
 		AssertEqual(expected, actual);
