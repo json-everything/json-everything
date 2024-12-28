@@ -19,7 +19,7 @@ namespace Json.Schema;
 /// Many messages support tokens in the format `[[foo]]`.
 /// Each message will specify the tokens it supports.
 /// </remarks>
-public static partial class ErrorMessages
+internal static partial class ErrorMessages
 {
     private static readonly ResourceManager _resourceManager = new("Json.Schema.Localization.Resources", typeof(ErrorMessages).Assembly);
 
