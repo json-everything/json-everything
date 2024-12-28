@@ -848,7 +848,7 @@ public sealed class SchemaJsonConverter : WeaklyTypedJsonConverter<JsonSchema>
 	}
 }
 
-public static partial class ErrorMessages
+partial class ErrorMessages
 {
 	private static string? _falseSchema;
 

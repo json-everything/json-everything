@@ -110,7 +110,7 @@ public sealed class MinLengthKeywordJsonConverter : WeaklyTypedJsonConverter<Min
 	}
 }
 
-public static partial class ErrorMessages
+partial class ErrorMessages
 {
 	/// <summary>
 	/// Gets or sets the error message for <see cref="MinLengthKeyword"/>.

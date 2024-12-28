@@ -94,7 +94,7 @@ public sealed class ConstKeywordJsonConverter : WeaklyTypedJsonConverter<ConstKe
 	}
 }
 
-public static partial class ErrorMessages
+partial class ErrorMessages
 {
 	/// <summary>
 	/// Gets or sets the error message for <see cref="ConstKeyword"/>.

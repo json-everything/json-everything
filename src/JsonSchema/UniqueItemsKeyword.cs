@@ -115,7 +115,7 @@ public sealed class UniqueItemsKeywordJsonConverter : WeaklyTypedJsonConverter<U
 	}
 }
 
-public static partial class ErrorMessages
+partial class ErrorMessages
 {
 	/// <summary>
 	/// Gets or sets the error message for <see cref="UniqueItemsKeyword"/>.

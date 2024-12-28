@@ -112,7 +112,7 @@ public sealed class SchemaKeywordJsonConverter : WeaklyTypedJsonConverter<Schema
 	}
 }
 
-public static partial class ErrorMessages
+partial class ErrorMessages
 {
 	/// <summary>
 	/// Gets or sets the error message for when the schema cannot be validated

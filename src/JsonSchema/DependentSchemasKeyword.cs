@@ -129,7 +129,7 @@ public sealed class DependentSchemasKeywordJsonConverter : WeaklyTypedJsonConver
 	}
 }
 
-public static partial class ErrorMessages
+partial class ErrorMessages
 {
 	/// <summary>
 	/// Gets or sets the error message for <see cref="DependentSchemasKeyword"/>.

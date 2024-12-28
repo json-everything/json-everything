@@ -124,7 +124,7 @@ public sealed class TypeKeywordJsonConverter : WeaklyTypedJsonConverter<TypeKeyw
 	}
 }
 
-public static partial class ErrorMessages
+partial class ErrorMessages
 {
 	/// <summary>
 	/// Gets or sets the error message for <see cref="TypeKeyword"/>.

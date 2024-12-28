@@ -130,7 +130,7 @@ public sealed class VocabularyKeywordJsonConverter : WeaklyTypedJsonConverter<Vo
 	}
 }
 
-public static partial class ErrorMessages
+partial class ErrorMessages
 {
 	/// <summary>
 	/// Gets or sets the error message for when a vocabulary is unknown but required.
