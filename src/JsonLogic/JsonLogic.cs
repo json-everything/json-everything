@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Text.Json.Nodes;
 using Json.Logic.Rules;
 using Json.More;
@@ -52,6 +53,17 @@ public static class JsonLogic
 	/// <param name="more">Subsequent rules.</param>
 	/// <returns>An `and` rule.</returns>
 	public static Rule And(Rule a, params Rule[] more) => new AndRule(a, more);
+
+#if NET9_0_OR_GREATER
+	/// <summary>
+	/// Creates an `and` rule.
+	/// </summary>
+	/// <param name="a">The first rule.</param>
+	/// <param name="more">Subsequent rules.</param>
+	/// <returns>An `and` rule.</returns>
+	public static Rule And(Rule a, params ReadOnlySpan<Rule> more) => new AndRule(a, more);
+#endif
+
 	/// <summary>
 	/// Creates an `or` rule.
 	/// </summary>
@@ -59,12 +71,24 @@ public static class JsonLogic
 	/// <param name="more">Subsequent rules.</param>
 	/// <returns>An `or` rule.</returns>
 	public static Rule Or(Rule a, params Rule[] more) => new OrRule(a, more);
+
+#if NET9_0_OR_GREATER
+	/// <summary>
+	/// Creates an `or` rule.
+	/// </summary>
+	/// <param name="a">The first rule.</param>
+	/// <param name="more">Subsequent rules.</param>
+	/// <returns>An `or` rule.</returns>
+	public static Rule Or(Rule a, params ReadOnlySpan<Rule> more) => new OrRule(a, more);
+#endif
+
 	/// <summary>
 	/// Creates a `!` ("not") rule.
 	/// </summary>
 	/// <param name="value">The rule to negate.</param>
 	/// <returns>A `!` rule.</returns>
 	public static Rule Not(Rule value) => new NotRule(value);
+	
 	/// <summary>
 	/// Creates a `!!` ("boolean cast") rule.
 	/// </summary>
@@ -86,6 +110,17 @@ public static class JsonLogic
 	/// <param name="more">Subsequent rules.</param>
 	/// <returns>A `+` rule.</returns>
 	public static Rule Add(Rule a, params Rule[] more) => new AddRule(a, more);
+
+#if NET9_0_OR_GREATER
+	/// <summary>
+	/// Creates a `+` ("add") rule.
+	/// </summary>
+	/// <param name="a">The first rule.</param>
+	/// <param name="more">Subsequent rules.</param>
+	/// <returns>A `+` rule.</returns>
+	public static Rule Add(Rule a, params ReadOnlySpan<Rule> more) => new AddRule(a, more);
+#endif
+
 	/// <summary>
 	/// Creates a `-` ("subtract") rule.
 	/// </summary>
@@ -93,6 +128,17 @@ public static class JsonLogic
 	/// <param name="more">Subsequent rules.</param>
 	/// <returns>A `-` rule.</returns>
 	public static Rule Subtract(Rule a, params Rule[] more) => new SubtractRule(a, more);
+
+#if NET9_0_OR_GREATER
+	/// <summary>
+	/// Creates a `-` ("subtract") rule.
+	/// </summary>
+	/// <param name="a">The first rule.</param>
+	/// <param name="more">Subsequent rules.</param>
+	/// <returns>A `-` rule.</returns>
+	public static Rule Subtract(Rule a, params ReadOnlySpan<Rule> more) => new SubtractRule(a, more);
+#endif
+
 	/// <summary>
 	/// Creates a `*` ("multiply") rule.
 	/// </summary>
@@ -100,6 +146,17 @@ public static class JsonLogic
 	/// <param name="more">Subsequent rules.</param>
 	/// <returns>A `*` rule.</returns>
 	public static Rule Multiply(Rule a, params Rule[] more) => new MultiplyRule(a, more);
+
+#if NET9_0_OR_GREATER
+	/// <summary>
+	/// Creates a `*` ("multiply") rule.
+	/// </summary>
+	/// <param name="a">The first rule.</param>
+	/// <param name="more">Subsequent rules.</param>
+	/// <returns>A `*` rule.</returns>
+	public static Rule Multiply(Rule a, params ReadOnlySpan<Rule> more) => new MultiplyRule(a, more);
+#endif
+
 	/// <summary>
 	/// Creates a `/` ("divide") rule.
 	/// </summary>
@@ -107,6 +164,7 @@ public static class JsonLogic
 	/// <param name="b"></param>
 	/// <returns>A `/` rule.</returns>
 	public static Rule Divide(Rule a, Rule b) => new DivideRule(a, b);
+	
 	/// <summary>
 	/// Creates a `%` ("modulus") rule.
 	/// </summary>
@@ -122,6 +180,17 @@ public static class JsonLogic
 	/// <param name="more">Subsequent rules.</param>
 	/// <returns>A `max` rule.</returns>
 	public static Rule Max(Rule a, params Rule[] more) => new MaxRule(a, more);
+
+#if NET9_0_OR_GREATER
+	/// <summary>
+	/// Creates a `max` rule.
+	/// </summary>
+	/// <param name="a">The first rule.</param>
+	/// <param name="more">Subsequent rules.</param>
+	/// <returns>A `max` rule.</returns>
+	public static Rule Max(Rule a, params ReadOnlySpan<Rule> more) => new MaxRule(a, more);
+#endif
+
 	/// <summary>
 	/// Creates a `min` rule.
 	/// </summary>
@@ -130,6 +199,16 @@ public static class JsonLogic
 	/// <returns>A `min` rule.</returns>
 	public static Rule Min(Rule a, params Rule[] more) => new MinRule(a, more);
 
+#if NET9_0_OR_GREATER
+	/// <summary>
+	/// Creates a `min` rule.
+	/// </summary>
+	/// <param name="a">The first rule.</param>
+	/// <param name="more">Subsequent rules.</param>
+	/// <returns>A `min` rule.</returns>
+	public static Rule Min(Rule a, params ReadOnlySpan<Rule> more) => new MinRule(a, more);
+#endif
+
 	/// <summary>
 	/// Creates a `===` ("strict equal") rule.
 	/// </summary>
@@ -137,12 +216,14 @@ public static class JsonLogic
 	/// <param name="b">The second rule.</param>
 	/// <returns>A `===` rule.</returns>
 	public static Rule StrictEquals(Rule a, Rule b) => new StrictEqualsRule(a, b);
+	
 	/// <summary>
 	/// Creates a `!==` ("strict not equal") rule.
 	/// </summary>
 	/// <param name="a">The first rule.</param>
 	/// <param name="b">The second rule.</param>
 	/// <returns>A `!==` rule.</returns>
+	
 	public static Rule StrictNotEquals(Rule a, Rule b) => new StrictNotEqualsRule(a, b);
 	/// <summary>
 	/// Creates a `==` ("loose equal") rule.
@@ -150,6 +231,7 @@ public static class JsonLogic
 	/// <param name="a">The first rule.</param>
 	/// <param name="b">The second rule.</param>
 	/// <returns>A `==` rule.</returns>
+	
 	public static Rule LooseEquals(Rule a, Rule b) => new LooseEqualsRule(a, b);
 	/// <summary>
 	/// Creates a `!=` ("loose not equal") rule.
@@ -212,6 +294,17 @@ public static class JsonLogic
 	/// <param name="more">Subsequent rules.</param>
 	/// <returns>A `cat` rule.</returns>
 	public static Rule Cat(Rule a, params Rule[] more) => new CatRule(a, more);
+
+#if NET9_0_OR_GREATER
+	/// <summary>
+	/// Creates a `cat` ("concatenation") rule.
+	/// </summary>
+	/// <param name="a">The first rule.</param>
+	/// <param name="more">Subsequent rules.</param>
+	/// <returns>A `cat` rule.</returns>
+	public static Rule Cat(Rule a, params ReadOnlySpan<Rule> more) => new CatRule(a, more);
+#endif
+
 	/// <summary>
 	/// Creates a `substr` ("concatenation") rule.
 	/// </summary>
@@ -219,6 +312,7 @@ public static class JsonLogic
 	/// <param name="start">The start rule.</param>
 	/// <returns>A `substr` rule.</returns>
 	public static Rule Substr(Rule input, Rule start) => new SubstrRule(input, start);
+	
 	/// <summary>
 	/// Creates a `substr` ("concatenation") rule.
 	/// </summary>
@@ -242,6 +336,7 @@ public static class JsonLogic
 	/// <param name="rule">The predicate to test by.</param>
 	/// <returns>A `some` rule.</returns>
 	public static Rule Some(Rule input, Rule rule) => new SomeRule(input, rule);
+	
 	/// <summary>
 	/// Creates a `none` rule.
 	/// </summary>
@@ -249,12 +344,14 @@ public static class JsonLogic
 	/// <param name="rule">The predicate to test by.</param>
 	/// <returns>A `none` rule.</returns>
 	public static Rule None(Rule input, Rule rule) => new NoneRule(input, rule);
+	
 	/// <summary>
 	/// Creates a `missing` rule.
 	/// </summary>
 	/// <param name="components">The missing components.</param>
 	/// <returns>A `missing` rule.</returns>
 	public static Rule Missing(params Rule[] components) => new MissingRule(components);
+	
 	/// <summary>
 	/// Creates a `missing-some` rule.
 	/// </summary>
@@ -292,6 +389,7 @@ public static class JsonLogic
 	/// <param name="rule">The predicate to test by.</param>
 	/// <returns>A `filter` rule.</returns>
 	public static Rule Filter(Rule input, Rule rule) => new FilterRule(input, rule);
+	
 	/// <summary>
 	/// Creates a `merge` rule.
 	/// </summary>

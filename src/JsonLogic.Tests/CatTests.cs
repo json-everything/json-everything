@@ -10,7 +10,7 @@ public class CatTests
 	[Test]
 	public void CatTwoStringsConcatsValues()
 	{
-		var rule = new CatRule("foo", "bar");
+		var rule = JsonLogic.Cat("foo", "bar");
 
 		JsonAssert.AreEquivalent("foobar", rule.Apply());
 	}
@@ -18,7 +18,7 @@ public class CatTests
 	[Test]
 	public void CatStringAndNullConcatsValues()
 	{
-		var rule = new CatRule("foo", LiteralRule.Null);
+		var rule = JsonLogic.Cat("foo", LiteralRule.Null);
 
 		JsonAssert.AreEquivalent("foo", rule.Apply());
 	}
@@ -26,7 +26,7 @@ public class CatTests
 	[Test]
 	public void CatStringAndNumberConcatsValues()
 	{
-		var rule = new CatRule("foo", 1);
+		var rule = JsonLogic.Cat("foo", 1);
 
 		JsonAssert.AreEquivalent("foo1", rule.Apply());
 	}
@@ -34,7 +34,7 @@ public class CatTests
 	[Test]
 	public void CatStringAndBooleanConcatsValues()
 	{
-		var rule = new CatRule("foo", true);
+		var rule = JsonLogic.Cat("foo", true);
 
 		JsonAssert.AreEquivalent("footrue", rule.Apply());
 	}
@@ -43,7 +43,7 @@ public class CatTests
 	public void CatStringAndArrayConcatsValues()
 	{
 		var array = new JsonArray(1, 2, 3);
-		var rule = new CatRule("foo", array);
+		var rule = JsonLogic.Cat("foo", array);
 
 		JsonAssert.AreEquivalent("foo1,2,3", rule.Apply());
 	}
@@ -53,7 +53,7 @@ public class CatTests
 	{
 		var array = new JsonArray(1, 2, 3);
 		var nestedArray = new JsonArray(1, array, 3);
-		var rule = new CatRule("foo", nestedArray);
+		var rule = JsonLogic.Cat("foo", nestedArray);
 
 		JsonAssert.AreEquivalent("foo1,1,2,3,3", rule.Apply());
 	}
@@ -61,7 +61,7 @@ public class CatTests
 	[Test]
 	public void CatStringAndObjectConcatsValues()
 	{
-		var rule = new CatRule("foo", JsonNode.Parse("{}"));
+		var rule = JsonLogic.Cat("foo", JsonNode.Parse("{}"));
 
 		Assert.Throws<JsonLogicException>(() => rule.Apply());
 	}

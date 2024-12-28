@@ -29,6 +29,17 @@ public class SubtractRule : Rule, IRule
 	{
 		Items = [a, .. more];
 	}
+
+	/// <summary>
+	/// Creates a new instance of <see cref="SubtractRule"/> when '-' operator is detected within json logic.
+	/// </summary>
+	/// <param name="a">The first value, from which other values will be subtracted.</param>
+	/// <param name="more">Sequence of values to subtract from the first value.</param>
+	protected internal SubtractRule(Rule a, ReadOnlySpan<Rule> more)
+	{
+		Items = [a, .. more];
+	}
+
 	/// <summary>
 	/// Creates a new instance for model-less processing.
 	/// </summary>

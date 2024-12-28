@@ -31,6 +31,17 @@ public class MaxRule : Rule, IRule
 	{
 		Items = [a, .. more];
 	}
+
+	/// <summary>
+	/// Creates a new instance of <see cref="MaxRule"/> when 'max' operator is detected within json logic.
+	/// </summary>
+	/// <param name="a">The first numeric value in a sequence of numbers.</param>
+	/// <param name="more">A sequence of numbers.</param>
+	protected internal MaxRule(Rule a, ReadOnlySpan<Rule> more)
+	{
+		Items = [a, .. more];
+	}
+
 	/// <summary>
 	/// Creates a new instance for model-less processing.
 	/// </summary>
