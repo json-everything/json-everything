@@ -21,14 +21,14 @@ public class MemberGenerationContext : SchemaGenerationContextBase
 	/// <summary>
 	/// Gets the context this is based on.
 	/// </summary>
-	public SchemaGenerationContextBase BasedOn { get; }
+	public TypeGenerationContext BasedOn { get; }
 
 	/// <summary>
 	/// Gets the set of member attributes.
 	/// </summary>
 	public List<Attribute> Attributes { get; }
 
-	internal MemberGenerationContext(SchemaGenerationContextBase basedOn, List<Attribute> attributes)
+	internal MemberGenerationContext(TypeGenerationContext basedOn, List<Attribute> attributes)
 	{
 		BasedOn = basedOn;
 		Attributes = attributes;
@@ -38,13 +38,30 @@ public class MemberGenerationContext : SchemaGenerationContextBase
 		GenerateIntents();
 	}
 
+
+	internal MemberGenerationContext(MemberGenerationContext source)
+	{
+		BasedOn = source.BasedOn;
+		Attributes = [..source.Attributes];
+		Intents.AddRange(source.Intents);
+
+		DebuggerDisplay = BasedOn.Type.CSharpName() + $"[{string.Join(",", Attributes.Select(x => x.GetType().CSharpName().Replace("Attribute", string.Empty)))}]";
+	}
+
 	internal sealed override void GenerateIntents()
 	{
 		if (ReferenceEquals(this, True) || ReferenceEquals(this, False)) return;
 
 		var configuration = SchemaGeneratorConfiguration.Current;
 
-		Intents.Add(new RefIntent(new Uri($"#/$defs/{BasedOn.Type.FullName}", UriKind.Relative)));
+		if (Attributes.Count == 0 || Type.IsKnownType())
+		{
+			Intents.AddRange(BasedOn.Intents);
+		}
+		else
+		{
+			Intents.Add(new RefIntent(new Uri($"#/$defs/{BasedOn.DefinitionName}", UriKind.Relative)));
+		}
 
 		AttributeHandler.HandleAttributes(this);
 

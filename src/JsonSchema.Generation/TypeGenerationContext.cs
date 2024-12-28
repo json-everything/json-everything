@@ -21,12 +21,15 @@ public class TypeGenerationContext : SchemaGenerationContextBase
 	/// </summary>
 	public override Type Type { get; }
 
+	internal string DefinitionName { get; }
+
 	internal IComparer<MemberInfo> DeclarationOrderComparer => _memberInfoComparer ??= GetComparer(Type);
 
 	internal TypeGenerationContext(Type type)
 	{
 		Type = type;
 		DebuggerDisplay = type.CSharpName();
+		DefinitionName = type.GetDefName();
 	}
 
 	internal override void GenerateIntents()

@@ -38,7 +38,7 @@ public static class SchemaGenerationContextCache
 		var baseContext = Get(type, true);
 
 		var definitions = Cache.Where(x => x.Key != type && !x.Key.IsKnownType())
-			.ToDictionary(x => x.Key.FullName!, SchemaGenerationContextBase (x) => x.Value);
+			.ToDictionary(x => x.Value.DefinitionName, SchemaGenerationContextBase (x) => x.Value);
 
 		if (definitions.Count != 0)
 			baseContext.Intents.Add(new DefsIntent(definitions));
