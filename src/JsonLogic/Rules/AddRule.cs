@@ -29,6 +29,17 @@ public class AddRule : Rule, IRule
 	{
 		Items = [a, .. more];
 	}
+
+	/// <summary>
+	/// Creates a new instance of <see cref="AddRule"/> when '+' operator is detected within json logic.
+	/// </summary>
+	/// <param name="a">The first value, to which other values will be added to.</param>
+	/// <param name="more">Sequence of values to add to the first value.</param>
+	protected internal AddRule(Rule a, ReadOnlySpan<Rule> more)
+	{
+		Items = [a, .. more];
+	}
+
 	/// <summary>
 	/// Creates a new instance for model-less processing.
 	/// </summary>

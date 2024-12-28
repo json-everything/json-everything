@@ -31,6 +31,16 @@ public class AndRule : Rule, IRule
 	}
 
 	/// <summary>
+	/// Creates a new instance of <see cref="AndRule"/> when 'and' operator is detected within json logic.
+	/// </summary>
+	/// <param name="a">The first value.</param>
+	/// <param name="more">Sequence of values to And against.</param>
+	protected internal AndRule(Rule a, ReadOnlySpan<Rule> more)
+	{
+		Items = [a, .. more];
+	}
+
+	/// <summary>
 	/// Creates a new instance for model-less processing.
 	/// </summary>
 	protected internal AndRule(){}
