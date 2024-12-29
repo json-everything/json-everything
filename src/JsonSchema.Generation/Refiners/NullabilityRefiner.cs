@@ -11,13 +11,20 @@ internal class NullabilityRefiner : ISchemaRefiner
 
 	public bool ShouldRun(SchemaGenerationContextBase context)
 	{
-		return context.Intents.OfType<TypeIntent>().Any();
+		return false;
+
+		//return context.Intents.OfType<TypeIntent>().Any() ||
+		//       context.GetAttributes().OfType<NullableAttribute>().Any() ||
+		//       context.Type.IsNullableValueType();
 	}
 
 	public void Run(SchemaGenerationContextBase context)
 	{
 		var typeIntent = context.Intents.OfType<TypeIntent>().FirstOrDefault();
-		if (typeIntent == null) return; // shouldn't happen because of ShouldRun(), but including just in case.
+		if (typeIntent == null)
+		{
+			// could be enum or a member context with attributes
+		}
 
 		var attributes = context.GetAttributes();
 
@@ -39,15 +46,6 @@ internal class NullabilityRefiner : ISchemaRefiner
 				typeIntent.Type &= ~SchemaValueType.Null;
 			return;
 		}
-
-		if (SchemaGeneratorConfiguration.Current.Nullability.HasFlag(Nullability.AllowForNullableValueTypes) &&
-		    typeIsNullableValueType) 
-			ReplaceTypeWithNullableIntent(context, typeIntent);
-
-		if (SchemaGeneratorConfiguration.Current.Nullability.HasFlag(Nullability.AllowForReferenceTypes) &&
-			// see https://stackoverflow.com/a/16578846/878701
-			!context.Type.IsValueType)
-			typeIntent.Type |= SchemaValueType.Null;
 	}
 
 	private static void ReplaceTypeWithNullableIntent(SchemaGenerationContextBase context, TypeIntent typeIntent)

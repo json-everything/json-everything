@@ -79,7 +79,7 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 				unconditionalAttributes.Add(new WriteOnlyAttribute(true));
 
 			var memberTypeContext = SchemaGenerationContextCache.Get(member.GetMemberType());
-			var memberContext = new MemberGenerationContext(memberTypeContext, unconditionalAttributes);
+			var memberContext = new MemberGenerationContext(memberTypeContext, unconditionalAttributes, member.IsMarkedAsNullable());
 
 			var name = SchemaGeneratorConfiguration.Current.PropertyNameResolver!(member);
 			var nameAttribute = unconditionalAttributes.OfType<JsonPropertyNameAttribute>().FirstOrDefault();

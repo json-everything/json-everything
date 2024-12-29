@@ -52,13 +52,6 @@ public class SchemaGeneratorConfiguration
 	}
 
 	/// <summary>
-	/// Gets or sets whether to include `null` in the `type` keyword.
-	/// Default is <see cref="Nullability.Disabled"/> which means that it will
-	/// not ever be included.
-	/// </summary>
-	public Nullability Nullability { get; set; }
-
-	/// <summary>
 	/// Gets or sets whether optimizations (moving common subschemas into `$defs`) will be performed.  Default is true.
 	/// </summary>
 	public bool Optimize { get; set; } = true;

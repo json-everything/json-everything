@@ -605,7 +605,6 @@ public class ConditionalTests
 
 		var config = new SchemaGeneratorConfiguration
 		{
-			Nullability = Nullability.AllowForNullableValueTypes,
 			PropertyNameResolver = PropertyNameResolvers.CamelCase
 		};
 

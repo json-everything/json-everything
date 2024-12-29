@@ -5,7 +5,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.Json.Nodes;
-using System.Text.Json.Serialization;
 using Humanizer;
 using Json.More;
 #pragma warning disable IL2075
@@ -73,7 +72,7 @@ public static class TypeExtensions
 			[typeof(bool)] = "bool",
 		};
 
-	internal static bool IsKnownType(this Type type) =>
+	internal static bool IsJsonType(this Type type) =>
 		_keywordedTypes.ContainsKey(type) ||
 		type.IsSubclassOf(typeof(JsonNode));
 
@@ -172,5 +171,21 @@ public static class TypeExtensions
 			name = $"{name} in {GetName(type.DeclaringType!)}";
 
 		return name;
+	}
+
+	internal static bool IsMarkedAsNullable(this MemberInfo member)
+	{
+#if NET8_0_OR_GREATER
+		var infoContext = member switch
+		{
+			PropertyInfo p => new NullabilityInfoContext().Create(p),
+			FieldInfo f => new NullabilityInfoContext().Create(f),
+			_ => null
+		};
+
+		return infoContext?.WriteState is NullabilityState.Nullable;
+#else
+		return false;
+#endif
 	}
 }

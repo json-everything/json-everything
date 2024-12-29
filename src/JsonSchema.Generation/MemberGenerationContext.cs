@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using Json.Schema.Generation.Intents;
 using Json.Schema.Generation.Refiners;
 
 namespace Json.Schema.Generation;
@@ -28,10 +27,16 @@ public class MemberGenerationContext : SchemaGenerationContextBase
 	/// </summary>
 	public List<Attribute> Attributes { get; }
 
-	internal MemberGenerationContext(TypeGenerationContext basedOn, List<Attribute> attributes)
+	/// <summary>
+	/// Indicates whether the member is marked as a nullable reference type.
+	/// </summary>
+	public bool NullableRef { get; }
+
+	internal MemberGenerationContext(TypeGenerationContext basedOn, List<Attribute> attributes, bool markedAsNullableRef = false)
 	{
 		BasedOn = basedOn;
 		Attributes = attributes;
+		NullableRef = markedAsNullableRef;
 
 		DebuggerDisplay = BasedOn.Type.CSharpName() + $"[{string.Join(",", attributes.Select(x => x.GetType().CSharpName().Replace("Attribute", string.Empty)))}]";
 
@@ -54,14 +59,7 @@ public class MemberGenerationContext : SchemaGenerationContextBase
 
 		var configuration = SchemaGeneratorConfiguration.Current;
 
-		if (Attributes.Count == 0 || Type.IsKnownType())
-		{
-			Intents.AddRange(BasedOn.Intents);
-		}
-		else
-		{
-			Intents.Add(new RefIntent(new Uri($"#/$defs/{BasedOn.DefinitionName}", UriKind.Relative)));
-		}
+		Intents.AddRange(NullableRef ? BasedOn.Intents.AsNullable() : BasedOn.Intents);
 
 		AttributeHandler.HandleAttributes(this);
 
