@@ -15,6 +15,7 @@ internal class NullableValueTypeSchemaGenerator : ISchemaGenerator
 
 		if (underlyingType == null) return;
 		var underlyingContext = SchemaGenerationContextCache.Get(underlyingType);
+		underlyingContext.ReferenceCount--;
 
 		context.Intents.AddRange(underlyingContext.Intents);
 	}

@@ -37,7 +37,8 @@ public static class SchemaGenerationContextCache
 	{
 		var baseContext = Get(type, true);
 
-		var definitions = Cache.Where(x => x.Key != type &&
+		var definitions = Cache.Where(x => x.Value.ReferenceCount > 0 &&
+		                                   x.Key != type &&
 		                                   !x.Key.IsJsonType() &&
 		                                   !x.Key.IsNullableValueType())
 			.ToDictionary(x => x.Value.DefinitionName, SchemaGenerationContextBase (x) => x.Value);

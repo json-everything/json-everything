@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using Json.Schema.Generation.Intents;
-using Json.Schema.Generation.Refiners;
 
 namespace Json.Schema.Generation;
 
@@ -63,7 +62,6 @@ public class TypeGenerationContext : SchemaGenerationContextBase
 		AttributeHandler.HandleAttributes(this);
 
 		var refiners = configuration.Refiners.ToList();
-		refiners.Add(NullabilityRefiner.Instance);
 		foreach (var refiner in refiners.Where(x => x.ShouldRun(this)))
 		{
 			refiner.Run(this);

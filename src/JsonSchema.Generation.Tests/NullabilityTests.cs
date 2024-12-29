@@ -345,6 +345,7 @@ public class NullabilityTests
 	public void NullableStruct()
 	{
 		var expected = new JsonSchemaBuilder()
+			.Type(SchemaValueType.Object)
 			.Properties(
 				("Property", new JsonSchemaBuilder()
 					.Type(SchemaValueType.String | SchemaValueType.Null)
@@ -369,6 +370,7 @@ public class NullabilityTests
 	public void NullableStructWithAnotherAttribute()
 	{
 		var expected = new JsonSchemaBuilder()
+			.Type(SchemaValueType.Object)
 			.Properties(
 				("Property", new JsonSchemaBuilder()
 					.Type(SchemaValueType.String | SchemaValueType.Null)

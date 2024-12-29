@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using Json.Schema.Generation.Refiners;
 
 namespace Json.Schema.Generation;
 
@@ -59,12 +58,15 @@ public class MemberGenerationContext : SchemaGenerationContextBase
 
 		var configuration = SchemaGeneratorConfiguration.Current;
 
-		Intents.AddRange(NullableRef ? BasedOn.Intents.AsNullable() : BasedOn.Intents);
+		var nullableAttribute = Attributes.OfType<NullableAttribute>().FirstOrDefault();
+		var nullable = nullableAttribute?.IsNullable ?? NullableRef;
+
+		Intents.AddRange(nullable ? BasedOn.Intents.AsNullable() : BasedOn.Intents);
+		BasedOn.ReferenceCount--;
 
 		AttributeHandler.HandleAttributes(this);
 
 		var refiners = configuration.Refiners.ToList();
-		refiners.Add(NullabilityRefiner.Instance);
 		foreach (var refiner in refiners.Where(x => x.ShouldRun(this)))
 		{
 			refiner.Run(this);

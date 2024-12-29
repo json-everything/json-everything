@@ -32,7 +32,7 @@ public class AdditionalItemsAttribute : ConditionalAttribute, IAttributeHandler
 	/// <summary>
 	/// Creates a new <see cref="AdditionalPropertiesAttribute"/> instance.
 	/// </summary>
-	/// <param name="typeSchema">A type to generate the a schema for the keyword.</param>
+	/// <param name="typeSchema">A type to generate a schema for the keyword.</param>
 	public AdditionalItemsAttribute(Type typeSchema)
 	{
 		TypeValue = typeSchema;

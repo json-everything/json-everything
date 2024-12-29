@@ -3,12 +3,9 @@
 namespace Json.Schema.Generation;
 
 /// <summary>
-/// Overrides the <see cref="SchemaGeneratorConfiguration.Nullability"/> option and either
-/// adds or removes `null` in the `type` keyword.
+/// Overrides the nullability declared in code and either adds or removes `null` in the `type` keyword.
 /// </summary>
-[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field |
-				AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface,
-	AllowMultiple = true)]
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = true)]
 public class NullableAttribute : ConditionalAttribute, IAttributeHandler
 {
 	/// <summary>
