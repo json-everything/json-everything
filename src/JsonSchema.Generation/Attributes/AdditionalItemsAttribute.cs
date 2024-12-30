@@ -40,6 +40,8 @@ public class AdditionalItemsAttribute : ConditionalAttribute, IAttributeHandler
 
 	void IAttributeHandler.AddConstraints(SchemaGenerationContextBase context, Attribute attribute)
 	{
+		if (!context.Type.IsArray()) return;
+
 		if (BoolValue.HasValue)
 		{
 			context.Intents.Add(new AdditionalItemsIntent(BoolValue.Value

@@ -35,18 +35,7 @@ public static class SchemaGenerationContextCache
 
 	internal static TypeGenerationContext GetRoot(Type type)
 	{
-		var baseContext = Get(type, true);
-
-		var definitions = Cache.Where(x => x.Value.ReferenceCount > 0 &&
-		                                   x.Key != type &&
-		                                   !x.Key.IsJsonType() &&
-		                                   !x.Key.IsNullableValueType())
-			.ToDictionary(x => x.Value.DefinitionName, SchemaGenerationContextBase (x) => x.Value);
-
-		if (definitions.Count != 0)
-			baseContext.Intents.Add(new DefsIntent(definitions));
-
-		return baseContext;
+		return Get(type, true);
 	}
 
 	private static TypeGenerationContext Get(Type type, bool isRoot)

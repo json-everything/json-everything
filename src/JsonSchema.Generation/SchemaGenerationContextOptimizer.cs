@@ -23,8 +23,6 @@ public static class SchemaGenerationContextOptimizer
 	{
 		var allContexts = SchemaGenerationContextCache.Cache.Values;
 		var root = allContexts.First();
-		if (root is MemberGenerationContext)
-			throw new InvalidOperationException("root should always be a type context");
 
 		var contextsToMove = allContexts.Where(x => x.ReferenceCount > 1 && x.Intents.Count > 1);
 

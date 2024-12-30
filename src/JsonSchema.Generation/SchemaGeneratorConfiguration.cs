@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Json.Schema.Generation.Generators;
+using Json.Schema.Generation.Refiners;
 using Json.Schema.Generation.XmlComments;
 
 namespace Json.Schema.Generation;
@@ -10,6 +11,12 @@ namespace Json.Schema.Generation;
 /// </summary>
 public class SchemaGeneratorConfiguration
 {
+	private static readonly ISchemaRefiner[] _defaultRefiners =
+	[
+		new ArrayItemsRefiner(),
+		new ObjectValuesRefiner()
+	];
+
 	private readonly Dictionary<string, string> _xmlCommentsFiles = [];
 	private PropertyNameResolver? _propertyNameResolver;
 
@@ -28,7 +35,7 @@ public class SchemaGeneratorConfiguration
 	/// <summary>
 	/// A collection of refiners.
 	/// </summary>
-	public List<ISchemaRefiner> Refiners { get; } = [];
+	public List<ISchemaRefiner> Refiners { get; } = [.._defaultRefiners];
 	/// <summary>
 	/// A collection of generators in addition to the global set.
 	/// </summary>

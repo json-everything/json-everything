@@ -48,8 +48,11 @@ public class ClientTests
 	{
 		public string Value { get; set; }
 
-		[JsonPropertyName("left")] public TreeNodeMetaData Left { get; set; }
-		[JsonPropertyName("right")] public TreeNodeMetaData Right { get; set; }
+		[JsonPropertyName("left")]
+		public TreeNodeMetaData Left { get; set; }
+		
+		[JsonPropertyName("right")]
+		public TreeNodeMetaData Right { get; set; }
 	}
 
 	public class TreeNodeMetaData
@@ -402,7 +405,7 @@ public class ClientTests
 	[Test]
 	public void Issue767_PropertyDescriptionFromXmlComments()
 	{
-		var expected = JsonNode.Parse(
+		var expected = JsonSchema.FromText(
 			"""
 			{
 			  "type": "object",
@@ -464,9 +467,7 @@ public class ClientTests
 		var options = new SchemaGeneratorConfiguration { Optimize = true };
 		options.RegisterXmlCommentFile<Issue767_PropertyLevelComments>("JsonSchema.Net.Generation.Tests.xml");
 		JsonSchema schema = new JsonSchemaBuilder().FromType<Issue767_PropertyLevelComments>(options);
-		var schemaJson = JsonSerializer.SerializeToNode(schema, TestSerializerContext.Default.JsonSchema);
-		TestConsole.WriteLine(schemaJson);
 
-		Assert.That(schemaJson.IsEquivalentTo(expected), Is.True);
+		AssertEqual(expected, schema);
 	}
 }
