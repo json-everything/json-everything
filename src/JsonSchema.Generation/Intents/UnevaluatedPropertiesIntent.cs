@@ -8,7 +8,7 @@ public class UnevaluatedPropertiesIntent : ISchemaKeywordIntent, IContextContain
 	/// <summary>
 	/// The context that represents the inner requirements.
 	/// </summary>
-	public SchemaGenerationContextBase? Context { get; private set; }
+	public SchemaGenerationContextBase? Context { get; set; }
 
 	/// <summary>
 	/// Creates a new <see cref="UnevaluatedPropertiesIntent"/> instance.

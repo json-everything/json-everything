@@ -8,7 +8,7 @@ public class AdditionalPropertiesIntent : ISchemaKeywordIntent, IContextContaine
 	/// <summary>
 	/// The context that represents the inner requirements.
 	/// </summary>
-	public SchemaGenerationContextBase Context { get; private set; }
+	public SchemaGenerationContextBase Context { get; set; }
 
 	/// <summary>
 	/// Creates a new <see cref="AdditionalPropertiesIntent"/> instance.

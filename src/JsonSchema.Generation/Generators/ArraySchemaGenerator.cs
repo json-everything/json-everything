@@ -31,6 +31,7 @@ internal class ArraySchemaGenerator : ISchemaGenerator
 		if (itemType == null) return;
 
 		var itemTypeContext = SchemaGenerationContextCache.Get(itemType);
-		context.Intents.Add(new ItemsIntent(itemTypeContext));
+		var itemMemberContext = new MemberGenerationContext(itemTypeContext, []);
+		context.Intents.Add(new ItemsIntent(itemMemberContext));
 	}
 }

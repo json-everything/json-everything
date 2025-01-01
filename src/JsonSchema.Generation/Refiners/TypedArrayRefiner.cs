@@ -15,7 +15,8 @@ internal class ArrayItemsRefiner : ISchemaRefiner
 	{
 		var memberContext = (MemberGenerationContext)context;
 		var itemsIntent = memberContext.Intents.OfType<ItemsIntent>().First();
-		if (itemsIntent.Context is not TypeGenerationContext itemsTypeContext) return;
+		var itemsTypeContext = itemsIntent.Context as TypeGenerationContext ??
+		                       ((MemberGenerationContext)itemsIntent.Context).BasedOn;
 
 		var index = memberContext.Intents.IndexOf(itemsIntent);
 		var itemsMemberContext = new MemberGenerationContext(itemsTypeContext, memberContext.Attributes);

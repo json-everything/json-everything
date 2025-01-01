@@ -24,11 +24,29 @@ internal class ObjectValuesRefiner : ISchemaRefiner
 	public void Run(SchemaGenerationContextBase context)
 	{
 		var memberContext = (MemberGenerationContext)context;
-		var itemsIntent = memberContext.Intents.OfType<ItemsIntent>().First();
-		if (itemsIntent.Context is not TypeGenerationContext itemsTypeContext) return;
 
-		itemsIntent.Context = new MemberGenerationContext(itemsTypeContext, memberContext.Attributes);
+		var additionalPropertiesIntent = memberContext.Intents.OfType<AdditionalPropertiesIntent>().FirstOrDefault();
+		if (additionalPropertiesIntent is not null)
+		{
+			var additionalPropertiesTypeContext = additionalPropertiesIntent.Context as TypeGenerationContext ??
+			                       ((MemberGenerationContext)additionalPropertiesIntent.Context).BasedOn;
 
-		AttributeHandler.HandleAttributes(itemsTypeContext);
+			additionalPropertiesIntent.Context = new MemberGenerationContext(additionalPropertiesTypeContext, memberContext.Attributes);
+
+			AttributeHandler.HandleAttributes(additionalPropertiesTypeContext);
+		}
+
+		var unevaluatedPropertiesIntent = memberContext.Intents.OfType<UnevaluatedPropertiesIntent>().FirstOrDefault();
+		if (unevaluatedPropertiesIntent is not null)
+		{
+			var unevaluatedPropertiesTypeContext = unevaluatedPropertiesIntent.Context as TypeGenerationContext ??
+			                                       ((MemberGenerationContext?)unevaluatedPropertiesIntent.Context)?.BasedOn;
+			if (unevaluatedPropertiesTypeContext is not null)
+			{
+				unevaluatedPropertiesIntent.Context = new MemberGenerationContext(unevaluatedPropertiesTypeContext, memberContext.Attributes);
+
+				AttributeHandler.HandleAttributes(unevaluatedPropertiesTypeContext);
+			}
+		}
 	}
 }

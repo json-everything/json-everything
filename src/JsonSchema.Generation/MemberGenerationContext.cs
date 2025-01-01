@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Json.Schema.Generation.Intents;
 
 namespace Json.Schema.Generation;
 
@@ -60,9 +61,16 @@ public class MemberGenerationContext : SchemaGenerationContextBase
 
 		var nullableAttribute = Attributes.OfType<NullableAttribute>().FirstOrDefault();
 		var nullable = nullableAttribute?.IsNullable ?? NullableRef;
+		List<ISchemaKeywordIntent> baseIntents;
+		if (BasedOn.IsRoot)
+			baseIntents = [new RefIntent(new Uri("#", UriKind.Relative))];
+		else
+		{
+			baseIntents = BasedOn.Intents;
+			BasedOn.ReferenceCount--;
+		}
 
-		Intents.AddRange(nullable ? BasedOn.Intents.AsNullable() : BasedOn.Intents);
-		BasedOn.ReferenceCount--;
+		Intents.AddRange(nullable ? baseIntents.AsNullable() : baseIntents);
 
 		AttributeHandler.HandleAttributes(this);
 

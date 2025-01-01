@@ -375,4 +375,25 @@ public class SchemaGenerationTests
 
 		AssertEqual(expected, actual);
 	}
+
+	private class LinkedList
+	{
+		public int Value { get; set; }
+		public LinkedList Next { get; set; }
+	}
+
+	[Test]
+	public void RecursiveDefinition()
+	{
+		JsonSchema expected = new JsonSchemaBuilder()
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("Value", new JsonSchemaBuilder().Type(SchemaValueType.Integer)),
+				("Next", new JsonSchemaBuilder().Ref("#"))
+			);
+
+		JsonSchema actual = new JsonSchemaBuilder().FromType<LinkedList>();
+
+		AssertEqual(expected, actual);
+	}
 }
