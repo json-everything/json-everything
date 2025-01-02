@@ -59,11 +59,6 @@ public class SchemaGeneratorConfiguration
 	}
 
 	/// <summary>
-	/// Gets or sets whether optimizations (moving common subschemas into `$defs`) will be performed.  Default is true.
-	/// </summary>
-	public bool Optimize { get; set; } = true;
-
-	/// <summary>
 	/// Gets or sets whether properties that are affected by conditionals are defined
 	/// globally or only within their respective `then` subschemas.  True restricts
 	/// those property definitions to `then` subschemas and adds a top-level

@@ -268,10 +268,7 @@ public class NullabilityTests
 			);
 
 		var actual = new JsonSchemaBuilder()
-			.FromType<DifferingNullabilityValueType>(new SchemaGeneratorConfiguration
-			{
-				Optimize = false
-			})
+			.FromType<DifferingNullabilityValueType>(new SchemaGeneratorConfiguration())
 			.Build();
 
 		AssertEqual(expected, actual);
@@ -295,10 +292,7 @@ public class NullabilityTests
 			);
 
 		var actual = new JsonSchemaBuilder()
-			.FromType<DifferingNullabilityValueTypeUsingAttribute>(new SchemaGeneratorConfiguration
-			{
-				Optimize = false
-			})
+			.FromType<DifferingNullabilityValueTypeUsingAttribute>(new SchemaGeneratorConfiguration())
 			.Build();
 
 		AssertEqual(expected, actual);
@@ -327,10 +321,7 @@ public class NullabilityTests
 			);
 
 		var actual = new JsonSchemaBuilder()
-			.FromType<DifferingNullabilityReferenceType>(new SchemaGeneratorConfiguration
-			{
-				Optimize = false
-			})
+			.FromType<DifferingNullabilityReferenceType>(new SchemaGeneratorConfiguration())
 			.Build();
 
 		AssertEqual(expected, actual);

@@ -439,7 +439,7 @@ public class ClientTests
 				)
 			);
 
-		var options = new SchemaGeneratorConfiguration { Optimize = true };
+		var options = new SchemaGeneratorConfiguration();
 		options.RegisterXmlCommentFile<Issue767_PropertyLevelComments>("JsonSchema.Net.Generation.Tests.xml");
 		JsonSchema schema = new JsonSchemaBuilder().FromType<Issue767_PropertyLevelComments>(options);
 
