@@ -30,7 +30,7 @@ public class ContextAccessor
 
 		if (source.TryParseName(ref i, out var name))
 		{
-			if (name.In("true", "false", "null"))
+			if (name!.In("true", "false", "null"))
 			{
 				accessor = null;
 				return false;

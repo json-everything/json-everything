@@ -61,7 +61,7 @@ public class CatTests
 	[Test]
 	public void CatStringAndObjectConcatsValues()
 	{
-		var rule = JsonLogic.Cat("foo", JsonNode.Parse("{}"));
+		var rule = JsonLogic.Cat("foo", JsonNode.Parse("{}")!);
 
 		Assert.Throws<JsonLogicException>(() => rule.Apply());
 	}

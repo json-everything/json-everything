@@ -4,9 +4,12 @@ title: JsonLogic
 icon: fas fa-tag
 order: "09.11"
 ---
-# [5.4.0](https://github.com/gregsdennis/json-everything/pull/822) {#release-logic-5.4.0}
+# [5.4.0](https://github.com/gregsdennis/json-everything/pull/848) {#release-logic-5.4.0}
 
 Add .Net 9.0 support.
+
+[#843](https://github.com/json-everything/json-everything/pull/843) - Additional performance improvements courtesy of [@cptjazz](https://github.com/cptjazz).
+
 
 # [5.3.0](https://github.com/gregsdennis/json-everything/pull/808) {#release-logic-5.3.0}
 

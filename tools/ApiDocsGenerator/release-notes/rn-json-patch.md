@@ -4,6 +4,10 @@ title: JsonPatch.Net
 icon: fas fa-tag
 order: "09.09"
 ---
+# [3.3.0](https://github.com/gregsdennis/json-everything/pull/848) {#release-patch-3.3.0}
+
+[#843](https://github.com/json-everything/json-everything/pull/843) - Performance improvements courtesy of [@cptjazz](https://github.com/cptjazz).
+
 # [3.2.3](https://github.com/gregsdennis/json-everything/pull/829) {#release-patch-3.2.3}
 
 - [#825](https://github.com/gregsdennis/json-everything/issues/825) - Remove and replace not working when `path` pointer ends with `-`.  (Cannot access end of array.)
