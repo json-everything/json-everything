@@ -28,7 +28,9 @@ public class TypeGenerationContext : SchemaGenerationContextBase
 
 	internal string DefinitionName { get; }
 
+#pragma warning disable IL3050
 	internal IComparer<MemberInfo> DeclarationOrderComparer => _memberInfoComparer ??= GetComparer(Type);
+#pragma warning restore IL3050
 
 	internal TypeGenerationContext(Type type)
 	{

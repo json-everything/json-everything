@@ -37,22 +37,25 @@ public static class SchemaGenerationContextCache
 	{
 		var baseContext = Get(type, true);
 		var toReintegrate = Cache
-			.Where(x => x.Value.References.Count == 1 &&
+			.Where(x => (x.Value.References.Count == 1 &&
 			            x.Key != type &&
-			            x.Key.CanBeReferenced())
+			            x.Key.CanBeReferenced()) ||
+			            x.Value.Intents is [RefIntent])
 			.Select(x => x.Value)
 			.ToList();
 
 		foreach (var schema in toReintegrate)
 		{
-			var context = schema.References[0];
-			var contextKeywords = context.Intents.Select(x => x.GetType());
-			var schemaKeywords = schema.Intents.Select(x => x.GetType());
-			if (contextKeywords.Intersect(schemaKeywords).Any()) continue;
+			foreach (var context in schema.References)
+			{
+				var contextKeywords = context.Intents.Select(x => x.GetType());
+				var schemaKeywords = schema.Intents.Select(x => x.GetType());
+				if (contextKeywords.Intersect(schemaKeywords).Except([typeof(RefIntent)]).Any()) continue;
 
-			var refIntent = context.Intents.OfType<RefIntent>().First();
-			context.Intents.Remove(refIntent);
-			context.Intents.AddRange(schema.Intents);
+				var refIntent = context.Intents.OfType<RefIntent>().First();
+				context.Intents.Remove(refIntent);
+				context.Intents.AddRange(schema.Intents);
+			}
 			schema.References.Clear();
 		}
 
