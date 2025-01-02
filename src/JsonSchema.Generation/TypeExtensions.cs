@@ -126,7 +126,7 @@ public static class TypeExtensions
 	}
 
 	internal static string GetDefName(this Type type) =>
-		SchemaGenerationContextOptimizer.TypeNameGenerator?.GenerateName(type) ??
+		SchemaGeneratorConfiguration.Current.TypeNameGenerator?.GenerateName(type) ??
 		GetName(type).Camelize();
 
 	private static string GetName(Type type)

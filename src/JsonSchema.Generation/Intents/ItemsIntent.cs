@@ -3,7 +3,7 @@
 /// <summary>
 /// Provides intent to create an `items` keyword.
 /// </summary>
-public class ItemsIntent : ISchemaKeywordIntent, IContextContainer
+public class ItemsIntent : ISchemaKeywordIntent
 {
 	/// <summary>
 	/// The context that represents the inner requirements.
@@ -17,17 +17,6 @@ public class ItemsIntent : ISchemaKeywordIntent, IContextContainer
 	public ItemsIntent(SchemaGenerationContextBase context)
 	{
 		Context = context;
-	}
-
-	/// <summary>
-	/// Replaces one context with another.
-	/// </summary>
-	/// <param name="hashCode">The hashcode of the context to replace.</param>
-	/// <param name="newContext">The new context.</param>
-	public void Replace(int hashCode, SchemaGenerationContextBase newContext)
-	{
-		//if (Context.Hash == hashCode)
-		//	Context = newContext;
 	}
 
 	/// <summary>

@@ -6,7 +6,7 @@ namespace Json.Schema.Generation.Intents;
 /// <summary>
 /// Provides intent to create an `additionalProperties` keyword.
 /// </summary>
-public class PropertiesIntent : ISchemaKeywordIntent, IContextContainer
+public class PropertiesIntent : ISchemaKeywordIntent
 {
 	/// <summary>
 	/// The contexts that represent the properties.
@@ -20,20 +20,6 @@ public class PropertiesIntent : ISchemaKeywordIntent, IContextContainer
 	public PropertiesIntent(Dictionary<string, SchemaGenerationContextBase> properties)
 	{
 		Properties = properties;
-	}
-
-	/// <summary>
-	/// Replaces one context with another.
-	/// </summary>
-	/// <param name="hashCode">The hashcode of the context to replace.</param>
-	/// <param name="newContext">The new context.</param>
-	public void Replace(int hashCode, SchemaGenerationContextBase newContext)
-	{
-		//foreach (var property in Properties.ToList())
-		//{
-		//	if (property.Value.Hash == hashCode)
-		//		Properties[property.Key] = newContext;
-		//}
 	}
 
 	/// <summary>

@@ -72,6 +72,11 @@ public class SchemaGeneratorConfiguration
 	/// </summary>
 	public Dictionary<Type, Uri> ExternalReferences { get; } = [];
 
+	/// <summary>
+	/// Provides custom naming functionality.
+	/// </summary>
+	public ITypeNameGenerator? TypeNameGenerator { get; set; }
+
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 	/// <summary>
 	/// Creates a new <see cref="SchemaGeneratorConfiguration"/>.
