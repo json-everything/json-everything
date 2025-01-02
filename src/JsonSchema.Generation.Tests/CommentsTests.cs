@@ -1,6 +1,5 @@
-﻿using System.Text.Json;
-using NUnit.Framework;
-using TestHelpers;
+﻿using NUnit.Framework;
+using static Json.Schema.Generation.Tests.AssertionExtensions;
 
 namespace Json.Schema.Generation.Tests;
 
@@ -96,19 +95,36 @@ public class CommentsTests
 	[Test]
 	public void DefinitionContainsTypeCommentAndRefContainsMemberComment()
 	{
+		var expected = new JsonSchemaBuilder()
+			.Type(SchemaValueType.Object)
+			.Description("Type commented model description")
+			.Properties(
+				("Inner", new JsonSchemaBuilder()
+					.Ref("#/$defs/typeCommentedInnerModelInCommentsTests")
+					.Description("This overrides the type description")
+				),
+				("Inner2", new JsonSchemaBuilder()
+					.Ref("#/$defs/typeCommentedInnerModelInCommentsTests")
+				),
+				("Inner3", new JsonSchemaBuilder()
+					.Ref("#/$defs/typeCommentedInnerModelInCommentsTests")
+				)
+			)
+			.Defs(
+				("typeCommentedInnerModelInCommentsTests", new JsonSchemaBuilder()
+					.Type(SchemaValueType.Object)
+					.Description("Type commented inner model description")
+					.Properties(
+						("Bar", new JsonSchemaBuilder().Type(SchemaValueType.Integer))
+					)
+				)
+			);
+
 		var config = new SchemaGeneratorConfiguration();
 		config.RegisterXmlCommentFile<TypeAndSingleMemberCommentedModel>("JsonSchema.Net.Generation.Tests.xml");
 
 		JsonSchema schema = new JsonSchemaBuilder().FromType<TypeAndSingleMemberCommentedModel>(config);
 
-		TestConsole.WriteLine(JsonSerializer.Serialize(schema, TestEnvironment.SerializerOptions));
-
-		Assert.Multiple(() =>
-		{
-			Assert.That(schema.GetProperties()?["Inner"].GetDescription(), Is.EqualTo("This overrides the type description"));
-			Assert.That(schema.GetProperties()?["Inner2"].GetDescription(), Is.Null);
-			Assert.That(schema.GetProperties()?["Inner3"].GetDescription(), Is.Null);
-			Assert.That(schema.GetDefs()?["typeCommentedInnerModelInCommentsTests"].GetDescription(), Is.EqualTo("Type commented inner model description"));
-		});
+		AssertEqual(expected, schema);
 	}
 }

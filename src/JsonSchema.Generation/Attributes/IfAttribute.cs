@@ -7,12 +7,13 @@ namespace Json.Schema.Generation;
 /// Creates or amends a condition group by expecting a value in a property.
 /// </summary>
 [AttributeUsage(AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface, AllowMultiple = true)]
-public class IfAttribute : ConditionalAttribute, IConditionAttribute
+public class IfAttribute : ConditionalAttribute, INestableAttribute, IConditionalAttribute
 {
 	/// <summary>
 	/// The property name.
 	/// </summary>
 	public string PropertyName { get; set; }
+
 	/// <summary>
 	/// The expected property value.
 	/// </summary>
@@ -21,6 +22,11 @@ public class IfAttribute : ConditionalAttribute, IConditionAttribute
 	/// values will work.
 	/// </remarks>
 	public JsonNode? Value { get; set; }
+
+	/// <summary>
+	/// The index of the parameter to which the attribute should apply. Default is -1 to indicate the root.
+	/// </summary>
+	public int GenericParameter { get; set; } = -1;
 
 	/// <summary>
 	/// Creates a new <see cref="IfAttribute"/> instance.

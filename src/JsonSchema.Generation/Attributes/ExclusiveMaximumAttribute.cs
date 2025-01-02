@@ -15,12 +15,17 @@ namespace Json.Schema.Generation;
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field |
                 AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface,
 	AllowMultiple = true)]
-public class ExclusiveMaximumAttribute : ConditionalAttribute, IAttributeHandler
+public class ExclusiveMaximumAttribute : ConditionalAttribute, INestableAttribute, IAttributeHandler
 {
 	/// <summary>
 	/// The exclusive maximum.
 	/// </summary>
 	public decimal Value { get; }
+
+	/// <summary>
+	/// The index of the parameter to which the attribute should apply. Default is -1 to indicate the root.
+	/// </summary>
+	public int GenericParameter { get; set; } = -1;
 
 	/// <summary>
 	/// Creates a new <see cref="ExclusiveMaximumAttribute"/> instance.

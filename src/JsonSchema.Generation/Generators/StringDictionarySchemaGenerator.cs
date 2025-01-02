@@ -26,8 +26,10 @@ internal class StringDictionarySchemaGenerator : ISchemaGenerator
 		context.Intents.Add(new TypeIntent(SchemaValueType.Object));
 
 		var valueType = context.Type.GenericTypeArguments[1];
-		var valueContext = SchemaGenerationContextCache.Get(valueType);
+		var valueTypeContext = SchemaGenerationContextCache.Get(valueType);
+		var valueMemberContext = new MemberGenerationContext(valueTypeContext, []) { Parameter = 1 };
+		context.Intents.Add(new AdditionalPropertiesIntent(valueMemberContext));
 
-		context.Intents.Add(new AdditionalPropertiesIntent(valueContext));
+		valueMemberContext.GenerateIntents();
 	}
 }

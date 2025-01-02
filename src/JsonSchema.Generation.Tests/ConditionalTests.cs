@@ -355,10 +355,12 @@ public class ConditionalTests
 					.Then(new JsonSchemaBuilder()
 						.Properties(
 							("Age", new JsonSchemaBuilder()
+								.Type(SchemaValueType.Integer)
 								.Minimum(0)
 								.Maximum(17)
 							),
 							("CanVote", new JsonSchemaBuilder()
+								.Type(SchemaValueType.Boolean)
 								.Const(false)
 							)
 						)
@@ -373,10 +375,12 @@ public class ConditionalTests
 					.Then(new JsonSchemaBuilder()
 						.Properties(
 							("Age", new JsonSchemaBuilder()
+								.Type(SchemaValueType.Integer)
 								.Minimum(18)
 								.Maximum(64)
 							),
 							("CanVote", new JsonSchemaBuilder()
+								.Type(SchemaValueType.Boolean)
 								.Const(true)
 							)
 						)
@@ -391,9 +395,11 @@ public class ConditionalTests
 					.Then(new JsonSchemaBuilder()
 						.Properties(
 							("Age", new JsonSchemaBuilder()
+								.Type(SchemaValueType.Integer)
 								.Minimum(65)
 							),
 							("CanVote", new JsonSchemaBuilder()
+								.Type(SchemaValueType.Boolean)
 								.Const(true)
 							)
 						)
@@ -605,7 +611,6 @@ public class ConditionalTests
 
 		var config = new SchemaGeneratorConfiguration
 		{
-			Nullability = Nullability.AllowForNullableValueTypes,
 			PropertyNameResolver = PropertyNameResolvers.CamelCase
 		};
 

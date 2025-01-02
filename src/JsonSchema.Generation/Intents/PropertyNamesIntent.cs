@@ -3,7 +3,7 @@
 /// <summary>
 /// Provides intent to create a `propertyNames` keyword.
 /// </summary>
-public class PropertyNamesIntent : ISchemaKeywordIntent, IContextContainer
+public class PropertyNamesIntent : ISchemaKeywordIntent
 {
 	/// <summary>
 	/// The context that represents the inner requirements.
@@ -17,21 +17,6 @@ public class PropertyNamesIntent : ISchemaKeywordIntent, IContextContainer
 	public PropertyNamesIntent(SchemaGenerationContextBase context)
 	{
 		Context = context;
-	}
-
-	/// <summary>
-	/// Replaces one context with another.
-	/// </summary>
-	/// <param name="hashCode">The hashcode of the context to replace.</param>
-	/// <param name="newContext">The new context.</param>
-	/// <remarks>
-	/// To implement this, call <see cref="object.GetHashCode()"/> on the contained
-	/// contexts.  If any match, replace them with <paramref name="newContext"/>.
-	/// </remarks>
-	public void Replace(int hashCode, SchemaGenerationContextBase newContext)
-	{
-		if (Context.Hash == hashCode)
-			Context = newContext;
 	}
 
 	/// <summary>

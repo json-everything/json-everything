@@ -186,7 +186,7 @@ public class SchemaGenerationTests
 		[MaxItems(10)]
 		public List<bool> ListOfBool { get; set; }
 
-		[MinLength(5)]
+		[MinLength(5, GenericParameter = 0)]
 		[UniqueItems(true)]
 		[Obsolete]
 		public List<string> ListOfString { get; set; }
@@ -297,10 +297,12 @@ public class SchemaGenerationTests
 					.Deprecated(true)
 				),
 				("Duplicated1", new JsonSchemaBuilder()
-					.Ref("#/$defs/integer")
+					.Type(SchemaValueType.Integer)
+					.Maximum(100)
 				),
 				("Duplicated2", new JsonSchemaBuilder()
-					.Ref("#/$defs/integer")
+					.Type(SchemaValueType.Integer)
+					.Maximum(100)
 				),
 				("Target", JsonSchemaBuilder.RefRoot()),
 				("DontIgnoreThis", new JsonSchemaBuilder().Type(SchemaValueType.String)),
@@ -334,13 +336,7 @@ public class SchemaGenerationTests
 					.Description("description")
 				)
 			)
-			.Required(nameof(GenerationTarget.Integer), "RequiredString", "rename-this-required-string")
-			.Defs(
-				("integer", new JsonSchemaBuilder()
-					.Type(SchemaValueType.Integer)
-					.Maximum(100)
-				)
-			);
+			.Required(nameof(GenerationTarget.Integer), "RequiredString", "rename-this-required-string");
 
 		JsonSchema actual = new JsonSchemaBuilder().FromType<GenerationTarget>();
 
@@ -372,6 +368,27 @@ public class SchemaGenerationTests
 			);
 
 		JsonSchema actual = new JsonSchemaBuilder().FromType<InitializedType>();
+
+		AssertEqual(expected, actual);
+	}
+
+	private class LinkedList
+	{
+		public int Value { get; set; }
+		public LinkedList Next { get; set; }
+	}
+
+	[Test]
+	public void RecursiveDefinition()
+	{
+		JsonSchema expected = new JsonSchemaBuilder()
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("Value", new JsonSchemaBuilder().Type(SchemaValueType.Integer)),
+				("Next", new JsonSchemaBuilder().Ref("#"))
+			);
+
+		JsonSchema actual = new JsonSchemaBuilder().FromType<LinkedList>();
 
 		AssertEqual(expected, actual);
 	}

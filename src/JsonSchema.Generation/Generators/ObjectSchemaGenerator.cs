@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json.Nodes;
@@ -15,19 +16,24 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 		return true;
 	}
 
+	[RequiresDynamicCode("JSON serialization and deserialization might require types that cannot be statically analyzed and might need runtime code generation. Use System.Text.Json source generation for native AOT applications.")]
+#pragma warning disable IL3051 // 'RequiresDynamicCodeAttribute' annotations must match across all interface implementations or overrides.
 	public void AddConstraints(SchemaGenerationContextBase context)
+#pragma warning restore IL3051 // 'RequiresDynamicCodeAttribute' annotations must match across all interface implementations or overrides.
 	{
-		if (context.Type == typeof(object)) return;
+		if (context is not TypeGenerationContext typeContext) return;
 
-		context.Intents.Add(new TypeIntent(SchemaValueType.Object));
+		if (typeContext.Type == typeof(object)) return;
 
-		var props = new Dictionary<string, SchemaGenerationContextBase>();
+		typeContext.Intents.Add(new TypeIntent(SchemaValueType.Object));
+
+		var props = new Dictionary<string, MemberGenerationContext>();
 		var required = new List<string>();
-		var propertiesToGenerate = context.Type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
-		var fieldsToGenerate = context.Type.GetFields(BindingFlags.Public | BindingFlags.Instance);
-		var hiddenPropertiesToGenerate = context.Type.GetProperties(BindingFlags.NonPublic | BindingFlags.Instance)
+		var propertiesToGenerate = typeContext.Type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+		var fieldsToGenerate = typeContext.Type.GetFields(BindingFlags.Public | BindingFlags.Instance);
+		var hiddenPropertiesToGenerate = typeContext.Type.GetProperties(BindingFlags.NonPublic | BindingFlags.Instance)
 			.Where(p => p.GetCustomAttribute<JsonIncludeAttribute>() != null);
-		var hiddenFieldsToGenerate = context.Type.GetFields(BindingFlags.NonPublic | BindingFlags.Instance)
+		var hiddenFieldsToGenerate = typeContext.Type.GetFields(BindingFlags.NonPublic | BindingFlags.Instance)
 			.Where(p => p.GetCustomAttribute<JsonIncludeAttribute>() != null);
 		var membersToGenerate = propertiesToGenerate.Cast<MemberInfo>()
 			.Concat(fieldsToGenerate)
@@ -37,13 +43,13 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 
 		membersToGenerate = SchemaGeneratorConfiguration.Current.PropertyOrder switch
 		{
-			PropertyOrder.AsDeclared => [.. membersToGenerate.OrderBy(m => m, context.DeclarationOrderComparer)],
+			PropertyOrder.AsDeclared => [.. membersToGenerate.OrderBy(m => m, typeContext.DeclarationOrderComparer)],
 			PropertyOrder.ByName => [.. membersToGenerate.OrderBy(m => m.Name)],
 			_ => membersToGenerate
 		};
 
 		var conditionalAttributes = new Dictionary<object, List<(MemberInfo, ConditionalAttribute)>>();
-		var strictPropertyDefinitions = new Dictionary<(object, string), SchemaGenerationContextBase>();
+		var strictPropertyDefinitions = new Dictionary<(object, string), MemberGenerationContext>();
 		var addUnevaluatedProperties = false;
 
 		foreach (var member in membersToGenerate)
@@ -76,7 +82,9 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 			if (member.IsWriteOnly() && !unconditionalAttributes.OfType<WriteOnlyAttribute>().Any())
 				unconditionalAttributes.Add(new WriteOnlyAttribute(true));
 
-			var memberContext = SchemaGenerationContextCache.Get(member.GetMemberType(), unconditionalAttributes);
+			var memberTypeContext = SchemaGenerationContextCache.Get(member.GetMemberType());
+			var memberContext = new MemberGenerationContext(memberTypeContext, unconditionalAttributes, member.IsMarkedAsNullable());
+			memberContext.GenerateIntents();
 
 			var name = SchemaGeneratorConfiguration.Current.PropertyNameResolver!(member);
 			var nameAttribute = unconditionalAttributes.OfType<JsonPropertyNameAttribute>().FirstOrDefault();
@@ -85,8 +93,6 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 
 			if (unconditionalAttributes.OfType<ObsoleteAttribute>().Any())
 			{
-				if (memberContext is TypeGenerationContext)
-					memberContext = new MemberGenerationContext(memberContext, []);
 				memberContext.Intents.Add(new DeprecatedIntent(true));
 			}
 
@@ -103,7 +109,11 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 			else
 				props.Add(name, memberContext);
 
-			if (unconditionalAttributes.OfType<RequiredAttribute>().Any())
+			if (unconditionalAttributes.OfType<RequiredAttribute>().Any()
+#if NET7_0_OR_GREATER
+			    || unconditionalAttributes.OfType<System.Runtime.CompilerServices.RequiredMemberAttribute>().Any()
+#endif
+			   )
 				required.Add(name);
 
 			foreach (var conditionalRequiredAttribute in localConditionalAttributes.OfType<RequiredAttribute>())
@@ -114,14 +124,14 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 
 		if (props.Count > 0)
 		{
-			context.Intents.Add(new PropertiesIntent(props));
+			context.Intents.Add(new PropertiesIntent(props.ToDictionary(x => x.Key, SchemaGenerationContextBase (x) => x.Value)));
 
 			if (required.Count > 0)
 				context.Intents.Add(new RequiredIntent(required));
 		}
 
 		var conditionGroups = context.Type.GetCustomAttributes()
-			.OfType<IConditionAttribute>()
+			.OfType<IConditionalAttribute>()
 			.SelectMany(x => ExpandEnumConditions(x, membersToGenerate))
 			.GroupBy(x => x.Attribute.ConditionGroup)
 			.ToList();
@@ -174,7 +184,8 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 			context.Intents.Add(new UnevaluatedPropertiesIntent());
 	}
 
-	private static IEnumerable<(IConditionAttribute Attribute, MemberInfo Member)> ExpandEnumConditions(IConditionAttribute condition, IEnumerable<MemberInfo> members)
+	[RequiresDynamicCode("JSON serialization and deserialization might require types that cannot be statically analyzed and might need runtime code generation. Use System.Text.Json source generation for native AOT applications.")]
+	private static IEnumerable<(IConditionalAttribute Attribute, MemberInfo Member)> ExpandEnumConditions(IConditionalAttribute condition, IEnumerable<MemberInfo> members)
 	{
 		var member = members.FirstOrDefault(x => x.Name == condition.PropertyName);
 		if (member == null) yield break;
@@ -205,7 +216,7 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 		yield return (condition, member);
 	}
 
-	private static IfIntent GenerateIf(IEnumerable<(IConditionAttribute Attribute, MemberInfo Member)> conditions)
+	private static IfIntent GenerateIf(IEnumerable<(IConditionalAttribute Attribute, MemberInfo Member)> conditions)
 	{
 		static void AddPotentialValue(SchemaGenerationContextBase context, JsonNode? newValue)
 		{
@@ -254,17 +265,16 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 				required.Add(name);
 		}
 
-		var ifIntent = new IfIntent(new ISchemaKeywordIntent[]
-		{
+		var ifIntent = new IfIntent([
 			new PropertiesIntent(properties),
 			new RequiredIntent(required)
-		});
+		]);
 
 		return ifIntent;
 	}
 
 	private static ThenIntent? GenerateThen(List<(MemberInfo member, ConditionalAttribute attribute)> consequences,
-		Dictionary<string, SchemaGenerationContextBase> prebuiltMemberContexts)
+		Dictionary<string, MemberGenerationContext> prebuiltMemberContexts)
 	{
 		var applicable = consequences.Where(x => x.attribute is IAttributeHandler); // should be all
 		var required = consequences.Where(x => x.attribute is RequiredAttribute)
@@ -275,11 +285,12 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 		{
 			var name = SchemaGeneratorConfiguration.Current.PropertyNameResolver!(consequence.Key);
 			if (properties.TryGetValue(name, out var localContext))
-				localContext = new MemberGenerationContext(localContext, []);
+				localContext = new MemberGenerationContext(localContext);
 			else
 			{
 				var type = consequence.Key.GetMemberType();
-				localContext = new TypeGenerationContext(type);
+				localContext = new MemberGenerationContext(SchemaGenerationContextCache.Get(type), []);
+				localContext.GenerateIntents();
 			}
 			foreach (var (_, attribute) in consequence)
 			{
@@ -292,7 +303,7 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 		var thenIntents = new List<ISchemaKeywordIntent>();
 
 		if (properties.Count != 0)
-			thenIntents.Add(new PropertiesIntent(properties));
+			thenIntents.Add(new PropertiesIntent(properties.ToDictionary(x => x.Key, SchemaGenerationContextBase (x) => x.Value)));
 
 		if (required.Count != 0)
 			thenIntents.Add(new RequiredIntent(required));

@@ -30,7 +30,10 @@ internal class EnumDictionarySchemaGenerator : ISchemaGenerator
 		context.Intents.Add(new PropertyNamesIntent(keyContext));
 
 		var valueType = context.Type.GenericTypeArguments[1];
-		var valueContext = SchemaGenerationContextCache.Get(valueType);
-		context.Intents.Add(new AdditionalPropertiesIntent(valueContext));
+		var valueTypeContext = SchemaGenerationContextCache.Get(valueType);
+		var valueMemberContext = new MemberGenerationContext(valueTypeContext, []) { Parameter = 1 };
+		context.Intents.Add(new AdditionalPropertiesIntent(valueMemberContext));
+
+		valueMemberContext.GenerateIntents();
 	}
 }

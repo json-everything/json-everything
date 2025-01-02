@@ -1,3 +1,13 @@
-﻿namespace Json.Schema.Generation;
+﻿using System;
 
-internal class AdHocGenerationContext : SchemaGenerationContextBase;
+namespace Json.Schema.Generation;
+
+internal class AdHocGenerationContext : SchemaGenerationContextBase
+{
+	public override Type Type => null!;
+
+	internal override void GenerateIntents()
+	{
+		throw new NotImplementedException();
+	}
+}

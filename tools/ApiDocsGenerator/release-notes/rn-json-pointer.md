@@ -4,7 +4,11 @@ title: JsonPointer.Net
 icon: fas fa-tag
 order: "09.10"
 ---
-# [5.1.0](https://github.com/gregsdennis/json-everything/pull/822) {#release-e-5.1.0}
+# [5.2.0](https://github.com/gregsdennis/json-everything/pull/848) {#release-pointer-5.2.0}
+
+[#843](https://github.com/json-everything/json-everything/pull/843) - Performance improvements courtesy of [@cptjazz](https://github.com/cptjazz).
+
+# [5.1.0](https://github.com/gregsdennis/json-everything/pull/822) {#release-pointer-5.1.0}
 
 Add .Net 9.0 support.
 

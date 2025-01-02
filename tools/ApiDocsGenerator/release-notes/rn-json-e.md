@@ -4,9 +4,15 @@ title: JsonE.Net
 icon: fas fa-tag
 order: "09.12"
 ---
-# [2.3.0](https://github.com/gregsdennis/json-everything/pull/822) {#release-e-2.3.0}
+# [2.5.0](https://github.com/gregsdennis/json-everything/pull/848) {#release-e-2.5.0}
+
+[#843](https://github.com/json-everything/json-everything/pull/843) - Performance improvements courtesy of [@cptjazz](https://github.com/cptjazz).
+
+# [2.4.0](https://github.com/gregsdennis/json-everything/pull/822) {#release-e-2.4.0}
 
 Add .Net 9.0 support.
+
+(v2.3.0 skipped for some reason)
 
 # [2.2.0](https://github.com/gregsdennis/json-everything/pull/805) {#release-e-2.2.0}
 

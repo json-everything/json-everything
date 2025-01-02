@@ -29,6 +29,17 @@ public class OrRule : Rule, IRule
 	{
 		Items = [a, .. more];
 	}
+
+	/// <summary>
+	/// Creates a new instance of <see cref="OrRule"/> when 'or' operator is detected within json logic.
+	/// </summary>
+	/// <param name="a">The first value.</param>
+	/// <param name="more">Sequence of values to Or against.</param>
+	protected internal OrRule(Rule a, ReadOnlySpan<Rule> more)
+	{
+		Items = [a, .. more];
+	}
+
 	/// <summary>
 	/// Creates a new instance for model-less processing.
 	/// </summary>

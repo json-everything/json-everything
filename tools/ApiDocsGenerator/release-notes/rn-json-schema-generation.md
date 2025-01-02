@@ -4,7 +4,46 @@ title: JsonSchema.Net.Generation
 icon: fas fa-tag
 order: "09.05"
 ---
-# [2.3.0](https://github.com/gregsdennis/json-everything/pull/822) {#release-e-2.3.0}
+# [5.0.0](https://github.com/gregsdennis/json-everything/pull/822) {#release-schemagen-5.0.0}
+
+API update which addresses numerous design issues.
+
+- Revamped nullability so that the code is respected and `[Nullable]` is merely an override rather than the primary specifier of behavior.
+- Optimization can no longer be disabled, and has been updated to only collect types instead of common schemas.  `$ref`s are minimized.
+- Added explicit configuration to assign an attribute to a generic parameter.
+- Support for C# `required` keyword.
+
+## Breaking changes
+
+- `IContextContainer` removed as it only supported optimization, which is now performed differently.
+  - `.Replace()` removed from `AdditionalItemsIntent`, `AdditionaPropertiesIntent`, `ItemsIntent`, `PropertiesIntent`, `PropertyNamesIntent`, and `UnevaluatedPropertiesIntent`. 
+- `Nullability` enum removed.
+- `[Nullable]` attribute can no longer be applied to types; now only fields and properties.
+- `SchemaGenerationContextBase`:
+  - `.Type` is now abstract.
+  - `.Hash` removed.
+  - `.ReferenceCount` moved to `TypeGenerationContext`.
+  - `.GenerateIntents()` is now abstract.
+- `MemberGenerationContext.BasedOn` is now explicitly a `TypeGenerationContext`.
+- `SchemaGenerationContextCache.Get()` now explicitly returns a `TypeGenerationContext`.
+- `SchemaGenerationContextOptimizer` removed.
+  - `.TypeNameGenerator` static property moved to `ScheamGenerationConfiguration` as instance property.
+- `SchemaGeneratorConfiguration`:
+  - `.Nullability` removed.
+  - `.Optimize` removed.
+
+## Additions
+
+- `INestableAttribute` interface which allows specifying which generic parameter the attribute applies to.
+  - Most built-in attributes support this interface.
+- `Context` property now settable on `AdditionalPropertiesIntent`, `ItemsIntent`, and `UnevaluatedPropertiesIntent`.    
+- `MemberGenerationContext.NullableRef` which indicates that the member is declared as a nullable reference type.
+- `MemberGenerationContext.Parameter` which indicates the type nesting level ("nesting" as in how a generic parameter is nested).
+- C# `required` keyword will now add the property to a `required` JSON Schema keyword.
+
+## Other changes
+
+# [4.6.0](https://github.com/gregsdennis/json-everything/pull/822) {#release-schemagen-4.6.0}
 
 Add .Net 9.0 support.
 

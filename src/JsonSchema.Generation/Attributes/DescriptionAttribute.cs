@@ -10,12 +10,17 @@ namespace Json.Schema.Generation;
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field |
 				AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface,
 	AllowMultiple = true)]
-public class DescriptionAttribute : ConditionalAttribute, IAttributeHandler
+public class DescriptionAttribute : ConditionalAttribute, INestableAttribute, IAttributeHandler
 {
 	/// <summary>
 	/// The description.
 	/// </summary>
 	public string Description { get; }
+
+	/// <summary>
+	/// The index of the parameter to which the attribute should apply. Default is -1 to indicate the root.
+	/// </summary>
+	public int GenericParameter { get; set; } = -1;
 
 	/// <summary>
 	/// Creates a new <see cref="DescriptionAttribute"/> instance.

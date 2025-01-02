@@ -18,10 +18,21 @@ public class NullabilityTests
 		public string Property { get; set; }
 	}
 
+	public class ReferenceMemberNullable
+	{
+		public string? Property { get; set; }
+	}
+
 	public class ReferenceMemberWithNull
 	{
 		[Nullable(true)]
 		public string Property { get; set; }
+	}
+
+	public class ReferenceMemberNullableWithNull
+	{
+		[Nullable(true)]
+		public string? Property { get; set; }
 	}
 
 	public class ReferenceMemberWithNotNull
@@ -30,26 +41,20 @@ public class NullabilityTests
 		public string Property { get; set; }
 	}
 
-	public class NullableValueTypeMember
-	{
-		public int? Property { get; set; }
-	}
-
-	public class NullableValueTypeMemberWithNull
-	{
-		[Nullable(true)]
-		public int? Property { get; set; }
-	}
-
-	public class NullableValueTypeMemberWithNotNull
+	public class ReferenceMemberNullableWithNotNull
 	{
 		[Nullable(false)]
-		public int? Property { get; set; }
+                public string? Property { get; set; }
 	}
 
 	public class ValueTypeMember
 	{
 		public int Property { get; set; }
+	}
+
+	public class ValueTypeMemberNullable
+	{
+		public int? Property { get; set; }
 	}
 
 	public class ValueTypeMemberWithNull
@@ -58,16 +63,24 @@ public class NullabilityTests
 		public int Property { get; set; }
 	}
 
+	public class ValueTypeMemberNullableWithNull
+	{
+		[Nullable(true)]
+		public int? Property { get; set; }
+	}
+
+	public class ValueTypeMemberNullableWithNotNull
+	{
+		[Nullable(false)]
+		public int? Property { get; set; }
+	}
+
 	public class ValueTypeMemberWithNotNull
 	{
 		[Nullable(false)]
 		public int Property { get; set; }
 	}
 
-	private static readonly Nullability Disabled = Nullability.Disabled;
-	private static readonly Nullability AllowForReferenceTypes = Nullability.AllowForReferenceTypes;
-	private static readonly Nullability AllowForNullableValueTypes = Nullability.AllowForNullableValueTypes;
-	private static readonly Nullability AllowForAllTypes = Nullability.AllowForAllTypes;
 	private static readonly SchemaValueType String = SchemaValueType.String;
 	private static readonly SchemaValueType Integer = SchemaValueType.Integer;
 	private static readonly SchemaValueType Null = SchemaValueType.Null;
@@ -77,55 +90,25 @@ public class NullabilityTests
 	{
 		get
 		{
-			yield return new TestCaseData(Disabled, typeof(ReferenceMember), String);
-			yield return new TestCaseData(Disabled, typeof(ReferenceMemberWithNull), String | Null);
-			yield return new TestCaseData(Disabled, typeof(ReferenceMemberWithNotNull), String);
-			yield return new TestCaseData(AllowForNullableValueTypes, typeof(ReferenceMember), String);
-			yield return new TestCaseData(AllowForNullableValueTypes, typeof(ReferenceMemberWithNull), String | Null);
-			yield return new TestCaseData(AllowForNullableValueTypes, typeof(ReferenceMemberWithNotNull), String);
-			yield return new TestCaseData(AllowForAllTypes, typeof(ReferenceMember), String | Null);
-			yield return new TestCaseData(AllowForAllTypes, typeof(ReferenceMemberWithNull), String | Null);
-			yield return new TestCaseData(AllowForAllTypes, typeof(ReferenceMemberWithNotNull), String);
-			yield return new TestCaseData(AllowForReferenceTypes, typeof(ReferenceMember), String | Null);
-			yield return new TestCaseData(AllowForReferenceTypes, typeof(ReferenceMemberWithNull), String | Null);
-			yield return new TestCaseData(AllowForReferenceTypes, typeof(ReferenceMemberWithNotNull), String);
+			yield return new TestCaseData(typeof(ReferenceMember), String);
+			yield return new TestCaseData(typeof(ReferenceMemberWithNull), String | Null);
+			yield return new TestCaseData(typeof(ReferenceMemberWithNotNull), String);
+			yield return new TestCaseData(typeof(ReferenceMemberNullable), String | Null);
+			yield return new TestCaseData(typeof(ReferenceMemberNullableWithNull), String | Null);
+			yield return new TestCaseData(typeof(ReferenceMemberNullableWithNotNull), String);
 
-			yield return new TestCaseData(Disabled, typeof(NullableValueTypeMember), Integer);
-			yield return new TestCaseData(Disabled, typeof(NullableValueTypeMemberWithNull), Integer | Null);
-			yield return new TestCaseData(Disabled, typeof(NullableValueTypeMemberWithNotNull), Integer);
-			yield return new TestCaseData(AllowForNullableValueTypes, typeof(NullableValueTypeMember), Integer | Null);
-			yield return new TestCaseData(AllowForNullableValueTypes, typeof(NullableValueTypeMemberWithNull), Integer | Null);
-			yield return new TestCaseData(AllowForNullableValueTypes, typeof(NullableValueTypeMemberWithNotNull), Integer);
-			yield return new TestCaseData(AllowForAllTypes, typeof(NullableValueTypeMember), Integer | Null);
-			yield return new TestCaseData(AllowForAllTypes, typeof(NullableValueTypeMemberWithNull), Integer | Null);
-			yield return new TestCaseData(AllowForAllTypes, typeof(NullableValueTypeMemberWithNotNull), Integer);
-			yield return new TestCaseData(AllowForReferenceTypes, typeof(NullableValueTypeMember), Integer);
-			yield return new TestCaseData(AllowForReferenceTypes, typeof(NullableValueTypeMemberWithNull), Integer | Null);
-			yield return new TestCaseData(AllowForReferenceTypes, typeof(NullableValueTypeMemberWithNotNull), Integer);
-
-			yield return new TestCaseData(Disabled, typeof(ValueTypeMember), Integer);
-			yield return new TestCaseData(Disabled, typeof(ValueTypeMemberWithNull), Integer | Null);
-			yield return new TestCaseData(Disabled, typeof(ValueTypeMemberWithNotNull), Integer);
-			yield return new TestCaseData(AllowForNullableValueTypes, typeof(ValueTypeMember), Integer);
-			yield return new TestCaseData(AllowForNullableValueTypes, typeof(ValueTypeMemberWithNull), Integer | Null);
-			yield return new TestCaseData(AllowForNullableValueTypes, typeof(ValueTypeMemberWithNotNull), Integer);
-			yield return new TestCaseData(AllowForAllTypes, typeof(ValueTypeMember), Integer);
-			yield return new TestCaseData(AllowForAllTypes, typeof(ValueTypeMemberWithNull), Integer | Null);
-			yield return new TestCaseData(AllowForAllTypes, typeof(ValueTypeMemberWithNotNull), Integer);
-			yield return new TestCaseData(AllowForReferenceTypes, typeof(ValueTypeMember), Integer);
-			yield return new TestCaseData(AllowForReferenceTypes, typeof(ValueTypeMemberWithNull), Integer | Null);
-			yield return new TestCaseData(AllowForReferenceTypes, typeof(ValueTypeMemberWithNotNull), Integer);
+			yield return new TestCaseData(typeof(ValueTypeMember), Integer);
+			yield return new TestCaseData(typeof(ValueTypeMemberWithNull), Integer | Null);
+			yield return new TestCaseData(typeof(ValueTypeMemberWithNotNull), Integer);
+			yield return new TestCaseData(typeof(ValueTypeMemberNullable), Integer | Null);
+			yield return new TestCaseData(typeof(ValueTypeMemberNullableWithNull), Integer | Null);
+			yield return new TestCaseData(typeof(ValueTypeMemberNullableWithNotNull), Integer);
 		}
 	}
 
 	[TestCaseSource(nameof(MemberCases))]
-	public void MemberNullability(Nullability nullability, Type type, SchemaValueType valueType)
+	public void MemberNullability(Type type, SchemaValueType valueType)
 	{
-		var config = new SchemaGeneratorConfiguration
-		{
-			Nullability = nullability
-		};
-
 		// Nullability affects root schema so only PropertiesKeywords are compared
 		var expected = new JsonSchemaBuilder()
 			.Properties(
@@ -136,7 +119,79 @@ public class NullabilityTests
 			.First();
 
 		var actual = new JsonSchemaBuilder()
-			.FromType(type, config)
+			.FromType(type)
+			.Build()
+			.Keywords!
+			.OfType<PropertiesKeyword>()
+			.First();
+
+		AssertEqual(expected, actual);
+	}
+
+	public class EnumMember
+	{
+		public DayOfWeek Property { get; set; }
+	}
+
+	public class EnumMemberNullable
+	{
+		public DayOfWeek? Property { get; set; }
+	}
+
+	public class EnumMemberWithNull
+	{
+		[Nullable(true)]
+		public DayOfWeek Property { get; set; }
+	}
+
+	public class EnumMemberNullableWithNull
+	{
+		[Nullable(true)]
+		public DayOfWeek? Property { get; set; }
+	}
+
+	public class EnumMemberWithNotNull
+	{
+		[Nullable(false)]
+		public DayOfWeek Property { get; set; }
+	}
+
+	public class EnumMemberNullableWithNotNull
+	{
+		[Nullable(false)]
+		public DayOfWeek? Property { get; set; }
+	}
+
+	public static IEnumerable<TestCaseData> EnumMemberCases
+	{
+		get
+		{
+			yield return new TestCaseData(typeof(EnumMember), false);
+			yield return new TestCaseData(typeof(EnumMemberWithNull), true);
+			yield return new TestCaseData(typeof(EnumMemberWithNotNull), false);
+			yield return new TestCaseData(typeof(EnumMemberNullable), true);
+			yield return new TestCaseData(typeof(EnumMemberNullableWithNull), true);
+			yield return new TestCaseData(typeof(EnumMemberNullableWithNotNull), false);
+		}
+	}
+
+	[TestCaseSource(nameof(EnumMemberCases))]
+	public void EnumMemberNullability(Type type, bool containsNull)
+	{
+		var values = Enum.GetNames(typeof(DayOfWeek)).ToList();
+		if (containsNull)
+			values.Add(null!);
+		// Nullability affects root schema so only PropertiesKeywords are compared
+		var expected = new JsonSchemaBuilder()
+			.Properties(
+				(nameof(ReferenceMember.Property), new JsonSchemaBuilder().Enum(values)))
+			.Build()
+			.Keywords!
+			.OfType<PropertiesKeyword>()
+			.First();
+
+		var actual = new JsonSchemaBuilder()
+			.FromType(type)
 			.Build()
 			.Keywords!
 			.OfType<PropertiesKeyword>()
@@ -149,38 +204,48 @@ public class NullabilityTests
 	{
 		get
 		{
-			yield return new TestCaseData(Disabled, typeof(string), String);
-			yield return new TestCaseData(AllowForNullableValueTypes, typeof(string), String);
-			yield return new TestCaseData(AllowForAllTypes, typeof(string), String | Null);
-			yield return new TestCaseData(AllowForReferenceTypes, typeof(string), String | Null);
-
-			yield return new TestCaseData(Disabled, typeof(int?), Integer);
-			yield return new TestCaseData(AllowForNullableValueTypes, typeof(int?), Integer | Null);
-			yield return new TestCaseData(AllowForAllTypes, typeof(int?), Integer | Null);
-			yield return new TestCaseData(AllowForReferenceTypes, typeof(int?), Integer);
-
-			yield return new TestCaseData(Disabled, typeof(int), Integer);
-			yield return new TestCaseData(AllowForNullableValueTypes, typeof(int), Integer);
-			yield return new TestCaseData(AllowForAllTypes, typeof(int), Integer);
-			yield return new TestCaseData(AllowForReferenceTypes, typeof(int), Integer);
-
+			yield return new TestCaseData(typeof(string), String);
+			yield return new TestCaseData(typeof(int?), Integer);
+			yield return new TestCaseData(typeof(int), Integer);
 		}
 	}
 
 	[TestCaseSource(nameof(TypeCases))]
-	public void TypeNullability(Nullability nullability, Type type, SchemaValueType valueType)
+	public void TypeNullability(Type type, SchemaValueType valueType)
 	{
-		var config = new SchemaGeneratorConfiguration
-		{
-			Nullability = nullability
-		};
-
 		var expected = new JsonSchemaBuilder()
 			.Type(valueType)
 			.Build();
 
 		var actual = new JsonSchemaBuilder()
-			.FromType(type, config)
+			.FromType(type)
+			.Build();
+
+		AssertEqual(expected, actual);
+	}
+
+	public static IEnumerable<TestCaseData> EnumTypeCases
+	{
+		get
+		{
+			yield return new TestCaseData(typeof(DayOfWeek), false);
+			yield return new TestCaseData(typeof(DayOfWeek?), false);
+		}
+	}
+
+	[TestCaseSource(nameof(EnumTypeCases))]
+	public void EnumTypeNullability(Type type, bool containsNull)
+	{
+		var values = Enum.GetNames(typeof(DayOfWeek)).ToList();
+		if (containsNull)
+			values.Add(null!);
+
+		var expected = new JsonSchemaBuilder()
+			.Enum(values)
+			.Build();
+
+		var actual = new JsonSchemaBuilder()
+			.FromType(type)
 			.Build();
 
 		AssertEqual(expected, actual);
@@ -203,11 +268,7 @@ public class NullabilityTests
 			);
 
 		var actual = new JsonSchemaBuilder()
-			.FromType<DifferingNullabilityValueType>(new SchemaGeneratorConfiguration
-			{
-				Nullability = AllowForNullableValueTypes,
-				Optimize = false
-			})
+			.FromType<DifferingNullabilityValueType>(new SchemaGeneratorConfiguration())
 			.Build();
 
 		AssertEqual(expected, actual);
@@ -217,7 +278,7 @@ public class NullabilityTests
 	{
 		public int NonNullable { get; set; }
 		[Nullable(true)]
-		public int? Nullable { get; set; }
+		public int Nullable { get; set; }
 	}
 
 	[Test]
@@ -231,10 +292,7 @@ public class NullabilityTests
 			);
 
 		var actual = new JsonSchemaBuilder()
-			.FromType<DifferingNullabilityValueTypeUsingAttribute>(new SchemaGeneratorConfiguration
-			{
-				Optimize = false
-			})
+			.FromType<DifferingNullabilityValueTypeUsingAttribute>(new SchemaGeneratorConfiguration())
 			.Build();
 
 		AssertEqual(expected, actual);
@@ -244,7 +302,10 @@ public class NullabilityTests
 	{
 		public string NonNullable { get; set; }
 		[Nullable(true)]
-		public string? Nullable { get; set; }
+		public string Nullable { get; set; }
+		public string? AlsoNullable { get; set; }
+		[Nullable(false)]
+		public string? OverriddenNotNullable { get; set; }
 	}
 
 	[Test]
@@ -254,15 +315,63 @@ public class NullabilityTests
 			.Type(SchemaValueType.Object)
 			.Properties(
 				("NonNullable", new JsonSchemaBuilder().Type(String)),
-				("Nullable", new JsonSchemaBuilder().Type(String | Null))
+				("Nullable", new JsonSchemaBuilder().Type(String | Null)),
+				("AlsoNullable", new JsonSchemaBuilder().Type(String | Null)),
+				("OverriddenNotNullable", new JsonSchemaBuilder().Type(String))
 			);
 
 		var actual = new JsonSchemaBuilder()
-			.FromType<DifferingNullabilityReferenceType>(new SchemaGeneratorConfiguration
-			{
-				Nullability = AllowForNullableValueTypes,
-				Optimize = false
-			})
+			.FromType<DifferingNullabilityReferenceType>(new SchemaGeneratorConfiguration())
+			.Build();
+
+		AssertEqual(expected, actual);
+	}
+
+	private class NullableDateTime
+	{
+		public DateTime? Property { get; set; }
+	}
+
+	[Test]
+	public void NullableStruct()
+	{
+		var expected = new JsonSchemaBuilder()
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("Property", new JsonSchemaBuilder()
+					.Type(SchemaValueType.String | SchemaValueType.Null)
+					.Format(Formats.DateTime)
+				)
+			);
+
+		var actual = new JsonSchemaBuilder()
+			.FromType<NullableDateTime>()
+			.Build();
+
+		AssertEqual(expected, actual);
+	}
+
+	private class NullableDateTimeWithDescription
+	{
+		[Description("description")]
+		public DateTime? Property { get; set; }
+	}
+
+	[Test]
+	public void NullableStructWithAnotherAttribute()
+	{
+		var expected = new JsonSchemaBuilder()
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("Property", new JsonSchemaBuilder()
+					.Type(SchemaValueType.String | SchemaValueType.Null)
+					.Format(Formats.DateTime)
+					.Description("description")
+				)
+			);
+
+		var actual = new JsonSchemaBuilder()
+			.FromType<NullableDateTimeWithDescription>()
 			.Build();
 
 		AssertEqual(expected, actual);

@@ -12,20 +12,27 @@ namespace Json.Schema.Generation;
 /// The specific keywords which are added depend on the type of the targeted property.
 /// </remarks>
 [AttributeUsage(AttributeTargets.Enum | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface, AllowMultiple = true)]
-public class IfMaxAttribute : ConditionalAttribute, IConditionAttribute
+public class IfMaxAttribute : ConditionalAttribute, INestableAttribute, IConditionalAttribute
 {
 	/// <summary>
 	/// The property name.
 	/// </summary>
 	public string PropertyName { get; set; }
+	
 	/// <summary>
 	/// The expected maximum value.
 	/// </summary>
 	public double Value { get; set; }
+	
 	/// <summary>
 	/// Gets or sets whether the value should be exclusive.
 	/// </summary>
 	public bool IsExclusive { get; set; }
+
+	/// <summary>
+	/// The index of the parameter to which the attribute should apply. Default is -1 to indicate the root.
+	/// </summary>
+	public int GenericParameter { get; set; } = -1;
 
 	internal Type? PropertyType { get; set; }
 

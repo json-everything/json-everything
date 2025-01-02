@@ -29,7 +29,11 @@ internal static class CommonErrors
 
 	public static string WrongToken(string token, params string[] expected) => $"Found: {token} token, expected one of: {string.Join(",", expected)}";
 
+#if NET9_0_OR_GREATER
+	public static string WrongToken(char token, params ReadOnlySpan<string?> expected) => $"Found: {token} token, expected one of: {string.Join(",", expected)}";
+#else
 	public static string WrongToken(char token, params string[] expected) => $"Found: {token} token, expected one of: {string.Join(",", expected)}";
+#endif
 
 	public static string EndOfInput() => "Unexpected end of input";
 

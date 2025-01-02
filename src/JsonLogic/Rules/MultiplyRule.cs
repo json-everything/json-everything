@@ -29,6 +29,17 @@ public class MultiplyRule : Rule, IRule
 	{
 		Items = [a, .. more];
 	}
+
+	/// <summary>
+	/// Creates a new instance of <see cref="MultiplyRule"/> when '*' operator is detected within json logic.
+	/// </summary>
+	/// <param name="a">The first value in to which other values will be multiplied by.</param>
+	/// <param name="more">Sequence of values to multiply by.</param>
+	protected internal MultiplyRule(Rule a, ReadOnlySpan<Rule> more)
+	{
+		Items = [a, .. more];
+	}
+
 	/// <summary>
 	/// Creates a new instance for model-less processing.
 	/// </summary>

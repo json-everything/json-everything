@@ -1,6 +1,6 @@
 ﻿namespace Json.Schema.Generation;
 
-internal interface IConditionAttribute
+internal interface IConditionalAttribute
 {
 	string PropertyName { get; set; }
 	object? ConditionGroup { get; set; }

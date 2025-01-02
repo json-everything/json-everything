@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Json.Schema.Generation.Intents;
 
 namespace Json.Schema.Generation;
@@ -10,69 +11,77 @@ namespace Json.Schema.Generation;
 public static class SchemaGenerationContextCache
 {
 	[ThreadStatic]
-	private static Dictionary<int, SchemaGenerationContextBase>? _cache;
+	private static Dictionary<Type, TypeGenerationContext>? _cache;
 
-	internal static Dictionary<int, SchemaGenerationContextBase> Cache => _cache ??= [];
+	internal static Dictionary<Type, TypeGenerationContext> Cache => _cache ??= [];
 
 	/// <summary>
-	/// Gets or creates a <see cref="SchemaGenerationContextBase"/> based on the given
+	/// Gets or creates a <see cref="TypeGenerationContext"/> based on the given
 	/// type and attribute set.
 	/// </summary>
 	/// <param name="type">The type to generate.</param>
-	/// <param name="memberAttributes">
-	/// A collection of extra attributes.  Only use if requesting a context to represent
-	/// a member.
-	/// </param>
 	/// <returns>
 	/// A generation context, from the cache if one exists with the specified
 	/// type and attribute set; otherwise a new one.  New contexts are automatically
-	/// cached.  If <paramref name="memberAttributes"/> is null or empty, a
-	/// <see cref="TypeGenerationContext"/> will be returned; otherwise a
-	/// <see cref="MemberGenerationContext"/>.
+	/// cached.
 	/// </returns>
 	/// <remarks>
 	/// Use this in your generator if it needs to create keywords with subschemas.
 	/// </remarks>
-	public static SchemaGenerationContextBase Get(Type type, List<Attribute>? memberAttributes = null)
+	public static TypeGenerationContext Get(Type type)
 	{
-		return Get(type, memberAttributes, false);
+		return Get(type, false);
 	}
 
-	internal static SchemaGenerationContextBase GetRoot(Type type, List<Attribute>? memberAttributes = null)
+	internal static TypeGenerationContext GetRoot(Type type)
 	{
-		return Get(type, memberAttributes, true);
-	}
+		var baseContext = Get(type, true);
+		var toReintegrate = Cache
+			.Where(x => (x.Value.References.Count == 1 &&
+			            x.Key != type &&
+			            x.Key.CanBeReferenced()) ||
+			            x.Value.Intents is [RefIntent])
+			.Select(x => x.Value)
+			.ToList();
 
-	private static SchemaGenerationContextBase Get(Type type, List<Attribute>? memberAttributes, bool isRoot)
-	{
-		var hash = CalculateHash(type, memberAttributes?.WhereHandled());
-		if (!Cache.TryGetValue(hash, out var context))
+		foreach (var schema in toReintegrate)
 		{
-			if (memberAttributes != null && memberAttributes.Count != 0)
+			foreach (var context in schema.References)
 			{
-				var memberContext = new MemberGenerationContext(type, memberAttributes);
-				context = memberContext;
-				Cache[hash] = memberContext;
-				memberContext.BasedOn = Get(type);
-				if (hash != memberContext.BasedOn.Hash)
-					memberContext.BasedOn.ReferenceCount--;
-			}
-			else
-			{
-				context = new TypeGenerationContext(type) { IsRoot = isRoot };
-				var comments = SchemaGeneratorConfiguration.Current.XmlReader.GetTypeComments(type);
-				if (!string.IsNullOrWhiteSpace(comments.Summary))
-					context.Intents.Add(new DescriptionIntent(comments.Summary!));
+				var contextKeywords = context.Intents.Select(x => x.GetType());
+				var schemaKeywords = schema.Intents.Select(x => x.GetType());
+				if (contextKeywords.Intersect(schemaKeywords).Except([typeof(RefIntent)]).Any()) continue;
 
-				Cache[hash] = context;
+				var refIntent = context.Intents.OfType<RefIntent>().First();
+				context.Intents.Remove(refIntent);
+				context.Intents.AddRange(schema.Intents);
 			}
+			schema.References.Clear();
+		}
 
-			context.Hash = hash;
+		var definitions = Cache
+			.Where(x => x.Value.References.Count > 0 &&
+			            x.Key != type && 
+			            x.Key.CanBeReferenced())
+			.ToDictionary(x => x.Value.DefinitionName, SchemaGenerationContextBase (x) => x.Value);
+		if (definitions.Count != 0)
+			baseContext.Intents.Add(new DefsIntent(definitions));
+		return baseContext;
+	}
+
+	private static TypeGenerationContext Get(Type type, bool isRoot)
+	{
+		if (!Cache.TryGetValue(type, out var context))
+		{
+			context = new TypeGenerationContext(type) { IsRoot = isRoot };
+			var comments = SchemaGeneratorConfiguration.Current.XmlReader.GetTypeComments(type);
+			if (!string.IsNullOrWhiteSpace(comments.Summary))
+				context.Intents.Add(new DescriptionIntent(comments.Summary!));
+
+			Cache[type] = context;
 
 			context.GenerateIntents();
 		}
-
-		context.ReferenceCount++;
 
 		return context;
 	}
@@ -80,15 +89,5 @@ public static class SchemaGenerationContextCache
 	internal static void Clear()
 	{
 		Cache.Clear();
-	}
-
-	private static int CalculateHash(Type type, IEnumerable<Attribute>? attributes)
-	{
-		unchecked
-		{
-			var hashCode = type.GetHashCode();
-			hashCode = (hashCode * 397) ^ (attributes?.GetAttributeSetHashCode() ?? 0);
-			return hashCode;
-		}
 	}
 }

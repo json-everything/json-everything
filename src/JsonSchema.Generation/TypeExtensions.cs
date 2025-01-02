@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Text.Json.Serialization;
+using System.Text.Json.Nodes;
+using Humanizer;
 using Json.More;
 #pragma warning disable IL2075
 
@@ -26,26 +27,6 @@ public static class TypeExtensions
 		       (type.IsArray ||
 		        type == typeof(Array) ||
 		        typeof(IEnumerable).IsAssignableFrom(type));
-	}
-
-	internal static int GetAttributeSetHashCode(this IEnumerable<Attribute> items)
-	{
-		var eligible = items.Where(a => a is not JsonPropertyNameAttribute and not RequiredAttribute)
-			.OrderBy(x => x.GetType().AssemblyQualifiedName);
-		unchecked
-		{
-			var hashCode = 0;
-			foreach (var attribute in eligible)
-			{
-				var properties = attribute.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
-					.OrderBy(x => x.Name);
-				var propertyHash = properties.Aggregate(0, (c, p) => (c * 397) ^ (p.GetValue(attribute)?.GetHashCode() ?? 0));
-
-				hashCode = (hashCode * 397) ^ attribute.GetType().GetHashCode();
-				hashCode = (hashCode * 397) ^ propertyHash;
-			}
-			return hashCode;
-		}
 	}
 
 	internal static Type GetMemberType(this MemberInfo info) =>
@@ -72,6 +53,7 @@ public static class TypeExtensions
 			_ => throw new NotSupportedException($"Cannot get writability of {info.GetType()}")
 		};
 
+	// ReSharper disable once IdentifierTypo
 	private static readonly Dictionary<Type, string> _keywordedTypes =
 		new()
 		{
@@ -89,6 +71,10 @@ public static class TypeExtensions
 			[typeof(char)] = "char",
 			[typeof(bool)] = "bool",
 		};
+
+	internal static bool IsJsonType(this Type type) =>
+		_keywordedTypes.ContainsKey(type) ||
+		type.IsSubclassOf(typeof(JsonNode));
 
 	internal static string CSharpName(this Type type, StringBuilder? sb = null)
 	{
@@ -138,4 +124,70 @@ public static class TypeExtensions
 		return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>) &&
 			   type.GetGenericArguments()[0].IsNumber();
 	}
+
+	internal static string GetDefName(this Type type) =>
+		SchemaGeneratorConfiguration.Current.TypeNameGenerator?.GenerateName(type) ??
+		GetName(type).Camelize();
+
+	private static string GetName(Type type)
+	{
+		if (type.IsInteger()) return "integer";
+		if (type.IsNumber()) return "number";
+		if (type == typeof(string)) return "string";
+		if (type == typeof(bool)) return "boolean";
+		if (type.IsArray)
+		{
+			var itemType = type.GetElementType();
+			return $"array of {GetName(itemType!)}";
+		}
+		if (type.IsGenericType &&
+		    typeof(IEnumerable<>).IsAssignableFrom(type.GetGenericTypeDefinition()) &&
+		    type.GenericTypeArguments.Length == 1)
+		{
+			var itemType = type.GenericTypeArguments[0];
+			return $"array of {GetName(itemType)}";
+		}
+		return GetFriendlyTypeName(type);
+	}
+
+	private static string GetFriendlyTypeName(Type type, StringBuilder? sb = null)
+	{
+		sb ??= new StringBuilder();
+		var name = type.Name;
+		if (!type.IsGenericType)
+		{
+			if (type is { IsNested: true, IsGenericParameter: false })
+				name = $"{name} in {GetName(type.DeclaringType!)}";
+			return name;
+		}
+
+		sb.Append(name[..name.IndexOf('`')]);
+		sb.Append(" of ");
+		sb.Append(string.Join(" and ", type.GetGenericArguments()
+			.Select(x => GetFriendlyTypeName(x, sb))));
+		name = sb.ToString();
+
+		if (type.IsNested)
+			name = $"{name} in {GetName(type.DeclaringType!)}";
+
+		return name;
+	}
+
+	internal static bool IsMarkedAsNullable(this MemberInfo member)
+	{
+#if NET8_0_OR_GREATER
+		var infoContext = member switch
+		{
+			PropertyInfo p => new NullabilityInfoContext().Create(p),
+			FieldInfo f => new NullabilityInfoContext().Create(f),
+			_ => null
+		};
+
+		return infoContext?.WriteState is NullabilityState.Nullable;
+#else
+		return false;
+#endif
+	}
+
+	internal static bool CanBeReferenced(this Type type) => !type.IsJsonType() && !type.IsNullableValueType();
 }

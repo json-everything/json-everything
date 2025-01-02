@@ -4,6 +4,10 @@ title: JsonPath.Net
 icon: fas fa-tag
 order: "09.08"
 ---
+# [2.1.0](https://github.com/gregsdennis/json-everything/pull/848) {#release-path-2.1.0}
+
+[#843](https://github.com/json-everything/json-everything/pull/843) - Performance improvements courtesy of [@cptjazz](https://github.com/cptjazz).
+
 # [2.0.1](https://github.com/gregsdennis/json-everything/pull/842) {#release-path-2.0.1}
 
 [#837](https://github.com/gregsdennis/json-everything/pull/837) - Support for nested nodelist functions.  Thanks to [@He-Pin](https://github.com/He-Pin) for reporting and fixing this.

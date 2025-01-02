@@ -6,12 +6,10 @@ namespace Json.Schema.Generation.DataAnnotations.Tests;
 
 public class StringLengthAttributeTests
 {
-	private class Target
+	private class TargetNoMinimum
 	{
 		[StringLength(10)]
 		public object Simple { get; set; }
-		[StringLength(20, MinimumLength = 2)]
-		public object WithMin { get; set; }
 	}
 
 	[Test]
@@ -22,13 +20,30 @@ public class StringLengthAttributeTests
 			.Properties(
 				("Simple", new JsonSchemaBuilder()
 					.MaxLength(10)
-				),
+				)
+			);
+
+		VerifyGeneration<TargetNoMinimum>(expected);
+	}
+
+	private class TargetWithMinimum
+	{
+		[StringLength(20, MinimumLength = 2)]
+		public object WithMin { get; set; }
+	}
+
+	[Test]
+	public void GenerateStringRangeMinimum()
+	{
+		JsonSchema expected = new JsonSchemaBuilder()
+			.Type(SchemaValueType.Object)
+			.Properties(
 				("WithMin", new JsonSchemaBuilder()
 					.MinLength(2)
 					.MaxLength(20)
 				)
 			);
 
-		VerifyGeneration<Target>(expected);
+		VerifyGeneration<TargetWithMinimum>(expected);
 	}
 }

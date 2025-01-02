@@ -3,12 +3,12 @@
 /// <summary>
 /// Provides intent to create an `additionalProperties` keyword.
 /// </summary>
-public class AdditionalPropertiesIntent : ISchemaKeywordIntent, IContextContainer
+public class AdditionalPropertiesIntent : ISchemaKeywordIntent
 {
 	/// <summary>
 	/// The context that represents the inner requirements.
 	/// </summary>
-	public SchemaGenerationContextBase Context { get; private set; }
+	public SchemaGenerationContextBase Context { get; set; }
 
 	/// <summary>
 	/// Creates a new <see cref="AdditionalPropertiesIntent"/> instance.
@@ -17,17 +17,6 @@ public class AdditionalPropertiesIntent : ISchemaKeywordIntent, IContextContaine
 	public AdditionalPropertiesIntent(SchemaGenerationContextBase context)
 	{
 		Context = context;
-	}
-
-	/// <summary>
-	/// Replaces one context with another.
-	/// </summary>
-	/// <param name="hashCode">The hashcode of the context to replace.</param>
-	/// <param name="newContext">The new context.</param>
-	public void Replace(int hashCode, SchemaGenerationContextBase newContext)
-	{
-		if (Context.Hash == hashCode)
-			Context = newContext;
 	}
 
 	/// <summary>

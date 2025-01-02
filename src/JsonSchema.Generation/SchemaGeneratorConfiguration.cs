@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Json.Schema.Generation.Generators;
+using Json.Schema.Generation.Refiners;
 using Json.Schema.Generation.XmlComments;
 
 namespace Json.Schema.Generation;
@@ -10,6 +11,12 @@ namespace Json.Schema.Generation;
 /// </summary>
 public class SchemaGeneratorConfiguration
 {
+	private static readonly ISchemaRefiner[] _defaultRefiners =
+	[
+		new ArrayItemsRefiner(),
+		new ObjectValuesRefiner()
+	];
+
 	private readonly Dictionary<string, string> _xmlCommentsFiles = [];
 	private PropertyNameResolver? _propertyNameResolver;
 
@@ -28,7 +35,7 @@ public class SchemaGeneratorConfiguration
 	/// <summary>
 	/// A collection of refiners.
 	/// </summary>
-	public List<ISchemaRefiner> Refiners { get; } = [];
+	public List<ISchemaRefiner> Refiners { get; } = [.._defaultRefiners];
 	/// <summary>
 	/// A collection of generators in addition to the global set.
 	/// </summary>
@@ -52,18 +59,6 @@ public class SchemaGeneratorConfiguration
 	}
 
 	/// <summary>
-	/// Gets or sets whether to include `null` in the `type` keyword.
-	/// Default is <see cref="Nullability.Disabled"/> which means that it will
-	/// not ever be included.
-	/// </summary>
-	public Nullability Nullability { get; set; }
-
-	/// <summary>
-	/// Gets or sets whether optimizations (moving common subschemas into `$defs`) will be performed.  Default is true.
-	/// </summary>
-	public bool Optimize { get; set; } = true;
-
-	/// <summary>
 	/// Gets or sets whether properties that are affected by conditionals are defined
 	/// globally or only within their respective `then` subschemas.  True restricts
 	/// those property definitions to `then` subschemas and adds a top-level
@@ -76,6 +71,11 @@ public class SchemaGeneratorConfiguration
 	/// of these types, a `$ref` keyword will be generated instead of a full schema.
 	/// </summary>
 	public Dictionary<Type, Uri> ExternalReferences { get; } = [];
+
+	/// <summary>
+	/// Provides custom naming functionality.
+	/// </summary>
+	public ITypeNameGenerator? TypeNameGenerator { get; set; }
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 	/// <summary>

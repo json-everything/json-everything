@@ -48,8 +48,11 @@ public class ClientTests
 	{
 		public string Value { get; set; }
 
-		[JsonPropertyName("left")] public TreeNodeMetaData Left { get; set; }
-		[JsonPropertyName("right")] public TreeNodeMetaData Right { get; set; }
+		[JsonPropertyName("left")]
+		public TreeNodeMetaData Left { get; set; }
+		
+		[JsonPropertyName("right")]
+		public TreeNodeMetaData Right { get; set; }
 	}
 
 	public class TreeNodeMetaData
@@ -398,75 +401,103 @@ public class ClientTests
 		public NestedType? Nested = new();
 	}
 
-
 	[Test]
 	public void Issue767_PropertyDescriptionFromXmlComments()
 	{
-		var expected = JsonNode.Parse(
-			"""
-			{
-			  "type": "object",
-			  "properties": {
-			    "Nested": {
-			      "type": "object",
-			      "properties": {
-			        "NestedNested": {
-			          "$ref": "#/$defs/nestedNestedTypeInNestedTypeInIssue767PropertyLevelCommentsInClientTests"
-			        },
-			        "Names": {
-			          "$ref": "#/$defs/listOfString1"
-			        },
-			        "Descriptions": {
-			          "$ref": "#/$defs/listOfString2"
-			        }
-			      },
-			      "description": "Nested property on Issue767_PropertyLevelComments"
-			    }
-			  },
-			  "$defs": {
-			    "nestedNestedTypeInNestedTypeInIssue767PropertyLevelCommentsInClientTests": {
-			      "type": "object",
-			      "properties": {
-			        "NestedNames": {
-			          "$ref": "#/$defs/listOfString"
-			        }
-			      },
-			      "description": "NestedNested property on NestedType"
-			    },
-			    "listOfString": {
-			      "type": "array",
-			      "items": {
-			        "type": "string",
-			        "description": "NestedNames property on NestedNestedType (double-nested)"
-			      },
-			      "description": "NestedNames property on NestedNestedType (double-nested)"
-			    },
-			    "listOfString1": {
-			      "type": "array",
-			      "items": {
-			        "type": "string",
-			        "description": "Names property on NestedType"
-			      },
-			      "description": "Names property on NestedType"
-			    },
-			    "listOfString2": {
-			      "type": "array",
-			      "items": {
-			        "type": "string",
-			        "description": "Descriptions property on NestedType"
-			      },
-			      "description": "Descriptions property on NestedType"
-			    }
-			  }
-			}
-			""");
+		var expected = new JsonSchemaBuilder()
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("Nested", new JsonSchemaBuilder()
+					.Type(SchemaValueType.Object | SchemaValueType.Null)
+					.Description("Nested property on Issue767_PropertyLevelComments")
+					.Properties(
+						("Names", new JsonSchemaBuilder()
+							.Ref("#/$defs/listOfString")
+							.Description("Names property on NestedType")
+						),
+						("Descriptions", new JsonSchemaBuilder()
+							.Ref("#/$defs/listOfString")
+							.Description("Descriptions property on NestedType")
+						),
+						("NestedNested", new JsonSchemaBuilder()
+							.Type(SchemaValueType.Object)
+							.Description("NestedNested property on NestedType")
+							.Properties(
+								("NestedNames", new JsonSchemaBuilder()
+									.Ref("#/$defs/listOfString")
+							.Description("NestedNames property on NestedNestedType (double-nested)")
+								)
+							)
+						)
+					)
+				)
+			)
+			.Defs(
+				("listOfString", new JsonSchemaBuilder()
+					.Type(SchemaValueType.Array)
+					.Items(new JsonSchemaBuilder().Type(SchemaValueType.String))
+				)
+			);
 
-		var options = new SchemaGeneratorConfiguration { Optimize = true };
+		var options = new SchemaGeneratorConfiguration();
 		options.RegisterXmlCommentFile<Issue767_PropertyLevelComments>("JsonSchema.Net.Generation.Tests.xml");
 		JsonSchema schema = new JsonSchemaBuilder().FromType<Issue767_PropertyLevelComments>(options);
-		var schemaJson = JsonSerializer.SerializeToNode(schema, TestSerializerContext.Default.JsonSchema);
-		TestConsole.WriteLine(schemaJson);
 
-		Assert.That(schemaJson.IsEquivalentTo(expected), Is.True);
+		AssertEqual(expected, schema);
+	}
+
+	private const string ExternalSchemaUri = "https://test.json-everything.net/has-external-schema";
+	private const string GeneratedSchemaUri = "https://test.json-everything.net/uses-external-schema";
+
+	[Id(ExternalSchemaUri)]
+	internal class HasExternalSchemaUsingIdAttribute
+	{
+		public int Value { get; set; }
+	}
+
+	[Id(GeneratedSchemaUri)]
+	internal class ShouldRefToExternalSchemaUsingIdAttributeWithRequiredKeyword
+	{
+		// it is this required keyword that prevents the $ref
+		public required HasExternalSchemaUsingIdAttribute ShouldRef { get; set; }
+	}
+
+	[Id(GeneratedSchemaUri)]
+	internal class ShouldRefToExternalSchemaUsingIdAttributeWithRequiredAttribute
+	{
+		[Required]
+		public HasExternalSchemaUsingIdAttribute ShouldRef { get; set; }
+	}
+
+	[Test]
+	public void Issue815_UsingCSharpRequiredKeyword()
+	{
+		JsonSchema expected = new JsonSchemaBuilder()
+			.Id(GeneratedSchemaUri)
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("ShouldRef", new JsonSchemaBuilder().Ref(ExternalSchemaUri))
+			)
+			.Required("ShouldRef");
+
+		JsonSchema actual = new JsonSchemaBuilder().FromType<ShouldRefToExternalSchemaUsingIdAttributeWithRequiredKeyword>();
+
+		AssertEqual(expected, actual);
+	}
+
+	[Test]
+	public void Issue815_UsingRequiredAttribute()
+	{
+		JsonSchema expected = new JsonSchemaBuilder()
+			.Id(GeneratedSchemaUri)
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("ShouldRef", new JsonSchemaBuilder().Ref(ExternalSchemaUri))
+			)
+			.Required("ShouldRef");
+
+		JsonSchema actual = new JsonSchemaBuilder().FromType<ShouldRefToExternalSchemaUsingIdAttributeWithRequiredKeyword>();
+
+		AssertEqual(expected, actual);
 	}
 }

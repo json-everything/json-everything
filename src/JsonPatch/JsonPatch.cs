@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -26,7 +27,7 @@ public class JsonPatch : IEquatable<JsonPatch>
 	/// <param name="operations">The collection of operations.</param>
 	public JsonPatch(params PatchOperation[] operations)
 	{
-		Operations = operations.ToList().AsReadOnly();
+		Operations = new ReadOnlyCollection<PatchOperation>(operations);
 	}
 
 	/// <summary>
@@ -36,6 +37,15 @@ public class JsonPatch : IEquatable<JsonPatch>
 	public JsonPatch(IEnumerable<PatchOperation> operations)
 	{
 		Operations = operations.ToList().AsReadOnly();
+	}
+
+	/// <summary>
+	/// Creates a new instance of the <see cref="JsonPatch"/> class.
+	/// </summary>
+	/// <param name="operations">The collection of operations.</param>
+	internal JsonPatch(List<PatchOperation> operations)
+	{
+		Operations = operations.AsReadOnly();
 	}
 
 	/// <summary>

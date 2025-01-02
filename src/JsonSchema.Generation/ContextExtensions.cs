@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace Json.Schema.Generation;
@@ -19,7 +20,8 @@ public static class ContextExtensions
 	public static IEnumerable<Attribute> GetAttributes(this SchemaGenerationContextBase context) =>
 		context switch
 		{
-			MemberGenerationContext memberContext => memberContext.Attributes,
+			MemberGenerationContext memberContext => memberContext.Attributes.Where(x => x is not INestableAttribute nestable ||
+			                                                                             nestable.GenericParameter == memberContext.Parameter),
 			TypeGenerationContext typeContext => typeContext.Type.GetCustomAttributes(),
 			_ => throw new InvalidOperationException($"Unknown context type: {context.GetType().Name}")
 		};

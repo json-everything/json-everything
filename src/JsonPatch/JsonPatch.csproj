@@ -15,8 +15,8 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageId>JsonPatch.Net</PackageId>
-    <Version>3.2.3</Version>
-    <FileVersion>3.2.3</FileVersion>
+    <Version>3.3.0</Version>
+    <FileVersion>3.3.0</FileVersion>
     <AssemblyVersion>3.0.0.0</AssemblyVersion>
     <Authors>Greg Dennis</Authors>
     <Description>JSON Patch built on the System.Text.Json namespace</Description>

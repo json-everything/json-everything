@@ -30,6 +30,17 @@ public class CatRule : Rule, IRule
 	{
 		Items = [a, .. more];
 	}
+
+	/// <summary>
+	/// Creates a new instance of <see cref="CatRule"/> when 'cat' operator is detected within json logic.
+	/// </summary>
+	/// <param name="a">The first value, to which subsequent values will be concatenated to.</param>
+	/// <param name="more">A sequence of values to concatenate to the first value.</param>
+	protected internal CatRule(Rule a, ReadOnlySpan<Rule> more)
+	{
+		Items = [a, .. more];
+	}
+
 	/// <summary>
 	/// Creates a new instance for model-less processing.
 	/// </summary>
