@@ -32,17 +32,20 @@ public class MemberGenerationContext : SchemaGenerationContextBase
 	/// </summary>
 	public bool NullableRef { get; }
 
+	/// <summary>
+	/// Gets or sets the generic parameter that this context represents.
+	/// A null value (default) represents the root type.
+	/// </summary>
+	public int Parameter { get; set; } = -1;
+
 	internal MemberGenerationContext(TypeGenerationContext basedOn, List<Attribute> attributes, bool markedAsNullableRef = false)
 	{
 		BasedOn = basedOn;
 		Attributes = attributes;
 		NullableRef = markedAsNullableRef;
 
-		DebuggerDisplay = BasedOn.Type.CSharpName() + $"[{string.Join(",", attributes.Select(x => x.GetType().CSharpName().Replace("Attribute", string.Empty)))}]";
-
-		GenerateIntents();
+		DebuggerDisplay = BasedOn.Type.CSharpName() + $" + [{string.Join(",", attributes.Select(x => x.GetType().CSharpName().Replace("Attribute", string.Empty)))}]";
 	}
-
 
 	internal MemberGenerationContext(MemberGenerationContext source)
 	{
@@ -63,12 +66,14 @@ public class MemberGenerationContext : SchemaGenerationContextBase
 		var nullable = nullableAttribute?.IsNullable ?? NullableRef;
 		List<ISchemaKeywordIntent> baseIntents;
 		if (BasedOn.IsRoot)
-			baseIntents = [new RefIntent(new Uri("#", UriKind.Relative))];
-		else
+			baseIntents = [new RefIntent(this, new Uri("#", UriKind.Relative))];
+		else if (!nullable && (Attributes.Count == 0 || BasedOn.Intents.Count == 1) && Type.CanBeReferenced())
 		{
-			baseIntents = BasedOn.Intents;
-			BasedOn.ReferenceCount--;
+			baseIntents = [new RefIntent(this, new Uri($"#/$defs/{BasedOn.DefinitionName}", UriKind.Relative))];
+			BasedOn.References.Add(this);
 		}
+		else
+			baseIntents = BasedOn.Intents;
 
 		Intents.AddRange(nullable ? baseIntents.AsNullable() : baseIntents);
 

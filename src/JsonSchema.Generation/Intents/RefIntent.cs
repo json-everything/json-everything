@@ -12,12 +12,25 @@ public class RefIntent : ISchemaKeywordIntent
 	/// </summary>
 	public Uri Reference { get; set; }
 
+	internal MemberGenerationContext? Context { get; }
+
 	/// <summary>
 	/// Creates a new <see cref="RefIntent"/> instance.
 	/// </summary>
 	/// <param name="reference">The reference.</param>
 	public RefIntent(Uri reference)
 	{
+		Reference = reference;
+	}
+
+	/// <summary>
+	/// Creates a new <see cref="RefIntent"/> instance.
+	/// </summary>
+	/// <param name="context">The context that holds this reference.</param>
+	/// <param name="reference">The reference.</param>
+	public RefIntent(MemberGenerationContext context, Uri reference)
+	{
+		Context = context;
 		Reference = reference;
 	}
 

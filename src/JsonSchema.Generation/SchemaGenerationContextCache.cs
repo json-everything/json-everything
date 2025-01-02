@@ -35,7 +35,35 @@ public static class SchemaGenerationContextCache
 
 	internal static TypeGenerationContext GetRoot(Type type)
 	{
-		return Get(type, true);
+		var baseContext = Get(type, true);
+		var toReintegrate = Cache
+			.Where(x => x.Value.References.Count == 1 &&
+			            x.Key != type &&
+			            x.Key.CanBeReferenced())
+			.Select(x => x.Value)
+			.ToList();
+
+		foreach (var schema in toReintegrate)
+		{
+			var context = schema.References[0];
+			var contextKeywords = context.Intents.Select(x => x.GetType());
+			var schemaKeywords = schema.Intents.Select(x => x.GetType());
+			if (contextKeywords.Intersect(schemaKeywords).Any()) continue;
+
+			context.Intents.AddRange(schema.Intents);
+			var refIntent = context.Intents.OfType<RefIntent>().First();
+			context.Intents.Remove(refIntent);
+			schema.References.Clear();
+		}
+
+		var definitions = Cache
+			.Where(x => x.Value.References.Count > 0 &&
+			            x.Key != type && 
+			            x.Key.CanBeReferenced())
+			.ToDictionary(x => x.Value.DefinitionName, SchemaGenerationContextBase (x) => x.Value);
+		if (definitions.Count != 0)
+			baseContext.Intents.Add(new DefsIntent(definitions));
+		return baseContext;
 	}
 
 	private static TypeGenerationContext Get(Type type, bool isRoot)
@@ -51,8 +79,6 @@ public static class SchemaGenerationContextCache
 
 			context.GenerateIntents();
 		}
-
-		context.ReferenceCount++;
 
 		return context;
 	}

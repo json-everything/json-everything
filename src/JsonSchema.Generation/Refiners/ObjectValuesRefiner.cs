@@ -33,7 +33,7 @@ internal class ObjectValuesRefiner : ISchemaRefiner
 
 			additionalPropertiesIntent.Context = new MemberGenerationContext(additionalPropertiesTypeContext, memberContext.Attributes);
 
-			AttributeHandler.HandleAttributes(additionalPropertiesTypeContext);
+			additionalPropertiesIntent.Context.GenerateIntents();
 		}
 
 		var unevaluatedPropertiesIntent = memberContext.Intents.OfType<UnevaluatedPropertiesIntent>().FirstOrDefault();
@@ -45,7 +45,7 @@ internal class ObjectValuesRefiner : ISchemaRefiner
 			{
 				unevaluatedPropertiesIntent.Context = new MemberGenerationContext(unevaluatedPropertiesTypeContext, memberContext.Attributes);
 
-				AttributeHandler.HandleAttributes(unevaluatedPropertiesTypeContext);
+				unevaluatedPropertiesIntent.Context.GenerateIntents();
 			}
 		}
 	}

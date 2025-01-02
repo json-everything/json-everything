@@ -80,6 +80,7 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 
 			var memberTypeContext = SchemaGenerationContextCache.Get(member.GetMemberType());
 			var memberContext = new MemberGenerationContext(memberTypeContext, unconditionalAttributes, member.IsMarkedAsNullable());
+			memberContext.GenerateIntents();
 
 			var name = SchemaGeneratorConfiguration.Current.PropertyNameResolver!(member);
 			var nameAttribute = unconditionalAttributes.OfType<JsonPropertyNameAttribute>().FirstOrDefault();
@@ -122,7 +123,7 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 		}
 
 		var conditionGroups = context.Type.GetCustomAttributes()
-			.OfType<IConditionAttribute>()
+			.OfType<IConditionalAttribute>()
 			.SelectMany(x => ExpandEnumConditions(x, membersToGenerate))
 			.GroupBy(x => x.Attribute.ConditionGroup)
 			.ToList();
@@ -175,7 +176,7 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 			context.Intents.Add(new UnevaluatedPropertiesIntent());
 	}
 
-	private static IEnumerable<(IConditionAttribute Attribute, MemberInfo Member)> ExpandEnumConditions(IConditionAttribute condition, IEnumerable<MemberInfo> members)
+	private static IEnumerable<(IConditionalAttribute Attribute, MemberInfo Member)> ExpandEnumConditions(IConditionalAttribute condition, IEnumerable<MemberInfo> members)
 	{
 		var member = members.FirstOrDefault(x => x.Name == condition.PropertyName);
 		if (member == null) yield break;
@@ -206,7 +207,7 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 		yield return (condition, member);
 	}
 
-	private static IfIntent GenerateIf(IEnumerable<(IConditionAttribute Attribute, MemberInfo Member)> conditions)
+	private static IfIntent GenerateIf(IEnumerable<(IConditionalAttribute Attribute, MemberInfo Member)> conditions)
 	{
 		static void AddPotentialValue(SchemaGenerationContextBase context, JsonNode? newValue)
 		{
@@ -280,6 +281,7 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 			{
 				var type = consequence.Key.GetMemberType();
 				localContext = new MemberGenerationContext(SchemaGenerationContextCache.Get(type), []);
+				localContext.GenerateIntents();
 			}
 			foreach (var (_, attribute) in consequence)
 			{

@@ -138,14 +138,12 @@ public class ClientTests
 		JsonSchema expected = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Object)
 			.Properties(
-				("Property1", new JsonSchemaBuilder().Ref("#/$defs/guid")),
-				("Property2", new JsonSchemaBuilder().Ref("#/$defs/guid"))
-			)
-			.Defs(
-				("guid", new JsonSchemaBuilder()
+				("Property1", new JsonSchemaBuilder()
 					.Type(SchemaValueType.String)
-					.Format(Formats.Uuid)
-				)
+					.Format(Formats.Uuid)),
+				("Property2", new JsonSchemaBuilder()
+					.Type(SchemaValueType.String)
+					.Format(Formats.Uuid))
 			);
 
 		JsonSchema actual = new JsonSchemaBuilder().FromType<ObjectA>();
@@ -401,68 +399,43 @@ public class ClientTests
 		public NestedType? Nested = new();
 	}
 
-
 	[Test]
 	public void Issue767_PropertyDescriptionFromXmlComments()
 	{
-		var expected = JsonSchema.FromText(
-			"""
-			{
-			  "type": "object",
-			  "properties": {
-			    "Nested": {
-			      "type": "object",
-			      "properties": {
-			        "NestedNested": {
-			          "$ref": "#/$defs/nestedNestedTypeInNestedTypeInIssue767PropertyLevelCommentsInClientTests"
-			        },
-			        "Names": {
-			          "$ref": "#/$defs/listOfString1"
-			        },
-			        "Descriptions": {
-			          "$ref": "#/$defs/listOfString2"
-			        }
-			      },
-			      "description": "Nested property on Issue767_PropertyLevelComments"
-			    }
-			  },
-			  "$defs": {
-			    "nestedNestedTypeInNestedTypeInIssue767PropertyLevelCommentsInClientTests": {
-			      "type": "object",
-			      "properties": {
-			        "NestedNames": {
-			          "$ref": "#/$defs/listOfString"
-			        }
-			      },
-			      "description": "NestedNested property on NestedType"
-			    },
-			    "listOfString": {
-			      "type": "array",
-			      "items": {
-			        "type": "string",
-			        "description": "NestedNames property on NestedNestedType (double-nested)"
-			      },
-			      "description": "NestedNames property on NestedNestedType (double-nested)"
-			    },
-			    "listOfString1": {
-			      "type": "array",
-			      "items": {
-			        "type": "string",
-			        "description": "Names property on NestedType"
-			      },
-			      "description": "Names property on NestedType"
-			    },
-			    "listOfString2": {
-			      "type": "array",
-			      "items": {
-			        "type": "string",
-			        "description": "Descriptions property on NestedType"
-			      },
-			      "description": "Descriptions property on NestedType"
-			    }
-			  }
-			}
-			""");
+		var expected = new JsonSchemaBuilder()
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("Nested", new JsonSchemaBuilder()
+					.Type(SchemaValueType.Object | SchemaValueType.Null)
+					.Description("Nested property on Issue767_PropertyLevelComments")
+					.Properties(
+						("Names", new JsonSchemaBuilder()
+							.Ref("#/$defs/listOfString")
+							.Description("Names property on NestedType")
+						),
+						("Descriptions", new JsonSchemaBuilder()
+							.Ref("#/$defs/listOfString")
+							.Description("Descriptions property on NestedType")
+						),
+						("NestedNested", new JsonSchemaBuilder()
+							.Type(SchemaValueType.Object)
+							.Description("NestedNested property on NestedType")
+							.Properties(
+								("NestedNames", new JsonSchemaBuilder()
+									.Ref("#/$defs/listOfString")
+							.Description("NestedNames property on NestedNestedType (double-nested)")
+								)
+							)
+						)
+					)
+				)
+			)
+			.Defs(
+				("listOfString", new JsonSchemaBuilder()
+					.Type(SchemaValueType.Array)
+					.Items(new JsonSchemaBuilder().Type(SchemaValueType.String))
+				)
+			);
 
 		var options = new SchemaGeneratorConfiguration { Optimize = true };
 		options.RegisterXmlCommentFile<Issue767_PropertyLevelComments>("JsonSchema.Net.Generation.Tests.xml");

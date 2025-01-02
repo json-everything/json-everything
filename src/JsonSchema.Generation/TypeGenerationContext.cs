@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using Json.Schema.Generation.Intents;
@@ -19,6 +20,11 @@ public class TypeGenerationContext : SchemaGenerationContextBase
 	/// The type.
 	/// </summary>
 	public override Type Type { get; }
+
+	/// <summary>
+	/// The number of times this context has been referenced.
+	/// </summary>
+	public List<MemberGenerationContext> References { get; } = [];
 
 	internal string DefinitionName { get; }
 
@@ -68,6 +74,7 @@ public class TypeGenerationContext : SchemaGenerationContextBase
 		}
 	}
 
+	[RequiresDynamicCode("JSON serialization and deserialization might require types that cannot be statically analyzed and might need runtime code generation. Use System.Text.Json source generation for native AOT applications.")]
 	private static IComparer<MemberInfo> GetComparer(Type type)
 	{
 		var comparerType = typeof(MemberInfoMetadataTokenComparer<>).MakeGenericType(type);

@@ -19,9 +19,9 @@ internal class ArrayItemsRefiner : ISchemaRefiner
 		                       ((MemberGenerationContext)itemsIntent.Context).BasedOn;
 
 		var index = memberContext.Intents.IndexOf(itemsIntent);
-		var itemsMemberContext = new MemberGenerationContext(itemsTypeContext, memberContext.Attributes);
+		var itemsMemberContext = new MemberGenerationContext(itemsTypeContext, memberContext.Attributes) { Parameter = 0 };
 		memberContext.Intents[index] = new ItemsIntent(itemsMemberContext);
 
-		AttributeHandler.HandleAttributes(itemsMemberContext);
+		itemsMemberContext.GenerateIntents();
 	}
 }

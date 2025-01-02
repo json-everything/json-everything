@@ -188,4 +188,6 @@ public static class TypeExtensions
 		return false;
 #endif
 	}
+
+	internal static bool CanBeReferenced(this Type type) => !type.IsJsonType() && !type.IsNullableValueType();
 }

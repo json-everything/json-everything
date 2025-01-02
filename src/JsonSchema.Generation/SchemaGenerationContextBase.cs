@@ -27,11 +27,6 @@ public abstract class SchemaGenerationContextBase
 	public abstract Type Type { get; }
 
 	/// <summary>
-	/// The number of times this context has been referenced.
-	/// </summary>
-	public int ReferenceCount { get; set; }
-
-	/// <summary>
 	/// The keyword intents required for this type.
 	/// </summary>
 	public List<ISchemaKeywordIntent> Intents { get; } = [];
