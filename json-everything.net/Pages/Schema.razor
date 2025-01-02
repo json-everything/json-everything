@@ -41,7 +41,7 @@
 					<div class="align-items-center mt-1">
 						@foreach (var library in _libraries)
 						{
-						<NugetLibrary Library="@library" />
+							<NugetLibrary Library="@library" />
 						}
 					</div>
 					<hr />
@@ -131,20 +131,20 @@
 					<div class="grid-panel flex-grow-1 position-relative">
 						<span class="editor-lang-@_schemaEditorLanguage">@GetLanguageText(_schemaEditorLanguage)</span>
 						<StandaloneCodeEditor @ref="_schemaEditor" Id="editor-schema" ConstructionOptions="BasicOptions"
-											  CssClass="h-100" OnDidChangeModelContent="HandleSchemaChanged" />
+						CssClass="h-100" OnDidChangeModelContent="HandleSchemaChanged" />
 					</div>
 				</div>
 				<div class="cyan w-50 d-flex flex-grow-1 h-50">
 					<div class="grid-panel flex-grow-1 position-relative">
 						<span class="editor-lang-@_instanceEditorLanguage">@GetLanguageText(_instanceEditorLanguage)</span>
 						<StandaloneCodeEditor @ref="_instanceEditor" Id="editor-instance" ConstructionOptions="BasicOptions"
-											  CssClass="h-100" OnDidChangeModelContent="HandleInstanceChanged" />
+						CssClass="h-100" OnDidChangeModelContent="HandleInstanceChanged" />
 					</div>
 				</div>
 				<div class="yellow w-100 d-flex flex-grow-1 h-50">
 					<div class="grid-panel flex-grow-1">
 						<StandaloneCodeEditor @ref="_outputEditor" Id="editor-output" ConstructionOptions="ReadOnlyOptions"
-											  CssClass="h-100 mb-2" />
+						CssClass="h-100 mb-2" />
 					</div>
 				</div>
 			</div>
@@ -165,11 +165,11 @@
 	private readonly List<LibraryVersion> _libraries =
 	[
 		LibraryVersion.GetFor<JsonSchema>(),
-		LibraryVersion.GetFor<DataKeyword>(),
-		LibraryVersion.GetFor<UniqueKeysKeyword>(),
-		LibraryVersion.GetFor<DiscriminatorKeyword>(),
-		LibraryVersion.GetFor<ISchemaRefiner>(),
-		LibraryVersion.GetFor<Bound>()
+	LibraryVersion.GetFor<DataKeyword>(),
+	LibraryVersion.GetFor<UniqueKeysKeyword>(),
+	LibraryVersion.GetFor<DiscriminatorKeyword>(),
+	LibraryVersion.GetFor<ISchemaRefiner>(),
+	LibraryVersion.GetFor<Bound>()
 	];
 
 	private IEnumerable<MetadataReference> _references;
@@ -265,7 +265,7 @@
 			_schemaEditorLanguage = await _schemaEditor.DetectLanguage(JsRuntime);
 			await DataManager.Set("schema-input-language", "json");
 		});
-			
+
 		SchemaEditorLabel = "Schema";
 
 		HelpSummary = HelpContent.SchemaEvaluate;
@@ -279,7 +279,7 @@
 		_schemaEditorLanguage = "csharp";
 		_schemaEditor.UpdateOptions(new EditorUpdateOptions { TabSize = 4 });
 		Task.Run(() => DataManager.Set("schema-input-language", "csharp"));
-			
+
 		SchemaEditorLabel = "Classes (C#)";
 
 		HelpSummary = HelpContent.SchemaGenerateSchema;
@@ -295,7 +295,7 @@
 			_schemaEditorLanguage = await _schemaEditor.DetectLanguage(JsRuntime);
 			await DataManager.Set("schema-input-language", "json");
 		});
-			
+
 		SchemaEditorLabel = "Schema";
 
 		HelpSummary = HelpContent.SchemaGenerateData;
@@ -560,8 +560,6 @@ namespace JsonEverythingTemp;
 		await base.OnAfterRenderAsync(firstRender);
 	}
 
-	private static T NoOp<T>(T value) => value;
-
 	private async Task LoadAssemblyReferences()
 	{
 		var refs = AppDomain.CurrentDomain.GetAssemblies();
@@ -572,16 +570,24 @@ namespace JsonEverythingTemp;
 
 		var references = new List<MetadataReference>();
 
-		foreach (var reference in refs.Where(x => !x.IsDynamic))
-		{
-			Console.WriteLine($"{reference.FullName}\n  Location - {reference.Location}\n");
-		}
-
+		var failedToLoadRefs = false;
 		foreach(var reference in refs.Where(x => !x.IsDynamic))
 		{
-			var stream = await client.GetStreamAsync($"_framework/{reference.FullName!.Split(',')[0]}.dll");
-			references.Add(MetadataReference.CreateFromStream(stream));
+			try
+			{
+				Console.WriteLine(reference.FullName);
+				var stream = await client.GetStreamAsync($"_framework/{reference.FullName!.Split(',')[0]}.dll");
+				references.Add(MetadataReference.CreateFromStream(stream));
+			}
+			catch (Exception e)
+			{
+				Console.Error.WriteLine(e);
+				failedToLoadRefs = true;
+			}
 		}
+
+		if (failedToLoadRefs)
+			throw new DllNotFoundException("Could not load one or more .Net references. Some functions may not be available.");
 
 		_references = references;
 	}
