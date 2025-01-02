@@ -138,12 +138,14 @@ public class ClientTests
 		JsonSchema expected = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Object)
 			.Properties(
-				("Property1", new JsonSchemaBuilder()
+				("Property1", new JsonSchemaBuilder().Ref("#/$defs/guid")),
+				("Property2", new JsonSchemaBuilder().Ref("#/$defs/guid"))
+			)
+			.Defs(
+				("guid", new JsonSchemaBuilder()
 					.Type(SchemaValueType.String)
-					.Format(Formats.Uuid)),
-				("Property2", new JsonSchemaBuilder()
-					.Type(SchemaValueType.String)
-					.Format(Formats.Uuid))
+					.Format(Formats.Uuid)
+				)
 			);
 
 		JsonSchema actual = new JsonSchemaBuilder().FromType<ObjectA>();

@@ -51,7 +51,7 @@ public class ArrayGenerationTests
 
 	private class MinValueList
 	{
-		[Minimum(5, Parameter = 0)]
+		[Minimum(5, GenericParameter = 0)]
 		public List<int> List { get; set; }
 	}
 
@@ -77,7 +77,7 @@ public class ArrayGenerationTests
 
 	private class MinValueListWithBasicList
 	{
-		[Minimum(5, Parameter = 0)]
+		[Minimum(5, GenericParameter = 0)]
 		public List<int> List { get; set; }
 		public List<int> BasicList { get; set; }
 	}

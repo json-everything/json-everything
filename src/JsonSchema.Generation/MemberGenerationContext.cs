@@ -60,26 +60,24 @@ public class MemberGenerationContext : SchemaGenerationContextBase
 	{
 		if (ReferenceEquals(this, True) || ReferenceEquals(this, False)) return;
 
-		var configuration = SchemaGeneratorConfiguration.Current;
-
 		var nullableAttribute = Attributes.OfType<NullableAttribute>().FirstOrDefault();
 		var nullable = nullableAttribute?.IsNullable ?? NullableRef;
 		List<ISchemaKeywordIntent> baseIntents;
 		if (BasedOn.IsRoot)
 			baseIntents = [new RefIntent(this, new Uri("#", UriKind.Relative))];
-		else if (!nullable && (Attributes.Count == 0 || BasedOn.Intents.Count == 1) && Type.CanBeReferenced())
+		else if (nullable || !Type.CanBeReferenced())
+			baseIntents = BasedOn.Intents;
+		else
 		{
 			baseIntents = [new RefIntent(this, new Uri($"#/$defs/{BasedOn.DefinitionName}", UriKind.Relative))];
 			BasedOn.References.Add(this);
 		}
-		else
-			baseIntents = BasedOn.Intents;
 
 		Intents.AddRange(nullable ? baseIntents.AsNullable() : baseIntents);
 
 		AttributeHandler.HandleAttributes(this);
 
-		var refiners = configuration.Refiners.ToList();
+		var refiners = SchemaGeneratorConfiguration.Current.Refiners.ToList();
 		foreach (var refiner in refiners.Where(x => x.ShouldRun(this)))
 		{
 			refiner.Run(this);

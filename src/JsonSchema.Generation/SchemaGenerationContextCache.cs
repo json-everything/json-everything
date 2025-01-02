@@ -50,9 +50,9 @@ public static class SchemaGenerationContextCache
 			var schemaKeywords = schema.Intents.Select(x => x.GetType());
 			if (contextKeywords.Intersect(schemaKeywords).Any()) continue;
 
-			context.Intents.AddRange(schema.Intents);
 			var refIntent = context.Intents.OfType<RefIntent>().First();
 			context.Intents.Remove(refIntent);
+			context.Intents.AddRange(schema.Intents);
 			schema.References.Clear();
 		}
 

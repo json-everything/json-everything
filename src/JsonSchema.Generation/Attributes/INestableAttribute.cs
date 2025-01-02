@@ -10,5 +10,5 @@ public interface INestableAttribute
 	/// Default MUST be -1, which indicates the root type.
 	/// For example, `Person` in `Dictionary&lt;string, Person&gt;` would have a parameter of 1.
 	/// </summary>
-	int Parameter { get; set; }
+	int GenericParameter { get; set; }
 }

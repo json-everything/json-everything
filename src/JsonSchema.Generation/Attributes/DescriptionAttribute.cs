@@ -20,7 +20,7 @@ public class DescriptionAttribute : ConditionalAttribute, INestableAttribute, IA
 	/// <summary>
 	/// The index of the parameter to which the attribute should apply. Default is -1 to indicate the root.
 	/// </summary>
-	public int Parameter { get; set; } = -1;
+	public int GenericParameter { get; set; } = -1;
 
 	/// <summary>
 	/// Creates a new <see cref="DescriptionAttribute"/> instance.

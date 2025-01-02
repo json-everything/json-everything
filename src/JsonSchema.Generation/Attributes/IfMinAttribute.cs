@@ -32,7 +32,7 @@ public class IfMinAttribute : ConditionalAttribute, INestableAttribute, IConditi
 	/// <summary>
 	/// The index of the parameter to which the attribute should apply. Default is -1 to indicate the root.
 	/// </summary>
-	public int Parameter { get; set; } = -1;
+	public int GenericParameter { get; set; } = -1;
 
 	internal Type? PropertyType { get; set; }
 

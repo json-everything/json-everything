@@ -21,7 +21,7 @@ public static class ContextExtensions
 		context switch
 		{
 			MemberGenerationContext memberContext => memberContext.Attributes.Where(x => x is not INestableAttribute nestable ||
-			                                                                             nestable.Parameter == memberContext.Parameter),
+			                                                                             nestable.GenericParameter == memberContext.Parameter),
 			TypeGenerationContext typeContext => typeContext.Type.GetCustomAttributes(),
 			_ => throw new InvalidOperationException($"Unknown context type: {context.GetType().Name}")
 		};
