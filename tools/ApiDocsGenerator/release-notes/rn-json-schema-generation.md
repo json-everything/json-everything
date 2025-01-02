@@ -11,6 +11,7 @@ API update which addresses numerous design issues.
 - Revamped nullability so that the code is respected and `[Nullable]` is merely an override rather than the primary specifier of behavior.
 - Optimization can no longer be disabled, and has been updated to only collect types instead of common schemas.  `$ref`s are minimized.
 - Added explicit configuration to assign an attribute to a generic parameter.
+- Support for C# `required` keyword.
 
 ## Breaking changes
 
@@ -38,6 +39,7 @@ API update which addresses numerous design issues.
 - `Context` property now settable on `AdditionalPropertiesIntent`, `ItemsIntent`, and `UnevaluatedPropertiesIntent`.    
 - `MemberGenerationContext.NullableRef` which indicates that the member is declared as a nullable reference type.
 - `MemberGenerationContext.Parameter` which indicates the type nesting level ("nesting" as in how a generic parameter is nested).
+- C# `required` keyword will now add the property to a `required` JSON Schema keyword.
 
 ## Other changes
 
