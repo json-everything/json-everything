@@ -44,7 +44,7 @@ public class NullabilityTests
 	public class ReferenceMemberNullableWithNotNull
 	{
 		[Nullable(false)]
-		public string Property { get; set; }
+                public string? Property { get; set; }
 	}
 
 	public class ValueTypeMember
