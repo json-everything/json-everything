@@ -536,7 +536,7 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 		{
 			final[length] = '/';
 			length++;
-			using var localOwner = MemoryPool<char>.Shared.Rent(segment.Length);
+			using var localOwner = MemoryPool<char>.Shared.Rent(segment.Length * 2);
 			var local = localOwner.Memory.Span;
 			var localLength = segment.AsSpan().Encode(local);
 			local[..localLength].CopyTo(final[length..]);
