@@ -562,7 +562,8 @@ namespace JsonEverythingTemp;
 
 	private async Task LoadAssemblyReferences()
 	{
-		var refs = AppDomain.CurrentDomain.GetAssemblies();
+		var domain = AppDomain.CurrentDomain;
+		var refs = domain.GetAssemblies();
 		var client = new HttpClient 
 		{
 			BaseAddress = new Uri(NavigationManager.BaseUri)
@@ -571,13 +572,14 @@ namespace JsonEverythingTemp;
 		var references = new List<MetadataReference>();
 
 		var failedToLoadRefs = false;
+		// the generation functions create dynamic libraries.  we don't want those.
 		foreach(var reference in refs.Where(x => !x.IsDynamic))
 		{
 			try
 			{
-				Console.WriteLine(reference.FullName);
 				var stream = await client.GetStreamAsync($"_framework/{reference.FullName!.Split(',')[0]}.dll");
 				references.Add(MetadataReference.CreateFromStream(stream));
+				Console.WriteLine(reference.FullName);
 			}
 			catch (Exception e)
 			{
