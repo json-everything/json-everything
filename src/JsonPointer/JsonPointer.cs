@@ -529,21 +529,61 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 	{
 		if (_plain is not null) return _plain;
 
-		using var memory = MemoryPool<char>.Shared.Rent();
-		var final = memory.Memory.Span;
-		var length = 0;
+		var max = 0;
+		var total = 0;
+
 		foreach (var segment in _decodedSegments)
 		{
-			final[length] = '/';
-			length++;
-			using var localOwner = MemoryPool<char>.Shared.Rent(segment.Length * 2);
-			var local = localOwner.Memory.Span;
-			var localLength = segment.AsSpan().Encode(local);
-			local[..localLength].CopyTo(final[length..]);
-			length += localLength;
+			max = Math.Max(max, segment.Length);
+			total += segment.Length;
 		}
 
-		return _plain ??= final[..length].ToString();
+		IDisposable? disposable1 = null;
+		IDisposable? disposable2 = null;
+		scoped Span<char> local;
+		scoped Span<char> final;
+
+		try
+		{
+			if (total < 128)
+			{
+				final = stackalloc char[total * 2 + _decodedSegments.Length];
+			}
+			else
+			{
+				var memory = MemoryPool<char>.Shared.Rent(total * 2 + _decodedSegments.Length);
+				final = memory.Memory.Span;
+				disposable1 = memory;
+			}
+
+			if (max < 64)
+			{
+				local = stackalloc char[max * 2];
+			}
+			else
+			{
+				var localOwner = MemoryPool<char>.Shared.Rent(max * 2);
+				local = localOwner.Memory.Span;
+				disposable2 = localOwner;
+			}
+
+			var length = 0;
+			foreach (var segment in _decodedSegments)
+			{
+				final[length] = '/';
+				length++;
+				var localLength = segment.AsSpan().Encode(local);
+				local[..localLength].CopyTo(final[length..]);
+				length += localLength;
+			}
+
+			return _plain ??= final[..length].ToString();
+		}
+		finally
+		{
+			disposable1?.Dispose();
+			disposable2?.Dispose();
+		}
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
