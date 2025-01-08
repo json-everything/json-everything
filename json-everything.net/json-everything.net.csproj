@@ -8,6 +8,7 @@
 	  <NoWarn>NU1701</NoWarn>
 	  <PublishTrimmed>false</PublishTrimmed>
     <WasmEnableWebcil>false</WasmEnableWebcil>
+    <WasmFingerprintAssets>false</WasmFingerprintAssets>
   </PropertyGroup>
 
   <ItemGroup>
