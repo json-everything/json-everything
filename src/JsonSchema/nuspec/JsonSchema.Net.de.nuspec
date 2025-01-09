@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package>
   <metadata minClientVersion="2.12">
-    <id>JsonSchema.Net</id>
+    <id>JsonSchema.Net.de</id>
     <version>1.0.0</version>
+    <title>JsonSchema.Net Locale (de)</title>
     <authors>Greg Dennis</authors>
-    <license type="expression">MIT</license>
-    <icon>json-logo-256.png</icon>
     <projectUrl>https://github.com/json-everything/json-everything</projectUrl>
-    <description>JSON Schema built on the System.Text.Json namespace.</description>
+    <icon>json-logo-256.png</icon>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>JsonSchema.Net Locale German (de)</description>
     <releaseNotes>Release notes can be found at https://json-everything.net/json-schema</releaseNotes>
-    <readme>README.md</readme>
-    <tags>json-schema validation schema json</tags>
+    <readme>README.de.md</readme>
+    <license type="expression">MIT</license>
     <repository type="git" url="https://github.com/json-everything/json-everything" />
+    <language>de</language>
     <dependencies>
-      <dependency id="JsonPointer.Net" version="5.0.0" exclude="Build,Analyzers" />
+      <dependency id="JsonSchema.Net" version="6.0.0" />
     </dependencies>
   </metadata>
   <files>
