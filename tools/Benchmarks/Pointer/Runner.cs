@@ -40,12 +40,31 @@ public class Runner
 		"#/%20",
 		"#/m~0n",
 	];
-	
-	[Params(1,10,100)]
+
+	private static readonly string[] _segments = 
+	[
+		"user",
+		"name",
+		"age",
+		"g%7Ch",
+		"theme",
+		"notifications",
+		"email",
+		"m~0n",
+		"comments",
+		"metadata",
+		"version",
+		"a~1b",
+		"errors",
+		"message",
+		"a~0b"
+	];
+
+	[Params(1, 10, 100)]
 	public int Count { get; set; }
 
 	[Benchmark]
-	public int Run()
+	public int Parse()
 	{
 		for (int i = 0; i < Count; i++)
 		{
@@ -56,5 +75,21 @@ public class Runner
 		}
 
 		return Count;
+	}
+
+	[Benchmark]
+	public JsonPointer Combine()
+	{
+		var p = JsonPointer.Empty;
+
+		for (int i = 0; i < Count; i++)
+		{
+			foreach (var test in _pointersToParse)
+			{
+				p = p.Combine(_segments[i % _segments.Length]);
+			}
+		}
+
+		return p;
 	}
 }
