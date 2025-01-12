@@ -538,52 +538,42 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 			total += segment.Length;
 		}
 
-		IDisposable? disposable1 = null;
-		IDisposable? disposable2 = null;
-		scoped Span<char> local;
-		scoped Span<char> final;
+		return _plain = total < 1024
+			? ToStringSmall(total)
+			: ToStringLarge(total);
+	}
 
-		try
+	private string ToStringSmall(int total)
+	{
+		Span<char> final = stackalloc char[total * 2 + _decodedSegments.Length];
+
+		var length = 0;
+		foreach (var segment in _decodedSegments)
 		{
-			if (total < 128)
-			{
-				final = stackalloc char[total * 2 + _decodedSegments.Length];
-			}
-			else
-			{
-				var memory = MemoryPool<char>.Shared.Rent(total * 2 + _decodedSegments.Length);
-				final = memory.Memory.Span;
-				disposable1 = memory;
-			}
-
-			if (max < 64)
-			{
-				local = stackalloc char[max * 2];
-			}
-			else
-			{
-				var localOwner = MemoryPool<char>.Shared.Rent(max * 2);
-				local = localOwner.Memory.Span;
-				disposable2 = localOwner;
-			}
-
-			var length = 0;
-			foreach (var segment in _decodedSegments)
-			{
-				final[length] = '/';
-				length++;
-				var localLength = segment.AsSpan().Encode(local);
-				local[..localLength].CopyTo(final[length..]);
-				length += localLength;
-			}
-
-			return _plain ??= final[..length].ToString();
+			final[length] = '/';
+			length++;
+			var localLength = segment.AsSpan().Encode(final.Slice(length, segment.Length * 2));
+			length += localLength;
 		}
-		finally
+
+		return final[..length].ToString();
+	}
+
+	private string ToStringLarge(int total)
+	{
+		using var memory = MemoryPool<char>.Shared.Rent(total * 2 + _decodedSegments.Length);
+		Span<char> final = memory.Memory.Span;
+
+		var length = 0;
+		foreach (var segment in _decodedSegments)
 		{
-			disposable1?.Dispose();
-			disposable2?.Dispose();
+			final[length] = '/';
+			length++;
+			var localLength = segment.AsSpan().Encode(final.Slice(length, segment.Length * 2));
+			length += localLength;
 		}
+
+		return final[..length].ToString();
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
