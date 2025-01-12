@@ -60,6 +60,10 @@ public class Runner
 		"a~0b"
 	];
 
+	private static readonly JsonPointer[] _pointers = _pointersToParse
+		.Select(JsonPointer.Parse)
+		.ToArray();
+
 	[Params(1, 10, 100)]
 	public int Count { get; set; }
 
@@ -91,5 +95,21 @@ public class Runner
 		}
 
 		return p;
+	}
+
+	[Benchmark]
+	public string PointerToString()
+	{
+		var s = string.Empty;
+
+		for (int i = 0; i < Count; i++)
+		{
+			foreach (var test in _pointersToParse)
+			{
+				s = _pointers[i % _segments.Length].ToString();
+			}
+		}
+
+		return s;
 	}
 }
