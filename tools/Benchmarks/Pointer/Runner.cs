@@ -1,4 +1,5 @@
 ﻿using BenchmarkDotNet.Attributes;
+﻿using System.Linq;
 using Json.Pointer;
 
 namespace Json.Benchmarks.Pointer;
