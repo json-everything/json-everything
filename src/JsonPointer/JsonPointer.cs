@@ -106,7 +106,7 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 		var sourceSpan = source.AsSpan();
 		using var segmentMemory = MemoryPool<string>.Shared.Rent();
 		var segments = segmentMemory.Memory.Span;
-		using var builderMemory = MemoryPool<char>.Shared.Rent();
+		using var builderMemory = MemoryPool<char>.Shared.Rent(source.Length);
 		var builder = builderMemory.Memory.Span;
 		while (sourceIndex < source.Length)
 		{
@@ -167,7 +167,7 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 		var sourceSpan = source.AsSpan();
 		using var segmentMemory = MemoryPool<string>.Shared.Rent();
 		var segments = segmentMemory.Memory.Span;
-		using var builderMemory = MemoryPool<char>.Shared.Rent();
+		using var builderMemory = MemoryPool<char>.Shared.Rent(source.Length);
 		var builder = builderMemory.Memory.Span;
 		while (sourceIndex < source.Length)
 		{
