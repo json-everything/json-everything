@@ -2,7 +2,7 @@
 <package>
   <metadata minClientVersion="2.12">
     <id>JsonSchema.Net.pl-PL</id>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <title>JsonSchema.Net Locale (pl-PL)</title>
     <authors>Greg Dennis</authors>
     <projectUrl>https://github.com/json-everything/json-everything</projectUrl>
@@ -13,7 +13,7 @@
     <readme>README.pl-PL.md</readme>
     <license type="expression">MIT</license>
     <repository type="git" url="https://github.com/json-everything/json-everything" />
-    <language>ru</language>
+    <language>pl-PL</language>
     <dependencies>
       <dependency id="JsonSchema.Net" version="6.0.0" />
     </dependencies>
