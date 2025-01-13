@@ -106,7 +106,7 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 		var sourceSpan = source.AsSpan();
 		using var segmentMemory = MemoryPool<string>.Shared.Rent();
 		var segments = segmentMemory.Memory.Span;
-		using var builderMemory = MemoryPool<char>.Shared.Rent();
+		using var builderMemory = MemoryPool<char>.Shared.Rent(source.Length);
 		var builder = builderMemory.Memory.Span;
 		while (sourceIndex < source.Length)
 		{
@@ -167,7 +167,7 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 		var sourceSpan = source.AsSpan();
 		using var segmentMemory = MemoryPool<string>.Shared.Rent();
 		var segments = segmentMemory.Memory.Span;
-		using var builderMemory = MemoryPool<char>.Shared.Rent();
+		using var builderMemory = MemoryPool<char>.Shared.Rent(source.Length);
 		var builder = builderMemory.Memory.Span;
 		while (sourceIndex < source.Length)
 		{
@@ -529,21 +529,51 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 	{
 		if (_plain is not null) return _plain;
 
-		using var memory = MemoryPool<char>.Shared.Rent();
-		var final = memory.Memory.Span;
+		var max = 0;
+		var total = 0;
+
+		foreach (var segment in _decodedSegments)
+		{
+			max = Math.Max(max, segment.Length);
+			total += segment.Length;
+		}
+
+		return _plain = total < 1024
+			? ToStringSmall(total)
+			: ToStringLarge(total);
+	}
+
+	private string ToStringSmall(int total)
+	{
+		Span<char> final = stackalloc char[total * 2 + _decodedSegments.Length];
+
 		var length = 0;
 		foreach (var segment in _decodedSegments)
 		{
 			final[length] = '/';
 			length++;
-			var localOwner = MemoryPool<char>.Shared.Rent();
-			var local = localOwner.Memory.Span;
-			var localLength = segment.AsSpan().Encode(local);
-			local[..localLength].CopyTo(final[length..]);
+			var localLength = segment.AsSpan().Encode(final.Slice(length, segment.Length * 2));
 			length += localLength;
 		}
 
-		return _plain ??= final[..length].ToString();
+		return final[..length].ToString();
+	}
+
+	private string ToStringLarge(int total)
+	{
+		using var memory = MemoryPool<char>.Shared.Rent(total * 2 + _decodedSegments.Length);
+		Span<char> final = memory.Memory.Span;
+
+		var length = 0;
+		foreach (var segment in _decodedSegments)
+		{
+			final[length] = '/';
+			length++;
+			var localLength = segment.AsSpan().Encode(final.Slice(length, segment.Length * 2));
+			length += localLength;
+		}
+
+		return final[..length].ToString();
 	}
 
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
