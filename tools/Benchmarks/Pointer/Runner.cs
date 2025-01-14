@@ -1,10 +1,13 @@
 ﻿using BenchmarkDotNet.Attributes;
 ﻿using System.Linq;
 using Json.Pointer;
+using BenchmarkDotNet.Jobs;
 
 namespace Json.Benchmarks.Pointer;
 
 [MemoryDiagnoser]
+[SimpleJob(RuntimeMoniker.Net80)]
+[SimpleJob(RuntimeMoniker.Net90)]
 public class Runner
 {
 	private static readonly string[] _pointersToParse =

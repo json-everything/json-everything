@@ -10,7 +10,6 @@ using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
-using System.Web;
 using Json.More;
 
 namespace Json.Pointer;
@@ -28,7 +27,6 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 	public static readonly JsonPointer Empty = new();
 
 	private readonly string[] _decodedSegments;
-	private string? _plain;
 	private int? _hashCode;
 
 	/// <summary>
@@ -69,17 +67,177 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 	private JsonPointer()
 	{
 		_decodedSegments = [];
-		_plain = string.Empty;
 	}
-	private JsonPointer(ReadOnlySpan<string> segments, string? plain = null)
+
+	private JsonPointer(ReadOnlySpan<string> segments)
 	{
 		_decodedSegments = [..segments];
-		_plain = plain;
 	}
-	private JsonPointer(string[] segments, string? plain = null)
+
+	private JsonPointer(string[] segments)
 	{
 		_decodedSegments = segments;
-		_plain = plain;
+	}
+
+	/// <summary>
+	/// Parses a JSON Pointer from a string.
+	/// </summary>
+	/// <param name="source">The source string.</param>
+	/// <returns>A JSON Pointer.</returns>
+	/// <exception cref="PointerParseException"><paramref name="source"/> does not contain a valid pointer or contains a pointer of the wrong kind.</exception>
+	public static JsonPointer Parse(ReadOnlySpan<char> source)
+	{
+		if (source.Length == 0) return Empty;
+
+		if (source[0] == '#')
+		{
+#if NET9_0_OR_GREATER
+			source = Uri.UnescapeDataString(source[1..]);
+#elif NET8_0_OR_GREATER
+			source = Uri.UnescapeDataString(new (source[1..]));
+#else
+			source = Uri.UnescapeDataString(source[1..].ToString()).AsSpan();
+#endif
+
+			if (source.Length == 0) return Empty;
+		}
+
+		if (source[0] != '/')
+			throw new PointerParseException("Pointer must start with either `#/` or `/` or be empty");
+
+		if (source.Length == 1)
+			return new JsonPointer([""]);
+
+		if (TryParseInternal(source, out var result))
+			return result;
+
+		throw new PointerParseException($"Value '{source.ToString()}' does not represent a valid JSON Pointer");
+	}
+
+	private static int CountSegments(ReadOnlySpan<char> source)
+	{
+		var size = 0;
+		var pos = source.IndexOf('/');
+
+		while (pos >= 0)
+		{
+			size++;
+
+			source = source[(pos + 1)..];
+			pos = source.IndexOf('/');
+		}
+
+		return size;
+	}
+
+#if NET9_0_OR_GREATER
+
+	private static bool TryParseInternal(ReadOnlySpan<char> source, [NotNullWhen(true)] out JsonPointer? result)
+	{
+		var segmentCount = CountSegments(source);
+		var segments = new string[segmentCount];
+		var segmentIndex = 0;
+
+		foreach (var segmentRange in source.Split('/'))
+		{
+			if (segmentRange.Start.Value != segmentRange.End.Value)
+				if (!TryDecodeSegment(source[segmentRange], out segments[segmentIndex++]))
+				{
+					result = null;
+					return false;
+				}
+		}
+
+		result = new JsonPointer(segments);
+		return true;
+	}
+
+#else
+
+	private static bool TryParseInternal(ReadOnlySpan<char> source, [NotNullWhen(true)] out JsonPointer? result)
+	{
+		var segmentCount = CountSegments(source);
+		var segments = new string[segmentCount];
+
+		var part = source;
+		var segmentIndex = 0;
+		result = null;
+
+		var sourceIndex = part.IndexOf('/');
+		while (sourceIndex >= 0)
+		{
+			if (!TryDecodeSegment(part[..sourceIndex], out var segment))
+				return false;
+
+			if (segment.Length != 0)
+			{
+				segments[segmentIndex++] = segment;
+			}
+
+			part = part[(sourceIndex + 1)..];
+			sourceIndex = part.IndexOf('/');
+		}
+
+		if (part.Length != 0)
+		{
+			if (!TryDecodeSegment(part, out segments[segmentIndex]))
+				return false;
+		}
+
+		result = new JsonPointer(segments);
+		return true;
+	}
+
+#endif
+
+	private static bool TryDecodeSegment(ReadOnlySpan<char> encoded, out string? result)
+	{
+		var l = encoded.Length;
+		if (l == 0)
+		{
+			result = string.Empty;
+			return true;
+		}
+
+		var targetIndex = 0;
+		var sourceIndex = 0;
+		result = null;
+
+		Span<char> target = l < 1024
+			? stackalloc char[l]
+			: new char[l];
+
+		for (; sourceIndex < l; targetIndex++, sourceIndex++)
+		{
+			target[targetIndex] = encoded[sourceIndex];
+			
+			if (target[targetIndex] == '/')
+			{
+				return false;
+			}
+
+			if (target[targetIndex] == '~')
+			{
+				if (sourceIndex == l - 1)
+					return false;
+
+				if (encoded[++sourceIndex] == '0')
+					continue; // we already wrote '~' so we're good
+				
+				if (encoded[sourceIndex] == '1')
+					target[targetIndex] = '/';
+				else
+					return false; // invalid escape sequence
+			}
+		}
+
+#if NET8_0_OR_GREATER
+		result = new string(target[..targetIndex]);
+#else
+		result = target[..targetIndex].ToString();
+#endif
+
+		return true;
 	}
 
 	/// <summary>
@@ -91,42 +249,54 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 	/// <exception cref="PointerParseException"><paramref name="source"/> does not contain a valid pointer or contains a pointer of the wrong kind.</exception>
 	public static JsonPointer Parse(string source)
 	{
-		if (source.Length == 0) return Empty;
+		return Parse(source.AsSpan());
+	}
 
-		if (source[0] == '#')
-			source = HttpUtility.UrlDecode(source[1..]);  // allocation
-
-		if (source.Length == 0) return Empty;
-		if (source[0] != '/')
-			throw new PointerParseException("Pointer must start with either `#/` or `/` or be empty");
-
-		var segmentIndex = 0;
-		var sourceIndex = 1;
-		var builderIndex = 0;
-		var sourceSpan = source.AsSpan();
-		using var segmentMemory = MemoryPool<string>.Shared.Rent();
-		var segments = segmentMemory.Memory.Span;
-		using var builderMemory = MemoryPool<char>.Shared.Rent(source.Length);
-		var builder = builderMemory.Memory.Span;
-		while (sourceIndex < source.Length)
+	/// <summary>
+	/// Parses a JSON Pointer from a string.
+	/// </summary>
+	/// <param name="source">The source string.</param>
+	/// <param name="pointer">The resulting pointer.</param>
+	/// <returns>`true` if the parse was successful; `false` otherwise.</returns>
+	/// <exception cref="ArgumentNullException"><paramref name="source"/> is null.</exception>
+	public static bool TryParse(ReadOnlySpan<char> source, [NotNullWhen(true)] out JsonPointer? pointer)
+	{
+		if (source.Length == 0)
 		{
-			if (source[sourceIndex] == '/')
-			{
-				segments[segmentIndex] = builder[..builderIndex].ToString();
-				builderIndex = 0;
-				segmentIndex++;
-				sourceIndex++;
-				continue;
-			}
-
-			builder[builderIndex] = sourceSpan.Decode(ref sourceIndex);
-			builderIndex++;
-			sourceIndex++;
+			pointer = Empty;
+			return true;
 		}
 
-		segments[segmentIndex] = builder[..builderIndex].ToString();
+		if (source[0] == '#')
+		{
+#if NET9_0_OR_GREATER
+			source = Uri.UnescapeDataString(source[1..]);
+#elif NET8_0_OR_GREATER
+			source = Uri.UnescapeDataString(new (source[1..]));
+#else
+			source = Uri.UnescapeDataString(source[1..].ToString()).AsSpan();
+#endif
 
-		return new JsonPointer(segments[..(segmentIndex + 1)], source);
+			if (source.Length == 0)
+			{
+				pointer = Empty;
+				return true;
+			}
+		}
+
+		if (source[0] != '/')
+		{
+			pointer = null;
+			return false;
+		}
+
+		if (source.Length == 1)
+		{
+			pointer = new JsonPointer([""]);
+			return true;
+		}
+
+		return TryParseInternal(source, out pointer);
 	}
 
 	/// <summary>
@@ -138,63 +308,7 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 	/// <exception cref="ArgumentNullException"><paramref name="source"/> is null.</exception>
 	public static bool TryParse(string source, [NotNullWhen(true)] out JsonPointer? pointer)
 	{
-		if (source.Length == 0)
-		{
-			pointer = Empty;
-			return true;
-		}
-
-		if (source[0] == '#')
-		{
-			source = HttpUtility.UrlDecode(source[1..]);  // allocation
-		}
-
-		if (source.Length == 0)
-		{
-			pointer = Empty;
-			return true;
-		}
-
-		if (source[0] != '/')
-		{
-			pointer = null;
-			return false;
-		}
-
-		var segmentIndex = 0;
-		var sourceIndex = 1;
-		var builderIndex = 0;
-		var sourceSpan = source.AsSpan();
-		using var segmentMemory = MemoryPool<string>.Shared.Rent();
-		var segments = segmentMemory.Memory.Span;
-		using var builderMemory = MemoryPool<char>.Shared.Rent(source.Length);
-		var builder = builderMemory.Memory.Span;
-		while (sourceIndex < source.Length)
-		{
-			if (source[sourceIndex] == '/')
-			{
-				segments[segmentIndex] = builder[..builderIndex].ToString();
-				builderIndex = 0;
-				segmentIndex++;
-				sourceIndex++;
-				continue;
-			}
-
-			if (!sourceSpan.TryDecode(ref sourceIndex, out var ch))
-			{
-				pointer = null;
-				return false;
-			}
-
-			builder[builderIndex] = ch;
-			builderIndex++;
-			sourceIndex++;
-		}
-
-		segments[segmentIndex] = builder[..builderIndex].ToString();
-
-		pointer = new JsonPointer(segments[..(segmentIndex + 1)], source);
-		return true;
+		return TryParse(source.AsSpan(), out pointer);
 	}
 
 	/// <summary>
@@ -527,7 +641,8 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 	/// <returns>The string representation.</returns>
 	public override string ToString()
 	{
-		if (_plain is not null) return _plain;
+		if (_decodedSegments.Length == 0)
+			return "";
 
 		var max = 0;
 		var total = 0;
@@ -538,7 +653,7 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 			total += segment.Length;
 		}
 
-		return _plain = total < 1024
+		return total < 1024
 			? ToStringSmall(total)
 			: ToStringLarge(total);
 	}
