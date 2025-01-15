@@ -187,15 +187,10 @@ public class EnumStringConverter<[DynamicallyAccessedMembers(DynamicallyAccessed
 				var value = (T) Enum.Parse(typeof(T), field.Name);
 				var description = field.GetCustomAttribute<DescriptionAttribute>()?.Description ?? field.Name;
 
-#if NET8_0_OR_GREATER
-				readValues.TryAdd(description, value);
-				writeValues.TryAdd(value, description);
-#else
 				if (!readValues.ContainsKey(description))
 					readValues.Add(description, value);
 				if (!writeValues.ContainsKey(value))
 					writeValues.Add(value, description);
-#endif
 			}
 
 			_readValues = readValues;
