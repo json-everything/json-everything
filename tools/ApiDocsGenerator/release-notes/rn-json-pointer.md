@@ -4,6 +4,11 @@ title: JsonPointer.Net
 icon: fas fa-tag
 order: "09.10"
 ---
+# [5.3.0](https://github.com/json-everything/json-everything/pull/850) {#release-pointer-5.3.0}
+
+[#849](https://github.com/json-everything/json-everything/issues/849) - Avoid memory leak in, and improve performance of JsonPointer.ToString() courtesy of [@cptjazz](https://github.com/cptjazz). 
+[#855](https://github.com/json-everything/json-everything/issues/855) - Performance improvements for JsonPointer.Parse()/TryParse() courtesy of [@cptjazz](https://github.com/cptjazz). 
+
 # [5.2.0](https://github.com/gregsdennis/json-everything/pull/848) {#release-pointer-5.2.0}
 
 [#843](https://github.com/json-everything/json-everything/pull/843) - Performance improvements courtesy of [@cptjazz](https://github.com/cptjazz).
