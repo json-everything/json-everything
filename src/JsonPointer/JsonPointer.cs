@@ -138,14 +138,14 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 		var segments = new string[segmentCount];
 		var segmentIndex = 0;
 
+		source = source[1..];
 		foreach (var segmentRange in source.Split('/'))
-		{
-			if (segmentRange.Start.Value != segmentRange.End.Value)
-				if (!TryDecodeSegment(source[segmentRange], out segments[segmentIndex++]))
-				{
-					result = null;
-					return false;
-				}
+		{			
+			if (!TryDecodeSegment(source[segmentRange], out segments[segmentIndex++]))
+			{
+				result = null;
+				return false;
+			}	
 		}
 
 		result = new JsonPointer(segments);
@@ -159,31 +159,25 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 		var segmentCount = CountSegments(source);
 		var segments = new string[segmentCount];
 
-		var part = source;
+		source = source[1..];
 		var segmentIndex = 0;
 		result = null;
 
-		var sourceIndex = part.IndexOf('/');
+		var sourceIndex = source.IndexOf('/');
 		while (sourceIndex >= 0)
 		{
-			if (!TryDecodeSegment(part[..sourceIndex], out var segment))
+			if (!TryDecodeSegment(source[..sourceIndex], out var segment))
 				return false;
 
-			if (segment.Length != 0)
-			{
-				segments[segmentIndex++] = segment;
-			}
-
-			part = part[(sourceIndex + 1)..];
-			sourceIndex = part.IndexOf('/');
+			segments[segmentIndex++] = segment;
+			
+			source = source[(sourceIndex + 1)..];
+			sourceIndex = source.IndexOf('/');
 		}
 
-		if (part.Length != 0)
-		{
-			if (!TryDecodeSegment(part, out segments[segmentIndex]))
-				return false;
-		}
-
+		if (!TryDecodeSegment(source, out segments[segmentIndex]))
+			return false;
+		
 		result = new JsonPointer(segments);
 		return true;
 	}
