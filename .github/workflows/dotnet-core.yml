@@ -33,6 +33,14 @@ jobs:
         run: dotnet build --configuration Release --no-restore
       - name: Test
         run: dotnet test --no-restore --verbosity normal --logger:"trx;LogFileName=test-results.trx"
+      - name: Test Report
+        uses: dorny/test-reporter@v1.7.0
+        if: always()
+        with:
+          name: .NET Tests
+          path: '**/test-results.trx'
+          reporter: dotnet-trx
+          fail-on-empty: 'true'
       - name: Upload Unit Test Results
         if: always()
         uses: actions/upload-artifact@v4
