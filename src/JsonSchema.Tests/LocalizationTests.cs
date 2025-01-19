@@ -7,7 +7,7 @@ namespace Json.Schema.Tests;
 
 public class LocalizationTests
 {
-	[Test]
+	[Test, SetCulture("en-US")]
 	public void MinimumReturnsDefaultErrorMessage()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()

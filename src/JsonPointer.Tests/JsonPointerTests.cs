@@ -113,4 +113,22 @@ public class JsonPointerTests
 
 		Assert.That(pointer.ToString(), Is.EqualTo("/string/1/foo"));
 	}
+
+	[Test]
+	public void ToString_WithEncodedCharacters()
+	{
+		var p = JsonPointer.Create("some", "pointer", "with~tilde");
+
+		var result = p.ToString();
+		Assert.That(result, Is.EqualTo("/some/pointer/with~0tilde"));
+	}
+
+	[Test]
+	public void ToString_EncodedCharactersOnly()
+	{
+		var p = JsonPointer.Create("~~~~~~~~~", "/////////", "~~~~~~~~~", "/////////");
+
+		var result = p.ToString();
+		Assert.That(result, Is.EqualTo("/~0~0~0~0~0~0~0~0~0/~1~1~1~1~1~1~1~1~1/~0~0~0~0~0~0~0~0~0/~1~1~1~1~1~1~1~1~1"));
+	}
 }

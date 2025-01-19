@@ -1,47 +1,58 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Json.Pointer;
 
 internal static class SpanExtensions
 {
-	internal static char Decode(this ReadOnlySpan<char> value, ref int index)
+	internal static bool TryDecodeSegment(this ReadOnlySpan<char> encoded, [NotNullWhen(true)] out string? result)
 	{
-		var ch = value[index];
-		if (ch == '~')
+		var l = encoded.Length;
+		if (l == 0)
 		{
-			if (index + 1 >= value.Length)
-				throw new PointerParseException($"Value '{value.ToString()}' does not represent a valid JSON Pointer segment");
-			ch = value[index + 1] switch
+			result = string.Empty;
+			return true;
+		}
+
+		var targetIndex = 0;
+		var sourceIndex = 0;
+		result = null;
+
+		Span<char> target = l < 1024
+			? stackalloc char[l]
+			: new char[l];
+
+		for (; sourceIndex < l; targetIndex++, sourceIndex++)
+		{
+			target[targetIndex] = encoded[sourceIndex];
+
+			if (target[targetIndex] == '/')
 			{
-				'0' => '~',
-				'1' => '/',
-				_ => throw new PointerParseException($"Value '{value.ToString()}' does not represent a valid JSON Pointer segment")
-			};
-			index++;
-		}
-
-		return ch;
-	}
-
-	internal static bool TryDecode(this ReadOnlySpan<char> value, ref int index, out char ch)
-	{
-		ch = value[index];
-		
-		if (ch != '~') return true;
-		if (index + 1 >= value.Length) return false;
-
-		index++;
-		switch (value[index])
-		{
-			case '0':
-				ch = '~';
-				return true;
-			case '1':
-				ch = '/';
-				return true;
-			default:
 				return false;
+			}
+
+			if (target[targetIndex] == '~')
+			{
+				if (sourceIndex == l - 1)
+					return false;
+
+				if (encoded[++sourceIndex] == '0')
+					continue; // we already wrote '~' so we're good
+
+				if (encoded[sourceIndex] == '1')
+					target[targetIndex] = '/';
+				else
+					return false; // invalid escape sequence
+			}
 		}
+
+#if NET8_0_OR_GREATER
+		result = new string(target[..targetIndex]);
+#else
+		result = target[..targetIndex].ToString();
+#endif
+
+		return true;
 	}
 
 	internal static int Encode(this ReadOnlySpan<char> key, Span<char> encoded)

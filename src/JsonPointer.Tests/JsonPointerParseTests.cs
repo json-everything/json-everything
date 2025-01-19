@@ -130,6 +130,19 @@ public class JsonPointerParseTests
 		Assert.That(actual, Is.EqualTo(expected));
 	}
 
+	[Test]
+	public void TrailingSlash()
+	{
+		var result = JsonPointer.TryParse("/foo/", out var pointer);
+
+		Assert.That(result, Is.True);
+		Assert.That(pointer, Is.Not.Null);
+		Assert.That(pointer.Count, Is.EqualTo(2));
+
+		Assert.That(pointer.First(), Is.EqualTo("foo"));
+		Assert.That(pointer.Last(), Is.EqualTo(""));
+	}
+
 	[TestCaseSource(nameof(SpecificationExamples))]
 	public void CreateThenToString(string pointerString, string[] segments)
 	{

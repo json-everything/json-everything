@@ -7,6 +7,7 @@ using TestHelpers;
 
 namespace Json.Schema.Tests;
 
+[TestFixture, SetCulture("en-US")]
 public class OutputTests
 {
 	private static readonly JsonSchema _schema =

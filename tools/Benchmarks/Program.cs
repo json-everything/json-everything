@@ -15,11 +15,11 @@ class Program
 		//config.WithOptions(ConfigOptions.DisableOptimizationsValidator);
 		//var summary = BenchmarkRunner.Run<TestSuiteRunner>(config);
 
-		var runner = new SuiteRunner();
-		runner.BenchmarkSetup();
-		runner.Models();
+		var runner = new Runner();
+		runner.Parse();
+		
 #else
-		var summary = BenchmarkRunner.Run<TestSuiteRunner>();
+		var summary = BenchmarkRunner.Run<Runner>();
 #endif
 	}
 }
