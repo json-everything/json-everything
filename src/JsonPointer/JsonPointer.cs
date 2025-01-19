@@ -27,6 +27,7 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 	public static readonly JsonPointer Empty = new();
 
 	private readonly string[] _decodedSegments;
+	private string? _plain;
 	private int? _hashCode;
 
 	/// <summary>
@@ -69,14 +70,16 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 		_decodedSegments = [];
 	}
 
-	private JsonPointer(ReadOnlySpan<string> segments)
+	private JsonPointer(ReadOnlySpan<string> segments, string? plain = null)
 	{
 		_decodedSegments = [..segments];
+		_plain = plain;
 	}
 
-	private JsonPointer(string[] segments)
+	private JsonPointer(string[] segments, string? plain = null)
 	{
 		_decodedSegments = segments;
+		_plain = plain;
 	}
 
 	/// <summary>
@@ -87,6 +90,23 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 	/// <exception cref="PointerParseException"><paramref name="source"/> does not contain a valid pointer or contains a pointer of the wrong kind.</exception>
 	public static JsonPointer Parse(ReadOnlySpan<char> source)
 	{
+		return ParseCore(source, null);
+	}
+
+	/// <summary>
+	/// Parses a JSON Pointer from a string.
+	/// </summary>
+	/// <param name="source">The source string.</param>
+	/// <returns>A JSON Pointer.</returns>
+	/// <exception cref="ArgumentNullException"><paramref name="source"/> is null.</exception>
+	/// <exception cref="PointerParseException"><paramref name="source"/> does not contain a valid pointer or contains a pointer of the wrong kind.</exception>
+	public static JsonPointer Parse(string source)
+	{
+		return ParseCore(source.AsSpan(), source);
+	}
+
+	private static JsonPointer ParseCore(ReadOnlySpan<char> source, string? plain)
+	{
 		if (source.Length == 0) return Empty;
 
 		if (source[0] == '#')
@@ -94,21 +114,25 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 #if NET9_0_OR_GREATER
 			source = Uri.UnescapeDataString(source[1..]);
 #elif NET8_0_OR_GREATER
-			source = Uri.UnescapeDataString(new (source[1..]));
+			source = Uri.UnescapeDataString(new(source[1..]));
 #else
 			source = Uri.UnescapeDataString(source[1..].ToString()).AsSpan();
 #endif
 
 			if (source.Length == 0) return Empty;
+
+			// We cannot use the original input, because ToString() always returns the non-URI form.
+			// So we force lazy evaluation in ToString() to not pay the cost here.
+			plain = null; 
 		}
 
 		if (source[0] != '/')
 			throw new PointerParseException("Pointer must start with either `#/` or `/` or be empty");
 
 		if (source.Length == 1)
-			return new JsonPointer([""]);
+			return new JsonPointer([""], "/");
 
-		if (TryParseInternal(source, out var result))
+		if (TryParseInternal(source, plain, out var result))
 			return result;
 
 		throw new PointerParseException($"Value '{source.ToString()}' does not represent a valid JSON Pointer");
@@ -132,7 +156,7 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 
 #if NET9_0_OR_GREATER
 
-	private static bool TryParseInternal(ReadOnlySpan<char> source, [NotNullWhen(true)] out JsonPointer? result)
+	private static bool TryParseInternal(ReadOnlySpan<char> source, string? plain, [NotNullWhen(true)] out JsonPointer? result)
 	{
 		var segmentCount = CountSegments(source);
 		var segments = new string[segmentCount];
@@ -152,13 +176,13 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 			}
 		}
 
-		result = new JsonPointer(segments);
+		result = new JsonPointer(segments, plain);
 		return true;
 	}
 
 #else
 
-	private static bool TryParseInternal(ReadOnlySpan<char> source, [NotNullWhen(true)] out JsonPointer? result)
+	private static bool TryParseInternal(ReadOnlySpan<char> source, string? plain, [NotNullWhen(true)] out JsonPointer? result)
 	{
 		var segmentCount = CountSegments(source);
 		var segments = new string[segmentCount];
@@ -189,7 +213,7 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 
 		segments[segmentIndex] = segment2;
 
-		result = new JsonPointer(segments);
+		result = new JsonPointer(segments, plain);
 		return true;
 	}
 
@@ -199,22 +223,15 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 	/// Parses a JSON Pointer from a string.
 	/// </summary>
 	/// <param name="source">The source string.</param>
-	/// <returns>A JSON Pointer.</returns>
-	/// <exception cref="ArgumentNullException"><paramref name="source"/> is null.</exception>
-	/// <exception cref="PointerParseException"><paramref name="source"/> does not contain a valid pointer or contains a pointer of the wrong kind.</exception>
-	public static JsonPointer Parse(string source)
-	{
-		return Parse(source.AsSpan());
-	}
-
-	/// <summary>
-	/// Parses a JSON Pointer from a string.
-	/// </summary>
-	/// <param name="source">The source string.</param>
 	/// <param name="pointer">The resulting pointer.</param>
 	/// <returns>`true` if the parse was successful; `false` otherwise.</returns>
 	/// <exception cref="ArgumentNullException"><paramref name="source"/> is null.</exception>
 	public static bool TryParse(ReadOnlySpan<char> source, [NotNullWhen(true)] out JsonPointer? pointer)
+	{
+		return TryParseCore(source, null, out pointer);
+	}
+
+	private static bool TryParseCore(ReadOnlySpan<char> source, string? plain, [NotNullWhen(true)] out JsonPointer? pointer)
 	{
 		if (source.Length == 0)
 		{
@@ -227,7 +244,7 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 #if NET9_0_OR_GREATER
 			source = Uri.UnescapeDataString(source[1..]);
 #elif NET8_0_OR_GREATER
-			source = Uri.UnescapeDataString(new (source[1..]));
+			source = Uri.UnescapeDataString(new(source[1..]));
 #else
 			source = Uri.UnescapeDataString(source[1..].ToString()).AsSpan();
 #endif
@@ -237,6 +254,10 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 				pointer = Empty;
 				return true;
 			}
+
+			// We cannot use the original input, because ToString() always returns the non-URI form.
+			// So we force lazy evaluation in ToString() to not pay the cost here.
+			plain = null;
 		}
 
 		if (source[0] != '/')
@@ -247,11 +268,11 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 
 		if (source.Length == 1)
 		{
-			pointer = new JsonPointer([""]);
+			pointer = new JsonPointer([""], "/");
 			return true;
 		}
 
-		return TryParseInternal(source, out pointer);
+		return TryParseInternal(source, plain, out pointer);
 	}
 
 	/// <summary>
@@ -596,6 +617,9 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 	/// <returns>The string representation.</returns>
 	public override string ToString()
 	{
+		if (_plain is not null)
+			return _plain;
+
 		if (_decodedSegments.Length == 0)
 			return "";
 
@@ -608,9 +632,9 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 			total += segment.Length;
 		}
 
-		return total < 1024
+		return _plain ??= (total < 1024
 			? ToStringSmall(total)
-			: ToStringLarge(total);
+			: ToStringLarge(total));
 	}
 
 	private string ToStringSmall(int total)
