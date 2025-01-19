@@ -140,12 +140,16 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 
 		source = source[1..];
 		foreach (var segmentRange in source.Split('/'))
-		{			
-			if (!TryDecodeSegment(source[segmentRange], out segments[segmentIndex++]))
+		{
+			if (source[segmentRange].TryDecodeSegment(out var segment))
+			{
+				segments[segmentIndex++] = segment;
+			}
+			else
 			{
 				result = null;
 				return false;
-			}	
+			}
 		}
 
 		result = new JsonPointer(segments);
@@ -161,13 +165,15 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 
 		source = source[1..];
 		var segmentIndex = 0;
-		result = null;
 
 		var sourceIndex = source.IndexOf('/');
 		while (sourceIndex >= 0)
 		{
-			if (!TryDecodeSegment(source[..sourceIndex], out var segment))
+			if (!source[..sourceIndex].TryDecodeSegment(out var segment))
+			{
+				result = null;
 				return false;
+			}
 
 			segments[segmentIndex++] = segment;
 			
@@ -175,64 +181,19 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 			sourceIndex = source.IndexOf('/');
 		}
 
-		if (!TryDecodeSegment(source, out segments[segmentIndex]))
+		if (!source.TryDecodeSegment(out var segment2))
+		{
+			result = null;
 			return false;
-		
+		}
+
+		segments[segmentIndex] = segment2;
+
 		result = new JsonPointer(segments);
 		return true;
 	}
 
 #endif
-
-	private static bool TryDecodeSegment(ReadOnlySpan<char> encoded, out string? result)
-	{
-		var l = encoded.Length;
-		if (l == 0)
-		{
-			result = string.Empty;
-			return true;
-		}
-
-		var targetIndex = 0;
-		var sourceIndex = 0;
-		result = null;
-
-		Span<char> target = l < 1024
-			? stackalloc char[l]
-			: new char[l];
-
-		for (; sourceIndex < l; targetIndex++, sourceIndex++)
-		{
-			target[targetIndex] = encoded[sourceIndex];
-			
-			if (target[targetIndex] == '/')
-			{
-				return false;
-			}
-
-			if (target[targetIndex] == '~')
-			{
-				if (sourceIndex == l - 1)
-					return false;
-
-				if (encoded[++sourceIndex] == '0')
-					continue; // we already wrote '~' so we're good
-				
-				if (encoded[sourceIndex] == '1')
-					target[targetIndex] = '/';
-				else
-					return false; // invalid escape sequence
-			}
-		}
-
-#if NET8_0_OR_GREATER
-		result = new string(target[..targetIndex]);
-#else
-		result = target[..targetIndex].ToString();
-#endif
-
-		return true;
-	}
 
 	/// <summary>
 	/// Parses a JSON Pointer from a string.
