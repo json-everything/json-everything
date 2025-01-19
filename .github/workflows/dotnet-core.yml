@@ -16,6 +16,12 @@ on:
       - '.github/workflows/dotnet-core.yml'
   workflow_dispatch:
 
+permissions:
+  contents: read
+  actions: read
+  checks: write
+  pull-requests: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -61,9 +67,6 @@ jobs:
     needs: build
     if: success() || failure()
     name: Publish Unit Test Results
-    permissions:
-      checks: write
-      pull-requests: write
     steps:
       - name: Download Artifacts
         uses: actions/download-artifact@v4
