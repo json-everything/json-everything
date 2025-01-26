@@ -1,4 +1,5 @@
 using System;
+using System.Net;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using NUnit.Framework;
@@ -77,5 +78,26 @@ public class EnumStringConverterTests
 		var deserialized = JsonSerializer.Deserialize<FlagsEnumContainer>(actual)!;
 
 		Assert.That(deserialized.Value, Is.EqualTo(CustomFlagsEnum.One | CustomFlagsEnum.Two));
+	}
+
+	private class EnumWithDuplicatedMemberValuesContainer
+	{
+		[JsonConverter(typeof(EnumStringConverter<HttpStatusCode>))]
+		public HttpStatusCode Value { get; set; }
+	}
+
+	[Test]
+	public void EnumWithDuplicatedMemberValuesIsConverted()
+	{
+		var value = new EnumWithDuplicatedMemberValuesContainer { Value = HttpStatusCode.MultipleChoices };
+
+		var expected = "{\"Value\":\"MultipleChoices\"}";
+		var actual = JsonSerializer.Serialize(value);
+
+		Assert.That(actual, Is.EqualTo(expected));
+
+		var deserialized = JsonSerializer.Deserialize<EnumWithDuplicatedMemberValuesContainer>(actual)!;
+
+		Assert.That(deserialized.Value, Is.EqualTo(HttpStatusCode.MultipleChoices));
 	}
 }
