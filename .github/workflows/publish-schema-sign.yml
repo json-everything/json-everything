@@ -68,11 +68,13 @@ jobs:
         with:
           name: build-output
           path: artifacts
-      - uses: nuget/setup-nuget@v2
+      - name: Setup NuGet
+        uses: nuget/setup-nuget@v2
         with:
           nuget-api-key: ${{ secrets.NUGET_API_KEY }}
           nuget-version: '6.x'
       - name: pack
+        shell: bash
         run: |
           NUSPEC_NAME=JsonSchema.Net.nuspec
           VERSION=${{ needs.build.outputs.version }}
