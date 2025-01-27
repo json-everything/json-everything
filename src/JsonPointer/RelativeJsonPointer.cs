@@ -122,11 +122,7 @@ public class RelativeJsonPointer
 		while (i < span.Length && char.IsDigit(span[i])) i++;
 		if (i == 0) throw new PointerParseException($"`{nameof(source)}` must start with a non-negative integer");
 
-#if NET8_0_OR_GREATER
-		var parentSteps = uint.Parse(span[..i]);
-#else
-		var parentSteps = uint.Parse(span[..i].ToString());
-#endif
+		var parentSteps = span[..i].AsUint();
 
 		if (i == span.Length) return new RelativeJsonPointer(parentSteps, JsonPointer.Empty);
 
@@ -138,11 +134,7 @@ public class RelativeJsonPointer
 			var start = i;
 			while (i < span.Length && char.IsDigit(span[i])) i++;
 
-#if NET8_0_OR_GREATER
-			indexManipulation = sign * int.Parse(span[start..i]);
-#else
-			indexManipulation = sign * int.Parse(span[start..i].ToString());
-#endif
+			indexManipulation = sign * span[start..i].AsInt();
 
 			if (i == span.Length) return new RelativeJsonPointer(parentSteps, indexManipulation, JsonPointer.Empty);
 		}
@@ -185,11 +177,7 @@ public class RelativeJsonPointer
 			return false;
 		}
 
-#if NET8_0_OR_GREATER
-		var parentSteps = uint.Parse(span[..i]);
-#else
-		var parentSteps = uint.Parse(span[..i].ToString());
-#endif
+		var parentSteps = span[..i].AsUint();
 
 		if (i == span.Length)
 		{
@@ -205,11 +193,8 @@ public class RelativeJsonPointer
 			var start = i;
 			while (i < span.Length && char.IsDigit(span[i])) i++;
 
-#if NET8_0_OR_GREATER
-			indexManipulation = sign * int.Parse(span[start..i]);
-#else
-			indexManipulation = sign * int.Parse(span[start..i].ToString());
-#endif
+			indexManipulation = sign * span[start..i].AsInt();
+
 			if (i == span.Length)
 			{
 				relativePointer = new RelativeJsonPointer(parentSteps, indexManipulation, JsonPointer.Empty);
