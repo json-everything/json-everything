@@ -144,7 +144,7 @@ jobs:
     - name: Sign NuGet Packages
       shell: bash
       run: |
-          dotnet sign "**/archive-packages-core/**/*.nupkg" \
+          ./sign "**/archive-packages-core/**/*.nupkg" \
             -v Trace -t http://timestamp.acs.microsoft.com
             --azure-key-vault-client-id "${{ secrets.AZURE_CLIENT_ID }}" \
             --azure-key-vault-tenant-id "${{ secrets.AZURE_TENANT_ID }}" \
