@@ -129,7 +129,7 @@ jobs:
 
     # Install the code signing tool    
     - name: Install Sign CLI tool
-      run: dotnet tool install --tool-path . sign --version 0.9.1-beta.24529.1
+      run: dotnet tool install --tool-path . --prerelease sign
     
     # Login to Azure using a ServicePrincipal configured to authenticate against a GitHub Action
     - name: 'Az CLI login'
@@ -141,19 +141,18 @@ jobs:
         allow-no-subscriptions: true
 
     # Run the signing command
-    - name: Sign artifacts
-      shell: pwsh
-      run: >
-        ./sign code azure-key-vault
-        **/*.nupkg
-        --base-directory "${{ github.workspace }}/archive-packages-core"
-        --file-list "${{ github.workspace }}/config/filelist.txt"
-        --publisher-name "Greg Dennis"
-        --description "JsonSchema.Net"
-        --description-url "https://github.com/dotnet/sign"
-        --azure-key-vault-managed-identity true
-        --azure-key-vault-url "${{ secrets.AZURE_KEY_VAULT_URL }}"
-        --azure-key-vault-certificate "${{ secrets.AZURE_KEY_VAULT_CERTIFICATE_ID }}"
+    - name: Sign NuGet Packages
+      shell: bash
+      run: |
+          for pkg in archive-packages-core/*.nupkg; do
+            dotnet sign "$pkg" \
+              -v Trace -t http://timestamp.acs.microsoft.com
+              --azure-key-vault-client-id "${{ secrets.AZURE_CLIENT_ID }}" \
+              --azure-key-vault-tenant-id "${{ secrets.AZURE_TENANT_ID }}" \
+              --azure-key-vault-client-secret "${{ secrets.AZURE_KEY_VAULT_CLIENT_SECRET }}" \
+              --azure-key-vault-certificate "${{ secrets.AZURE_KEY_VAULT_CERTIFICATE_ID }}" \
+              --azure-key-vault-url "${{ secrets.AZURE_KEY_VAULT_URL }}"
+          done
   # publish-localizations:
   #   needs: build
   #   name: pack & publish localizations
