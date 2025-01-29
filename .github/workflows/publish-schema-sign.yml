@@ -144,15 +144,19 @@ jobs:
     - name: Sign NuGet Packages
       shell: bash
       run: |
-          for pkg in archive-packages-core/*.nupkg; do
-            dotnet sign "$pkg" \
-              -v Trace -t http://timestamp.acs.microsoft.com
-              --azure-key-vault-client-id "${{ secrets.AZURE_CLIENT_ID }}" \
-              --azure-key-vault-tenant-id "${{ secrets.AZURE_TENANT_ID }}" \
-              --azure-key-vault-client-secret "${{ secrets.AZURE_KEY_VAULT_CLIENT_SECRET }}" \
-              --azure-key-vault-certificate "${{ secrets.AZURE_KEY_VAULT_CERTIFICATE_ID }}" \
-              --azure-key-vault-url "${{ secrets.AZURE_KEY_VAULT_URL }}"
-          done
+          dotnet sign "**/archive-packages-core/**/*.nupkg" \
+            -v Trace -t http://timestamp.acs.microsoft.com
+            --azure-key-vault-client-id "${{ secrets.AZURE_CLIENT_ID }}" \
+            --azure-key-vault-tenant-id "${{ secrets.AZURE_TENANT_ID }}" \
+            --azure-key-vault-client-secret "${{ secrets.AZURE_KEY_VAULT_CLIENT_SECRET }}" \
+            --azure-key-vault-certificate "${{ secrets.AZURE_KEY_VAULT_CERTIFICATE_ID }}" \
+            --azure-key-vault-url "${{ secrets.AZURE_KEY_VAULT_URL }}"
+    - name: archive signed packages
+      uses: actions/upload-artifact@v4
+      with:
+        name: archive-signed-packages-core
+        path: archive-packages-core/*
+            
   # publish-localizations:
   #   needs: build
   #   name: pack & publish localizations
