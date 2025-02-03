@@ -56,7 +56,7 @@ Add .Net 9.0 support.
 [#768](https://github.com/gregsdennis/json-everything/issues/768) - Added two ways to allow external references.  Thanks to [@luisjones](https://github.com/luisjones) for suggesting the idea.
 
 - Added `[Id]` attribute
-- Added `SchemaGenerationConfiguration.ExternalReferences`
+- Added `SchemaGeneratorConfiguration.ExternalReferences`
 
 # [4.4.0](https://github.com/gregsdennis/json-everything/pull/770) {#release-schemagen-4.4.0}
 
@@ -106,7 +106,7 @@ AOT support is not currently supported for this library.  Appropriate attributes
 
 - Dropping support for .Net Standard 3.1 - May still be used, but exact behavior cannot be guaranteed. 
 - `PropertyNamingMethods` removed.  Previously marked obsolete.
-- `SchemaGenerationConfiguration.PropertyNamingMethod` removed.  Previously marked obsolete.
+- `SchemaGeneratorConfiguration.PropertyNamingMethod` removed.  Previously marked obsolete.
 
 # [3.5.0](https://github.com/gregsdennis/json-everything/pull/581) {#release-schemagen-3.5.0}
 
@@ -132,7 +132,7 @@ Also affected by this were `[JsonPropertyName]` and `[JsonIgnore]`.
 
 [#528](https://github.com/gregsdennis/json-everything/pull/528) - [@juwens](https://github.com/juwens) suggesting adding `PropertyNameResolver` for property naming that takes the entire `MemberInfo` (instead of just the member name) in place of `PropertyNamingMethod` so that additional information can be used to determine a name for the JSON property.
 
-`SchemaGenerationConfiguration.PropertyNamingMethod` has been deprecated.  It's still functional but will be removed with the next major version.
+`SchemaGeneratorConfiguration.PropertyNamingMethod` has been deprecated.  It's still functional but will be removed with the next major version.
 
 # [3.3.2](https://github.com/gregsdennis/json-everything/pull/513) {#release-schemagen-3.3.2}
 
@@ -267,7 +267,7 @@ Fixed `[Minimum()]`, `[ExclusiveMinimum()]`, `[Maximum()]`, and `[ExclusiveMaxim
 [#128](https://github.com/gregsdennis/json-everything/pull/128) - Added support for nullability.  Special thanks to [@JMPSequeira](https://github.com/JMPSequeira) who proposed the feature and worked through multiple designs ([#124](https://github.com/gregsdennis/json-everything/pull/124) and [#127](https://github.com/gregsdennis/json-everything/pull/127)) that lead to the final solution and for adding all the tests needed to ensure proper function.
 - Added `NullableAttribute`.
 - Added `Nullability`.
-- Added `SchemaGenerationConfiguration.Nullability`.
+- Added `SchemaGeneratorConfiguration.Nullability`.
 
 [#125](https://github.com/gregsdennis/json-everything/pull/125) - Bug fix: generation of object with no serializable properties still generates an empty `properties` keyword.
 
