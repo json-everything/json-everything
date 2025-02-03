@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 namespace Json.Pointer;
 
@@ -19,7 +20,7 @@ public readonly struct PointerSegment
 	/// </summary>
 	/// <param name="value">A pointer segment that represents the value.</param>
 	public static implicit operator PointerSegment(int value) =>
-		new(value.ToString());
+		new(value.ToString(CultureInfo.InvariantCulture));
 
 	/// <summary>
 	/// Implicitly casts a <see cref="string"/> to a <see cref="PointerSegment"/>.
