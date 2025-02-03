@@ -181,4 +181,36 @@ public class FormatTests
 		TestConsole.WriteLine(JsonSerializer.Serialize(results, TestEnvironment.TestOutputSerializerOptions));
 		Assert.That(results.IsValid, Is.EqualTo(isValid));
 	}
+
+	[Test]
+	public void HostnameShouldSupportLongerStrings()
+	{
+		var schema = new JsonSchemaBuilder().Format(Formats.Hostname);
+		JsonNode instance = "hostname.exceeding24characte.rs";
+
+		var results = schema.Evaluate(instance, new EvaluationOptions
+		{
+			OutputFormat = OutputFormat.Hierarchical,
+			RequireFormatValidation = true
+		});
+
+		TestConsole.WriteLine(JsonSerializer.Serialize(results, TestEnvironment.TestOutputSerializerOptions));
+		Assert.That(results.IsValid, Is.True);
+	}
+
+	[Test]
+	public void IdnHostnameShouldSupportLongerStrings()
+	{
+		var schema = new JsonSchemaBuilder().Format(Formats.Hostname);
+		JsonNode instance = "hostname.exceeding24characte.rs";
+
+		var results = schema.Evaluate(instance, new EvaluationOptions
+		{
+			OutputFormat = OutputFormat.Hierarchical,
+			RequireFormatValidation = true
+		});
+
+		TestConsole.WriteLine(JsonSerializer.Serialize(results, TestEnvironment.TestOutputSerializerOptions));
+		Assert.That(results.IsValid, Is.True);
+	}
 }
