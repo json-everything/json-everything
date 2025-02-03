@@ -177,16 +177,24 @@ public class EnumStringConverter<[DynamicallyAccessedMembers(DynamicallyAccessed
 		{
 			if (_readValues != null && _writeValues != null) return;
 
-			var map = typeof(T).GetFields()
-				.Where(f => !f.IsSpecialName)
-				.Select(f => new
-				{
-					Value = (T)Enum.Parse(typeof(T), f.Name),
-					Description = f.GetCustomAttribute<DescriptionAttribute>()?.Description ?? f.Name
-				})
-				.ToList();
-			_readValues = map.ToDictionary(v => v.Description, v => v.Value);
-			_writeValues = map.ToDictionary(v => v.Value, v => v.Description);
+			var fields = typeof(T).GetFields();
+
+			var readValues = new Dictionary<string, T>(capacity: fields.Length);
+			var writeValues = new Dictionary<T, string>(capacity: fields.Length);
+
+			foreach (var field in fields.Where(f => !f.IsSpecialName))
+			{
+				var value = (T) Enum.Parse(typeof(T), field.Name);
+				var description = field.GetCustomAttribute<DescriptionAttribute>()?.Description ?? field.Name;
+
+				if (!readValues.ContainsKey(description))
+					readValues.Add(description, value);
+				if (!writeValues.ContainsKey(value))
+					writeValues.Add(value, description);
+			}
+
+			_readValues = readValues;
+			_writeValues = writeValues;
 		}
 	}
 }

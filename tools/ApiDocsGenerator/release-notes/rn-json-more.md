@@ -4,6 +4,10 @@ title: Json.More.Net
 icon: fas fa-tag
 order: "09.13"
 ---
+# [2.1.1](https://github.com/json-everything/json-everything/pull/857) {#release-more-2.1.1}
+
+[#856](https://github.com/json-everything/json-everything/issues/856) - `EnumStringConverter` fails on Enum serialization when multiple members have same value
+
 # [2.1.0](https://github.com/gregsdennis/json-everything/pull/822) {#release-more-2.1.0}
 
 Add .Net 9.0 support.

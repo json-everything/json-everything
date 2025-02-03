@@ -1,0 +1,188 @@
+# https://github.com/marketplace/actions/publish-nuget
+name: Publish and Sign JsonSchema.Net
+on:
+  push:
+    branches:
+      - master # Default release branch
+    paths:
+      - .github/workflows/publish-schema-sign.yml
+      - src/JsonSchema/**
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - id: get-localized-nuspecs
+        run: |
+          NUSPEC_FILES=$(echo -n '[' ; ls src/JsonSchema/nuspec/JsonSchema.Net.*.nuspec --format=commas|sed -e 's/^/\"/'|sed -e 's/,$/\",/'|sed -e 's/\([^,]\)$/\1\"\]/'|sed -e 's/, /\",\"/g')
+          echo $NUSPEC_FILES
+          DELIMITER="$(openssl rand -hex 8)"
+          echo "NUSPEC_FILES<<$DELIMITER" >> $GITHUB_OUTPUT
+          echo "$NUSPEC_FILES" >> $GITHUB_OUTPUT
+          echo "$DELIMITER" >> $GITHUB_OUTPUT
+      - name: Setup .NET Core 8.0.0
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Setup .NET Core 9.0.0
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+      # Publish
+      - name: Install dependencies
+        run: dotnet restore
+      - name: Build
+        # Localization build automatically moves localization DLLs into nuspec/ folder
+        run: dotnet build src/JsonSchema/JsonSchema.csproj --configuration Release --no-restore
+      - name: Get version
+        id: get-version
+        run: |
+          version="$(grep '<Version' src/JsonSchema/JsonSchema.csproj | cut -f2 -d'>'|cut -f1 -d'<')"
+          echo $version
+          echo "version=$version" >> $GITHUB_OUTPUT
+      - uses: actions/upload-artifact@v4
+        with:
+          name: build-output
+          path: |
+            src/JsonSchema/bin/Release/**/*
+            src/JsonSchema/nuspec
+    outputs:
+      matrix: ${{ steps.get-localized-nuspecs.outputs.NUSPEC_FILES }}
+      version: ${{ steps.get-version.outputs.version }}
+  pack:
+    needs: build
+    name: pack & publish core
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Download Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-output
+          path: artifacts
+      - name: Setup NuGet
+        uses: nuget/setup-nuget@v2
+        with:
+          nuget-api-key: ${{ secrets.NUGET_API_KEY }}
+          nuget-version: '6.x'
+      - name: pack
+        shell: bash
+        run: |
+          NUSPEC_NAME=JsonSchema.Net.nuspec
+          VERSION=${{ needs.build.outputs.version }}
+          ls -lR artifacts
+          echo $VERSION
+          nuget pack artifacts/bin/Release/netstandard2.0/nuspec/${NUSPEC_NAME} -OutputDirectory nupkg/ -Symbols -SymbolPackageFormat snupkg -Version ${VERSION}
+      # - name: push
+      #   run: |
+      #     NUSPEC_NAME=JsonSchema.Net.nuspec
+      #     VERSION=${{ needs.build.outputs.version }}
+      #     PKG_NAME=JsonSchema.Net.${VERSION}.nupkg
+      #     # echo ${PKG_NAME}
+      #     ls nupkg/
+      #     nuget push nupkg/${PKG_NAME} -Source https://api.nuget.org/v3/index.json -SkipDuplicate
+      # - name: create tag
+      #   uses: rickstaa/action-create-tag@v1
+      #   with:
+      #     tag: schema-v${{ needs.build.outputs.version }}
+      #     tag_exists_error: false
+      - name: archive packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: archive-packages-core
+          path: nupkg/*
+  sign:
+    needs: pack
+    runs-on: windows-latest # Code signing must run on a Windows agent for Authenticode signing (dll/exe)
+    # if: ${{ github.ref == 'refs/heads/master' }} # Only run this job on pushes to the main branch
+    permissions:
+      id-token: write # Required for requesting the JWT
+      
+    steps:
+
+    # Download signing configuration and artifacts
+    # - name: Download signing config
+    #   uses: actions/download-artifact@v3
+    #   with:
+    #     name: config
+    #     path: config
+        
+    - name: Download build artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: archive-packages-core
+        path: archive-packages-core
+    
+    # .NET is required on the agent for the tool to run
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.x
+
+    # Install the code signing tool    
+    - name: Install Sign CLI tool
+      run: dotnet tool install --tool-path . --prerelease sign
+    
+    # Login to Azure using a ServicePrincipal configured to authenticate against a GitHub Action
+    - name: 'Az CLI login'
+      uses: azure/login@v2
+      with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: "997e7c30-fd83-4b3d-bcf5-492e194f9b98"
+        allow-no-subscriptions: true
+
+    # Run the signing command
+    - name: Sign NuGet Packages
+      shell: bash
+      run: ./sign code azure-key-vault "./archive-packages-core/**/*.nupkg" -v Trace -t http://timestamp.acs.microsoft.com -kvc "${{ secrets.AZURE_KEY_VAULT_CERTIFICATE_ID }}" -kvu "${{ secrets.AZURE_KEY_VAULT_URL }}"
+
+    - name: archive signed packages
+      uses: actions/upload-artifact@v4
+      with:
+        name: archive-signed-packages-core
+        path: archive-packages-core/*
+            
+  # publish-localizations:
+  #   needs: build
+  #   name: pack & publish localizations
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     matrix:
+  #       nuspec: ${{ fromJson(needs.build.outputs.matrix) }}
+  #   steps:
+  #     - name: Download Artifacts
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: build-output
+  #         path: artifacts/JsonSchema
+  #     - uses: nuget/setup-nuget@v1
+  #       with:
+  #         nuget-api-key: ${{ secrets.NUGET_API_KEY }}
+  #         nuget-version: '6.x'
+  #     - name: pack
+  #       run: |
+  #         # matrix var includes "src/JsonSchema/nuspec/"
+  #         ls -lR artifacts/JsonSchema
+  #         NUSPEC_NAME="$(echo ${{ matrix.nuspec }} | sed 's/^.\{4\}//')"
+  #         nuget pack artifacts/${NUSPEC_NAME} -OutputDirectory nupkg/
+  #     - name: push
+  #       run: |
+  #         PKG_NAME=*.nupkg
+  #         echo ${PKG_NAME}
+  #         nuget push nupkg/*.nupkg -Source https://api.nuget.org/v3/index.json -SkipDuplicate
+  #     - name: archive packages
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: archive-packages-${{ matrix.nuspec }}
+  #         path: |
+  #           **/*.nupkg
+  #           **/*.snupkg
