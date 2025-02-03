@@ -23,6 +23,9 @@
     <file src="..\..\net8.0\JsonSchema.Net.dll" target="lib\net8.0" />
     <file src="..\..\net8.0\JsonSchema.Net.xml" target="lib\net8.0" />
     <file src="..\..\net8.0\JsonSchema.Net.pdb" target="lib\net8.0" />
+    <file src="..\..\net9.0\JsonSchema.Net.dll" target="lib\net9.0" />
+    <file src="..\..\net9.0\JsonSchema.Net.xml" target="lib\net9.0" />
+    <file src="..\..\net9.0\JsonSchema.Net.pdb" target="lib\net9.0" />
     <file src="..\json-logo-256.png" target="json-logo-256.png" />
     <file src="..\README.md" target="\" />
   </files>
