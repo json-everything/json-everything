@@ -6,7 +6,7 @@ order: "09.01"
 ---
 # [7.3.2](https://github.com/gregsdennis/json-everything/pull/870) {#release-schema-7.3.2}
 
-[#852](https://github.com/gregsdennis/json-everything/issues/852) - Improves `hostname` & `idn-hostname` format validation.
+[#852](https://github.com/gregsdennis/json-everything/issues/852) - Improves `hostname` & `idn-hostname` format validation.  Thanks to [@mauricecamphadrian](https://github.com/mauricecamphadrian) for finding this and suggesting a new regex.
 
 # [7.3.1](https://github.com/gregsdennis/json-everything/pull/822) {#release-schema-7.3.1}
 
