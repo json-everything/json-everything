@@ -63,7 +63,7 @@ public class DocXmlReader
 	/// <summary>
 	/// 
 	/// </summary>
-	[Obsolete("Use SchemaGenerationConfiguration.RegisterXmlCommentFile<T>() instead")]
+	[Obsolete("Use SchemaGeneratorConfiguration.RegisterXmlCommentFile<T>() instead")]
 	public static void ExplicitlyAddAssemblyXml(Assembly assembly, string xmlContent)
 	{
 		_explicitXmlContent[assembly] = xmlContent;
