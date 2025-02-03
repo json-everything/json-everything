@@ -56,10 +56,10 @@ public static partial class Formats
 
 
 #if NET7_0_OR_GREATER
-	[GeneratedRegex("^[a-zA-Z][-.a-zA-Z0-9]{0,22}[a-zA-Z0-9]$", RegexOptions.Compiled, 250)]
+	[GeneratedRegex("^([a-zA-Z0-9]([a-zA-Z0-9\\-]{0,61}[a-zA-Z0-9])?\\.)+[a-zA-Z]{2,6}$", RegexOptions.Compiled, 250)]
 	private static partial Regex HostnameRegex();
 #else
-	private static readonly Regex _hostnameRegex = new("^[a-zA-Z][-.a-zA-Z0-9]{0,22}[a-zA-Z0-9]$", RegexOptions.Compiled, TimeSpan.FromMilliseconds(250));
+	private static readonly Regex _hostnameRegex = new("^([a-zA-Z0-9]([a-zA-Z0-9\\-]{0,61}[a-zA-Z0-9])?\\.)+[a-zA-Z]{2,6}$", RegexOptions.Compiled, TimeSpan.FromMilliseconds(250));
 
 	private static Regex HostnameRegex() => _hostnameRegex;
 #endif
@@ -68,7 +68,7 @@ public static partial class Formats
 	/// <summary>
 	/// Defines the `hostname` format.
 	/// </summary>
-	public static readonly Format Hostname = new RegexFormat("hostname", HostnameRegex());
+	public static readonly Format Hostname = new PredicateFormat("hostname", CheckHostName);
 	/// <summary>
 	/// Defines the `idn-email` format.
 	/// </summary>
@@ -76,7 +76,7 @@ public static partial class Formats
 	/// <summary>
 	/// Defines the `idn-hostname` format.
 	/// </summary>
-	public static readonly Format IdnHostname = new PredicateFormat("idn-hostname", CheckHostName);
+	public static readonly Format IdnHostname = new PredicateFormat("idn-hostname", CheckIdnHostName);
 	/// <summary>
 	/// Defines the `ipv4` format.
 	/// </summary>
@@ -331,6 +331,15 @@ public static partial class Formats
 	}
 
 	private static bool CheckHostName(JsonNode? node)
+	{
+		if (node.GetSchemaValueType() != SchemaValueType.String) return true;
+
+		var value = node!.GetValue<string>();
+
+		return HostnameRegex().IsMatch(value) && value.Length < 253;
+	}
+
+	private static bool CheckIdnHostName(JsonNode? node)
 	{
 		if (node.GetSchemaValueType() != SchemaValueType.String) return true;
 
