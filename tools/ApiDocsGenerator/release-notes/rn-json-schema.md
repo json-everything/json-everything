@@ -4,6 +4,10 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "09.01"
 ---
+# [7.3.2](https://github.com/gregsdennis/json-everything/pull/870) {#release-schema-7.3.2}
+
+[#852](https://github.com/gregsdennis/json-everything/issues/852) - Improves `hostname` & `idn-hostname` format validation.  Thanks to [@mauricecamphadrian](https://github.com/mauricecamphadrian) for finding this and suggesting a new regex.
+
 # [7.3.1](https://github.com/gregsdennis/json-everything/pull/822) {#release-schema-7.3.1}
 
 [#844](https://github.com/gregsdennis/json-everything/issues/844) - Nuspec for this library is manually mananged and gets left behind if a listed dependency is updated.  Added a test to prevent this from happening again.  Updates the dependency on _JsonPointer.Net_ to current latest (v5.1.0).

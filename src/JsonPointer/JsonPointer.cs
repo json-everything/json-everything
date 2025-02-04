@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -540,7 +541,7 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 					}
 					if (segment[0] == '0') return null;
 					if (segment is ['-']) return current.EnumerateArray().LastOrDefault();
-					if (!int.TryParse(segment, out var index)) return null;
+					if (!int.TryParse(segment, NumberStyles.Integer, CultureInfo.InvariantCulture, out var index)) return null;
 					if (index >= current.GetArrayLength()) return null;
 					if (index < 0) return null;
 
