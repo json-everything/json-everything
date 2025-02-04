@@ -13,7 +13,7 @@
     <tags>json-schema validation schema json</tags>
     <repository type="git" url="https://github.com/json-everything/json-everything" />
     <dependencies>
-      <dependency id="JsonPointer.Net" version="5.3.0" exclude="Build,Analyzers" />
+      <dependency id="JsonPointer.Net" version="5.3.1" exclude="Build,Analyzers" />
     </dependencies>
   </metadata>
   <files>
