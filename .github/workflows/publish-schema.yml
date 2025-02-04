@@ -63,7 +63,7 @@ jobs:
         with:
           name: build-output
           path: artifacts
-      - uses: nuget/setup-nuget@v1
+      - uses: nuget/setup-nuget@v2
         with:
           nuget-api-key: ${{ secrets.NUGET_API_KEY }}
           nuget-version: '6.x'
@@ -107,7 +107,7 @@ jobs:
         with:
           name: build-output
           path: artifacts/JsonSchema
-      - uses: nuget/setup-nuget@v1
+      - uses: nuget/setup-nuget@v2
         with:
           nuget-api-key: ${{ secrets.NUGET_API_KEY }}
           nuget-version: '6.x'
