@@ -66,7 +66,20 @@ public class NameSelector : ISelector, IHaveShorthand
 	public void BuildString(StringBuilder builder)
 	{
 		builder.Append('\'');
-		builder.Append(Name); // TODO escape this
+		foreach (var c in Name)
+		{
+			builder.Append(c switch
+			{
+				'\'' => "\\'",
+				'\b' => "\\b",
+				'\t' => "\\t",
+				'\n' => "\\n",
+				'\f' => "\\f",
+				'\r' => "\\r",
+				'\\' => @"\\",
+				_ => c
+			});
+		}
 		builder.Append('\'');
 	}
 }
