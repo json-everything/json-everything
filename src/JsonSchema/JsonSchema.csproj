@@ -14,28 +14,21 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>../../json-everything.snk</AssemblyOriginatorKeyFile>
 
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+
     <PackageId>JsonSchema.Net</PackageId>
-    <Version>7.3.2</Version>
-    <FileVersion>7.3.2</FileVersion>
+    <JsonSchemaNetVersion>7.3.2</JsonSchemaNetVersion>
     <AssemblyVersion>7.0.0.0</AssemblyVersion>
+    <FileVersion>$(JsonSchemaNetVersion)</FileVersion>
     <Authors>Greg Dennis</Authors>
-    <Description>JSON Schema built on the System.Text.Json namespace</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageIcon>json-logo-256.png</PackageIcon>
     <PackageProjectUrl>https://github.com/json-everything/json-everything</PackageProjectUrl>
     <RepositoryUrl>https://github.com/json-everything/json-everything</RepositoryUrl>
-    <PackageTags>json-schema validation schema json</PackageTags>
     <PackageReleaseNotes>Release notes can be found at https://docs.json-everything.net/rn-json-schema/</PackageReleaseNotes>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
 
     <PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
@@ -43,16 +36,96 @@
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
   </ItemGroup>
 
+  <PropertyGroup Condition="'$(ResourceLanguage)' == 'base'">
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PackageId>JsonSchema.Net</PackageId>
+    <Description>JSON Schema built on the System.Text.Json namespace</Description>
+    <Version>$(JsonSchemaNetVersion)</Version>
+    <PackageTags>json-schema validation schema json</PackageTags>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(ResourceLanguage)' == 'base'">
+    <None Include="README.md" Pack="true" PackagePath="\" />
+    <None Include="..\..\LICENSE" Pack="true" PackagePath="\" />
+    <None Include="..\..\Resources\json-logo-256.png" Pack="true" PackagePath="\" />
+    <None Include="bin\$(Configuration)\netstandard2.0\JsonSchema.Net.dll" Pack="true" PackagePath="lib\netstandard2.0" />
+    <None Include="bin\$(Configuration)\netstandard2.0\JsonSchema.Net.xml" Pack="true" PackagePath="lib\netstandard2.0" />
+    <None Include="bin\$(Configuration)\netstandard2.0\JsonSchema.Net.pdb" Pack="true" PackagePath="lib\netstandard2.0" />
+    <None Include="bin\$(Configuration)\net8.0\JsonSchema.Net.dll" Pack="true" PackagePath="lib\net8.0" />
+    <None Include="bin\$(Configuration)\net8.0\JsonSchema.Net.xml" Pack="true" PackagePath="lib\net8.0" />
+    <None Include="bin\$(Configuration)\net8.0\JsonSchema.Net.pdb" Pack="true" PackagePath="lib\net8.0" />
+    <None Include="bin\$(Configuration)\net9.0\JsonSchema.Net.dll" Pack="true" PackagePath="lib\net9.0" />
+    <None Include="bin\$(Configuration)\net9.0\JsonSchema.Net.xml" Pack="true" PackagePath="lib\net9.0" />
+    <None Include="bin\$(Configuration)\net9.0\JsonSchema.Net.pdb" Pack="true" PackagePath="lib\net9.0" />
+  </ItemGroup>
+
+  <PropertyGroup Condition="'$(ResourceLanguage)' != '' And '$(ResourceLanguage)' != 'base'">
+    <PackageId>JsonSchema.Net.$(ResourceLanguage)</PackageId>
+    <Description>JSON Schema built on the System.Text.Json namespace</Description>
+    <PackageTags>json-schema validation schema json error language-pack</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(ResourceLanguage)' != '' And '$(ResourceLanguage)' != 'base'">
+    <None Include="Localization\README.$(ResourceLanguage).md" Pack="true" PackagePath="\" />
+    <None Include="..\..\LICENSE" Pack="true" PackagePath="\" />
+    <None Include="..\..\Resources\json-logo-256.png" Pack="true" PackagePath="\" />
+    <None Include="bin\$(Configuration)\netstandard2.0\$(ResourceLanguage)\JsonSchema.Net.resources.dll" Pack="true" PackagePath="lib\netstandard2.0\$(ResourceLanguage)" />
+    <None Include="bin\$(Configuration)\net8.0\$(ResourceLanguage)\JsonSchema.Net.resources.dll" Pack="true" PackagePath="lib\net8.0\$(ResourceLanguage)" />
+    <None Include="bin\$(Configuration)\net9.0\$(ResourceLanguage)\JsonSchema.Net.resources.dll" Pack="true" PackagePath="lib\net9.0\$(ResourceLanguage)" />
+  </ItemGroup>
+
+  <PropertyGroup Condition="'$(ResourceLanguage)' == 'de'">
+    <Description>JsonSchema.Net Locale German (de)</Description>
+    <Version>1.0.1</Version>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(ResourceLanguage)' == 'es'">
+    <Description>JsonSchema.Net Locale Spanish (es)</Description>
+    <Version>2.0.2</Version>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(ResourceLanguage)' == 'it'">
+    <Description>JsonSchema.Net Locale Italian (it)</Description>
+    <Version>1.0.2</Version>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(ResourceLanguage)' == 'ko'">
+    <Description>JsonSchema.Net Locale Korean (ko)</Description>
+    <Version>1.0.2</Version>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(ResourceLanguage)' == 'nb-NO'">
+    <Description>JsonSchema.Net Locale Norwegian (nb-NO)</Description>
+    <Version>2.0.2</Version>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(ResourceLanguage)' == 'pl-PL'">
+    <Description>JsonSchema.Net Locale Polish (pl-PL)</Description>
+    <Version>1.0.3</Version>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(ResourceLanguage)' == 'ru'">
+    <Description>JsonSchema.Net Locale Russian (ru)</Description>
+    <Version>1.0.2</Version>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(ResourceLanguage)' == 'sv-SE'">
+    <Description>JsonSchema.Net Locale Swedish (sv-SE)</Description>
+    <Version>2.0.2</Version>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(ResourceLanguage)' == 'tr-TR'">
+    <Description>JsonSchema.Net Locale Turkish (tr-TR)</Description>
+    <Version>2.0.2</Version>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Include="..\..\tools\ApiDocsGenerator\release-notes\rn-json-schema.md" Link="release-notes.md" />
-    <None Include="README.md" Pack="true" PackagePath="\" CopyToOutputDirectory="Always" />
-    <None Include="..\..\LICENSE" Pack="true" PackagePath="\" />
-    <None Include="..\..\Resources\json-logo-256.png" Pack="true" PackagePath="\" CopyToOutputDirectory="Always" />
-    <None Update="nuspec\**\*" CopyToOutputDirectory="Always" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Json.More\Json.More.csproj" />
     <ProjectReference Include="..\JsonPointer\JsonPointer.csproj" />
   </ItemGroup>
 
