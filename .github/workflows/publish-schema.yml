@@ -14,52 +14,35 @@ permissions:
   actions: write
 
 jobs:
-  # build:
-  #   name: build
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - name: Setup .NET Core
-  #       uses: actions/setup-dotnet@v2
-  #       with:
-  #         dotnet-version: 9.0.x
-  #     - name: Install dependencies
-  #       run: dotnet restore
-  #     - name: Build
-  #       run: dotnet build src/JsonSchema/JsonSchema.csproj -c Release --no-restore
-  #     - uses: actions/upload-artifact@v4
-  #       with:
-  #         name: build-output
-  #         path: |
-  #           src/JsonSchema/**/*
   publish:
     # needs: build
-    name: pack & publish localizations
+    name: build, pack, (maybe sign?), and push
     runs-on: ubuntu-latest
     strategy:
       matrix:
         lang: [ base, de, es, it, ko, nb-NO, pl-PL, ru, sv-SE, tr-TR ]
     steps:
       - uses: actions/checkout@v4
-      # - name: Download Artifacts
-      #   uses: actions/download-artifact@v4
-      #   with:
-      #     name: build-output
-      #     path: src/JsonSchema
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v2
         with:
           dotnet-version: 9.0.x
       - name: Install dependencies
         run: dotnet restore
+      # Ideally I'd like to build once, but the pack doesn't seem to work
+      # without having the full source and build artifacts available, and
+      # it doesn't take long anyway.
       - name: Build
         run: dotnet build src/JsonSchema/JsonSchema.csproj -c Release --no-restore
-      - name: pack & push
+      - name: Pack
         run: |
           cd src/JsonSchema
           dotnet pack -o nupkg/ -c Release -p:ResourceLanguage=${{ matrix.lang }} --no-build
-          ls nupkg/
-          dotnet nuget push nupkg/*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
+      # TODO: sign package before push
+      - name: Push
+        run: |
+          cd src/JsonSchema
+          dotnet nuget push nupkg/*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json --skip-duplicate
       # - name: archive package
       #   uses: actions/upload-artifact@v4
       #   with:
