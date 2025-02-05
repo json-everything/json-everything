@@ -31,8 +31,7 @@ jobs:
         with:
           name: build-output
           path: |
-            src/JsonSchema/bin/**/*
-            src/JsonSchema/obj/**/*
+            src/JsonSchema/**/*
   publish:
     needs: build
     name: pack & publish localizations
@@ -46,7 +45,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: build-output
-          path: src/JsonSchema/bin
+          path: src/JsonSchema
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v2
         with:
