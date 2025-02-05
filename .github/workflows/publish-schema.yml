@@ -31,27 +31,29 @@ jobs:
         with:
           name: build-output
           path: |
-            src/JsonSchema/**/*
+            src/JsonSchema/bin/**/*
   publish:
     needs: build
     name: pack & publish localizations
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        lang: [ 'base', '.de', '.es', '.it', '.ko', '.nb-NO', '.pl-PL', '.ru', '.sv-SE', '.tr-TR' ]
+        lang: [ base, de, es, it, ko, nb-NO, pl-PL, ru, sv-SE, tr-TR ]
     steps:
+      - uses: actions/checkout@v4
       - name: Download Artifacts
         uses: actions/download-artifact@v4
         with:
           name: build-output
-          path: '.'
+          path: src/JsonSchema/bin
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v2
         with:
           dotnet-version: 9.0.x
       - name: pack & push
         run: |
-          dotnet pack -o nupkg/ -c Release -p:ResourceLanguage=${{ matrix.lang }}
+          cd src/JsonSchema
+          dotnet pack -o nupkg/ -c Release -p:ResourceLanguage=${{ matrix.lang }} --no-build
           dotnet nuget push nupkg/*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
       # - name: archive package
       #   uses: actions/upload-artifact@v4
