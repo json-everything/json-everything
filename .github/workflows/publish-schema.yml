@@ -32,6 +32,7 @@ jobs:
           name: build-output
           path: |
             src/JsonSchema/bin/**/*
+            src/JsonSchema/obj/**/*
   publish:
     needs: build
     name: pack & publish localizations
