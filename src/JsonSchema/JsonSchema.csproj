@@ -68,7 +68,7 @@
   </PropertyGroup>
 
   <ItemGroup Condition="'$(ResourceLanguage)' != '' And '$(ResourceLanguage)' != 'base'">
-    <None Include="Localization\README.$(ResourceLanguage).md" Pack="true" PackagePath="\" />
+    <None Include="Localization\README.$(ResourceLanguage).md" Pack="true" PackagePath="\README.md" />
     <None Include="..\..\LICENSE" Pack="true" PackagePath="\" />
     <None Include="..\..\Resources\json-logo-256.png" Pack="true" PackagePath="\" />
     <None Include="bin\$(Configuration)\netstandard2.0\$(ResourceLanguage)\JsonSchema.Net.resources.dll" Pack="true" PackagePath="lib\netstandard2.0\$(ResourceLanguage)" />
