@@ -63,7 +63,6 @@
 
   <PropertyGroup Condition="'$(ResourceLanguage)' != '' And '$(ResourceLanguage)' != 'base'">
     <PackageId>JsonSchema.Net.$(ResourceLanguage)</PackageId>
-    <Description>JSON Schema built on the System.Text.Json namespace</Description>
     <PackageTags>json-schema validation schema json error language-pack</PackageTags>
   </PropertyGroup>
 

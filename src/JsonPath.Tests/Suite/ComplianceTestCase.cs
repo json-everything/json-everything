@@ -15,6 +15,10 @@ public class ComplianceTestCase
 	public JsonNode? Document { get; set; }
 	public JsonArray? Result { get; set; }
 	public List<JsonArray>? Results { get; set; }
+	[JsonPropertyName("result_paths")]
+	public JsonArray? Location { get; set; }
+	[JsonPropertyName("results_paths")]
+	public List<JsonArray>? Locations { get; set; }
 	[JsonPropertyName("invalid_selector")]
 	public bool InvalidSelector { get; set; }
 
@@ -25,6 +29,8 @@ public class ComplianceTestCase
 			   $"Document: {JsonSerializer.Serialize(Document, SerializerOptions.Default)}\n" +
 			   $"Result:   {JsonSerializer.Serialize(Result, SerializerOptions.Default)}\n" +
 			   $"Results:   {JsonSerializer.Serialize(Results, SerializerOptions.Default)}\n" +
+			   $"Paths:   {JsonSerializer.Serialize(Location, SerializerOptions.Default)}\n" +
+			   $"Path sets:   {JsonSerializer.Serialize(Locations, SerializerOptions.Default)}\n" +
 			   $"IsValid:  {!InvalidSelector}";
 	}
 }

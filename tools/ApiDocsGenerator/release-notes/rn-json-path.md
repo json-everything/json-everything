@@ -4,6 +4,10 @@ title: JsonPath.Net
 icon: fas fa-tag
 order: "09.08"
 ---
+# [2.1.1](https://github.com/gregsdennis/json-everything/pull/866) {#release-path-2.1.1}
+
+[jsonpath-standard/jsonpath-compliance-test-suite#100](https://github.com/jsonpath-standard/jsonpath-compliance-test-suite/pull/100) - Stringifying paths were not considering escapable characters.
+
 # [2.1.0](https://github.com/gregsdennis/json-everything/pull/848) {#release-path-2.1.0}
 
 [#843](https://github.com/json-everything/json-everything/pull/843) - Performance improvements courtesy of [@cptjazz](https://github.com/cptjazz).

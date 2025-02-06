@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using Json.More;
 using NUnit.Framework;
 using TestHelpers;
@@ -61,10 +62,13 @@ public class ComplianceTestSuiteTests
 		}
 		
 		var path = JsonPath.Parse(testCase.Selector);
+		Console.WriteLine("Parse:");
 		Evaluate(path, testCase);
+		Console.WriteLine();
 
 		var success = JsonPath.TryParse(testCase.Selector, out path);
 		Assert.That(success, Is.True);
+		Console.WriteLine("TryParse:");
 		Evaluate(path!, testCase);
 	}
 
@@ -72,16 +76,25 @@ public class ComplianceTestSuiteTests
 	{
 		var actual = path.Evaluate(testCase.Document);
 
-		var actualValues = actual.Matches!.Select(m => m.Value).ToJsonArray();
-		TestConsole.WriteLine($"Actual (values): {JsonSerializer.Serialize(actualValues, SerializerOptions.Default)}");
-		TestConsole.WriteLine();
-		TestConsole.WriteLine($"Actual: {JsonSerializer.Serialize(actual, SerializerOptions.Default)}");
+		var actualValues = actual.Matches.Select(m => m.Value).ToJsonArray();
+		var actualLocations = actual.Matches.Select(m => (JsonValue) m.Location!.ToString()).ToJsonArray();
+		TestConsole.WriteLine($"  Actual (values): {JsonSerializer.Serialize(actualValues, SerializerOptions.Default)}");
+		TestConsole.WriteLine($"  Actual (locations): {JsonSerializer.Serialize(actualLocations, SerializerOptions.Default)}");
+		TestConsole.WriteLine($"  Actual (full): {JsonSerializer.Serialize(actual, SerializerOptions.Default)}");
 		if (testCase.InvalidSelector)
 			Assert.Fail($"{testCase.Selector} is not a valid path.");
 
 		if (testCase.Result is not null)
+		{
 			Assert.That(testCase.Result.IsEquivalentTo(actualValues), Is.True, "Unexpected results returned");
+			if (testCase.Location is not null)
+				Assert.That(testCase.Location.IsEquivalentTo(actualLocations), Is.True, "Unexpected results returned");
+		}
 		else
+		{
 			Assert.That(() => testCase.Results!.Contains(actualValues, JsonNodeEqualityComparer.Instance), "None of the options matched.");
+			if (testCase.Locations is not null)
+				Assert.That(() => testCase.Locations!.Contains(actualLocations, JsonNodeEqualityComparer.Instance), "None of the options matched.");
+		}
 	}
 }
