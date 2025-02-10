@@ -4,9 +4,14 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "09.01"
 ---
-# [7.3.2](https://github.com/gregsdennis/json-everything/pull/870) {#release-schema-7.3.2}
+# [7.3.3](https://github.com/json-everything/json-everything/commit/f8c131ddfb280cbe33e1bb38ec1f13a11ba56b33) {#release-schema-7.3.3}
 
 [#852](https://github.com/gregsdennis/json-everything/issues/852) - Improves `hostname` & `idn-hostname` format validation.  Thanks to [@mauricecamphadrian](https://github.com/mauricecamphadrian) for finding this and suggesting a new regex.
+
+# [7.3.2](https://github.com/gregsdennis/json-everything/pull/870) {#release-schema-7.3.2}
+
+> I'm not sure what changed here.  The intended changes were republished as 7.3.3 (above).  Use that instead.
+{: .prompt-info }
 
 # [7.3.1](https://github.com/gregsdennis/json-everything/pull/822) {#release-schema-7.3.1}
 
