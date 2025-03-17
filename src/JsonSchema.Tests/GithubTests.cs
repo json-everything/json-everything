@@ -961,6 +961,108 @@ public class GithubTests
 	}
 
 	[Test]
+	public void Issue881_DateTimeValidationPassesWithOneOfSchema()
+	{
+		var file = GetFile(881, "schema");
+
+		var schema = JsonSchema.FromFile(file);
+
+		var instance = new JsonObject()
+		{
+				new KeyValuePair<string, JsonNode?>("oneOfDates", "2025-01-02T23:03:22.222Z")
+		};
+
+		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
+
+		result.AssertValid();
+	}
+
+	[Test]
+	public void Issue881_DateValidationPassesWithOneOfSchema()
+	{
+		var file = GetFile(881, "schema");
+
+		var schema = JsonSchema.FromFile(file);
+
+		var instance = new JsonObject()
+		{
+				new KeyValuePair<string, JsonNode?>("oneOfDates", "2025-01-02")
+		};
+
+		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
+
+		result.AssertValid();
+	}
+
+	[Test]
+	public void Issue881_DateValidationFailsAgainstDateTime()
+	{
+		var file = GetFile(881, "schema");
+
+		var schema = JsonSchema.FromFile(file);
+
+		var instance = new JsonObject()
+		{
+				new KeyValuePair<string, JsonNode?>("dateWithDateFormat", "2025-01-02T23:03:22.222Z")
+		};
+
+		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
+
+		result.AssertInvalid();
+	}
+
+	[Test]
+	public void Issue881_DateValidationPassesAgainstDate()
+	{
+		var file = GetFile(881, "schema");
+
+		var schema = JsonSchema.FromFile(file);
+
+		var instance = new JsonObject()
+		{
+				new KeyValuePair<string, JsonNode?>("dateWithDateFormat", "2025-01-02")
+		};
+
+		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
+
+		result.AssertValid();
+	}
+
+	[Test]
+	public void Issue881_TimeValidationFailsAgainstDateTime()
+	{
+		var file = GetFile(881, "schema");
+
+		var schema = JsonSchema.FromFile(file);
+
+		var instance = new JsonObject()
+		{
+				new KeyValuePair<string, JsonNode?>("timeWithTimeFormat", "2025-01-02T23:03:22.222Z")
+		};
+
+		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
+
+		result.AssertInvalid();
+	}
+
+	[Test]
+	public void Issue881_TimeValidationPassesAgainstTime()
+	{
+		var file = GetFile(881, "schema");
+
+		var schema = JsonSchema.FromFile(file);
+
+		var instance = new JsonObject()
+		{
+				new KeyValuePair<string, JsonNode?>("timeWithTimeFormat", "23:03:22")
+		};
+
+		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
+
+		result.AssertValid();
+	}
+
+	[Test]
 	public void Issue664_UIntConstNotValidating()
 	{
 		var schema = new JsonSchemaBuilder()
