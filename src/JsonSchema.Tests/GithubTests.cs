@@ -972,7 +972,7 @@ public class GithubTests
 			["oneOfDates"] = "2025-01-02T23:03:22.222Z"
 		};
 
-		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
+		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List, RequireFormatValidation = true });
 
 		result.AssertValid();
 	}
@@ -989,7 +989,7 @@ public class GithubTests
 			["oneOfDates"] = "2025-01-02"
 		};
 
-		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
+		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List, RequireFormatValidation = true });
 
 		result.AssertValid();
 	}
@@ -1006,7 +1006,7 @@ public class GithubTests
 			["dateWithDateFormat"] = "2025-01-02T23:03:22.222Z"
 		};
 
-		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
+		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List, RequireFormatValidation = true });
 
 		result.AssertInvalid();
 	}
@@ -1023,7 +1023,7 @@ public class GithubTests
 			["dateWithDateFormat"] = "2025-01-02"
 		};
 
-		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
+		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List, RequireFormatValidation = true });
 
 		result.AssertValid();
 	}
@@ -1040,7 +1040,7 @@ public class GithubTests
 			["timeWithTimeFormat"] = "2025-01-02T23:03:22.222Z"
 		};
 
-		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
+		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List, RequireFormatValidation = true });
 
 		result.AssertInvalid();
 	}
@@ -1057,7 +1057,7 @@ public class GithubTests
 			["timeWithTimeFormat"] = "23:03:22"
 		};
 
-		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
+		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List, RequireFormatValidation = true });
 
 		result.AssertValid();
 	}
