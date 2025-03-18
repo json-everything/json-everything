@@ -969,7 +969,7 @@ public class GithubTests
 
 		var instance = new JsonObject()
 		{
-				new KeyValuePair<string, JsonNode?>("oneOfDates", "2025-01-02T23:03:22.222Z")
+			["oneOfDates"] = "2025-01-02T23:03:22.222Z"
 		};
 
 		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
@@ -986,7 +986,7 @@ public class GithubTests
 
 		var instance = new JsonObject()
 		{
-				new KeyValuePair<string, JsonNode?>("oneOfDates", "2025-01-02")
+			["oneOfDates"] = "2025-01-02"
 		};
 
 		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
@@ -1003,7 +1003,7 @@ public class GithubTests
 
 		var instance = new JsonObject()
 		{
-				new KeyValuePair<string, JsonNode?>("dateWithDateFormat", "2025-01-02T23:03:22.222Z")
+			["dateWithDateFormat"] = "2025-01-02T23:03:22.222Z"
 		};
 
 		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
@@ -1020,7 +1020,7 @@ public class GithubTests
 
 		var instance = new JsonObject()
 		{
-				new KeyValuePair<string, JsonNode?>("dateWithDateFormat", "2025-01-02")
+			["dateWithDateFormat"] = "2025-01-02"
 		};
 
 		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
@@ -1037,7 +1037,7 @@ public class GithubTests
 
 		var instance = new JsonObject()
 		{
-				new KeyValuePair<string, JsonNode?>("timeWithTimeFormat", "2025-01-02T23:03:22.222Z")
+			["timeWithTimeFormat"] = "2025-01-02T23:03:22.222Z"
 		};
 
 		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
@@ -1054,7 +1054,7 @@ public class GithubTests
 
 		var instance = new JsonObject()
 		{
-				new KeyValuePair<string, JsonNode?>("timeWithTimeFormat", "23:03:22")
+			["timeWithTimeFormat"] = "23:03:22"
 		};
 
 		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
