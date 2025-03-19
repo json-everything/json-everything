@@ -309,7 +309,12 @@ public static partial class Formats
 
 	private static bool CheckDateTime(JsonNode? node)
 	{
-		return CheckDateFormat(node);
+		if (!CheckDateFormat(node))
+		{
+			return CheckDateTimePrecisionFormat(node);
+		}
+
+		return true;
 	}
 
 	private static bool CheckDateFormat(JsonNode? node, params string[] formats)
@@ -323,11 +328,19 @@ public static partial class Formats
 			if (canParseExact) return true;
 		}
 
+		return false;
+	}
+
+	private static bool CheckDateTimePrecisionFormat(JsonNode? node)
+	{
+		if (node.GetSchemaValueType() != SchemaValueType.String) return true;
+
+		var dateString = node!.GetValue<string>().ToUpperInvariant();
+
 		// date-times with very high precision don't get matched by TryParseExact but are still actually parsable.
 		// We use a fallback to catch these cases
 		var match = DateTimeRegex().Match(dateString);
 		return match.Success;
-
 	}
 
 	private static bool CheckHostName(JsonNode? node)

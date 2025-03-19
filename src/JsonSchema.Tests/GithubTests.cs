@@ -961,6 +961,108 @@ public class GithubTests
 	}
 
 	[Test]
+	public void Issue881_UsingSchema201909DateTimeValidationPassesWithOneOfSchema()
+	{
+		var file = GetFile(881, "schema");
+
+		var schema = JsonSchema.FromFile(file);
+
+		var instance = new JsonObject()
+		{
+			["oneOfDates"] = "2025-01-02T23:03:22.222Z"
+		};
+
+		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List, RequireFormatValidation = true });
+
+		result.AssertValid();
+	}
+
+	[Test]
+	public void Issue881_UsingSchema201909DateValidationPassesWithOneOfSchema()
+	{
+		var file = GetFile(881, "schema");
+
+		var schema = JsonSchema.FromFile(file);
+
+		var instance = new JsonObject()
+		{
+			["oneOfDates"] = "2025-01-02"
+		};
+
+		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List, RequireFormatValidation = true });
+
+		result.AssertValid();
+	}
+
+	[Test]
+	public void Issue881_UsingSchema201909DateValidationFailsAgainstDateTimeFormat()
+	{
+		var file = GetFile(881, "schema");
+
+		var schema = JsonSchema.FromFile(file);
+
+		var instance = new JsonObject()
+		{
+			["dateWithDateFormat"] = "2025-01-02T23:03:22.222Z"
+		};
+
+		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List, RequireFormatValidation = true });
+
+		result.AssertInvalid();
+	}
+
+	[Test]
+	public void Issue881_UsingSchema201909DateValidationPassesAgainstDateFormat()
+	{
+		var file = GetFile(881, "schema");
+
+		var schema = JsonSchema.FromFile(file);
+
+		var instance = new JsonObject()
+		{
+			["dateWithDateFormat"] = "2025-01-02"
+		};
+
+		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List, RequireFormatValidation = true });
+
+		result.AssertValid();
+	}
+
+	[Test]
+	public void Issue881_UsingSchema201909TimeValidationFailsAgainstDateTimeFormat()
+	{
+		var file = GetFile(881, "schema");
+
+		var schema = JsonSchema.FromFile(file);
+
+		var instance = new JsonObject()
+		{
+			["timeWithTimeFormat"] = "2025-01-02T23:03:22.222Z"
+		};
+
+		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List, RequireFormatValidation = true });
+
+		result.AssertInvalid();
+	}
+
+	[Test]
+	public void Issue881_UsingSchema201909TimeValidationPassesAgainstTimeFormat()
+	{
+		var file = GetFile(881, "schema");
+
+		var schema = JsonSchema.FromFile(file);
+
+		var instance = new JsonObject()
+		{
+			["timeWithTimeFormat"] = "23:03:22"
+		};
+
+		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List, RequireFormatValidation = true });
+
+		result.AssertValid();
+	}
+
+	[Test]
 	public void Issue664_UIntConstNotValidating()
 	{
 		var schema = new JsonSchemaBuilder()

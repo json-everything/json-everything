@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "description": "Schema for issue 881",
+  "properties": {
+    "oneOfDates": {
+      "title": "Dates that have a oneOf conditional schema",
+      "type": "string",
+      "oneOf": [
+        {
+          "type": "string",
+          "format": "date"
+        },
+        {
+          "type": "string",
+          "format": "date-time"
+        }
+      ]
+    },
+    "dateWithDateFormat": {
+      "title": "Property with date defined format",
+      "type": "string",
+      "format": "date"
+    },
+    "timeWithTimeFormat": {
+      "title": "Property with time defined format",
+      "type": "string",
+      "format": "time"
+    }
+  }
+}
