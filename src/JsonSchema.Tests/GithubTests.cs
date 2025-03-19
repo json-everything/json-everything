@@ -961,7 +961,7 @@ public class GithubTests
 	}
 
 	[Test]
-	public void Issue881_DateTimeValidationPassesWithOneOfSchema()
+	public void Issue881_UsingSchema201909DateTimeValidationPassesWithOneOfSchema()
 	{
 		var file = GetFile(881, "schema");
 
@@ -978,7 +978,7 @@ public class GithubTests
 	}
 
 	[Test]
-	public void Issue881_DateValidationPassesWithOneOfSchema()
+	public void Issue881_UsingSchema201909DateValidationPassesWithOneOfSchema()
 	{
 		var file = GetFile(881, "schema");
 
@@ -995,7 +995,7 @@ public class GithubTests
 	}
 
 	[Test]
-	public void Issue881_DateValidationFailsAgainstDateTime()
+	public void Issue881_UsingSchema201909DateValidationFailsAgainstDateTimeFormat()
 	{
 		var file = GetFile(881, "schema");
 
@@ -1012,7 +1012,7 @@ public class GithubTests
 	}
 
 	[Test]
-	public void Issue881_DateValidationPassesAgainstDate()
+	public void Issue881_UsingSchema201909DateValidationPassesAgainstDateFormat()
 	{
 		var file = GetFile(881, "schema");
 
@@ -1029,7 +1029,7 @@ public class GithubTests
 	}
 
 	[Test]
-	public void Issue881_TimeValidationFailsAgainstDateTime()
+	public void Issue881_UsingSchema201909TimeValidationFailsAgainstDateTimeFormat()
 	{
 		var file = GetFile(881, "schema");
 
@@ -1046,7 +1046,7 @@ public class GithubTests
 	}
 
 	[Test]
-	public void Issue881_TimeValidationPassesAgainstTime()
+	public void Issue881_UsingSchema201909TimeValidationPassesAgainstTimeFormat()
 	{
 		var file = GetFile(881, "schema");
 
