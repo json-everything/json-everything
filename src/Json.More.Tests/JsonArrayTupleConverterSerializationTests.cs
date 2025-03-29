@@ -120,4 +120,15 @@ public class JsonArrayTupleConverterSerializationTests
 
 		Assert.That(actual, Is.EqualTo(expected));
 	}
+
+	[Test]
+	public void TupleInArray()
+	{
+		(int, string, bool, double, string, int, int, int)[] tuple = [(1, "string", false, -4.2, "foo", 6, 7, 8), (10, "bool", true, 4.2, "bar", 6, 7, 8)];
+		var expected = "[[1,\"string\",false,-4.2,\"foo\",6,7,8],[10,\"bool\",true,4.2,\"bar\",6,7,8]]";
+
+		var actual = JsonSerializer.Serialize(tuple, _options);
+
+		Assert.That(actual, Is.EqualTo(expected));
+	}
 }

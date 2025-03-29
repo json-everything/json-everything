@@ -20,6 +20,11 @@ public class JsonArrayTupleConverter : JsonConverterFactory
 	/// <see langword="true" /> if the instance can convert the specified object type; otherwise, <see langword="false" />.</returns>
 	public override bool CanConvert(Type typeToConvert)
 	{
+		if (typeToConvert.IsArray)
+		{
+			return false;
+		}
+		
 		return typeToConvert.FullName?.StartsWith("System.ValueTuple`") ?? false;
 	}
 
