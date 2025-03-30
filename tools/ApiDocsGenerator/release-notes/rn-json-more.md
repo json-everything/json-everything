@@ -6,7 +6,7 @@ order: "09.13"
 ---
 # [2.1.2](https://github.com/json-everything/json-everything/pull/888) {#release-more-2.1.2}
 
-[#885](https://github.com/json-everything/json-everything/issues/885) - Fixes an issue in`JsonArrayTupleConverter` 
+[#885](https://github.com/json-everything/json-everything/issues/885) - Fixes an issue in `JsonArrayTupleConverter`.  Thanks to [@MatthewSmit](https://github.com/MatthewSmit) for identifying and providing the fix.
 when serializing/deserializing arrays of tuples.
 
 # [2.1.1](https://github.com/json-everything/json-everything/pull/857) {#release-more-2.1.1}
