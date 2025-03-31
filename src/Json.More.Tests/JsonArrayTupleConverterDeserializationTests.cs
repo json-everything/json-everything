@@ -120,4 +120,15 @@ public class JsonArrayTupleConverterDeserializationTests
 
 		Assert.That(actual, Is.EqualTo(expected));
 	}
+
+	[Test]
+	public void TupleInArray()
+	{
+		(int, string, bool, double, string, int, int, int)[] expected = [(1, "string", false, -4.2, "foo", 6, 7, 8), (10, "bool", true, 4.2, "bar", 6, 7, 8)];
+		var json = "[[1,\"string\",false,-4.2,\"foo\",6,7,8],[10,\"bool\",true,4.2,\"bar\",6,7,8]]";
+
+		var actual = JsonSerializer.Deserialize<(int, string, bool, double, string, int, int, int)[]>(json, _options);
+
+		Assert.That(actual, Is.EqualTo(expected));
+	}
 }
