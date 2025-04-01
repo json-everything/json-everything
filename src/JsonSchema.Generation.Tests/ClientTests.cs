@@ -500,4 +500,48 @@ public class ClientTests
 
 		AssertEqual(expected, actual);
 	}
+
+	internal class Pizza
+	{
+		/// <summary>
+		/// The size of the pizza.
+		/// </summary>
+		public PizzaSize Size { get; init; }
+	}
+
+	/// <summary>
+	/// All possible sizes for a pizza.
+	/// </summary>
+	internal enum PizzaSize
+	{
+		Small,
+		Medium,
+		Large,
+	}
+
+	[Test]
+	public void Issue886_CommentedType()
+	{
+		var expected = new JsonSchemaBuilder()
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("Size", new JsonSchemaBuilder()
+					.Ref("#/$defs/pizzaSizeInClientTests")
+					.Description("The size of the pizza.")
+				)
+			)
+			.Defs(
+				("pizzaSizeInClientTests", new JsonSchemaBuilder()
+					.Description("All possible sizes for a pizza.")
+					.Enum(["Small", "Medium", "Large"])
+				)
+			);
+
+		var config = new SchemaGeneratorConfiguration();
+		config.RegisterXmlCommentFile<Pizza>("JsonSchema.Net.Generation.Tests.xml");
+
+		JsonSchema schema = new JsonSchemaBuilder().FromType<Pizza>(config);
+
+		AssertEqual(expected, schema);
+	}
 }
