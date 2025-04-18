@@ -46,16 +46,15 @@ public static class SchemaGenerationContextCache
 
 		foreach (var schema in toReintegrate)
 		{
-			foreach (var context in schema.References)
-			{
-				var contextKeywords = context.Intents.Select(x => x.GetType());
-				var schemaKeywords = schema.Intents.Select(x => x.GetType());
-				if (contextKeywords.Intersect(schemaKeywords).Except([typeof(RefIntent)]).Any()) continue;
+			var context = schema.References[0];
+			var contextKeywords = context.Intents.Select(x => x.GetType());
+			var schemaKeywords = schema.Intents.Select(x => x.GetType());
+			if (contextKeywords.Intersect(schemaKeywords).Except([typeof(RefIntent)]).Any()) continue;
 
-				var refIntent = context.Intents.OfType<RefIntent>().First();
-				context.Intents.Remove(refIntent);
-				context.Intents.AddRange(schema.Intents);
-			}
+			var refIntent = context.Intents.OfType<RefIntent>().First();
+			context.Intents.Remove(refIntent);
+			context.Intents.AddRange(schema.Intents);
+
 			schema.References.Clear();
 		}
 
