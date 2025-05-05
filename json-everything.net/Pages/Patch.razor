@@ -12,64 +12,67 @@
 
 <PageTitle>JSON Patch - json-everything.net</PageTitle>
 
-<div id="layout" class="flex-grow-1 position-relative">
-	<div class="dimgray fill-remaining">
-		<div class="inner d-flex h-100">
-			<div class="green w-25 d-flex">
-				<div class="tan grid-panel flex-grow-1 scroll">
-					<div class="align-items-center hstack mx-2">
-						<img src="img/json-patch.png" height="70" width="70" class="me-3" />
-						<h1 class="display-4">JSON Patch</h1>
-					</div>
-					<div class="align-items-center mx-3">
-						<div>
-							Describe and process alterations to JSON documents. Learn more about
-							<a href="http://jsonpatch.com/" target="_blank">JSON Patch <ExternalLinkIcon/></a>
-						</div>
-					</div>
-					<div class="align-items-center mt-1">
-						@foreach (var library in _libraries)
-						{
-						<NugetLibrary Library="@library"/>
-						}
-					</div>
-					<hr />
-					<EditForm Model="_options" class="vstack">
-						<label class="my-2">
-							What do you want to do?<br/>
-							<InputSelect @bind-Value="Operation" DisplayName="Spec version" class="form-control">
-								@foreach (PatchOperations operation in Enum.GetValues(typeof(PatchOperations)))
-								{
-									<option value="@operation">@GetDescription(operation)</option>
-								}
-							</InputSelect>
-						</label>
-						<button class="btn btn-primary mt-2" @onclick="Run">Run</button>
-					</EditForm>
-					<hr />
-					<MarkdownSpan Content="@HelpSummary"></MarkdownSpan>
+<div class="schema-container">
+	<div class="sidebar">
+		<div class="sidebar-content">
+			<div class="align-items-center hstack mx-2">
+				<img src="img/json-patch.png" height="70" width="70" class="me-3" />
+				<h1 class="display-4">JSON Patch</h1>
+			</div>
+			<div class="align-items-center mx-3">
+				<div>
+					Describe and process alterations to JSON documents. Learn more about
+					<a href="http://jsonpatch.com/" target="_blank">JSON Patch <ExternalLinkIcon/></a>
 				</div>
 			</div>
-			<div class="gray w-75 d-flex flex-wrap">
-				<div class="pink w-50 d-flex flex-grow-1 h-50">
-					<div class="grid-panel flex-grow-1 position-relative">
+			<div class="align-items-center mt-1">
+				@foreach (var library in _libraries)
+				{
+					<NugetLibrary Library="@library"/>
+				}
+			</div>
+			<hr />
+			<EditForm Model="_options" class="vstack">
+				<label class="my-2">
+					What do you want to do?<br/>
+					<InputSelect @bind-Value="Operation" DisplayName="Spec version" class="form-control">
+						@foreach (PatchOperations operation in Enum.GetValues(typeof(PatchOperations)))
+						{
+							<option value="@operation">@GetDescription(operation)</option>
+						}
+					</InputSelect>
+				</label>
+				<button class="btn btn-primary mt-2" @onclick="Run">Run</button>
+			</EditForm>
+			<hr />
+			<MarkdownSpan Content="@HelpSummary"></MarkdownSpan>
+		</div>
+	</div>
+	<div class="resize-handle"></div>
+	<div class="main-content">
+		<div class="editor-grid">
+			<div class="top-editors-row" id="top-editors-row">
+				<div class="editor-cell left-editor" id="left-editor-cell">
+					<div class="editor-container">
 						<span class="editor-lang-json">JSON</span>
 						<StandaloneCodeEditor @ref="_patchEditor" Id="editor-patch" ConstructionOptions="BasicOptions"
-						                      CssClass="h-100"/>
+							CssClass="h-100"/>
 					</div>
 				</div>
-				<div class="cyan w-50 d-flex flex-grow-1 h-50">
-					<div class="grid-panel flex-grow-1 position-relative">
+				<div class="resize-handle" id="vertical-resize-handle"></div>
+				<div class="editor-cell right-editor" id="right-editor-cell">
+					<div class="editor-container">
 						<span class="editor-lang-json">JSON</span>
 						<StandaloneCodeEditor @ref="_instanceEditor" Id="editor-instance" ConstructionOptions="BasicOptions"
-						                      CssClass="h-100"/>
+							CssClass="h-100"/>
 					</div>
 				</div>
-				<div class="yellow w-100 d-flex flex-grow-1 h-50">
-					<div class="grid-panel flex-grow-1">
-						<StandaloneCodeEditor @ref="_outputEditor" Id="editor-output" ConstructionOptions="ReadOnlyOptions"
-						                      CssClass="h-100"/>
-					</div>
+			</div>
+			<div class="resize-handle horizontal" id="horizontal-resize-handle"></div>
+			<div class="editor-cell output-cell" id="bottom-editor-cell">
+				<div class="editor-container">
+					<StandaloneCodeEditor @ref="_outputEditor" Id="editor-output" ConstructionOptions="ReadOnlyOptions"
+						CssClass="h-100"/>
 				</div>
 			</div>
 		</div>
@@ -261,12 +264,10 @@
 	{
 		if (firstRender)
 		{
+			await JsRuntime.InvokeVoidAsync("initResizableSidebar");
+			
 			await LoadSavedPatch();
 			await LoadSavedInstance();
-
-			await _patchEditor.SetLanguageAsync("json", JsRuntime);
-			await _patchEditor.UpdateOptions(new EditorUpdateOptions { TabSize = 2 });
-			await DataManager.Set("schema-input-language", "json");
 			await _outputEditor.SetValue(string.Empty);
 		}
 

@@ -8,61 +8,54 @@
 @using Microsoft.AspNetCore.Components
 
 @inject DataManager DataManager;
+@inject IJSRuntime JsRuntime;
 
 <PageTitle>JSON Pointer - json-everything.net</PageTitle>
 
-<div id="layout" class="flex-grow-1 position-relative">
-	<div class="dimgray fill-remaining">
-		<div class="inner d-flex h-100">
-			<div class="green w-25 d-flex">
-				<div class="tan grid-panel flex-grow-1 scroll">
-					<div class="align-items-center hstack mx-2">
-						<img src="img/json-pointer.png" height="70" width="70" class="me-3" />
-						<h1 class="display-4">JSON Pointer</h1>
-					</div>
-					<div class="align-items-center mx-3">
-						<div>
-							Identify specific locations within JSON data. Learn more about
-							<a href="https://datatracker.ietf.org/doc/html/rfc6901" target="_blank">JSON Pointer <ExternalLinkIcon/></a>
-						</div>
-					</div>
-					<div class="align-items-center mt-1">
-						@foreach (var library in _libraries)
-						{
-						<NugetLibrary Library="@library"/>
-						}
-					</div>
-					<hr />
-					<button class="btn btn-primary w-100" @onclick="Evaluate">Evaluate</button>
-					<hr/>
-					<MarkdownSpan Content="@HelpContent.PointerEvaluate"></MarkdownSpan>
+<div class="schema-container">
+	<div class="sidebar">
+		<div class="sidebar-content">
+			<div class="align-items-center hstack mx-2">
+				<img src="img/json-pointer.png" height="70" width="70" class="me-3" />
+				<h1 class="display-4">JSON Pointer</h1>
+			</div>
+			<div class="align-items-center mx-3">
+				<div>
+					Identify specific locations within JSON data. Learn more about
+					<a href="https://datatracker.ietf.org/doc/html/rfc6901" target="_blank">JSON Pointer <ExternalLinkIcon/></a>
 				</div>
 			</div>
-			<div class="gray d-flex flex-grow-1 flex-column">
-				<div class="maroon d-flex flex-grow-1 flex-column">
-					<div class="yellow mx-2 d-flex flex-grow-1">
-						<EditForm Model="_input" class="col-12">
-							<label class="mb-2 w-100">
-								Pointer
-								<InputText @bind-Value="_input.Pointer" DisplayName="Default base URI" class="form-control"
-								           @oninput="SavePath"/>
-							</label>
-						</EditForm>
+			<div class="align-items-center mt-1">
+				@foreach (var library in _libraries)
+				{
+					<NugetLibrary Library="@library"/>
+				}
+			</div>
+			<hr />
+			<button class="btn btn-primary w-100" @onclick="Evaluate">Evaluate</button>
+			<hr/>
+			<MarkdownSpan Content="@HelpContent.PointerEvaluate"></MarkdownSpan>
+		</div>
+	</div>
+	<div class="resize-handle"></div>
+	<div class="main-content">
+		<div class="path-input-row">
+			<EditForm Model="_input">
+				<InputText @bind-Value="_input.Pointer" DisplayName="Pointer" class="form-control" @oninput="SavePath" placeholder="Pointer"/>
+			</EditForm>
+		</div>
+		<div class="editor-grid">
+			<div class="top-editors-row fill-vertical" id="top-editors-row">
+				<div class="editor-cell left-editor" id="left-editor-cell">
+					<div class="editor-container">
+						<span class="editor-lang-json">JSON</span>
+						<StandaloneCodeEditor @ref="_instanceEditor" Id="editor-instance" ConstructionOptions="BasicOptions" CssClass="h-100"/>
 					</div>
-					<div class="palegreen d-flex h-100">
-						<div class="pink w-50 d-flex flex-grow-1">
-							<div class="grid-panel flex-grow-1 position-relative">
-								<span class="editor-lang-json">JSON</span>
-								<StandaloneCodeEditor @ref="_instanceEditor" Id="editor-instance" ConstructionOptions="BasicOptions"
-								                      CssClass="h-100"/>
-							</div>
-						</div>
-						<div class="cyan w-50 d-flex flex-grow-1">
-							<div class="grid-panel flex-grow-1">
-								<StandaloneCodeEditor @ref="_outputEditor" Id="editor-output" ConstructionOptions="ReadOnlyOptions"
-								                      CssClass="h-100"/>
-							</div>
-						</div>
+				</div>
+				<div class="resize-handle" id="vertical-resize-handle"></div>
+				<div class="editor-cell right-editor" id="right-editor-cell">
+					<div class="editor-container">
+						<StandaloneCodeEditor @ref="_outputEditor" Id="editor-output" ConstructionOptions="ReadOnlyOptions" CssClass="h-100"/>
 					</div>
 				</div>
 			</div>
@@ -95,6 +88,7 @@
 	{
 		if (firstRender)
 		{
+			await JsRuntime.InvokeVoidAsync("initResizableSidebar");
 			await LoadSavedPath();
 			await LoadSavedInstance();
 			await _outputEditor.SetValue(string.Empty);

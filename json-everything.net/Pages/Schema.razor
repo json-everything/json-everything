@@ -23,129 +23,132 @@
 
 <PageTitle>JSON Schema - json-everything.net</PageTitle>
 
-<div id="layout" class="flex-grow-1 position-relative">
-	<div class="dimgray fill-remaining">
-		<div class="inner d-flex h-100">
-			<div class="green w-25 d-flex">
-				<div class="tan grid-panel flex-grow-1 scroll">
-					<div class="align-items-center hstack mx-2">
-						<img src="img/json-schema.png" height="70" width="70" class="me-3" />
-						<h1 class="display-4">JSON Schema</h1>
-					</div>
-					<div class="align-items-center mx-3">
-						<div>
-							Constraints-based validation of JSON data. Learn more about
-							<a href="https://json-schema.org" target="_blank">JSON Schema <ExternalLinkIcon /></a>
-						</div>
-					</div>
-					<div class="align-items-center mt-1">
-						@foreach (var library in _libraries)
-						{
-							<NugetLibrary Library="@library" />
-						}
-					</div>
-					<hr />
-					<EditForm Model="_options" class="vstack">
-						<label class="my-2">
-							What do you want to do?<br />
-							<InputSelect @bind-Value="Operation" DisplayName="Spec version" class="form-control">
-								@foreach (SchemaOperations operation in Enum.GetValues(typeof(SchemaOperations)))
-								{
-									<option value="@operation">@GetDescription(operation)</option>
-								}
-							</InputSelect>
-						</label>
-						<div class="vstack @EvaluationOptionsVisibility">
-							<label class="my-2">
-								Spec Version (<span class="small"><span class="font-monospace">$schema</span> will override</span>)
-								<span class="tooltip-icon">
-									ⓘ
-									<span class="tooltip-text">
-										<MarkdownSpan Content="@HelpContent.SchemaVersion"></MarkdownSpan>
-									</span>
-								</span>
-								<br />
-								<InputSelect @bind-Value="_options.Version" DisplayName="Spec version" class="form-control">
-									@foreach (SpecVersion version in Enum.GetValues(typeof(SpecVersion)))
-									{
-										if (version is SpecVersion.Unspecified or SpecVersion.All) continue;
-										<option value="@version">@GetDescription(version)</option>
-									}
-								</InputSelect>
-							</label>
-							<label class="my-2">
-								Output format
-								<span class="tooltip-icon">
-									ⓘ
-									<span class="tooltip-text">
-										<MarkdownSpan Content="@HelpContent.SchemaOutputFormat"></MarkdownSpan>
-									</span>
-								</span>
-								<br />
-								<InputSelect @bind-Value="_options.OutputFormat" DisplayName="Output format" class="form-control">
-									@foreach (var format in Enum.GetValues(typeof(OutputFormat)))
-									{
-										<option value="@format">@format</option>
-									}
-								</InputSelect>
-							</label>
-							<label class="my-2">
-								<InputCheckbox @bind-Value="_options.IncludeDroppedAnnotations" DisplayName="Preserve dropped annotations" />
-								Preserve dropped annotations
-								<span class="tooltip-icon">
-									ⓘ
-									<span class="tooltip-text">
-										<MarkdownSpan Content="@HelpContent.SchemaDroppedAnnotations"></MarkdownSpan>
-									</span>
-								</span>
-							</label>
-							<label class="my-2">
-								<InputCheckbox @bind-Value="_options.AddAnnotationForUnknownKeywords" DisplayName="Unknown keywords annotation" />
-								Unknown keywords annotation
-								<span class="tooltip-icon">
-									ⓘ
-									<span class="tooltip-text">
-										<MarkdownSpan Content="@HelpContent.SchemaUnknownKeywordsAnnotation"></MarkdownSpan>
-									</span>
-								</span>
-							</label>
-							<label class="my-2">
-								<InputCheckbox @bind-Value="_options.ValidateFormat" DisplayName="Validate format" />
-								Validate <span class="font-monospace">format</span>
-								<span class="tooltip-icon">
-									ⓘ
-									<span class="tooltip-text">
-										<MarkdownSpan Content="@HelpContent.SchemaValidateFormat"></MarkdownSpan>
-									</span>
-								</span>
-							</label>
-						</div>
-						<button class="btn btn-primary mt-2" @onclick="Run">Run</button>
-					</EditForm>
-					<hr />
-					<MarkdownSpan Content="@HelpSummary"></MarkdownSpan>
+<div class="schema-container">
+	<div class="sidebar">
+		<div class="sidebar-content">
+			<div class="align-items-center hstack mx-2">
+				<img src="img/json-schema.png" height="70" width="70" class="me-3" />
+				<h1 class="display-4">JSON Schema</h1>
+			</div>
+			<div class="align-items-center mx-3">
+				<div>
+					Constraints-based validation of JSON data. Learn more about
+					<a href="https://json-schema.org" target="_blank">JSON Schema <ExternalLinkIcon /></a>
 				</div>
 			</div>
-			<div class="gray w-75 d-flex flex-wrap">
-				<div class="pink w-50 d-flex flex-grow-1 h-50">
-					<div class="grid-panel flex-grow-1 position-relative">
+			<div class="align-items-center mt-1">
+				@foreach (var library in _libraries)
+				{
+					<NugetLibrary Library="@library" />
+				}
+			</div>
+			<hr />
+			<EditForm Model="_options" class="vstack">
+				<label class="my-2">
+					What do you want to do?<br />
+					<InputSelect @bind-Value="Operation" DisplayName="Spec version" class="form-control">
+						@foreach (SchemaOperations operation in Enum.GetValues(typeof(SchemaOperations)))
+						{
+							<option value="@operation">@GetDescription(operation)</option>
+						}
+					</InputSelect>
+				</label>
+				<div class="vstack @EvaluationOptionsVisibility">
+					<label class="my-2">
+						Spec Version (<span class="small"><span class="font-monospace">$schema</span> will override</span>)
+						<span class="tooltip-icon">
+							ⓘ
+							<span class="tooltip-text">
+								<MarkdownSpan Content="@HelpContent.SchemaVersion"></MarkdownSpan>
+							</span>
+						</span>
+						<br />
+						<InputSelect @bind-Value="_options.Version" DisplayName="Spec version" class="form-control">
+							@foreach (SpecVersion version in Enum.GetValues(typeof(SpecVersion)))
+							{
+								if (version is SpecVersion.Unspecified or SpecVersion.All) continue;
+								<option value="@version">@GetDescription(version)</option>
+							}
+						</InputSelect>
+					</label>
+					<label class="my-2">
+						Output format
+						<span class="tooltip-icon">
+							ⓘ
+							<span class="tooltip-text">
+								<MarkdownSpan Content="@HelpContent.SchemaOutputFormat"></MarkdownSpan>
+							</span>
+						</span>
+						<br />
+						<InputSelect @bind-Value="_options.OutputFormat" DisplayName="Output format" class="form-control">
+							@foreach (var format in Enum.GetValues(typeof(OutputFormat)))
+							{
+								<option value="@format">@format</option>
+							}
+						</InputSelect>
+					</label>
+					<label class="my-2">
+						<InputCheckbox @bind-Value="_options.IncludeDroppedAnnotations" DisplayName="Preserve dropped annotations" />
+						Preserve dropped annotations
+						<span class="tooltip-icon">
+							ⓘ
+							<span class="tooltip-text">
+								<MarkdownSpan Content="@HelpContent.SchemaDroppedAnnotations"></MarkdownSpan>
+							</span>
+						</span>
+					</label>
+					<label class="my-2">
+						<InputCheckbox @bind-Value="_options.AddAnnotationForUnknownKeywords" DisplayName="Unknown keywords annotation" />
+						Unknown keywords annotation
+						<span class="tooltip-icon">
+							ⓘ
+							<span class="tooltip-text">
+								<MarkdownSpan Content="@HelpContent.SchemaUnknownKeywordsAnnotation"></MarkdownSpan>
+							</span>
+						</span>
+					</label>
+					<label class="my-2">
+						<InputCheckbox @bind-Value="_options.ValidateFormat" DisplayName="Validate format" />
+						Validate <span class="font-monospace">format</span>
+						<span class="tooltip-icon">
+							ⓘ
+							<span class="tooltip-text">
+								<MarkdownSpan Content="@HelpContent.SchemaValidateFormat"></MarkdownSpan>
+							</span>
+						</span>
+					</label>
+				</div>
+				<button class="btn btn-primary mt-2" @onclick="Run">Run</button>
+			</EditForm>
+			<hr />
+			<MarkdownSpan Content="@HelpSummary"></MarkdownSpan>
+		</div>
+	</div>
+	<div class="resize-handle"></div>
+	<div class="main-content">
+		<div class="editor-grid">
+			<div class="top-editors-row" id="top-editors-row">
+				<div class="editor-cell left-editor" id="left-editor-cell">
+					<div class="editor-container">
 						<span class="editor-lang-@_schemaEditorLanguage">@GetLanguageText(_schemaEditorLanguage)</span>
 						<StandaloneCodeEditor @ref="_schemaEditor" Id="editor-schema" ConstructionOptions="BasicOptions"
 						CssClass="h-100" OnDidChangeModelContent="HandleSchemaChanged" />
 					</div>
 				</div>
-				<div class="cyan w-50 d-flex flex-grow-1 h-50">
-					<div class="grid-panel flex-grow-1 position-relative">
+				<div class="resize-handle" id="vertical-resize-handle"></div>
+				<div class="editor-cell right-editor" id="right-editor-cell">
+					<div class="editor-container">
 						<span class="editor-lang-@_instanceEditorLanguage">@GetLanguageText(_instanceEditorLanguage)</span>
 						<StandaloneCodeEditor @ref="_instanceEditor" Id="editor-instance" ConstructionOptions="BasicOptions"
 						CssClass="h-100" OnDidChangeModelContent="HandleInstanceChanged" />
 					</div>
 				</div>
-				<div class="yellow w-100 d-flex flex-grow-1 h-50">
-					<div class="grid-panel flex-grow-1">
-						<StandaloneCodeEditor @ref="_outputEditor" Id="editor-output" ConstructionOptions="ReadOnlyOptions"
-						CssClass="h-100 mb-2" />
-					</div>
+			</div>
+			<div class="resize-handle horizontal" id="horizontal-resize-handle"></div>
+			<div class="editor-cell output-cell" id="bottom-editor-cell">
+				<div class="editor-container">
+					<StandaloneCodeEditor @ref="_outputEditor" Id="editor-output" ConstructionOptions="ReadOnlyOptions"
+					CssClass="h-100" />
 				</div>
 			</div>
 		</div>
@@ -534,6 +537,8 @@ namespace JsonEverythingTemp;
 	{
 		if (firstRender)
 		{
+			await JsRuntime.InvokeVoidAsync("initResizableSidebar");
+			
 			Json.Schema.Data.Vocabularies.Register();
 			Json.Schema.ArrayExt.Vocabularies.Register();
 			Json.Schema.OpenApi.Vocabularies.Register();
