@@ -20,6 +20,7 @@
     <JsonSchemaNetVersion>7.3.4</JsonSchemaNetVersion>
     <AssemblyVersion>7.0.0.0</AssemblyVersion>
     <FileVersion>$(JsonSchemaNetVersion)</FileVersion>
+    <Version>$(JsonSchemaNetVersion)</Version>
     <Authors>Greg Dennis</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageIcon>json-logo-256.png</PackageIcon>
@@ -41,7 +42,6 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageId>JsonSchema.Net</PackageId>
     <Description>JSON Schema built on the System.Text.Json namespace</Description>
-    <Version>$(JsonSchemaNetVersion)</Version>
     <PackageTags>json-schema validation schema json</PackageTags>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
   </PropertyGroup>

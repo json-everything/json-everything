@@ -4,9 +4,13 @@ title: JsonSchema.Net.Generation
 icon: fas fa-tag
 order: "09.05"
 ---
+# [5.0.2](https://github.com/json-everything/json-everything/pull/887) {#release-schemagen-5.0.2}
+
+Rerelease of 5.0.1 with fixed package dependencies.  Thanks to [@arturcic](https://github.com/arturcic) for reporting.
+
 # [5.0.1](https://github.com/json-everything/json-everything/pull/887) {#release-schemagen-5.0.1}
 
-- Fixed missing `$defs` in the produced JSON schema if `SchemaGeneratorConfiguration.RegisterXmlCommentFile()` is used on a type which has a `<summary>` xmldoc.
+Fixed missing `$defs` in the produced JSON schema if `SchemaGeneratorConfiguration.RegisterXmlCommentFile()` is used on a type which has a `<summary>` xmldoc.
 
 # [5.0.0](https://github.com/gregsdennis/json-everything/pull/822) {#release-schemagen-5.0.0}
 
