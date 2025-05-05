@@ -1,0 +1,125 @@
+.schema-container {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.sidebar {
+    width: 25%;
+    position: relative;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    margin: 1rem 0 1rem 1rem;
+    box-sizing: border-box;
+}
+
+.sidebar-content {
+    padding: 1rem;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.resize-handle {
+    cursor: col-resize;
+    width: 1rem;
+    flex: 0 0 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 10;
+    background: transparent;
+}
+
+.resize-handle::after {
+    content: "";
+    width: 2px;
+    height: 30px;
+    background-color: #dee2e6;
+    border-radius: 1px;
+    pointer-events: none;
+}
+
+.resize-handle:hover::after {
+    background-color: #0d6efd;
+}
+
+.main-content {
+    flex: 1;
+    height: 100%;
+    overflow: hidden;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.editor-grid {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 0%;
+    min-height: 0;
+    padding: 1rem 1rem 1rem 0;
+    box-sizing: border-box;
+}
+
+.top-editors-row {
+    display: flex;
+    flex-direction: row;
+    min-height: 0;
+}
+
+.fill-vertical {
+    flex: 1 1 0%;
+    min-height: 0;
+}
+
+.left-editor, .right-editor {
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 0;
+    display: flex;
+}
+
+.output-cell {
+    min-height: 0;
+    height: 50%;
+    grid-column: 1 / -1;
+}
+
+.editor-container {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+}
+
+.resize-handle.horizontal {
+    width: 100%;
+    height: 1rem;
+    flex: 0 0 1rem;
+    cursor: row-resize;
+    justify-content: center;
+    align-items: center;
+}
+
+.resize-handle.horizontal::after {
+    content: "";
+    width: 30px;
+    height: 2px;
+    background-color: #dee2e6;
+    border-radius: 1px;
+    pointer-events: none;
+}
+
+.resize-handle.horizontal:hover::after {
+    background-color: #0d6efd;
+} 
+
+.path-input-row {
+    margin-top: 1rem;
+    margin-right: 1rem;
+}
