@@ -39,6 +39,8 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 			.Concat(fieldsToGenerate)
 			.Concat(hiddenPropertiesToGenerate)
 			.Concat(hiddenFieldsToGenerate)
+			.GroupBy(p=> p.Name)
+			.Select(g=> g.First())
 			.ToList();
 
 		membersToGenerate = SchemaGeneratorConfiguration.Current.PropertyOrder switch
@@ -55,14 +57,14 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 		foreach (var member in membersToGenerate)
 		{
 			var memberAttributes = member.GetCustomAttributes().ToList();
-			var ignoreAttribute = (Attribute?)memberAttributes.OfType<JsonIgnoreAttribute>().FirstOrDefault(a=>a.Condition == JsonIgnoreCondition.Always) ??
+			var ignoreAttribute = (Attribute?)memberAttributes.OfType<JsonIgnoreAttribute>().FirstOrDefault(a => a.Condition == JsonIgnoreCondition.Always) ??
 								  memberAttributes.OfType<JsonExcludeAttribute>().FirstOrDefault();
 			if (ignoreAttribute != null) continue;
 
 			if (!memberAttributes.OfType<DescriptionAttribute>().Any())
 			{
 				var comments = SchemaGeneratorConfiguration.Current.XmlReader.GetMemberComments(member);
-				if (!string.IsNullOrWhiteSpace(comments.Summary)) 
+				if (!string.IsNullOrWhiteSpace(comments.Summary))
 					memberAttributes.Add(new DescriptionAttribute(comments.Summary!));
 			}
 
@@ -70,7 +72,7 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 			var localConditionalAttributes = memberAttributes.Except(unconditionalAttributes).OfType<ConditionalAttribute>().ToList();
 			foreach (var conditions in localConditionalAttributes.GroupBy(x => x.ConditionGroup))
 			{
-				if (!conditionalAttributes.TryGetValue(conditions.Key!, out var list)) 
+				if (!conditionalAttributes.TryGetValue(conditions.Key!, out var list))
 					conditionalAttributes[conditions.Key!] = list = [];
 
 				list.AddRange(conditions.Select(x => (member, x)));
@@ -97,7 +99,7 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 			}
 
 			if (SchemaGeneratorConfiguration.Current.StrictConditionals &&
-			    localConditionalAttributes.Count != 0)
+				localConditionalAttributes.Count != 0)
 			{
 				addUnevaluatedProperties = true;
 				var applicableConditionGroups = localConditionalAttributes.Select(x => x.ConditionGroup).Distinct();
