@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using Json.More;
 
@@ -23,9 +24,9 @@ internal class LessThanOrEqualToOperator : IBinaryComparativeOperator
 		    rNode is not JsonValue rValue)
 			return false;
 
-		if (lValue.TryGetValue(out string? leftString) &&
-		    rValue.TryGetValue(out string? rightString))
-			return string.Compare(leftString, rightString, StringComparison.Ordinal) <= 0;
+		if (lValue.GetValueKind() == JsonValueKind.String &&
+		    rValue.GetValueKind() == JsonValueKind.String)
+			return string.Compare(lValue.GetString(), rValue.GetString(), StringComparison.Ordinal) <= 0;
 
 		return lValue.GetNumber() <= rValue.GetNumber();
 	}

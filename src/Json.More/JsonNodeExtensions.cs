@@ -223,7 +223,9 @@ public static class JsonNodeExtensions
 		if (value.TryGetValue(out string? s)) return s;
 		if (value.TryGetValue(out char c)) return c.ToString();
 
-		return null;
+		return value.GetValueKind() == JsonValueKind.String
+			? value.ToJsonString()[1..^1] //strip JSON literal double quotes
+			: null;
 	}
 
 	/// <summary>
