@@ -69,12 +69,12 @@ public class JsonPointerParseTests
 	[TestCaseSource(nameof(UrlSpecificationExamples))]
 	public void Parse(string pointerString, string[] segments)
 	{
-		var pointer = JsonPointer_Old.Parse(pointerString);
+		var pointer = JsonPointer.Parse(pointerString);
 
-		pointer.Count.Should().Be(segments.Length);
-		for (int i = 0; i < pointer.Count; i++)
+		pointer.SegmentCount.Should().Be(segments.Length);
+		for (int i = 0; i < pointer.SegmentCount; i++)
 		{
-			var segment = pointer[i];
+			var segment = pointer.GetSegment(i).Decode()?.ToString();
 			var expected = segments[i];
 
 			Assert.That(segment, Is.EqualTo(expected));
@@ -84,12 +84,12 @@ public class JsonPointerParseTests
 	[TestCaseSource(nameof(SpecificationExamples))]
 	public void TryParse(string pointerString, string[] segments)
 	{
-		Assert.That(JsonPointer_Old.TryParse(pointerString, out var pointer), Is.True);
+		Assert.That(JsonPointer.TryParse(pointerString, out var pointer), Is.True);
 
-		pointer!.Count.Should().Be(segments.Length);
-		for (int i = 0; i < pointer.Count; i++)
+		pointer.SegmentCount.Should().Be(segments.Length);
+		for (int i = 0; i < pointer.SegmentCount; i++)
 		{
-			var segment = pointer[i];
+			var segment = pointer.GetSegment(i).ToString();
 			var expected = segments[i];
 
 			Assert.That(segment, Is.EqualTo(expected));
@@ -99,19 +99,19 @@ public class JsonPointerParseTests
 	[TestCaseSource(nameof(FailureCases))]
 	public void ParseFailure(string pointerString)
 	{
-		Assert.Throws<PointerParseException>(() => JsonPointer_Old.Parse(pointerString));
+		Assert.Throws<PointerParseException>(() => JsonPointer.Parse(pointerString));
 	}
 
 	[TestCaseSource(nameof(FailureCases))]
 	public void TryParseFailure(string pointerString)
 	{
-		Assert.That(JsonPointer_Old.TryParse(pointerString, out _), Is.False);
+		Assert.That(JsonPointer.TryParse(pointerString, out _), Is.False);
 	}
 
 	[Test]
 	public void ParseShouldStoreNonUrlForm()
 	{
-		var pointer = JsonPointer_Old.Parse("#/foo");
+		var pointer = JsonPointer.Parse("#/foo");
 		var expected = "/foo";
 
 		var actual = pointer.ToString();
@@ -122,10 +122,10 @@ public class JsonPointerParseTests
 	[Test]
 	public void TryParseShouldStoreNonUrlForm()
 	{
-		Assert.That(JsonPointer_Old.TryParse("#/foo", out var pointer), Is.True);
+		Assert.That(JsonPointer.TryParse("#/foo", out var pointer), Is.True);
 		var expected = "/foo";
 
-		var actual = pointer!.ToString();
+		var actual = pointer.ToString();
 
 		Assert.That(actual, Is.EqualTo(expected));
 	}
@@ -133,20 +133,19 @@ public class JsonPointerParseTests
 	[Test]
 	public void TrailingSlash()
 	{
-		var result = JsonPointer_Old.TryParse("/foo/", out var pointer);
+		var result = JsonPointer.TryParse("/foo/", out var pointer);
 
 		Assert.That(result, Is.True);
-		Assert.That(pointer, Is.Not.Null);
-		Assert.That(pointer.Count, Is.EqualTo(2));
+		Assert.That(pointer.SegmentCount, Is.EqualTo(2));
 
-		Assert.That(pointer.First(), Is.EqualTo("foo"));
-		Assert.That(pointer.Last(), Is.EqualTo(""));
+		Assert.That(pointer.GetSegment(0).ToString(), Is.EqualTo("foo"));
+		Assert.That(pointer.GetSegment(1).ToString(), Is.EqualTo(""));
 	}
 
 	[TestCaseSource(nameof(SpecificationExamples))]
 	public void CreateThenToString(string pointerString, string[] segments)
 	{
-		var pointer = JsonPointer_Old.Create(segments.Select(x => (PointerSegment)x).ToArray());
+		var pointer = JsonPointer.Create(segments.Select(x => (PointerSegment)x).ToArray());
 
 		var backToString = pointer.ToString();
 		Assert.That(backToString, Is.EqualTo(pointerString));

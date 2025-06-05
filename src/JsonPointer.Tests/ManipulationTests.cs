@@ -10,13 +10,9 @@ public class ManipulationTests
 	[TestCase("/foo/5/bar", 3, "")]
 	public void Ancestor(string original, int levels, string expected)
 	{
-		var pointer = JsonPointer_Old.Parse(original);
+		var pointer = JsonPointer.Parse(original);
 
-#if NET481
-		var actual = pointerOld.GetAncestor(levels);
-#else
-		var actual = pointer[..^levels];
-#endif
+		var actual = pointer.GetParent(levels);
 
 		Assert.That(actual.ToString(), Is.EqualTo(expected));
 	}
@@ -27,13 +23,9 @@ public class ManipulationTests
 	[TestCase("/foo/5/bar", 3, "")]
 	public void Local(string original, int skip, string expected)
 	{
-		var pointer = JsonPointer_Old.Parse(original);
+		var pointer = JsonPointer.Parse(original);
 
-#if NET481
-		var actual = pointerOld.GetLocal(skip);
-#else
-		var actual = pointer[skip..];
-#endif
+		var actual = pointer.GetLocal(skip);
 
 		Assert.That(actual.ToString(), Is.EqualTo(expected));
 	}
@@ -41,8 +33,8 @@ public class ManipulationTests
 	[TestCase("/foo/5/bar", "/baz/42/quux", "/foo/5/bar/baz/42/quux")]
 	public void CombinePointer(string a, string b, string expected)
 	{
-		var left = JsonPointer_Old.Parse(a);
-		var right = JsonPointer_Old.Parse(b);
+		var left = JsonPointer.Parse(a);
+		var right = JsonPointer.Parse(b);
 
 		var actual = left.Combine(right);
 
@@ -52,7 +44,7 @@ public class ManipulationTests
 	[Test]
 	public void CombineSegments()
 	{
-		var pointer = JsonPointer_Old.Parse("/foo/5/bar");
+		var pointer = JsonPointer.Parse("/foo/5/bar");
 
 		var actual = pointer.Combine("baz", 0, "quux", 5, 10);
 

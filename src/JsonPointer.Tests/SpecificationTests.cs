@@ -81,7 +81,7 @@ public class SpecificationTests
 				""m~n"": 8
 			}");
 
-		var pointer = JsonPointer_Old.Parse(pointerString);
+		var pointer = JsonPointer.Parse(pointerString);
 
 		var actual = pointer.Evaluate(target.RootElement)!;
 
@@ -107,7 +107,7 @@ public class SpecificationTests
 				""m~n"": 8
 			}");
 
-		var pointer = JsonPointer_Old.Parse(pointerString);
+		var pointer = JsonPointer.Parse(pointerString);
 
 		var success = pointer.TryEvaluate(target, out var actual);
 
@@ -123,7 +123,7 @@ public class SpecificationTests
 		if (pointerString.Length != 0 && pointerString[0] == '#')
 			Assert.Inconclusive("Returning to URI encoded is not supported");
 
-		var pointer = JsonPointer_Old.Parse(pointerString);
+		var pointer = JsonPointer.Parse(pointerString);
 		var backToString = pointer.ToString();
 
 		Assert.That(backToString, Is.EqualTo(pointerString));

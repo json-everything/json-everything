@@ -7,18 +7,18 @@ using System.Text.Json.Serialization;
 namespace Json.Pointer;
 
 /// <summary>
-/// Represents a Relative JSON PointerOld IAW draft-handrews-relative-json-pointerOld-02
+/// Represents a Relative JSON Pointer IAW draft-handrews-relative-json-pointer-02
 /// </summary>
 [JsonConverter(typeof(RelativeJsonPointerJsonConverter))]
-public class RelativeJsonPointer
+public readonly struct RelativeJsonPointer : IEquatable<RelativeJsonPointer>
 {
 	/// <summary>
-	/// The null pointerOld.  Indicates no navigation should occur.
+	/// The null pointer.  Indicates no navigation should occur.
 	/// </summary>
 	public static readonly RelativeJsonPointer Null = new();
 
 	/// <summary>
-	/// Gets whether the pointerOld is an index query, which returns the index within the parent rather than the value.
+	/// Gets whether the pointer is an index query, which returns the index within the parent rather than the value.
 	/// </summary>
 	public bool IsIndexQuery { get; }
 	/// <summary>
@@ -30,88 +30,92 @@ public class RelativeJsonPointer
 	/// </summary>
 	public int ArrayIndexManipulator { get; }
 	/// <summary>
-	/// Gets the pointerOld to follow after taking <see cref="ParentSteps"/> steps upward.
+	/// Gets the pointer to follow after taking <see cref="ParentSteps"/> steps upward.
 	/// </summary>
-	public JsonPointer_Old PointerOld { get; }
+	public JsonPointer Pointer { get; }
 
 	/// <summary>
-	/// Creates the null pointerOld.
+	/// Creates the null pointer.
 	/// </summary>
-	private RelativeJsonPointer()
+	public RelativeJsonPointer()
 	{
 		IsIndexQuery = false;
 		ParentSteps = 0;
 		ArrayIndexManipulator = 0;
-		PointerOld = JsonPointer_Old.Empty;
+		Pointer = JsonPointer.Empty;
 	}
+
 	private RelativeJsonPointer(uint parentSteps)
 	{
 		IsIndexQuery = true;
 		ParentSteps = parentSteps;
 		ArrayIndexManipulator = 0;
-		PointerOld = JsonPointer_Old.Empty;
+		Pointer = JsonPointer.Empty;
 	}
+
 	private RelativeJsonPointer(uint parentSteps, int arrayIndexManipulator)
 	{
 		IsIndexQuery = true;
 		ParentSteps = parentSteps;
 		ArrayIndexManipulator = arrayIndexManipulator;
-		PointerOld = JsonPointer_Old.Empty;
+		Pointer = JsonPointer.Empty;
 	}
-	private RelativeJsonPointer(uint parentSteps, JsonPointer_Old pointerOld)
+
+	private RelativeJsonPointer(uint parentSteps, JsonPointer pointer)
 	{
 		IsIndexQuery = false;
 		ParentSteps = parentSteps;
 		ArrayIndexManipulator = 0;
-		PointerOld = pointerOld;
+		Pointer = pointer;
 	}
-	private RelativeJsonPointer(uint parentSteps, int arrayIndexManipulator, JsonPointer_Old pointerOld)
+
+	private RelativeJsonPointer(uint parentSteps, int arrayIndexManipulator, JsonPointer pointer)
 	{
 		IsIndexQuery = false;
 		ParentSteps = parentSteps;
 		ArrayIndexManipulator = arrayIndexManipulator;
-		PointerOld = pointerOld;
+		Pointer = pointer;
 	}
 
 	/// <summary>
-	/// Creates an index query pointerOld.
+	/// Creates an index query pointer.
 	/// </summary>
 	/// <param name="parentSteps"></param>
-	/// <returns>A Relative JSON PointerOld.</returns>
+	/// <returns>A Relative JSON Pointer.</returns>
 	public static RelativeJsonPointer IndexQuery(uint parentSteps) => new(parentSteps);
 
 	/// <summary>
-	/// Creates an index query pointerOld.
+	/// Creates an index query pointer.
 	/// </summary>
 	/// <param name="parentSteps"></param>
 	/// <param name="arrayIndexManipulator">The index manipulator.</param>
-	/// <returns>A Relative JSON PointerOld.</returns>
+	/// <returns>A Relative JSON Pointer.</returns>
 	public static RelativeJsonPointer IndexQuery(uint parentSteps, int arrayIndexManipulator) => new(parentSteps, arrayIndexManipulator);
 
 	/// <summary>
-	/// Creates a Relative JSON PointerOld from a JSON PointerOld and a number of parent steps.
+	/// Creates a Relative JSON Pointer from a JSON Pointer and a number of parent steps.
 	/// </summary>
 	/// <param name="parentSteps">The number of parent steps.</param>
-	/// <param name="pointerOld">The JSON PointerOld.</param>
-	/// <returns>A Relative JSON PointerOld.</returns>
-	public static RelativeJsonPointer FromPointer(uint parentSteps, JsonPointer_Old pointerOld) => new(parentSteps, pointerOld);
+	/// <param name="pointer">The JSON Pointer.</param>
+	/// <returns>A Relative JSON Pointer.</returns>
+	public static RelativeJsonPointer FromPointer(uint parentSteps, JsonPointer pointer) => new(parentSteps, pointer);
 
 	/// <summary>
-	/// Creates a Relative JSON PointerOld from a JSON PointerOld and a number of parent steps.
+	/// Creates a Relative JSON Pointer from a JSON Pointer and a number of parent steps.
 	/// </summary>
 	/// <param name="parentSteps">The number of parent steps.</param>
 	/// <param name="arrayIndexManipulator">The index manipulator.</param>
-	/// <param name="pointerOld">The JSON PointerOld.</param>
-	/// <returns>A Relative JSON PointerOld.</returns>
-	public static RelativeJsonPointer FromPointer(uint parentSteps, int arrayIndexManipulator, JsonPointer_Old pointerOld) => new(parentSteps, arrayIndexManipulator, pointerOld);
+	/// <param name="pointer">The JSON Pointer.</param>
+	/// <returns>A Relative JSON Pointer.</returns>
+	public static RelativeJsonPointer FromPointer(uint parentSteps, int arrayIndexManipulator, JsonPointer pointer) => new(parentSteps, arrayIndexManipulator, pointer);
 
 	/// <summary>
-	/// Parses a JSON PointerOld segment from a string.
+	/// Parses a JSON Pointer segment from a string.
 	/// </summary>
 	/// <param name="source">The source string.</param>
-	/// <returns>A Relative JSON PointerOld.</returns>
+	/// <returns>A Relative JSON Pointer.</returns>
 	/// <exception cref="ArgumentNullException"><paramref name="source"/> is null.</exception>
-	/// <exception cref="PointerParseException"><paramref name="source"/> does not contain a valid relative pointerOld.</exception>
+	/// <exception cref="PointerParseException"><paramref name="source"/> does not contain a valid relative pointer.</exception>
 	public static RelativeJsonPointer Parse(string source)
 	{
 		if (source == null) throw new ArgumentNullException(nameof(source));
@@ -124,7 +128,7 @@ public class RelativeJsonPointer
 
 		var parentSteps = span[..i].AsUint();
 
-		if (i == span.Length) return new RelativeJsonPointer(parentSteps, JsonPointer_Old.Empty);
+		if (i == span.Length) return new RelativeJsonPointer(parentSteps, JsonPointer.Empty);
 
 		int indexManipulation = 0;
 		if (span[i] == '+' || span[i] == '-')
@@ -136,7 +140,7 @@ public class RelativeJsonPointer
 
 			indexManipulation = sign * span[start..i].AsInt();
 
-			if (i == span.Length) return new RelativeJsonPointer(parentSteps, indexManipulation, JsonPointer_Old.Empty);
+			if (i == span.Length) return new RelativeJsonPointer(parentSteps, indexManipulation, JsonPointer.Empty);
 		}
 		if (span[i] == '#')
 		{
@@ -146,7 +150,7 @@ public class RelativeJsonPointer
 
 		if (span[i] != '/') throw new PointerParseException($"{nameof(source)} must contain either a `#` or a pointerOld after the initial number");
 
-		var pointer = JsonPointer_Old.Parse(span[i..]);
+		var pointer = JsonPointer.Parse(span[i..]);
 
 		return new RelativeJsonPointer(parentSteps, indexManipulation, pointer);
 	}
@@ -158,12 +162,12 @@ public class RelativeJsonPointer
 	/// <param name="relativePointer">The resulting relative pointerOld.</param>
 	/// <returns>`true` if the parse was successful; `false` otherwise.</returns>
 	/// <exception cref="ArgumentNullException"><paramref name="source"/> is null.</exception>
-	public static bool TryParse(string source, [NotNullWhen(true)] out RelativeJsonPointer? relativePointer)
+	public static bool TryParse(string source, out RelativeJsonPointer relativePointer)
 	{
 		if (source == null) throw new ArgumentNullException(nameof(source));
 		if (string.IsNullOrWhiteSpace(source))
 		{
-			relativePointer = null;
+			relativePointer = default;
 			return false;
 		}
 
@@ -173,7 +177,7 @@ public class RelativeJsonPointer
 
 		if (i == 0)
 		{
-			relativePointer = null;
+			relativePointer = default;
 			return false;
 		}
 
@@ -181,7 +185,7 @@ public class RelativeJsonPointer
 
 		if (i == span.Length)
 		{
-			relativePointer = new RelativeJsonPointer(parentSteps, JsonPointer_Old.Empty);
+			relativePointer = new RelativeJsonPointer(parentSteps, JsonPointer.Empty);
 			return true;
 		}
 
@@ -197,7 +201,7 @@ public class RelativeJsonPointer
 
 			if (i == span.Length)
 			{
-				relativePointer = new RelativeJsonPointer(parentSteps, indexManipulation, JsonPointer_Old.Empty);
+				relativePointer = new RelativeJsonPointer(parentSteps, indexManipulation, JsonPointer.Empty);
 				return true;
 			}
 		}
@@ -205,7 +209,7 @@ public class RelativeJsonPointer
 		{
 			if (i + 1 < span.Length)
 			{
-				relativePointer = null;
+				relativePointer = default;
 				return false;
 			}
 			relativePointer = new RelativeJsonPointer(parentSteps, indexManipulation);
@@ -214,13 +218,13 @@ public class RelativeJsonPointer
 
 		if (span[i] != '/')
 		{
-			relativePointer = null;
+			relativePointer = default;
 			return false;
 		}
 
-		if (!JsonPointer_Old.TryParse(span[i..], out var pointer))
+		if (!JsonPointer.TryParse(span[i..], out var pointer))
 		{
-			relativePointer = null;
+			relativePointer = default;
 			return false;
 		}
 
@@ -272,13 +276,51 @@ public class RelativeJsonPointer
 			}
 		}
 
-		return PointerOld.TryEvaluate(current, out result);
+		return Pointer.TryEvaluate(current, out result);
 	}
 
 	/// <summary>Returns the fully qualified type name of this instance.</summary>
 	/// <returns>The fully qualified type name.</returns>
 	public override string ToString()
 	{
-		return $"{ParentSteps}{PointerOld}";
+		return $"{ParentSteps}{Pointer}";
 	}
+
+	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+	/// <param name="other">An object to compare with this object.</param>
+	/// <returns>
+	/// <see langword="true" /> if the current object is equal to the <paramref name="other" /> parameter; otherwise, <see langword="false" />.</returns>
+	public bool Equals(RelativeJsonPointer other)
+	{
+		return IsIndexQuery == other.IsIndexQuery &&
+		       ParentSteps == other.ParentSteps &&
+		       ArrayIndexManipulator == other.ArrayIndexManipulator &&
+		       Pointer.Equals(other.Pointer);
+	}
+
+	/// <summary>Indicates whether this instance and a specified object are equal.</summary>
+	/// <param name="obj">The object to compare with the current instance.</param>
+	/// <returns>
+	/// <see langword="true" /> if <paramref name="obj" /> and this instance are the same type and represent the same value; otherwise, <see langword="false" />.</returns>
+	public override bool Equals(object? obj)
+	{
+		return obj is RelativeJsonPointer other && Equals(other);
+	}
+
+	/// <summary>Returns the hash code for this instance.</summary>
+	/// <returns>A 32-bit signed integer that is the hash code for this instance.</returns>
+	public override int GetHashCode()
+	{
+		unchecked
+		{
+			var hashCode = IsIndexQuery.GetHashCode();
+			hashCode = (hashCode * 397) ^ (int)ParentSteps;
+			hashCode = (hashCode * 397) ^ ArrayIndexManipulator;
+			hashCode = (hashCode * 397) ^ Pointer.GetHashCode();
+			return hashCode;
+		}
+	}
+
+	public static bool operator ==(RelativeJsonPointer left, RelativeJsonPointer right) => left.Equals(right);
+	public static bool operator !=(RelativeJsonPointer left, RelativeJsonPointer right) => !left.Equals(right);
 }

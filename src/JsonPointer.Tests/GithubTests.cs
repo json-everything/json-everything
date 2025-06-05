@@ -8,7 +8,7 @@ public class GithubTests
 	[Test]
 	public void Issue408_ArrayDerefThrowsIndexOutOfRange()
 	{
-		var pointer = JsonPointer_Old.Parse("/");
+		var pointer = JsonPointer.Parse("/");
 		var data = JsonNode.Parse("[]");
 
 		var success = pointer.TryEvaluate(data, out var array);
