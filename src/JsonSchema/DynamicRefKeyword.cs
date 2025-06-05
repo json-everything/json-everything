@@ -56,7 +56,7 @@ public class DynamicRefKeyword : IJsonSchemaKeyword
 
 		if (targetSchema == null)
 		{
-			if (JsonPointer.TryParse(newUri.Fragment, out var pointerFragment))
+			if (JsonPointer_Old.TryParse(newUri.Fragment, out var pointerFragment))
 			{
 				var targetBase = context.Options.SchemaRegistry.Get(newUri);
 
@@ -81,7 +81,7 @@ public class DynamicRefKeyword : IJsonSchemaKeyword
 	private static void Evaluator(KeywordEvaluation evaluation, EvaluationContext context, JsonSchema target)
 	{
 		var childEvaluation = target
-			.GetConstraint(JsonPointer.Create(Name), evaluation.Results.InstanceLocation, JsonPointer.Empty, context)
+			.GetConstraint(JsonPointer_Old.Create(Name), evaluation.Results.InstanceLocation, JsonPointer_Old.Empty, context)
 			.BuildEvaluation(evaluation.LocalInstance, evaluation.Results.InstanceLocation, evaluation.Results.EvaluationPath.Combine(Name), context.Options);
 		evaluation.ChildEvaluations = [childEvaluation];
 

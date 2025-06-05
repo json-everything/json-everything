@@ -83,11 +83,11 @@ public static class PatchExtensions
 	public static JsonPatch CreatePatch(this JsonNode? original, JsonNode? target)
 	{
 		var patch = new List<PatchOperation>();
-		CreatePatch(patch, original, target, JsonPointer.Empty);
+		CreatePatch(patch, original, target, JsonPointer_Old.Empty);
 		return new JsonPatch(patch);
 	}
 
-	private static void CreatePatch(List<PatchOperation> patch, JsonNode? original, JsonNode? target, JsonPointer path)
+	private static void CreatePatch(List<PatchOperation> patch, JsonNode? original, JsonNode? target, JsonPointer_Old path)
 	{
 		if (original is JsonObject originalObj && target is JsonObject targetObj)
 			PatchForObject(originalObj, targetObj, patch, path);
@@ -97,7 +97,7 @@ public static class PatchExtensions
 			patch.Add(PatchOperation.Replace(path, target));
 	}
 
-	private static void PatchForObject(JsonObject original, JsonObject target, List<PatchOperation> patch, JsonPointer path)
+	private static void PatchForObject(JsonObject original, JsonObject target, List<PatchOperation> patch, JsonPointer_Old path)
 	{
 		var origNames = original.Select(x => x.Key).ToArray();
 		var modNames = target.Select(x => x.Key).ToArray();
@@ -114,7 +114,7 @@ public static class PatchExtensions
 		}
 	}
 
-	private static void PatchForArray(JsonArray original, JsonArray target, List<PatchOperation> patch, JsonPointer path)
+	private static void PatchForArray(JsonArray original, JsonArray target, List<PatchOperation> patch, JsonPointer_Old path)
 	{
 		if (target.Count >= original.Count)
 		{

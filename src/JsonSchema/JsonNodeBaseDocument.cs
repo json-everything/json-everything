@@ -12,7 +12,7 @@ namespace Json.Schema;
 public class JsonNodeBaseDocument : IBaseDocument
 {
 	private readonly JsonNode _node;
-	private readonly ConcurrentDictionary<JsonPointer, JsonSchema?> _foundSubschemas;
+	private readonly ConcurrentDictionary<JsonPointer_Old, JsonSchema?> _foundSubschemas;
 
 	/// <summary>
 	/// Gets the base URI that applies to this schema.  This may be defined by a parent schema.
@@ -34,7 +34,7 @@ public class JsonNodeBaseDocument : IBaseDocument
 	public JsonNodeBaseDocument(JsonNode node, Uri baseUri)
 	{
 		_node = node;
-		_foundSubschemas = new ConcurrentDictionary<JsonPointer, JsonSchema?>();
+		_foundSubschemas = new ConcurrentDictionary<JsonPointer_Old, JsonSchema?>();
 
 		BaseUri = baseUri;
 	}
@@ -42,12 +42,12 @@ public class JsonNodeBaseDocument : IBaseDocument
 	/// <summary>
 	/// Finds a schema within the document.
 	/// </summary>
-	/// <param name="pointer">A JSON Pointer to the location of the schema within the document.</param>
+	/// <param name="pointerOld">A JSON PointerOld to the location of the schema within the document.</param>
 	/// <param name="options">Evaluation options.  This is needed for internal processing.</param>
 	/// <returns>A JSON Schema, if found.</returns>
-	public JsonSchema? FindSubschema(JsonPointer pointer, EvaluationOptions options)
+	public JsonSchema? FindSubschema(JsonPointer_Old pointerOld, EvaluationOptions options)
 	{
-		return _foundSubschemas.GetOrAdd(pointer, jsonPointer =>
+		return _foundSubschemas.GetOrAdd(pointerOld, jsonPointer =>
 		{
 			if (!jsonPointer.TryEvaluate(_node, out var location)) return null;
 

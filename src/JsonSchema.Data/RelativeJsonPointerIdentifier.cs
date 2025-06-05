@@ -9,7 +9,7 @@ namespace Json.Schema.Data;
 public class RelativeJsonPointerIdentifier : IDataResourceIdentifier
 {
 	/// <summary>
-	/// The Relative JSON Pointer target.
+	/// The Relative JSON PointerOld target.
 	/// </summary>
 	public RelativeJsonPointer Target { get; }
 

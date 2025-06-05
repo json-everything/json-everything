@@ -61,7 +61,7 @@ public class PropertyDependenciesKeyword : IJsonSchemaKeyword, ICustomSchemaColl
 			var propertyConstraint = property.Value.Schemas.Select(requirement =>
 			{
 				context.PushEvaluationPath(requirement.Key);
-				var requirementConstraint = requirement.Value.GetConstraint(JsonPointer.Create(Name, property.Key), schemaConstraint.BaseInstanceLocation, JsonPointer.Empty, context);
+				var requirementConstraint = requirement.Value.GetConstraint(JsonPointer_Old.Create(Name, property.Key), schemaConstraint.BaseInstanceLocation, JsonPointer_Old.Empty, context);
 				context.PopEvaluationPath();
 				requirementConstraint.InstanceLocator = evaluation =>
 				{
@@ -99,11 +99,11 @@ public class PropertyDependenciesKeyword : IJsonSchemaKeyword, ICustomSchemaColl
 				.ReplaceToken("failed", failedProperties));
 	}
 
-	(JsonSchema? Schema, int SegmentsConsumed) ICustomSchemaCollector.FindSubschema(JsonPointer pointer)
+	(JsonSchema? Schema, int SegmentsConsumed) ICustomSchemaCollector.FindSubschema(JsonPointer_Old pointerOld)
 	{
-		if (pointer.Count < 2) return (null, 0);
-		if (!Dependencies.TryGetValue(pointer[0], out var property)) return (null, 0);
-		if (!property.Schemas.TryGetValue(pointer[1], out var schema)) return (null, 0);
+		if (pointerOld.Count < 2) return (null, 0);
+		if (!Dependencies.TryGetValue(pointerOld[0], out var property)) return (null, 0);
+		if (!property.Schemas.TryGetValue(pointerOld[1], out var schema)) return (null, 0);
 
 		return (schema, 2);
 	}

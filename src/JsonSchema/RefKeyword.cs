@@ -64,7 +64,7 @@ public class RefKeyword : IJsonSchemaKeyword
 
 		JsonSchema? targetSchema;
 
-		if (JsonPointer.TryParse(fragment, out var pointerFragment))
+		if (JsonPointer_Old.TryParse(fragment, out var pointerFragment))
 		{
 			var targetBase = context.Options.SchemaRegistry.Get(newUri) ??
 							 throw new RefResolutionException(newUri, pointerFragment);
@@ -86,7 +86,7 @@ public class RefKeyword : IJsonSchemaKeyword
 			throw new RefResolutionException(newUri);
 
 		context.NavigatedReferences.Push(navigation);
-		var subschemaConstraint = targetSchema.GetConstraint(JsonPointer.Create(Name), schemaConstraint.BaseInstanceLocation, JsonPointer.Empty, context);
+		var subschemaConstraint = targetSchema.GetConstraint(JsonPointer_Old.Create(Name), schemaConstraint.BaseInstanceLocation, JsonPointer_Old.Empty, context);
 		context.NavigatedReferences.Pop();
 		if (pointerFragment != null)
 			subschemaConstraint.BaseSchemaOffset = pointerFragment;

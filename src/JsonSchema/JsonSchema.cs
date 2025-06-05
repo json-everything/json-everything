@@ -287,11 +287,11 @@ public class JsonSchema : IBaseDocument
 		options.SchemaRegistry.Register(this);
 
 		var context = new EvaluationContext(options, DeclaredVersion, BaseUri);
-		var constraint = BuildConstraint(JsonPointer.Empty, JsonPointer.Empty, JsonPointer.Empty, context.Scope);
+		var constraint = BuildConstraint(JsonPointer_Old.Empty, JsonPointer_Old.Empty, JsonPointer_Old.Empty, context.Scope);
 		if (!BoolValue.HasValue)
 			PopulateConstraint(constraint, context);
 
-		var evaluation = constraint.BuildEvaluation(root, JsonPointer.Empty, JsonPointer.Empty, options);
+		var evaluation = constraint.BuildEvaluation(root, JsonPointer_Old.Empty, JsonPointer_Old.Empty, options);
 		evaluation.Evaluate(context);
 
 		if (options.AddAnnotationForUnknownKeywords && constraint.UnknownKeywords != null)
@@ -369,7 +369,7 @@ public class JsonSchema : IBaseDocument
 	/// Builds a constraint for the schema.
 	/// </summary>
 	/// <param name="relativeEvaluationPath">
-	/// The relative evaluation path in JSON Pointer form.  Generally this will be a keyword name,
+	/// The relative evaluation path in JSON PointerOld form.  Generally this will be a keyword name,
 	/// but may have other segments, such as in the case of `properties` which also has the property name.
 	/// </param>
 	/// <param name="baseInstanceLocation">The base location within the instance that is being evaluated.</param>
@@ -384,7 +384,7 @@ public class JsonSchema : IBaseDocument
 	/// Different evaluation paths to this schema object may result in different constraints, so
 	/// a new constraint is saved for each dynamic scope.
 	/// </remarks>
-	public SchemaConstraint GetConstraint(JsonPointer relativeEvaluationPath, JsonPointer baseInstanceLocation, JsonPointer relativeInstanceLocation, EvaluationContext context)
+	public SchemaConstraint GetConstraint(JsonPointer_Old relativeEvaluationPath, JsonPointer_Old baseInstanceLocation, JsonPointer_Old relativeInstanceLocation, EvaluationContext context)
 	{
 		var baseUri = BoolValue.HasValue ? context.Scope.LocalScope : BaseUri;
 	
@@ -402,7 +402,7 @@ public class JsonSchema : IBaseDocument
 		return constraint;
 	}
 
-	private SchemaConstraint BuildConstraint(JsonPointer evaluationPath, JsonPointer baseInstanceLocation, JsonPointer relativeInstanceLocation, DynamicScope scope)
+	private SchemaConstraint BuildConstraint(JsonPointer_Old evaluationPath, JsonPointer_Old baseInstanceLocation, JsonPointer_Old relativeInstanceLocation, DynamicScope scope)
 	{
 		lock (_constraints)
 		{
@@ -622,9 +622,9 @@ public class JsonSchema : IBaseDocument
 		return i == 0 ? [] : span[..i];
 	}
 
-	JsonSchema? IBaseDocument.FindSubschema(JsonPointer pointer, EvaluationOptions options)
+	JsonSchema? IBaseDocument.FindSubschema(JsonPointer_Old pointerOld, EvaluationOptions options)
 	{
-		object? ExtractSchemaFromData(JsonPointer localPointer, JsonNode? data, JsonSchema hostSchema)
+		object? ExtractSchemaFromData(JsonPointer_Old localPointer, JsonNode? data, JsonSchema hostSchema)
 		{
 			if (!localPointer.TryEvaluate(data, out var value)) return null;
 
@@ -676,9 +676,9 @@ public class JsonSchema : IBaseDocument
 					break;
 				case ICustomSchemaCollector customCollector:
 #if NETSTANDARD2_0
-					var (found, segmentsConsumed) = customCollector.FindSubschema(pointer.GetLocal(i));
+					var (found, segmentsConsumed) = customCollector.FindSubschema(pointerOld.GetLocal(i));
 #else
-					var (found, segmentsConsumed) = customCollector.FindSubschema(pointer[i..]);
+					var (found, segmentsConsumed) = customCollector.FindSubschema(pointerOld[i..]);
 #endif
 					hostSchema = found!;
 					newResolvable = hostSchema;
@@ -693,9 +693,9 @@ public class JsonSchema : IBaseDocument
 					var serialized = JsonSerializer.Serialize(localResolvable, typeInfo!);
 					var json = JsonNode.Parse(serialized);
 #if NETSTANDARD2_0
-					var newPointer = pointer.GetLocal(i);
+					var newPointer = pointerOld.GetLocal(i);
 #else
-					var newPointer = pointer[i..];
+					var newPointer = pointerOld[i..];
 #endif
 					i += newPointer.Count - 1;
 					return ExtractSchemaFromData(newPointer, json, hostSchema);
@@ -704,12 +704,12 @@ public class JsonSchema : IBaseDocument
 			if (newResolvable is UnrecognizedKeyword unrecognized)
 			{
 				if (!options.AllowReferencesIntoUnknownKeywords)
-					throw new InvalidOperationException($"Encountered reference into unknown keyword: {BaseUri}#{pointer}");
+					throw new InvalidOperationException($"Encountered reference into unknown keyword: {BaseUri}#{pointerOld}");
 
 #if NETSTANDARD2_0
-				var newPointer = pointer.GetLocal(i+1);
+				var newPointer = pointerOld.GetLocal(i+1);
 #else
-				var newPointer = pointer[(i+1)..];
+				var newPointer = pointerOld[(i+1)..];
 #endif
 				i += newPointer.Count;
 				return ExtractSchemaFromData(newPointer, unrecognized.Value, (JsonSchema)localResolvable);
@@ -720,9 +720,9 @@ public class JsonSchema : IBaseDocument
 
 		object? resolvable = this;
 		var currentSchema = this;
-		for (var i = 0; i < pointer.Count; i++)
+		for (var i = 0; i < pointerOld.Count; i++)
 		{
-			var segment = pointer[i];
+			var segment = pointerOld[i];
 
 			resolvable = CheckResolvable(resolvable, ref i, segment, ref currentSchema);
 			if (resolvable == null) return null;
@@ -730,9 +730,9 @@ public class JsonSchema : IBaseDocument
 
 		if (resolvable is JsonSchema target) return target;
 
-		var count = pointer.Count;
+		var count = pointerOld.Count;
 		// These parameters don't really matter.  This extra check only captures the case where the
-		// last segment of the pointer is an ISchemaContainer.
+		// last segment of the pointerOld is an ISchemaContainer.
 		return CheckResolvable(resolvable, ref count, null!, ref currentSchema) as JsonSchema;
 	}
 

@@ -46,13 +46,13 @@ public class UniqueKeysKeyword : IJsonSchemaKeyword
 	/// <summary>
 	/// The collection of keywords and references.
 	/// </summary>
-	public IEnumerable<JsonPointer> Keys { get; }
+	public IEnumerable<JsonPointer_Old> Keys { get; }
 
 	/// <summary>
 	/// Creates an instance of the <see cref="UniqueKeysKeyword"/> class.
 	/// </summary>
 	/// <param name="references">The collection of keywords and references.</param>
-	public UniqueKeysKeyword(IEnumerable<JsonPointer> references)
+	public UniqueKeysKeyword(IEnumerable<JsonPointer_Old> references)
 	{
 		Keys = references;
 	}
@@ -122,7 +122,7 @@ public sealed class UniqueKeysKeywordJsonConverter : WeaklyTypedJsonConverter<Un
 		if (reader.TokenType != JsonTokenType.StartArray)
 			throw new JsonException("Expected array");
 
-		var references = options.ReadList(ref reader, JsonSchemaArrayExtSerializerContext.Default.JsonPointer)!;
+		var references = options.ReadList(ref reader, JsonSchemaArrayExtSerializerContext.Default.JsonPointer_Old)!;
 		return new UniqueKeysKeyword(references);
 	}
 
@@ -132,6 +132,6 @@ public sealed class UniqueKeysKeywordJsonConverter : WeaklyTypedJsonConverter<Un
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, UniqueKeysKeyword value, JsonSerializerOptions options)
 	{
-		options.WriteList(writer, value.Keys, JsonSchemaArrayExtSerializerContext.Default.JsonPointer);
+		options.WriteList(writer, value.Keys, JsonSchemaArrayExtSerializerContext.Default.JsonPointer_Old);
 	}
 }

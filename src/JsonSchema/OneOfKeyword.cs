@@ -70,7 +70,7 @@ public class OneOfKeyword : IJsonSchemaKeyword, ISchemaCollector
 	/// <returns>A constraint object.</returns>
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, ReadOnlySpan<KeywordConstraint> localConstraints, EvaluationContext context)
 	{
-		var subschemaConstraints = Schemas.Select((x, i) => x.GetConstraint(JsonPointer.Create(Name, i), schemaConstraint.BaseInstanceLocation, JsonPointer.Empty, context)).ToArray();
+		var subschemaConstraints = Schemas.Select((x, i) => x.GetConstraint(JsonPointer_Old.Create(Name, i), schemaConstraint.BaseInstanceLocation, JsonPointer_Old.Empty, context)).ToArray();
 
 		return new KeywordConstraint(Name, Evaluator)
 		{

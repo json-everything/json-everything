@@ -14,10 +14,10 @@ namespace Json.Schema.OpenApi.Tests;
 // If needed, generate one.
 public class OpenApiDoc : IBaseDocument
 {
-	private static readonly JsonPointer _componentSchemasLocation = JsonPointer.Parse("/components/schemas");
+	private static readonly JsonPointer_Old _componentSchemasLocation = JsonPointer_Old.Parse("/components/schemas");
 	private static readonly JsonPath _schemasQuery = JsonPath.Parse("$..schema");
 
-	private readonly Dictionary<JsonPointer, JsonSchema> _lookup = [];
+	private readonly Dictionary<JsonPointer_Old, JsonSchema> _lookup = [];
 
 	// implements IBaseDocument
 	public Uri BaseUri { get; }
@@ -33,9 +33,9 @@ public class OpenApiDoc : IBaseDocument
 	}
 
 	// implements IBaseDocument
-	public JsonSchema? FindSubschema(JsonPointer pointer, EvaluationOptions options)
+	public JsonSchema? FindSubschema(JsonPointer_Old pointerOld, EvaluationOptions options)
 	{
-		return _lookup.GetValueOrDefault(pointer);
+		return _lookup.GetValueOrDefault(pointerOld);
 	}
 
 	private void Initialize(JsonNode definition)
@@ -65,8 +65,8 @@ public class OpenApiDoc : IBaseDocument
 
 	// Paths are returned like: $['components']['schemas']
 	// but we need pointers like /components/schemas to do lookups
-	private static JsonPointer ConvertToPointer(JsonPath path)
+	private static JsonPointer_Old ConvertToPointer(JsonPath path)
 	{
-		return JsonPointer.Parse(path.AsJsonPointer());
+		return JsonPointer_Old.Parse(path.AsJsonPointer());
 	}
 }

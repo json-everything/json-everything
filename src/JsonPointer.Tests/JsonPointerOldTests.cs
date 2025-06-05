@@ -6,7 +6,7 @@ using NUnit.Framework;
 namespace Json.Pointer.Tests;
 
 [TestFixture]
-public class JsonPointerTests
+public class JsonPointerOldTests
 {
 	public static IEnumerable ErrorCases
 	{
@@ -28,7 +28,7 @@ public class JsonPointerTests
 	{
 		using var target = JsonDocument.Parse("{\"a\":\"1\",\"b\":[5, true, null],\"c\":{\"false\":false}}");
 
-		var pointer = JsonPointer.Parse(pointerString);
+		var pointer = JsonPointer_Old.Parse(pointerString);
 
 		var actual = pointer.Evaluate(target.RootElement);
 
@@ -40,7 +40,7 @@ public class JsonPointerTests
 	{
 		var target = JsonNode.Parse("{\"a\":\"1\",\"b\":[5, true, null],\"c\":{\"false\":false}}")!;
 
-		var pointer = JsonPointer.Parse(pointerString);
+		var pointer = JsonPointer_Old.Parse(pointerString);
 
 		var success = pointer.TryEvaluate(target, out var actual);
 
@@ -53,7 +53,7 @@ public class JsonPointerTests
 	{
 		using var target = JsonDocument.Parse("{\"a\":\"1\",\"b\":[5, true, null],\"c\":{\"0\":false}}");
 
-		var pointer = JsonPointer.Parse("/c/0");
+		var pointer = JsonPointer_Old.Parse("/c/0");
 
 		var actual = pointer.Evaluate(target.RootElement)!;
 
@@ -66,7 +66,7 @@ public class JsonPointerTests
 	{
 		var target = JsonNode.Parse("{\"a\":\"1\",\"b\":[5, true, null],\"c\":{\"0\":false}}")!;
 
-		var pointer = JsonPointer.Parse("/c/0");
+		var pointer = JsonPointer_Old.Parse("/c/0");
 
 		var success = pointer.TryEvaluate(target, out var actual);
 
@@ -82,7 +82,7 @@ public class JsonPointerTests
 	{
 		using var target = JsonDocument.Parse("{\"a\":\"1\",\"b\":[5, true, null],\"c\":{\"0\":false}}");
 
-		var pointer = JsonPointer.Parse("/b/-");
+		var pointer = JsonPointer_Old.Parse("/b/-");
 
 		var actual = pointer.Evaluate(target.RootElement)!;
 
@@ -95,7 +95,7 @@ public class JsonPointerTests
 	{
 		var target = JsonNode.Parse("{\"a\":\"1\",\"b\":[5, true, null],\"c\":{\"0\":false}}")!;
 
-		var pointer = JsonPointer.Parse("/b/-");
+		var pointer = JsonPointer_Old.Parse("/b/-");
 
 		var success = pointer.TryEvaluate(target, out var actual);
 
@@ -109,7 +109,7 @@ public class JsonPointerTests
 	[Test]
 	public void ImplicitCastTest()
 	{
-		var pointer = JsonPointer.Create("string", 1, "foo");
+		var pointer = JsonPointer_Old.Create("string", 1, "foo");
 
 		Assert.That(pointer.ToString(), Is.EqualTo("/string/1/foo"));
 	}
@@ -117,16 +117,16 @@ public class JsonPointerTests
 	[Test]
 	public void ToString_WithEncodedCharacters()
 	{
-		var p = JsonPointer.Create("some", "pointer", "with~tilde");
+		var p = JsonPointer_Old.Create("some", "pointerOld", "with~tilde");
 
 		var result = p.ToString();
-		Assert.That(result, Is.EqualTo("/some/pointer/with~0tilde"));
+		Assert.That(result, Is.EqualTo("/some/pointerOld/with~0tilde"));
 	}
 
 	[Test]
 	public void ToString_EncodedCharactersOnly()
 	{
-		var p = JsonPointer.Create("~~~~~~~~~", "/////////", "~~~~~~~~~", "/////////");
+		var p = JsonPointer_Old.Create("~~~~~~~~~", "/////////", "~~~~~~~~~", "/////////");
 
 		var result = p.ToString();
 		Assert.That(result, Is.EqualTo("/~0~0~0~0~0~0~0~0~0/~1~1~1~1~1~1~1~1~1/~0~0~0~0~0~0~0~0~0/~1~1~1~1~1~1~1~1~1"));

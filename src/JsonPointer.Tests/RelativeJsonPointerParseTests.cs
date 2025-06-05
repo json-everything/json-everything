@@ -60,8 +60,8 @@ public class RelativeJsonPointerParseTests
 
 		pointer.ParentSteps.Should().Be((uint)parentSteps);
 		pointer.ArrayIndexManipulator.Should().Be(indexManipulation);
-		pointer.Pointer.Count.Should().Be(segments.Length);
-		pointer.Pointer.Should().BeEquivalentTo(segments);
+		pointer.PointerOld.Count.Should().Be(segments.Length);
+		pointer.PointerOld.Should().BeEquivalentTo(segments);
 	}
 
 	[TestCaseSource(nameof(SpecificationExamples))]
@@ -73,8 +73,8 @@ public class RelativeJsonPointerParseTests
 
 		pointer.ParentSteps.Should().Be((uint)parentSteps);
 		pointer.ArrayIndexManipulator.Should().Be(indexManipulation);
-		pointer.Pointer.Count.Should().Be(segments.Length);
-		pointer.Pointer.Should().BeEquivalentTo(segments);
+		pointer.PointerOld.Count.Should().Be(segments.Length);
+		pointer.PointerOld.Should().BeEquivalentTo(segments);
 	}
 
 	[TestCaseSource(nameof(FailureCases))]

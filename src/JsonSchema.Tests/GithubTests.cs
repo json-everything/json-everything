@@ -876,7 +876,7 @@ public class GithubTests
 				)
 			).Build();
 
-		var pointer = JsonPointer.Parse("/additionalProperties");
+		var pointer = JsonPointer_Old.Parse("/additionalProperties");
 		var subSchema = schema.FindSubschema(pointer, EvaluationOptions.Default);
 
 		Assert.That(subSchema, Is.Not.Null);
@@ -942,7 +942,7 @@ public class GithubTests
 		var options = new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical };
 		options.SchemaRegistry.Register(baseDocument);
 
-		var schemaLocation = JsonPointer.Parse("/components/parameters/user/content/application~1json/schema");
+		var schemaLocation = JsonPointer_Old.Parse("/components/parameters/user/content/application~1json/schema");
 		var schema = baseDocument.FindSubschema(schemaLocation, options)!;
 
 		var instance = new JsonObject

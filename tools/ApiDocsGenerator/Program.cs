@@ -33,7 +33,7 @@ namespace ApiDocsGenerator
 			await GenerateAndSaveDocs<NumberRange>("10.07", outputDir, "api");
 			await GenerateAndSaveDocs<JsonPath>("10.08", outputDir, "api");
 			await GenerateAndSaveDocs<JsonPatch>("10.09", outputDir, "api");
-			await GenerateAndSaveDocs<JsonPointer>("10.10", outputDir, "api");
+			await GenerateAndSaveDocs<JsonPointer_Old>("10.10", outputDir, "api");
 			await GenerateAndSaveDocs(typeof(JsonLogic), "10.11", outputDir, "api");
 			await GenerateAndSaveDocs(typeof(JsonE), "10.12", outputDir, "api");
 			await GenerateAndSaveDocs(typeof(EnumStringConverter<>), "10.13", outputDir, "api");

@@ -1,4 +1,4 @@
-﻿@page "/json-pointer"
+﻿@page "/json-pointerOld"
 @using System.Text.Json
 @using Json.Pointer
 @using JsonEverythingNet.Services
@@ -10,19 +10,19 @@
 @inject DataManager DataManager;
 @inject IJSRuntime JsRuntime;
 
-<PageTitle>JSON Pointer - json-everything.net</PageTitle>
+<PageTitle>JSON PointerOld - json-everything.net</PageTitle>
 
 <div class="schema-container">
 	<div class="sidebar">
 		<div class="sidebar-content">
 			<div class="align-items-center hstack mx-2">
-				<img src="img/json-pointer.png" height="70" width="70" class="me-3" />
-				<h1 class="display-4">JSON Pointer</h1>
+				<img src="img/json-pointerOld.png" height="70" width="70" class="me-3" />
+				<h1 class="display-4">JSON PointerOld</h1>
 			</div>
 			<div class="align-items-center mx-3">
 				<div>
 					Identify specific locations within JSON data. Learn more about
-					<a href="https://datatracker.ietf.org/doc/html/rfc6901" target="_blank">JSON Pointer <ExternalLinkIcon/></a>
+					<a href="https://datatracker.ietf.org/doc/html/rfc6901" target="_blank">JSON PointerOld <ExternalLinkIcon/></a>
 				</div>
 			</div>
 			<div class="align-items-center mt-1">
@@ -41,7 +41,7 @@
 	<div class="main-content">
 		<div class="path-input-row">
 			<EditForm Model="_input">
-				<InputText @bind-Value="_input.Pointer" DisplayName="Pointer" class="form-control" @oninput="SavePath" placeholder="Pointer"/>
+				<InputText @bind-Value="_input.Pointer" DisplayName="PointerOld" class="form-control" @oninput="SavePath" placeholder="PointerOld"/>
 			</EditForm>
 		</div>
 		<div class="editor-grid">
@@ -72,7 +72,7 @@
 
 	private readonly List<LibraryVersion> _libraries = new()
 	{
-		LibraryVersion.GetFor<JsonPointer>(),
+		LibraryVersion.GetFor<JsonPointer_Old>(),
 	};
 #pragma warning restore CS8618
 
@@ -101,14 +101,14 @@
 	{
 		await SaveInstance();
 
-		JsonPointer pointer;
+		JsonPointer_Old pointerOld;
 		try
 		{
-			pointer = JsonPointer.Parse(_input.Pointer!);
+			pointerOld = JsonPointer_Old.Parse(_input.Pointer!);
 		}
 		catch (Exception e)
 		{
-			await _outputEditor.SetValue($"Pointer is invalid\n\n{e.Message}");
+			await _outputEditor.SetValue($"PointerOld is invalid\n\n{e.Message}");
 			return;
 		}
 		JsonElement instance;
@@ -122,7 +122,7 @@
 			return;
 		}
 
-		var results = pointer.Evaluate(instance);
+		var results = pointerOld.Evaluate(instance);
 
 		var resultText = results.HasValue
 			? JsonSerializer.Serialize(results, new JsonSerializerOptions
@@ -139,23 +139,23 @@
 	{
 		var pointerText = args.Value as string;
 
-		await DataManager.Set("pointer", pointerText ?? string.Empty);
+		await DataManager.Set("pointerOld", pointerText ?? string.Empty);
 	}
 
 	private async Task LoadSavedPath()
 	{
-		var pointerText = await DataManager.Get("pointer") ?? string.Empty;
+		var pointerText = await DataManager.Get("pointerOld") ?? string.Empty;
 
 		_input.Pointer = pointerText;
 	}
 
 	private async Task SaveInstance()
 	{
-		await DataManager.SaveEditorValue(_instanceEditor, "pointer-instance");
+		await DataManager.SaveEditorValue(_instanceEditor, "pointerOld-instance");
 	}
 
 	private async Task LoadSavedInstance()
 	{
-		await DataManager.LoadEditorValue(_instanceEditor, "pointer-instance");
+		await DataManager.LoadEditorValue(_instanceEditor, "pointerOld-instance");
 	}
 }

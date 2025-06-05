@@ -93,7 +93,7 @@ public class SpecExampleTests
 
 		var openApiDocNode = JsonNode.Parse(openApiDocText);
 		var openApiDoc = new OpenApiDoc(new Uri("http://localhost:1234/openapi"), openApiDocNode!);
-		var targetSchema = openApiDoc.FindSubschema(JsonPointer.Parse("/webhooks/newPet/post/requestBody/content/application~1json/schema"), EvaluationOptions.Default);
+		var targetSchema = openApiDoc.FindSubschema(JsonPointer_Old.Parse("/webhooks/newPet/post/requestBody/content/application~1json/schema"), EvaluationOptions.Default);
 
 		var payload = new JsonObject
 		{

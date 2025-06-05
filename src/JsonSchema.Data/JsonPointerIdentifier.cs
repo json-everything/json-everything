@@ -9,15 +9,15 @@ namespace Json.Schema.Data;
 public class JsonPointerIdentifier : IDataResourceIdentifier
 {
 	/// <summary>
-	/// The JSON Pointer target.
+	/// The JSON PointerOld target.
 	/// </summary>
-	public JsonPointer Target { get; }
+	public JsonPointer_Old Target { get; }
 
 	/// <summary>
 	/// Creates a new instance of <see cref="JsonPointerIdentifier"/>.
 	/// </summary>
 	/// <param name="target">The target.</param>
-	public JsonPointerIdentifier(JsonPointer target)
+	public JsonPointerIdentifier(JsonPointer_Old target)
 	{
 		Target = target;
 	}

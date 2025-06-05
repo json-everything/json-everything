@@ -74,7 +74,7 @@ public class UriIdentifier : IDataResourceIdentifier
 		if (!string.IsNullOrEmpty(fragment))
 		{
 			fragment = $"#{fragment}";
-			if (!JsonPointer.TryParse(fragment, out var pointer))
+			if (!JsonPointer_Old.TryParse(fragment, out var pointer))
 				throw new JsonSchemaException($"Unrecognized fragment type `{Target}`");
 
 			if (!pointer!.TryEvaluate(data, out var resolved))

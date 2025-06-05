@@ -11,7 +11,7 @@ public static class JsonSchemaExtensions
 	/// <summary>
 	/// Gets the values in `uniqueKeys` if the keyword exists.
 	/// </summary>
-	public static IEnumerable<JsonPointer>? GetUniqueKeys(this JsonSchema schema)
+	public static IEnumerable<JsonPointer_Old>? GetUniqueKeys(this JsonSchema schema)
 	{
 		return schema.TryGetKeyword<UniqueKeysKeyword>(UniqueKeysKeyword.Name, out var k) ? k.Keys : null;
 	}

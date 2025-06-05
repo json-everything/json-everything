@@ -27,9 +27,9 @@ public class RefResolutionException : JsonSchemaException
 	/// </remarks>
 	public bool IsDynamic { get; }
 	/// <summary>
-	/// Gets a JSON Pointer, if one exists.
+	/// Gets a JSON PointerOld, if one exists.
 	/// </summary>
-	public JsonPointer? Location { get; }
+	public JsonPointer_Old? Location { get; }
 
 	/// <summary>
 	/// Creates a new instance.
@@ -49,8 +49,8 @@ public class RefResolutionException : JsonSchemaException
 	/// Creates a new instance.
 	/// </summary>
 	/// <param name="baseUri">The base URI of the reference.</param>
-	/// <param name="location">The JSON Pointer location.</param>
-	public RefResolutionException(Uri baseUri, JsonPointer location)
+	/// <param name="location">The JSON PointerOld location.</param>
+	public RefResolutionException(Uri baseUri, JsonPointer_Old location)
 		: base($"Could not resolve schema '{baseUri}#{location}'")
 	{
 		BaseUri = baseUri;

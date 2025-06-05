@@ -477,7 +477,7 @@ public class OutputTests
 		var serialized = JsonSerializer.Serialize(result, TestEnvironment.TestOutputSerializerOptions);
 		TestConsole.WriteLine(serialized);
 
-		var unevaluatedPropertiesResult = result.Details.Single(x => x.EvaluationPath.Equals(JsonPointer.Create("unevaluatedProperties")));
+		var unevaluatedPropertiesResult = result.Details.Single(x => x.EvaluationPath.Equals(JsonPointer_Old.Create("unevaluatedProperties")));
 		Assert.That(unevaluatedPropertiesResult.InstanceLocation.ToString(), Is.EqualTo("/bar"));
 	}
 
@@ -496,7 +496,7 @@ public class OutputTests
 		var serialized = JsonSerializer.Serialize(result, TestEnvironment.TestOutputSerializerOptions);
 		TestConsole.WriteLine(serialized);
 
-		var unevaluatedPropertiesResult = result.Details.Single(x => x.EvaluationPath.Equals(JsonPointer.Create("unevaluatedItems")));
+		var unevaluatedPropertiesResult = result.Details.Single(x => x.EvaluationPath.Equals(JsonPointer_Old.Create("unevaluatedItems")));
 		Assert.That(unevaluatedPropertiesResult.InstanceLocation.ToString(), Is.EqualTo("/1"));
 	}
 

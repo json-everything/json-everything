@@ -10,7 +10,7 @@ namespace Json.Schema.Data;
 [JsonSerializable(typeof(OptionalDataKeyword))]
 [JsonSerializable(typeof(Uri))]
 [JsonSerializable(typeof(JsonSchema))]
-[JsonSerializable(typeof(JsonPointer))]
+[JsonSerializable(typeof(JsonPointer_Old))]
 [JsonSerializable(typeof(RelativeJsonPointer))]
 [JsonSerializable(typeof(string))]
 [JsonSerializable(typeof(Dictionary<string, JsonNode>))]

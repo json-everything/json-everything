@@ -80,18 +80,18 @@ public class OrderingKeyword : IJsonSchemaKeyword
 
 				if (!specifier.By.TryEvaluate(basisItem, out var basisValue))
 				{
-					evaluation.Results.Fail(Name, "Item at index [[index]] does not have a value at [[pointer]]"
+					evaluation.Results.Fail(Name, "Item at index [[index]] does not have a value at [[pointerOld]]"
 							.ReplaceToken("index", i-1)
-							.ReplaceToken("pointer", specifier.By, JsonSchemaArrayExtSerializerContext.Default.JsonPointer)
+							.ReplaceToken("pointerOld", specifier.By, JsonSchemaArrayExtSerializerContext.Default.JsonPointer)
 						);
 					return;
 				}
 
 				if (!specifier.By.TryEvaluate(currentItem, out var currentValue))
 				{
-					evaluation.Results.Fail(Name, "Item at index [[index]] does not have a value at [[pointer]]"
+					evaluation.Results.Fail(Name, "Item at index [[index]] does not have a value at [[pointerOld]]"
 							.ReplaceToken("index", i)
-							.ReplaceToken("pointer", specifier.By, JsonSchemaArrayExtSerializerContext.Default.JsonPointer)
+							.ReplaceToken("pointerOld", specifier.By, JsonSchemaArrayExtSerializerContext.Default.JsonPointer)
 						);
 					return;
 				}

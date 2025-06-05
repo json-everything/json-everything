@@ -12,7 +12,7 @@ public class EvaluationContext
 {
 	private readonly Stack<SpecVersion> _evaluatingAs = new();
 #if DEBUG
-	private JsonPointer _evaluationPath = JsonPointer.Empty;
+	private JsonPointer_Old _evaluationPath = JsonPointer_Old.Empty;
 #endif
 
 	/// <summary>
@@ -41,7 +41,7 @@ public class EvaluationContext
 	/// </remarks>
 	public SpecVersion EvaluatingAs { get; private set; }
 
-	internal Stack<(string, JsonPointer)> NavigatedReferences { get; } = new();
+	internal Stack<(string, JsonPointer_Old)> NavigatedReferences { get; } = new();
 
 	internal EvaluationContext(EvaluationOptions options, SpecVersion evaluatingAs, Uri initialScope)
 	{

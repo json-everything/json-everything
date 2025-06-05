@@ -64,8 +64,8 @@ public class Runner
 		"a~0b"
 	];
 
-	private static readonly JsonPointer[] _pointers = _pointersToParse
-		.Select(JsonPointer.Parse)
+	private static readonly JsonPointer_Old[] _pointers = _pointersToParse
+		.Select(JsonPointer_Old.Parse)
 		.ToArray();
 
 	[Params(1, 10, 100)]
@@ -78,7 +78,7 @@ public class Runner
 		{
 			foreach (var test in _pointersToParse)
 			{
-				_ = JsonPointer.Parse(test);
+				_ = JsonPointer_Old.Parse(test);
 			}
 		}
 
@@ -86,9 +86,9 @@ public class Runner
 	}
 
 	[Benchmark]
-	public JsonPointer Combine()
+	public JsonPointer_Old Combine()
 	{
-		var p = JsonPointer.Empty;
+		var p = JsonPointer_Old.Empty;
 
 		for (int i = 0; i < Count; i++)
 		{

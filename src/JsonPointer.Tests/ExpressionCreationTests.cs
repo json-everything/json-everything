@@ -24,7 +24,7 @@ public class ExpressionCreationTests
 	public void SimpleProperty()
 	{
 		var expected = "/String";
-		var actual = JsonPointer.Create<TestClass>(x => x.String);
+		var actual = JsonPointer_Old.Create<TestClass>(x => x.String);
 
 		Assert.That(actual.ToString(), Is.EqualTo(expected));
 	}
@@ -46,7 +46,7 @@ public class ExpressionCreationTests
 	[TestCaseSource(nameof(NamingOptions))]
 	public void SimplePropertyWithOptions(PropertyNameResolver resolver, string expected)
 	{
-		var actual = JsonPointer.Create<TestClass>(x => x.NestMore, new PointerCreationOptions { PropertyNameResolver = resolver });
+		var actual = JsonPointer_Old.Create<TestClass>(x => x.NestMore, new PointerCreationOptions { PropertyNameResolver = resolver });
 
 		Assert.That(actual.ToString(), Is.EqualTo(expected));
 	}
@@ -55,7 +55,7 @@ public class ExpressionCreationTests
 	public void JsonProperty()
 	{
 		var expected = "/customName";
-		var actual = JsonPointer.Create<TestClass>(x => x.Other);
+		var actual = JsonPointer_Old.Create<TestClass>(x => x.Other);
 
 		Assert.That(actual.ToString(), Is.EqualTo(expected));
 	}
@@ -64,7 +64,7 @@ public class ExpressionCreationTests
 	public void SimpleArrayIndex()
 	{
 		var expected = "/Ints/1";
-		var actual = JsonPointer.Create<TestClass>(x => x.Ints[1]);
+		var actual = JsonPointer_Old.Create<TestClass>(x => x.Ints[1]);
 
 		Assert.That(actual.ToString(), Is.EqualTo(expected));
 	}
@@ -73,7 +73,7 @@ public class ExpressionCreationTests
 	public void SimpleArrayIndexWithAnActualArray()
 	{
 		var expected = "/StringArray/2";
-		var actual = JsonPointer.Create<TestClass>(x => x.StringArray[2]);
+		var actual = JsonPointer_Old.Create<TestClass>(x => x.StringArray[2]);
 
 		Assert.That(actual.ToString(), Is.EqualTo(expected));
 	}
@@ -82,7 +82,7 @@ public class ExpressionCreationTests
 	public void NestedProperty()
 	{
 		var expected = "/Nest/Nest";
-		var actual = JsonPointer.Create<TestClass>(x => x.Nest.Nest);
+		var actual = JsonPointer_Old.Create<TestClass>(x => x.Nest.Nest);
 
 		Assert.That(actual.ToString(), Is.EqualTo(expected));
 	}
@@ -91,7 +91,7 @@ public class ExpressionCreationTests
 	public void NestedWithArrayIndexProperty()
 	{
 		var expected = "/Nest/Ints/5";
-		var actual = JsonPointer.Create<TestClass>(x => x.Nest.Ints[5]);
+		var actual = JsonPointer_Old.Create<TestClass>(x => x.Nest.Ints[5]);
 
 		Assert.That(actual.ToString(), Is.EqualTo(expected));
 	}
@@ -100,7 +100,7 @@ public class ExpressionCreationTests
 	public void ArrayIndexWithNestProperty()
 	{
 		var expected = "/NestMore/5/Nest";
-		var actual = JsonPointer.Create<TestClass>(x => x.NestMore[5].Nest);
+		var actual = JsonPointer_Old.Create<TestClass>(x => x.NestMore[5].Nest);
 
 		Assert.That(actual.ToString(), Is.EqualTo(expected));
 	}
@@ -109,7 +109,7 @@ public class ExpressionCreationTests
 	public void LastArrayIndex()
 	{
 		var expected = "/NestMore/-";
-		var actual = JsonPointer.Create<TestClass>(x => x.NestMore.Last());
+		var actual = JsonPointer_Old.Create<TestClass>(x => x.NestMore.Last());
 
 		Assert.That(actual.ToString(), Is.EqualTo(expected));
 	}
@@ -118,7 +118,7 @@ public class ExpressionCreationTests
 	public void LastArrayIndexWithNestProperty()
 	{
 		var expected = "/NestMore/-/Nest";
-		var actual = JsonPointer.Create<TestClass>(x => x.NestMore.Last().Nest);
+		var actual = JsonPointer_Old.Create<TestClass>(x => x.NestMore.Last().Nest);
 
 		Assert.That(actual.ToString(), Is.EqualTo(expected));
 	}
@@ -129,7 +129,7 @@ public class ExpressionCreationTests
 		var index = 5;
 
 		var expected = "/NestMore/5/Nest";
-		var actual = JsonPointer.Create<TestClass>(x => x.NestMore[index].Nest);
+		var actual = JsonPointer_Old.Create<TestClass>(x => x.NestMore[index].Nest);
 
 		Assert.That(actual.ToString(), Is.EqualTo(expected));
 	}
@@ -140,7 +140,7 @@ public class ExpressionCreationTests
 		var index = new { Foo = 5 };
 
 		var expected = "/NestMore/5/Nest";
-		var actual = JsonPointer.Create<TestClass>(x => x.NestMore[index.Foo].Nest);
+		var actual = JsonPointer_Old.Create<TestClass>(x => x.NestMore[index.Foo].Nest);
 
 		Assert.That(actual.ToString(), Is.EqualTo(expected));
 	}

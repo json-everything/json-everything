@@ -95,7 +95,7 @@ public class ItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, ISchemaCollect
 		{
 			var prefixItemsConstraint = localConstraints.GetKeywordConstraint<PrefixItemsKeyword>();
 
-			var subschemaConstraint = SingleSchema.GetConstraint(JsonPointer.Create(Name), schemaConstraint.BaseInstanceLocation, JsonPointer.Empty, context);
+			var subschemaConstraint = SingleSchema.GetConstraint(JsonPointer_Old.Create(Name), schemaConstraint.BaseInstanceLocation, JsonPointer_Old.Empty, context);
 			subschemaConstraint.InstanceLocator = LocateInstances;
 
 			if (prefixItemsConstraint != null)
@@ -108,7 +108,7 @@ public class ItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, ISchemaCollect
 			    context.EvaluatingAs.HasFlag(SpecVersion.DraftNext))
 				throw new JsonSchemaException($"Array form of {Name} is invalid for draft 2020-12 and later");
 
-			var subschemaConstraints = ArraySchemas!.Select((x, i) => x.GetConstraint(JsonPointer.Create(Name, i), schemaConstraint.BaseInstanceLocation, CommonJsonPointers.GetNumberSegment(i), context)).ToArray();
+			var subschemaConstraints = ArraySchemas!.Select((x, i) => x.GetConstraint(JsonPointer_Old.Create(Name, i), schemaConstraint.BaseInstanceLocation, CommonJsonPointers.GetNumberSegment(i), context)).ToArray();
 
 			constraint.ChildDependencies = subschemaConstraints;
 		}
@@ -116,7 +116,7 @@ public class ItemsKeyword : IJsonSchemaKeyword, ISchemaContainer, ISchemaCollect
 		return constraint;
 	}
 
-	private static IEnumerable<JsonPointer> LocateInstances(KeywordEvaluation evaluation)
+	private static IEnumerable<JsonPointer_Old> LocateInstances(KeywordEvaluation evaluation)
 	{
 		if (evaluation.LocalInstance is not JsonArray array) yield break;
 

@@ -18,15 +18,15 @@ public readonly struct PointerSegment
 	/// <summary>
 	/// Implicitly casts an <see cref="uint"/> to a <see cref="PointerSegment"/>.
 	/// </summary>
-	/// <param name="value">A pointer segment that represents the value.</param>
+	/// <param name="value">A pointerOld segment that represents the value.</param>
 	public static implicit operator PointerSegment(int value) =>
 		new(value.ToString(CultureInfo.InvariantCulture));
 
 	/// <summary>
 	/// Implicitly casts a <see cref="string"/> to a <see cref="PointerSegment"/>.
 	/// </summary>
-	/// <param name="value">A pointer segment that represents the value.</param>
-	/// <remarks>JSON Pointer encoding is performed, but URI encoding is not.</remarks>
+	/// <param name="value">A pointerOld segment that represents the value.</param>
+	/// <remarks>JSON PointerOld encoding is performed, but URI encoding is not.</remarks>
 	public static implicit operator PointerSegment(string value) =>
 		new(value);
 

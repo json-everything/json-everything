@@ -177,7 +177,7 @@ public static class HelpContent
 
 	public const string PointerEvaluate =
 		"""
-		JSON Pointer, [RFC 9601](https://www.rfc-editor.org/rfc/rfc6901), is a syntax that enables identification of a
+		JSON PointerOld, [RFC 9601](https://www.rfc-editor.org/rfc/rfc6901), is a syntax that enables identification of a
 		single location within JSON data.
 		""";
 

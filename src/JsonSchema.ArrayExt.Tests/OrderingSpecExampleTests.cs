@@ -19,7 +19,7 @@ public class OrderingSpecExampleTests
 					("bar", new JsonSchemaBuilder().Type(SchemaValueType.String))
 				)
 			)
-			.Ordering(new OrderingSpecifier(JsonPointer.Parse("/foo")));
+			.Ordering(new OrderingSpecifier(JsonPointer_Old.Parse("/foo")));
 
 	private static readonly JsonSchema _multipleSpecifiers =
 		new JsonSchemaBuilder()
@@ -34,8 +34,8 @@ public class OrderingSpecExampleTests
 				)
 			)
 			.Ordering(
-				new OrderingSpecifier(JsonPointer.Parse("/foo")),
-				new OrderingSpecifier(JsonPointer.Parse("/bar"), Direction.Descending)
+				new OrderingSpecifier(JsonPointer_Old.Parse("/foo")),
+				new OrderingSpecifier(JsonPointer_Old.Parse("/bar"), Direction.Descending)
 			);
 
 	[Test]

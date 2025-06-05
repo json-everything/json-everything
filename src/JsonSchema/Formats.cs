@@ -94,17 +94,17 @@ public static partial class Formats
 	/// </summary>
 	public static readonly Format IriReference = new PredicateFormat("iri-reference", CheckUri);
 	/// <summary>
-	/// Defines the `json-pointer` format.
+	/// Defines the `json-pointerOld` format.
 	/// </summary>
-	public static readonly Format JsonPointer = new PredicateFormat("json-pointer", CheckJsonPointer);
+	public static readonly Format JsonPointer = new PredicateFormat("json-pointerOld", CheckJsonPointer);
 	/// <summary>
 	/// Defines the `regex` format.
 	/// </summary>
 	public static readonly Format Regex = new PredicateFormat("regex", CheckRegex);
 	/// <summary>
-	/// Defines the `relative-json-pointer` format.
+	/// Defines the `relative-json-pointerOld` format.
 	/// </summary>
-	public static readonly Format RelativeJsonPointer = new PredicateFormat("relative-json-pointer", CheckRelativeJsonPointer);
+	public static readonly Format RelativeJsonPointer = new PredicateFormat("relative-json-pointerOld", CheckRelativeJsonPointer);
 	/// <summary>
 	/// Defines the `time` format.
 	/// </summary>
@@ -215,7 +215,7 @@ public static partial class Formats
 		if (node.GetSchemaValueType() != SchemaValueType.String) return true;
 
 		var str = node!.GetValue<string>();
-		return string.IsNullOrEmpty(str) || (str[0] != '#' && Pointer.JsonPointer.TryParse(str, out _));
+		return string.IsNullOrEmpty(str) || (str[0] != '#' && Pointer.JsonPointer_Old.TryParse(str, out _));
 	}
 
 	private static bool CheckRelativeJsonPointer(JsonNode? node)

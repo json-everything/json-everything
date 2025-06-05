@@ -13,7 +13,7 @@ public class EvaluationOptionsTests
 			.Format(Formats.JsonPointer)
 			.Build();
 
-		JsonNode instance = "not a pointer";
+		JsonNode instance = "not a pointerOld";
 
 		var result = schema.Evaluate(instance);
 		result.AssertValid();
@@ -30,7 +30,7 @@ public class EvaluationOptionsTests
 			.Format("not-a-format")
 			.Build();
 
-		JsonNode instance = "not a pointer";
+		JsonNode instance = "not a pointerOld";
 
 		var result = schema.Evaluate(instance);
 		result.AssertValid();
@@ -47,7 +47,7 @@ public class EvaluationOptionsTests
 			.Format("not-a-format")
 			.Build();
 
-		JsonNode instance = "not a pointer";
+		JsonNode instance = "not a pointerOld";
 
 		var options = new EvaluationOptions();
 		var result = schema.Evaluate(instance, options);

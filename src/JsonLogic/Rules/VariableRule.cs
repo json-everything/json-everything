@@ -50,7 +50,7 @@ public class VariableRule : Rule, IRule
 		var pathString = path.Stringify()!;
 		if (pathString == string.Empty) return contextData ?? data;
 
-		var pointer = pathString == string.Empty ? JsonPointer.Empty : JsonPointer.Parse($"/{pathString.Replace('.', '/')}");
+		var pointer = pathString == string.Empty ? JsonPointer_Old.Empty : JsonPointer_Old.Parse($"/{pathString.Replace('.', '/')}");
 		if (pointer.TryEvaluate(contextData ?? data, out var pathEval) ||
 			pointer.TryEvaluate(data, out pathEval))
 			return pathEval;

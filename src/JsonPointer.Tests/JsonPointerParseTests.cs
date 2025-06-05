@@ -69,7 +69,7 @@ public class JsonPointerParseTests
 	[TestCaseSource(nameof(UrlSpecificationExamples))]
 	public void Parse(string pointerString, string[] segments)
 	{
-		var pointer = JsonPointer.Parse(pointerString);
+		var pointer = JsonPointer_Old.Parse(pointerString);
 
 		pointer.Count.Should().Be(segments.Length);
 		for (int i = 0; i < pointer.Count; i++)
@@ -84,7 +84,7 @@ public class JsonPointerParseTests
 	[TestCaseSource(nameof(SpecificationExamples))]
 	public void TryParse(string pointerString, string[] segments)
 	{
-		Assert.That(JsonPointer.TryParse(pointerString, out var pointer), Is.True);
+		Assert.That(JsonPointer_Old.TryParse(pointerString, out var pointer), Is.True);
 
 		pointer!.Count.Should().Be(segments.Length);
 		for (int i = 0; i < pointer.Count; i++)
@@ -99,19 +99,19 @@ public class JsonPointerParseTests
 	[TestCaseSource(nameof(FailureCases))]
 	public void ParseFailure(string pointerString)
 	{
-		Assert.Throws<PointerParseException>(() => JsonPointer.Parse(pointerString));
+		Assert.Throws<PointerParseException>(() => JsonPointer_Old.Parse(pointerString));
 	}
 
 	[TestCaseSource(nameof(FailureCases))]
 	public void TryParseFailure(string pointerString)
 	{
-		Assert.That(JsonPointer.TryParse(pointerString, out _), Is.False);
+		Assert.That(JsonPointer_Old.TryParse(pointerString, out _), Is.False);
 	}
 
 	[Test]
 	public void ParseShouldStoreNonUrlForm()
 	{
-		var pointer = JsonPointer.Parse("#/foo");
+		var pointer = JsonPointer_Old.Parse("#/foo");
 		var expected = "/foo";
 
 		var actual = pointer.ToString();
@@ -122,7 +122,7 @@ public class JsonPointerParseTests
 	[Test]
 	public void TryParseShouldStoreNonUrlForm()
 	{
-		Assert.That(JsonPointer.TryParse("#/foo", out var pointer), Is.True);
+		Assert.That(JsonPointer_Old.TryParse("#/foo", out var pointer), Is.True);
 		var expected = "/foo";
 
 		var actual = pointer!.ToString();
@@ -133,7 +133,7 @@ public class JsonPointerParseTests
 	[Test]
 	public void TrailingSlash()
 	{
-		var result = JsonPointer.TryParse("/foo/", out var pointer);
+		var result = JsonPointer_Old.TryParse("/foo/", out var pointer);
 
 		Assert.That(result, Is.True);
 		Assert.That(pointer, Is.Not.Null);
@@ -146,7 +146,7 @@ public class JsonPointerParseTests
 	[TestCaseSource(nameof(SpecificationExamples))]
 	public void CreateThenToString(string pointerString, string[] segments)
 	{
-		var pointer = JsonPointer.Create(segments.Select(x => (PointerSegment)x).ToArray());
+		var pointer = JsonPointer_Old.Create(segments.Select(x => (PointerSegment)x).ToArray());
 
 		var backToString = pointer.ToString();
 		Assert.That(backToString, Is.EqualTo(pointerString));

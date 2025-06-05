@@ -70,8 +70,8 @@ public class OptionalDataKeyword : IJsonSchemaKeyword
 		var subschema = JsonSerializer.Deserialize(json, JsonSchemaDataSerializerContext.Default.JsonSchema)!;
 
 		var schemaEvaluation = subschema
-			.GetConstraint(JsonPointer.Create(Name), evaluation.Results.InstanceLocation, evaluation.Results.InstanceLocation, context)
-			.BuildEvaluation(evaluation.LocalInstance, evaluation.Results.InstanceLocation, JsonPointer.Create(Name), context.Options);
+			.GetConstraint(JsonPointer_Old.Create(Name), evaluation.Results.InstanceLocation, evaluation.Results.InstanceLocation, context)
+			.BuildEvaluation(evaluation.LocalInstance, evaluation.Results.InstanceLocation, JsonPointer_Old.Create(Name), context.Options);
 
 		evaluation.ChildEvaluations = [schemaEvaluation];
 
@@ -125,7 +125,7 @@ public sealed class OptionalDataKeywordJsonConverter : WeaklyTypedJsonConverter<
 			switch (kvp.Value)
 			{
 				case JsonPointerIdentifier jp:
-					options.Write(writer, jp.Target, JsonSchemaDataSerializerContext.Default.JsonPointer);
+					options.Write(writer, jp.Target, JsonSchemaDataSerializerContext.Default.JsonPointer_Old);
 					break;
 				case RelativeJsonPointerIdentifier rjp:
 					options.Write(writer, rjp.Target, JsonSchemaDataSerializerContext.Default.RelativeJsonPointer);

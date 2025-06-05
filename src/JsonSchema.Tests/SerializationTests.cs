@@ -17,7 +17,7 @@ public class SerializationTests
 	[TestCase("{\"$id\":\"http://some.site/schema\"}")]
 	[TestCase("{\"$recursiveAnchor\":true}")]
 	[TestCase("{\"$recursiveRef\":\"#\"}")]
-	[TestCase("{\"$ref\":\"#/json/pointer\"}")]
+	[TestCase("{\"$ref\":\"#/json/pointerOld\"}")]
 	[TestCase("{\"$schema\":\"http://some.site/schema\"}")]
 	[TestCase("{\"$vocabulary\":{\"http://some.site/vocab\":false}}")]
 	[TestCase("{\"additionalItems\":true}")]

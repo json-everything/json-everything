@@ -107,7 +107,7 @@ public class GeneratorTests
 			.Format(Formats.JsonPointer)
 			.Build();
 
-		var actual = new JsonSchemaBuilder().FromType<JsonPointer>().Build();
+		var actual = new JsonSchemaBuilder().FromType<JsonPointer_Old>().Build();
 
 		AssertEqual(expected, actual);
 	}

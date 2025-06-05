@@ -9,7 +9,7 @@ using Json.More;
 using Json.Pointer;
 
 /// <summary>
-/// Represents a JSON Pointer as defined in RFC 6901.
+/// Represents a JSON PointerOld as defined in RFC 6901.
 /// This implementation is optimized for minimal allocations.
 /// </summary>
 [JsonConverter(typeof(JsonPointer2JsonConverter))]
@@ -17,7 +17,7 @@ using Json.Pointer;
 public readonly struct JsonPointer2 : IEquatable<JsonPointer2>
 {
     /// <summary>
-    /// Represents an empty JSON Pointer.
+    /// Represents an empty JSON PointerOld.
     /// </summary>
     public static readonly JsonPointer2 Empty = new(ReadOnlyMemory<char>.Empty, 0);
 
@@ -31,10 +31,10 @@ public readonly struct JsonPointer2 : IEquatable<JsonPointer2>
     }
 
     /// <summary>
-    /// Creates a new JSON Pointer from a string.
+    /// Creates a new JSON PointerOld from a string.
     /// </summary>
-    /// <param name="pointer">The JSON Pointer string (e.g., "/foo/0/bar")</param>
-    /// <returns>A new JsonPointer instance</returns>
+    /// <param name="pointer">The JSON PointerOld string (e.g., "/foo/0/bar")</param>
+    /// <returns>A new JsonPointer_Old instance</returns>
     public static JsonPointer2 Parse(string pointer)
     {
         if (pointer == null)
@@ -44,7 +44,7 @@ public readonly struct JsonPointer2 : IEquatable<JsonPointer2>
             return Empty;
 
         if (pointer[0] != '/')
-            throw new FormatException("JSON Pointer must start with '/'");
+            throw new FormatException("JSON PointerOld must start with '/'");
 
         int segmentCount = 0;
         for (int i = 0; i < pointer.Length; i++)
@@ -57,10 +57,10 @@ public readonly struct JsonPointer2 : IEquatable<JsonPointer2>
     }
 
     /// <summary>
-    /// Attempts to parse a JSON Pointer from a string.
+    /// Attempts to parse a JSON PointerOld from a string.
     /// </summary>
-    /// <param name="pointer">The JSON Pointer string to parse.</param>
-    /// <param name="result">The parsed pointer if successful; null otherwise.</param>
+    /// <param name="pointer">The JSON PointerOld string to parse.</param>
+    /// <param name="result">The parsed pointerOld if successful; null otherwise.</param>
     /// <returns>True if parsing was successful; false otherwise.</returns>
     public static bool TryParse(string? pointer, out JsonPointer2 result)
     {
@@ -94,14 +94,14 @@ public readonly struct JsonPointer2 : IEquatable<JsonPointer2>
     }
 
     /// <summary>
-    /// Gets the number of segments in the pointer.
+    /// Gets the number of segments in the pointerOld.
     /// </summary>
     public int SegmentCount => _segmentCount;
 
     /// <summary>
-    /// Gets the parent pointer of this pointer.
+    /// Gets the parent pointerOld of this pointerOld.
     /// </summary>
-    /// <returns>The parent pointer, or null if this is the root pointer</returns>
+    /// <returns>The parent pointerOld, or null if this is the root pointerOld</returns>
     public JsonPointer2? GetParent()
     {
         if (_segmentCount <= 1)
@@ -116,10 +116,10 @@ public readonly struct JsonPointer2 : IEquatable<JsonPointer2>
     }
 
     /// <summary>
-    /// Combines this pointer with another pointer.
+    /// Combines this pointerOld with another pointerOld.
     /// </summary>
-    /// <param name="other">The pointer to append</param>
-    /// <returns>A new pointer representing the combination</returns>
+    /// <param name="other">The pointerOld to append</param>
+    /// <returns>A new pointerOld representing the combination</returns>
     public JsonPointer2 Combine(JsonPointer2 other)
     {
         if (other._pointer.IsEmpty)
@@ -159,7 +159,7 @@ public readonly struct JsonPointer2 : IEquatable<JsonPointer2>
     }
 
     /// <summary>
-    /// Gets all ancestor pointers of this pointer.
+    /// Gets all ancestor pointers of this pointerOld.
     /// </summary>
     /// <returns>An enumerable of all ancestor pointers</returns>
     public IEnumerable<JsonPointer2> GetAncestors()
@@ -173,13 +173,13 @@ public readonly struct JsonPointer2 : IEquatable<JsonPointer2>
     }
 
     /// <summary>
-    /// Gets the string representation of this pointer.
+    /// Gets the string representation of this pointerOld.
     /// </summary>
-    /// <returns>The pointer string</returns>
+    /// <returns>The pointerOld string</returns>
     public override string ToString() => _pointer.ToString();
 
     /// <summary>
-    /// Gets a segment from the pointer by index.
+    /// Gets a segment from the pointerOld by index.
     /// </summary>
     /// <param name="index">The zero-based index of the segment</param>
     /// <returns>The segment as a ReadOnlyMemory&lt;char&gt;</returns>
@@ -212,7 +212,7 @@ public readonly struct JsonPointer2 : IEquatable<JsonPointer2>
     }
 
     /// <summary>
-    /// Decodes a JSON Pointer segment by replacing escape sequences.
+    /// Decodes a JSON PointerOld segment by replacing escape sequences.
     /// </summary>
     /// <param name="segment">The segment to decode</param>
     /// <returns>The decoded segment</returns>
@@ -249,7 +249,7 @@ public readonly struct JsonPointer2 : IEquatable<JsonPointer2>
     }
 
     /// <summary>
-    /// Compares this pointer with another pointer for equality.
+    /// Compares this pointerOld with another pointerOld for equality.
     /// </summary>
     public bool Equals(JsonPointer2 other)
     {
@@ -279,7 +279,7 @@ public readonly struct JsonPointer2 : IEquatable<JsonPointer2>
     public static bool operator !=(JsonPointer2 left, JsonPointer2 right) => !left.Equals(right);
 
     /// <summary>
-    /// Compares a segment of this pointer with a value, handling both encoded and unencoded values.
+    /// Compares a segment of this pointerOld with a value, handling both encoded and unencoded values.
     /// </summary>
     /// <param name="segmentIndex">The index of the segment to compare</param>
     /// <param name="value">The value to compare against (can be encoded or unencoded)</param>
@@ -355,7 +355,7 @@ public readonly struct JsonPointer2 : IEquatable<JsonPointer2>
     }
 
     /// <summary>
-    /// Compares a segment of this pointer with a value, handling both encoded and unencoded values.
+    /// Compares a segment of this pointerOld with a value, handling both encoded and unencoded values.
     /// </summary>
     /// <param name="segmentIndex">The index of the segment to compare</param>
     /// <param name="value">The value to compare against (can be encoded or unencoded)</param>
@@ -368,7 +368,7 @@ public readonly struct JsonPointer2 : IEquatable<JsonPointer2>
     }
 
     /// <summary>
-    /// Evaluates this pointer against a JsonElement to find the referenced value.
+    /// Evaluates this pointerOld against a JsonElement to find the referenced value.
     /// </summary>
     /// <param name="element">The root JsonElement to evaluate against</param>
     /// <returns>The referenced JsonElement if found, null otherwise</returns>

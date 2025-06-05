@@ -63,7 +63,7 @@ public class SchemaKeyword : IJsonSchemaKeyword
 			throw new JsonSchemaException($"Cannot resolve meta-schema `{Schema}`");
 
 		context.Options.ValidateAgainstMetaSchema = false;
-		var metaSchemaConstraint = metaSchema.GetConstraint(JsonPointer.Create(Name), schemaConstraint.BaseInstanceLocation.Combine(Name), JsonPointer.Empty, context);
+		var metaSchemaConstraint = metaSchema.GetConstraint(JsonPointer_Old.Create(Name), schemaConstraint.BaseInstanceLocation.Combine(Name), JsonPointer_Old.Empty, context);
 		context.Options.ValidateAgainstMetaSchema = true;
 
 		return new KeywordConstraint(Name, Evaluator)

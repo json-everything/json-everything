@@ -24,8 +24,8 @@ namespace Json.Schema;
 [JsonConverter(typeof(PropertiesKeywordJsonConverter))]
 public class PropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 {
-	private readonly Dictionary<string, JsonPointer> _evaluationPointers;
-	private readonly Dictionary<string, JsonPointer> _instancePointers;
+	private readonly Dictionary<string, JsonPointer_Old> _evaluationPointers;
+	private readonly Dictionary<string, JsonPointer_Old> _instancePointers;
 
 	/// <summary>
 	/// The JSON name of the keyword.
@@ -47,8 +47,8 @@ public class PropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 	{
 		Properties = values ?? throw new ArgumentNullException(nameof(values));
 
-		_evaluationPointers = values.ToDictionary(x => x.Key, x => JsonPointer.Create(Name, x.Key));
-		_instancePointers = values.ToDictionary(x => x.Key, x => JsonPointer.Create(x.Key));
+		_evaluationPointers = values.ToDictionary(x => x.Key, x => JsonPointer_Old.Create(Name, x.Key));
+		_instancePointers = values.ToDictionary(x => x.Key, x => JsonPointer_Old.Create(x.Key));
 	}
 
 	/// <summary>

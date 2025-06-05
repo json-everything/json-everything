@@ -22,7 +22,7 @@ public sealed class RelativeJsonPointerJsonConverter : JsonConverter<RelativeJso
 		var str = reader.GetString()!;
 		return RelativeJsonPointer.TryParse(str, out var pointer)
 			? pointer
-			: throw new JsonException("Value does not represent a Relative JSON Pointer");
+			: throw new JsonException("Value does not represent a Relative JSON PointerOld");
 	}
 
 	/// <summary>Writes a specified value as JSON.</summary>

@@ -39,9 +39,9 @@ public static class ResultsExtensions
 			Assert.Fail($"Equivalence test failed at {errorLocation}");
 	}
 
-	private static (bool, JsonPointer?) AreEquivalent(JsonNode? a, JsonNode? b, JsonPointer? currentLocation = null)
+	private static (bool, JsonPointer_Old?) AreEquivalent(JsonNode? a, JsonNode? b, JsonPointer_Old? currentLocation = null)
 	{
-		currentLocation ??= JsonPointer.Empty;
+		currentLocation ??= JsonPointer_Old.Empty;
 		switch (a, b)
 		{
 			case (null, null):

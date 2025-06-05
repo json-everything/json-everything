@@ -8,7 +8,7 @@ internal class JsonPointerSchemaGenerator : ISchemaGenerator
 {
 	public bool Handles(Type type)
 	{
-		return type == typeof(JsonPointer);
+		return type == typeof(JsonPointer_Old);
 	}
 
 	public void AddConstraints(SchemaGenerationContextBase context)

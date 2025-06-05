@@ -22,17 +22,17 @@ public class PatchOperation : IEquatable<PatchOperation>
 	/// <summary>
 	/// Gets the source path.
 	/// </summary>
-	public JsonPointer From { get; }
+	public JsonPointer_Old From { get; }
 	/// <summary>
 	/// Gets the target path.
 	/// </summary>
-	public JsonPointer Path { get; }
+	public JsonPointer_Old Path { get; }
 	/// <summary>
 	/// Gets the discrete value.
 	/// </summary>
 	public JsonNode? Value { get; }
 
-	private PatchOperation(OperationType op, JsonPointer from, JsonPointer path, JsonNode? value, IPatchOperationHandler handler)
+	private PatchOperation(OperationType op, JsonPointer_Old from, JsonPointer_Old path, JsonNode? value, IPatchOperationHandler handler)
 	{
 		_handler = handler;
 		Op = op;
@@ -47,9 +47,9 @@ public class PatchOperation : IEquatable<PatchOperation>
 	/// <param name="path">The source path.</param>
 	/// <param name="value">The value to add.</param>
 	/// <returns>An `add` operation.</returns>
-	public static PatchOperation Add(JsonPointer path, JsonNode? value)
+	public static PatchOperation Add(JsonPointer_Old path, JsonNode? value)
 	{
-		return new PatchOperation(OperationType.Add, JsonPointer.Empty, path, value, AddOperationHandler.Instance);
+		return new PatchOperation(OperationType.Add, JsonPointer_Old.Empty, path, value, AddOperationHandler.Instance);
 	}
 
 	/// <summary>
@@ -57,9 +57,9 @@ public class PatchOperation : IEquatable<PatchOperation>
 	/// </summary>
 	/// <param name="path">The source path.</param>
 	/// <returns>An `remove` operation.</returns>
-	public static PatchOperation Remove(JsonPointer path)
+	public static PatchOperation Remove(JsonPointer_Old path)
 	{
-		return new PatchOperation(OperationType.Remove, JsonPointer.Empty, path, default, RemoveOperationHandler.Instance);
+		return new PatchOperation(OperationType.Remove, JsonPointer_Old.Empty, path, default, RemoveOperationHandler.Instance);
 	}
 
 	/// <summary>
@@ -68,9 +68,9 @@ public class PatchOperation : IEquatable<PatchOperation>
 	/// <param name="path">The source path.</param>
 	/// <param name="value">The value to add.</param>
 	/// <returns>An `replace` operation.</returns>
-	public static PatchOperation Replace(JsonPointer path, JsonNode? value)
+	public static PatchOperation Replace(JsonPointer_Old path, JsonNode? value)
 	{
-		return new PatchOperation(OperationType.Replace, JsonPointer.Empty, path, value, ReplaceOperationHandler.Instance);
+		return new PatchOperation(OperationType.Replace, JsonPointer_Old.Empty, path, value, ReplaceOperationHandler.Instance);
 	}
 
 	/// <summary>
@@ -79,7 +79,7 @@ public class PatchOperation : IEquatable<PatchOperation>
 	/// <param name="path">The target path.</param>
 	/// <param name="from">The path to the value to move.</param>
 	/// <returns>An `move` operation.</returns>
-	public static PatchOperation Move(JsonPointer from, JsonPointer path)
+	public static PatchOperation Move(JsonPointer_Old from, JsonPointer_Old path)
 	{
 		return new PatchOperation(OperationType.Move, from, path, default, MoveOperationHandler.Instance);
 	}
@@ -90,7 +90,7 @@ public class PatchOperation : IEquatable<PatchOperation>
 	/// <param name="path">The target path.</param>
 	/// <param name="from">The path to the value to move.</param>
 	/// <returns>An `copy` operation.</returns>
-	public static PatchOperation Copy(JsonPointer from, JsonPointer path)
+	public static PatchOperation Copy(JsonPointer_Old from, JsonPointer_Old path)
 	{
 		return new PatchOperation(OperationType.Copy, from, path, default, CopyOperationHandler.Instance);
 	}
@@ -101,9 +101,9 @@ public class PatchOperation : IEquatable<PatchOperation>
 	/// <param name="path">The source path.</param>
 	/// <param name="value">The value to match.</param>
 	/// <returns>An `test` operation.</returns>
-	public static PatchOperation Test(JsonPointer path, JsonNode? value)
+	public static PatchOperation Test(JsonPointer_Old path, JsonNode? value)
 	{
-		return new PatchOperation(OperationType.Test, JsonPointer.Empty, path, value, TestOperationHandler.Instance);
+		return new PatchOperation(OperationType.Test, JsonPointer_Old.Empty, path, value, TestOperationHandler.Instance);
 	}
 
 	internal void Handle(PatchContext context)
@@ -154,9 +154,9 @@ internal class PatchOperationJsonConverter : JsonConverter<PatchOperation>
 		[JsonPropertyName("op")]
 		public OperationType Op { get; set; }
 		[JsonPropertyName("from")]
-		public JsonPointer? From { get; set; }
+		public JsonPointer_Old? From { get; set; }
 		[JsonPropertyName("path")]
-		public JsonPointer? Path { get; set; }
+		public JsonPointer_Old? Path { get; set; }
 		[JsonPropertyName("value")]
 		public JsonElement Value { get; set; }
 	}
@@ -206,7 +206,7 @@ internal class PatchOperationJsonConverter : JsonConverter<PatchOperation>
 		options.Write(writer, value.Op, JsonPatchSerializerContext.Default.OperationType);
 
 		writer.WritePropertyName("path");
-		options.Write(writer, value.Path, JsonPatchSerializerContext.Default.JsonPointer);
+		options.Write(writer, value.Path, JsonPatchSerializerContext.Default.JsonPointer_Old);
 
 		switch (value.Op)
 		{
@@ -222,11 +222,11 @@ internal class PatchOperationJsonConverter : JsonConverter<PatchOperation>
 				break;
 			case OperationType.Move:
 				writer.WritePropertyName("from");
-				options.Write(writer, value.From, JsonPatchSerializerContext.Default.JsonPointer);
+				options.Write(writer, value.From, JsonPatchSerializerContext.Default.JsonPointer_Old);
 				break;
 			case OperationType.Copy:
 				writer.WritePropertyName("from");
-				options.Write(writer, value.From, JsonPatchSerializerContext.Default.JsonPointer);
+				options.Write(writer, value.From, JsonPatchSerializerContext.Default.JsonPointer_Old);
 				break;
 			case OperationType.Test:
 				writer.WritePropertyName("value");

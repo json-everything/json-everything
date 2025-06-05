@@ -14,7 +14,7 @@ namespace Json.Schema;
 public class SchemaConstraint
 {
 	private readonly Guid _id = Guid.NewGuid();
-	private readonly JsonPointer _relativeEvaluationPath;
+	private readonly JsonPointer_Old _relativeEvaluationPath;
 
 	/// <summary>
 	/// Gets the schema's base URI.
@@ -24,13 +24,13 @@ public class SchemaConstraint
 	/// <summary>
 	/// Gets the base location within the instance that is being evaluated.
 	/// </summary>
-	public JsonPointer BaseInstanceLocation { get; }
+	public JsonPointer_Old BaseInstanceLocation { get; }
 
 	/// <summary>
 	/// Gets the location relative to <see cref="BaseInstanceLocation"/> within the instance that
 	/// is being evaluated.
 	/// </summary>
-	public JsonPointer RelativeInstanceLocation { get; }
+	public JsonPointer_Old RelativeInstanceLocation { get; }
 
 	/// <summary>
 	/// Gets the set of keyword constraints.
@@ -45,19 +45,19 @@ public class SchemaConstraint
 	/// e.g. `additionalProperties`, this function can be used to dynamically provide
 	/// JSON Pointers to those locations at evaluation time.
 	/// </remarks>
-	public Func<KeywordEvaluation, IEnumerable<JsonPointer>>? InstanceLocator { get; set; }
+	public Func<KeywordEvaluation, IEnumerable<JsonPointer_Old>>? InstanceLocator { get; set; }
 
 	/// <summary>
 	/// Gets the local <see cref="JsonSchema"/>.
 	/// </summary>
 	public JsonSchema LocalSchema { get; }
 
-	internal JsonPointer BaseSchemaOffset { get; set; } = JsonPointer.Empty;
+	internal JsonPointer_Old BaseSchemaOffset { get; set; } = JsonPointer_Old.Empty;
 	internal SchemaConstraint? Source { get; set; }
 	internal bool UseLocatorAsInstance { get; set; }
 	internal JsonArray? UnknownKeywords { get; set; }
 
-	internal SchemaConstraint(JsonPointer relativeEvaluationPath, JsonPointer baseInstanceLocation, JsonPointer relativeInstanceLocation, Uri schemaBaseUri, JsonSchema localSchema)
+	internal SchemaConstraint(JsonPointer_Old relativeEvaluationPath, JsonPointer_Old baseInstanceLocation, JsonPointer_Old relativeInstanceLocation, Uri schemaBaseUri, JsonSchema localSchema)
 	{
 		_relativeEvaluationPath = relativeEvaluationPath;
 		SchemaBaseUri = schemaBaseUri;
@@ -74,7 +74,7 @@ public class SchemaConstraint
 	/// <param name="evaluationPath">The evaluation path.</param>
 	/// <param name="options">Any evaluation options.  This will be passed via the evaluation context.</param>
 	/// <returns>A schema evaluation object.</returns>
-	public SchemaEvaluation BuildEvaluation(JsonNode? localInstance, JsonPointer instanceLocation, JsonPointer evaluationPath, EvaluationOptions options)
+	public SchemaEvaluation BuildEvaluation(JsonNode? localInstance, JsonPointer_Old instanceLocation, JsonPointer_Old evaluationPath, EvaluationOptions options)
 	{
 		if (Source != null)
 			Constraints = Source.Constraints;
@@ -91,7 +91,7 @@ public class SchemaConstraint
 			options
 		) { Id = _id };
 
-		if (BaseSchemaOffset != JsonPointer.Empty)
+		if (BaseSchemaOffset != JsonPointer_Old.Empty)
 			evaluation.Results.SetSchemaReference(BaseSchemaOffset);
 
 		if (LocalSchema.BoolValue.HasValue)

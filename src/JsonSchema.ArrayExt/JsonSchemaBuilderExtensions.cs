@@ -15,7 +15,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <param name="builder">The builder.</param>
 	/// <param name="keys">The collection of pointers to the keys which should be unique within the array.</param>
 	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder UniqueKeys(this JsonSchemaBuilder builder, IEnumerable<JsonPointer> keys)
+	public static JsonSchemaBuilder UniqueKeys(this JsonSchemaBuilder builder, IEnumerable<JsonPointer_Old> keys)
 	{
 		builder.Add(new UniqueKeysKeyword(keys));
 		return builder;
@@ -29,7 +29,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder UniqueKeys(this JsonSchemaBuilder builder, IEnumerable<string> keys)
 	{
-		builder.Add(new UniqueKeysKeyword(keys.Select(JsonPointer.Parse)));
+		builder.Add(new UniqueKeysKeyword(keys.Select(JsonPointer_Old.Parse)));
 		return builder;
 	}
 
@@ -39,7 +39,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <param name="builder">The builder.</param>
 	/// <param name="keys">The collection of pointers to the keys which should be unique within the array.</param>
 	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder UniqueKeys(this JsonSchemaBuilder builder, params JsonPointer[] keys)
+	public static JsonSchemaBuilder UniqueKeys(this JsonSchemaBuilder builder, params JsonPointer_Old[] keys)
 	{
 		builder.Add(new UniqueKeysKeyword(keys));
 		return builder;
@@ -53,7 +53,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder UniqueKeys(this JsonSchemaBuilder builder, params string[] keys)
 	{
-		builder.Add(new UniqueKeysKeyword(keys.Select(JsonPointer.Parse)));
+		builder.Add(new UniqueKeysKeyword(keys.Select(JsonPointer_Old.Parse)));
 		return builder;
 	}
 

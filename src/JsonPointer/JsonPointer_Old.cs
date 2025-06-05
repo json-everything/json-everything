@@ -16,23 +16,23 @@ using Json.More;
 namespace Json.Pointer;
 
 /// <summary>
-/// Represents a JSON Pointer IAW RFC 6901.
+/// Represents a JSON PointerOld IAW RFC 6901.
 /// </summary>
-[JsonConverter(typeof(JsonPointerJsonConverter))]
-[TypeConverter(typeof(JsonPointerTypeConverter))]
-public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
+[JsonConverter(typeof(JsonPointerJsonConverter_Old))]
+[TypeConverter(typeof(JsonPointerTypeConverter_Old))]
+public class JsonPointer_Old : IEquatable<JsonPointer_Old>, IReadOnlyList<string>
 {
 	/// <summary>
-	/// The empty pointer.
+	/// The empty pointerOld.
 	/// </summary>
-	public static readonly JsonPointer Empty = new();
+	public static readonly JsonPointer_Old Empty = new();
 
 	private readonly string[] _decodedSegments;
 	private string? _plain;
 	private int? _hashCode;
 
 	/// <summary>
-	/// Gets the number of segments in the pointer.
+	/// Gets the number of segments in the pointerOld.
 	/// </summary>
 	public int Count => _decodedSegments.Length;
 	
@@ -51,11 +51,11 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 	// for this, but I haven't been able to think of one.
 #if !NETSTANDARD2_0
 	/// <summary>
-	/// Creates a new pointer with the indicated segments.
+	/// Creates a new pointerOld with the indicated segments.
 	/// </summary>
-	/// <param name="r">The segment range for the new pointer.</param>
-	/// <returns>A new pointer.</returns>
-	public JsonPointer this[Range r] => GetSubPointer(r);
+	/// <param name="r">The segment range for the new pointerOld.</param>
+	/// <returns>A new pointerOld.</returns>
+	public JsonPointer_Old this[Range r] => GetSubPointer(r);
 #endif
 
 	/// <summary>Returns an enumerator that iterates through the collection.</summary>
@@ -66,47 +66,47 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 	/// <returns>An enumerator that can be used to iterate through the collection.</returns>
 	IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-	private JsonPointer()
+	private JsonPointer_Old()
 	{
 		_decodedSegments = [];
 	}
 
-	private JsonPointer(ReadOnlySpan<string> segments, string? plain = null)
+	private JsonPointer_Old(ReadOnlySpan<string> segments, string? plain = null)
 	{
 		_decodedSegments = segments.ToArray();
 		_plain = plain;
 	}
 
-	private JsonPointer(string[] segments, string? plain = null)
+	private JsonPointer_Old(string[] segments, string? plain = null)
 	{
 		_decodedSegments = segments;
 		_plain = plain;
 	}
 
 	/// <summary>
-	/// Parses a JSON Pointer from a string.
+	/// Parses a JSON PointerOld from a string.
 	/// </summary>
 	/// <param name="source">The source string.</param>
-	/// <returns>A JSON Pointer.</returns>
-	/// <exception cref="PointerParseException"><paramref name="source"/> does not contain a valid pointer or contains a pointer of the wrong kind.</exception>
-	public static JsonPointer Parse(ReadOnlySpan<char> source)
+	/// <returns>A JSON PointerOld.</returns>
+	/// <exception cref="PointerParseException"><paramref name="source"/> does not contain a valid pointerOld or contains a pointerOld of the wrong kind.</exception>
+	public static JsonPointer_Old Parse(ReadOnlySpan<char> source)
 	{
 		return ParseCore(source, null);
 	}
 
 	/// <summary>
-	/// Parses a JSON Pointer from a string.
+	/// Parses a JSON PointerOld from a string.
 	/// </summary>
 	/// <param name="source">The source string.</param>
-	/// <returns>A JSON Pointer.</returns>
+	/// <returns>A JSON PointerOld.</returns>
 	/// <exception cref="ArgumentNullException"><paramref name="source"/> is null.</exception>
-	/// <exception cref="PointerParseException"><paramref name="source"/> does not contain a valid pointer or contains a pointer of the wrong kind.</exception>
-	public static JsonPointer Parse(string source)
+	/// <exception cref="PointerParseException"><paramref name="source"/> does not contain a valid pointerOld or contains a pointerOld of the wrong kind.</exception>
+	public static JsonPointer_Old Parse(string source)
 	{
 		return ParseCore(source.AsSpan(), source);
 	}
 
-	private static JsonPointer ParseCore(ReadOnlySpan<char> source, string? plain)
+	private static JsonPointer_Old ParseCore(ReadOnlySpan<char> source, string? plain)
 	{
 		if (source.Length == 0) return Empty;
 
@@ -128,15 +128,15 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 		}
 
 		if (source[0] != '/')
-			throw new PointerParseException("Pointer must start with either `#/` or `/` or be empty");
+			throw new PointerParseException("PointerOld must start with either `#/` or `/` or be empty");
 
 		if (source.Length == 1)
-			return new JsonPointer([""], "/");
+			return new JsonPointer_Old([""], "/");
 
 		if (TryParseInternal(source, plain, out var result))
 			return result;
 
-		throw new PointerParseException($"Value '{source.ToString()}' does not represent a valid JSON Pointer");
+		throw new PointerParseException($"Value '{source.ToString()}' does not represent a valid JSON PointerOld");
 	}
 
 	private static int CountSegments(ReadOnlySpan<char> source)
@@ -157,7 +157,7 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 
 #if NET9_0_OR_GREATER
 
-	private static bool TryParseInternal(ReadOnlySpan<char> source, string? plain, [NotNullWhen(true)] out JsonPointer? result)
+	private static bool TryParseInternal(ReadOnlySpan<char> source, string? plain, [NotNullWhen(true)] out JsonPointer_Old? result)
 	{
 		var segmentCount = CountSegments(source);
 		var segments = new string[segmentCount];
@@ -177,13 +177,13 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 			}
 		}
 
-		result = new JsonPointer(segments, plain);
+		result = new JsonPointer_Old(segments, plain);
 		return true;
 	}
 
 #else
 
-	private static bool TryParseInternal(ReadOnlySpan<char> source, string? plain, [NotNullWhen(true)] out JsonPointer? result)
+	private static bool TryParseInternal(ReadOnlySpan<char> source, string? plain, [NotNullWhen(true)] out JsonPointer_Old? result)
 	{
 		var segmentCount = CountSegments(source);
 		var segments = new string[segmentCount];
@@ -214,25 +214,25 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 
 		segments[segmentIndex] = segment2;
 
-		result = new JsonPointer(segments, plain);
+		result = new JsonPointer_Old(segments, plain);
 		return true;
 	}
 
 #endif
 
 	/// <summary>
-	/// Parses a JSON Pointer from a string.
+	/// Parses a JSON PointerOld from a string.
 	/// </summary>
 	/// <param name="source">The source string.</param>
-	/// <param name="pointer">The resulting pointer.</param>
+	/// <param name="pointer">The resulting pointerOld.</param>
 	/// <returns>`true` if the parse was successful; `false` otherwise.</returns>
 	/// <exception cref="ArgumentNullException"><paramref name="source"/> is null.</exception>
-	public static bool TryParse(ReadOnlySpan<char> source, [NotNullWhen(true)] out JsonPointer? pointer)
+	public static bool TryParse(ReadOnlySpan<char> source, [NotNullWhen(true)] out JsonPointer_Old? pointer)
 	{
 		return TryParseCore(source, null, out pointer);
 	}
 
-	private static bool TryParseCore(ReadOnlySpan<char> source, string? plain, [NotNullWhen(true)] out JsonPointer? pointer)
+	private static bool TryParseCore(ReadOnlySpan<char> source, string? plain, [NotNullWhen(true)] out JsonPointer_Old? pointer)
 	{
 		if (source.Length == 0)
 		{
@@ -269,7 +269,7 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 
 		if (source.Length == 1)
 		{
-			pointer = new JsonPointer([""], "/");
+			pointer = new JsonPointer_Old([""], "/");
 			return true;
 		}
 
@@ -277,35 +277,35 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 	}
 
 	/// <summary>
-	/// Parses a JSON Pointer from a string.
+	/// Parses a JSON PointerOld from a string.
 	/// </summary>
 	/// <param name="source">The source string.</param>
-	/// <param name="pointer">The resulting pointer.</param>
+	/// <param name="pointer">The resulting pointerOld.</param>
 	/// <returns>`true` if the parse was successful; `false` otherwise.</returns>
 	/// <exception cref="ArgumentNullException"><paramref name="source"/> is null.</exception>
-	public static bool TryParse(string source, [NotNullWhen(true)] out JsonPointer? pointer)
+	public static bool TryParse(string source, [NotNullWhen(true)] out JsonPointer_Old? pointer)
 	{
 		return TryParse(source.AsSpan(), out pointer);
 	}
 
 	/// <summary>
-	/// Creates a new JSON Pointer from a single segment.
+	/// Creates a new JSON PointerOld from a single segment.
 	/// </summary>
 	/// <param name="segment">The segment.</param>
-	/// <returns>The JSON Pointer.</returns>
+	/// <returns>The JSON PointerOld.</returns>
 	/// <remarks>This method creates un-encoded pointers only.</remarks>
-	public static JsonPointer Create(PointerSegment segment)
+	public static JsonPointer_Old Create(PointerSegment segment)
 	{
-		return new JsonPointer(new[] { segment.Value });
+		return new JsonPointer_Old(new[] { segment.Value });
 	}
 
 	/// <summary>
-	/// Creates a new JSON Pointer from a collection of segments.
+	/// Creates a new JSON PointerOld from a collection of segments.
 	/// </summary>
 	/// <param name="segments">A collection of segments.</param>
-	/// <returns>The JSON Pointer.</returns>
+	/// <returns>The JSON PointerOld.</returns>
 	/// <remarks>This method creates un-encoded pointers only.</remarks>
-	public static JsonPointer Create(params PointerSegment[] segments)
+	public static JsonPointer_Old Create(params PointerSegment[] segments)
 	{
 #if NET9_0_OR_GREATER
 		return Create(segments.AsSpan());
@@ -317,18 +317,18 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 			array[i] = segments[i].Value;
 		}
 
-		return new JsonPointer(array);
+		return new JsonPointer_Old(array);
 #endif
 	}
 
 #if NET9_0_OR_GREATER
 	/// <summary>
-	/// Creates a new JSON Pointer from a collection of segments.
+	/// Creates a new JSON PointerOld from a collection of segments.
 	/// </summary>
 	/// <param name="segments">A collection of segments.</param>
-	/// <returns>The JSON Pointer.</returns>
+	/// <returns>The JSON PointerOld.</returns>
 	/// <remarks>This method creates un-encoded pointers only.</remarks>
-	public static JsonPointer Create(params ReadOnlySpan<PointerSegment> segments)
+	public static JsonPointer_Old Create(params ReadOnlySpan<PointerSegment> segments)
 	{
 		var array = new string[segments.Length];
 		
@@ -337,33 +337,33 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 			array[i] = segments[i].Value;
 		}
 
-		return new JsonPointer(array);
+		return new JsonPointer_Old(array);
 	}
 #endif
 
 	/// <summary>
-	/// Creates a new JSON Pointer from a collection of segments.
+	/// Creates a new JSON PointerOld from a collection of segments.
 	/// </summary>
 	/// <param name="segments">A collection of segments.</param>
-	/// <returns>The JSON Pointer.</returns>
+	/// <returns>The JSON PointerOld.</returns>
 	/// <remarks>This method creates un-encoded pointers only.</remarks>
-	public static JsonPointer Create(params ReadOnlySpan<string> segments)
+	public static JsonPointer_Old Create(params ReadOnlySpan<string> segments)
 	{
-		return new JsonPointer(segments.ToArray());
+		return new JsonPointer_Old(segments.ToArray());
 	}
 
 	/// <summary>
-	/// Generates a JSON Pointer from a lambda expression.
+	/// Generates a JSON PointerOld from a lambda expression.
 	/// </summary>
 	/// <typeparam name="T">The type of the object.</typeparam>
-	/// <param name="expression">The lambda expression which gives the pointer path.</param>
-	/// <param name="options">(optional) Options for creating the pointer.</param>
-	/// <returns>The JSON Pointer.</returns>
+	/// <param name="expression">The lambda expression which gives the pointerOld path.</param>
+	/// <param name="options">(optional) Options for creating the pointerOld.</param>
+	/// <returns>The JSON PointerOld.</returns>
 	/// <exception cref="NotSupportedException">
 	/// Thrown when the lambda expression contains a node that is not a property access or
 	/// <see cref="int"/>-valued indexer.
 	/// </exception>
-	public static JsonPointer Create<T>(Expression<Func<T, object>> expression, PointerCreationOptions? options = null)
+	public static JsonPointer_Old Create<T>(Expression<Func<T, object>> expression, PointerCreationOptions? options = null)
 	{
 		string GetSegment(MemberInfo member)
 		{
@@ -440,11 +440,11 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 	}
 
 	/// <summary>
-	/// Concatenates a single segment onto the current pointer.
+	/// Concatenates a single segment onto the current pointerOld.
 	/// </summary>
 	/// <param name="segment">The segment to add.</param>
-	/// <returns>A new pointer.</returns>
-	public JsonPointer Combine(PointerSegment segment)
+	/// <returns>A new pointerOld.</returns>
+	public JsonPointer_Old Combine(PointerSegment segment)
 	{
 		if (_decodedSegments.Length == 0) return Create(segment);
 
@@ -453,7 +453,7 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 		{
 			Array.Copy(_decodedSegments, array, _decodedSegments.Length);
 			array[_decodedSegments.Length] = segment.Value;
-			return new JsonPointer(array.AsSpan()[..(_decodedSegments.Length + 1)]);
+			return new JsonPointer_Old(array.AsSpan()[..(_decodedSegments.Length + 1)]);
 		}
 		finally
 		{
@@ -462,11 +462,11 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 	}
 
 	/// <summary>
-	/// Concatenates a pointer onto the current pointer.
+	/// Concatenates a pointerOld onto the current pointerOld.
 	/// </summary>
-	/// <param name="other">Another pointer.</param>
-	/// <returns>A new pointer.</returns>
-	public JsonPointer Combine(JsonPointer other)
+	/// <param name="other">Another pointerOld.</param>
+	/// <returns>A new pointerOld.</returns>
+	public JsonPointer_Old Combine(JsonPointer_Old other)
 	{
 		if (other._decodedSegments.Length == 0) return this;
 		if (_decodedSegments.Length == 0) return other;
@@ -476,7 +476,7 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 		{
 			Array.Copy(_decodedSegments, array, _decodedSegments.Length);
 			Array.Copy(other._decodedSegments, 0, array, _decodedSegments.Length, other._decodedSegments.Length);
-			return new JsonPointer(array.AsSpan()[..(_decodedSegments.Length + other._decodedSegments.Length)]);
+			return new JsonPointer_Old(array.AsSpan()[..(_decodedSegments.Length + other._decodedSegments.Length)]);
 		}
 		finally
 		{
@@ -485,11 +485,11 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 	}
 
 	/// <summary>
-	/// Concatenates additional segments onto the current pointer.
+	/// Concatenates additional segments onto the current pointerOld.
 	/// </summary>
 	/// <param name="additionalSegments">The additional segments.</param>
-	/// <returns>A new pointer.</returns>
-	public JsonPointer Combine(params PointerSegment[] additionalSegments)
+	/// <returns>A new pointerOld.</returns>
+	public JsonPointer_Old Combine(params PointerSegment[] additionalSegments)
 	{
 #if NET9_0_OR_GREATER
 		return Combine(additionalSegments.AsSpan());
@@ -507,7 +507,7 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 				array[_decodedSegments.Length + i] = additionalSegments[i].Value;
 			}
 
-			return new JsonPointer(array.AsSpan()[..(_decodedSegments.Length + additionalSegments.Length)]);
+			return new JsonPointer_Old(array.AsSpan()[..(_decodedSegments.Length + additionalSegments.Length)]);
 		}
 		finally
 		{
@@ -518,11 +518,11 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 
 #if NET9_0_OR_GREATER
 	/// <summary>
-	/// Concatenates additional segments onto the current pointer.
+	/// Concatenates additional segments onto the current pointerOld.
 	/// </summary>
 	/// <param name="additionalSegments">The additional segments.</param>
-	/// <returns>A new pointer.</returns>
-	public JsonPointer Combine(params ReadOnlySpan<PointerSegment> additionalSegments)
+	/// <returns>A new pointerOld.</returns>
+	public JsonPointer_Old Combine(params ReadOnlySpan<PointerSegment> additionalSegments)
 	{
 		if (additionalSegments.Length == 0) return this;
 		if (_decodedSegments.Length == 0) return Create(additionalSegments);
@@ -537,7 +537,7 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 				array[_decodedSegments.Length + i] = additionalSegments[i].Value;
 			}
 
-			return new JsonPointer(array[..(_decodedSegments.Length + additionalSegments.Length)]);
+			return new JsonPointer_Old(array[..(_decodedSegments.Length + additionalSegments.Length)]);
 		}
 		finally
 		{
@@ -547,14 +547,14 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 #endif
 
 	/// <summary>
-	/// Concatenates additional segments onto the current pointer.
+	/// Concatenates additional segments onto the current pointerOld.
 	/// </summary>
 	/// <param name="additionalSegments">The additional segments.</param>
-	/// <returns>A new pointer.</returns>
-	public JsonPointer Combine(params ReadOnlySpan<string> additionalSegments)
+	/// <returns>A new pointerOld.</returns>
+	public JsonPointer_Old Combine(params ReadOnlySpan<string> additionalSegments)
 	{
 		if (additionalSegments.Length == 0) return this;
-		if (_decodedSegments.Length == 0) return new JsonPointer(additionalSegments.ToArray());
+		if (_decodedSegments.Length == 0) return new JsonPointer_Old(additionalSegments.ToArray());
 
 		var array = ArrayPool<string>.Shared.Rent(_decodedSegments.Length + additionalSegments.Length);
 		try
@@ -562,7 +562,7 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 			Array.Copy(_decodedSegments, array, _decodedSegments.Length);
 			additionalSegments.CopyTo(array.AsSpan(_decodedSegments.Length));
 
-			return new JsonPointer(array.AsSpan()[..(_decodedSegments.Length + additionalSegments.Length)]);
+			return new JsonPointer_Old(array.AsSpan()[..(_decodedSegments.Length + additionalSegments.Length)]);
 		}
 		finally
 		{
@@ -571,41 +571,41 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 	}
 
 	/// <summary>
-	/// Creates a new pointer retaining the starting segments.
+	/// Creates a new pointerOld retaining the starting segments.
 	/// </summary>
-	/// <param name="levels">How many levels to remove from the end of the pointer.</param>
-	/// <returns>A new pointer.</returns>
-	public JsonPointer GetAncestor(int levels)
+	/// <param name="levels">How many levels to remove from the end of the pointerOld.</param>
+	/// <returns>A new pointerOld.</returns>
+	public JsonPointer_Old GetAncestor(int levels)
 	{
 		return new(_decodedSegments.AsSpan()[..^levels]);
 	}
 	/// <summary>
-	/// Creates a new pointer retaining the ending segments.
+	/// Creates a new pointerOld retaining the ending segments.
 	/// </summary>
-	/// <param name="levels">How many levels to keep from the end of the pointer.</param>
-	/// <returns>A new pointer.</returns>
-	public JsonPointer GetLocal(int levels)
+	/// <param name="levels">How many levels to keep from the end of the pointerOld.</param>
+	/// <returns>A new pointerOld.</returns>
+	public JsonPointer_Old GetLocal(int levels)
 	{
 		return new(_decodedSegments.AsSpan()[levels..]);
 	}
 
 #if !NETSTANDARD2_0
 	/// <summary>
-	/// Creates a new pointer with the indicated segments.
+	/// Creates a new pointerOld with the indicated segments.
 	/// </summary>
-	/// <param name="range">The segment range for the new pointer.</param>
-	/// <returns>A new pointer.</returns>
-	public JsonPointer GetSubPointer(Range range)
+	/// <param name="range">The segment range for the new pointerOld.</param>
+	/// <returns>A new pointerOld.</returns>
+	public JsonPointer_Old GetSubPointer(Range range)
 	{
 		return new(_decodedSegments.AsSpan()[range]);
 	}
 #endif
 
 	/// <summary>
-	/// Evaluates the pointer over a <see cref="JsonElement"/>.
+	/// Evaluates the pointerOld over a <see cref="JsonElement"/>.
 	/// </summary>
 	/// <param name="root">The <see cref="JsonElement"/>.</param>
-	/// <returns>The sub-element at the pointer's location, or null if the path does not exist.</returns>
+	/// <returns>The sub-element at the pointerOld's location, or null if the path does not exist.</returns>
 	public JsonElement? Evaluate(JsonElement root)
 	{
 		var current = root;
@@ -653,7 +653,7 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 	}
 
 	/// <summary>
-	/// Evaluates the pointer over a <see cref="JsonNode"/>.
+	/// Evaluates the pointerOld over a <see cref="JsonNode"/>.
 	/// </summary>
 	/// <param name="root">The <see cref="JsonNode"/>.</param>
 	/// <param name="result">The result, if return value is true; null otherwise</param>
@@ -758,7 +758,7 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
 	/// <param name="other">An object to compare with this object.</param>
 	/// <returns>true if the current object is equal to the <paramref name="other">other</paramref> parameter; otherwise, false.</returns>
-	public bool Equals(JsonPointer? other)
+	public bool Equals(JsonPointer_Old? other)
 	{
 		if (other is null) return false;
 		if (ReferenceEquals(this, other)) return true;
@@ -771,7 +771,7 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 	/// <returns>true if <paramref name="obj">obj</paramref> and this instance are the same type and represent the same value; otherwise, false.</returns>
 	public override bool Equals(object? obj)
 	{
-		return Equals(obj as JsonPointer);
+		return Equals(obj as JsonPointer_Old);
 	}
 
 	/// <summary>Returns the hash code for this instance.</summary>
@@ -783,23 +783,23 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 	}
 	
 	/// <summary>
-	/// Evaluates equality via <see cref="Equals(JsonPointer)"/>.
+	/// Evaluates equality via <see cref="Equals(JsonPointer_Old)"/>.
 	/// </summary>
-	/// <param name="left">A JSON Pointer.</param>
-	/// <param name="right">A JSON Pointer.</param>
+	/// <param name="left">A JSON PointerOld.</param>
+	/// <param name="right">A JSON PointerOld.</param>
 	/// <returns>`true` if the pointers are equal; `false` otherwise.</returns>
-	public static bool operator ==(JsonPointer? left, JsonPointer? right)
+	public static bool operator ==(JsonPointer_Old? left, JsonPointer_Old? right)
 	{
 		return Equals(left, right);
 	}
 
 	/// <summary>
-	/// Evaluates inequality via <see cref="Equals(JsonPointer)"/>.
+	/// Evaluates inequality via <see cref="Equals(JsonPointer_Old)"/>.
 	/// </summary>
-	/// <param name="left">A JSON Pointer.</param>
-	/// <param name="right">A JSON Pointer.</param>
+	/// <param name="left">A JSON PointerOld.</param>
+	/// <param name="right">A JSON PointerOld.</param>
 	/// <returns>`false` if the pointers are equal; `true` otherwise.</returns>
-	public static bool operator !=(JsonPointer? left, JsonPointer? right)
+	public static bool operator !=(JsonPointer_Old? left, JsonPointer_Old? right)
 	{
 		return !Equals(left, right);
 	}
