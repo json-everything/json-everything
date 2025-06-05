@@ -73,7 +73,7 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 
 	private JsonPointer(ReadOnlySpan<string> segments, string? plain = null)
 	{
-		_decodedSegments = [..segments];
+		_decodedSegments = segments.ToArray();
 		_plain = plain;
 	}
 
@@ -289,6 +289,17 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 	}
 
 	/// <summary>
+	/// Creates a new JSON Pointer from a single segment.
+	/// </summary>
+	/// <param name="segment">The segment.</param>
+	/// <returns>The JSON Pointer.</returns>
+	/// <remarks>This method creates un-encoded pointers only.</remarks>
+	public static JsonPointer Create(PointerSegment segment)
+	{
+		return new JsonPointer(new[] { segment.Value });
+	}
+
+	/// <summary>
 	/// Creates a new JSON Pointer from a collection of segments.
 	/// </summary>
 	/// <param name="segments">A collection of segments.</param>
@@ -311,7 +322,6 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 	}
 
 #if NET9_0_OR_GREATER
-
 	/// <summary>
 	/// Creates a new JSON Pointer from a collection of segments.
 	/// </summary>
@@ -329,8 +339,18 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 
 		return new JsonPointer(array);
 	}
-
 #endif
+
+	/// <summary>
+	/// Creates a new JSON Pointer from a collection of segments.
+	/// </summary>
+	/// <param name="segments">A collection of segments.</param>
+	/// <returns>The JSON Pointer.</returns>
+	/// <remarks>This method creates un-encoded pointers only.</remarks>
+	public static JsonPointer Create(params ReadOnlySpan<string> segments)
+	{
+		return new JsonPointer(segments.ToArray());
+	}
 
 	/// <summary>
 	/// Generates a JSON Pointer from a lambda expression.
@@ -420,6 +440,28 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 	}
 
 	/// <summary>
+	/// Concatenates a single segment onto the current pointer.
+	/// </summary>
+	/// <param name="segment">The segment to add.</param>
+	/// <returns>A new pointer.</returns>
+	public JsonPointer Combine(PointerSegment segment)
+	{
+		if (_decodedSegments.Length == 0) return Create(segment);
+
+		var array = ArrayPool<string>.Shared.Rent(_decodedSegments.Length + 1);
+		try
+		{
+			Array.Copy(_decodedSegments, array, _decodedSegments.Length);
+			array[_decodedSegments.Length] = segment.Value;
+			return new JsonPointer(array.AsSpan()[..(_decodedSegments.Length + 1)]);
+		}
+		finally
+		{
+			ArrayPool<string>.Shared.Return(array);
+		}
+	}
+
+	/// <summary>
 	/// Concatenates a pointer onto the current pointer.
 	/// </summary>
 	/// <param name="other">Another pointer.</param>
@@ -429,11 +471,17 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 		if (other._decodedSegments.Length == 0) return this;
 		if (_decodedSegments.Length == 0) return other;
 
-		var array = new string[_decodedSegments.Length + other._decodedSegments.Length];
-		Array.Copy(_decodedSegments, array, _decodedSegments.Length);
-		Array.Copy(other._decodedSegments, 0, array, _decodedSegments.Length, other._decodedSegments.Length);
-
-		return new JsonPointer(array);
+		var array = ArrayPool<string>.Shared.Rent(_decodedSegments.Length + other._decodedSegments.Length);
+		try
+		{
+			Array.Copy(_decodedSegments, array, _decodedSegments.Length);
+			Array.Copy(other._decodedSegments, 0, array, _decodedSegments.Length, other._decodedSegments.Length);
+			return new JsonPointer(array.AsSpan()[..(_decodedSegments.Length + other._decodedSegments.Length)]);
+		}
+		finally
+		{
+			ArrayPool<string>.Shared.Return(array);
+		}
 	}
 
 	/// <summary>
@@ -449,20 +497,26 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 		if (additionalSegments.Length == 0) return this;
 		if (_decodedSegments.Length == 0) return Create(additionalSegments);
 
-		var array = new string[_decodedSegments.Length + additionalSegments.Length];
-		Array.Copy(_decodedSegments, array, _decodedSegments.Length);
-
-		for (int i = 0; i < additionalSegments.Length; i++)
+		var array = ArrayPool<string>.Shared.Rent(_decodedSegments.Length + additionalSegments.Length);
+		try
 		{
-			array[_decodedSegments.Length + i] = additionalSegments[i].Value;
-		}
+			Array.Copy(_decodedSegments, array, _decodedSegments.Length);
 
-		return new JsonPointer(array);
+			for (int i = 0; i < additionalSegments.Length; i++)
+			{
+				array[_decodedSegments.Length + i] = additionalSegments[i].Value;
+			}
+
+			return new JsonPointer(array.AsSpan()[..(_decodedSegments.Length + additionalSegments.Length)]);
+		}
+		finally
+		{
+			ArrayPool<string>.Shared.Return(array);
+		}
 #endif
 	}
 
 #if NET9_0_OR_GREATER
-
 	/// <summary>
 	/// Concatenates additional segments onto the current pointer.
 	/// </summary>
@@ -473,18 +527,48 @@ public class JsonPointer : IEquatable<JsonPointer>, IReadOnlyList<string>
 		if (additionalSegments.Length == 0) return this;
 		if (_decodedSegments.Length == 0) return Create(additionalSegments);
 
-		var array = new string[_decodedSegments.Length + additionalSegments.Length];
-		Array.Copy(_decodedSegments, array, _decodedSegments.Length);
-
-		for (int i = 0; i < additionalSegments.Length; i++)
+		var array = ArrayPool<string>.Shared.Rent(_decodedSegments.Length + additionalSegments.Length);
+		try
 		{
-			array[_decodedSegments.Length + i] = additionalSegments[i].Value;
+			Array.Copy(_decodedSegments, array, _decodedSegments.Length);
+
+			for (int i = 0; i < additionalSegments.Length; i++)
+			{
+				array[_decodedSegments.Length + i] = additionalSegments[i].Value;
+			}
+
+			return new JsonPointer(array[..(_decodedSegments.Length + additionalSegments.Length)]);
 		}
-
-		return new JsonPointer(array);
+		finally
+		{
+			ArrayPool<string>.Shared.Return(array);
+		}
 	}
-
 #endif
+
+	/// <summary>
+	/// Concatenates additional segments onto the current pointer.
+	/// </summary>
+	/// <param name="additionalSegments">The additional segments.</param>
+	/// <returns>A new pointer.</returns>
+	public JsonPointer Combine(params ReadOnlySpan<string> additionalSegments)
+	{
+		if (additionalSegments.Length == 0) return this;
+		if (_decodedSegments.Length == 0) return new JsonPointer(additionalSegments.ToArray());
+
+		var array = ArrayPool<string>.Shared.Rent(_decodedSegments.Length + additionalSegments.Length);
+		try
+		{
+			Array.Copy(_decodedSegments, array, _decodedSegments.Length);
+			additionalSegments.CopyTo(array.AsSpan(_decodedSegments.Length));
+
+			return new JsonPointer(array.AsSpan()[..(_decodedSegments.Length + additionalSegments.Length)]);
+		}
+		finally
+		{
+			ArrayPool<string>.Shared.Return(array);
+		}
+	}
 
 	/// <summary>
 	/// Creates a new pointer retaining the starting segments.

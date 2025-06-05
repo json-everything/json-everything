@@ -5,6 +5,58 @@ namespace Json.Pointer;
 
 internal static class SpanExtensions
 {
+#if NET9_0_OR_GREATER
+	internal static bool TryParse(this ReadOnlySpan<char> s, out int result) => int.TryParse(s, out result);
+#else
+	internal static bool TryParse(this ReadOnlySpan<char> s, out int result)
+	{
+		result = 0;
+		if (s.IsEmpty) return false;
+
+		bool isNegative = false;
+		int index = 0;
+
+		// Handle sign
+		if (s[0] == '-')
+		{
+			isNegative = true;
+			index = 1;
+		}
+		else if (s[0] == '+')
+		{
+			index = 1;
+		}
+
+		// Must have at least one digit
+		if (index >= s.Length) return false;
+
+		// Parse digits
+		long value = 0;
+		while (index < s.Length)
+		{
+			char c = s[index];
+			if (c < '0' || c > '9') return false;
+			
+			value = value * 10 + (c - '0');
+			
+			// Check for overflow
+			if (isNegative)
+			{
+				if (-value < int.MinValue) return false;
+			}
+			else
+			{
+				if (value > int.MaxValue) return false;
+			}
+			
+			index++;
+		}
+
+		result = isNegative ? -(int)value : (int)value;
+		return true;
+	}
+#endif
+
 	internal static bool TryDecodeSegment(this ReadOnlySpan<char> encoded, [NotNullWhen(true)] out string? result)
 	{
 		var l = encoded.Length;
