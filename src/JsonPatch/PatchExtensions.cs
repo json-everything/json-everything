@@ -83,77 +83,85 @@ public static class PatchExtensions
 	public static JsonPatch CreatePatch(this JsonNode? original, JsonNode? target)
 	{
 		var patch = new List<PatchOperation>();
-		CreatePatch(patch, original, target, JsonPointer_Old.Empty);
+		CreatePatch(patch, original, target, JsonPointer.Empty);
 		return new JsonPatch(patch);
 	}
 
-	private static void CreatePatch(List<PatchOperation> patch, JsonNode? original, JsonNode? target, JsonPointer_Old path)
+	private static void CreatePatch(List<PatchOperation> patch, JsonNode? original, JsonNode? target, JsonPointer path)
 	{
-		if (original is JsonObject originalObj && target is JsonObject targetObj)
-			PatchForObject(originalObj, targetObj, patch, path);
-		else if (original is JsonArray originalArr && target is JsonArray targetArr)
-			PatchForArray(originalArr, targetArr, patch, path);
-		else if (!original.IsEquivalentTo(target))
-			patch.Add(PatchOperation.Replace(path, target));
-	}
+		if (ReferenceEquals(original, target)) return;
 
-	private static void PatchForObject(JsonObject original, JsonObject target, List<PatchOperation> patch, JsonPointer_Old path)
-	{
-		var origNames = original.Select(x => x.Key).ToArray();
-		var modNames = target.Select(x => x.Key).ToArray();
-
-		patch.AddRange(origNames.Except(modNames).Select(key => PatchOperation.Remove(path.Combine(key))));
-		patch.AddRange(modNames.Except(origNames).Select(key => PatchOperation.Add(path.Combine(key), target[key])));
-
-		foreach (var key in origNames.Intersect(modNames))
+		switch (original, target)
 		{
-			var origValue = original[key];
-			var modValue = target[key];
-
-			CreatePatch(patch, origValue, modValue, path.Combine(key));
+			case (JsonObject origObj, JsonObject targetObj):
+				PatchForObject(origObj, targetObj, patch, path);
+				break;
+			case (JsonArray origArr, JsonArray targetArr):
+				PatchForArray(origArr, targetArr, patch, path);
+				break;
+			case (null, null):
+				return;
+			case (null, _):
+				patch.Add(PatchOperation.Add(path, target));
+				break;
+			case (_, null):
+				patch.Add(PatchOperation.Remove(path));
+				break;
+			default:
+				patch.Add(PatchOperation.Replace(path, target));
+				break;
 		}
 	}
 
-	private static void PatchForArray(JsonArray original, JsonArray target, List<PatchOperation> patch, JsonPointer_Old path)
+	private static void PatchForObject(JsonObject original, JsonObject target, List<PatchOperation> patch, JsonPointer path)
 	{
-		if (target.Count >= original.Count)
+		foreach (var kvp in original)
 		{
-			for (int i = 0; i < target.Count; i++)
+			var newPath = path.Combine(JsonPointer.Parse($"/{kvp.Key}"));
+			if (!target.TryGetPropertyValue(kvp.Key, out var targetValue))
 			{
-				if (i >= original.Count)
-				{
-					patch.Add(PatchOperation.Add(path.Combine(i), target[i]));
-					continue;
-				}
-
-				PatchForArrayIndex(i);
+				patch.Add(PatchOperation.Remove(newPath));
 			}
-		}
-		else if (target.Count == 0)
-		{
-			patch.Add(PatchOperation.Replace(path, target));
-		}
-		else
-		{
-			int i = original.Count;
-			while (--i >= 0)
+			else
 			{
-				var ui = (uint)i;
-				if (i >= target.Count)
-				{
-					patch.Add(PatchOperation.Remove(path.Combine(i)));
-					continue;
-				}
-				PatchForArrayIndex(i);
+				CreatePatch(patch, kvp.Value, targetValue, newPath);
 			}
 		}
 
-		void PatchForArrayIndex(int i)
+		foreach (var kvp in target)
 		{
-			var origValue = original[i];
-			var modValue = target[i];
+			if (!original.TryGetPropertyValue(kvp.Key, out _))
+			{
+				var newPath = path.Combine(JsonPointer.Parse($"/{kvp.Key}"));
+				patch.Add(PatchOperation.Add(newPath, kvp.Value));
+			}
+		}
+	}
 
-			CreatePatch(patch, origValue, modValue, path.Combine(i));
+	private static void PatchForArray(JsonArray original, JsonArray target, List<PatchOperation> patch, JsonPointer path)
+	{
+		var minLength = Math.Min(original.Count, target.Count);
+		for (int i = 0; i < minLength; i++)
+		{
+			var newPath = path.Combine(JsonPointer.Parse($"/{i}"));
+			CreatePatch(patch, original[i], target[i], newPath);
+		}
+
+		if (original.Count > target.Count)
+		{
+			for (int i = target.Count; i < original.Count; i++)
+			{
+				var newPath = path.Combine(JsonPointer.Parse($"/{i}"));
+				patch.Add(PatchOperation.Remove(newPath));
+			}
+		}
+		else if (target.Count > original.Count)
+		{
+			for (int i = original.Count; i < target.Count; i++)
+			{
+				var newPath = path.Combine(JsonPointer.Parse($"/{i}"));
+				patch.Add(PatchOperation.Add(newPath, target[i]));
+			}
 		}
 	}
 }

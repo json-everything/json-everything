@@ -2,14 +2,16 @@ using System;
 using System.Buffers;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 
 namespace Json.Pointer;
 
 /// <summary>
-/// Represents a JSON PointerOld as defined in RFC 6901.
+/// Represents a JSON Pointer as defined in RFC 6901.
 /// This implementation is optimized for minimal allocations.
 /// </summary>
 [JsonConverter(typeof(JsonPointerJsonConverter))]
@@ -17,7 +19,7 @@ namespace Json.Pointer;
 public readonly struct JsonPointer : IEquatable<JsonPointer>
 {
 	/// <summary>
-	/// Represents an empty JSON PointerOld.
+	/// Represents an empty JSON Pointer.
 	/// </summary>
 	public static readonly JsonPointer Empty = new(ReadOnlyMemory<char>.Empty, 0);
 
@@ -31,10 +33,10 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 	}
 
 	/// <summary>
-	/// Creates a new JSON PointerOld from a string.
+	/// Creates a new JSON Pointer from a string.
 	/// </summary>
-	/// <param name="pointer">The JSON PointerOld string (e.g., "/foo/0/bar")</param>
-	/// <returns>A new JsonPointer_Old instance</returns>
+	/// <param name="pointer">The JSON Pointer string (e.g., "/foo/0/bar")</param>
+	/// <returns>A new JsonPointer instance</returns>
 	public static JsonPointer Parse(string pointer)
 	{
 		if (pointer == null)
@@ -423,5 +425,81 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 		}
 
 		return current;
+	}
+
+	/// <summary>
+	/// Evaluates the pointerOld over a <see cref="JsonNode"/>.
+	/// </summary>
+	/// <param name="root">The <see cref="JsonNode"/>.</param>
+	/// <param name="result">The result, if return value is true; null otherwise</param>
+	/// <returns>true if a value exists at the indicate path; false otherwise.</returns>
+	public bool TryEvaluate(JsonNode? root, out JsonNode? result)
+	{
+		if (_pointer.IsEmpty)
+		{
+			result = root;
+			return true;
+		}
+
+		var current = root;
+		result = null;
+		var span = _pointer.Span;
+		int start = 1; // Skip the leading '/'
+		int currentIndex = 0;
+
+		while (start < span.Length)
+		{
+			int end = span[start..].IndexOf('/');
+			if (end == -1)
+				end = span.Length;
+			else
+				end += start;
+
+			var segment = span[start..end];
+
+			switch (current)
+			{
+				case JsonArray array:
+					if (segment.Length == 0) return false;
+					if (segment is ['0'])
+					{
+						if (array.Count == 0) return false;
+						current = array[0];
+						break;
+					}
+					if (segment[0] == '0') return false;
+					if (segment is ['-'])
+					{
+						result = array.Last();
+						return true;
+					}
+					if (!segment.TryParse(out int index)) return false;
+					if (index >= array.Count) return false;
+					if (index < 0) return false;
+					current = array[index];
+					break;
+				case JsonObject obj:
+					var found = false;
+					foreach (var kvp in obj)
+					{
+						if (SegmentEquals(currentIndex, kvp.Key))
+						{
+							current = kvp.Value;
+							found = true;
+							break;
+						}
+					}
+					if (!found) return false;
+					break;
+				default:
+					return false;
+			}
+
+			start = end + 1;
+			currentIndex++;
+		}
+
+		result = current;
+		return true;
 	}
 }

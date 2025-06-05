@@ -21,7 +21,7 @@ public class GithubTests
 
 		var pathsToPatch = new[] { "/first_name", "/last_name" };
 
-		var patchOperations = pathsToPatch.Select(path => PatchOperation.Replace(JsonPointer_Old.Parse(path), maskJson));
+		var patchOperations = pathsToPatch.Select(path => PatchOperation.Replace(JsonPointer.Parse(path), maskJson));
 		var patchConfig = new JsonPatch(patchOperations);
 
 		TestConsole.WriteLine(JsonSerializer.Serialize(patchConfig, TestSerializerContext.Default.JsonPatch));
@@ -67,7 +67,7 @@ public class GithubTests
 
 		var pathsToPatch = new[] { "/first_name", "/last_name" };
 
-		var patchOperations = pathsToPatch.Select(path => PatchOperation.Replace(JsonPointer_Old.Parse(path), maskJson));
+		var patchOperations = pathsToPatch.Select(path => PatchOperation.Replace(JsonPointer.Parse(path), maskJson));
 		var patchConfig = new JsonPatch(patchOperations);
 
 		const string singleObjectJson = "{" +
@@ -115,7 +115,7 @@ public class GithubTests
 
 		var pathsToPatch = new[] { "/first_name", "/last_name" };
 
-		var patchOperations = pathsToPatch.Select(path => PatchOperation.Replace(JsonPointer_Old.Parse(path), maskJson));
+		var patchOperations = pathsToPatch.Select(path => PatchOperation.Replace(JsonPointer.Parse(path), maskJson));
 		var patchConfig = new JsonPatch(patchOperations);
 
 		const string singleObjectJson = "{" +
@@ -165,7 +165,7 @@ public class GithubTests
 
 		var pathsToPatch = new[] { "/first_name", "/last_name" };
 
-		var patchOperations = pathsToPatch.Select(path => PatchOperation.Replace(JsonPointer_Old.Parse(path), maskJson));
+		var patchOperations = pathsToPatch.Select(path => PatchOperation.Replace(JsonPointer.Parse(path), maskJson));
 		var patchConfig = new JsonPatch(patchOperations);
 
 		const string singleObjectJson = @"{
@@ -197,7 +197,7 @@ public class GithubTests
 		var targetObj = new Target543 { Values = [1, 2, 3, 4] };
 		var target = JsonSerializer.SerializeToNode(targetObj, TestEnvironment.SerializerOptions);
 
-		var jsonPointer = JsonPointer_Old.Create<Target543>(x => x.Values.Last());
+		var jsonPointer = JsonPointer.Parse("/Values/-");
 		var jsonPatch = new JsonPatch(PatchOperation.Add(jsonPointer, (JsonNode)42));
 
 		var expected = new JsonObject
@@ -220,8 +220,8 @@ public class GithubTests
 
 		var doc = new JsonPatch(
 			PatchOperation.Move(
-				JsonPointer_Old.Parse("/Items/2"),
-				JsonPointer_Old.Parse("/Items/-")));
+				JsonPointer.Parse("/Items/2"),
+				JsonPointer.Parse("/Items/-")));
 
 		var result = doc.Apply(jsonModel);
 
@@ -242,8 +242,8 @@ public class GithubTests
 
 		var doc = new JsonPatch(
 			PatchOperation.Copy(
-				JsonPointer_Old.Parse("/Items/2"),
-				JsonPointer_Old.Parse("/Items/-")));
+				JsonPointer.Parse("/Items/2"),
+				JsonPointer.Parse("/Items/-")));
 
 		var result = doc.Apply(jsonModel);
 
@@ -262,7 +262,7 @@ public class GithubTests
 			["Items"] = new JsonArray(1, 2, 3, 4, 5)
 		};
 
-		var doc = new JsonPatch(PatchOperation.Remove(JsonPointer_Old.Parse("/Items/-")));
+		var doc = new JsonPatch(PatchOperation.Remove(JsonPointer.Parse("/Items/-")));
 
 		var result = doc.Apply(jsonModel);
 
@@ -283,7 +283,7 @@ public class GithubTests
 		};
 
 		var doc = new JsonPatch(PatchOperation.Replace(
-			JsonPointer_Old.Parse(path),
+			JsonPointer.Parse(path),
 			JsonNode.Parse("6")));
 
 		var result = doc.Apply(jsonModel);
@@ -309,7 +309,7 @@ public class GithubTests
 
 		var addDoc = new JsonPatch(
 			PatchOperation.Add(
-				JsonPointer_Old.Parse("/Items/0"),
+				JsonPointer.Parse("/Items/0"),
 				JsonNode.Parse("3")));
 
 		var addResult = addDoc.Apply(jsonModel);
@@ -320,8 +320,8 @@ public class GithubTests
 
 		var copyDoc = new JsonPatch(
 			PatchOperation.Copy(
-				JsonPointer_Old.Parse("/Items/2"),
-				JsonPointer_Old.Parse("/Items/0")));
+				JsonPointer.Parse("/Items/2"),
+				JsonPointer.Parse("/Items/0")));
 
 		var copyResult = copyDoc.Apply(jsonModel);
 
