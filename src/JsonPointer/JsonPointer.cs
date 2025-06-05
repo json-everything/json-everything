@@ -106,8 +106,8 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 	/// <returns>The parent pointerOld, or null if this is the root pointerOld</returns>
 	public JsonPointer? GetParent()
 	{
-		if (_segmentCount <= 1)
-			return null;
+		if (_segmentCount <= 0) return null;
+		if (_segmentCount == 1) return Empty;
 
 		var span = _pointer.Span;
 		int lastSlash = span.LastIndexOf('/');
@@ -447,7 +447,7 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 		int start = 1; // Skip the leading '/'
 		int currentIndex = 0;
 
-		while (start < span.Length)
+		while (start <= span.Length)
 		{
 			int end = span[start..].IndexOf('/');
 			if (end == -1)
