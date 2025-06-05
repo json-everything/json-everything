@@ -74,7 +74,7 @@ public class JsonPointerParseTests
 		pointer.SegmentCount.Should().Be(segments.Length);
 		for (int i = 0; i < pointer.SegmentCount; i++)
 		{
-			var segment = pointer.GetSegment(i).Decode()?.ToString();
+			var segment = pointer.GetSegment(i).Decode();
 			var expected = segments[i];
 
 			Assert.That(segment, Is.EqualTo(expected));
@@ -89,7 +89,7 @@ public class JsonPointerParseTests
 		pointer.SegmentCount.Should().Be(segments.Length);
 		for (int i = 0; i < pointer.SegmentCount; i++)
 		{
-			var segment = pointer.GetSegment(i).ToString();
+			var segment = pointer.GetSegment(i).Decode();
 			var expected = segments[i];
 
 			Assert.That(segment, Is.EqualTo(expected));
