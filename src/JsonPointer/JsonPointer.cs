@@ -42,7 +42,8 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 	/// <returns>The parent pointer, or null if this is the root pointer</returns>
 	public JsonPointer? GetParent(int levels = 1)
 	{
-		if (levels <= 0) throw new ArgumentOutOfRangeException(nameof(levels), "Levels must be positive");
+		if (levels < 0) throw new ArgumentOutOfRangeException(nameof(levels), "Levels must be non-negative");
+		if (levels == 0) return this;
 		if (SegmentCount < levels) return null;
 		if (SegmentCount == levels) return Empty;
 
@@ -67,16 +68,17 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 	/// <returns>A new pointer containing the specified number of trailing segments</returns>
 	public JsonPointer GetLocal(int levels = 1)
 	{
-		if (levels <= 0) throw new ArgumentOutOfRangeException(nameof(levels), "Levels must be positive");
+		if (levels < 0) throw new ArgumentOutOfRangeException(nameof(levels), "Levels must be non-negative");
+		if (levels == 0) return Empty;
 		if (levels > SegmentCount) throw new ArgumentOutOfRangeException(nameof(levels), "Levels cannot exceed segment count");
 
 		var span = _pointer.Span;
 		int start = 0;
+		int segmentsToSkip = SegmentCount - levels;
 
-		// Find the start of the nth segment from the end
-		for (int i = 0; i < SegmentCount - levels; i++)
+		for (int i = 0; i < segmentsToSkip; i++)
 		{
-			start = span[start..].IndexOf('/') + start + 1;
+			start = span[(start + 1)..].IndexOf('/') + start + 1;
 		}
 
 		return new JsonPointer(_pointer[start..], levels);
@@ -413,15 +415,14 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 	/// <returns>The referenced JsonElement if found, null otherwise</returns>
 	public JsonElement? Evaluate(JsonElement element)
 	{
-		if (_pointer.IsEmpty)
-			return element;
+		if (_pointer.IsEmpty) return element;
 
 		var current = element;
 		var span = _pointer.Span;
 		int start = 1; // Skip the leading '/'
 		int currentIndex = 0;
 
-		while (start < span.Length)
+		while (start <= span.Length)
 		{
 			int end = span[start..].IndexOf('/');
 			if (end == -1)
@@ -447,9 +448,23 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 			}
 			else if (current.ValueKind == JsonValueKind.Array)
 			{
-				if (!segment.TryParse(out int index) || index < 0 || index >= current.GetArrayLength())
+				if (segment.Length == 0) return null;
+				if (segment is ['0'])
+				{
+					if (current.GetArrayLength() == 0) return null;
+					current = current[0];
+				}
+				else if (segment[0] == '0') return null;
+				else if (segment is ['-'])
+				{
+					var length = current.GetArrayLength();
+					if (length == 0) return null;
+					current = current[length - 1];
+				}
+				else if (!segment.TryParse(out int index) || index < 0 || index >= current.GetArrayLength())
 					return null;
-				current = current[index];
+				else
+					current = current[index];
 			}
 			else return null;
 
