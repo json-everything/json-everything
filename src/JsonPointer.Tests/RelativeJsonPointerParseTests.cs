@@ -63,7 +63,7 @@ public class RelativeJsonPointerParseTests
 		pointer.Pointer.SegmentCount.Should().Be(segments.Length);
 		for (int i = 0; i < pointer.Pointer.SegmentCount; i++)
 		{
-			pointer.Pointer.GetSegment(i).ToString().Should().Be(segments[i]);
+			pointer.Pointer.GetSegment(i).Decode().Should().Be(segments[i]);
 		}
 	}
 
@@ -77,7 +77,7 @@ public class RelativeJsonPointerParseTests
 		pointer.Pointer.SegmentCount.Should().Be(segments.Length);
 		for (int i = 0; i < pointer.Pointer.SegmentCount; i++)
 		{
-			pointer.Pointer.GetSegment(i).ToString().Should().Be(segments[i]);
+			pointer.Pointer.GetSegment(i).Decode().Should().Be(segments[i]);
 		}
 	}
 
