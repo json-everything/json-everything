@@ -82,7 +82,7 @@ public class OrderingKeyword : IJsonSchemaKeyword
 				{
 					evaluation.Results.Fail(Name, "Item at index [[index]] does not have a value at [[pointerOld]]"
 							.ReplaceToken("index", i-1)
-							.ReplaceToken("pointerOld", specifier.By, JsonSchemaArrayExtSerializerContext.Default.JsonPointer)
+							.ReplaceToken("pointerOld", specifier.By, JsonSchemaArrayExtSerializerContext.Default.JsonPointer_Old)
 						);
 					return;
 				}
@@ -91,7 +91,7 @@ public class OrderingKeyword : IJsonSchemaKeyword
 				{
 					evaluation.Results.Fail(Name, "Item at index [[index]] does not have a value at [[pointerOld]]"
 							.ReplaceToken("index", i)
-							.ReplaceToken("pointerOld", specifier.By, JsonSchemaArrayExtSerializerContext.Default.JsonPointer)
+							.ReplaceToken("pointerOld", specifier.By, JsonSchemaArrayExtSerializerContext.Default.JsonPointer_Old)
 						);
 					return;
 				}
