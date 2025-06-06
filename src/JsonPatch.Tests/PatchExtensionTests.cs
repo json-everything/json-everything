@@ -243,10 +243,10 @@ public class PatchExtensionTests
 			"{\"op\":\"replace\",\"path\":\"/InnerObjects/0/Id\",\"value\":\"bed584b0-7ccc-4336-adba-d0d7f7c3c3f2\"}," +
 			"{\"op\":\"replace\",\"path\":\"/InnerObjects/0/Numbers/0\",\"value\":1}," +
 			"{\"op\":\"add\",\"path\":\"/InnerObjects/0/Strings/2\",\"value\":\"test5\"}," +
-			"{\"op\":\"remove\",\"path\":\"/Attributes/4\"}," +
-			"{\"op\":\"replace\",\"path\":\"/Attributes/3/test/1\",\"value\":1}," +
 			"{\"op\":\"remove\",\"path\":\"/Attributes/0/test\"}," +
-			"{\"op\":\"add\",\"path\":\"/Attributes/0/test1\",\"value\":\"test123\"}]";
+			"{\"op\":\"add\",\"path\":\"/Attributes/0/test1\",\"value\":\"test123\"}," +
+			"{\"op\":\"replace\",\"path\":\"/Attributes/3/test/1\",\"value\":1}," +
+			"{\"op\":\"remove\",\"path\":\"/Attributes/4\"}]";
 		var patchExpected = JsonSerializer.Deserialize<JsonPatch>(patchExpectedStr, TestEnvironment.SerializerOptions);
 
 		var patchBackExpectedStr =

@@ -1,0 +1,14 @@
+[
+    {
+      "op": "replace",
+      "path": "/spec/template/metadata/annotations/kubectl.kubernetes.io~1restartedAt",
+      "value": ""
+    },
+    {
+      "op": "replace",
+      "path": "/spec/template/metadata/annotations/date",
+      "value": "1719925004"
+    }
+  ]
+
+  

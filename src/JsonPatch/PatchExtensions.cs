@@ -108,16 +108,20 @@ public static class PatchExtensions
 				patch.Add(PatchOperation.Remove(path));
 				break;
 			default:
-				patch.Add(PatchOperation.Replace(path, target));
+				if (!JsonNode.DeepEquals(original, target))
+				{
+					patch.Add(PatchOperation.Replace(path, target));
+				}
 				break;
 		}
 	}
 
 	private static void PatchForObject(JsonObject original, JsonObject target, List<PatchOperation> patch, JsonPointer path)
 	{
+		// Handle removed and modified properties
 		foreach (var kvp in original)
 		{
-			var newPath = path.Combine(JsonPointer.Parse($"/{kvp.Key}"));
+			var newPath = path.Combine(JsonPointer.Create(kvp.Key));
 			if (!target.TryGetPropertyValue(kvp.Key, out var targetValue))
 			{
 				patch.Add(PatchOperation.Remove(newPath));
@@ -128,11 +132,12 @@ public static class PatchExtensions
 			}
 		}
 
+		// Handle added properties
 		foreach (var kvp in target)
 		{
 			if (!original.TryGetPropertyValue(kvp.Key, out _))
 			{
-				var newPath = path.Combine(JsonPointer.Parse($"/{kvp.Key}"));
+				var newPath = path.Combine(JsonPointer.Create(kvp.Key));
 				patch.Add(PatchOperation.Add(newPath, kvp.Value));
 			}
 		}
@@ -140,18 +145,68 @@ public static class PatchExtensions
 
 	private static void PatchForArray(JsonArray original, JsonArray target, List<PatchOperation> patch, JsonPointer path)
 	{
+		// If arrays are identical, no patch needed
+		if (JsonNode.DeepEquals(original, target)) return;
+
+		// For small arrays, use simple index-based comparison
+		if (original.Count <= 10 && target.Count <= 10)
+		{
+			SimpleArrayPatch(original, target, patch, path);
+			return;
+		}
+
+		// For larger arrays, use a more sophisticated diff algorithm
+		var lcs = ComputeLongestCommonSubsequence(original, target);
+		var operations = GenerateArrayOperations(original, target, lcs);
+
+		// Apply operations in reverse order to maintain correct indices
+		foreach (var op in operations.Reverse())
+		{
+			switch (op.Type)
+			{
+				case "add":
+					patch.Add(PatchOperation.Add(path.Combine(JsonPointer.Parse($"/{op.Index}")), op.Value));
+					break;
+				case "remove":
+					patch.Add(PatchOperation.Remove(path.Combine(JsonPointer.Parse($"/{op.Index}"))));
+					break;
+				case "replace":
+					patch.Add(PatchOperation.Replace(path.Combine(JsonPointer.Parse($"/{op.Index}")), op.Value));
+					break;
+			}
+		}
+	}
+
+	private static void SimpleArrayPatch(JsonArray original, JsonArray target, List<PatchOperation> patch, JsonPointer path)
+	{
+		// If target is empty and original is not, replace the entire array
+		if (target.Count == 0 && original.Count > 0)
+		{
+			patch.Add(PatchOperation.Replace(path, target));
+			return;
+		}
+
 		var minLength = Math.Min(original.Count, target.Count);
+		
+		// Compare elements up to the minimum length
 		for (int i = 0; i < minLength; i++)
 		{
 			var newPath = path.Combine(JsonPointer.Parse($"/{i}"));
 			CreatePatch(patch, original[i], target[i], newPath);
 		}
 
+		// Handle remaining elements
 		if (original.Count > target.Count)
 		{
-			for (int i = target.Count; i < original.Count; i++)
+			// If we need to remove multiple elements, replace the entire array
+			if (original.Count - target.Count > 1)
 			{
-				var newPath = path.Combine(JsonPointer.Parse($"/{i}"));
+				patch.Add(PatchOperation.Replace(path, target));
+			}
+			else
+			{
+				// Remove single element
+				var newPath = path.Combine(JsonPointer.Parse($"/{target.Count}"));
 				patch.Add(PatchOperation.Remove(newPath));
 			}
 		}
@@ -163,5 +218,87 @@ public static class PatchExtensions
 				patch.Add(PatchOperation.Add(newPath, target[i]));
 			}
 		}
+	}
+
+	private static List<(int OriginalIndex, int TargetIndex)> ComputeLongestCommonSubsequence(JsonArray original, JsonArray target)
+	{
+		var matrix = new int[original.Count + 1, target.Count + 1];
+		var lcs = new List<(int OriginalIndex, int TargetIndex)>();
+
+		// Fill the LCS matrix
+		for (int i = 1; i <= original.Count; i++)
+		{
+			for (int j = 1; j <= target.Count; j++)
+			{
+				if (JsonNode.DeepEquals(original[i - 1], target[j - 1]))
+				{
+					matrix[i, j] = matrix[i - 1, j - 1] + 1;
+				}
+				else
+				{
+					matrix[i, j] = Math.Max(matrix[i - 1, j], matrix[i, j - 1]);
+				}
+			}
+		}
+
+		// Backtrack to find the LCS
+		int x = original.Count, y = target.Count;
+		while (x > 0 && y > 0)
+		{
+			if (JsonNode.DeepEquals(original[x - 1], target[y - 1]))
+			{
+				lcs.Add((x - 1, y - 1));
+				x--; y--;
+			}
+			else if (matrix[x - 1, y] > matrix[x, y - 1])
+			{
+				x--;
+			}
+			else
+			{
+				y--;
+			}
+		}
+
+		lcs.Reverse();
+		return lcs;
+	}
+
+	private static IEnumerable<(string Type, int Index, JsonNode? Value)> GenerateArrayOperations(
+		JsonArray original, 
+		JsonArray target, 
+		List<(int OriginalIndex, int TargetIndex)> lcs)
+	{
+		var operations = new List<(string Type, int Index, JsonNode? Value)>();
+
+		// Process removals and replacements
+		for (int i = 0; i < original.Count; i++)
+		{
+			var lcsItem = lcs.FirstOrDefault(x => x.OriginalIndex == i);
+			if (lcsItem.OriginalIndex == i)
+			{
+				// Element is in LCS, check if it needs replacement
+				if (!JsonNode.DeepEquals(original[i], target[lcsItem.TargetIndex]))
+				{
+					operations.Add(("replace", i, target[lcsItem.TargetIndex]));
+				}
+			}
+			else
+			{
+				// Element is not in LCS, remove it
+				operations.Add(("remove", i, null));
+			}
+		}
+
+		// Process additions
+		for (int i = 0; i < target.Count; i++)
+		{
+			if (!lcs.Any(x => x.TargetIndex == i))
+			{
+				operations.Add(("add", i, target[i]));
+			}
+		}
+
+		return operations;
 	}
 }
