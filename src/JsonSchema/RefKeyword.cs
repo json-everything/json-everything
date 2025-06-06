@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.More;
 using Json.Pointer;
@@ -36,10 +37,10 @@ public class RefKeyword : IJsonSchemaKeyword
 	/// <summary>
 	/// Creates a new <see cref="RefKeyword"/>.
 	/// </summary>
-	/// <param name="value">The URI reference.</param>
-	public RefKeyword(Uri value)
+	/// <param name="reference">The URI reference.</param>
+	public RefKeyword(Uri reference)
 	{
-		Reference = value;
+		Reference = reference ?? throw new ArgumentNullException(nameof(reference));
 	}
 
 	/// <summary>
@@ -64,7 +65,7 @@ public class RefKeyword : IJsonSchemaKeyword
 
 		JsonSchema? targetSchema;
 
-		if (JsonPointer_Old.TryParse(fragment, out var pointerFragment))
+		if (JsonPointer.TryParse(fragment, out var pointerFragment))
 		{
 			var targetBase = context.Options.SchemaRegistry.Get(newUri) ??
 							 throw new RefResolutionException(newUri, pointerFragment);
@@ -86,7 +87,7 @@ public class RefKeyword : IJsonSchemaKeyword
 			throw new RefResolutionException(newUri);
 
 		context.NavigatedReferences.Push(navigation);
-		var subschemaConstraint = targetSchema.GetConstraint(JsonPointer_Old.Create(Name), schemaConstraint.BaseInstanceLocation, JsonPointer_Old.Empty, context);
+		var subschemaConstraint = targetSchema.GetConstraint(JsonPointer.Create(Name), schemaConstraint.BaseInstanceLocation, JsonPointer.Empty, context);
 		context.NavigatedReferences.Pop();
 		if (pointerFragment != null)
 			subschemaConstraint.BaseSchemaOffset = pointerFragment;
@@ -120,8 +121,6 @@ public sealed class RefKeywordJsonConverter : WeaklyTypedJsonConverter<RefKeywor
 	{
 		var uri = reader.GetString();
 		return new RefKeyword(new Uri(uri!, UriKind.RelativeOrAbsolute));
-
-
 	}
 
 	/// <summary>Writes a specified value as JSON.</summary>

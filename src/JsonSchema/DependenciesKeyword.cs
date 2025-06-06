@@ -60,12 +60,12 @@ public class DependenciesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 			.Where(x => x.Value.Schema != null)
 			.Select(requirement =>
 		{
-			var subschemaConstraint = requirement.Value.Schema!.GetConstraint(JsonPointer_Old.Create(Name, requirement.Key), schemaConstraint.BaseInstanceLocation, JsonPointer_Old.Empty, context);
+			var subschemaConstraint = requirement.Value.Schema!.GetConstraint(JsonPointer.Create(Name, requirement.Key), schemaConstraint.BaseInstanceLocation, JsonPointer.Empty, context);
 			subschemaConstraint.InstanceLocator = evaluation =>
 			{
 				if (evaluation.LocalInstance is not JsonObject obj ||
 				    !obj.ContainsKey(requirement.Key))
-					return Array.Empty<JsonPointer_Old>();
+					return Array.Empty<JsonPointer>();
 
 				return CommonJsonPointers.SingleEmptyPointerArray;
 			};

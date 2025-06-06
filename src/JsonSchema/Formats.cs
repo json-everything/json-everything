@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
+using Json.More;
+using Json.Pointer;
 
 namespace Json.Schema;
 
@@ -215,7 +217,7 @@ public static partial class Formats
 		if (node.GetSchemaValueType() != SchemaValueType.String) return true;
 
 		var str = node!.GetValue<string>();
-		return string.IsNullOrEmpty(str) || (str[0] != '#' && Pointer.JsonPointer_Old.TryParse(str, out _));
+		return string.IsNullOrEmpty(str) || (str[0] != '#' && Pointer.JsonPointer.TryParse(str, out _));
 	}
 
 	private static bool CheckRelativeJsonPointer(JsonNode? node)

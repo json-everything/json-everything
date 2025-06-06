@@ -72,7 +72,7 @@ public class AnyOfKeyword : IJsonSchemaKeyword, ISchemaCollector
 		var subschemaConstraints = Schemas.Select((x, i) =>
 		{
 			context.PushEvaluationPath(i);
-			var constraint = x.GetConstraint(JsonPointer_Old.Create(Name, i), schemaConstraint.BaseInstanceLocation, JsonPointer_Old.Empty, context);
+			var constraint = x.GetConstraint(JsonPointer.Create(Name, i), schemaConstraint.BaseInstanceLocation, JsonPointer.Empty, context);
 			context.PopEvaluationPath();
 			return constraint;
 		}).ToArray();

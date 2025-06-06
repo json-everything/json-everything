@@ -61,7 +61,7 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer
 		var patternPropertiesConstraint = localConstraints.GetKeywordConstraint<PatternPropertiesKeyword>();
 		var keywordConstraints = new[] { propertiesConstraint, patternPropertiesConstraint }.Where(x => x != null).ToArray();
 
-		var subschemaConstraint = Schema.GetConstraint(JsonPointer_Old.Create(Name), schemaConstraint.BaseInstanceLocation, JsonPointer_Old.Empty, context);
+		var subschemaConstraint = Schema.GetConstraint(JsonPointer.Create(Name), schemaConstraint.BaseInstanceLocation, JsonPointer.Empty, context);
 		subschemaConstraint.InstanceLocator = LocateInstances;
 
 		return new KeywordConstraint(Name, Evaluator)
@@ -71,7 +71,7 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer
 		};
 	}
 
-	private static IEnumerable<JsonPointer_Old> LocateInstances(KeywordEvaluation evaluation)
+	private static IEnumerable<JsonPointer> LocateInstances(KeywordEvaluation evaluation)
 	{
 		if (evaluation.LocalInstance is not JsonObject obj) yield break;
 
@@ -99,7 +99,7 @@ public class AdditionalPropertiesKeyword : IJsonSchemaKeyword, ISchemaContainer
 		{
 			if (skip.Contains(kvp.Key)) continue;
 
-			yield return JsonPointer_Old.Create(kvp.Key);
+			yield return JsonPointer.Create(kvp.Key);
 		}
 	}
 

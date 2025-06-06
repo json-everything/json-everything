@@ -58,7 +58,7 @@ public class ThenKeyword : IJsonSchemaKeyword, ISchemaContainer
 		if (ifConstraint == null)
 			return KeywordConstraint.Skip;
 
-		var subschemaConstraint = Schema.GetConstraint(JsonPointer_Old.Create(Name), schemaConstraint.BaseInstanceLocation, JsonPointer_Old.Empty, context);
+		var subschemaConstraint = Schema.GetConstraint(JsonPointer.Create(Name), schemaConstraint.BaseInstanceLocation, JsonPointer.Empty, context);
 
 		return new KeywordConstraint(Name, Evaluator)
 		{

@@ -59,7 +59,7 @@ public class DependentSchemasKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 		var subschemaConstraints = Schemas.Select(requirement =>
 		{
 			context.PushEvaluationPath(requirement.Key);
-			var subschemaConstraint = requirement.Value.GetConstraint(JsonPointer_Old.Create(Name, requirement.Key), schemaConstraint.BaseInstanceLocation, JsonPointer_Old.Empty, context);
+			var subschemaConstraint = requirement.Value.GetConstraint(JsonPointer.Create(Name, requirement.Key), schemaConstraint.BaseInstanceLocation, JsonPointer.Empty, context);
 			context.PopEvaluationPath();
 			subschemaConstraint.InstanceLocator = evaluation =>
 			{

@@ -67,7 +67,7 @@ public class KeywordConstraint
 		return new KeywordConstraint(keyword, (e, _) => e.Results.SetAnnotation(keyword, value));
 	}
 
-	internal KeywordEvaluation BuildEvaluation(SchemaEvaluation schemaEvaluation, JsonPointer_Old instanceLocation, JsonPointer_Old evaluationPath)
+	internal KeywordEvaluation BuildEvaluation(SchemaEvaluation schemaEvaluation, JsonPointer instanceLocation, JsonPointer evaluationPath)
 	{
 		var evaluation = new KeywordEvaluation(this, schemaEvaluation.LocalInstance, schemaEvaluation.Results) { Id = _id };
 

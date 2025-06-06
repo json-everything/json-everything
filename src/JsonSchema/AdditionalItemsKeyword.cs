@@ -55,7 +55,7 @@ public class AdditionalItemsKeyword : IJsonSchemaKeyword, ISchemaContainer
 		var itemsConstraint = localConstraints.GetKeywordConstraint<ItemsKeyword>();
 		if (itemsConstraint == null) return KeywordConstraint.Skip;
 
-		var subschemaConstraint = Schema.GetConstraint(JsonPointer_Old.Create(Name), schemaConstraint.BaseInstanceLocation, JsonPointer_Old.Empty, context);
+		var subschemaConstraint = Schema.GetConstraint(JsonPointer.Create(Name), schemaConstraint.BaseInstanceLocation, JsonPointer.Empty, context);
 		subschemaConstraint.InstanceLocator = LocateInstances;
 
 		var constraint = new KeywordConstraint(Name, Evaluator)
@@ -66,7 +66,7 @@ public class AdditionalItemsKeyword : IJsonSchemaKeyword, ISchemaContainer
 		return constraint;
 	}
 
-	private static IEnumerable<JsonPointer_Old> LocateInstances(KeywordEvaluation evaluation)
+	private static IEnumerable<JsonPointer> LocateInstances(KeywordEvaluation evaluation)
 	{
 		if (evaluation.LocalInstance is not JsonArray array) yield break;
 

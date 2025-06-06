@@ -19,7 +19,7 @@ public class SchemaEvaluation
 	/// <summary>
 	/// Gets the relative instance location.  (The base location can be found in <see cref="Results"/>.
 	/// </summary>
-	public JsonPointer_Old RelativeInstanceLocation { get; internal set; }
+	public JsonPointer RelativeInstanceLocation { get; internal set; }
 	/// <summary>
 	/// Gets the local evaluation results.
 	/// </summary>
@@ -29,7 +29,7 @@ public class SchemaEvaluation
 	internal KeywordEvaluation[] KeywordEvaluations { get; }
 	internal EvaluationOptions Options { get; }
 
-	internal SchemaEvaluation(JsonNode? localInstance, JsonPointer_Old relativeInstanceLocation, EvaluationResults results, KeywordEvaluation[] evaluations, EvaluationOptions options)
+	internal SchemaEvaluation(JsonNode? localInstance, JsonPointer relativeInstanceLocation, EvaluationResults results, KeywordEvaluation[] evaluations, EvaluationOptions options)
 	{
 		LocalInstance = localInstance;
 		RelativeInstanceLocation = relativeInstanceLocation;

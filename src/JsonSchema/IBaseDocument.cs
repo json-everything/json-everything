@@ -23,8 +23,8 @@ public interface IBaseDocument
 	/// <summary>
 	/// Finds a schema within the document.
 	/// </summary>
-	/// <param name="pointerOld">A JSON PointerOld to the location of the schema within the document.</param>
+	/// <param name="pointer">A JSON Pointer to the location of the schema within the document.</param>
 	/// <param name="options">Evaluation options.  This is needed for internal processing.</param>
 	/// <returns>A JSON Schema, if found.</returns>
-	JsonSchema? FindSubschema(JsonPointer_Old pointerOld, EvaluationOptions options);
+	JsonSchema? FindSubschema(JsonPointer pointer, EvaluationOptions options);
 }

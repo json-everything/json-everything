@@ -18,7 +18,7 @@ public class EvaluationResults
 	private readonly Uri _currentUri;
 	private readonly HashSet<string>? _backgroundAnnotations;
 	private readonly HashSet<string>? _ignoredAnnotations;
-	private JsonPointer_Old? _reference;
+	private JsonPointer? _reference;
 	private Uri? _schemaLocation;
 	private List<EvaluationResults>? _details;
 	private Dictionary<string, JsonNode?>? _annotations;
@@ -31,11 +31,11 @@ public class EvaluationResults
 	/// <summary>
 	/// The schema location that generated this node.
 	/// </summary>
-	public JsonPointer_Old EvaluationPath { get; }
+	public JsonPointer EvaluationPath { get; }
 	/// <summary>
 	/// The instance location that was processed.
 	/// </summary>
-	public JsonPointer_Old InstanceLocation { get; }
+	public JsonPointer InstanceLocation { get; }
 
 	/// <summary>
 	/// The absolute schema location.
@@ -95,7 +95,7 @@ public class EvaluationResults
 			? _annotations!.Where(x => !(_backgroundAnnotations?.Contains(x.Key) ?? false)).ToDictionary(x => x.Key, x => x.Value)
 			: null;
 
-	internal EvaluationResults(JsonPointer_Old evaluationPath, Uri schemaLocation, JsonPointer_Old instanceLocation, EvaluationOptions options)
+	internal EvaluationResults(JsonPointer evaluationPath, Uri schemaLocation, JsonPointer instanceLocation, EvaluationOptions options)
 	{
 		EvaluationPath = evaluationPath;
 		_currentUri = schemaLocation;
@@ -123,15 +123,15 @@ public class EvaluationResults
 		_backgroundAnnotations = other._backgroundAnnotations;
 	}
 
-	internal void SetSchemaReference(JsonPointer_Old pointerOld)
+	internal void SetSchemaReference(JsonPointer pointer)
 	{
-		_reference = pointerOld;
+		_reference = pointer;
 	}
 
 	private Uri BuildSchemaLocation()
 	{
 		var localEvaluationPathStart = 0;
-		for (var i = 0; i < EvaluationPath.Count; i++)
+		for (var i = 0; i < EvaluationPath.SegmentCount; i++)
 		{
 			var segment = EvaluationPath[i];
 			if (segment == RefKeyword.Name ||
@@ -142,14 +142,14 @@ public class EvaluationResults
 
 		if (_reference == null && _currentUri == Parent?._currentUri)
 			_reference = Parent._reference;
-		var fragment = _reference ?? JsonPointer_Old.Empty;
+		var fragment = _reference ?? JsonPointer.Empty;
 #if NETSTANDARD2_0
 		fragment = fragment.Combine(EvaluationPath.GetLocal(localEvaluationPathStart));  // 2 allocations
 #else
 		fragment = fragment.Combine(EvaluationPath[localEvaluationPathStart..]);  // 2 allocations
 #endif
 
-		return fragment == JsonPointer_Old.Empty
+		return fragment == JsonPointer.Empty
 			? _currentUri
 			: new Uri(_currentUri, "#" + fragment);
 	}
@@ -328,7 +328,7 @@ public class EvaluationResultsJsonConverter : WeaklyTypedJsonConverter<Evaluatio
 		if (value.Format == OutputFormat.Hierarchical || value.Parent != null)
 		{
 			writer.WritePropertyName("evaluationPath");
-			options.Write(writer, value.EvaluationPath, JsonSchemaSerializerContext.Default.JsonPointer_Old);
+			options.Write(writer, value.EvaluationPath, JsonSchemaSerializerContext.Default.JsonPointer);
 
 			// this can still be null if the root schema is a boolean
 			if (value.SchemaLocation != null!)
@@ -341,7 +341,7 @@ public class EvaluationResultsJsonConverter : WeaklyTypedJsonConverter<Evaluatio
 			}
 
 			writer.WritePropertyName("instanceLocation");
-			options.Write(writer, value.InstanceLocation, JsonSchemaSerializerContext.Default.JsonPointer_Old);
+			options.Write(writer, value.InstanceLocation, JsonSchemaSerializerContext.Default.JsonPointer);
 		}
 
 		if (value.IsValid)
@@ -389,9 +389,9 @@ public class Pre202012EvaluationResultsJsonConverter : WeaklyTypedJsonConverter<
 	{
 		public string Owner { get; }
 		public JsonNode? Value { get; }
-		public JsonPointer_Old Source { get; }
+		public JsonPointer Source { get; }
 	
-		public Annotation(string owner, JsonNode? value, in JsonPointer_Old source)
+		public Annotation(string owner, JsonNode? value, in JsonPointer source)
 		{
 			Owner = owner;
 			Value = value;
@@ -424,13 +424,13 @@ public class Pre202012EvaluationResultsJsonConverter : WeaklyTypedJsonConverter<
 		if (value.Format == OutputFormat.Hierarchical || value.Parent != null)
 		{
 			writer.WritePropertyName("keywordLocation");
-			options.Write(writer, value.EvaluationPath, JsonSchemaSerializerContext.Default.JsonPointer_Old);
+			options.Write(writer, value.EvaluationPath, JsonSchemaSerializerContext.Default.JsonPointer);
 
 			writer.WritePropertyName("absoluteKeywordLocation");
 			options.Write(writer, value.SchemaLocation, JsonSchemaSerializerContext.Default.Uri);
 
 			writer.WritePropertyName("instanceLocation");
-			options.Write(writer, value.InstanceLocation, JsonSchemaSerializerContext.Default.JsonPointer_Old);
+			options.Write(writer, value.InstanceLocation, JsonSchemaSerializerContext.Default.JsonPointer);
 		}
 
 		bool skipCloseObject = false;
@@ -567,7 +567,7 @@ public class Pre202012EvaluationResultsJsonConverter : WeaklyTypedJsonConverter<
 		writer.WriteBoolean("valid", value.IsValid);
 
 		writer.WritePropertyName("keywordLocation");
-		options.Write(writer, value.EvaluationPath.Combine(keyword), JsonSchemaSerializerContext.Default.JsonPointer_Old);
+		options.Write(writer, value.EvaluationPath.Combine(keyword), JsonSchemaSerializerContext.Default.JsonPointer);
 
 		writer.WritePropertyName("absoluteKeywordLocation");
 		if (value.SchemaLocation.OriginalString.Contains('#'))
@@ -576,7 +576,7 @@ public class Pre202012EvaluationResultsJsonConverter : WeaklyTypedJsonConverter<
 			options.Write(writer, value.SchemaLocation.OriginalString + $"#/{keyword}", JsonSchemaSerializerContext.Default.String);
 
 		writer.WritePropertyName("instanceLocation");
-		options.Write(writer, value.InstanceLocation, JsonSchemaSerializerContext.Default.JsonPointer_Old);
+		options.Write(writer, value.InstanceLocation, JsonSchemaSerializerContext.Default.JsonPointer);
 
 		writer.WritePropertyName("error");
 		options.Write(writer, error, JsonSchemaSerializerContext.Default.String);
@@ -591,7 +591,7 @@ public class Pre202012EvaluationResultsJsonConverter : WeaklyTypedJsonConverter<
 		writer.WriteBoolean("valid", value.IsValid);
 
 		writer.WritePropertyName("keywordLocation");
-		options.Write(writer, annotation.Source, JsonSchemaSerializerContext.Default.JsonPointer_Old);
+		options.Write(writer, annotation.Source, JsonSchemaSerializerContext.Default.JsonPointer);
 
 		writer.WritePropertyName("absoluteKeywordLocation");
 		if (value.SchemaLocation.OriginalString.Contains('#'))
@@ -600,7 +600,7 @@ public class Pre202012EvaluationResultsJsonConverter : WeaklyTypedJsonConverter<
 			options.Write(writer, value.SchemaLocation.OriginalString + $"#/{annotation.Owner}", JsonSchemaSerializerContext.Default.String);
 
 		writer.WritePropertyName("instanceLocation");
-		options.Write(writer, value.InstanceLocation, JsonSchemaSerializerContext.Default.JsonPointer_Old);
+		options.Write(writer, value.InstanceLocation, JsonSchemaSerializerContext.Default.JsonPointer);
 
 		writer.WritePropertyName("annotation");
 		options.Write(writer, annotation.Value, JsonSchemaSerializerContext.Default.JsonNode!);

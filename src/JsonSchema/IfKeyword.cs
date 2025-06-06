@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -53,7 +52,7 @@ public class IfKeyword : IJsonSchemaKeyword, ISchemaContainer
 	/// <returns>A constraint object.</returns>
 	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, ReadOnlySpan<KeywordConstraint> localConstraints, EvaluationContext context)
 	{
-		var subschemaDependency = Schema.GetConstraint(JsonPointer_Old.Create(Name), schemaConstraint.BaseInstanceLocation, JsonPointer_Old.Empty, context);
+		var subschemaDependency = Schema.GetConstraint(JsonPointer.Create(Name), schemaConstraint.BaseInstanceLocation, JsonPointer.Empty, context);
 
 		return new KeywordConstraint(Name, Evaluator)
 		{

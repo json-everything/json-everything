@@ -25,7 +25,7 @@ namespace Json.Schema;
 [JsonConverter(typeof(PatternPropertiesKeywordJsonConverter))]
 public class PatternPropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
 {
-	private readonly IReadOnlyDictionary<string, (RegexOrPattern Regex, JsonPointer_Old Pointer, JsonSchema Schema)> _patternsLookup;
+	private readonly IReadOnlyDictionary<string, (RegexOrPattern Regex, JsonPointer Pointer, JsonSchema Schema)> _patternsLookup;
 
 	/// <summary>
 	/// The JSON name of the keyword.
@@ -60,7 +60,7 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollecto
 	/// <param name="values">The pattern-keyed schemas.</param>
 	public PatternPropertiesKeyword(IEnumerable<KeyValuePair<string, JsonSchema>> values)
 	{
-		_patternsLookup = values.ToDictionary(x => x.Key, x => (new RegexOrPattern(x.Key), JsonPointer_Old.Create(Name, x.Key), x.Value), StringComparer.Ordinal);
+		_patternsLookup = values.ToDictionary(x => x.Key, x => (new RegexOrPattern(x.Key), JsonPointer.Create(Name, x.Key), x.Value), StringComparer.Ordinal);
 	}
 
 	/// <summary>
@@ -69,17 +69,17 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollecto
 	/// <param name="values">The pattern-keyed schemas.</param>
 	public PatternPropertiesKeyword(IEnumerable<KeyValuePair<Regex, JsonSchema>> values)
 	{
-		_patternsLookup = values.ToDictionary(x => x.Key.ToString(), x => (new RegexOrPattern(x.Key), JsonPointer_Old.Create(Name, x.Key.ToString()), x.Value), StringComparer.Ordinal);
+		_patternsLookup = values.ToDictionary(x => x.Key.ToString(), x => (new RegexOrPattern(x.Key), JsonPointer.Create(Name, x.Key.ToString()), x.Value), StringComparer.Ordinal);
 	}
 
 	internal PatternPropertiesKeyword(IEnumerable<(string Pattern, JsonSchema Schema)> values)
 	{
-		_patternsLookup = values.ToDictionary(x => x.Pattern, x => (new RegexOrPattern(x.Pattern), JsonPointer_Old.Create(Name, x.Pattern), x.Schema), StringComparer.Ordinal);
+		_patternsLookup = values.ToDictionary(x => x.Pattern, x => (new RegexOrPattern(x.Pattern), JsonPointer.Create(Name, x.Pattern), x.Schema), StringComparer.Ordinal);
 	}
 
 	internal PatternPropertiesKeyword(IEnumerable<(Regex Pattern, JsonSchema Schema)> values)
 	{
-		_patternsLookup = values.ToDictionary(x => x.Pattern.ToString(), x => (new RegexOrPattern(x.Pattern), JsonPointer_Old.Create(Name, x.Pattern.ToString()), x.Schema), StringComparer.Ordinal);
+		_patternsLookup = values.ToDictionary(x => x.Pattern.ToString(), x => (new RegexOrPattern(x.Pattern), JsonPointer.Create(Name, x.Pattern.ToString()), x.Schema), StringComparer.Ordinal);
 	}
 
 	/// <summary>
@@ -100,7 +100,7 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollecto
 			var (regex, pointer, schema) = kvp.Value;
 
 			context.PushEvaluationPath(key);
-			var subschemaConstraint = schema.GetConstraint(pointer, schemaConstraint.BaseInstanceLocation, JsonPointer_Old.Empty, context);
+			var subschemaConstraint = schema.GetConstraint(pointer, schemaConstraint.BaseInstanceLocation, JsonPointer.Empty, context);
 			context.PopEvaluationPath();
 			subschemaConstraint.InstanceLocator = evaluation =>
 			{
@@ -108,7 +108,7 @@ public class PatternPropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollecto
 
 				var properties = obj.Select(x => x.Key).Where(x => regex.IsMatch(x));
 
-				return properties.Select(x => JsonPointer_Old.Create(x));
+				return properties.Select(x => JsonPointer.Create(x));
 			};
 
 			return subschemaConstraint;

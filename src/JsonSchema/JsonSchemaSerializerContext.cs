@@ -78,7 +78,7 @@ namespace Json.Schema;
 [JsonSerializable(typeof(PropertyDependency))]
 [JsonSerializable(typeof(SchemaValueType))]
 [JsonSerializable(typeof(EvaluationResults))]
-[JsonSerializable(typeof(JsonPointer_Old))]
+[JsonSerializable(typeof(JsonPointer))]
 [JsonSerializable(typeof(JsonNode))]
 [JsonSerializable(typeof(IReadOnlyCollection<JsonNode>))]
 [JsonSerializable(typeof(uint))]
