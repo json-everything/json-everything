@@ -294,7 +294,7 @@ public class JsonPointer_Old : IEquatable<JsonPointer_Old>, IReadOnlyList<string
 	/// <param name="segment">The segment.</param>
 	/// <returns>The JSON PointerOld.</returns>
 	/// <remarks>This method creates un-encoded pointers only.</remarks>
-	public static JsonPointer_Old Create(PointerSegment segment)
+	public static JsonPointer_Old Create(SegmentValueStandIn segment)
 	{
 		return new JsonPointer_Old(new[] { segment.Value });
 	}
@@ -305,7 +305,7 @@ public class JsonPointer_Old : IEquatable<JsonPointer_Old>, IReadOnlyList<string
 	/// <param name="segments">A collection of segments.</param>
 	/// <returns>The JSON PointerOld.</returns>
 	/// <remarks>This method creates un-encoded pointers only.</remarks>
-	public static JsonPointer_Old Create(params PointerSegment[] segments)
+	public static JsonPointer_Old Create(params SegmentValueStandIn[] segments)
 	{
 #if NET9_0_OR_GREATER
 		return Create(segments.AsSpan());
@@ -328,7 +328,7 @@ public class JsonPointer_Old : IEquatable<JsonPointer_Old>, IReadOnlyList<string
 	/// <param name="segments">A collection of segments.</param>
 	/// <returns>The JSON PointerOld.</returns>
 	/// <remarks>This method creates un-encoded pointers only.</remarks>
-	public static JsonPointer_Old Create(params ReadOnlySpan<PointerSegment> segments)
+	public static JsonPointer_Old Create(params ReadOnlySpan<SegmentValueStandIn> segments)
 	{
 		var array = new string[segments.Length];
 		
@@ -388,7 +388,7 @@ public class JsonPointer_Old : IEquatable<JsonPointer_Old>, IReadOnlyList<string
 		options ??= PointerCreationOptions.Default;
 
 		var body = expression.Body;
-		using var owner = MemoryPool<PointerSegment>.Shared.Rent();
+		using var owner = MemoryPool<SegmentValueStandIn>.Shared.Rent();
 		var segments = owner.Memory.Span;
 		var i = segments.Length - 1;
 		while (body != null)
@@ -444,7 +444,7 @@ public class JsonPointer_Old : IEquatable<JsonPointer_Old>, IReadOnlyList<string
 	/// </summary>
 	/// <param name="segment">The segment to add.</param>
 	/// <returns>A new pointerOld.</returns>
-	public JsonPointer_Old Combine(PointerSegment segment)
+	public JsonPointer_Old Combine(SegmentValueStandIn segment)
 	{
 		if (_decodedSegments.Length == 0) return Create(segment);
 
@@ -489,7 +489,7 @@ public class JsonPointer_Old : IEquatable<JsonPointer_Old>, IReadOnlyList<string
 	/// </summary>
 	/// <param name="additionalSegments">The additional segments.</param>
 	/// <returns>A new pointerOld.</returns>
-	public JsonPointer_Old Combine(params PointerSegment[] additionalSegments)
+	public JsonPointer_Old Combine(params SegmentValueStandIn[] additionalSegments)
 	{
 #if NET9_0_OR_GREATER
 		return Combine(additionalSegments.AsSpan());
@@ -522,7 +522,7 @@ public class JsonPointer_Old : IEquatable<JsonPointer_Old>, IReadOnlyList<string
 	/// </summary>
 	/// <param name="additionalSegments">The additional segments.</param>
 	/// <returns>A new pointerOld.</returns>
-	public JsonPointer_Old Combine(params ReadOnlySpan<PointerSegment> additionalSegments)
+	public JsonPointer_Old Combine(params ReadOnlySpan<SegmentValueStandIn> additionalSegments)
 	{
 		if (additionalSegments.Length == 0) return this;
 		if (_decodedSegments.Length == 0) return Create(additionalSegments);

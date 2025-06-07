@@ -62,7 +62,7 @@ public class EvaluationContext
 		EvaluatingAs = _evaluatingAs.Peek();
 	}
 
-	internal void PushEvaluationPath(PointerSegment segment)
+	internal void PushEvaluationPath(SegmentValueStandIn segment)
 	{
 #if DEBUG
 		_evaluationPath = _evaluationPath.Combine(segment);

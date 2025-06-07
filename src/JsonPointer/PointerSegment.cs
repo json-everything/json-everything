@@ -6,11 +6,12 @@ namespace Json.Pointer;
 /// <summary>
 /// Serves as an intermediary for creating JSON Pointers by segments.
 /// </summary>
-public readonly struct PointerSegment
+[Obsolete("Not intended to be used directly.")]
+public readonly struct SegmentValueStandIn
 {
 	internal string Value { get; }
 
-	private PointerSegment(string value)
+	private SegmentValueStandIn(string value)
 	{
 		Value = Encode(value);
 	}
@@ -59,18 +60,18 @@ public readonly struct PointerSegment
 	}
 
 	/// <summary>
-	/// Implicitly casts an <see cref="int"/> to a <see cref="PointerSegment"/>.
+	/// Implicitly casts an <see cref="int"/> to a <see cref="SegmentValueStandIn"/>.
 	/// </summary>
 	/// <param name="value">A pointer segment that represents the value.</param>
-	public static implicit operator PointerSegment(int value) =>
+	public static implicit operator SegmentValueStandIn(int value) =>
 		new(value.ToString(CultureInfo.InvariantCulture));
 
 	/// <summary>
-	/// Implicitly casts a <see cref="string"/> to a <see cref="PointerSegment"/>.
+	/// Implicitly casts a <see cref="string"/> to a <see cref="SegmentValueStandIn"/>.
 	/// </summary>
 	/// <param name="value">A pointer segment that represents the value.</param>
 	/// <remarks>JSON Pointer encoding is performed automatically.</remarks>
-	public static implicit operator PointerSegment(string value) =>
+	public static implicit operator SegmentValueStandIn(string value) =>
 		new(value);
 
 	/// <summary>Returns the fully qualified type name of this instance.</summary>

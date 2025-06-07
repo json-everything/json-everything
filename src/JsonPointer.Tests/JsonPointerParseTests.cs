@@ -145,7 +145,7 @@ public class JsonPointerParseTests
 	[TestCaseSource(nameof(SpecificationExamples))]
 	public void CreateThenToString(string pointerString, string[] segments)
 	{
-		var pointer = JsonPointer.Create(segments.Select(x => (PointerSegment)x).ToArray());
+		var pointer = JsonPointer.Create(segments.Select(x => (SegmentValueStandIn)x).ToArray());
 
 		var backToString = pointer.ToString();
 		Assert.That(backToString, Is.EqualTo(pointerString));

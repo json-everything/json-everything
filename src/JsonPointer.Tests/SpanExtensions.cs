@@ -4,9 +4,10 @@ namespace Json.Pointer.Tests;
 
 internal static class SpanExtensions
 {
-	internal static string? Decode(this ReadOnlyMemory<char> encoded)
+	internal static string? Decode(this JsonPointerSegment encoded)
 	{
-		var l = encoded.Length;
+		var span = encoded.AsSpan();
+		var l = span.Length;
 		if (l == 0) return string.Empty;
 
 		var targetIndex = 0;
@@ -18,7 +19,7 @@ internal static class SpanExtensions
 
 		for (; sourceIndex < l; targetIndex++, sourceIndex++)
 		{
-			target[targetIndex] = encoded.Span[sourceIndex];
+			target[targetIndex] = span[sourceIndex];
 
 			if (target[targetIndex] == '/')
 			{
@@ -30,10 +31,10 @@ internal static class SpanExtensions
 				if (sourceIndex == l - 1)
 					return null;
 
-				if (encoded.Span[++sourceIndex] == '0')
+				if (span[++sourceIndex] == '0')
 					continue; // we already wrote '~' so we're good
 
-				if (encoded.Span[sourceIndex] == '1')
+				if (span[sourceIndex] == '1')
 					target[targetIndex] = '/';
 				else
 					return null; // invalid escape sequence

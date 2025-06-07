@@ -93,7 +93,9 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 	/// This method incurs allocation costs for string concatenation and array creation.
 	/// For better performance with large pointers, consider using <see cref="Parse(ReadOnlySpan{char})"/>.
 	/// </remarks>
-	public static JsonPointer Create(params PointerSegment[] segments)
+#pragma warning disable CS0618 // Type or member is obsolete
+	public static JsonPointer Create(params SegmentValueStandIn[] segments)
+#pragma warning restore CS0618 // Type or member is obsolete
 	{
 		if (segments.Length == 0) return Empty;
 
@@ -191,7 +193,9 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 	/// This method incurs allocation costs for string concatenation and array creation.
 	/// For better performance with large numbers of segments, consider using <see cref="Parse(ReadOnlySpan{char})"/>.
 	/// </remarks>
-	public JsonPointer Combine(params PointerSegment[] segments)
+#pragma warning disable CS0618 // Type or member is obsolete
+	public JsonPointer Combine(params SegmentValueStandIn[] segments)
+#pragma warning restore CS0618 // Type or member is obsolete
 	{
 		if (segments.Length == 0) return this;
 
@@ -257,8 +261,9 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 	/// Gets a segment from the pointer by index.
 	/// </summary>
 	/// <param name="index">The zero-based index of the segment</param>
-	/// <returns>The segment as a ReadOnlyMemory&lt;char&gt;</returns>
-	public ReadOnlyMemory<char> GetSegment(int index)
+	/// <returns>The segment as a JsonPointerSegment</returns>
+	/// <exception cref="ArgumentOutOfRangeException">The index is out of range.</exception>
+	public JsonPointerSegment GetSegment(int index)
 	{
 		if (index < 0 || index >= SegmentCount)
 			throw new ArgumentOutOfRangeException(nameof(index));
@@ -277,13 +282,48 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 				}
 				else if (currentIndex == index + 1)
 				{
-					return _pointer[start..i];
+					return new JsonPointerSegment(span[start..i]);
 				}
 				currentIndex++;
 			}
 		}
 
-		return _pointer[start..];
+		return new JsonPointerSegment(span[start..]);
+	}
+
+	/// <summary>
+	/// Gets a segment from the pointer by index.
+	/// </summary>
+	/// <param name="index">The zero-based index of the segment</param>
+	/// <returns>The segment as a JsonPointerSegment</returns>
+	/// <exception cref="ArgumentOutOfRangeException">The index is out of range.</exception>
+	public JsonPointerSegment this[int index]
+	{
+		get
+		{
+			if (index < 0 || index >= SegmentCount)
+				throw new ArgumentOutOfRangeException(nameof(index));
+			
+			return GetSegment(index);
+		}
+	}
+
+	/// <summary>
+	/// Attempts to get a segment from the pointer by index.
+	/// </summary>
+	/// <param name="index">The zero-based index of the segment</param>
+	/// <param name="segment">The segment if found; default otherwise</param>
+	/// <returns>True if the segment was found; false otherwise</returns>
+	public bool TryGetSegment(int index, out JsonPointerSegment segment)
+	{
+		if (index < 0 || index >= SegmentCount)
+		{
+			segment = default;
+			return false;
+		}
+		
+		segment = GetSegment(index);
+		return true;
 	}
 
 	/// <summary>
@@ -322,93 +362,6 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 	public static bool operator !=(JsonPointer left, JsonPointer right) => !left.Equals(right);
 
 	/// <summary>
-	/// Compares a segment of this pointer with a value, handling both encoded and unencoded values.
-	/// </summary>
-	/// <param name="segmentIndex">The index of the segment to compare</param>
-	/// <param name="value">The value to compare against (can be encoded or unencoded)</param>
-	/// <returns>True if the segment matches the value, false otherwise</returns>
-	public bool SegmentEquals(int segmentIndex, ReadOnlySpan<char> value)
-	{
-		if (segmentIndex < 0 || segmentIndex >= SegmentCount)
-			throw new ArgumentOutOfRangeException(nameof(segmentIndex));
-
-		var segment = GetSegment(segmentIndex).Span;
-            
-		// If neither contains escape sequences, we can do a direct comparison
-		if (segment.IndexOf('~') == -1 && value.IndexOf('~') == -1)
-			return segment.SequenceEqual(value);
-
-		// Otherwise, compare while handling escape sequences
-		int i = 0, j = 0;
-		while (i < segment.Length && j < value.Length)
-		{
-			if (segment[i] == '~' && i + 1 < segment.Length)
-			{
-				if (segment[i + 1] == '0')
-				{
-					if (value[j] != '~') return false;
-					i += 2;
-					j++;
-				}
-				else if (segment[i + 1] == '1')
-				{
-					if (value[j] != '/') return false;
-					i += 2;
-					j++;
-				}
-				else
-				{
-					if (segment[i] != value[j]) return false;
-					i++;
-					j++;
-				}
-			}
-			else if (value[j] == '~' && j + 1 < value.Length)
-			{
-				if (value[j + 1] == '0')
-				{
-					if (segment[i] != '~') return false;
-					i++;
-					j += 2;
-				}
-				else if (value[j + 1] == '1')
-				{
-					if (segment[i] != '/') return false;
-					i++;
-					j += 2;
-				}
-				else
-				{
-					if (segment[i] != value[j]) return false;
-					i++;
-					j++;
-				}
-			}
-			else
-			{
-				if (segment[i] != value[j]) return false;
-				i++;
-				j++;
-			}
-		}
-
-		return i == segment.Length && j == value.Length;
-	}
-
-	/// <summary>
-	/// Compares a segment of this pointer with a value, handling both encoded and unencoded values.
-	/// </summary>
-	/// <param name="segmentIndex">The index of the segment to compare</param>
-	/// <param name="value">The value to compare against (can be encoded or unencoded)</param>
-	/// <returns>True if the segment matches the value, false otherwise</returns>
-	public bool SegmentEquals(int segmentIndex, string value)
-	{
-		if (value == null)
-			throw new ArgumentNullException(nameof(value));
-		return SegmentEquals(segmentIndex, value.AsSpan());
-	}
-
-	/// <summary>
 	/// Evaluates this pointer against a JsonElement to find the referenced value.
 	/// </summary>
 	/// <param name="element">The root JsonElement to evaluate against</param>
@@ -437,7 +390,7 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 				bool found = false;
 				foreach (var property in current.EnumerateObject())
 				{
-					if (SegmentEquals(currentIndex, property.Name))
+					if (GetSegment(currentIndex).Equals(property.Name))
 					{
 						current = property.Value;
 						found = true;
@@ -530,7 +483,7 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 					var found = false;
 					foreach (var kvp in obj)
 					{
-						if (SegmentEquals(currentIndex, kvp.Key))
+						if (GetSegment(currentIndex).Equals(kvp.Key))
 						{
 							current = kvp.Value;
 							found = true;
