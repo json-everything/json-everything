@@ -4,6 +4,11 @@ title: JsonSchema.Net.Generation
 icon: fas fa-tag
 order: "09.05"
 ---
+
+# [5.0.3](https://github.com/json-everything/json-everything/pull/897) {#release-schemagen-5.0.3}
+
+Fixed schema generation for types with property overrides using 'new' keyword
+
 # [5.0.2](https://github.com/json-everything/json-everything/pull/887) {#release-schemagen-5.0.2}
 
 Rerelease of 5.0.1 with fixed package dependencies.  Thanks to [@arturcic](https://github.com/arturcic) for reporting.
