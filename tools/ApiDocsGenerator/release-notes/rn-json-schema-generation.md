@@ -4,6 +4,10 @@ title: JsonSchema.Net.Generation
 icon: fas fa-tag
 order: "09.05"
 ---
+# [5.0.4](https://github.com/json-everything/json-everything/pull/910) {#release-schemagen-5.0.4}
+
+[#906](https://github.com/gregsdennis/json-everything/issues/906) - Multiple types could produce the same schema.  For example `IEnumerable<int>` and `int[]` both produce a definition name of `arrayOfInt`.
+
 
 # [5.0.3](https://github.com/json-everything/json-everything/pull/897) {#release-schemagen-5.0.3}
 

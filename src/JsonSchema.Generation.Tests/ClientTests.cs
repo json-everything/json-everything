@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -543,5 +544,11 @@ public class ClientTests
 		JsonSchema schema = new JsonSchemaBuilder().FromType<Pizza>(config);
 
 		AssertEqual(expected, schema);
+	}
+
+	[Test]
+	public void Issue906_DataTableSchema()
+	{
+		_ = new JsonSchemaBuilder().FromType<DataTable>().Build();
 	}
 }
