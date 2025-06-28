@@ -15,8 +15,8 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <Version>5.0.3</Version>
-    <FileVersion>5.0.3</FileVersion>
+    <Version>5.0.4</Version>
+    <FileVersion>5.0.4</FileVersion>
     <AssemblyVersion>5.0.0.0</AssemblyVersion>
     <Authors>Greg Dennis</Authors>
     <Description>Extends JsonSchema.Net to provide schema generation functionality</Description>

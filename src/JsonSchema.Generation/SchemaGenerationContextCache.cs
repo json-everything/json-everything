@@ -62,6 +62,7 @@ public static class SchemaGenerationContextCache
 			.Where(x => x.Value.References.Count > 0 &&
 			            x.Key != type && 
 			            x.Key.CanBeReferenced())
+			//.DistinctBy(x => x.Value.DefinitionName)
 			.ToDictionary(x => x.Value.DefinitionName, SchemaGenerationContextBase (x) => x.Value);
 		if (definitions.Count != 0)
 			baseContext.Intents.Add(new DefsIntent(definitions));
