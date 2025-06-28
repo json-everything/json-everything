@@ -19,7 +19,6 @@ body:
       label: Nuget Package
       description: Which package are you using?
       options:
-        - json-everything.net (playground)
         - Json.More.Net
         - JsonE.Net
         - JsonLogic
@@ -36,6 +35,7 @@ body:
         - JsonSchema.Net.OpenApi
         - JsonSchema.Net.UniqueKeys
         - Yaml2JsonNode
+        - json-everything.net (playground)
     validations:
       required: true
   - type: input
