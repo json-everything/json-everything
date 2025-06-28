@@ -8,7 +8,7 @@ on:
       - 'src/Yaml2JsonNode*/**/*'
       - 'ref-repos/**/*'
       - '.github/workflows/dotnet-core.yml'
-  pull_request_target:
+  pull_request:
     paths:
       - 'src/Json*/**/*'
       - 'src/Yaml2JsonNode*/**/*'
