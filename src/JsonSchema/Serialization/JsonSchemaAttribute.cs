@@ -10,7 +10,7 @@ namespace Json.Schema.Serialization;
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface | AttributeTargets.Struct)]
 public class JsonSchemaAttribute : Attribute
 {
-	internal JsonSchema Schema { get; }
+	internal JsonSchemaNode Schema { get; }
 
 	/// <summary>
 	/// Identifies a <see cref="JsonSchema"/> to use when deserializing a type.
@@ -33,7 +33,7 @@ public class JsonSchemaAttribute : Attribute
 		var field = member as FieldInfo;
 
 		var value = prop?.GetValue(null) ?? field?.GetValue(null);
-		if (value is not JsonSchema schema)
+		if (value is not JsonSchemaNode schema)
 			throw new ArgumentException($"Value of property must be `{typeof(JsonSchema).FullName}`");
 
 		Schema = schema;

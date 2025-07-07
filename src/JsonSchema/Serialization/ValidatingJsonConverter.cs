@@ -36,7 +36,7 @@ public class ValidatingJsonConverter : JsonConverterFactory
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
 	/// <param name="schema"></param>
-	public static void MapType<T>(JsonSchema schema)
+	public static void MapType<T>(JsonSchemaNode schema)
 	{
 		_instance.CreateConverter(typeof(T), schema);
 	}
@@ -79,7 +79,7 @@ public class ValidatingJsonConverter : JsonConverterFactory
 		return CreateConverter(typeToConvert, schema);
 	}
 
-	private JsonConverter CreateConverter(Type typeToConvert, JsonSchema schema)
+	private JsonConverter CreateConverter(Type typeToConvert, JsonSchemaNode schema)
 	{
 		var converterType = typeof(ValidatingJsonConverter<>).MakeGenericType(typeToConvert);
 
@@ -119,13 +119,13 @@ internal interface IValidatingJsonConverter
 
 internal class ValidatingJsonConverter<T> : WeaklyTypedJsonConverter<T>, IValidatingJsonConverter
 {
-	private readonly JsonSchema _schema;
+	private readonly JsonSchemaNode _schema;
 	private readonly Func<JsonSerializerOptions, JsonSerializerOptions> _optionsFactory;
 
 	public OutputFormat OutputFormat { get; set; } = OutputFormat.Flag;
 	public bool RequireFormatValidation { get; set; }
 
-	public ValidatingJsonConverter(JsonSchema schema, Func<JsonSerializerOptions, JsonSerializerOptions> optionsFactory)
+	public ValidatingJsonConverter(JsonSchemaNode schema, Func<JsonSerializerOptions, JsonSerializerOptions> optionsFactory)
 	{
 		_schema = schema;
 		_optionsFactory = optionsFactory;
@@ -135,32 +135,34 @@ internal class ValidatingJsonConverter<T> : WeaklyTypedJsonConverter<T>, IValida
 	[UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public override T? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var readerCopy = reader;
-		var node = options.Read(ref readerCopy, JsonSchemaSerializerContext.Default.JsonNode);
+		//var readerCopy = reader;
+		//var node = options.Read(ref readerCopy, JsonSchemaSerializerContext.Default.JsonNode);
 		
-		var validation = _schema.Evaluate(node, new EvaluationOptions
-		{
-			OutputFormat = OutputFormat,
-			RequireFormatValidation = RequireFormatValidation
-		});
+		//var validation = _schema.Evaluate(node, new EvaluationOptions
+		//{
+		//	OutputFormat = OutputFormat,
+		//	RequireFormatValidation = RequireFormatValidation
+		//});
 
-		var newOptions = _optionsFactory(options);
+		//var newOptions = _optionsFactory(options);
 
-		if (validation.IsValid)
-			// TODO: this does not use the options reader because at least one test failed with a NotSupportedException
-			/*
-			return newOptions.Read<T>(ref reader);
-			/*/
-			return JsonSerializer.Deserialize<T>(ref reader, newOptions);
-			//*/
+		//if (validation.IsValid)
+		//	// TODO: this does not use the options reader because at least one test failed with a NotSupportedException
+		//	/*
+		//	return newOptions.Read<T>(ref reader);
+		//	/*/
+		//	return JsonSerializer.Deserialize<T>(ref reader, newOptions);
+		//	//*/
 
-		throw new JsonException("JSON does not meet schema requirements")
-		{
-			Data =
-			{
-				["validation"] = validation
-			}
-		};
+		//throw new JsonException("JSON does not meet schema requirements")
+		//{
+		//	Data =
+		//	{
+		//		["validation"] = validation
+		//	}
+		//};
+
+		throw new NotImplementedException();
 	}
 
 	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]

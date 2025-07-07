@@ -56,8 +56,8 @@ public class MissingRule : Rule, IRule
 			.Select(p => new
 			{
 				Path = p, Pointer = p == string.Empty
-					? JsonPointer_Old.Empty
-					: JsonPointer_Old.Parse($"/{p.Replace('.', '/')}")
+					? JsonPointer.Empty
+					: JsonPointer.Parse($"/{p.Replace('.', '/')}")
 			})
 			.Select(p =>
 			{

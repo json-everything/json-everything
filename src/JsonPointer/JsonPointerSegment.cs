@@ -163,6 +163,37 @@ public readonly ref struct JsonPointerSegment
         _segment.ToString();
 
     /// <summary>
+    /// Returns the int representation of this segment.
+    /// </summary>
+    /// <returns>The segment as an int.</returns>
+    public int ToInt()
+    {
+#if NET8_0_OR_GREATER
+		if (int.TryParse(_segment, out var result)) return result;
+        
+        throw new FormatException($"The segment '{_segment.ToString()}' is not a valid integer.");
+#else
+		if (_segment.Length == 0)
+			throw new FormatException("Empty segment cannot be converted to integer.");
+
+		int result = 0;
+		for (int i = 0; i < _segment.Length; i++)
+		{
+			char c = _segment[i];
+			if (c < '0' || c > '9')
+				throw new FormatException($"Invalid character '{c}' in numeric segment.");
+			
+			if (result > (int.MaxValue - (c - '0')) / 10)
+				throw new OverflowException("Numeric segment value is too large.");
+			
+			result = result * 10 + (c - '0');
+		}
+		
+		return result;
+#endif
+	}
+
+    /// <summary>
     /// Gets the raw span representation of this segment.
     /// </summary>
     /// <returns>The segment as a ReadOnlySpan&lt;char&gt;.</returns>
