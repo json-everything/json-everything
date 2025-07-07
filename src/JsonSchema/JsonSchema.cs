@@ -123,14 +123,12 @@ public static class JsonSchema
     {
         var baseUri = context.BaseUri;
 
-        // Always register the root schema
-        context.SchemaResources.Add(baseUri, schema);
+		context.SchemaResources.TryAdd(baseUri, schema);
 
         if (schema.TryGetProperty("$id", out var idElement))
         {
             var idValue = idElement.GetString()!;
             baseUri = new Uri(context.BaseUri, idValue);
-            // Register the schema with its $id as well
             context.SchemaResources.Add(baseUri, schema);
         }
 
