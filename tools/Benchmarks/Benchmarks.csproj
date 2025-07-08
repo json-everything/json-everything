@@ -9,8 +9,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="LogicSuite\**" />
     <Compile Remove="SchemaSuite\**" />
+    <EmbeddedResource Remove="LogicSuite\**" />
     <EmbeddedResource Remove="SchemaSuite\**" />
+    <None Remove="LogicSuite\**" />
     <None Remove="SchemaSuite\**" />
   </ItemGroup>
 
@@ -27,6 +30,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\JsonLogic\JsonLogic.csproj" />
+    <ProjectReference Include="..\..\src\JsonPath\JsonPath.csproj" />
+    <ProjectReference Include="..\..\src\JsonPointer\JsonPointer.csproj" />
     <ProjectReference Include="..\..\src\JsonSchema\JsonSchema.csproj" />
   </ItemGroup>
 

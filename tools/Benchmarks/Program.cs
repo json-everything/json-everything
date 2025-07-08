@@ -1,6 +1,6 @@
 ﻿using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Running;
-using Json.Benchmarks.LogicSuite;
+//using Json.Benchmarks.LogicSuite;
 using Json.Benchmarks.Pointer;
 using Json.Benchmarks.Schema;
 //using Json.Benchmarks.SchemaSuite;
@@ -17,7 +17,7 @@ class Program
 		//var summary = BenchmarkRunner.Run<TestSuiteRunner>(config);
 
 		var runner = new ValidationRunner();
-		runner.ValidateWithSchemaCompilation();
+		runner.NewSchemaValidation();
 		
 #else
 		var summary = BenchmarkRunner.Run<ValidationRunner>();

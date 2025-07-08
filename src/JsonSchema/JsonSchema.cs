@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using Json.Pointer;
 
@@ -10,7 +11,7 @@ public static class JsonSchema
     private static JsonSchemaNode CreateTrue(BuildContext context) => new(
         baseIri: context.BaseUri,
         schemaLocation: context.SchemaPath,
-        constraints: new() { ["boolean"] = (_, _) => KeywordResult.Skip },
+        constraints: new() { [""] = (_, _) => KeywordResult.Skip },
         dependencies: new(),
         schemaPathFromParent: context.AdditionalSchemaPathFromParent,
         instancePathFromParent: context.InstancePathFromParent,
@@ -20,7 +21,7 @@ public static class JsonSchema
     private static JsonSchemaNode CreateFalse(BuildContext context) => new(
         baseIri: context.BaseUri,
         schemaLocation: context.SchemaPath,
-        constraints: new() { ["boolean"] = (_, _) => new KeywordResult(false, "Instance validation failed against false schema", null) },
+        constraints: new() { [""] = (_, _) => new KeywordResult(false, "Instance validation failed against false schema", null) },
         dependencies: new(),
         schemaPathFromParent: context.AdditionalSchemaPathFromParent,
         instancePathFromParent: context.InstancePathFromParent,
@@ -48,13 +49,15 @@ public static class JsonSchema
         return $"{BaseUriDomain}/{id}";
     }
 
-    public static JsonSchemaNode Build(JsonElement schema)
+    public static JsonSchemaNode Build(JsonElement schema, JsonSchemaOptions? options = null)
     {
+		options ??= JsonSchemaOptions.Global;
+
         var context = new BuildContext(
             BaseUri: new Uri(GenerateBaseUri()),
             CurrentInstanceLocation: JsonPointer.Empty,
             SchemaPath: JsonPointer.Empty,
-            SchemaResources: new Dictionary<Uri, JsonElement>(),
+            SchemaResources: new Dictionary<Uri, JsonElement>(options.SchemaRegistry.Schemas),
             Anchors: new Dictionary<string, Uri>(),
             Visited: new Dictionary<(Uri, JsonPointer), JsonSchemaNode>(),
             AdditionalSchemaPathFromParent: JsonPointer.Empty,
@@ -232,4 +235,51 @@ public static class JsonSchema
 		if (dependencyResults.Count > 0)
 			evaluatedDependencies[keyword] = dependencyResults;
 	}
+}
+
+public class SchemaRegistry
+{
+	public static SchemaRegistry Global { get; } = new();
+
+	internal Dictionary<Uri, JsonElement> Schemas { get; } = new();
+
+	public SchemaRegistry(){}
+
+	public SchemaRegistry(SchemaRegistry other)
+	{
+		Schemas = new Dictionary<Uri, JsonElement>(other.Schemas);
+	}
+
+	public void Register(JsonElement schema, Uri? baseUri = null)
+	{
+		if (baseUri is null)
+		{
+			if (schema.ValueKind != JsonValueKind.Object)
+				throw new ArgumentException("Only object schemas with $id can be registered without supplying a base IRI");
+
+			var idElement = schema.EnumerateObject().FirstOrDefault(x => x.Name == "$id").Value;
+			if (idElement.ValueKind != JsonValueKind.String)
+				throw new ArgumentException("Only object schemas with $id can be registered without supplying a base IRI");
+
+			var id = idElement.GetString();
+			if (!Uri.TryCreate(id, UriKind.Absolute, out baseUri))
+				throw new ArgumentException("$id must be a valid absolute IRI");
+		}
+
+		Schemas.Add(baseUri, schema);
+	}
+}
+
+public class JsonSchemaOptions
+{
+	public static JsonSchemaOptions Global { get; } = new();
+
+	public JsonSchemaOptions() { }
+
+	public JsonSchemaOptions(JsonSchemaOptions other)
+	{
+		SchemaRegistry = new SchemaRegistry(other.SchemaRegistry);
+	}
+
+	public SchemaRegistry SchemaRegistry { get; set; } = SchemaRegistry.Global;
 }

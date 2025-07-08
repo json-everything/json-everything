@@ -28,7 +28,7 @@ public sealed class OneOfHandler : IKeywordHandler
             var newContext = context with
             {
                 SchemaPath = context.SchemaPath.Combine("oneOf", i),
-                AdditionalSchemaPathFromParent = JsonPointer.Create(i),
+                AdditionalSchemaPathFromParent = JsonPointerHelpers.GetCachedPointer(i),
                 InstancePathFromParent = JsonPointer.Empty,
                 FilterDependencyLocations = null
             };

@@ -30,9 +30,9 @@ public sealed class PropertiesHandler : IKeywordHandler
             var newContext = context with
             {
                 CurrentInstanceLocation = context.CurrentInstanceLocation.Combine(propName),
-                InstancePathFromParent = JsonPointer.Create(propName),
+                InstancePathFromParent = JsonPointerHelpers.GetCachedPointer(propName),
                 SchemaPath = context.SchemaPath.Combine("properties", propName),
-                AdditionalSchemaPathFromParent = JsonPointer.Create(propName),
+                AdditionalSchemaPathFromParent = JsonPointerHelpers.GetCachedPointer(propName),
                 FilterDependencyLocations = null
             };
 

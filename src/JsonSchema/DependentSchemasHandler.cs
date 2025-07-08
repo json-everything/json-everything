@@ -24,7 +24,7 @@ public sealed class DependentSchemasHandler : IKeywordHandler
             var node = JsonSchema.BuildCore(property.Value, context with
             {
                 SchemaPath = context.SchemaPath.Combine("dependentSchemas", property.Name),
-                AdditionalSchemaPathFromParent = JsonPointer.Create(property.Name),
+                AdditionalSchemaPathFromParent = JsonPointerHelpers.GetCachedPointer(property.Name),
                 InstancePathFromParent = JsonPointer.Empty,
                 FilterDependencyLocations = (_, instance, _) => 
                     instance.ValueKind == JsonValueKind.Object && 

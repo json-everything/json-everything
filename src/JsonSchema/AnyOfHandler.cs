@@ -30,7 +30,7 @@ public sealed class AnyOfHandler : IKeywordHandler
             var newContext = context with
             {
                 SchemaPath = context.SchemaPath.Combine("anyOf", i),
-                AdditionalSchemaPathFromParent = JsonPointer.Create(i),
+                AdditionalSchemaPathFromParent = JsonPointerHelpers.GetCachedPointer(i),
                 InstancePathFromParent = JsonPointer.Empty,
                 FilterDependencyLocations = null
             };

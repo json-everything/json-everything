@@ -3,7 +3,7 @@ using Json.Schema;
 using System.Text.Json;
 using BenchmarkDotNet.Jobs;
 
-namespace Json.Benchmarks.Schema;
+namespace Json.LegacyBenchmarks;
 
 [MemoryDiagnoser]
 //[SimpleJob(RuntimeMoniker.Net80)]
@@ -70,21 +70,20 @@ public class ValidationRunner
 	public int Count { get; set; }
 
 	[Benchmark]
-	public bool NewSchemaValidation()
+	public bool LegacySchemaValidation()
 	{
-		// Parse and build the schema once
-		using var schemaDoc = JsonDocument.Parse(_personSchemaText);
-		var schema = JsonSchema.Build(schemaDoc.RootElement);
+		// Parse the schema once
+		var schema = JsonSchema.FromText(_personSchemaText);
 		
 		// Parse the instance once
-		using var instanceDoc = JsonDocument.Parse(_personInstanceText);
-		var instance = instanceDoc.RootElement;
+		using var document = JsonDocument.Parse(_personInstanceText);
+		var instance = document.RootElement;
 		
 		// Run validation Count times
 		bool result = false;
 		for (int i = 0; i < Count; i++)
 		{
-			var evaluationResults = JsonSchema.Evaluate(schema, instance);
+			var evaluationResults = schema.Evaluate(instance);
 			result = evaluationResults.IsValid;
 		}
 		

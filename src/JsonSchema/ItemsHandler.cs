@@ -28,9 +28,9 @@ public sealed class ItemsHandler : IKeywordHandler
                 var newContext = context with
                 {
                     CurrentInstanceLocation = context.CurrentInstanceLocation.Combine(i),
-                    InstancePathFromParent = JsonPointer.Create(i),
+                    InstancePathFromParent = JsonPointerHelpers.GetCachedPointer(i),
                     SchemaPath = context.SchemaPath.Combine("items", i),
-                    AdditionalSchemaPathFromParent = JsonPointer.Create(i),
+                    AdditionalSchemaPathFromParent = JsonPointerHelpers.GetCachedPointer(i),
                     FilterDependencyLocations = (_, _, parent) =>
                     {
                         if (parent.ValueKind != JsonValueKind.Array)

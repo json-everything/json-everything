@@ -28,9 +28,9 @@ public sealed class PrefixItemsHandler : IKeywordHandler
             var newContext = context with
             {
                 CurrentInstanceLocation = context.CurrentInstanceLocation.Combine(i),
-                InstancePathFromParent = JsonPointer.Create(i),
+                InstancePathFromParent = JsonPointerHelpers.GetCachedPointer(i),
                 SchemaPath = context.SchemaPath.Combine("prefixItems", i),
-                AdditionalSchemaPathFromParent = JsonPointer.Create(i),
+                AdditionalSchemaPathFromParent = JsonPointerHelpers.GetCachedPointer(i),
                 FilterDependencyLocations = null
             };
             prefixNodes[i] = JsonSchema.BuildCore(schemas[i], newContext);

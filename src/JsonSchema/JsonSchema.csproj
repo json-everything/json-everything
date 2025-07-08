@@ -7,7 +7,6 @@
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <NoWarn>IDE0290</NoWarn>
-    <IsAotCompatible Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net7.0'))">true</IsAotCompatible>	  
     <RootNamespace>Json.Schema</RootNamespace>
     <AssemblyName>JsonSchema.Net</AssemblyName>
     <DocumentationFile>JsonSchema.Net.xml</DocumentationFile>

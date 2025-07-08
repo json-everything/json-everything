@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
@@ -10,6 +11,30 @@ public static class JsonPointerHelpers
 {
 	public static readonly JsonPointer Wildcard = JsonPointer.Create(Guid.NewGuid().ToString("N"));
 	public static readonly JsonPointer Key = JsonPointer.Create(Guid.NewGuid().ToString("N"));
+
+	// Pointer cache for performance optimization
+	private static readonly ConcurrentDictionary<string, JsonPointer> _stringPointerCache = new();
+	private static readonly ConcurrentDictionary<int, JsonPointer> _intPointerCache = new();
+
+	/// <summary>
+	/// Gets a cached JsonPointer for the specified string segment.
+	/// </summary>
+	/// <param name="segment">The string segment</param>
+	/// <returns>A cached JsonPointer instance</returns>
+	public static JsonPointer GetCachedPointer(string segment)
+	{
+		return _stringPointerCache.GetOrAdd(segment, s => JsonPointer.Create(s));
+	}
+
+	/// <summary>
+	/// Gets a cached JsonPointer for the specified integer segment.
+	/// </summary>
+	/// <param name="segment">The integer segment</param>
+	/// <returns>A cached JsonPointer instance</returns>
+	public static JsonPointer GetCachedPointer(int segment)
+	{
+		return _intPointerCache.GetOrAdd(segment, i => JsonPointer.Create(i));
+	}
 
 	/// <summary>
 	/// Evaluates a JsonPointer against a JsonElement, expanding wildcards to return all matching values and their locations.

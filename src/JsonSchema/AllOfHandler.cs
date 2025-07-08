@@ -28,7 +28,7 @@ public sealed class AllOfHandler : IKeywordHandler
             var newContext = context with
             {
                 SchemaPath = context.SchemaPath.Combine("allOf", i),
-                AdditionalSchemaPathFromParent = JsonPointer.Create(i),
+                AdditionalSchemaPathFromParent = JsonPointerHelpers.GetCachedPointer(i),
                 InstancePathFromParent = JsonPointer.Empty,
                 FilterDependencyLocations = null
             };

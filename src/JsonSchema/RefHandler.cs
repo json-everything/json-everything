@@ -69,7 +69,7 @@ public sealed class RefHandler : IKeywordHandler
             SchemaResources = context.SchemaResources,
             Anchors = context.Anchors,
             SchemaPath = schemaPath,
-            AdditionalSchemaPathFromParent = JsonPointer.Create("$ref"),
+            AdditionalSchemaPathFromParent = JsonPointerHelpers.GetCachedPointer("$ref"),
             InstancePathFromParent = JsonPointer.Empty,
             FilterDependencyLocations = null
         }, schemaPath);

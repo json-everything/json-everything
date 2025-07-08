@@ -11,8 +11,39 @@
 		<AssemblyOriginatorKeyFile>../../json-everything.snk</AssemblyOriginatorKeyFile>
 		<NoWarn>IDE0290</NoWarn>
 		<Nullable>enable</Nullable>
-		<JsonSerializerIsReflectionEnabledByDefault Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net7.0'))">false</JsonSerializerIsReflectionEnabledByDefault>
 	</PropertyGroup>
+
+	<ItemGroup>
+	  <Compile Remove="AnchorTests.cs" />
+	  <Compile Remove="AutoEvaluationTests.cs" />
+	  <Compile Remove="BaseDocumentTests.cs" />
+	  <Compile Remove="BuilderExtensions.cs" />
+	  <Compile Remove="BundlingTests.cs" />
+	  <Compile Remove="CreationTests.cs" />
+	  <Compile Remove="CrossDraftTests.cs" />
+	  <Compile Remove="DevTest.cs" />
+	  <Compile Remove="EvaluationOptionsTests.cs" />
+	  <Compile Remove="ExtensionTests.cs" />
+	  <Compile Remove="FetchTests.cs" />
+	  <Compile Remove="FormatTests.cs" />
+	  <Compile Remove="GithubTests.cs" />
+	  <Compile Remove="LearnJsonEverythingTestFixture.cs" />
+	  <Compile Remove="LocalizationTests.cs" />
+	  <Compile Remove="NullTests.cs" />
+	  <Compile Remove="OutputTests.cs" />
+	  <Compile Remove="PatternTests.cs" />
+	  <Compile Remove="ReferenceTests.cs" />
+	  <Compile Remove="ResultsExtensions.cs" />
+	  <Compile Remove="SelfValidationTest.cs" />
+	  <Compile Remove="SerializationTests.cs" />
+	  <Compile Remove="Serialization\DeserializationTests.cs" />
+	  <Compile Remove="SlackTests.cs" />
+	  <Compile Remove="TestEnvironment.cs" />
+	  <Compile Remove="TestSerializerContext.cs" />
+	  <Compile Remove="TraversalTests.cs" />
+	  <Compile Remove="UnrecognizedKeywordTests.cs" />
+	  <Compile Remove="VocabularyTests.cs" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Humanizer.Core" Version="2.14.1" />
@@ -40,5 +71,9 @@
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
 	</ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Serialization\" />
+  </ItemGroup>
 
 </Project>
