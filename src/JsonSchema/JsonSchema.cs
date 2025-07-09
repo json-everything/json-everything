@@ -235,6 +235,203 @@ public static class JsonSchema
 		if (dependencyResults.Count > 0)
 			evaluatedDependencies[keyword] = dependencyResults;
 	}
+
+	public static EvaluationOutput Evaluate2(JsonSchemaNode node, JsonElement instance)
+	{
+		return Evaluate2(node, instance, JsonPointer.Empty, JsonPointer.Empty);
+	}
+
+	private static EvaluationOutput Evaluate2(JsonSchemaNode node, JsonElement instance, JsonPointer instanceLocation, JsonPointer evaluationPath)
+	{
+		var isValid = true;
+		var errors = new Dictionary<string, string>();
+		var annotations = new Dictionary<string, JsonElement>();
+		var allResults = new List<EvaluationOutput>();
+
+		// Create a recursive evaluator function that keywords can use directly
+		Func<JsonSchemaNode, JsonElement, JsonPointer, JsonPointer, EvaluationOutput> evaluator = Evaluate2;
+
+		// Evaluate each constraint, letting it handle its own sub-schema evaluation
+		foreach (var kvp in node.Constraints)
+		{
+			var keyword = kvp.Key;
+			var constraint = kvp.Value;
+			
+			// Get dependencies for this keyword and evaluate them on-demand
+			var dependencyResults = new List<EvaluationOutput>();
+			if (node.Dependencies.TryGetValue(keyword, out var dependencies))
+			{
+				foreach (var dependency in dependencies)
+				{
+					var subResults = EvaluateDependencyRecursive(dependency, instance, instanceLocation, evaluationPath, keyword, evaluator);
+					dependencyResults.AddRange(subResults);
+					allResults.AddRange(subResults);
+				}
+			}
+
+			// Now evaluate the constraint with the dependency results
+			var result = constraint(instance, dependencyResults);
+
+			if (result.IsValid)
+			{
+				if (result.Annotation.HasValue)
+					annotations[keyword] = result.Annotation.Value;
+			}
+			else
+			{
+				isValid = false;
+				if (result.ErrorMessage != null)
+				{
+					var errorKeyword = result.KeywordOverride ?? keyword;
+					errors[errorKeyword] = result.ErrorMessage;
+				}
+			}
+		}
+
+		return new EvaluationOutput(
+			isValid,
+			instanceLocation,
+			evaluationPath,
+			node.SchemaIri,
+			errors.Count > 0 ? errors : null,
+			isValid ? annotations : null,
+			allResults.Count > 0 ? allResults : null
+		);
+	}
+
+	private static List<EvaluationOutput> EvaluateDependencyRecursive(
+		JsonSchemaNode dependency, 
+		JsonElement instance, 
+		JsonPointer instanceLocation, 
+		JsonPointer evaluationPath, 
+		string keyword,
+		Func<JsonSchemaNode, JsonElement, JsonPointer, JsonPointer, EvaluationOutput> evaluator)
+	{
+		var results = new List<EvaluationOutput>();
+		
+		// Get all matching instance values for the dependency's path
+		var matches = dependency.InstancePathFromParent.EvaluateWithWildcards(instance);
+		if (matches.Length == 0) return results;
+
+		foreach (var (matchValue, matchLocation) in matches)
+		{
+			// Apply the filter if it exists
+			if (dependency.FilterDependencyLocations != null &&
+				!dependency.FilterDependencyLocations(matchLocation, matchValue, instance))
+				continue;
+
+			// Build the full instance location for the dependency
+			var dependencyInstanceLocation = instanceLocation.Combine(matchLocation);
+			
+			// Build the evaluation path including the keyword and additional schema path
+			var dependencyEvaluationPath = dependency.AdditionalSchemaPathFromParent.SegmentCount == 0
+				? evaluationPath.Combine(keyword)
+				: evaluationPath.Combine(keyword).Combine(dependency.AdditionalSchemaPathFromParent);
+
+			// Recursively evaluate the dependency
+			var result = evaluator(dependency, matchValue, dependencyInstanceLocation, dependencyEvaluationPath);
+			results.Add(result);
+		}
+
+		return results;
+	}
+
+	// Alternative: A more streamlined recursive approach that doesn't use the dependency system
+	public static EvaluationOutput Evaluate3(JsonSchemaNode node, JsonElement instance)
+	{
+		return Evaluate3(node, instance, JsonPointer.Empty, JsonPointer.Empty);
+	}
+
+	private static EvaluationOutput Evaluate3(JsonSchemaNode node, JsonElement instance, JsonPointer instanceLocation, JsonPointer evaluationPath)
+	{
+		var isValid = true;
+		var errors = new Dictionary<string, string>();
+		var annotations = new Dictionary<string, JsonElement>();
+		var allResults = new List<EvaluationOutput>();
+
+		// Direct constraint evaluation - evaluate dependencies on-demand for each constraint
+		foreach (var kvp in node.Constraints)
+		{
+			var keyword = kvp.Key;
+			var constraint = kvp.Value;
+			
+			// Evaluate dependencies for this specific constraint on-demand
+			var dependencyResults = new List<EvaluationOutput>();
+			if (node.Dependencies.TryGetValue(keyword, out var dependencies))
+			{
+				foreach (var dependency in dependencies)
+				{
+					var subResults = EvaluateDependencyDirect(dependency, instance, instanceLocation, evaluationPath, keyword);
+					dependencyResults.AddRange(subResults);
+					allResults.AddRange(subResults);
+				}
+			}
+
+			// Now evaluate the constraint with proper dependency results
+			var result = constraint(instance, dependencyResults);
+
+			if (result.IsValid)
+			{
+				if (result.Annotation.HasValue)
+					annotations[keyword] = result.Annotation.Value;
+			}
+			else
+			{
+				isValid = false;
+				if (result.ErrorMessage != null)
+				{
+					var errorKeyword = result.KeywordOverride ?? keyword;
+					errors[errorKeyword] = result.ErrorMessage;
+				}
+			}
+		}
+
+		return new EvaluationOutput(
+			isValid,
+			instanceLocation,
+			evaluationPath,
+			node.SchemaIri,
+			errors.Count > 0 ? errors : null,
+			isValid ? annotations : null,
+			allResults.Count > 0 ? allResults : null
+		);
+	}
+
+	private static List<EvaluationOutput> EvaluateDependencyDirect(
+		JsonSchemaNode dependency, 
+		JsonElement instance, 
+		JsonPointer instanceLocation, 
+		JsonPointer evaluationPath, 
+		string keyword)
+	{
+		var results = new List<EvaluationOutput>();
+		
+		// Get all matching instance values for the dependency's path
+		var matches = dependency.InstancePathFromParent.EvaluateWithWildcards(instance);
+		if (matches.Length == 0) return results;
+
+		foreach (var (matchValue, matchLocation) in matches)
+		{
+			// Apply the filter if it exists
+			if (dependency.FilterDependencyLocations != null &&
+				!dependency.FilterDependencyLocations(matchLocation, matchValue, instance))
+				continue;
+
+			// Build the full instance location for the dependency
+			var dependencyInstanceLocation = instanceLocation.Combine(matchLocation);
+			
+			// Build the evaluation path including the keyword and additional schema path
+			var dependencyEvaluationPath = dependency.AdditionalSchemaPathFromParent.SegmentCount == 0
+				? evaluationPath.Combine(keyword)
+				: evaluationPath.Combine(keyword).Combine(dependency.AdditionalSchemaPathFromParent);
+
+			// Recursively evaluate the dependency using Evaluate3
+			var result = Evaluate3(dependency, matchValue, dependencyInstanceLocation, dependencyEvaluationPath);
+			results.Add(result);
+		}
+
+		return results;
+	}
 }
 
 public class SchemaRegistry

@@ -6,10 +6,11 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using NUnit.Framework;
 using TestHelpers;
+using Json.Schema.Ast;
 
 namespace Json.Schema.Tests.Suite;
 
-public class JsonSchemaTestSuiteTests
+public class JsonSchemaAstTestSuiteTests
 {
     private const string _testCasesPath = @"../../../../../ref-repos/JSON-Schema-Test-Suite/tests";
     private const string _remoteSchemasPath = @"../../../../../ref-repos/JSON-Schema-Test-Suite/remotes";
@@ -104,7 +105,7 @@ public class JsonSchemaTestSuiteTests
             var schemaJson = File.ReadAllText(fileName);
             var schemaElement = JsonDocument.Parse(schemaJson).RootElement;
             var uri = new Uri(fileName.Replace(remotesPath, "http://localhost:1234").Replace('\\', '/'));
-             SchemaRegistry.Global.Register(schemaElement, uri);
+	        SchemaRegistry.Global.Register(schemaElement, uri);
         }
     }
 
@@ -129,7 +130,7 @@ public class JsonSchemaTestSuiteTests
         try
         {
             var schemaNode = JsonSchema.Build(scenario.Schema);
-            var result = JsonSchema.Evaluate3(schemaNode, scenario.Data);
+            var result = JsonSchema.Evaluate(schemaNode, scenario.Data);
             var isValid = result.IsValid;
 
             TestConsole.WriteLine("Evaluation Result:");

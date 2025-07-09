@@ -17,7 +17,7 @@ class Program
 		//var summary = BenchmarkRunner.Run<TestSuiteRunner>(config);
 
 		var runner = new ValidationRunner();
-		runner.NewSchemaValidation();
+		runner.AstSchemaValidation();
 		
 #else
 		var summary = BenchmarkRunner.Run<ValidationRunner>();
