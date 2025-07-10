@@ -18,6 +18,7 @@ public static class KeywordHandlers
         ["enum"] = new EnumHandler(),
         ["exclusiveMaximum"] = new ExclusiveMaximumHandler(),
         ["exclusiveMinimum"] = new ExclusiveMinimumHandler(),
+        ["if"] = new ConditionalHandler(),
         ["items"] = new ItemsHandler(),
         ["maximum"] = new MaximumHandler(),
         ["maxItems"] = new MaxItemsHandler(),
