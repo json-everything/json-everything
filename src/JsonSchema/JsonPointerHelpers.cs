@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Text.Json;
 using Json.Pointer;
 
@@ -45,10 +43,8 @@ public static class JsonPointerHelpers
 	/// <returns>An array of tuples containing the matched values and their relative locations</returns>
 	public static (JsonElement value, JsonPointer location)[] EvaluateWithWildcards(this JsonPointer pointer, JsonElement element)
 	{
-		DebugWildcard(() => $"WILDCARD START: {pointer} on {element.ValueKind}");
 		var results = new List<(JsonElement, JsonPointer)>();
 		EvaluateWithWildcardsRecursive(pointer, element, 0, JsonPointer.Empty, results);
-		DebugWildcard(() => $"WILDCARD END: {results.Count} results");
 		return results.ToArray();
 	}
 
@@ -57,7 +53,6 @@ public static class JsonPointerHelpers
 		// If we've processed all segments, add the current element
 		if (segmentIndex >= pointer.SegmentCount)
 		{
-			DebugWildcard(() => $"  MATCH: {currentLocation}");
 			results.Add((current, currentLocation));
 			return;
 		}
@@ -65,16 +60,12 @@ public static class JsonPointerHelpers
 		var segment = pointer.GetSegment(segmentIndex);
 		var isWildcard = segment == Wildcard.GetSegment(0);
 
-		var s = segment.ToString();
-		DebugWildcard(() => $"  SEGMENT[{segmentIndex}]: {s} (wildcard:{isWildcard}) on {current.ValueKind}");
-
 		if (isWildcard)
 		{
 			// Expand wildcard based on the current element type
 			if (current.ValueKind == JsonValueKind.Array)
 			{
 				var arrayLength = current.GetArrayLength();
-				DebugWildcard(() => $"    ARRAY WILDCARD: expanding {arrayLength} items");
 				for (int i = 0; i < arrayLength; i++)
 				{
 					var nextLocation = currentLocation.Combine(i);
@@ -83,18 +74,11 @@ public static class JsonPointerHelpers
 			}
 			else if (current.ValueKind == JsonValueKind.Object)
 			{
-				var propertyCount = current.EnumerateObject().Count();
-				DebugWildcard(() => $"    OBJECT WILDCARD: expanding {propertyCount} properties");
 				foreach (var property in current.EnumerateObject())
 				{
 					var nextLocation = currentLocation.Combine(property.Name);
 					EvaluateWithWildcardsRecursive(pointer, property.Value, segmentIndex + 1, nextLocation, results);
 				}
-			}
-			// For non-container types, wildcard doesn't match anything
-			else
-			{
-				DebugWildcard(() => $"    WILDCARD NO MATCH: {current.ValueKind} is not a container");
 			}
 		}
 		else
@@ -105,24 +89,11 @@ public static class JsonPointerHelpers
 
 			if (current.ValueKind == JsonValueKind.Array)
 			{
-				try
+				var index = segment.ToInt();
+				if (index.HasValue && index.Value >= 0 && index.Value < current.GetArrayLength())
 				{
-					var index = segment.ToInt();
-					if (index >= 0 && index < current.GetArrayLength())
-					{
-						nextElement = current[index];
-						nextLocation = currentLocation.Combine(index);
-						DebugWildcard(() => $"    ARRAY ACCESS: [{index}] found");
-					}
-					else
-					{
-						DebugWildcard(() => $"    ARRAY ACCESS: [{index}] out of bounds");
-					}
-				}
-				catch (FormatException)
-				{
-					var s1 = segment.ToString();
-					DebugWildcard(() => $"    ARRAY ACCESS: '{s1}' not a valid index");
+					nextElement = current[index.Value];
+					nextLocation = currentLocation.Combine(index.Value);
 				}
 			}
 			else if (current.ValueKind == JsonValueKind.Object)
@@ -132,16 +103,7 @@ public static class JsonPointerHelpers
 				{
 					nextElement = property;
 					nextLocation = currentLocation.Combine(propertyName);
-					DebugWildcard(() => $"    OBJECT ACCESS: '{propertyName}' found");
 				}
-				else
-				{
-					DebugWildcard(() => $"    OBJECT ACCESS: '{propertyName}' not found");
-				}
-			}
-			else
-			{
-				DebugWildcard(() => $"    REGULAR SEGMENT: can't navigate {current.ValueKind}");
 			}
 
 			if (nextElement.HasValue)
@@ -149,11 +111,5 @@ public static class JsonPointerHelpers
 				EvaluateWithWildcardsRecursive(pointer, nextElement.Value, segmentIndex + 1, nextLocation, results);
 			}
 		}
-	}
-
-	[Conditional("DEBUG")]
-	private static void DebugWildcard(Func<string> messageFunc)
-	{
-		Console.WriteLine($"[WILDCARD DEBUG] {messageFunc()}");
 	}
 }

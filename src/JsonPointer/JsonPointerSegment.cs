@@ -165,26 +165,26 @@ public readonly ref struct JsonPointerSegment
     /// <summary>
     /// Returns the int representation of this segment.
     /// </summary>
-    /// <returns>The segment as an int.</returns>
-    public int ToInt()
+    /// <returns>The segment as an int, or null if the segment is not a valid integer.</returns>
+    public int? ToInt()
     {
 #if NET8_0_OR_GREATER
 		if (int.TryParse(_segment, out var result)) return result;
         
-        throw new FormatException($"The segment '{_segment.ToString()}' is not a valid integer.");
+        return null;
 #else
 		if (_segment.Length == 0)
-			throw new FormatException("Empty segment cannot be converted to integer.");
+			return null;
 
 		int result = 0;
 		for (int i = 0; i < _segment.Length; i++)
 		{
 			char c = _segment[i];
 			if (c < '0' || c > '9')
-				throw new FormatException($"Invalid character '{c}' in numeric segment.");
+				return null;
 			
 			if (result > (int.MaxValue - (c - '0')) / 10)
-				throw new OverflowException("Numeric segment value is too large.");
+				return null;
 			
 			result = result * 10 + (c - '0');
 		}

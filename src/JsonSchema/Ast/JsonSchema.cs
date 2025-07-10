@@ -68,7 +68,7 @@ public static class JsonSchema
 
         // Process schema metadata first
         var newBaseUri = ProcessSchemaMetadata(schema, context);
-        var updatedContext = context with { BaseUri = newBaseUri };
+        var updatedContext = context with { BaseUri = newBaseUri, CurrentSchema = schema };
 
         // Create placeholder for cycle detection
         var node = new JsonSchemaNode(updatedContext.BaseUri, updatedContext.SchemaPath, JsonSchemaNodeType.Object, new(), new());

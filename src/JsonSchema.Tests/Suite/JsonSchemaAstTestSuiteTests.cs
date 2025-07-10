@@ -6,7 +6,8 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using NUnit.Framework;
 using TestHelpers;
-using Json.Schema.Ast;
+
+using AstJsonSchema = Json.Schema.Ast.JsonSchema;
 
 namespace Json.Schema.Tests.Suite;
 
@@ -129,8 +130,8 @@ public class JsonSchemaAstTestSuiteTests
 
         try
         {
-            var schemaNode = JsonSchema.Build(scenario.Schema);
-            var result = JsonSchema.Evaluate(schemaNode, scenario.Data);
+            var schemaNode = AstJsonSchema.Build(scenario.Schema);
+            var result = AstJsonSchema.Evaluate(schemaNode, scenario.Data);
             var isValid = result.IsValid;
 
             TestConsole.WriteLine("Evaluation Result:");
