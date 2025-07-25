@@ -130,7 +130,7 @@ public class LessThanRule : Rule, IRule
 		{
 			if (a != null && a.TryGetValue(out stringA) &&
 			    b != null && b.TryGetValue(out stringB))
-				return string.Compare(stringA, stringB, StringComparison.Ordinal) < 0;
+				return string.Compare(stringA, stringB, StringComparison.Ordinal) <0;
 
 			var numberA = a.Numberify();
 			var numberB = b.Numberify();
