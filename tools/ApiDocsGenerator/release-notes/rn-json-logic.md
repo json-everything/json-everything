@@ -4,6 +4,10 @@ title: JsonLogic
 icon: fas fa-tag
 order: "09.11"
 ---
+# [5.4.1](https://github.com/gregsdennis/json-everything/pull/919) {#release-logic-5.4.1}
+
+[#916](https://github.com/gregsdennis/json-everything/issues/916) - `<` not working correctly when comparing two strings.  Thanks to [@alexkharuk](https://github.com/alexkharuk) for finding and fixing this issue.
+
 # [5.4.0](https://github.com/gregsdennis/json-everything/pull/848) {#release-logic-5.4.0}
 
 Add .Net 9.0 support.
