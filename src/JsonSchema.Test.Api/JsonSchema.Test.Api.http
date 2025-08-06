@@ -1,0 +1,6 @@
+@JsonSchema.Test.Api_HostAddress = http://localhost:5042
+
+GET {{JsonSchema.Test.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

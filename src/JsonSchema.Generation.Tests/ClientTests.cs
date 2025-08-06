@@ -551,4 +551,26 @@ public class ClientTests
 	{
 		_ = new JsonSchemaBuilder().FromType<DataTable>().Build();
 	}
+
+	public class Issue915_SomeType
+	{
+		public string Foo { get; set; }
+	}
+
+	public class Issue915_RootType
+	{
+		public Issue915_SomeType Bar { get; set; }
+		public Issue915_SomeType Baz { get; set; }
+	}
+
+	[Test]
+	public void Issue915_ExternalRef()
+	{
+		var genConfig = new SchemaGeneratorConfiguration(); 
+		genConfig.ExternalReferences.Add(typeof(Issue915_SomeType), new Uri("https://some.domain.com/someType"));
+
+		var schema = new JsonSchemaBuilder().FromType<Issue915_RootType>(genConfig);
+
+		AssertEqual(true, schema);
+	}
 }

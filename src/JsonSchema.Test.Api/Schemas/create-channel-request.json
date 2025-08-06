@@ -1,0 +1,16 @@
+﻿{
+	"type": "object",
+	"additionalProperties": false,
+	"required": [
+	  "name",
+	  "enabled"
+	],
+	"properties": {
+		"name": {
+			"type": "string"
+		},
+		"enabled": {
+			"type": "boolean"
+		}
+	}
+}
