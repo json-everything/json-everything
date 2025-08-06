@@ -4,10 +4,17 @@ title: JsonSchema.Net.Generation
 icon: fas fa-tag
 order: "09.05"
 ---
+# [5.1.0](https://github.com/json-everything/json-everything/pull/921) {#release-schemagen-5.1.0}
+
+[#915](https://github.com/gregsdennis/json-everything/issues/915) - Multiple external references incorrectly create references to a `$defs` definition that doesn't exist.
+
+Adds:
+- `[GenerateJsonSchema]` attribute
+- `GenerativeValidatingJsonConverter` as a replacement for _JsonSchema.Net_'s `ValidatingJsonConverter` that generates schemas instead of requiring explicit schemas.  Also supports `[JsonSchema]` attribute.
+
 # [5.0.4](https://github.com/json-everything/json-everything/pull/910) {#release-schemagen-5.0.4}
 
 [#906](https://github.com/gregsdennis/json-everything/issues/906) - Multiple types could produce the same schema.  For example `IEnumerable<int>` and `int[]` both produce a definition name of `arrayOfInt`.
-
 
 # [5.0.3](https://github.com/json-everything/json-everything/pull/897) {#release-schemagen-5.0.3}
 
