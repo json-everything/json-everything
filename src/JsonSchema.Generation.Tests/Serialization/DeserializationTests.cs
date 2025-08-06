@@ -1,18 +1,18 @@
 using System;
-using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using Json.Schema.Generation.Serialization;
 using Json.Schema.Serialization;
 using NUnit.Framework;
 using TestHelpers;
 using RangeAttribute = System.ComponentModel.DataAnnotations.RangeAttribute;
 
-namespace Json.Schema.Tests.Serialization;
+namespace Json.Schema.Generation.Tests.Serialization;
 
 public class DeserializationTests
 {
-	internal class Foo
+	public class Foo
 	{
 		[MinLength(5)]
 		public string? Bar { get; set; }
@@ -21,27 +21,29 @@ public class DeserializationTests
 		public int Value { get; set; }
 	}
 
-	[JsonSchema(typeof(DeserializationTests), nameof(FooSchema))]
-	internal class FooWithSchema
+	[GenerateJsonSchema]
+	public class FooWithSchema
 	{
+		[MinLength(5)]
 		public string? Bar { get; set; }
+		[Minimum(40)]
+		[Required]
 		public int Value { get; set; }
 	}
 
-	public static readonly JsonSchema FooSchema =
-		new JsonSchemaBuilder()
-			.Type(SchemaValueType.Object)
-			.Properties(
-				(nameof(Foo.Bar), new JsonSchemaBuilder()
-					.Type(SchemaValueType.String | SchemaValueType.Null)
-					.MinLength(5)
-				),
-				(nameof(Foo.Value), new JsonSchemaBuilder()
-					.Type(SchemaValueType.Integer)
-					.Minimum(40)
-				)
-			)
-			.Required(nameof(Foo.Value));
+	private static readonly JsonSerializerOptions _options = new()
+	{
+		TypeInfoResolverChain = { TestSerializerContext.Default },
+		WriteIndented = true,
+		Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+		Converters = { new GenerativeValidatingJsonConverter { Options = { OutputFormat = OutputFormat.List } } }
+	};
+
+	[SetUp]
+	public void Setup()
+	{
+		ValidatingJsonConverter.MapType<Point>(PointSchema);
+	}
 
 	public static readonly JsonSchema PointSchema =
 		new JsonSchemaBuilder()
@@ -51,20 +53,6 @@ public class DeserializationTests
 				("Y", new JsonSchemaBuilder().Type(SchemaValueType.Integer))
 			)
 			.AdditionalProperties(false);
-
-	private static readonly JsonSerializerOptions _options = new()
-	{
-		TypeInfoResolverChain = { TestSerializerContext.Default },
-		WriteIndented = true,
-		Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-		Converters = { new ValidatingJsonConverter { Options = { OutputFormat = OutputFormat.List } } }
-	};
-
-	[SetUp]
-	public void Setup()
-	{
-		ValidatingJsonConverter.MapType<Point>(PointSchema);
-	}
 
 	/// <summary>
 	/// Demonstrates that even without a schema, the incorrect JSON data type is
@@ -296,7 +284,7 @@ public class DeserializationTests
 					TypeInfoResolverChain = { TestSerializerContext.Default },
 					WriteIndented = true,
 					Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-					Converters = { new ValidatingJsonConverter { Options = { OutputFormat = OutputFormat.List } } }
+					Converters = { new GenerativeValidatingJsonConverter { Options = { OutputFormat = OutputFormat.List } } }
 				};
 
 				var model = JsonSerializer.Deserialize<FooWithSchema>(jsonText, options);
@@ -326,7 +314,7 @@ public class DeserializationTests
 				TypeInfoResolverChain = { TestSerializerContext.Default },
 				WriteIndented = true,
 				Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-				Converters = { new ValidatingJsonConverter { Options = { OutputFormat = OutputFormat.List } } }
+				Converters = { new GenerativeValidatingJsonConverter { Options = { OutputFormat = OutputFormat.List } } }
 			};
 
 			var model = JsonSerializer.Deserialize<Point>(jsonText, options);
@@ -357,7 +345,7 @@ public class DeserializationTests
 						TypeInfoResolverChain = { TestSerializerContext.Default },
 						WriteIndented = true,
 						Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-						Converters = { new ValidatingJsonConverter { Options = { OutputFormat = OutputFormat.List } } }
+						Converters = { new GenerativeValidatingJsonConverter { Options = { OutputFormat = OutputFormat.List } } }
 					};
 
 					var model = JsonSerializer.Deserialize<Point>(jsonText, options);

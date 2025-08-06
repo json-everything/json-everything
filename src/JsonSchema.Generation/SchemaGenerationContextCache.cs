@@ -37,10 +37,11 @@ public static class SchemaGenerationContextCache
 	{
 		var baseContext = Get(type, true);
 		var toReintegrate = Cache
-			.Where(x => (x.Value.References.Count == 1 &&
-			            x.Key != type &&
-			            x.Key.CanBeReferenced()) ||
-			            x.Value.Intents is [RefIntent])
+			.Where(x => ((x.Value.References.Count == 1 &&
+			              x.Key != type &&
+			              x.Key.CanBeReferenced()) ||
+			             x.Value.Intents is [RefIntent]) &&
+			            !x.Value.IsSimpleRef())
 			.Select(x => x.Value)
 			.ToList();
 

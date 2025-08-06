@@ -65,7 +65,7 @@ public class MemberGenerationContext : SchemaGenerationContextBase
 		List<ISchemaKeywordIntent> baseIntents;
 		if (BasedOn.IsRoot)
 			baseIntents = [new RefIntent(this, new Uri("#", UriKind.Relative))];
-		else if (nullable || !Type.CanBeReferenced())
+		else if (nullable || !Type.CanBeReferenced() || BasedOn.IsSimpleRef())
 			baseIntents = BasedOn.Intents;
 		else
 		{

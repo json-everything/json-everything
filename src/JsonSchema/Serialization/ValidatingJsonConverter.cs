@@ -19,17 +19,40 @@ public class ValidatingJsonConverter : JsonConverterFactory
 	private static readonly ValidatingJsonConverter _instance = new();
 
 	/// <summary>
-	/// Specifies the output format.
+	/// Provides evaluation options for the validator.
 	/// </summary>
-	public OutputFormat? OutputFormat { get; set; }
+	public EvaluationOptions Options { get; set; } = EvaluationOptions.From(EvaluationOptions.Default);
+
 	/// <summary>
-	/// Specifies whether the `format` keyword should be required to provide
+	/// (Obsolete) Specifies the output format.
+	/// </summary>
+	[Obsolete("Use 'Options'")]
+	public OutputFormat? OutputFormat
+	{
+		get => Options.OutputFormat;
+		set
+		{
+			if (value.HasValue)
+				Options.OutputFormat = value.Value;
+		}
+	}
+	/// <summary>
+	/// (Obsolete) Specifies whether the `format` keyword should be required to provide
 	/// validation results.  Default is false, which just produces annotations
 	/// for drafts 2019-09 and prior or follows the behavior set forth by the
 	/// format-annotation vocabulary requirement in the `$vocabulary` keyword in
 	/// a meta-schema declaring draft 2020-12.
 	/// </summary>
-	public bool? RequireFormatValidation { get; set; }
+	[Obsolete("Use 'Options'")]
+	public bool? RequireFormatValidation
+	{
+		get => Options.RequireFormatValidation;
+		set
+		{
+			if (value.HasValue)
+				Options.RequireFormatValidation = value.Value;
+		}
+	}
 
 	/// <summary>
 	/// Adds an explicit type/schema mapping for types external types which cannot be decorated with <see cref="JsonSchemaAttribute"/>.
@@ -73,10 +96,17 @@ public class ValidatingJsonConverter : JsonConverterFactory
 			return converter;
 		}
 
-		var schemaAttribute = (JsonSchemaAttribute)typeToConvert.GetCustomAttributes(typeof(JsonSchemaAttribute)).Single();
-		var schema = schemaAttribute.Schema;
-
+		var schema = GetSchema(typeToConvert);
 		return CreateConverter(typeToConvert, schema);
+	}
+
+	/// <summary>
+	/// Gets the schema for a type.
+	/// </summary>
+	protected virtual JsonSchema GetSchema(Type type)
+	{
+		var schemaAttribute = (JsonSchemaAttribute)type.GetCustomAttributes(typeof(JsonSchemaAttribute)).Single();
+		return schemaAttribute.Schema;
 	}
 
 	private JsonConverter CreateConverter(Type typeToConvert, JsonSchema schema)
@@ -97,7 +127,6 @@ public class ValidatingJsonConverter : JsonConverterFactory
 		var converter = (JsonConverter)Activator.CreateInstance(converterType, schema, optionsFactory)!;
 
 		SetOptions(converter);
-
 		_cache[typeToConvert] = converter;
 
 		return converter;
@@ -106,15 +135,13 @@ public class ValidatingJsonConverter : JsonConverterFactory
 	private void SetOptions(JsonConverter converter)
 	{
 		var validatingConverter = (IValidatingJsonConverter)converter;
-		validatingConverter.OutputFormat = OutputFormat ?? Schema.OutputFormat.Flag;
-		validatingConverter.RequireFormatValidation = RequireFormatValidation ?? false;
+		validatingConverter.Options = Options;
 	}
 }
 
 internal interface IValidatingJsonConverter
 {
-	public OutputFormat OutputFormat { get; set; }
-	public bool RequireFormatValidation { get; set; }
+	EvaluationOptions Options { get; set; }
 }
 
 internal class ValidatingJsonConverter<T> : WeaklyTypedJsonConverter<T>, IValidatingJsonConverter
@@ -122,8 +149,7 @@ internal class ValidatingJsonConverter<T> : WeaklyTypedJsonConverter<T>, IValida
 	private readonly JsonSchema _schema;
 	private readonly Func<JsonSerializerOptions, JsonSerializerOptions> _optionsFactory;
 
-	public OutputFormat OutputFormat { get; set; } = OutputFormat.Flag;
-	public bool RequireFormatValidation { get; set; }
+	public EvaluationOptions Options { get; set; }
 
 	public ValidatingJsonConverter(JsonSchema schema, Func<JsonSerializerOptions, JsonSerializerOptions> optionsFactory)
 	{
@@ -138,11 +164,7 @@ internal class ValidatingJsonConverter<T> : WeaklyTypedJsonConverter<T>, IValida
 		var readerCopy = reader;
 		var node = options.Read(ref readerCopy, JsonSchemaSerializerContext.Default.JsonNode);
 		
-		var validation = _schema.Evaluate(node, new EvaluationOptions
-		{
-			OutputFormat = OutputFormat,
-			RequireFormatValidation = RequireFormatValidation
-		});
+		var validation = _schema.Evaluate(node, Options);
 
 		var newOptions = _optionsFactory(options);
 
