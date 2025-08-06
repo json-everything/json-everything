@@ -1187,7 +1187,7 @@ public class GithubTests
 	private static void Run791<T>()
 	{
 		var jsonText = @"{ ""Foo"": ""foo"",  ""Bar"": -42 }";
-		var converter = new ValidatingJsonConverter { OutputFormat = OutputFormat.List };
+		var converter = new ValidatingJsonConverter { Options = { OutputFormat = OutputFormat.List } };
 		var options = new JsonSerializerOptions(TestEnvironment.TestOutputSerializerOptions) { Converters = { converter } };
 		var ex = Assert.Throws<JsonException>(() => JsonSerializer.Deserialize<T>(jsonText, options));
 		var result = ex.Data["validation"] as EvaluationResults;

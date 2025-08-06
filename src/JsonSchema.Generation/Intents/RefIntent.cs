@@ -13,6 +13,7 @@ public class RefIntent : ISchemaKeywordIntent
 	public Uri Reference { get; set; }
 
 	internal MemberGenerationContext? Context { get; }
+	internal bool IsExternalRef { get; set; }
 
 	/// <summary>
 	/// Creates a new <see cref="RefIntent"/> instance.

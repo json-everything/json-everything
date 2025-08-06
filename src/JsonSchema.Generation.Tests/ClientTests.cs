@@ -566,11 +566,22 @@ public class ClientTests
 	[Test]
 	public void Issue915_ExternalRef()
 	{
+		var expected = new JsonSchemaBuilder()
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("Bar", new JsonSchemaBuilder()
+					.Ref("https://some.domain.com/someType")
+				),
+				("Baz", new JsonSchemaBuilder()
+					.Ref("https://some.domain.com/someType")
+				)
+			);
+
 		var genConfig = new SchemaGeneratorConfiguration(); 
 		genConfig.ExternalReferences.Add(typeof(Issue915_SomeType), new Uri("https://some.domain.com/someType"));
 
 		var schema = new JsonSchemaBuilder().FromType<Issue915_RootType>(genConfig);
 
-		AssertEqual(true, schema);
+		AssertEqual(expected, schema);
 	}
 }

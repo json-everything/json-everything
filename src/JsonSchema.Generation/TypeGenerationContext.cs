@@ -46,7 +46,7 @@ public class TypeGenerationContext : SchemaGenerationContextBase
 		var configuration = SchemaGeneratorConfiguration.Current;
 
 		if (configuration.ExternalReferences.TryGetValue(Type, out var uri))
-			Intents.Add(new RefIntent(uri));
+			Intents.Add(new RefIntent(uri) { IsExternalRef = true });
 		else
 		{
 			var runGenerator = true;
@@ -75,6 +75,8 @@ public class TypeGenerationContext : SchemaGenerationContextBase
 			refiner.Run(this);
 		}
 	}
+
+	internal bool IsSimpleRef() => Intents is [RefIntent { IsExternalRef: true }];
 
 	[RequiresDynamicCode("JSON serialization and deserialization might require types that cannot be statically analyzed and might need runtime code generation. Use System.Text.Json source generation for native AOT applications.")]
 	private static IComparer<MemberInfo> GetComparer(Type type)

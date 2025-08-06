@@ -17,7 +17,7 @@
     <IncludeBuildOutput>false</IncludeBuildOutput>
 
     <PackageId>JsonSchema.Net</PackageId>
-    <JsonSchemaNetVersion>7.3.4</JsonSchemaNetVersion>
+    <JsonSchemaNetVersion>7.4.0</JsonSchemaNetVersion>
     <AssemblyVersion>7.0.0.0</AssemblyVersion>
     <FileVersion>$(JsonSchemaNetVersion)</FileVersion>
     <Version>$(JsonSchemaNetVersion)</Version>

@@ -16,8 +16,11 @@ builder.Services.ConfigureHttpJsonOptions(opt =>
 {
 	opt.SerializerOptions.Converters.Add(new ValidatingJsonConverter
 	{
-		RequireFormatValidation = true,
-		OutputFormat = OutputFormat.List
+		Options =
+		{
+			RequireFormatValidation = true,
+			OutputFormat = OutputFormat.List
+		}
 	});
 });
 var app = builder.Build();

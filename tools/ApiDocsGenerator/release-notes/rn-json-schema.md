@@ -4,6 +4,14 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "09.01"
 ---
+# [7.4.0](https://github.com/json-everything/json-everything/pull/921) {#release-schema-7.4.0}
+
+Replaces `ValidatingJsonConverter.OutputFormat` and `.RequireFormatValidation` with a full `.Options` property.  Previous properties have been marked obsolete and redirected to new property.  Supports _JsonSchema.Net.Generation_ v5.1.0.
+
+# [7.3.4](https://github.com/json-everything/json-everything/pull/882) {#release-schema-7.3.4}
+
+[#881](https://github.com/gregsdennis/json-everything/issues/881) - Improves `date-time` format validation.  Thanks to [@mauricecamphadrian](https://github.com/mauricecamphadrian) for suggesting and implementing this.
+
 # [7.3.3](https://github.com/json-everything/json-everything/commit/f8c131ddfb280cbe33e1bb38ec1f13a11ba56b33) {#release-schema-7.3.3}
 
 [#852](https://github.com/gregsdennis/json-everything/issues/852) - Improves `hostname` & `idn-hostname` format validation.  Thanks to [@mauricecamphadrian](https://github.com/mauricecamphadrian) for finding this and suggesting a new regex.
