@@ -77,7 +77,7 @@ public class AndRule : Rule, IRule
 		JsonNode? result = null;
 		foreach (var item in array)
 		{
-			result = item is JsonObject innerRule ? JsonLogic.Apply(innerRule, context) : item;
+			result = JsonLogic.Apply(item, context);
 			if (!result.IsTruthy()) break;
 		}
 

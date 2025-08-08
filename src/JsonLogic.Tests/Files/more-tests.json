@@ -130,5 +130,11 @@
 			{"+":[{"var":"current"}, 5]},
 			10
 		]}, {}, 10 ],
+  [ {"and": [ { "missing": "var1" }, [{ "cat": [ { "var": "var2" }, "[", { "var": "idx"}, "] invalid" ]}]] },
+    { "var2": "object", "idx": 0},
+    [ "object[0] invalid"]],
+  [ {"or": [ { "missing": "var2" }, [{ "cat": [ { "var": "var2" }, "[", { "var": "idx"}, "] valid" ]}]] },
+    { "var2": "object", "idx": 0},
+    [ "object[0] valid"]],
 	"EOF"
 ]
