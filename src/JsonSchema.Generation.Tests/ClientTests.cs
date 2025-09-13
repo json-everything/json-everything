@@ -584,4 +584,28 @@ public class ClientTests
 
 		AssertEqual(expected, schema);
 	}
+
+	class Issue891_ClassWithMultipleIndexers
+	{
+		public string Foo { get; set; }
+
+		public int this[string idx] => 0;
+
+		public int this[int idx] => 0;
+	}
+
+	[Test]
+	public void Issue891_MultipleIndexers()
+	{
+		var expected = new JsonSchemaBuilder()
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("Foo", new JsonSchemaBuilder().Type(SchemaValueType.String))
+			);
+
+
+		var schema = new JsonSchemaBuilder().FromType<Issue891_ClassWithMultipleIndexers>();
+
+		AssertEqual(expected, schema);
+	}
 }
