@@ -23,7 +23,7 @@ internal class IndexSegment : IContextAccessorSegment
 		{
 			if (index < 0)
 			{
-				if (-index < arr.Count)
+				if (-index <= arr.Count)
 				{
 					value = arr[arr.Count + index];
 					return true;
