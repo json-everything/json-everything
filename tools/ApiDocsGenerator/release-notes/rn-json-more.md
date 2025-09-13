@@ -4,6 +4,12 @@ title: Json.More.Net
 icon: fas fa-tag
 order: "09.13"
 ---
+# [2.1.3](https://github.com/json-everything/json-everything/pull/934) {#release-more-2.1.3}
+
+[#895](https://github.com/json-everything/json-everything/issues/895) - Optimization to use a frozen dictionary in `EnumStringConverter`.  Thanks to [@Meir017](https://github.com/Meir017) for identifying this.
+
+[#918](https://github.com/json-everything/json-everything/issues/918) - Nulls not handled properly by `JsonArrayTupleConverter`.  Thanks to [@OpenByteDev](https://github.com/OpenByteDev) for identifying this.
+
 # [2.1.2](https://github.com/json-everything/json-everything/pull/888) {#release-more-2.1.2}
 
 [#885](https://github.com/json-everything/json-everything/issues/885) - Fixes an issue in `JsonArrayTupleConverter`.  Thanks to [@MatthewSmit](https://github.com/MatthewSmit) for identifying and providing the fix.
