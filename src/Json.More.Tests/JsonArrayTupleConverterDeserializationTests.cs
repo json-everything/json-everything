@@ -131,4 +131,16 @@ public class JsonArrayTupleConverterDeserializationTests
 
 		Assert.That(actual, Is.EqualTo(expected));
 	}
+
+	[Test]
+	public void NullInTuple()
+	{
+		var expected = new ValueTuple<string>(null!);
+		var actual = JsonSerializer.Deserialize<ValueTuple<string>>("[null]", new JsonSerializerOptions
+		{
+			Converters = { new JsonArrayTupleConverter() }
+		});
+
+		Assert.That(actual, Is.EqualTo(expected));
+	}
 }

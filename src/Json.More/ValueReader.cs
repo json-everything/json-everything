@@ -107,7 +107,7 @@ internal static class ValueReader
 		var restParams = typeof(TRest).GetGenericArguments();
 		var method = GetReadValuesMethod($"ReadValues{restParams.Length}", restParams);
 
-		var rest = (TRest) method.Invoke(null, new object[] { enumerator, options })!;
+		var rest = (TRest) method.Invoke(null, [enumerator, options])!;
 
 		return new ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest>(value1, value2, value3, value4, value5, value6, value7, rest);
 	}

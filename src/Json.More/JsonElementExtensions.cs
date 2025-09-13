@@ -279,10 +279,10 @@ public static class JsonElementExtensions
 
 	[RequiresDynamicCode("Calls System.Text.Json.JsonSerializer.Deserialize<TValue>(JsonSerializerOptions)")]
 	[RequiresUnreferencedCode("Calls System.Text.Json.JsonSerializer.Deserialize<TValue>(JsonSerializerOptions)")]
-	internal static T ReadValue<T>(ref JsonElement.ArrayEnumerator enumerator, JsonSerializerOptions options)
+	internal static T? ReadValue<T>(ref JsonElement.ArrayEnumerator enumerator, JsonSerializerOptions options)
 	{
 		enumerator.MoveNext();
-		return enumerator.Current.Deserialize<T>(options) ?? throw new JsonException("Expected value");
+		return enumerator.Current.Deserialize<T>(options);
 	}
 }
 
