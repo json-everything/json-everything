@@ -109,7 +109,7 @@ public class ArrayGenerationTests
 	}
 
 	[Title("A test enum")]
-	private enum EnumTest
+	public enum EnumTest
 	{
 		One = 1,
 		Two = 2

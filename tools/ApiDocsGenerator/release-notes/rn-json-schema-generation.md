@@ -4,6 +4,14 @@ title: JsonSchema.Net.Generation
 icon: fas fa-tag
 order: "09.05"
 ---
+# [5.1.1](https://github.com/json-everything/json-everything/pull/934) {#release-schemagen-5.1.1}
+
+[#890](https://github.com/gregsdennis/json-everything/issues/890) - Add support for `[JsonStringMemberName]` attribute.  Thanks to [@PJBarczyk](https://github.com/PJBarczyk) for suggesting.
+
+[#891](https://github.com/gregsdennis/json-everything/issues/891) - Multiple indexers throw exception.  Fix here is to just ignore indexers for schema generation.  Thanks to [@ovidiuiliescu](https://github.com/ovidiuiliescu) for reporting.
+
+[#933](https://github.com/gregsdennis/json-everything/issues/933) - Address potential duplicate key exception when in a multi-threaded environment.
+
 # [5.1.0](https://github.com/json-everything/json-everything/pull/921) {#release-schemagen-5.1.0}
 
 [#915](https://github.com/gregsdennis/json-everything/issues/915) - Multiple external references incorrectly create references to a `$defs` definition that doesn't exist.

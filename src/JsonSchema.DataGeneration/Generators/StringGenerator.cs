@@ -68,8 +68,9 @@ internal class StringGenerator : IDataGenerator
 			if (context.Pattern != null)
 				overallRegex = context.Pattern;
 
+#if DEBUG
 			Console.WriteLine(overallRegex);
-
+#endif
 			return GenerationResult.Success(new Xeger(overallRegex).Generate());
 		}
 

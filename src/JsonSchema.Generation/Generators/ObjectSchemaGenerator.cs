@@ -29,7 +29,9 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 
 		var props = new Dictionary<string, MemberGenerationContext>();
 		var required = new List<string>();
-		var propertiesToGenerate = typeContext.Type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+		var propertiesToGenerate = typeContext.Type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+			.Where(x => x.GetMethod is null || x.GetMethod.GetParameters().Length == 0)
+			.Where(x => x.SetMethod is null || x.SetMethod.GetParameters().Length == 1); // value
 		var fieldsToGenerate = typeContext.Type.GetFields(BindingFlags.Public | BindingFlags.Instance);
 		var hiddenPropertiesToGenerate = typeContext.Type.GetProperties(BindingFlags.NonPublic | BindingFlags.Instance)
 			.Where(p => p.GetCustomAttribute<JsonIncludeAttribute>() != null);

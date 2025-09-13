@@ -4,6 +4,10 @@ title: JsonSchema.Net.DataGeneration
 icon: fas fa-tag
 order: "09.07"
 ---
+# [2.3.1](https://github.com/gregsdennis/json-everything/pull/934) {#release-schemadatagen-2.3.1}
+
+[#892](https://github.com/gregsdennis/json-everything/issues/892) - Removed unnecessary `Console.WriteLine()`.  Thanks to [@ruanmed](https://github.com/ruanmed) for reporting.
+
 # [2.3.0](https://github.com/gregsdennis/json-everything/pull/822) {#release-schemadatagen-2.3.0}
 
 Add .Net 9.0 support.

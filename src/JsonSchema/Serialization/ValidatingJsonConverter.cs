@@ -149,7 +149,7 @@ internal class ValidatingJsonConverter<T> : WeaklyTypedJsonConverter<T>, IValida
 	private readonly JsonSchema _schema;
 	private readonly Func<JsonSerializerOptions, JsonSerializerOptions> _optionsFactory;
 
-	public EvaluationOptions Options { get; set; }
+	public EvaluationOptions? Options { get; set; }
 
 	public ValidatingJsonConverter(JsonSchema schema, Func<JsonSerializerOptions, JsonSerializerOptions> optionsFactory)
 	{

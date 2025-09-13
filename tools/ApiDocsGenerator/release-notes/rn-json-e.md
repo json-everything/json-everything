@@ -4,6 +4,10 @@ title: JsonE.Net
 icon: fas fa-tag
 order: "09.12"
 ---
+# [2.5.1](https://github.com/gregsdennis/json-everything/pull/934) {#release-e-2.5.1}
+
+[#931](https://github.com/json-everything/json-everything/pull/931) - Fixed bounds issue for negative indices in array expressions.  Thanks to [@einart-vm](https://github.com/einart-vm) for identifying this.
+
 # [2.5.0](https://github.com/gregsdennis/json-everything/pull/848) {#release-e-2.5.0}
 
 [#843](https://github.com/json-everything/json-everything/pull/843) - Performance improvements courtesy of [@cptjazz](https://github.com/cptjazz).

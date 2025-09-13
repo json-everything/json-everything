@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using Json.Schema.Generation.Generators;
 using Json.Schema.Generation.Refiners;
 using Json.Schema.Generation.XmlComments;

@@ -584,4 +584,59 @@ public class ClientTests
 
 		AssertEqual(expected, schema);
 	}
+
+	class Issue891_ClassWithMultipleIndexers
+	{
+		public string Foo { get; set; }
+
+		public int this[string idx] => 0;
+
+		public int this[int idx] => 0;
+	}
+
+	[Test]
+	public void Issue891_MultipleIndexers()
+	{
+		var expected = new JsonSchemaBuilder()
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("Foo", new JsonSchemaBuilder().Type(SchemaValueType.String))
+			);
+
+
+		var schema = new JsonSchemaBuilder().FromType<Issue891_ClassWithMultipleIndexers>();
+
+		AssertEqual(expected, schema);
+	}
+
+#if NET9_0_OR_GREATER
+	[JsonConverter(typeof(JsonStringEnumConverter))]
+	public enum Issue890_Status
+	{
+		[JsonStringEnumMemberName("active")]
+		Active,
+		[JsonStringEnumMemberName("inactive")]
+		Inactive
+	}
+
+	public class Issue890_EnumMemberName
+	{
+		public Issue890_Status EnumProp { get; set; }
+	}
+
+	[Test]
+	public void Issue890_SupportEnumMemberName()
+	{
+		var expected = new JsonSchemaBuilder()
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("EnumProp", new JsonSchemaBuilder().Enum("active", "inactive"))
+			);
+
+
+		var schema = new JsonSchemaBuilder().FromType<Issue890_EnumMemberName>();
+
+		AssertEqual(expected, schema);
+	}
+#endif
 }

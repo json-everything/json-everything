@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
@@ -41,13 +42,13 @@ namespace Json.More;
 public class EnumStringConverter<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T> : WeaklyTypedJsonConverter<T>
 	where T : Enum
 {
-	private static Dictionary<string, T>? _readValues;
-	private static Dictionary<T, string>? _writeValues;
+	private static FrozenDictionary<string, T>? _readValues;
+	private static FrozenDictionary<T, string>? _writeValues;
 	private static Func<T, T, T>? _aggregator;
 	// ReSharper disable once StaticMemberInGenericType
 	private static readonly object _lock = new();
 
-	private static Dictionary<string, T> ReadValues
+	private static FrozenDictionary<string, T> ReadValues
 	{
 		get
 		{
@@ -56,7 +57,7 @@ public class EnumStringConverter<[DynamicallyAccessedMembers(DynamicallyAccessed
 		}
 	}
 
-	private static Dictionary<T, string> WriteValues
+	private static FrozenDictionary<T, string> WriteValues
 	{
 		get
 		{
@@ -193,8 +194,8 @@ public class EnumStringConverter<[DynamicallyAccessedMembers(DynamicallyAccessed
 					writeValues.Add(value, description);
 			}
 
-			_readValues = readValues;
-			_writeValues = writeValues;
+			_readValues = readValues.ToFrozenDictionary();
+			_writeValues = writeValues.ToFrozenDictionary();
 		}
 	}
 }

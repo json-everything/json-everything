@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Json.More;
 using Json.Schema.Generation.Intents;
-#pragma warning disable IL2075
+//#pragma warning disable IL2075
 
 namespace Json.Schema.Generation.Generators;
 
@@ -15,10 +18,10 @@ internal class EnumGenerator : ISchemaGenerator
 
 	public void AddConstraints(SchemaGenerationContextBase context)
 	{
-		bool ShouldIncludeMember(string enumValue)
+		bool ShouldIncludeMember(object enumMember)
 		{
-			var fieldInfo = context.Type.GetField(enumValue);
-			var fieldAttributes = fieldInfo?.GetCustomAttributes(inherit: true)?.ToList();
+			var fieldInfo = context.Type.GetField(enumMember.ToString());
+			var fieldAttributes = fieldInfo?.GetCustomAttributes(inherit: true).ToList();
 
 			// JsonIgnoreCondition values other than Never and Always don't make sense in the context of JSON schema generation,
 			// so we only ignore members if they are marked as "always ignored."
@@ -29,7 +32,25 @@ internal class EnumGenerator : ISchemaGenerator
 			return ignoreAttribute == null;
 		};
 
-		var includedValues = Enum.GetNames(context.Type).Where(ShouldIncludeMember).ToList();
+		string GetName(object enumMember)
+		{
+#if NET9_0_OR_GREATER
+			var fieldInfo = context.Type.GetField(enumMember.ToString()!);
+			var fieldAttributes = fieldInfo?.GetCustomAttributes(inherit: true).ToList();
+
+			var enumNameAttribute = fieldAttributes?.OfType<JsonStringEnumMemberNameAttribute>().FirstOrDefault();
+
+			return enumNameAttribute?.Name ?? enumMember.ToString()!;
+#else
+			return enumMember.ToString();
+#endif
+		}
+
+		var includedValues = Enum.GetValues(context.Type)
+			.Cast<object>()
+			.Where(ShouldIncludeMember)
+			.Select(GetName)
+			.ToList();
 		context.Intents.Add(new EnumIntent(includedValues));
 	}
 }
