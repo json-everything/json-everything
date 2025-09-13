@@ -69,8 +69,6 @@ public class VariableRule : Rule, IRule
 			if (array.Count > 1)
 				defaultValue = array[1];
 		}
-		else
-			pathValue = args.Stringify();
 
 		var path = JsonLogic.Apply(pathValue, context).Stringify();
 		if (path == string.Empty) return context.CurrentValue;
