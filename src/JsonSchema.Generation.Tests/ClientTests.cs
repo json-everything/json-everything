@@ -627,11 +627,6 @@ public class ClientTests
 	[Test]
 	public void Issue890_SupportEnumMemberName()
 	{
-		var generatorOptions = new SchemaGeneratorConfiguration
-		{
-			SerializerOptions = TestEnvironment.SerializerOptions
-		};
-
 		var expected = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Object)
 			.Properties(
@@ -639,7 +634,7 @@ public class ClientTests
 			);
 
 
-		var schema = new JsonSchemaBuilder().FromType<Issue890_EnumMemberName>(generatorOptions);
+		var schema = new JsonSchemaBuilder().FromType<Issue890_EnumMemberName>();
 
 		AssertEqual(expected, schema);
 	}

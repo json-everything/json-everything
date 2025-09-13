@@ -78,11 +78,6 @@ public class SchemaGeneratorConfiguration
 	/// </summary>
 	public ITypeNameGenerator? TypeNameGenerator { get; set; }
 
-	/// <summary>
-	/// Gets or sets serializer options.  Used for enum schema generation.
-	/// </summary>
-	public JsonSerializerOptions SerializerOptions { get; set; }
-
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 	/// <summary>
 	/// Creates a new <see cref="SchemaGeneratorConfiguration"/>.

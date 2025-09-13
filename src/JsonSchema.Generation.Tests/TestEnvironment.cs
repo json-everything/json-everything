@@ -23,6 +23,7 @@ internal static class TestEnvironment
 [JsonSerializable(typeof(PropertiesKeyword))]
 [JsonSerializable(typeof(DeserializationTests.Foo))]
 [JsonSerializable(typeof(DeserializationTests.FooWithSchema))]
+[JsonSerializable(typeof(ArrayGenerationTests.EnumTest))]
 #if NET9_0_OR_GREATER
 [JsonSerializable(typeof(ClientTests.Issue890_Status))]
 #endif

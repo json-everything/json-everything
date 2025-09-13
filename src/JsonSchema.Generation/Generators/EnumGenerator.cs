@@ -32,15 +32,24 @@ internal class EnumGenerator : ISchemaGenerator
 			return ignoreAttribute == null;
 		};
 
+		string GetName(object enumMember)
+		{
+#if NET9_0_OR_GREATER
+			var fieldInfo = context.Type.GetField(enumMember.ToString()!);
+			var fieldAttributes = fieldInfo?.GetCustomAttributes(inherit: true).ToList();
+
+			var enumNameAttribute = fieldAttributes?.OfType<JsonStringEnumMemberNameAttribute>().FirstOrDefault();
+
+			return enumNameAttribute?.Name ?? enumMember.ToString()!;
+#else
+			return enumMember.ToString();
+#endif
+		}
+
 		var includedValues = Enum.GetValues(context.Type)
 			.Cast<object>()
 			.Where(ShouldIncludeMember)
-			.Select(x =>
-			{
-				var serialized = JsonSerializer.SerializeToNode(x, SchemaGeneratorConfiguration.Current.SerializerOptions)!; // includes JSON quotes
-				var unencodedValue = serialized.AsValue().GetString();
-				return unencodedValue;
-			})
+			.Select(GetName)
 			.ToList();
 		context.Intents.Add(new EnumIntent(includedValues));
 	}
