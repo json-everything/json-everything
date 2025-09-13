@@ -608,4 +608,40 @@ public class ClientTests
 
 		AssertEqual(expected, schema);
 	}
+
+#if NET9_0_OR_GREATER
+	[JsonConverter(typeof(JsonStringEnumConverter))]
+	public enum Issue890_Status
+	{
+		[JsonStringEnumMemberName("active")]
+		Active,
+		[JsonStringEnumMemberName("inactive")]
+		Inactive
+	}
+
+	public class Issue890_EnumMemberName
+	{
+		public Issue890_Status EnumProp { get; set; }
+	}
+
+	[Test]
+	public void Issue890_SupportEnumMemberName()
+	{
+		var generatorOptions = new SchemaGeneratorConfiguration
+		{
+			SerializerOptions = TestEnvironment.SerializerOptions
+		};
+
+		var expected = new JsonSchemaBuilder()
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("EnumProp", new JsonSchemaBuilder().Enum("active", "inactive"))
+			);
+
+
+		var schema = new JsonSchemaBuilder().FromType<Issue890_EnumMemberName>(generatorOptions);
+
+		AssertEqual(expected, schema);
+	}
+#endif
 }

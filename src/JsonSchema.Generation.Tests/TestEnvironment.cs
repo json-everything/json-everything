@@ -23,4 +23,7 @@ internal static class TestEnvironment
 [JsonSerializable(typeof(PropertiesKeyword))]
 [JsonSerializable(typeof(DeserializationTests.Foo))]
 [JsonSerializable(typeof(DeserializationTests.FooWithSchema))]
+#if NET9_0_OR_GREATER
+[JsonSerializable(typeof(ClientTests.Issue890_Status))]
+#endif
 public partial class TestSerializerContext : JsonSerializerContext;
