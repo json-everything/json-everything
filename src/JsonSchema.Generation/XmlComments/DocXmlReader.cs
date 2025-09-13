@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -17,7 +18,7 @@ public class DocXmlReader
 	/// <summary>
 	///     Dictionary of XML navigators for multiple assemblies.
 	/// </summary>
-	private readonly Dictionary<Assembly, XPathNavigator?> _assemblyNavigators;
+	private readonly ConcurrentDictionary<Assembly, XPathNavigator?> _assemblyNavigators;
 
 	/// <summary>
 	///     Function that returns path to XML documentation file for specified assembly.
@@ -249,7 +250,7 @@ public class DocXmlReader
 			var commentFileName = _assemblyXmlPathFunction(assembly);
 			if (commentFileName == null)
 			{
-				_assemblyNavigators.Add(assembly, null);
+				_assemblyNavigators.TryAdd(assembly, null);
 				return null;
 			}
 
@@ -260,7 +261,7 @@ public class DocXmlReader
 		var docNavigator = document.CreateNavigator();
 		if (docNavigator == null) return null;
 
-		_assemblyNavigators.Add(assembly, docNavigator);
+		_assemblyNavigators.TryAdd(assembly, docNavigator);
 		return docNavigator;
 	}
 
