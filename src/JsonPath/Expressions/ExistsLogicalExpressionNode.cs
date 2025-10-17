@@ -29,6 +29,11 @@ internal class ExistsLogicalExpressionNode : LeafLogicalExpressionNode
 
 		return result.Matches.Count != 0;
 	}
+	/// <inheritdoc/>
+	public override string ToString()
+	{
+		return Path.ToString();
+	}
 }
 
 internal class ExistsLogicalExpressionParser : ILogicalExpressionParser

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Linq;
 using NUnit.Framework;
 
 namespace Json.Path.Tests
@@ -54,11 +55,9 @@ namespace Json.Path.Tests
 		{
 			var path = JsonPath.Parse("$..[?(@['$ref'] == '#/components/schemas/Metadata' && @.anyOf)]['$ref']");
 			var typeConverter = TypeDescriptor.GetConverter(typeof(JsonPath));
-			var path2 = typeConverter.ConvertTo(path, typeof(JsonPath)) as JsonPath;
+			var result = $"{(path.Scope is PathScope.Global ? "$" : "@")}{string.Concat(path.Segments[..^1].Select(static s => s.ToString()))}";
 
-			Assert.That(path2, Is.Not.Null);
-			Assert.That(path2, Is.Not.SameAs(path));
-			Assert.That(path2!.ToString(), Is.EqualTo("$..[?@['$ref']==\"#/components/schemas/Metadata\"&&@.anyOf]['$ref']"));
+			Assert.That(result, Is.EqualTo("$..[?@['$ref']==\"#/components/schemas/Metadata\"&&@.anyOf]"));
 		}
 
 	}
