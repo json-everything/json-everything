@@ -49,6 +49,17 @@ namespace Json.Path.Tests
 			Assert.That(path2, Is.Not.SameAs(path));
 			Assert.That(path2!.ToString(), Is.EqualTo("$.store.book[*].author"));
 		}
+		[Test]
+		public void ConvertLogicalExpressionToJsonPath()
+		{
+			var path = JsonPath.Parse("$..[?(@['$ref'] == '#/components/schemas/Metadata' && @.anyOf)]['$ref']");
+			var typeConverter = TypeDescriptor.GetConverter(typeof(JsonPath));
+			var path2 = typeConverter.ConvertTo(path, typeof(JsonPath)) as JsonPath;
+
+			Assert.That(path2, Is.Not.Null);
+			Assert.That(path2, Is.Not.SameAs(path));
+			Assert.That(path2!.ToString(), Is.EqualTo("$..[?@['$ref']==\"#/components/schemas/Metadata\"&&@.anyOf]['$ref']"));
+		}
 
 	}
 }
