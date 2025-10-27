@@ -50,6 +50,7 @@ namespace Json.Path.Tests
 			Assert.That(path2, Is.Not.SameAs(path));
 			Assert.That(path2!.ToString(), Is.EqualTo("$.store.book[*].author"));
 		}
+
 		[Test]
 		public void ConvertLogicalExpressionToJsonPath()
 		{
