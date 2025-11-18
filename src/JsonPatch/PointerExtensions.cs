@@ -12,11 +12,7 @@ internal static class PointerExtensions
 			target = node?.Parent;
 			return target != null;
 		}
-#if NETSTANDARD2_0
-		var parentPointer = pointer.GetAncestor(1);
-#else
-		var parentPointer = pointer[..^1];
-#endif
-		return parentPointer.TryEvaluate(node, out target);
+		var parentPointer = pointer.GetParent()!;
+		return parentPointer.Value.TryEvaluate(node, out target);
 	}
 }

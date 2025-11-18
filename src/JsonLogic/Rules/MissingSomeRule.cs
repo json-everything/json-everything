@@ -76,7 +76,7 @@ public class MissingSomeRule : Rule, IRule
 			})
 			.Select(p =>
 			{
-				if (p.Pointer != null! && p.Pointer.TryEvaluate(data, out var value))
+				if (p.Pointer.HasValue && p.Pointer.Value.TryEvaluate(data, out var value))
 					return new { Path = p.Path, Value = value };
 				return new { Path = p.Path, Value = (JsonNode?)null };
 			})

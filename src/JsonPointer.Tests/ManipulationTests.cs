@@ -12,28 +12,20 @@ public class ManipulationTests
 	{
 		var pointer = JsonPointer.Parse(original);
 
-#if NET481
-		var actual = pointer.GetAncestor(levels);
-#else
-		var actual = pointer[..^levels];
-#endif
+		var actual = pointer.GetParent(levels);
 
 		Assert.That(actual.ToString(), Is.EqualTo(expected));
 	}
 
-	[TestCase("/foo/5/bar", 0, "/foo/5/bar")]
-	[TestCase("/foo/5/bar", 1, "/5/bar")]
-	[TestCase("/foo/5/bar", 2, "/bar")]
-	[TestCase("/foo/5/bar", 3, "")]
+	[TestCase("/foo/5/bar", 3, "/foo/5/bar")]
+	[TestCase("/foo/5/bar", 2, "/5/bar")]
+	[TestCase("/foo/5/bar", 1, "/bar")]
+	[TestCase("/foo/5/bar", 0, "")]
 	public void Local(string original, int skip, string expected)
 	{
 		var pointer = JsonPointer.Parse(original);
 
-#if NET481
 		var actual = pointer.GetLocal(skip);
-#else
-		var actual = pointer[skip..];
-#endif
 
 		Assert.That(actual.ToString(), Is.EqualTo(expected));
 	}

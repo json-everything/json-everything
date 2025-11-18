@@ -60,21 +60,25 @@ public class RelativeJsonPointerParseTests
 
 		pointer.ParentSteps.Should().Be((uint)parentSteps);
 		pointer.ArrayIndexManipulator.Should().Be(indexManipulation);
-		pointer.Pointer.Count.Should().Be(segments.Length);
-		pointer.Pointer.Should().BeEquivalentTo(segments);
+		pointer.Pointer.SegmentCount.Should().Be(segments.Length);
+		for (int i = 0; i < pointer.Pointer.SegmentCount; i++)
+		{
+			pointer.Pointer.GetSegment(i).Decode().Should().Be(segments[i]);
+		}
 	}
 
 	[TestCaseSource(nameof(SpecificationExamples))]
 	public void TryParse(string pointerString, int parentSteps, int indexManipulation, string[] segments)
 	{
-		Assert.That(RelativeJsonPointer.TryParse(pointerString, out var check), Is.True);
-
-		var pointer = check!;
+		Assert.That(RelativeJsonPointer.TryParse(pointerString, out var pointer), Is.True);
 
 		pointer.ParentSteps.Should().Be((uint)parentSteps);
 		pointer.ArrayIndexManipulator.Should().Be(indexManipulation);
-		pointer.Pointer.Count.Should().Be(segments.Length);
-		pointer.Pointer.Should().BeEquivalentTo(segments);
+		pointer.Pointer.SegmentCount.Should().Be(segments.Length);
+		for (int i = 0; i < pointer.Pointer.SegmentCount; i++)
+		{
+			pointer.Pointer.GetSegment(i).Decode().Should().Be(segments[i]);
+		}
 	}
 
 	[TestCaseSource(nameof(FailureCases))]

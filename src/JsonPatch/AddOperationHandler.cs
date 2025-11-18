@@ -12,7 +12,7 @@ internal class AddOperationHandler : IPatchOperationHandler
 
 	public void Process(PatchContext context, PatchOperation operation)
 	{
-		if (operation.Path.Count == 0)
+		if (operation.Path.SegmentCount == 0)
 		{
 			context.Source = operation.Value;
 			return;
@@ -24,7 +24,7 @@ internal class AddOperationHandler : IPatchOperationHandler
 			return;
 		}
 
-		var lastPathSegment = operation.Path[^1];
+		var lastPathSegment = operation.Path.GetLocal().GetSegment(0).ToString();
 		if (target is JsonObject objTarget)
 		{
 			objTarget[lastPathSegment] = operation.Value?.DeepClone();

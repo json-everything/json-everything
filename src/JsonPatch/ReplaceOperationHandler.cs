@@ -10,7 +10,7 @@ internal class ReplaceOperationHandler : IPatchOperationHandler
 
 	public void Process(PatchContext context, PatchOperation operation)
 	{
-		if (operation.Path.Count == 0)
+		if (operation.Path.SegmentCount == 0)
 		{
 			context.Source = operation.Value;
 			return;
@@ -23,7 +23,7 @@ internal class ReplaceOperationHandler : IPatchOperationHandler
 			return;
 		}
 
-		var lastPathSegment = operation.Path[^1];
+		var lastPathSegment = operation.Path.GetSegment(operation.Path.SegmentCount - 1).ToString();
 		if (target is JsonObject objTarget)
 		{
 			objTarget[lastPathSegment] = operation.Value?.DeepClone();

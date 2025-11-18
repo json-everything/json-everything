@@ -3,7 +3,7 @@
 namespace Json.Pointer;
 
 /// <summary>
-/// Thrown during parsing when the source string contains invalid JSON Pointer data.
+/// Thrown during parsing when the source string contains invalid JSON PointerOld data.
 /// </summary>
 public class PointerParseException : Exception
 {

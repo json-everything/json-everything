@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 namespace Json.Pointer;
 
 /// <summary>
-/// Options for creating pointers using <see cref="JsonPointer.Create{T}(Expression{Func{T, object}}, PointerCreationOptions)"/>.
+/// Options for creating pointers using <see cref="JsonPointer_Old.Create{T}(Expression{Func{T, object}}, PointerCreationOptions)"/>.
 /// </summary>
 public class PointerCreationOptions
 {

@@ -13,7 +13,7 @@ internal class MoveOperationHandler : IPatchOperationHandler
 	{
 		if (Equals(operation.Path, operation.From)) return;
 
-		if (operation.Path.Count == 0)
+		if (operation.Path.SegmentCount == 0)
 		{
 			context.Message = "Cannot move root value.";
 			return;
@@ -32,7 +32,7 @@ internal class MoveOperationHandler : IPatchOperationHandler
 			return;
 		}
 
-		var lastFromSegment = operation.From[^1];
+		var lastFromSegment = operation.From.GetSegment(operation.From.SegmentCount - 1).ToString();
 		if (source is JsonObject objSource)
 			objSource.Remove(lastFromSegment);
 		else if (source is JsonArray arrSource)
@@ -45,13 +45,13 @@ internal class MoveOperationHandler : IPatchOperationHandler
 			arrSource.RemoveAt(index);
 		}
 
-		if (operation.Path.Count == 0)
+		if (operation.Path.SegmentCount == 0)
 		{
 			context.Source = data;
 			return;
 		}
 
-		var lastPathSegment = operation.Path[^1];
+		var lastPathSegment = operation.Path.GetSegment(operation.Path.SegmentCount - 1).ToString();
 		if (target is JsonObject objTarget)
 		{
 			objTarget[lastPathSegment] = data?.DeepClone();
