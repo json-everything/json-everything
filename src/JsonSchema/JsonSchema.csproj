@@ -50,7 +50,6 @@
     <Compile Remove="DependenciesKeyword.cs" />
     <Compile Remove="DependentRequiredKeyword.cs" />
     <Compile Remove="DependentSchemasKeyword.cs" />
-    <Compile Remove="DependsOnAnnotationsFromAttribute.cs" />
     <Compile Remove="DeprecatedKeyword.cs" />
     <Compile Remove="DescriptionKeyword.cs" />
     <Compile Remove="DynamicAnchorKeyword.cs" />

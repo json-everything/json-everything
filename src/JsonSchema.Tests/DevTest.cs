@@ -16,5 +16,10 @@ public class DevTest
 
 		var schemaJson = JsonDocument.Parse(schemaText).RootElement;
 		var schema = JsonSchema.Build(schemaJson);
+
+		var instanceText = "\"a string\"";
+		var instance = JsonDocument.Parse(instanceText).RootElement;
+
+		var results = schema.Evaluate(instance);
 	}
 }

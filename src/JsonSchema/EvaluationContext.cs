@@ -91,6 +91,8 @@ public enum IntegerProcessing
 {
 	Int32,
 	Int64,
+#if NET8_0_OR_GREATER
 	Int128,
+#endif
 	BigInt
 }
