@@ -161,28 +161,30 @@ internal class ValidatingJsonConverter<T> : WeaklyTypedJsonConverter<T>, IValida
 	[UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]
 	public override T? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var readerCopy = reader;
-		var node = options.Read(ref readerCopy, JsonSchemaSerializerContext.Default.JsonNode);
+		throw new NotImplementedException();
+
+		//var readerCopy = reader;
+		//var node = options.Read(ref readerCopy, JsonSchemaSerializerContext.Default.JsonNode);
 		
-		var validation = _schema.Evaluate(node, Options);
+		//var validation = _schema.Evaluate(node, Options);
 
-		var newOptions = _optionsFactory(options);
+		//var newOptions = _optionsFactory(options);
 
-		if (validation.IsValid)
-			// TODO: this does not use the options reader because at least one test failed with a NotSupportedException
-			/*
-			return newOptions.Read<T>(ref reader);
-			/*/
-			return JsonSerializer.Deserialize<T>(ref reader, newOptions);
-			//*/
+		//if (validation.IsValid)
+		//	// TODO: this does not use the options reader because at least one test failed with a NotSupportedException
+		//	/*
+		//	return newOptions.Read<T>(ref reader);
+		//	/*/
+		//	return JsonSerializer.Deserialize<T>(ref reader, newOptions);
+		//	//*/
 
-		throw new JsonException("JSON does not meet schema requirements")
-		{
-			Data =
-			{
-				["validation"] = validation
-			}
-		};
+		//throw new JsonException("JSON does not meet schema requirements")
+		//{
+		//	Data =
+		//	{
+		//		["validation"] = validation
+		//	}
+		//};
 	}
 
 	[UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "We guarantee that the SerializerOptions covers all the types we need for AOT scenarios.")]

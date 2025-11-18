@@ -10,7 +10,7 @@
     <IsAotCompatible Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net7.0'))">true</IsAotCompatible>	  
     <RootNamespace>Json.Schema</RootNamespace>
     <AssemblyName>JsonSchema.Net</AssemblyName>
-    <DocumentationFile>JsonSchema.Net.xml</DocumentationFile>
+    <!--<DocumentationFile>JsonSchema.Net.xml</DocumentationFile>-->
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>../../json-everything.snk</AssemblyOriginatorKeyFile>
 
@@ -31,6 +31,108 @@
 
     <PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="AdditionalItemsKeyword.cs" />
+    <Compile Remove="AdditionalPropertiesKeyword.cs" />
+    <Compile Remove="AllOfKeyword.cs" />
+    <Compile Remove="AnchorKeyword.cs" />
+    <Compile Remove="AnyOfKeyword.cs" />
+    <Compile Remove="CommentKeyword.cs" />
+    <Compile Remove="ConstKeyword.cs" />
+    <Compile Remove="ContainsKeyword.cs" />
+    <Compile Remove="ContentEncodingKeyword.cs" />
+    <Compile Remove="ContentMediaTypeKeyword.cs" />
+    <Compile Remove="ContentSchemaKeyword.cs" />
+    <Compile Remove="DefaultKeyword.cs" />
+    <Compile Remove="DefinitionsKeyword.cs" />
+    <Compile Remove="DefsKeyword.cs" />
+    <Compile Remove="DependenciesKeyword.cs" />
+    <Compile Remove="DependentRequiredKeyword.cs" />
+    <Compile Remove="DependentSchemasKeyword.cs" />
+    <Compile Remove="DependsOnAnnotationsFromAttribute.cs" />
+    <Compile Remove="DeprecatedKeyword.cs" />
+    <Compile Remove="DescriptionKeyword.cs" />
+    <Compile Remove="DynamicAnchorKeyword.cs" />
+    <Compile Remove="DynamicRefKeyword.cs" />
+    <Compile Remove="ElseKeyword.cs" />
+    <Compile Remove="EnumKeyword.cs" />
+    <Compile Remove="ExamplesKeyword.cs" />
+    <Compile Remove="ExclusiveMaximumKeyword.cs" />
+    <Compile Remove="ExclusiveMinimumKeyword.cs" />
+    <Compile Remove="Format.cs" />
+    <Compile Remove="FormatKeyword.cs" />
+    <Compile Remove="Formats.cs" />
+    <Compile Remove="ICustomSchemaCollector.cs" />
+    <Compile Remove="IfKeyword.cs" />
+    <Compile Remove="IIdKeyword.cs" />
+    <Compile Remove="IKeyedSchemaCollector.cs" />
+    <Compile Remove="ISchemaCollector.cs" />
+    <Compile Remove="ISchemaContainer.cs" />
+    <Compile Remove="ItemsKeyword.cs" />
+    <Compile Remove="JsonNodeBaseDocument.cs" />
+    <Compile Remove="JsonSchemaBuilder.cs" />
+    <Compile Remove="JsonSchemaBuilderExtensions.cs" />
+    <Compile Remove="JsonSchemaExtensions.KeywordAccess.cs" />
+    <Compile Remove="KeywordConstraint.cs" />
+    <Compile Remove="KeywordEvaluation.cs" />
+    <Compile Remove="MaxContainsKeyword.cs" />
+    <Compile Remove="MaximumKeyword.cs" />
+    <Compile Remove="MaxItemsKeyword.cs" />
+    <Compile Remove="MaxLengthKeyword.cs" />
+    <Compile Remove="MaxPropertiesKeyword.cs" />
+    <Compile Remove="MetaSchemas.cs" />
+    <Compile Remove="MetaSchemas.Draft201909.cs" />
+    <Compile Remove="MetaSchemas.Draft202012.cs" />
+    <Compile Remove="MetaSchemas.Draft6.cs" />
+    <Compile Remove="MetaSchemas.Draft7.cs" />
+    <Compile Remove="MetaSchemas.DraftNext.cs" />
+    <Compile Remove="MinContainsKeyword.cs" />
+    <Compile Remove="MinimumKeyword.cs" />
+    <Compile Remove="MinItemsKeyword.cs" />
+    <Compile Remove="MinLengthKeyword.cs" />
+    <Compile Remove="MinPropertiesKeyword.cs" />
+    <Compile Remove="MultipleOfKeyword.cs" />
+    <Compile Remove="NotKeyword.cs" />
+    <Compile Remove="OneOfKeyword.cs" />
+    <Compile Remove="PatternKeyword.cs" />
+    <Compile Remove="PatternPropertiesKeyword.cs" />
+    <Compile Remove="PredicateFormat.cs" />
+    <Compile Remove="PrefixItemsKeyword.cs" />
+    <Compile Remove="PropertiesKeyword.cs" />
+    <Compile Remove="PropertyDependenciesKeyword.cs" />
+    <Compile Remove="PropertyDependency.cs" />
+    <Compile Remove="PropertyNamesKeyword.cs" />
+    <Compile Remove="ReadOnlyKeyword.cs" />
+    <Compile Remove="RecursiveAnchorKeyword.cs" />
+    <Compile Remove="RecursiveRefKeyword.cs" />
+    <Compile Remove="RefKeyword.cs" />
+    <Compile Remove="RegexFormat.cs" />
+    <Compile Remove="RegexOrPattern.cs" />
+    <Compile Remove="RequiredKeyword.cs" />
+    <Compile Remove="SchemaConstraint.cs" />
+    <Compile Remove="SchemaEvaluation.cs" />
+    <Compile Remove="SchemaKeyword.cs" />
+    <Compile Remove="SchemaKeywordAttribute.cs" />
+    <Compile Remove="SchemaSpecVersionAttribute.cs" />
+    <Compile Remove="SpecVersion.cs" />
+    <Compile Remove="ThenKeyword.cs" />
+    <Compile Remove="TitleKeyword.cs" />
+    <Compile Remove="UnevaluatedItemsKeyword.cs" />
+    <Compile Remove="UnevaluatedPropertiesKeyword.cs" />
+    <Compile Remove="UniqueItemsKeyword.cs" />
+    <Compile Remove="UnknownFormat.cs" />
+    <Compile Remove="UnrecognizedKeyword.cs" />
+    <Compile Remove="Vocabularies.cs" />
+    <Compile Remove="Vocabularies.Draft201909.cs" />
+    <Compile Remove="Vocabularies.Draft202012.cs" />
+    <Compile Remove="Vocabularies.DraftNext.cs" />
+    <Compile Remove="Vocabulary.cs" />
+    <Compile Remove="VocabularyAttribute.cs" />
+    <Compile Remove="VocabularyKeyword.cs" />
+    <Compile Remove="VocabularyRegistry.cs" />
+    <Compile Remove="WriteOnlyKeyword.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="PolySharp" Version="1.15.0" PrivateAssets="all" />
@@ -135,7 +237,7 @@
     </EmbeddedResource>
   </ItemGroup>
 
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+  <!--<Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Copy SourceFiles="$(TargetDir)$(DocumentationFile)" DestinationFolder="..\..\doc-tool\xml\" SkipUnchangedFiles="True" OverwriteReadOnlyFiles="True" />
-  </Target>
+  </Target>-->
 </Project>

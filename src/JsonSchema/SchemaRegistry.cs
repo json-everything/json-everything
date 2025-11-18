@@ -2,6 +2,7 @@
 using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 
 namespace Json.Schema;
 
@@ -12,7 +13,7 @@ public class SchemaRegistry
 {
 	private class Registration
 	{
-		public required IBaseDocument Root { get; init; } = null!;
+		public required IBaseDocument Root { get; init; }
 		public Dictionary<string, JsonSchema>? Anchors { get; set; }
 		public Dictionary<string, JsonSchema>? LegacyAnchors { get; set; }
 		public Dictionary<string, JsonSchema>? DynamicAnchors { get; set; }
@@ -21,23 +22,13 @@ public class SchemaRegistry
 
 	private static readonly Uri _empty = new("http://everything.json/");
 
-	private static readonly Dictionary<Uri, SpecVersion> _versionLookup = new()
-	{
-		[MetaSchemas.Draft6Id] = SpecVersion.Draft6,
-		[MetaSchemas.Draft7Id] = SpecVersion.Draft7,
-		[MetaSchemas.Draft201909Id] = SpecVersion.Draft201909,
-		[MetaSchemas.Draft202012Id] = SpecVersion.Draft202012,
-		[MetaSchemas.DraftNextId] = SpecVersion.DraftNext
-	};
-
 	private readonly Dictionary<Uri, Registration> _registered = [];
-	private readonly EvaluationOptions _options;
 	private Func<Uri, IBaseDocument?>? _fetch;
 
 	/// <summary>
 	/// The global registry.
 	/// </summary>
-	public static SchemaRegistry Global => EvaluationOptions.Default.SchemaRegistry;
+	public static SchemaRegistry Global => BuildOptions.Default.SchemaRegistry;
 
 	/// <summary>
 	/// Gets or sets a method to enable automatic download of schemas by `$id` URI.
@@ -48,44 +39,39 @@ public class SchemaRegistry
 		set => _fetch = value;
 	}
 
-	internal SchemaRegistry(EvaluationOptions options)
+	public SchemaRegistry()
 	{
-		_options = options;
-	}
+		//Register(MetaSchemas.Draft6);
 
-	internal void InitializeMetaSchemas()
-	{
-		Register(MetaSchemas.Draft6);
+		//Register(MetaSchemas.Draft7);
 
-		Register(MetaSchemas.Draft7);
+		//Register(MetaSchemas.Draft201909);
+		//Register(MetaSchemas.Core201909);
+		//Register(MetaSchemas.Applicator201909);
+		//Register(MetaSchemas.Validation201909);
+		//Register(MetaSchemas.Metadata201909);
+		//Register(MetaSchemas.Format201909);
+		//Register(MetaSchemas.Content201909);
 
-		Register(MetaSchemas.Draft201909);
-		Register(MetaSchemas.Core201909);
-		Register(MetaSchemas.Applicator201909);
-		Register(MetaSchemas.Validation201909);
-		Register(MetaSchemas.Metadata201909);
-		Register(MetaSchemas.Format201909);
-		Register(MetaSchemas.Content201909);
+		//Register(MetaSchemas.Draft202012);
+		//Register(MetaSchemas.Core202012);
+		//Register(MetaSchemas.Applicator202012);
+		//Register(MetaSchemas.Validation202012);
+		//Register(MetaSchemas.Metadata202012);
+		//Register(MetaSchemas.Unevaluated202012);
+		//Register(MetaSchemas.FormatAnnotation202012);
+		//Register(MetaSchemas.FormatAssertion202012);
+		//Register(MetaSchemas.Content202012);
 
-		Register(MetaSchemas.Draft202012);
-		Register(MetaSchemas.Core202012);
-		Register(MetaSchemas.Applicator202012);
-		Register(MetaSchemas.Validation202012);
-		Register(MetaSchemas.Metadata202012);
-		Register(MetaSchemas.Unevaluated202012);
-		Register(MetaSchemas.FormatAnnotation202012);
-		Register(MetaSchemas.FormatAssertion202012);
-		Register(MetaSchemas.Content202012);
-
-		Register(MetaSchemas.DraftNext);
-		Register(MetaSchemas.CoreNext);
-		Register(MetaSchemas.ApplicatorNext);
-		Register(MetaSchemas.ValidationNext);
-		Register(MetaSchemas.MetadataNext);
-		Register(MetaSchemas.UnevaluatedNext);
-		Register(MetaSchemas.FormatAnnotationNext);
-		Register(MetaSchemas.FormatAssertionNext);
-		Register(MetaSchemas.ContentNext);
+		//Register(MetaSchemas.DraftNext);
+		//Register(MetaSchemas.CoreNext);
+		//Register(MetaSchemas.ApplicatorNext);
+		//Register(MetaSchemas.ValidationNext);
+		//Register(MetaSchemas.MetadataNext);
+		//Register(MetaSchemas.UnevaluatedNext);
+		//Register(MetaSchemas.FormatAnnotationNext);
+		//Register(MetaSchemas.FormatAssertionNext);
+		//Register(MetaSchemas.ContentNext);
 	}
 
 	/// <summary>
@@ -105,24 +91,19 @@ public class SchemaRegistry
 	public void Register(Uri? uri, IBaseDocument document)
 	{
 		RegisterSchema(uri, document);
-		_options.Changed = true;
 	}
 
 	/// <summary>
-	/// Registers a new meta-schema URI and establishes a new recognized value for the
-	/// <see cref="SpecVersion"/> enumeration.
+	/// Registers a new meta-schema URI.
 	/// </summary>
 	/// <param name="metaSchemaUri">The meta-schema URI.</param>
-	/// <param name="specVersion">The value of the enum to associate with the meta-schema.</param>
+	/// <param name="metaSchema"></param>
 	/// <remarks>
 	/// **WARNING** There be dragons here.  Use only if you know what you're doing.
 	/// </remarks>
-	public static void RegisterNewSpecVersion(Uri metaSchemaUri, SpecVersion specVersion)
+	public static void RegisterNewSpecVersion(Uri metaSchemaUri, IBaseDocument metaSchema)
 	{
-		if (_versionLookup.ContainsKey(metaSchemaUri))
-			throw new ArgumentException("Overriding known specification versions is not supported.");
-
-		_versionLookup[metaSchemaUri] = specVersion;
+		// TODO
 	}
 
 	private void RegisterSchema(Uri? uri, IBaseDocument document)
@@ -196,24 +177,6 @@ public class SchemaRegistry
 		}
 
 		throw new RefResolutionException(scope.LocalScope, anchor, true);
-	}
-
-	internal JsonSchema GetRecursive(DynamicScope scope)
-	{
-		JsonSchema? resolved = null;
-		foreach (var uri in scope)
-		{
-			var registration = _registered.GetValueOrDefault(uri) ?? Global._registered.GetValueOrDefault(uri);
-			if (registration == null)
-				throw new InvalidOperationException($"Could not find '{uri}'. This shouldn't happen.");
-			if (registration.RecursiveAnchor is null)
-				return resolved ?? (JsonSchema) registration.Root;
-
-			resolved = registration.RecursiveAnchor;
-		}
-
-		// resolved should always be set
-		return resolved ?? throw new NotImplementedException();
 	}
 
 	private IBaseDocument? Get(Uri baseUri, string? anchor, bool isDynamic, bool allowLegacy)
@@ -314,149 +277,151 @@ public class SchemaRegistry
 			else
 				_registered[reg.Key] = reg.Value;
 
-			SetDialect((JsonSchema)reg.Value.Root, null);
+			//SetDialect((JsonSchema)reg.Value.Root, null);
 		}
 	}
 
 	private Dictionary<Uri, Registration> Scan(Uri baseUri, JsonSchema document)
 	{
-		var toCheck = new Queue<(Uri, JsonSchema, SpecVersion, Vocabulary[]?)>();
-		toCheck.Enqueue((baseUri, document, _options.EvaluateAs, null));
+		//var toCheck = new Queue<(Uri, JsonSchema, SpecVersion, Vocabulary[]?)>();
+		//toCheck.Enqueue((baseUri, document, _options.EvaluateAs, null));
 
-		var registrations = new Dictionary<Uri, Registration>();
+		//var registrations = new Dictionary<Uri, Registration>();
 
-		while (toCheck.Count != 0)
-		{
-			var (currentUri, currentSchema, parentSpecVersion, parentDialect) = toCheck.Dequeue();
+		//while (toCheck.Count != 0)
+		//{
+		//	var (currentUri, currentSchema, parentSpecVersion, parentDialect) = toCheck.Dequeue();
 
-			SetDialect(currentSchema, parentDialect);
+		//	SetDialect(currentSchema, parentDialect);
 			
-			var id = currentSchema.GetId();
+		//	var id = currentSchema.GetId();
 			
-			DetermineSpecVersion(currentSchema, this);
-			if (currentSchema.DeclaredVersion is SpecVersion.Unspecified)
-				currentSchema.DeclaredVersion = parentSpecVersion;
-			if ((currentSchema.DeclaredVersion is not (SpecVersion.Draft6 or SpecVersion.Draft7) || currentSchema.GetRef() is null) && id is not null)
-				currentUri = new Uri(currentUri, id);
+		//	DetermineSpecVersion(currentSchema, this);
+		//	if (currentSchema.DeclaredVersion is SpecVersion.Unspecified)
+		//		currentSchema.DeclaredVersion = parentSpecVersion;
+		//	if ((currentSchema.DeclaredVersion is not (SpecVersion.Draft6 or SpecVersion.Draft7) || currentSchema.GetRef() is null) && id is not null)
+		//		currentUri = new Uri(currentUri, id);
 
-			if (!registrations.TryGetValue(currentUri, out var registration))
-				registrations[currentUri] = registration = new Registration
-				{
-					Root = currentSchema
-				};
+		//	if (!registrations.TryGetValue(currentUri, out var registration))
+		//		registrations[currentUri] = registration = new Registration
+		//		{
+		//			Root = currentSchema
+		//		};
 
-			currentSchema.BaseUri = currentUri;
+		//	currentSchema.BaseUri = currentUri;
 
-			if (!string.IsNullOrEmpty(currentUri.Fragment))
-			{
-				var fragment = currentUri.Fragment[1..];
-				if (AnchorKeyword.AnchorPattern201909.IsMatch(fragment))
-				{
-					registration.LegacyAnchors ??= [];
-					registration.LegacyAnchors[fragment] = currentSchema;
-				}
-			}
+		//	if (!string.IsNullOrEmpty(currentUri.Fragment))
+		//	{
+		//		var fragment = currentUri.Fragment[1..];
+		//		if (AnchorKeyword.AnchorPattern201909.IsMatch(fragment))
+		//		{
+		//			registration.LegacyAnchors ??= [];
+		//			registration.LegacyAnchors[fragment] = currentSchema;
+		//		}
+		//	}
 
-			var dynamicAnchor = currentSchema.GetDynamicAnchor();
-			if (dynamicAnchor is not null)
-			{
-				registration.Anchors ??= [];
-				registration.Anchors[dynamicAnchor] = currentSchema;
-				registration.DynamicAnchors ??= [];
-				registration.DynamicAnchors[dynamicAnchor] = currentSchema;
-			}
+		//	var dynamicAnchor = currentSchema.GetDynamicAnchor();
+		//	if (dynamicAnchor is not null)
+		//	{
+		//		registration.Anchors ??= [];
+		//		registration.Anchors[dynamicAnchor] = currentSchema;
+		//		registration.DynamicAnchors ??= [];
+		//		registration.DynamicAnchors[dynamicAnchor] = currentSchema;
+		//	}
 
-			var recursiveAnchor = currentSchema.GetRecursiveAnchor();
-			if (recursiveAnchor == true)
-				registration.RecursiveAnchor = currentSchema;
+		//	var recursiveAnchor = currentSchema.GetRecursiveAnchor();
+		//	if (recursiveAnchor == true)
+		//		registration.RecursiveAnchor = currentSchema;
 
-			var anchor = currentSchema.GetAnchor();
-			if (anchor is not null)
-			{
-				registration.Anchors ??= [];
-				registration.Anchors[anchor] = currentSchema;
-			}
+		//	var anchor = currentSchema.GetAnchor();
+		//	if (anchor is not null)
+		//	{
+		//		registration.Anchors ??= [];
+		//		registration.Anchors[anchor] = currentSchema;
+		//	}
 
-			using var owner = MemoryPool<JsonSchema>.Shared.Rent(currentSchema.CountSubschemas());
-			foreach (var subschema in currentSchema.GetSubschemas(owner))
-			{
-				if (subschema.BoolValue.HasValue) continue;
+		//	using var owner = MemoryPool<JsonSchema>.Shared.Rent(currentSchema.CountSubschemas());
+		//	foreach (var subschema in currentSchema.GetSubschemas(owner))
+		//	{
+		//		if (subschema.BoolValue.HasValue) continue;
 
-				toCheck.Enqueue((currentUri, subschema, currentSchema.DeclaredVersion, currentSchema.Dialect));
-			}
-		}
+		//		toCheck.Enqueue((currentUri, subschema, currentSchema.DeclaredVersion, currentSchema.Dialect));
+		//	}
+		//}
 
-		return registrations;
+		//return registrations;
+
+		throw new NotImplementedException();
 	}
 
-	private static void DetermineSpecVersion(JsonSchema schema, SchemaRegistry registry)
-	{
-		if (schema.BoolValue.HasValue)
-		{
-			schema.DeclaredVersion = SpecVersion.Unspecified;
-			return;
-		}
+	//private static void DetermineSpecVersion(JsonSchema schema, SchemaRegistry registry)
+	//{
+	//	if (schema.BoolValue.HasValue)
+	//	{
+	//		schema.DeclaredVersion = SpecVersion.Unspecified;
+	//		return;
+	//	}
 
-		if (schema.TryGetKeyword<SchemaKeyword>(SchemaKeyword.Name, out var schemaKeyword))
-		{
-			var metaSchemaId = schemaKeyword.Schema;
-			while (metaSchemaId != null)
-			{
-				if (_versionLookup.TryGetValue(metaSchemaId, out var version))
-				{
-					schema.DeclaredVersion = version;
-					return;
-				}
+	//	if (schema.TryGetKeyword<SchemaKeyword>(SchemaKeyword.Name, out var schemaKeyword))
+	//	{
+	//		var metaSchemaId = schemaKeyword.Schema;
+	//		while (metaSchemaId != null)
+	//		{
+	//			if (_versionLookup.TryGetValue(metaSchemaId, out var version))
+	//			{
+	//				schema.DeclaredVersion = version;
+	//				return;
+	//			}
 
-				schema.DeclaredVersion = SpecVersion.Unspecified;
+	//			schema.DeclaredVersion = SpecVersion.Unspecified;
 
-				var metaSchema = registry.Get(metaSchemaId) as JsonSchema ??
-					throw new JsonSchemaException("Cannot resolve custom meta-schema.");
+	//			var metaSchema = registry.Get(metaSchemaId) as JsonSchema ??
+	//				throw new JsonSchemaException("Cannot resolve custom meta-schema.");
 
-				var newMetaSchemaId = metaSchema.GetSchema();
-				if (newMetaSchemaId == metaSchemaId)
-					throw new JsonSchemaException("Custom meta-schema `$schema` keywords must eventually resolve to a meta-schema for a supported specification version.");
+	//			var newMetaSchemaId = metaSchema.GetSchema();
+	//			if (newMetaSchemaId == metaSchemaId)
+	//				throw new JsonSchemaException("Custom meta-schema `$schema` keywords must eventually resolve to a meta-schema for a supported specification version.");
 
-				metaSchemaId = newMetaSchemaId;
-			}
-		}
+	//			metaSchemaId = newMetaSchemaId;
+	//		}
+	//	}
 
-		schema.DeclaredVersion = SpecVersion.Unspecified;
-	}
+	//	schema.DeclaredVersion = SpecVersion.Unspecified;
+	//}
 
-	private void SetDialect(JsonSchema schema, Vocabulary[]? parentDialect)
-	{
-		var schemaKeyword = (SchemaKeyword?)schema.Keywords?.FirstOrDefault(x => x is SchemaKeyword);
-		if (schemaKeyword == null)
-		{
-			schema.Dialect = parentDialect;
-			return;
-		}
+	//private void SetDialect(JsonSchema schema, Vocabulary[]? parentDialect)
+	//{
+	//	var schemaKeyword = (SchemaKeyword?)schema.Keywords?.FirstOrDefault(x => x is SchemaKeyword);
+	//	if (schemaKeyword == null)
+	//	{
+	//		schema.Dialect = parentDialect;
+	//		return;
+	//	}
 
-		var metaSchema = (JsonSchema)Get(schemaKeyword.Schema);
-		var vocabulary = metaSchema.GetVocabulary();
+	//	var metaSchema = (JsonSchema)Get(schemaKeyword.Schema);
+	//	var vocabulary = metaSchema.GetVocabulary();
 
 
-		if (vocabulary is null) return;
+	//	if (vocabulary is null) return;
 
-		using var owner = MemoryPool<Vocabulary>.Shared.Rent();
-		var span = owner.Memory.Span;
-		var i = 0;
+	//	using var owner = MemoryPool<Vocabulary>.Shared.Rent();
+	//	var span = owner.Memory.Span;
+	//	var i = 0;
 
-		foreach (var kvp in vocabulary)
-		{
-			var vocab = VocabularyRegistry.Get(kvp.Key);
-			if (vocab is null)
-			{
-				if (kvp.Value && _options.ValidateAgainstMetaSchema)
-					throw new JsonSchemaException($"Detected unknown required vocabulary: '{kvp.Key}'");
-				continue;
-			}
+	//	foreach (var kvp in vocabulary)
+	//	{
+	//		var vocab = VocabularyRegistry.Get(kvp.Key);
+	//		if (vocab is null)
+	//		{
+	//			if (kvp.Value && _options.ValidateAgainstMetaSchema)
+	//				throw new JsonSchemaException($"Detected unknown required vocabulary: '{kvp.Key}'");
+	//			continue;
+	//		}
 
-			span[i] = vocab;
-			i++;
-		}
+	//		span[i] = vocab;
+	//		i++;
+	//	}
 
-		schema.Dialect = span[..i].ToArray();
-	}
+	//	schema.Dialect = span[..i].ToArray();
+	//}
 }

@@ -117,10 +117,10 @@ public class JsonPointerTests
 	[Test]
 	public void ToString_WithEncodedCharacters()
 	{
-		var p = JsonPointer.Create("some", "pointer", "with~tilde");
+		var p = JsonPointer.Create("some", "pointerOld", "with~tilde");
 
 		var result = p.ToString();
-		Assert.That(result, Is.EqualTo("/some/pointer/with~0tilde"));
+		Assert.That(result, Is.EqualTo("/some/pointerOld/with~0tilde"));
 	}
 
 	[Test]
