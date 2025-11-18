@@ -71,29 +71,33 @@ public class TypeKeyword : IKeywordHandler
 
 	public KeywordEvaluation Evaluate(KeywordData keyword, EvaluationContext context)
 	{
-		throw new NotImplementedException();
+		var instanceType = context.Instance.GetSchemaValueType();
+		var expectedType = (SchemaValueType)keyword.Value!;
+		if (expectedType.HasFlag(instanceType))
+			return new KeywordEvaluation
+			{
+				Keyword = Name,
+				IsValid = true
+			};
 
-		//var instanceType = context.Instance.GetSchemaValueType();
-		//var expectedType = (SchemaValueType) keyword.Value!;
-		//if (expectedType.HasFlag(instanceType))
-		//	return new KeywordEvaluation
-		//	{
-		//		Keyword = Name,
-		//		IsValid = true
-		//	};
-
-		//if (instanceType == SchemaValueType.Integer && expectedType.HasFlag(SchemaValueType.Number))
-		//	return new KeywordEvaluation
-		//	{
-		//		Keyword = Name,
-		//		IsValid = true
-		//	};
+		if (instanceType == SchemaValueType.Integer && expectedType.HasFlag(SchemaValueType.Number))
+			return new KeywordEvaluation
+			{
+				Keyword = Name,
+				IsValid = true
+			};
 
 		//if (instanceType == SchemaValueType.Number)
 		//{
-		//	var number = context.Instance.GetNumber(context.Options.NumberProcessing); // TODO: hm...  Can't do a GetNumber now
+		//	var number = context.Instance.GetNumber(context.Options.NumberProcessing);
 		//	if (number == Math.Truncate(number!.Value) && expectedType.HasFlag(SchemaValueType.Integer)) return;
 		//}
+
+		return new KeywordEvaluation
+		{
+			Keyword = Name,
+			IsValid = false
+		};
 
 		//var expected = expectedType.ToString().ToLower();
 		//evaluation.Results.Fail(Name, ErrorMessages.GetType(context.Options.Culture).

@@ -71,7 +71,7 @@ public class JsonSchema : IBaseDocument
 		_root = root;
 		_options = options;
 
-		options.SchemaRegistry.Register(this);
+		//options.SchemaRegistry.Register(this);
 	}
 
 	/// <summary>
@@ -129,10 +129,26 @@ public class JsonSchema : IBaseDocument
 		if (root.ValueKind != JsonValueKind.Object)
 			throw new ArgumentException($"Schemas may only booleans or objects.  Received {root.ValueKind}");
 
+		var context = new BuildContext(options)
+		{
+			LocalSchema = root,
+			EvaluationPath = JsonPointer.Empty
+		};
+
+		var node = BuildNode(context);
+
+		return new JsonSchema(root, node, context.Options);
+	}
+
+	public static JsonSchemaNode BuildNode(BuildContext context)
+	{
+		// TODO: for consideration: resolving references as part of the build might prevent support of cyclical or recursive references.  A <--> B
+		//       how do we register B for A to reference without first building B which needs A to be registered?
+
 		var node = new JsonSchemaNode();
-		var context = new BuildContext(options);
-		
-		foreach (var property in root.EnumerateObject())
+	
+		var keywordData = new List<KeywordData>();
+		foreach (var property in context.LocalSchema.EnumerateObject())
 		{
 			var keyword = property.Name;
 			var value = property.Value;
@@ -140,22 +156,38 @@ public class JsonSchema : IBaseDocument
 			var handler = context.Options.KeywordRegistry.GetHandler(keyword);
 			if (handler is null) continue; // TODO: for v1, throw exception if not x-*
 
-			node.Keywords[keyword] = new KeywordData
+			keywordData.Add(new KeywordData
 			{
+				EvaluationOrder = context.Options.KeywordRegistry.GetEvaluationOrder(keyword) ??
+				                  throw new UnreachableException("Cannot get evaluation order for keyword"),
 				RawValue = value.Clone(),
+				Handler = handler,
 				Value = handler.ValidateValue(value),
 				Subschemas = handler.BuildSubschemas(context)
-			};
+			});
 		}
 
-		return new JsonSchema(root, node, context.Options);
+		node.Keywords = keywordData.OrderBy(x => x.EvaluationOrder).ToArray();
+
+		return node;
 	}
 
-	public EvaluationResults Evaluate(JsonElement? root, EvaluationOptions? options = null)
+	public EvaluationResults Evaluate(JsonElement instance, EvaluationOptions? options = null)
 	{
 		options ??= EvaluationOptions.Default;
+		var context = new EvaluationContext
+		{
+			Options = options,
+			Instance = instance
+		};
 
-		throw new NotImplementedException();
+		var keywordEvaluations = _root.Keywords.Select(x => x.Handler.Evaluate(x, context)).ToArray();
+
+		var results = new EvaluationResults(JsonPointer.Empty, BaseUri, JsonPointer.Empty, options);
+		if (!keywordEvaluations.All(x => x.IsValid))
+			results.Fail();
+
+		return results;
 	}
 
 	public JsonSchema? FindSubschema(JsonPointer pointer, EvaluationOptions options)
@@ -205,12 +237,12 @@ public interface IKeywordHandler
 
 public class JsonSchemaNode
 {
-	public Dictionary<string, KeywordData> Keywords { get; set; } = [];
+	public KeywordData[] Keywords { get; set; } = [];
 }
 
 public class KeywordData
 {
-	public int EvaluationOrder { get; set; }
+	public long EvaluationOrder { get; set; }
 	public JsonElement RawValue { get; set; }
 	public object? Value { get; set; }
 	public JsonSchemaNode[] Subschemas { get; set; }
