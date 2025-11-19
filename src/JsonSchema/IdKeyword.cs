@@ -31,7 +31,9 @@ public class IdKeyword : IKeywordHandler //, IIdKeyword
 		return uri;
 	}
 
-	public JsonSchemaNode[] BuildSubschemas(BuildContext context) => [];
+	public void BuildSubschemas(KeywordData keyword, BuildContext context)
+	{
+	}
 
 	public KeywordEvaluation Evaluate(KeywordData keyword, EvaluationContext context)
 	{

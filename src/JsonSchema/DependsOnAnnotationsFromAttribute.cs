@@ -37,7 +37,7 @@ public class DependsOnAnnotationsFromAttribute : Attribute
 /// </remarks>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, AllowMultiple = true)]
 public class DependsOnAnnotationsFromAttribute<T> : DependsOnAnnotationsFromAttribute
-	where T : IJsonSchemaKeyword
+	where T : IKeywordHandler
 {
 	/// <summary>
 	/// Creates a new <see cref="DependsOnAnnotationsFromAttribute"/> instance.

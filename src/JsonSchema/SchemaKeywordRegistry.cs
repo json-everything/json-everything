@@ -20,7 +20,6 @@ public class SchemaKeywordRegistry
 		public long Priority { get; set; }
 		public bool ProducesDependentAnnotations { get; set; }
 		// ReSharper restore MemberHidesStaticFromOuterClass
-		public IJsonSchemaKeyword? NullValue { get; set; }
 
 		public KeywordMetaData(IKeywordHandler handler)
 		{
@@ -58,7 +57,7 @@ public class SchemaKeywordRegistry
 			//new ContentSchemaKeyword(),
 			//new DefaultKeyword(),
 			//new DefinitionsKeyword(),
-			//new DefsKeyword(),
+			new DefsKeyword(),
 			//new DependenciesKeyword(),
 			//new DependentRequiredKeyword(),
 			//new DependentSchemasKeyword(),
@@ -97,7 +96,7 @@ public class SchemaKeywordRegistry
 			//new ReadOnlyKeyword(),
 			//new RecursiveAnchorKeyword(),
 			//new RecursiveRefKeyword(),
-			//new RefKeyword(),
+			new RefKeyword(),
 			//new RequiredKeyword(),
 			//new SchemaKeyword(),
 			//new ThenKeyword(),

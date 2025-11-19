@@ -67,7 +67,9 @@ public class TypeKeyword : IKeywordHandler
 		throw new JsonSchemaException("'type' must be either a string or an array of strings");
 	}
 
-	public JsonSchemaNode[] BuildSubschemas(BuildContext context) => [];
+	public void BuildSubschemas(KeywordData keyword, BuildContext context)
+	{
+	}
 
 	public KeywordEvaluation Evaluate(KeywordData keyword, EvaluationContext context)
 	{
