@@ -326,6 +326,16 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 		return true;
 	}
 
+	public bool StartsWith(JsonPointer other)
+	{
+		return _pointer.Span.StartsWith(other._pointer.Span);
+	}
+
+	public bool EndsWith(JsonPointer other)
+	{
+		return _pointer.Span.EndsWith(other._pointer.Span);
+	}
+
 	/// <summary>
 	/// Compares this pointer with another pointer for equality.
 	/// </summary>

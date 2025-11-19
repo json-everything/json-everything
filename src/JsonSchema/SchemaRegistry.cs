@@ -120,12 +120,18 @@ public class SchemaRegistry
 
 		_registered[uri] = new Registration { Root = document };
 		if (schema is null) return;
-		
-		var registrations = Scan(uri, schema);
-		foreach (var reg in registrations)
+
+		// TODO: temp
+		_registered[uri] = new Registration
 		{
-			_registered[reg.Key] = reg.Value;
-		}
+			Root = document
+		};
+
+		//var registrations = Scan(uri, schema);
+		//foreach (var reg in registrations)
+		//{
+		//	_registered[reg.Key] = reg.Value;
+		//}
 
 		if (_registered.ContainsKey(uri)) return;
 

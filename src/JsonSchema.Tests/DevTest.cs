@@ -10,7 +10,10 @@ public class DevTest
 	{
 		var schemaText = """
 		    {
-		      "type": "string"
+		      "$ref": "#/$defs/stringy-thingy",
+		      "$defs": {
+		        "stringy-thingy": { "type": "string" }
+		      }
 		    }
 		    """;
 

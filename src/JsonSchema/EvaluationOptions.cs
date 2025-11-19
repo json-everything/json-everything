@@ -95,7 +95,7 @@ public class EvaluationOptions
 	/// </summary>
 	/// <typeparam name="T">The keyword type which should not have annotations.</typeparam>
 	public void IgnoreAnnotationsFrom<T>()
-		where T : IJsonSchemaKeyword
+		where T : IKeywordHandler
 	{
 		_ignoredAnnotationTypes ??= [];
 
@@ -122,6 +122,7 @@ public class EvaluationOptions
 	/// Restores annotation collection for the specified keyword.
 	/// </summary>
 	public void CollectAnnotationsFrom<T>()
+		where T : IKeywordHandler
 	{
 		_ignoredAnnotationTypes?.Remove(typeof(T));
 	}

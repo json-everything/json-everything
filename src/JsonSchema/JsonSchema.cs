@@ -25,7 +25,6 @@ public class JsonSchema : IBaseDocument
 
 	private readonly Dictionary<string, KeywordData>? _keywords;
 	private BuildOptions _options;
-	private JsonElement _source;
 	private JsonSchemaNode _root;
 
 	/// <summary>
@@ -65,9 +64,8 @@ public class JsonSchema : IBaseDocument
 		BoolValue = value;
 	}
 
-	private JsonSchema(JsonElement source, JsonSchemaNode root, BuildOptions options)
+	private JsonSchema(JsonSchemaNode root, BuildOptions options)
 	{
-		_source = source;
 		_root = root;
 		_options = options;
 
@@ -129,23 +127,34 @@ public class JsonSchema : IBaseDocument
 		if (root.ValueKind != JsonValueKind.Object)
 			throw new ArgumentException($"Schemas may only booleans or objects.  Received {root.ValueKind}");
 
-		var context = new BuildContext(options)
+		var context = new BuildContext(options, root, GenerateBaseUri())
 		{
-			LocalSchema = root,
-			EvaluationPath = JsonPointer.Empty
+			LocalSchema = root
 		};
 
 		var node = BuildNode(context);
 
-		return new JsonSchema(root, node, context.Options);
+		var schema = new JsonSchema(node, context.Options) { BaseUri = context.BaseUri };
+		context.Options.SchemaRegistry.Register(schema);
+
+		TryResolveReferences(node, context);
+
+		return schema;
 	}
 
 	public static JsonSchemaNode BuildNode(BuildContext context)
 	{
 		// TODO: for consideration: resolving references as part of the build might prevent support of cyclical or recursive references.  A <--> B
 		//       how do we register B for A to reference without first building B which needs A to be registered?
+		//       - register A - try-resolve refs misses B
+		//       - register B - try-resolve refs finds A
+		//                    - recursive try-resolve into A finds B
 
-		var node = new JsonSchemaNode();
+		var node = new JsonSchemaNode
+		{
+			BaseUri = context.BaseUri,
+			Source = context.LocalSchema
+		};
 	
 		var keywordData = new List<KeywordData>();
 		foreach (var property in context.LocalSchema.EnumerateObject())
@@ -156,20 +165,43 @@ public class JsonSchema : IBaseDocument
 			var handler = context.Options.KeywordRegistry.GetHandler(keyword);
 			if (handler is null) continue; // TODO: for v1, throw exception if not x-*
 
-			keywordData.Add(new KeywordData
+			var data = new KeywordData
 			{
 				EvaluationOrder = context.Options.KeywordRegistry.GetEvaluationOrder(keyword) ??
 				                  throw new UnreachableException("Cannot get evaluation order for keyword"),
 				RawValue = value.Clone(),
 				Handler = handler,
-				Value = handler.ValidateValue(value),
-				Subschemas = handler.BuildSubschemas(context)
-			});
+				Value = handler.ValidateValue(value)
+			};
+			handler.BuildSubschemas(data, context);
+
+			keywordData.Add(data);
 		}
 
 		node.Keywords = keywordData.OrderBy(x => x.EvaluationOrder).ToArray();
 
 		return node;
+	}
+
+	public static bool TryResolveReferences(JsonSchemaNode node, BuildContext context)
+	{
+		var allResolved = true;
+		var refKeyword = node.Keywords.SingleOrDefault(x => x.Handler is RefKeyword);
+		if (refKeyword is not null)
+		{
+			var handler = (RefKeyword)refKeyword.Handler;
+			allResolved &= handler.Resolve(refKeyword, context);
+		}
+
+		foreach (var keyword in node.Keywords)
+		{
+			foreach (var subNode in keyword.Subschemas)
+			{
+				allResolved &= TryResolveReferences(subNode, context);
+			}
+		}
+
+		return allResolved;
 	}
 
 	public EvaluationResults Evaluate(JsonElement instance, EvaluationOptions? options = null)
@@ -181,18 +213,26 @@ public class JsonSchema : IBaseDocument
 			Instance = instance
 		};
 
-		var keywordEvaluations = _root.Keywords.Select(x => x.Handler.Evaluate(x, context)).ToArray();
-
-		var results = new EvaluationResults(JsonPointer.Empty, BaseUri, JsonPointer.Empty, options);
-		if (!keywordEvaluations.All(x => x.IsValid))
-			results.Fail();
-
-		return results;
+		return _root.Evaluate(context);
 	}
 
-	public JsonSchema? FindSubschema(JsonPointer pointer, EvaluationOptions options)
+	public JsonSchemaNode? FindSubschema(JsonPointer pointer, BuildOptions options)
 	{
-		throw new NotImplementedException();
+		var subschema = _root;
+		while (pointer.SegmentCount != 0)
+		{
+			var keyword = subschema.Keywords.FirstOrDefault(x => pointer.StartsWith(JsonPointer.Create(x.Handler.Name)));
+			if (keyword is null) return null;
+
+			pointer = pointer.GetLocal(pointer.SegmentCount - 1);
+
+			subschema = keyword.Subschemas.FirstOrDefault(x => pointer.StartsWith(x.RelativePath));
+			if (subschema is null) return null;
+
+			pointer = pointer.GetLocal(pointer.SegmentCount - subschema.RelativePath.SegmentCount);
+		}
+
+		return subschema;
 	}
 
 	/// <summary>
@@ -208,7 +248,7 @@ public class JsonSchema : IBaseDocument
 	{
 		if (BoolValue.HasValue) return BoolValue.Value ? "true" : "false";
 
-		var idKeyword = _keywords.Where(x => x.Value.Handler is IdKeyword).SingleOrDefault();
+		var idKeyword = _keywords!.SingleOrDefault(x => x.Value.Handler is IdKeyword);
 		return idKeyword.Value?.RawValue.GetString() ?? BaseUri.OriginalString;
 	}
 }
@@ -231,26 +271,46 @@ public interface IKeywordHandler
 	string Name { get; }
 
 	object? ValidateValue(JsonElement value);
-	JsonSchemaNode[] BuildSubschemas(BuildContext context);
+	void BuildSubschemas(KeywordData keyword, BuildContext context);
 	KeywordEvaluation Evaluate(KeywordData keyword, EvaluationContext context);
 }
 
 public class JsonSchemaNode
 {
+	public required Uri BaseUri { get; set; }
+	public JsonElement Source { get; set; }
 	public KeywordData[] Keywords { get; set; } = [];
+	public JsonPointer RelativePath { get; set; }
+
+	public EvaluationResults Evaluate(EvaluationContext context)
+	{
+		var keywordEvaluations = Keywords.Select(x => x.Handler.Evaluate(x, context)).ToArray();
+
+		var results = new EvaluationResults(JsonPointer.Empty, BaseUri, JsonPointer.Empty, context.Options);
+		if (!keywordEvaluations.All(x => x.IsValid))
+			results.Fail();
+
+		return results;
+	}
 }
 
 public class KeywordData
 {
-	public long EvaluationOrder { get; set; }
-	public JsonElement RawValue { get; set; }
+	public required long EvaluationOrder { get; set; }
+	public required IKeywordHandler Handler { get; set; }
+	public required JsonElement RawValue { get; set; }
+	public JsonSchemaNode[] Subschemas { get; set; } = [];
 	public object? Value { get; set; }
-	public JsonSchemaNode[] Subschemas { get; set; }
-	public IKeywordHandler Handler { get; set; }
 }
 
 public readonly struct KeywordEvaluation
 {
+	public static KeywordEvaluation Ignore = new()
+	{
+		Keyword = Guid.NewGuid().ToString("N"),
+		IsValid = true
+	};
+
 	public required string Keyword { get; init; }
 	public required bool IsValid { get; init; }
 	public string[] Annotations { get; init; } = [];
@@ -258,9 +318,33 @@ public readonly struct KeywordEvaluation
 	public KeywordEvaluation(){}
 }
 
-public struct BuildContext(BuildOptions? options)
+public struct BuildContext
 {
-	public BuildOptions Options { get; } = options ?? BuildOptions.Default;
-	public JsonPointer EvaluationPath { get; set; }
+	private readonly Stack<(string, JsonPointer)> _navigatedReferences = [];
+
+	public BuildOptions Options { get; }
+	public JsonElement RootSchema { get; }
+	public Uri BaseUri { get; set; }
 	public JsonElement LocalSchema { get; set; }
+
+	internal BuildContext(BuildOptions? options, JsonElement rootSchema, Uri baseUri)
+	{
+		Options = options ?? BuildOptions.Default;
+		RootSchema = rootSchema;
+		BaseUri = baseUri;
+	}
+
+	public void PushNavigation(string uri, JsonPointer instanceLocation)
+	{
+		var value = (uri, instanceLocation);
+		if (_navigatedReferences.Contains(value))
+			throw new JsonSchemaException($"Encountered circular reference at schema location `{uri}` and instance location `{instanceLocation}`");
+
+		_navigatedReferences.Push(value);
+	}
+
+	public void PopNavigation()
+	{
+		_navigatedReferences.Pop();
+	}
 }

@@ -46,7 +46,6 @@
     <Compile Remove="ContentSchemaKeyword.cs" />
     <Compile Remove="DefaultKeyword.cs" />
     <Compile Remove="DefinitionsKeyword.cs" />
-    <Compile Remove="DefsKeyword.cs" />
     <Compile Remove="DependenciesKeyword.cs" />
     <Compile Remove="DependentRequiredKeyword.cs" />
     <Compile Remove="DependentSchemasKeyword.cs" />
@@ -105,7 +104,6 @@
     <Compile Remove="ReadOnlyKeyword.cs" />
     <Compile Remove="RecursiveAnchorKeyword.cs" />
     <Compile Remove="RecursiveRefKeyword.cs" />
-    <Compile Remove="RefKeyword.cs" />
     <Compile Remove="RegexFormat.cs" />
     <Compile Remove="RegexOrPattern.cs" />
     <Compile Remove="RequiredKeyword.cs" />
