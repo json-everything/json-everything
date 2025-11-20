@@ -134,6 +134,7 @@ public class JsonSchema : IBaseDocument
 		context.Options.SchemaRegistry.Register(schema);
 
 		TryResolveReferences(node, context);
+		DetectCycles(node);
 
 		return schema;
 	}
@@ -208,6 +209,33 @@ public class JsonSchema : IBaseDocument
 			{
 				TryResolveReferences(subNode, context, checkedNodes);
 			}
+		}
+	}
+
+	public static void DetectCycles(JsonSchemaNode node, HashSet<JsonSchemaNode>? checkedNodes = null)
+	{
+		checkedNodes ??= [];
+		if (!checkedNodes.Add(node)) return;
+
+		var foundRefs = new HashSet<JsonSchemaNode> { node };
+
+		var refKeyword = node.Keywords.SingleOrDefault(x => x.Handler is RefKeyword);
+		if (refKeyword is null) return;
+
+		while (refKeyword is not null)
+		{
+			var nextNode = refKeyword.Subschemas.FirstOrDefault();
+			if (nextNode is null) break; // might not have resolved all refs yet
+
+			if (!foundRefs.Add(nextNode))
+				throw new JsonSchemaException($"Cycle detected starting with a reference to '{refKeyword.RawValue}'");
+
+			refKeyword = nextNode.Keywords.SingleOrDefault(x => x.Handler is RefKeyword);
+		}
+
+		foreach (var subschema in node.Keywords.SelectMany(x => x.Subschemas))
+		{
+			DetectCycles(subschema, checkedNodes);
 		}
 	}
 
@@ -288,7 +316,6 @@ public class JsonSchemaNode
 	public JsonElement Source { get; set; }
 	public KeywordData[] Keywords { get; init; } = [];
 	public JsonPointer RelativePath { get; set; }
-	internal bool ReferencesResolved { get; set; }
 
 	public EvaluationResults Evaluate(EvaluationContext context)
 	{

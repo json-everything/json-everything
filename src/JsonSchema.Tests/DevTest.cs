@@ -12,10 +12,7 @@ public class DevTest
 		var schema1Text = """
 		    {
 		      "$id": "a",
-		      "properties": {
-		        "b": { "$ref": "b" },
-		        "value": { "type": "boolean" }
-		      }
+		      "$ref": "b"
 		    }
 		    """;
 
@@ -25,10 +22,7 @@ public class DevTest
 		var schema2Text = """
 		    {
 		      "$id": "b",
-		      "properties": {
-		        "b": { "$ref": "a" },
-		        "value": { "type": "string" }
-		      }
+		      "$ref": "a"
 		    }
 		    """;
 
@@ -49,7 +43,7 @@ public class DevTest
 			""";
 		var instance = JsonDocument.Parse(instanceText).RootElement;
 
-		var results = schema2.Evaluate(instance);
+		var results = schema1.Evaluate(instance);
 
 		Console.WriteLine(JsonSerializer.Serialize(results, TestEnvironment.TestOutputSerializerOptions));
 	}
