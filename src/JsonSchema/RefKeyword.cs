@@ -46,7 +46,7 @@ public class RefKeyword : IKeywordHandler
 		keyword.Value = newUri;
 	}
 
-	internal static bool TryResolve(KeywordData keyword, BuildContext context)
+	internal static void TryResolve(KeywordData keyword, BuildContext context)
 	{
 		var newUri = (Uri)keyword.Value!;
 		var fragment = newUri.Fragment;
@@ -73,8 +73,6 @@ public class RefKeyword : IKeywordHandler
 
 		if (targetSchema is not null)
 			keyword.Subschemas = [targetSchema];
-
-		return true;
 	}
 
 	public KeywordEvaluation Evaluate(KeywordData keyword, EvaluationContext context)

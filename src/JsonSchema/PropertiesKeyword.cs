@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
-using System.Text.Json.Nodes;
-using System.Text.Json.Serialization;
-using Json.More;
 using Json.Pointer;
 
 namespace Json.Schema;
@@ -69,7 +65,7 @@ public class PropertiesKeyword : IKeywordHandler
 			{
 				InstanceLocation = context.InstanceLocation.Combine(subschema.RelativePath),
 				Instance = instance.Value,
-				EvaluationPath = context.EvaluationPath.Combine(Name)
+				EvaluationPath = context.EvaluationPath.Combine(Name, subschema.RelativePath[0].ToString())
 			};
 
 			subschemaEvaluations.Add(subschema.Evaluate(propContext));
