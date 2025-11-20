@@ -97,7 +97,6 @@
     <Compile Remove="PatternPropertiesKeyword.cs" />
     <Compile Remove="PredicateFormat.cs" />
     <Compile Remove="PrefixItemsKeyword.cs" />
-    <Compile Remove="PropertiesKeyword.cs" />
     <Compile Remove="PropertyDependenciesKeyword.cs" />
     <Compile Remove="PropertyDependency.cs" />
     <Compile Remove="PropertyNamesKeyword.cs" />

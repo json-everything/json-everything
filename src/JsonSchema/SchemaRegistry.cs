@@ -150,14 +150,14 @@ public class SchemaRegistry
 	/// </returns>
 	// For URI equality see https://docs.microsoft.com/en-us/dotnet/api/system.uri.op_equality?view=netcore-3.1
 	// tl;dr - URI equality doesn't consider fragments
-	public IBaseDocument Get(Uri uri)
+	public IBaseDocument? Get(Uri uri)
 	{
 		return Get(uri, null);
 	}
 
-	internal IBaseDocument Get(Uri baseUri, string? anchor, bool allowLegacy = false)
+	internal IBaseDocument? Get(Uri baseUri, string? anchor, bool allowLegacy = false)
 	{
-		return Get(baseUri, anchor, false, allowLegacy) ?? throw new RefResolutionException(baseUri, anchor);
+		return Get(baseUri, anchor, false, allowLegacy);
 	}
 
 	internal JsonSchema Get(DynamicScope scope, Uri baseUri, string anchor, bool requireLocalAnchor)

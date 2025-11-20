@@ -90,7 +90,7 @@ public class SchemaKeywordRegistry
 			//new PatternKeyword(),
 			//new PatternPropertiesKeyword(),
 			//new PrefixItemsKeyword(),
-			//new PropertiesKeyword(),
+			new PropertiesKeyword(),
 			//new PropertyDependenciesKeyword(),
 			//new PropertyNamesKeyword(),
 			//new ReadOnlyKeyword(),
