@@ -10,11 +10,6 @@ namespace Json.Schema;
 /// </summary>
 public struct EvaluationContext
 {
-	private readonly Stack<Uri> _evaluatingAs = new();
-#if DEBUG
-	private JsonPointer _evaluationPath = JsonPointer.Empty;
-#endif
-
 	/// <summary>
 	/// Gets the evaluation options.
 	/// </summary>
@@ -43,42 +38,13 @@ public struct EvaluationContext
 	/// </remarks>
 	public Uri EvaluatingAs { get; private set; }
 
+	public JsonPointer EvaluationPath { get; init; }
+
+	public JsonPointer InstanceLocation { get; init; }
+
 	internal Stack<(string, JsonPointer)> NavigatedReferences { get; } = new();
 
 	public EvaluationContext(){}
-
-	internal void PushEvaluatingAs(Uri version)
-	{
-		_evaluatingAs.Push(version);
-		EvaluatingAs = version;
-	}
-
-	internal void PopEvaluatingAs()
-	{ 
-		_evaluatingAs.Pop();
-		EvaluatingAs = _evaluatingAs.Peek();
-	}
-
-	internal void PushEvaluationPath(string segment)
-	{
-#if DEBUG
-		_evaluationPath = _evaluationPath.Combine(segment);
-#endif
-	}
-
-	internal void PushEvaluationPath(int segment)
-	{
-#if DEBUG
-		_evaluationPath = _evaluationPath.Combine(segment);
-#endif
-	}
-
-	internal void PopEvaluationPath()
-	{
-#if DEBUG
-		_evaluationPath = _evaluationPath.GetParent()!.Value;
-#endif
-	}
 }
 
 public enum NumberProcessing

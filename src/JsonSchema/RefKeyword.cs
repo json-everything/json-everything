@@ -40,13 +40,15 @@ public class RefKeyword : IKeywordHandler
 
 	public void BuildSubschemas(KeywordData keyword, BuildContext context)
 	{
-		// build is a no-op, resolve on a second pass
+		var reference = (Uri)keyword.Value!;
+		var newUri = new Uri(context.BaseUri, reference);
+
+		keyword.Value = newUri;
 	}
 
 	internal bool Resolve(KeywordData keyword, BuildContext context)
 	{
-		var reference = (Uri)keyword.Value!;
-		var newUri = new Uri(context.BaseUri, reference);
+		var newUri = (Uri)keyword.Value!;
 		var fragment = newUri.Fragment;
 
 		JsonSchemaNode? targetSchema;
@@ -80,6 +82,22 @@ public class RefKeyword : IKeywordHandler
 
 	public KeywordEvaluation Evaluate(KeywordData keyword, EvaluationContext context)
 	{
-		throw new NotImplementedException();
+		var newUri = (Uri)keyword.Value!;
+		var subschema = keyword.Subschemas.FirstOrDefault();
+		if (subschema is null)
+			throw new RefResolutionException(newUri);
+
+		var refContext = context with
+		{
+			EvaluationPath = context.EvaluationPath.Combine(Name)
+		};
+
+		var subschemaEvaluation = subschema.Evaluate(refContext);
+		return new KeywordEvaluation
+		{
+			Keyword = Name,
+			IsValid = subschemaEvaluation.IsValid,
+			Details = [subschemaEvaluation]
+		};
 	}
 }

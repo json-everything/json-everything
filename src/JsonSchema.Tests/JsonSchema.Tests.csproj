@@ -37,8 +37,6 @@
 		<Compile Remove="SelfValidationTest.cs" />
 		<Compile Remove="SerializationTests.cs" />
 		<Compile Remove="SlackTests.cs" />
-		<Compile Remove="TestEnvironment.cs" />
-		<Compile Remove="TestSerializerContext.cs" />
 		<Compile Remove="TraversalTests.cs" />
 		<Compile Remove="UnrecognizedKeywordTests.cs" />
 		<Compile Remove="VocabularyTests.cs" />

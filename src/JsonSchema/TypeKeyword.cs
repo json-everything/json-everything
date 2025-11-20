@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
-using System.Linq;
 using System.Text.Json;
 
 namespace Json.Schema;
@@ -98,13 +96,11 @@ public class TypeKeyword : IKeywordHandler
 		return new KeywordEvaluation
 		{
 			Keyword = Name,
-			IsValid = false
+			IsValid = false,
+			Error = ErrorMessages.GetType(context.Options.Culture).
+				ReplaceToken("received", instanceType, JsonSchemaSerializerContext.Default.SchemaValueType).
+				ReplaceToken("expected", expectedType.ToString().ToLower())
 		};
-
-		//var expected = expectedType.ToString().ToLower();
-		//evaluation.Results.Fail(Name, ErrorMessages.GetType(context.Options.Culture).
-		//	ReplaceToken("received", instanceType, JsonSchemaSerializerContext.Default.SchemaValueType).
-		//	ReplaceToken("expected", expected));
 	}
 }
 
