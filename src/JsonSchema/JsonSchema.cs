@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
-using System.Text.Json.Nodes;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Json.More;
 using Json.Pointer;
 
 // ReSharper disable LocalizableElement
@@ -134,7 +130,7 @@ public class JsonSchema : IBaseDocument
 
 		var node = BuildNode(context);
 
-		var schema = new JsonSchema(node, context.Options){BaseUri = context.BaseUri};
+		var schema = new JsonSchema(node, context.Options) { BaseUri = context.BaseUri };
 		context.Options.SchemaRegistry.Register(schema);
 
 		TryResolveReferences(node, context);
@@ -149,12 +145,6 @@ public class JsonSchema : IBaseDocument
 		//       - register A - try-resolve refs misses B
 		//       - register B - try-resolve refs finds A
 		//                    - recursive try-resolve into A finds B
-
-		var node = new JsonSchemaNode
-		{
-			BaseUri = context.BaseUri,
-			Source = context.LocalSchema
-		};
 	
 		var keywordData = new List<KeywordData>();
 		foreach (var property in context.LocalSchema.EnumerateObject())
@@ -175,10 +165,30 @@ public class JsonSchema : IBaseDocument
 			};
 			handler.BuildSubschemas(data, context);
 
-			keywordData.Add(data);
+			if (handler is IdKeyword) // TODO: also handle $anchor like this
+			{
+				var newUri = new Uri(context.BaseUri, (Uri)data.Value!);
+				context.BaseUri = newUri;
+			}
+			else
+				keywordData.Add(data);
 		}
 
-		node.Keywords = keywordData.OrderBy(x => x.EvaluationOrder).ToArray();
+		var embeddedResources = keywordData
+			.SelectMany(x => x.Subschemas)
+			.Where(x => x.BaseUri != context.BaseUri);
+		foreach (var embeddedResource in embeddedResources)
+		{
+			var schema = new JsonSchema(embeddedResource, context.Options) { BaseUri = embeddedResource.BaseUri };
+			context.Options.SchemaRegistry.Register(schema);
+		}
+
+		var node = new JsonSchemaNode
+		{
+			BaseUri = context.BaseUri,
+			Source = context.LocalSchema,
+			Keywords = keywordData.OrderBy(x => x.EvaluationOrder).ToArray()
+		};
 
 		return node;
 	}
@@ -279,7 +289,7 @@ public class JsonSchemaNode
 {
 	public required Uri BaseUri { get; set; }
 	public JsonElement Source { get; set; }
-	public KeywordData[] Keywords { get; set; } = [];
+	public KeywordData[] Keywords { get; init; } = [];
 	public JsonPointer RelativePath { get; set; }
 
 	public EvaluationResults Evaluate(EvaluationContext context)
