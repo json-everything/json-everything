@@ -130,7 +130,7 @@ public class JsonSchema : IBaseDocument
 
 		var node = BuildNode(context);
 
-		var schema = new JsonSchema(node, context.Options) { BaseUri = context.BaseUri };
+		var schema = new JsonSchema(node, context.Options) { BaseUri = node.BaseUri };
 		context.Options.SchemaRegistry.Register(schema);
 
 		TryResolveReferences(node, context);
@@ -193,25 +193,22 @@ public class JsonSchema : IBaseDocument
 		return node;
 	}
 
-	public static bool TryResolveReferences(JsonSchemaNode node, BuildContext context)
+	public static void TryResolveReferences(JsonSchemaNode node, BuildContext context, HashSet<JsonSchemaNode>? checkedNodes = null)
 	{
-		var allResolved = true;
+		checkedNodes ??= [];
+		if (!checkedNodes.Add(node)) return;
+
 		var refKeyword = node.Keywords.SingleOrDefault(x => x.Handler is RefKeyword);
-		if (refKeyword is not null)
-		{
-			var handler = (RefKeyword)refKeyword.Handler;
-			allResolved &= handler.Resolve(refKeyword, context);
-		}
+		if (refKeyword is not null) 
+			RefKeyword.TryResolve(refKeyword, context);
 
 		foreach (var keyword in node.Keywords)
 		{
 			foreach (var subNode in keyword.Subschemas)
 			{
-				allResolved &= TryResolveReferences(subNode, context);
+				TryResolveReferences(subNode, context, checkedNodes);
 			}
 		}
-
-		return allResolved;
 	}
 
 	public EvaluationResults Evaluate(JsonElement instance, EvaluationOptions? options = null)
@@ -291,6 +288,7 @@ public class JsonSchemaNode
 	public JsonElement Source { get; set; }
 	public KeywordData[] Keywords { get; init; } = [];
 	public JsonPointer RelativePath { get; set; }
+	internal bool ReferencesResolved { get; set; }
 
 	public EvaluationResults Evaluate(EvaluationContext context)
 	{

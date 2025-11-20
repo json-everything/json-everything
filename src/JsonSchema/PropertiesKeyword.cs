@@ -12,111 +12,74 @@ namespace Json.Schema;
 /// <summary>
 /// Handles `properties`.
 /// </summary>
-[SchemaKeyword(Name)]
-[SchemaSpecVersion(SpecVersion.Draft6)]
-[SchemaSpecVersion(SpecVersion.Draft7)]
-[SchemaSpecVersion(SpecVersion.Draft201909)]
-[SchemaSpecVersion(SpecVersion.Draft202012)]
-[SchemaSpecVersion(SpecVersion.DraftNext)]
-[Vocabulary(Vocabularies.Applicator201909Id)]
-[Vocabulary(Vocabularies.Applicator202012Id)]
-[Vocabulary(Vocabularies.ApplicatorNextId)]
-[JsonConverter(typeof(PropertiesKeywordJsonConverter))]
-public class PropertiesKeyword : IJsonSchemaKeyword, IKeyedSchemaCollector
+//[SchemaKeyword(Name)]
+//[SchemaSpecVersion(SpecVersion.Draft6)]
+//[SchemaSpecVersion(SpecVersion.Draft7)]
+//[SchemaSpecVersion(SpecVersion.Draft201909)]
+//[SchemaSpecVersion(SpecVersion.Draft202012)]
+//[SchemaSpecVersion(SpecVersion.DraftNext)]
+//[Vocabulary(Vocabularies.Applicator201909Id)]
+//[Vocabulary(Vocabularies.Applicator202012Id)]
+//[Vocabulary(Vocabularies.ApplicatorNextId)]
+public class PropertiesKeyword : IKeywordHandler
 {
-	private readonly Dictionary<string, JsonPointer> _evaluationPointers;
-	private readonly Dictionary<string, JsonPointer> _instancePointers;
-
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
-	public const string Name = "properties";
+	public string Name => "properties";
 
-	/// <summary>
-	/// The property schemas.
-	/// </summary>
-	public IReadOnlyDictionary<string, JsonSchema> Properties { get; }
-
-	IReadOnlyDictionary<string, JsonSchema> IKeyedSchemaCollector.Schemas => Properties;
-
-	/// <summary>
-	/// Creates a new <see cref="PropertiesKeyword"/>.
-	/// </summary>
-	/// <param name="values">The property schemas.</param>
-	public PropertiesKeyword(IReadOnlyDictionary<string, JsonSchema> values)
+	public object? ValidateValue(JsonElement value)
 	{
-		Properties = values ?? throw new ArgumentNullException(nameof(values));
+		if (value.ValueKind != JsonValueKind.Object)
+			throw new JsonSchemaException($"'properties' value must be an object, found {value.ValueKind}");
 
-		_evaluationPointers = values.ToDictionary(x => x.Key, x => JsonPointer.Create(Name, x.Key));
-		_instancePointers = values.ToDictionary(x => x.Key, x => JsonPointer.Create(x.Key));
+		if (value.EnumerateObject().Any(x => x.Value.ValueKind is not (JsonValueKind.Object or JsonValueKind.True or JsonValueKind.False)))
+			throw new JsonSchemaException("Values must be valid schemas");
+
+		return null;
 	}
 
-	/// <summary>
-	/// Builds a constraint object for a keyword.
-	/// </summary>
-	/// <param name="schemaConstraint">The <see cref="SchemaConstraint"/> for the schema object that houses this keyword.</param>
-	/// <param name="localConstraints">
-	///     The set of other <see cref="KeywordConstraint"/>s that have been processed prior to this one.
-	///     Will contain the constraints for keyword dependencies.
-	/// </param>
-	/// <param name="context">The <see cref="EvaluationContext"/>.</param>
-	/// <returns>A constraint object.</returns>
-	public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint, ReadOnlySpan<KeywordConstraint> localConstraints, EvaluationContext context)
+	public void BuildSubschemas(KeywordData keyword, BuildContext context)
 	{
-		var subschemaConstraints = Properties.Select(x =>
+		var subschemas = new List<JsonSchemaNode>();
+		foreach (var definition in keyword.RawValue.EnumerateObject())
 		{
-			context.PushEvaluationPath(x.Key);
-			var constraint = x.Value.GetConstraint(_evaluationPointers[x.Key], schemaConstraint.BaseInstanceLocation, _instancePointers[x.Key], context);
-			context.PopEvaluationPath();
-			return constraint;
-		}).ToArray();
-
-		return new KeywordConstraint(Name, Evaluator)
-		{
-			ChildDependencies = subschemaConstraints
-		};
-	}
-
-	private static void Evaluator(KeywordEvaluation evaluation, EvaluationContext context)
-	{
-		evaluation.Results.SetAnnotation(Name, evaluation.ChildEvaluations.Select(x => (JsonNode)x.RelativeInstanceLocation[0]).ToJsonArray());
-
-		if (!evaluation.ChildEvaluations.All(x => x.Results.IsValid))
-			evaluation.Results.Fail();
-	}
-}
-
-/// <summary>
-/// JSON converter for <see cref="PropertiesKeyword"/>.
-/// </summary>
-public sealed class PropertiesKeywordJsonConverter : WeaklyTypedJsonConverter<PropertiesKeyword>
-{
-	/// <summary>Reads and converts the JSON to type <see cref="PropertiesKeyword"/>.</summary>
-	/// <param name="reader">The reader.</param>
-	/// <param name="typeToConvert">The type to convert.</param>
-	/// <param name="options">An object that specifies serialization options to use.</param>
-	/// <returns>The converted value.</returns>
-	public override PropertiesKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-	{
-		if (reader.TokenType != JsonTokenType.StartObject)
-			throw new JsonException("Expected object");
-
-		var schema = options.ReadDictionary(ref reader, JsonSchemaSerializerContext.Default.JsonSchema)!;
-		return new PropertiesKeyword(schema);
-	}
-
-	/// <summary>Writes a specified value as JSON.</summary>
-	/// <param name="writer">The writer to write to.</param>
-	/// <param name="value">The value to convert to JSON.</param>
-	/// <param name="options">An object that specifies serialization options to use.</param>
-	public override void Write(Utf8JsonWriter writer, PropertiesKeyword value, JsonSerializerOptions options)
-	{
-		writer.WriteStartObject();
-		foreach (var kvp in value.Properties)
-		{
-			writer.WritePropertyName(kvp.Key);
-			options.Write(writer, kvp.Value, JsonSchemaSerializerContext.Default.JsonSchema);
+			var defContext = context with
+			{
+				LocalSchema = definition.Value
+			};
+			var node = JsonSchema.BuildNode(defContext);
+			node.RelativePath = JsonPointer.Create(definition.Name);
+			subschemas.Add(node);
 		}
-		writer.WriteEndObject();
+
+		keyword.Subschemas = subschemas.ToArray();
+	}
+
+	public KeywordEvaluation Evaluate(KeywordData keyword, EvaluationContext context)
+	{
+		var subschemaEvaluations = new List<EvaluationResults>();
+
+		foreach (var subschema in keyword.Subschemas)
+		{
+			var instance = subschema.RelativePath.Evaluate(context.Instance);
+			if (!instance.HasValue) continue;
+
+			var propContext = context with
+			{
+				InstanceLocation = context.InstanceLocation.Combine(subschema.RelativePath),
+				Instance = instance.Value,
+				EvaluationPath = context.EvaluationPath.Combine(Name)
+			};
+
+			subschemaEvaluations.Add(subschema.Evaluate(propContext));
+		}
+
+		return new KeywordEvaluation
+		{
+			Keyword = Name,
+			IsValid = subschemaEvaluations.All(x => x.IsValid),
+			Details = subschemaEvaluations.ToArray()
+		};
 	}
 }

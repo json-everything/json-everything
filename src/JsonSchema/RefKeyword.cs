@@ -46,7 +46,7 @@ public class RefKeyword : IKeywordHandler
 		keyword.Value = newUri;
 	}
 
-	internal bool Resolve(KeywordData keyword, BuildContext context)
+	internal static bool TryResolve(KeywordData keyword, BuildContext context)
 	{
 		var newUri = (Uri)keyword.Value!;
 		var fragment = newUri.Fragment;
@@ -55,10 +55,9 @@ public class RefKeyword : IKeywordHandler
 
 		if (JsonPointer.TryParse(fragment, out var pointerFragment))
 		{
-			var targetBase = context.Options.SchemaRegistry.Get(newUri) ??
-			                 throw new RefResolutionException(newUri, pointerFragment);
+			var targetBase = context.Options.SchemaRegistry.Get(newUri);
 
-			targetSchema = targetBase.FindSubschema(pointerFragment, context.Options);
+			targetSchema = targetBase?.FindSubschema(pointerFragment, context.Options);
 		}
 		else
 		{
@@ -72,10 +71,8 @@ public class RefKeyword : IKeywordHandler
 			//targetSchema = context.Options.SchemaRegistry.Get(newUri, anchorFragment, allowLegacy) as JsonSchema;
 		}
 
-		if (targetSchema == null)
-			throw new RefResolutionException(newUri);
-
-		keyword.Subschemas = [targetSchema];
+		if (targetSchema is not null)
+			keyword.Subschemas = [targetSchema];
 
 		return true;
 	}

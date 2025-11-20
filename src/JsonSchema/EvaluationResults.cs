@@ -70,7 +70,7 @@ public class EvaluationResults
 	internal bool IncludeDroppedAnnotations { get; }
 
 	internal IReadOnlyDictionary<string, JsonNode?>? AnnotationsToSerialize =>
-		Annotations is null || Annotations.Count == 0
+		Annotations is not null && Annotations.Count != 0
 			? Annotations!.Where(x => !(_backgroundAnnotations?.Contains(x.Key) ?? false)).ToDictionary(x => x.Key, x => x.Value)
 			: null;
 
