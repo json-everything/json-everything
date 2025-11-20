@@ -9,11 +9,16 @@ public class DevTest
 	[Test]
 	public void Test()
 	{
+		// TODO: add try-register at node level (may need to wrap in schema)
 		var schemaText = """
 		    {
-		      "$ref": "#/$defs/stringy-thingy",
+		      "$id": "outer",
+		      "$ref": "inner",
 		      "$defs": {
-		        "stringy-thingy": { "type": "string" }
+		        "stringy-thingy": {
+		          "$id": "inner",
+		          "type": "string"
+		        }
 		      }
 		    }
 		    """;
