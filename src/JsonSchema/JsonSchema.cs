@@ -134,7 +134,7 @@ public class JsonSchema : IBaseDocument
 
 		var node = BuildNode(context);
 
-		var schema = new JsonSchema(node, context.Options) { BaseUri = context.BaseUri };
+		var schema = new JsonSchema(node, context.Options){BaseUri = context.BaseUri};
 		context.Options.SchemaRegistry.Register(schema);
 
 		TryResolveReferences(node, context);
@@ -286,9 +286,28 @@ public class JsonSchemaNode
 	{
 		var keywordEvaluations = Keywords.Select(x => x.Handler.Evaluate(x, context)).ToArray();
 
-		var results = new EvaluationResults(JsonPointer.Empty, BaseUri, JsonPointer.Empty, context.Options);
+		var results = new EvaluationResults(context.EvaluationPath, BaseUri, context.InstanceLocation, context.Options);
 		if (!keywordEvaluations.All(x => x.IsValid))
-			results.Fail();
+			results.IsValid = false;
+
+		foreach (var evaluation in keywordEvaluations)
+		{
+			if (evaluation.Details is null) continue;
+
+			foreach (var nestedResult in evaluation.Details)
+			{
+				results.Details ??= [];
+				results.Details.Add(nestedResult);
+			}
+		}
+
+		foreach (var evaluation in keywordEvaluations)
+		{
+			if (evaluation.Error is null) continue;
+
+			results.Errors ??= [];
+			results.Errors[evaluation.Keyword] = evaluation.Error!;
+		}
 
 		return results;
 	}
@@ -313,7 +332,9 @@ public readonly struct KeywordEvaluation
 
 	public required string Keyword { get; init; }
 	public required bool IsValid { get; init; }
-	public string[] Annotations { get; init; } = [];
+	public string[]? Annotations { get; init; }
+	public EvaluationResults[]? Details { get; init; }
+	public string? Error { get; init; }
 
 	public KeywordEvaluation(){}
 }

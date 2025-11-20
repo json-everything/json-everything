@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System;
+using System.Text.Json;
 using NUnit.Framework;
 
 namespace Json.Schema.Tests;
@@ -20,9 +21,12 @@ public class DevTest
 		var schemaJson = JsonDocument.Parse(schemaText).RootElement;
 		var schema = JsonSchema.Build(schemaJson);
 
-		var instanceText = "\"a string\"";
+		//var instanceText = "\"a string\"";
+		var instanceText = "42";
 		var instance = JsonDocument.Parse(instanceText).RootElement;
 
 		var results = schema.Evaluate(instance);
+
+		Console.WriteLine(JsonSerializer.Serialize(results, TestEnvironment.TestOutputSerializerOptions));
 	}
 }
