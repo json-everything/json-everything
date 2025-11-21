@@ -36,7 +36,6 @@
     <Compile Remove="AdditionalItemsKeyword.cs" />
     <Compile Remove="AdditionalPropertiesKeyword.cs" />
     <Compile Remove="AllOfKeyword.cs" />
-    <Compile Remove="AnchorKeyword.cs" />
     <Compile Remove="AnyOfKeyword.cs" />
     <Compile Remove="CommentKeyword.cs" />
     <Compile Remove="ConstKeyword.cs" />
@@ -61,6 +60,7 @@
     <Compile Remove="Format.cs" />
     <Compile Remove="FormatKeyword.cs" />
     <Compile Remove="Formats.cs" />
+    <Compile Remove="IBaseDocument.cs" />
     <Compile Remove="ICustomSchemaCollector.cs" />
     <Compile Remove="IfKeyword.cs" />
     <Compile Remove="IIdKeyword.cs" />

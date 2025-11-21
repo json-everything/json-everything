@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.Json;
 
-namespace Json.Schema;
+namespace Json.Schema.Keywords;
 
 /// <summary>
 /// Handles `$id`.
@@ -17,6 +17,8 @@ namespace Json.Schema;
 //[Vocabulary(Vocabularies.CoreNextId)]
 public class IdKeyword : IKeywordHandler //, IIdKeyword
 {
+	private static readonly Uri _testUri = new("https://json-everything.test");
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
@@ -28,6 +30,10 @@ public class IdKeyword : IKeywordHandler //, IIdKeyword
 		    !Uri.TryCreate(value.GetString(), UriKind.RelativeOrAbsolute, out var uri))
 			throw new JsonSchemaException("$id requires a string in the format of a URI");
 
+		var testUri = new Uri(_testUri, uri);
+		if (!string.IsNullOrEmpty(testUri.Fragment) && testUri.Fragment != "#")
+			throw new JsonSchemaException("$id must not contain a fragment");
+
 		return uri;
 	}
 
@@ -37,10 +43,6 @@ public class IdKeyword : IKeywordHandler //, IIdKeyword
 
 	public KeywordEvaluation Evaluate(KeywordData keyword, EvaluationContext context)
 	{
-		return new KeywordEvaluation
-		{
-			Keyword = Name,
-			IsValid = true
-		};
+		return KeywordEvaluation.Ignore;
 	}
 }

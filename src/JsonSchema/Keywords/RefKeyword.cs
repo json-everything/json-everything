@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
-using System.Text.Json.Serialization;
-using Json.More;
 using Json.Pointer;
 
-namespace Json.Schema;
+namespace Json.Schema.Keywords;
 
 /// <summary>
 /// Handles `$ref`.
@@ -61,14 +58,8 @@ public class RefKeyword : IKeywordHandler
 		}
 		else
 		{
-			throw new NotImplementedException();
-			//var allowLegacy = context.EvaluatingAs is SpecVersion.Draft6 or SpecVersion.Draft7;
-			//var anchorFragment = fragment[1..];
-			//if ((context.EvaluatingAs <= SpecVersion.Draft201909 && !AnchorKeyword.AnchorPattern201909.IsMatch(anchorFragment)) ||
-			//    (context.EvaluatingAs >= SpecVersion.Draft202012 && !AnchorKeyword.AnchorPattern202012.IsMatch(anchorFragment)))
-			//	throw new JsonSchemaException($"Unrecognized fragment type `{newUri}`");
-
-			//targetSchema = context.Options.SchemaRegistry.Get(newUri, anchorFragment, allowLegacy) as JsonSchema;
+			var anchorFragment = fragment[1..]; // drop #
+			targetSchema = context.Options.SchemaRegistry.Get(newUri, anchorFragment);
 		}
 
 		if (targetSchema is not null)
