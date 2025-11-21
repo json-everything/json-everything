@@ -2,13 +2,14 @@
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using Json.Schema.Keywords;
 
 namespace Json.Schema;
 
 /// <summary>
 /// Manages which keywords are known by the system.
 /// </summary>
-public class SchemaKeywordRegistry
+public partial class SchemaKeywordRegistry
 {
 	[DebuggerDisplay("{Name} / {Priority}")]
 	private class KeywordMetaData
@@ -38,77 +39,10 @@ public class SchemaKeywordRegistry
 
 	private readonly MultiLookupConcurrentDictionary<KeywordMetaData> _keywordData;
 
-	public static SchemaKeywordRegistry Default => BuildOptions.Default.KeywordRegistry;
+	public static SchemaKeywordRegistry Default { get; set; } = Draft202012;
 
-	public SchemaKeywordRegistry()
+	public SchemaKeywordRegistry(params IKeywordHandler[] keywordData)
 	{
-		var keywordData = new IKeywordHandler[]
-		{
-			//new AdditionalItemsKeyword(),
-			//new AdditionalPropertiesKeyword(),
-			//new AllOfKeyword(),
-			//new AnchorKeyword(),
-			//new AnyOfKeyword(),
-			//new CommentKeyword(),
-			//new ConstKeyword(),
-			//new ContainsKeyword(),
-			//new ContentEncodingKeyword(),
-			//new ContentMediaTypeKeyword(),
-			//new ContentSchemaKeyword(),
-			//new DefaultKeyword(),
-			//new DefinitionsKeyword(),
-			new DefsKeyword(),
-			//new DependenciesKeyword(),
-			//new DependentRequiredKeyword(),
-			//new DependentSchemasKeyword(),
-			//new DeprecatedKeyword(),
-			//new DescriptionKeyword(),
-			//new DynamicAnchorKeyword(),
-			//new DynamicRefKeyword(),
-			//new ElseKeyword(),
-			//new EnumKeyword(),
-			//new ExamplesKeyword(),
-			//new ExclusiveMaximumKeyword(),
-			//new ExclusiveMinimumKeyword(),
-			//new FormatKeyword(),
-			new IdKeyword(),
-			//new IfKeyword(),
-			//new ItemsKeyword(),
-			//new MaxContainsKeyword(),
-			//new MaximumKeyword(),
-			//new MaxItemsKeyword(),
-			//new MaxLengthKeyword(),
-			//new MaxPropertiesKeyword(),
-			//new MinContainsKeyword(),
-			//new MinimumKeyword(),
-			//new MinItemsKeyword(),
-			//new MinLengthKeyword(),
-			//new MinPropertiesKeyword(),
-			//new MultipleOfKeyword(),
-			//new NotKeyword(),
-			//new OneOfKeyword(),
-			//new PatternKeyword(),
-			//new PatternPropertiesKeyword(),
-			//new PrefixItemsKeyword(),
-			new PropertiesKeyword(),
-			//new PropertyDependenciesKeyword(),
-			//new PropertyNamesKeyword(),
-			//new ReadOnlyKeyword(),
-			//new RecursiveAnchorKeyword(),
-			//new RecursiveRefKeyword(),
-			new RefKeyword(),
-			//new RequiredKeyword(),
-			//new SchemaKeyword(),
-			//new ThenKeyword(),
-			//new TitleKeyword(),
-			new TypeKeyword(),
-			//new UnevaluatedItemsKeyword(),
-			//new UnevaluatedPropertiesKeyword(),
-			//new UniqueItemsKeyword(),
-			//new VocabularyKeyword(),
-			//new WriteOnlyKeyword(),
-		};
-
 		_keywordData = [];
 		_keywordData.AddLookup(x => x.Name);
 		_keywordData.AddLookup(x => x.Type);
@@ -117,9 +51,6 @@ public class SchemaKeywordRegistry
 			var metaData = new KeywordMetaData(type);
 			_keywordData.Add(metaData);
 		}
-
-		//RegisterNullValue(new ConstKeyword(null));
-		//RegisterNullValue(new DefaultKeyword(null));
 	}
 
 	/// <summary>

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Json.Pointer;
+using Json.Schema.Keywords;
 
 // ReSharper disable LocalizableElement
 
@@ -15,13 +16,12 @@ namespace Json.Schema;
 /// Represents a JSON Schema.
 /// </summary>
 [DebuggerDisplay("{ToDebugString()}")]
-public class JsonSchema : IBaseDocument
+public class JsonSchema
 {
 	private const string _unknownKeywordsAnnotationKey = "$unknownKeywords";
 
 	private readonly Dictionary<string, KeywordData>? _keywords;
 	private BuildOptions _options;
-	private JsonSchemaNode _root;
 
 	/// <summary>
 	/// The `true` schema.  Passes all instances.
@@ -48,24 +48,22 @@ public class JsonSchema : IBaseDocument
 	/// It may change after the initial evaluation based on whether the schema contains an `$id` keyword
 	/// or is a child of another schema.
 	/// </remarks>
-	public Uri BaseUri { get; set; } = GenerateBaseUri();
+	public Uri BaseUri { get; set; }
 
-	/// <summary>
-	/// Gets whether the schema defines a new schema resource.  This will only be true if it contains an `$id` keyword.
-	/// </summary>
-	public bool IsResourceRoot { get; private set; }
+	public JsonSchemaNode Root { get; }
 
 	private JsonSchema(bool value)
 	{
 		BoolValue = value;
+		Root = value ? JsonSchemaNode.True : JsonSchemaNode.False;
+		BaseUri = Root.BaseUri;
 	}
 
 	private JsonSchema(JsonSchemaNode root, BuildOptions options)
 	{
-		_root = root;
+		Root = root;
 		_options = options;
-
-		//options.SchemaRegistry.Register(this);
+		BaseUri = Root.BaseUri;
 	}
 
 	/// <summary>
@@ -113,16 +111,10 @@ public class JsonSchema : IBaseDocument
 		return JsonSerializer.DeserializeAsync<JsonSchema>(source, options)!;
 	}
 
-	private static Uri GenerateBaseUri() => new($"https://json-everything.net/{Guid.NewGuid().ToString("N")[..10]}");
+	private static Uri GenerateBaseUri() => new($"https://json-everything.lib/{Guid.NewGuid().ToString("N")[..10]}");
 
 	public static JsonSchema Build(JsonElement root, BuildOptions? options = null)
 	{
-		if (root.ValueKind == JsonValueKind.True) return True;
-		if (root.ValueKind == JsonValueKind.False) return False;
-
-		if (root.ValueKind != JsonValueKind.Object)
-			throw new ArgumentException($"Schemas may only booleans or objects.  Received {root.ValueKind}");
-
 		var context = new BuildContext(options, root, GenerateBaseUri())
 		{
 			LocalSchema = root
@@ -141,12 +133,12 @@ public class JsonSchema : IBaseDocument
 
 	public static JsonSchemaNode BuildNode(BuildContext context)
 	{
-		// TODO: for consideration: resolving references as part of the build might prevent support of cyclical or recursive references.  A <--> B
-		//       how do we register B for A to reference without first building B which needs A to be registered?
-		//       - register A - try-resolve refs misses B
-		//       - register B - try-resolve refs finds A
-		//                    - recursive try-resolve into A finds B
-	
+		if (context.LocalSchema.ValueKind == JsonValueKind.True) return JsonSchemaNode.True;
+		if (context.LocalSchema.ValueKind == JsonValueKind.False) return JsonSchemaNode.False;
+
+		if (context.LocalSchema.ValueKind != JsonValueKind.Object)
+			throw new ArgumentException($"Schemas may only booleans or objects.  Received {context.LocalSchema.ValueKind}");
+
 		var keywordData = new List<KeywordData>();
 		foreach (var property in context.LocalSchema.EnumerateObject())
 		{
@@ -170,6 +162,7 @@ public class JsonSchema : IBaseDocument
 			{
 				var newUri = new Uri(context.BaseUri, (Uri)data.Value!);
 				context.BaseUri = newUri;
+				// TODO: for draft 6/7, might need to register an anchor
 			}
 			else
 				keywordData.Add(data);
@@ -190,6 +183,12 @@ public class JsonSchema : IBaseDocument
 			Source = context.LocalSchema,
 			Keywords = keywordData.OrderBy(x => x.EvaluationOrder).ToArray()
 		};
+
+		var anchorKeyword = keywordData.FirstOrDefault(x => x.Handler is AnchorKeyword);
+		if (anchorKeyword is not null)
+		{
+			context.Options.SchemaRegistry.RegisterAnchor(context.BaseUri, (string)anchorKeyword.Value!, node);
+		}
 
 		return node;
 	}
@@ -248,12 +247,12 @@ public class JsonSchema : IBaseDocument
 			Instance = instance
 		};
 
-		return _root.Evaluate(context);
+		return Root.Evaluate(context);
 	}
 
 	public JsonSchemaNode? FindSubschema(JsonPointer pointer, BuildOptions options)
 	{
-		var subschema = _root;
+		var subschema = Root;
 		while (pointer.SegmentCount != 0)
 		{
 			var keyword = subschema.Keywords.FirstOrDefault(x => pointer.StartsWith(JsonPointer.Create(x.Handler.Name)));
@@ -312,6 +311,17 @@ public interface IKeywordHandler
 
 public class JsonSchemaNode
 {
+	public static readonly JsonSchemaNode True = new()
+	{
+		BaseUri = new Uri("https://json-schema.org/true"),
+		Source = JsonDocument.Parse("true").RootElement
+	};
+	public static readonly JsonSchemaNode False = new()
+	{
+		BaseUri = new Uri("https://json-schema.org/false"),
+		Source = JsonDocument.Parse("false").RootElement
+	};
+
 	public required Uri BaseUri { get; set; }
 	public JsonElement Source { get; set; }
 	public KeywordData[] Keywords { get; init; } = [];
@@ -319,9 +329,17 @@ public class JsonSchemaNode
 
 	public EvaluationResults Evaluate(EvaluationContext context)
 	{
+		var results = new EvaluationResults(context.EvaluationPath, BaseUri, context.InstanceLocation, context.Options);
+		if (this == True) return results;
+		if (this == False)
+		{
+			results.IsValid = false;
+			results.Errors = new() { [""] = ErrorMessages.FalseSchema };
+			return results;
+		}
+		
 		var keywordEvaluations = Keywords.Select(x => x.Handler.Evaluate(x, context)).ToArray();
 
-		var results = new EvaluationResults(context.EvaluationPath, BaseUri, context.InstanceLocation, context.Options);
 		if (!keywordEvaluations.All(x => x.IsValid))
 			results.IsValid = false;
 

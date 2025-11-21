@@ -5,7 +5,7 @@ public class BuildOptions
 	/// <summary>
 	/// The default settings.
 	/// </summary>
-	public static BuildOptions Default { get; } = new(new(), new());
+	public static BuildOptions Default { get; } = new();
 
 	/// <summary>
 	/// The local schema registry.  If a schema is not found here, it will
@@ -49,9 +49,8 @@ public class BuildOptions
 	public bool AllowReferencesIntoUnknownKeywords { get; set; } = true;
 
 	public BuildOptions()
+		: this(SchemaRegistry.Global, SchemaKeywordRegistry.Default)
 	{
-		SchemaRegistry = SchemaRegistry.Global;
-		KeywordRegistry = SchemaKeywordRegistry.Default;
 	}
 
 	private BuildOptions(SchemaRegistry schemaRegistry, SchemaKeywordRegistry keywordRegistry)

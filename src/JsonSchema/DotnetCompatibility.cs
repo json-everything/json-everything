@@ -6,8 +6,10 @@ namespace Json.Schema;
 
 internal static class DotnetCompatibility
 {
-	public static TValue? GetValueOrDefault<TKey, TValue>(this IReadOnlyDictionary<TKey, TValue> dictionary, TKey key)
+	public static TValue? GetValueOrDefault<TKey, TValue>(this IReadOnlyDictionary<TKey, TValue>? dictionary, TKey key)
 	{
+		if (dictionary is null) return default;
+
 		return dictionary.TryGetValue(key, out var value) ? value : default;
 	}
 }
