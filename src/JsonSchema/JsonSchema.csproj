@@ -50,8 +50,6 @@
     <Compile Remove="DependentSchemasKeyword.cs" />
     <Compile Remove="DeprecatedKeyword.cs" />
     <Compile Remove="DescriptionKeyword.cs" />
-    <Compile Remove="DynamicAnchorKeyword.cs" />
-    <Compile Remove="DynamicRefKeyword.cs" />
     <Compile Remove="ElseKeyword.cs" />
     <Compile Remove="EnumKeyword.cs" />
     <Compile Remove="ExamplesKeyword.cs" />
@@ -67,7 +65,6 @@
     <Compile Remove="IKeyedSchemaCollector.cs" />
     <Compile Remove="ISchemaCollector.cs" />
     <Compile Remove="ISchemaContainer.cs" />
-    <Compile Remove="ItemsKeyword.cs" />
     <Compile Remove="JsonNodeBaseDocument.cs" />
     <Compile Remove="JsonSchemaBuilder.cs" />
     <Compile Remove="JsonSchemaBuilderExtensions.cs" />
@@ -231,6 +228,11 @@
       <SubType>Designer</SubType>
       <Generator></Generator>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Keywords\Draft06\" />
+    <Folder Include="Keywords\Draft07\" />
   </ItemGroup>
 
   <!--<Target Name="PostBuild" AfterTargets="PostBuildEvent">

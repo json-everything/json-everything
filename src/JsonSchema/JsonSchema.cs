@@ -158,11 +158,10 @@ public class JsonSchema
 			};
 			handler.BuildSubschemas(data, context);
 
-			if (handler is IdKeyword) // TODO: also handle $anchor like this
+			if (handler is IdKeyword)
 			{
 				var newUri = new Uri(context.BaseUri, (Uri)data.Value!);
 				context.BaseUri = newUri;
-				// TODO: for draft 6/7, might need to register an anchor
 			}
 			else
 				keywordData.Add(data);
@@ -184,11 +183,14 @@ public class JsonSchema
 			Keywords = keywordData.OrderBy(x => x.EvaluationOrder).ToArray()
 		};
 
+		// TODO: for draft 6/7, might need to register an anchor stored in $id
 		var anchorKeyword = keywordData.FirstOrDefault(x => x.Handler is AnchorKeyword);
-		if (anchorKeyword is not null)
-		{
+		if (anchorKeyword is not null) 
 			context.Options.SchemaRegistry.RegisterAnchor(context.BaseUri, (string)anchorKeyword.Value!, node);
-		}
+
+		var dynamicAnchorKeyword = keywordData.FirstOrDefault(x => x.Handler is DynamicAnchorKeyword);
+		if (dynamicAnchorKeyword is not null) 
+			context.Options.SchemaRegistry.RegisterDynamicAnchor(context.BaseUri, (string)dynamicAnchorKeyword.Value!, node);
 
 		return node;
 	}
@@ -199,8 +201,18 @@ public class JsonSchema
 		if (!checkedNodes.Add(node)) return;
 
 		var refKeyword = node.Keywords.SingleOrDefault(x => x.Handler is RefKeyword);
-		if (refKeyword is not null) 
-			RefKeyword.TryResolve(refKeyword, context);
+		if (refKeyword is not null)
+		{
+			var handler = (RefKeyword)refKeyword.Handler;
+			handler.TryResolve(refKeyword, context);
+		}
+
+		var dynamicRefKeyword = node.Keywords.SingleOrDefault(x => x.Handler is DynamicRefKeyword);
+		if (dynamicRefKeyword is not null)
+		{
+			var handler = (DynamicRefKeyword)dynamicRefKeyword.Handler;
+			handler.TryResolve(dynamicRefKeyword, context);
+		}
 
 		foreach (var keyword in node.Keywords)
 		{
@@ -244,7 +256,9 @@ public class JsonSchema
 		var context = new EvaluationContext
 		{
 			Options = options,
-			Instance = instance
+			BuildOptions = _options,
+			Instance = instance,
+			Scope = new(BaseUri)
 		};
 
 		return Root.Evaluate(context);
@@ -287,19 +301,6 @@ public class JsonSchema
 	}
 }
 
-public static partial class ErrorMessages
-{
-	/// <summary>
-	/// Gets or sets the error message for the "false" schema.
-	/// </summary>
-	/// <remarks>No tokens are supported.</remarks>
-	public static string FalseSchema
-	{
-		get => field ?? Get();
-		set;
-	}
-}
-
 public interface IKeywordHandler
 {
 	string Name { get; }
@@ -329,6 +330,10 @@ public class JsonSchemaNode
 
 	public EvaluationResults Evaluate(EvaluationContext context)
 	{
+		var newScope = !Equals(BaseUri, context.Scope.LocalScope);
+		if (newScope) 
+			context.Scope.Push(BaseUri);
+
 		var results = new EvaluationResults(context.EvaluationPath, BaseUri, context.InstanceLocation, context.Options);
 		if (this == True) return results;
 		if (this == False)
@@ -362,6 +367,9 @@ public class JsonSchemaNode
 			results.Errors[evaluation.Keyword] = evaluation.Error!;
 		}
 
+		if (newScope)
+			context.Scope.Pop();
+
 		return results;
 	}
 }
@@ -394,8 +402,6 @@ public readonly struct KeywordEvaluation
 
 public struct BuildContext
 {
-	private readonly Stack<(string, JsonPointer)> _navigatedReferences = [];
-
 	public BuildOptions Options { get; }
 	public JsonElement RootSchema { get; }
 	public Uri BaseUri { get; set; }
@@ -406,19 +412,5 @@ public struct BuildContext
 		Options = options ?? BuildOptions.Default;
 		RootSchema = rootSchema;
 		BaseUri = baseUri;
-	}
-
-	public void PushNavigation(string uri, JsonPointer instanceLocation)
-	{
-		var value = (uri, instanceLocation);
-		if (_navigatedReferences.Contains(value))
-			throw new JsonSchemaException($"Encountered circular reference at schema location `{uri}` and instance location `{instanceLocation}`");
-
-		_navigatedReferences.Push(value);
-	}
-
-	public void PopNavigation()
-	{
-		_navigatedReferences.Pop();
 	}
 }

@@ -11,34 +11,50 @@ public class DevTest
 	[Test]
 	public void Test()
 	{
-		var schema1Text = """
+		var schemaText = """
 		    {
-		      "$id": "https://json-everything.test/a",
-		      "properties": {
-		        "foo": { "type": "string" },
-		        "bar": { "$ref": "#anchor" }
-		      },
+		      "$id": "https://json-everything.test/generic",
+		      "type": "array",
+		      "items": { "$dynamicRef": "#itemType"},
 		      "$defs": {
-		        "barDef": {
-		          "$anchor": "anchor",
-		          "type": "number"
+		        "fails": {
+		          "$dynamicAnchor": "itemType",
+		          "not": true
 		        }
 		      }
 		    }
 		    """;
 
-		var schema1Json = JsonDocument.Parse(schema1Text).RootElement;
-		var schema = Measure.Run("build", () => JsonSchema.Build(schema1Json));
+		var schemaJson = JsonDocument.Parse(schemaText).RootElement;
+		var schema = Measure.Run("build", () => JsonSchema.Build(schemaJson));
+
+		var typedSchemaText = """
+		    {
+		      "$id": "https://json-everything.test/specific",
+		      "$ref": "generic",
+		      "$defs": {
+		        "works": {
+		          "$dynamicAnchor": "itemType",
+		          "type": "string"
+		        }
+		      }
+		    }
+		    """;
+
+		var typedSchemaJson = JsonDocument.Parse(typedSchemaText).RootElement;
+		var typedSchema = Measure.Run("build", () => JsonSchema.Build(typedSchemaJson));
 
 		var instanceText = """
-			{
-			  "foo": 5.4,
-			  "bar": null
-			}
+			[
+			  "string 1",
+			  "string 2", 
+			  42,
+			  "string 4"
+			]
 			""";
 		var instance = JsonDocument.Parse(instanceText).RootElement;
 
-		var results = Measure.Run("evaluate", () => schema.Evaluate(instance));
+		var results = Measure.Run("evaluate", () => typedSchema.Evaluate(instance));
 
 		Console.WriteLine(JsonSerializer.Serialize(results, TestEnvironment.TestOutputSerializerOptions));
 	}

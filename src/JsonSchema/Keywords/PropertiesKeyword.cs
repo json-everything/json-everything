@@ -8,15 +8,6 @@ namespace Json.Schema.Keywords;
 /// <summary>
 /// Handles `properties`.
 /// </summary>
-//[SchemaKeyword(Name)]
-//[SchemaSpecVersion(SpecVersion.Draft6)]
-//[SchemaSpecVersion(SpecVersion.Draft7)]
-//[SchemaSpecVersion(SpecVersion.Draft201909)]
-//[SchemaSpecVersion(SpecVersion.Draft202012)]
-//[SchemaSpecVersion(SpecVersion.DraftNext)]
-//[Vocabulary(Vocabularies.Applicator201909Id)]
-//[Vocabulary(Vocabularies.Applicator202012Id)]
-//[Vocabulary(Vocabularies.ApplicatorNextId)]
 public class PropertiesKeyword : IKeywordHandler
 {
 	/// <summary>
@@ -54,6 +45,8 @@ public class PropertiesKeyword : IKeywordHandler
 
 	public KeywordEvaluation Evaluate(KeywordData keyword, EvaluationContext context)
 	{
+		if (context.Instance.ValueKind != JsonValueKind.Object) return KeywordEvaluation.Ignore;
+
 		var subschemaEvaluations = new List<EvaluationResults>();
 
 		foreach (var subschema in keyword.Subschemas)

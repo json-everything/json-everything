@@ -7,11 +7,6 @@ namespace Json.Schema.Keywords.Draft201909;
 /// </summary>
 public partial class AnchorKeyword : Json.Schema.Keywords.AnchorKeyword
 {
-	/// <summary>
-	/// The JSON name of the keyword.
-	/// </summary>
-	public string Name => "$anchor";
-
 #if NET7_0_OR_GREATER
 	[GeneratedRegex("^[A-Za-z][-A-Za-z0-9.:_]*$", RegexOptions.Compiled)]
 	private static partial Regex GetAnchorPatternRegex();

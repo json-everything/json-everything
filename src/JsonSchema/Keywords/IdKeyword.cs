@@ -6,15 +6,6 @@ namespace Json.Schema.Keywords;
 /// <summary>
 /// Handles `$id`.
 /// </summary>
-//[SchemaKeyword(Name)]
-//[SchemaSpecVersion(SpecVersion.Draft6)]
-//[SchemaSpecVersion(SpecVersion.Draft7)]
-//[SchemaSpecVersion(SpecVersion.Draft201909)]
-//[SchemaSpecVersion(SpecVersion.Draft202012)]
-//[SchemaSpecVersion(SpecVersion.DraftNext)]
-//[Vocabulary(Vocabularies.Core201909Id)]
-//[Vocabulary(Vocabularies.Core202012Id)]
-//[Vocabulary(Vocabularies.CoreNextId)]
 public class IdKeyword : IKeywordHandler //, IIdKeyword
 {
 	private static readonly Uri _testUri = new("https://json-everything.test");
