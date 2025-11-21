@@ -8,13 +8,6 @@ namespace Json.Schema.Keywords;
 /// <summary>
 /// Handles `$defs`.
 /// </summary>
-//[SchemaKeyword(Name)]
-//[SchemaSpecVersion(SpecVersion.Draft201909)]
-//[SchemaSpecVersion(SpecVersion.Draft202012)]
-//[SchemaSpecVersion(SpecVersion.DraftNext)]
-//[Vocabulary(Vocabularies.Core201909Id)]
-//[Vocabulary(Vocabularies.Core202012Id)]
-//[Vocabulary(Vocabularies.CoreNextId)]
 public class DefsKeyword : IKeywordHandler
 {
 	/// <summary>

@@ -1,22 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Globalization;
 using System.Text.Json;
 
-namespace Json.Schema;
+namespace Json.Schema.Keywords;
 
 /// <summary>
 /// Handles `type`.
 /// </summary>
-//[SchemaKeyword(Name)]
-//[SchemaSpecVersion(SpecVersion.Draft6)]
-//[SchemaSpecVersion(SpecVersion.Draft7)]
-//[SchemaSpecVersion(SpecVersion.Draft201909)]
-//[SchemaSpecVersion(SpecVersion.Draft202012)]
-//[SchemaSpecVersion(SpecVersion.DraftNext)]
-//[Vocabulary(Vocabularies.Validation201909Id)]
-//[Vocabulary(Vocabularies.Validation202012Id)]
-//[Vocabulary(Vocabularies.ValidationNextId)]
 public class TypeKeyword : IKeywordHandler
 {
 	public string Name => "type";
@@ -52,7 +42,7 @@ public class TypeKeyword : IKeywordHandler
 				if (typeElement.ValueKind != JsonValueKind.String)
 					throw new JsonSchemaException("A type array may only contain strings");
 
-				var type = typeElement.GetString();
+				var type = typeElement.GetString()!;
 				if (!_types.TryGetValue(type, out var valueType))
 					throw new JsonSchemaException($"'{type}' is not a valid JSON Schema value type");
 
@@ -101,32 +91,5 @@ public class TypeKeyword : IKeywordHandler
 				ReplaceToken("received", instanceType, JsonSchemaSerializerContext.Default.SchemaValueType).
 				ReplaceToken("expected", expectedType.ToString().ToLower())
 		};
-	}
-}
-
-public static partial class ErrorMessages
-{
-	/// <summary>
-	/// Gets or sets the error message for <see cref="TypeKeyword"/>.
-	/// </summary>
-	/// <remarks>
-	///	Available tokens are:
-	///   - [[received]] - the type of value provided in the JSON instance
-	///   - [[expected]] - the type(s) required by the schema
-	/// </remarks>
-	public static string? Type { get; set; }
-
-	/// <summary>
-	/// Gets the error message for <see cref="TypeKeyword"/> for a specific culture.
-	/// </summary>
-	/// <param name="culture">The culture to retrieve.</param>
-	/// <remarks>
-	///	Available tokens are:
-	///   - [[received]] - the type of value provided in the JSON instance
-	///   - [[expected]] - the type(s) required by the schema
-	/// </remarks>
-	public static string GetType(CultureInfo? culture)
-	{
-		return Type ?? Get(culture);
 	}
 }

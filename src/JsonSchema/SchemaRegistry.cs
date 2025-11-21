@@ -76,20 +76,14 @@ public class SchemaRegistry
 	/// Registers a schema by URI.
 	/// </summary>
 	/// <param name="document">The schema.</param>
-	public void Register(JsonSchema document)
-	{
-		Register(document.BaseUri, document);
-	}
+	public void Register(JsonSchema document) => Register(document.BaseUri, document);
 
 	/// <summary>
 	/// Registers a schema by URI.
 	/// </summary>
 	/// <param name="uri">The URI ID of the schema..</param>
 	/// <param name="document">The schema.</param>
-	public void Register(Uri? uri, JsonSchema document)
-	{
-		RegisterSchema(uri, document);
-	}
+	public void Register(Uri? uri, JsonSchema document) => RegisterSchema(uri, document);
 
 	///// <summary>
 	///// Registers a new meta-schema URI.
@@ -118,6 +112,23 @@ public class SchemaRegistry
 		_registered[uri] = new Registration
 		{
 			Anchors = new() { [anchor] = node }
+		};
+	}
+
+	internal void RegisterDynamicAnchor(Uri uri, string anchor, JsonSchemaNode node)
+	{
+		uri = MakeAbsolute(uri);
+		var registration = _registered.GetValueOrDefault(uri);
+		if (registration != null)
+		{
+			registration.DynamicAnchors ??= [];
+			registration.DynamicAnchors.Add(anchor, node);
+			return;
+		}
+
+		_registered[uri] = new Registration
+		{
+			DynamicAnchors = new() { [anchor] = node }
 		};
 	}
 
@@ -151,43 +162,32 @@ public class SchemaRegistry
 	/// </returns>
 	// For URI equality see https://docs.microsoft.com/en-us/dotnet/api/system.uri.op_equality?view=netcore-3.1
 	// tl;dr - URI equality doesn't consider fragments
-	public JsonSchema? Get(Uri uri)
-	{
-		var registration = GetRegistration(uri);
-
-		return registration?.Root;
-	}
+	public JsonSchema? Get(Uri uri) => GetRegistration(uri)?.Root;
 
 	internal JsonSchemaNode? Get(Uri baseUri, string? anchor)
 	{
 		var registration = GetRegistration(baseUri);
 
-		return registration?.Anchors?.GetValueOrDefault(anchor);
+		if (registration?.Anchors is null) return null;
+
+		return registration.Anchors!.GetValueOrDefault(anchor);
 	}
 
-	internal JsonSchemaNode Get(DynamicScope scope, Uri baseUri, string anchor, bool requireLocalAnchor)
+	internal JsonSchemaNode? GetDynamic(Uri baseUri, string? anchor)
 	{
-		baseUri = new Uri(baseUri.GetLeftPart(UriPartial.Query));
-	
-		if (requireLocalAnchor)
-		{
-			var registration = _registered.GetValueOrDefault(baseUri) ??
-			                   Global._registered.GetValueOrDefault(baseUri) ??
-			                   throw new UnreachableException($"Could not find '{baseUri}'.");
-			return registration?.DynamicAnchors?.GetValueOrDefault(anchor) ??
-			       throw new RefResolutionException(baseUri, anchor);
-		}
+		var registration = GetRegistration(baseUri);
 
-		foreach (var uri in scope.Reverse())
-		{
-			var registration = GetRegistration(uri);
-			if (registration is not null)
-				return registration?.DynamicAnchors?.GetValueOrDefault(anchor) ??
-				       throw new RefResolutionException(baseUri, anchor);
-		}
+		if (registration?.DynamicAnchors is null) return null;
 
-		throw new RefResolutionException(scope.LocalScope, anchor, true);
+		return registration.DynamicAnchors!.GetValueOrDefault(anchor);
 	}
+
+	internal JsonSchemaNode? Get(DynamicScope scope, string anchor) =>
+		scope
+			.Reverse()
+			.Select(GetRegistration)
+			.Select(registration => registration?.DynamicAnchors?.GetValueOrDefault(anchor))
+			.FirstOrDefault();
 
 	private Registration? GetRegistration(Uri baseUri)
 	{

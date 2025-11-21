@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text.Json;
 using Json.Pointer;
 
@@ -42,7 +41,7 @@ public struct EvaluationContext
 
 	public JsonPointer InstanceLocation { get; init; }
 
-	internal Stack<(string, JsonPointer)> NavigatedReferences { get; } = new();
+	public BuildOptions BuildOptions { get; internal init; }
 
 	public EvaluationContext(){}
 }
