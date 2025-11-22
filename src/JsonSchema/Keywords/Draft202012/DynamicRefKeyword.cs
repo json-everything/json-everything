@@ -20,10 +20,10 @@ public class DynamicRefKeyword : Json.Schema.Keywords.DynamicRefKeyword
 	public override object? ValidateValue(JsonElement value)
 	{
 		if (value.ValueKind != JsonValueKind.String)
-			throw new JsonSchemaException($"'$dynamicRef' value must be a string, found {value.ValueKind}");
+			throw new JsonSchemaException($"'{Name}' value must be a string, found {value.ValueKind}");
 
 		if (!Uri.TryCreate(value.GetString(), UriKind.RelativeOrAbsolute, out var uri))
-			throw new JsonSchemaException("'$dynamicRef' value must be a valid URI");
+			throw new JsonSchemaException($"'{Name}' value must be a valid URI");
 
 		return new DynamicRefInfo { Uri = uri };
 	}
@@ -86,9 +86,9 @@ public class DynamicRefKeyword : Json.Schema.Keywords.DynamicRefKeyword
 		if (reference.IsDynamic)
 		{
 			var anchor = reference.Uri.Fragment[1..];
-			subschema = context.BuildOptions.SchemaRegistry.Get(context.Scope, anchor);
+			subschema = context.BuildOptions.SchemaRegistry.GetDynamic(context.Scope, anchor);
 			if (subschema is null)
-				throw new RefResolutionException(context.Scope.LocalScope, anchor, true);
+				throw new RefResolutionException(context.Scope.LocalScope, anchor, AnchorType.Dynamic);
 		}
 		else
 		{

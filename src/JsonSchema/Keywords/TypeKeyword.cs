@@ -40,7 +40,7 @@ public class TypeKeyword : IKeywordHandler
 			foreach (var typeElement in value.EnumerateArray())
 			{
 				if (typeElement.ValueKind != JsonValueKind.String)
-					throw new JsonSchemaException("A type array may only contain strings");
+					throw new JsonSchemaException($"A '{Name}' array may only contain strings");
 
 				var type = typeElement.GetString()!;
 				if (!_types.TryGetValue(type, out var valueType))
@@ -52,7 +52,7 @@ public class TypeKeyword : IKeywordHandler
 			return finalType;
 		}
 
-		throw new JsonSchemaException("'type' must be either a string or an array of strings");
+		throw new JsonSchemaException($"'{Name}' must be either a string or an array of strings");
 	}
 
 	public void BuildSubschemas(KeywordData keyword, BuildContext context)

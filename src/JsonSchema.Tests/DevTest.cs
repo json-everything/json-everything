@@ -11,15 +11,17 @@ public class DevTest
 	[Test]
 	public void Test()
 	{
+		SchemaKeywordRegistry.Default = SchemaKeywordRegistry.Draft201909;
+
 		var schemaText = """
 		    {
 		      "$id": "https://json-everything.test/generic",
 		      "type": "array",
-		      "items": { "$dynamicRef": "#itemType"},
+		      "items": { "$recursiveRef": "#"},
 		      "$defs": {
 		        "fails": {
-		          "$dynamicAnchor": "itemType",
-		          "not": true
+		          "$recursiveAnchor": true,
+		          "type": "boolean"
 		        }
 		      }
 		    }
@@ -34,7 +36,7 @@ public class DevTest
 		      "$ref": "generic",
 		      "$defs": {
 		        "works": {
-		          "$dynamicAnchor": "itemType",
+		          "$recursiveAnchor": true,
 		          "type": "string"
 		        }
 		      }
@@ -67,8 +69,8 @@ public static class Measure
 		var stopwatch = new Stopwatch();
 		stopwatch.Start();
 		action();
-		var time = stopwatch.ElapsedMilliseconds;
-		Console.WriteLine($"{name}: {time}");
+		var time = stopwatch.ElapsedTicks / (double)TimeSpan.TicksPerMillisecond;
+		Console.WriteLine($"{name}: {time}ms");
 	}
 
 	public static T Run<T>(string name, Func<T> action)
@@ -76,8 +78,8 @@ public static class Measure
 		var stopwatch = new Stopwatch();
 		stopwatch.Start();
 		var value = action();
-		var time = stopwatch.ElapsedMilliseconds;
-		Console.WriteLine($"{name}: {time}");
+		var time = stopwatch.ElapsedTicks / (double)TimeSpan.TicksPerMillisecond;
+		Console.WriteLine($"{name}: {time}ms");
 		return value;
 	}
 
@@ -86,8 +88,8 @@ public static class Measure
 		var stopwatch = new Stopwatch();
 		stopwatch.Start();
 		var value = await action();
-		var time = stopwatch.ElapsedMilliseconds;
-		Console.WriteLine($"{name}: {time}");
+		var time = stopwatch.ElapsedTicks / (double)TimeSpan.TicksPerMillisecond;
+		Console.WriteLine($"{name}: {time}ms");
 		return value;
 	}
 }

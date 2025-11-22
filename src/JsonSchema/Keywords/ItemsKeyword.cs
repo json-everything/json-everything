@@ -15,15 +15,15 @@ public class ItemsKeyword : IKeywordHandler
 	/// </summary>
 	public string Name => "items";
 
-	public object? ValidateValue(JsonElement value)
+	public virtual object? ValidateValue(JsonElement value)
 	{
 		if (value.ValueKind != JsonValueKind.Object)
-			throw new JsonSchemaException($"'items' value must be an object, found {value.ValueKind}");
+			throw new JsonSchemaException($"'{Name}' value must be an object, found {value.ValueKind}");
 
 		return null;
 	}
 
-	public void BuildSubschemas(KeywordData keyword, BuildContext context)
+	public virtual void BuildSubschemas(KeywordData keyword, BuildContext context)
 	{
 		var defContext = context with
 		{
@@ -34,7 +34,7 @@ public class ItemsKeyword : IKeywordHandler
 		keyword.Subschemas = [node];
 	}
 
-	public KeywordEvaluation Evaluate(KeywordData keyword, EvaluationContext context)
+	public virtual KeywordEvaluation Evaluate(KeywordData keyword, EvaluationContext context)
 	{
 		if (context.Instance.ValueKind != JsonValueKind.Array) return KeywordEvaluation.Ignore;
 	

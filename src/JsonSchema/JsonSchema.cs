@@ -7,6 +7,8 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Json.Pointer;
 using Json.Schema.Keywords;
+using Json.Schema.Keywords.Draft201909;
+using AnchorKeyword = Json.Schema.Keywords.AnchorKeyword;
 
 // ReSharper disable LocalizableElement
 
@@ -191,6 +193,10 @@ public class JsonSchema
 		var dynamicAnchorKeyword = keywordData.FirstOrDefault(x => x.Handler is DynamicAnchorKeyword);
 		if (dynamicAnchorKeyword is not null) 
 			context.Options.SchemaRegistry.RegisterDynamicAnchor(context.BaseUri, (string)dynamicAnchorKeyword.Value!, node);
+
+		var recursiveAnchorKeyword = keywordData.FirstOrDefault(x => x.Handler is RecursiveAnchorKeyword);
+		if (recursiveAnchorKeyword?.Value is true)
+			context.Options.SchemaRegistry.RegisterRecursiveAnchor(context.BaseUri, node);
 
 		return node;
 	}

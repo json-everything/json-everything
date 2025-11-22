@@ -1,4 +1,5 @@
 ﻿using Json.Schema.Keywords;
+using Json.Schema.Keywords.Draft201909;
 
 namespace Json.Schema;
 
@@ -24,8 +25,6 @@ public partial class SchemaKeywordRegistry
 		//new DependentSchemasKeyword(),
 		//new DeprecatedKeyword(),
 		//new DescriptionKeyword(),
-		//new DynamicAnchorKeyword(),
-		//new DynamicRefKeyword(),
 		//new ElseKeyword(),
 		//new EnumKeyword(),
 		//new ExamplesKeyword(),
@@ -34,7 +33,7 @@ public partial class SchemaKeywordRegistry
 		//new FormatKeyword(),
 		new IdKeyword(),
 		//new IfKeyword(),
-		//new ItemsKeyword(),
+		new ItemsKeyword(),
 		//new MaxContainsKeyword(),
 		//new MaximumKeyword(),
 		//new MaxItemsKeyword(),
@@ -55,8 +54,8 @@ public partial class SchemaKeywordRegistry
 		//new PropertyDependenciesKeyword(),
 		//new PropertyNamesKeyword(),
 		//new ReadOnlyKeyword(),
-		//new RecursiveAnchorKeyword(),
-		//new RecursiveRefKeyword(),
+		new RecursiveAnchorKeyword(),
+		new RecursiveRefKeyword(),
 		new RefKeyword(),
 		//new RequiredKeyword(),
 		//new SchemaKeyword(),
