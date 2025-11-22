@@ -218,7 +218,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Keywords\Draft06\" />
     <Folder Include="Keywords\Draft07\" />
   </ItemGroup>
 

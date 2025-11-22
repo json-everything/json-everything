@@ -76,7 +76,7 @@ public class JsonSchema
 	/// <returns>A new <see cref="JsonSchema"/>.</returns>
 	/// <exception cref="JsonException">Could not deserialize a portion of the schema.</exception>
 	/// <remarks>The filename needs to not be URL-encoded as <see cref="Uri"/> attempts to encode it.</remarks>
-	public static JsonSchema FromFile(string fileName, JsonSerializerOptions? options = null)
+	public static JsonSchema FromFile(string fileName, BuildOptions? options = null)
 	{
 		var text = File.ReadAllText(fileName);
 		var schema = FromText(text, options);
@@ -97,20 +97,10 @@ public class JsonSchema
 	/// <param name="options">Serializer options.</param>
 	/// <returns>A new <see cref="JsonSchema"/>.</returns>
 	/// <exception cref="JsonException">Could not deserialize a portion of the schema.</exception>
-	public static JsonSchema FromText(string jsonText, JsonSerializerOptions? options = null)
+	public static JsonSchema FromText(string jsonText, BuildOptions? options = null)
 	{
-		return JsonSerializer.Deserialize<JsonSchema>(jsonText, options)!;
-	}
-
-	/// <summary>
-	/// Deserializes a <see cref="JsonSchema"/> from a stream.
-	/// </summary>
-	/// <param name="source">A stream.</param>
-	/// <param name="options">Serializer options.</param>
-	/// <returns>A new <see cref="JsonSchema"/>.</returns>
-	public static ValueTask<JsonSchema> FromStream(Stream source, JsonSerializerOptions? options = null)
-	{
-		return JsonSerializer.DeserializeAsync<JsonSchema>(source, options)!;
+		var element = JsonDocument.Parse(jsonText).RootElement;
+		return Build(element, options);
 	}
 
 	private static Uri GenerateBaseUri() => new($"https://json-everything.lib/{Guid.NewGuid().ToString("N")[..10]}");

@@ -42,11 +42,9 @@
 		<Compile Remove="VocabularyTests.cs" />
 		<Compile Remove="Serialization\DeserializationTests.cs" />
 		<Compile Remove="Suite\Output.cs" />
-		<Compile Remove="Suite\TestCase.cs" />
-		<Compile Remove="Suite\TestCollection.cs" />
-		<Compile Remove="Suite\Validation.cs" />
 		<Compile Remove="Suite\ValidationOptimized.cs" />
-	</ItemGroup>
+
+  </ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Humanizer.Core" Version="2.14.1" />
