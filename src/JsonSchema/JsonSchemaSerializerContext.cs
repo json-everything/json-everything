@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.Pointer;
 
@@ -13,7 +12,6 @@ namespace Json.Schema;
 [JsonSerializable(typeof(SchemaValueType))]
 [JsonSerializable(typeof(EvaluationResults))]
 [JsonSerializable(typeof(JsonPointer))]
-[JsonSerializable(typeof(JsonNode))]
 [JsonSerializable(typeof(uint))]
 [JsonSerializable(typeof(decimal))]
 [JsonSerializable(typeof(string))]
