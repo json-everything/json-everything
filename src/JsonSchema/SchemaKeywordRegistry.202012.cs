@@ -5,14 +5,13 @@ namespace Json.Schema;
 public partial class SchemaKeywordRegistry
 {
 	public static SchemaKeywordRegistry Draft202012 { get; } = new(
-		//new AdditionalItemsKeyword(),
-		//new AdditionalPropertiesKeyword(),
-		//new AllOfKeyword(),
+		new AdditionalPropertiesKeyword(),
+		new AllOfKeyword(),
 		new AnchorKeyword(),
-		//new AnyOfKeyword(),
-		//new CommentKeyword(),
-		//new ConstKeyword(),
-		//new ContainsKeyword(),
+		new AnyOfKeyword(),
+		new CommentKeyword(),
+		new ConstKeyword(),
+		new ContainsKeyword(),
 		//new ContentEncodingKeyword(),
 		//new ContentMediaTypeKeyword(),
 		//new ContentSchemaKeyword(),

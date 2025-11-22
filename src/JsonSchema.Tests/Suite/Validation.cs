@@ -43,8 +43,8 @@ public class Validation
 		{
 			KeywordRegistry = draftFolder switch
 			{
-				"draft6" => SchemaKeywordRegistry.Draft201909,
-				"draft7" => SchemaKeywordRegistry.Draft201909,
+				"draft6" => SchemaKeywordRegistry.Draft06,
+				"draft7" => SchemaKeywordRegistry.Draft07,
 				"draft2019-09" => SchemaKeywordRegistry.Draft201909,
 				"draft2020-12" => SchemaKeywordRegistry.Draft202012,
 				"draft-next" => SchemaKeywordRegistry.V1,
@@ -75,7 +75,7 @@ public class Validation
 				foreach (var test in collection.Tests)
 				{
 					var optional = collection.IsOptional ? "(optional) / " : null;
-					var name = $"{draftFolder} / {shortFileName} / {optional}{collection.Description} / {test.Description}";
+					var name = $"{draftFolder} / {optional}{shortFileName} / {collection.Description} / {test.Description}";
 					var evaluationOptionsCopy = EvaluationOptions.From(evaluationOptions);
 					allTests.Add(new TestCaseData(collection, test, shortFileName, buildOptions, evaluationOptionsCopy) { TestName = name });
 				}
@@ -115,7 +115,7 @@ public class Validation
 		TestConsole.WriteLine();
 		TestConsole.WriteLine(JsonSerializer.Serialize(collection.Schema, TestEnvironment.TestOutputSerializerOptions));
 		TestConsole.WriteLine();
-		TestConsole.WriteLine(test.Data.ToJsonString());
+		TestConsole.WriteLine(JsonSerializer.Serialize(test.Data, TestEnvironment.TestOutputSerializerOptions));
 		TestConsole.WriteLine();
 
 		var schema = Measure.Run("Build", () => JsonSchema.Build(collection.Schema, buildOptions));

@@ -164,6 +164,8 @@ public class JsonSchema
 			.Where(x => x.BaseUri != context.BaseUri);
 		foreach (var embeddedResource in embeddedResources)
 		{
+			if (embeddedResource.BaseUri == True.BaseUri || embeddedResource.BaseUri == False.BaseUri) continue;
+
 			var schema = new JsonSchema(embeddedResource, context.Options) { BaseUri = embeddedResource.BaseUri };
 			context.Options.SchemaRegistry.Register(schema);
 		}

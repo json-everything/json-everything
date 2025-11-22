@@ -4,11 +4,10 @@ namespace Json.Schema;
 
 public partial class SchemaKeywordRegistry
 {
-	public static SchemaKeywordRegistry Draft201909 { get; } = new(
+	public static SchemaKeywordRegistry Draft06 { get; } = new(
 		new Keywords.Draft06.AdditionalItemsKeyword(),
 		new AdditionalPropertiesKeyword(),
 		new AllOfKeyword(),
-		new Keywords.Draft201909.AnchorKeyword(),
 		new AnyOfKeyword(),
 		new CommentKeyword(),
 		new ConstKeyword(),
@@ -17,8 +16,7 @@ public partial class SchemaKeywordRegistry
 		//new ContentMediaTypeKeyword(),
 		//new ContentSchemaKeyword(),
 		//new DefaultKeyword(),
-		//new DefinitionsKeyword(),
-		new DefsKeyword(),
+		new Keywords.Draft06.DefinitionsKeyword(),
 		//new DependenciesKeyword(),
 		//new DependentRequiredKeyword(),
 		//new DependentSchemasKeyword(),
@@ -53,8 +51,6 @@ public partial class SchemaKeywordRegistry
 		//new PropertyDependenciesKeyword(),
 		//new PropertyNamesKeyword(),
 		//new ReadOnlyKeyword(),
-		new Keywords.Draft201909.RecursiveAnchorKeyword(),
-		new Keywords.Draft201909.RecursiveRefKeyword(),
 		new RefKeyword(),
 		//new RequiredKeyword(),
 		//new SchemaKeyword(),

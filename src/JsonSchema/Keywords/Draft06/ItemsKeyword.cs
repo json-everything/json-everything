@@ -101,7 +101,7 @@ public class ItemsKeyword : IKeywordHandler
 				{
 					InstanceLocation = context.InstanceLocation.Combine(i),
 					Instance = instance,
-					EvaluationPath = evaluationPath
+					EvaluationPath = evaluationPath.Combine(Name, i)
 				};
 
 				subschemaEvaluations.Add(subschema.Evaluate(itemContext));
