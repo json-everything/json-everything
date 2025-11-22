@@ -118,7 +118,7 @@ public class Validation
 		if (!InstanceIsDeserializable(test.Data))
 			Assert.Inconclusive("Instance not deserializable");
 
-		var result = collection.Schema.Evaluate(test.Data, options);
+		var result = Measure.Run("Evaluate", () => collection.Schema.Evaluate(test.Data, options));
 		//result.ToBasic();
 		TestConsole.WriteLine(JsonSerializer.Serialize(result, TestEnvironment.TestOutputSerializerOptions));
 
