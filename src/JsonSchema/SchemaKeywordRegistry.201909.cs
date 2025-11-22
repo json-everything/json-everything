@@ -1,12 +1,11 @@
 ﻿using Json.Schema.Keywords;
-using Json.Schema.Keywords.Draft201909;
 
 namespace Json.Schema;
 
 public partial class SchemaKeywordRegistry
 {
 	public static SchemaKeywordRegistry Draft201909 { get; } = new(
-		//new AdditionalItemsKeyword(),
+		new Keywords.Draft06.AdditionalItemsKeyword(),
 		//new AdditionalPropertiesKeyword(),
 		//new AllOfKeyword(),
 		new Keywords.Draft201909.AnchorKeyword(),
@@ -33,7 +32,7 @@ public partial class SchemaKeywordRegistry
 		//new FormatKeyword(),
 		new IdKeyword(),
 		//new IfKeyword(),
-		new ItemsKeyword(),
+		new Keywords.Draft06.ItemsKeyword(),
 		//new MaxContainsKeyword(),
 		//new MaximumKeyword(),
 		//new MaxItemsKeyword(),
@@ -54,8 +53,8 @@ public partial class SchemaKeywordRegistry
 		//new PropertyDependenciesKeyword(),
 		//new PropertyNamesKeyword(),
 		//new ReadOnlyKeyword(),
-		new RecursiveAnchorKeyword(),
-		new RecursiveRefKeyword(),
+		new Keywords.Draft201909.RecursiveAnchorKeyword(),
+		new Keywords.Draft201909.RecursiveRefKeyword(),
 		new RefKeyword(),
 		//new RequiredKeyword(),
 		//new SchemaKeyword(),

@@ -39,18 +39,21 @@ public class Validation
 		if (!Directory.Exists(testsPath)) return [];
 
 		var fileNames = Directory.GetFiles(testsPath, "*.json", SearchOption.AllDirectories);
-		var options = new EvaluationOptions
+		var buildOptions = new BuildOptions
+		{
+			KeywordRegistry = draftFolder switch
+			{
+				"draft6" => SchemaKeywordRegistry.Draft201909,
+				"draft7" => SchemaKeywordRegistry.Draft201909,
+				"draft2019-09" => SchemaKeywordRegistry.Draft201909,
+				"draft2020-12" => SchemaKeywordRegistry.Draft202012,
+				"draft-next" => SchemaKeywordRegistry.V1,
+				_ => throw new ArgumentOutOfRangeException(nameof(draftFolder), $"{draftFolder} is unsupported")
+			}
+		};
+		var evaluationOptions = new EvaluationOptions
 		{
 			OutputFormat = OutputFormat.Hierarchical,
-			EvaluateAs = draftFolder switch
-			{
-				"draft6" => SpecVersion.Draft6,
-				"draft7" => SpecVersion.Draft7,
-				"draft2019-09" => SpecVersion.Draft201909,
-				"draft2020-12" => SpecVersion.Draft202012,
-				"draft-next" => SpecVersion.DraftNext,
-				_ => SpecVersion.Unspecified
-			}
 		};
 
 		var allTests = new List<TestCaseData>();
@@ -59,7 +62,7 @@ public class Validation
 			var shortFileName = Path.GetFileNameWithoutExtension(fileName);
 
 			// adjust for format
-			options.RequireFormatValidation = fileName.Contains("format/".AdjustForPlatform()) &&
+			evaluationOptions.RequireFormatValidation = fileName.Contains("format/".AdjustForPlatform()) &&
 											  // uri-template will throw an exception as it's explicitly unsupported
 											  shortFileName != "uri-template";
 
@@ -73,8 +76,8 @@ public class Validation
 				{
 					var optional = collection.IsOptional ? "(optional) / " : null;
 					var name = $"{draftFolder} / {shortFileName} / {optional}{collection.Description} / {test.Description}";
-					var optionsCopy = EvaluationOptions.From(options);
-					allTests.Add(new TestCaseData(collection, test, shortFileName, optionsCopy) { TestName = name });
+					var evaluationOptionsCopy = EvaluationOptions.From(evaluationOptions);
+					allTests.Add(new TestCaseData(collection, test, shortFileName, buildOptions, evaluationOptionsCopy) { TestName = name });
 				}
 			}
 		}
@@ -82,7 +85,7 @@ public class Validation
 		return allTests;
 	}
 
-	[OneTimeSetUp]
+	//[OneTimeSetUp]
 	public void LoadRemoteSchemas()
 	{
 		// ReSharper disable once HeuristicUnreachableCode
@@ -101,7 +104,7 @@ public class Validation
 	}
 
 	[TestCaseSource(nameof(TestCases))]
-	public void Test(TestCollection collection, TestCase test, string fileName, EvaluationOptions options)
+	public void Test(TestCollection collection, TestCase test, string fileName, BuildOptions buildOptions, EvaluationOptions evaluationOptions)
 	{
 		TestConsole.WriteLine();
 		TestConsole.WriteLine();
@@ -112,14 +115,16 @@ public class Validation
 		TestConsole.WriteLine();
 		TestConsole.WriteLine(JsonSerializer.Serialize(collection.Schema, TestEnvironment.TestOutputSerializerOptions));
 		TestConsole.WriteLine();
-		TestConsole.WriteLine(test.Data.AsJsonString());
+		TestConsole.WriteLine(test.Data.ToJsonString());
 		TestConsole.WriteLine();
 
-		if (!InstanceIsDeserializable(test.Data))
-			Assert.Inconclusive("Instance not deserializable");
+		var schema = Measure.Run("Build", () => JsonSchema.Build(collection.Schema, buildOptions));
 
-		var result = Measure.Run("Evaluate", () => collection.Schema.Evaluate(test.Data, options));
+		var result = Measure.Run("Evaluate", () => schema.Evaluate(test.Data, evaluationOptions));
+
 		//result.ToBasic();
+		TestConsole.WriteLine();
+		TestConsole.WriteLine("Result:");
 		TestConsole.WriteLine(JsonSerializer.Serialize(result, TestEnvironment.TestOutputSerializerOptions));
 
 		if (collection.IsOptional && result.IsValid != test.Valid)
