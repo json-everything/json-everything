@@ -37,7 +37,6 @@
     <Compile Remove="DependentRequiredKeyword.cs" />
     <Compile Remove="DependentSchemasKeyword.cs" />
     <Compile Remove="ElseKeyword.cs" />
-    <Compile Remove="EnumKeyword.cs" />
     <Compile Remove="ExclusiveMaximumKeyword.cs" />
     <Compile Remove="ExclusiveMinimumKeyword.cs" />
     <Compile Remove="Format.cs" />
@@ -50,21 +49,12 @@
     <Compile Remove="JsonSchemaBuilder.cs" />
     <Compile Remove="JsonSchemaBuilderExtensions.cs" />
     <Compile Remove="JsonSchemaExtensions.KeywordAccess.cs" />
-    <Compile Remove="MaximumKeyword.cs" />
-    <Compile Remove="MaxItemsKeyword.cs" />
-    <Compile Remove="MaxLengthKeyword.cs" />
-    <Compile Remove="MaxPropertiesKeyword.cs" />
     <Compile Remove="MetaSchemas.cs" />
     <Compile Remove="MetaSchemas.Draft201909.cs" />
     <Compile Remove="MetaSchemas.Draft202012.cs" />
     <Compile Remove="MetaSchemas.Draft6.cs" />
     <Compile Remove="MetaSchemas.Draft7.cs" />
     <Compile Remove="MetaSchemas.DraftNext.cs" />
-    <Compile Remove="MinimumKeyword.cs" />
-    <Compile Remove="MinItemsKeyword.cs" />
-    <Compile Remove="MinLengthKeyword.cs" />
-    <Compile Remove="MinPropertiesKeyword.cs" />
-    <Compile Remove="MultipleOfKeyword.cs" />
     <Compile Remove="NotKeyword.cs" />
     <Compile Remove="OneOfKeyword.cs" />
     <Compile Remove="PatternKeyword.cs" />
@@ -76,7 +66,6 @@
     <Compile Remove="PropertyNamesKeyword.cs" />
     <Compile Remove="RegexFormat.cs" />
     <Compile Remove="RegexOrPattern.cs" />
-    <Compile Remove="RequiredKeyword.cs" />
     <Compile Remove="SchemaKeyword.cs" />
     <Compile Remove="ThenKeyword.cs" />
     <Compile Remove="UnevaluatedItemsKeyword.cs" />

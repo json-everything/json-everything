@@ -12,7 +12,7 @@ public class DefaultKeyword : IKeywordHandler
 	/// </summary>
 	public string Name => "default";
 
-	public virtual object? ValidateValue(JsonElement value)
+	public virtual object? ValidateKeywordValue(JsonElement value)
 	{
 		return null;
 	}

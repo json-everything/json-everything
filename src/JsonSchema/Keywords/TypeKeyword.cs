@@ -24,7 +24,7 @@ public class TypeKeyword : IKeywordHandler
 			{ "null", SchemaValueType.Null }
 		}.ToImmutableDictionary();
 
-	public object? ValidateValue(JsonElement value)
+	public object? ValidateKeywordValue(JsonElement value)
 	{
 		if (value.ValueKind == JsonValueKind.String)
 		{
