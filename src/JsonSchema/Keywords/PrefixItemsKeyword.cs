@@ -6,30 +6,22 @@ using Json.Pointer;
 namespace Json.Schema.Keywords;
 
 /// <summary>
-/// Handles `allOf`.
+/// Handles `prefixItems`.
 /// </summary>
-public class AllOfKeyword : IKeywordHandler
+public class PrefixItemsKeyword : IKeywordHandler
 {
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
-	public string Name => "allOf";
+	public string Name => "prefixItems";
 
 	public virtual object? ValidateKeywordValue(JsonElement value)
 	{
 		if (value.ValueKind is not JsonValueKind.Array)
-			throw new JsonSchemaException($"'{Name}' value must be an array, found {value.ValueKind}.");
+			throw new JsonSchemaException($"'{Name}' value must be an object, found {value.ValueKind}");
 
-		var count = 0;
-		foreach (var x in value.EnumerateArray())
-		{
-			if (x.ValueKind is not (JsonValueKind.Object or JsonValueKind.True or JsonValueKind.False))
-				throw new JsonSchemaException($"'{Name}' values must be valid schemas.");
-			count++;
-		}
-
-		if (count == 0)
-			throw new JsonSchemaException($"'{Name}' requires at least one subschema.");
+		if (value.EnumerateArray().Any(x => x.ValueKind is not (JsonValueKind.Object or JsonValueKind.True or JsonValueKind.False)))
+			throw new JsonSchemaException("Values must be valid schemas");
 
 		return null;
 	}
@@ -56,14 +48,19 @@ public class AllOfKeyword : IKeywordHandler
 
 	public virtual KeywordEvaluation Evaluate(KeywordData keyword, EvaluationContext context)
 	{
+		if (context.Instance.ValueKind != JsonValueKind.Array) return KeywordEvaluation.Ignore;
+
 		var subschemaEvaluations = new List<EvaluationResults>();
+		var pairs = keyword.Subschemas.Zip(context.Instance.EnumerateArray(), (s, i) => (s, i));
 
 		var i = 0;
-		foreach (var subschema in keyword.Subschemas)
+		foreach (var (subschema, instance) in pairs)
 		{
 			var evaluationPath = context.EvaluationPath.Combine(i);
 			var itemContext = context with
 			{
+				InstanceLocation = context.InstanceLocation.Combine(i),
+				Instance = instance,
 				EvaluationPath = evaluationPath.Combine(Name, i)
 			};
 

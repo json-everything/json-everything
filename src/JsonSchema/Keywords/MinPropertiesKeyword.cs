@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Text.Json;
 
 namespace Json.Schema.Keywords;
@@ -18,7 +19,12 @@ public class MinPropertiesKeyword : IKeywordHandler
 		if (value.ValueKind is not JsonValueKind.Number)
 			throw new JsonSchemaException($"'{Name}' value must be a number, found {value.ValueKind}");
 
-		var min = value.GetInt64();
+		var number = value.GetDouble();
+		var rounded = Math.Truncate(number);
+		if (number != rounded)
+			throw new JsonSchemaException($"'{Name}' value must be a integer, found {value.ValueKind}");
+
+		var min = (long)rounded;
 		if (min < 0)
 			throw new JsonSchemaException($"'{Name}' value must be non-negative, found {min}");
 

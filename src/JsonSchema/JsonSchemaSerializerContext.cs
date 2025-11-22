@@ -21,5 +21,5 @@ namespace Json.Schema;
 [JsonSerializable(typeof(long))]
 [JsonSerializable(typeof(Uri))]
 [JsonSerializable(typeof(Dictionary<string, string[]>))]
-[JsonSerializable(typeof(List<string>))]
+[JsonSerializable(typeof(HashSet<string>))]
 internal partial class JsonSchemaSerializerContext : JsonSerializerContext;

@@ -39,18 +39,6 @@ public class Validation
 		if (!Directory.Exists(testsPath)) return [];
 
 		var fileNames = Directory.GetFiles(testsPath, "*.json", SearchOption.AllDirectories);
-		var buildOptions = new BuildOptions
-		{
-			KeywordRegistry = draftFolder switch
-			{
-				"draft6" => SchemaKeywordRegistry.Draft06,
-				"draft7" => SchemaKeywordRegistry.Draft07,
-				"draft2019-09" => SchemaKeywordRegistry.Draft201909,
-				"draft2020-12" => SchemaKeywordRegistry.Draft202012,
-				"draft-next" => SchemaKeywordRegistry.V1,
-				_ => throw new ArgumentOutOfRangeException(nameof(draftFolder), $"{draftFolder} is unsupported")
-			}
-		};
 		var evaluationOptions = new EvaluationOptions
 		{
 			OutputFormat = OutputFormat.Hierarchical,
@@ -74,6 +62,19 @@ public class Validation
 				collection.IsOptional = fileName.Contains("optional");
 				foreach (var test in collection.Tests)
 				{
+					var buildOptions = new BuildOptions
+					{
+						KeywordRegistry = draftFolder switch
+						{
+							"draft6" => SchemaKeywordRegistry.Draft06,
+							"draft7" => SchemaKeywordRegistry.Draft07,
+							"draft2019-09" => SchemaKeywordRegistry.Draft201909,
+							"draft2020-12" => SchemaKeywordRegistry.Draft202012,
+							"draft-next" => SchemaKeywordRegistry.V1,
+							_ => throw new ArgumentOutOfRangeException(nameof(draftFolder), $"{draftFolder} is unsupported")
+						},
+						SchemaRegistry = new()
+					};
 					var optional = collection.IsOptional ? "(optional) / " : null;
 					var name = $"{draftFolder} / {optional}{shortFileName} / {collection.Description} / {test.Description}";
 					var evaluationOptionsCopy = EvaluationOptions.From(evaluationOptions);
@@ -85,7 +86,7 @@ public class Validation
 		return allTests;
 	}
 
-	//[OneTimeSetUp]
+	[OneTimeSetUp]
 	public void LoadRemoteSchemas()
 	{
 		// ReSharper disable once HeuristicUnreachableCode
@@ -97,9 +98,16 @@ public class Validation
 
 		foreach (var fileName in fileNames)
 		{
-			var schema = JsonSchema.FromFile(fileName);
-			var uri = new Uri(fileName.Replace(remotesPath, "http://localhost:1234").Replace('\\', '/'));
-			SchemaRegistry.Global.Register(uri, schema);
+			try
+			{
+				var schema = JsonSchema.FromFile(fileName);
+				var uri = new Uri(fileName.Replace(remotesPath, "http://localhost:1234").Replace('\\', '/'));
+				SchemaRegistry.Global.Register(uri, schema);
+			}
+			catch (JsonSchemaException e)
+			{
+				TestConsole.WriteLine($"Error loading file '{fileName}'");
+			}
 		}
 	}
 

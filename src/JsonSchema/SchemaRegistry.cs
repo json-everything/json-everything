@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace Json.Schema;
@@ -26,7 +25,7 @@ public class SchemaRegistry
 	/// <summary>
 	/// The global registry.
 	/// </summary>
-	public static SchemaRegistry Global => new();
+	public static SchemaRegistry Global { get; } = new();
 
 	/// <summary>
 	/// Gets or sets a method to enable automatic download of schemas by `$id` URI.
@@ -148,24 +147,29 @@ public class SchemaRegistry
 		};
 	}
 
-	private void RegisterSchema(Uri? uri, JsonSchema schema)
+	private Registration RegisterSchema(Uri? uri, JsonSchema schema)
 	{
-		uri = MakeAbsolute(uri);
-		var registration = _registered.GetValueOrDefault(uri);
-		if (registration != null)
+		var schemaUri = MakeAbsolute(schema.BaseUri);
+		var registration = _registered.GetValueOrDefault(schemaUri);
+		if (registration == null)
+		{
+			_registered[schemaUri] = registration = new Registration { Root = schema };
+		}
+		else
 		{
 			if (registration.Root is not null && schema != registration.Root)
 				throw new JsonSchemaException("Overwriting registered schemas is not permitted.");
 			registration.Root = schema;
-			return;
 		}
 
-		_registered[uri] = new Registration { Root = schema };
-		if (_registered.ContainsKey(schema.BaseUri)) return;
+		if (uri is not null && uri != schemaUri)
+		{
+			// also register with custom URI
+			registration = _registered.First(x => ReferenceEquals(x.Value.Root, schema)).Value;
+			_registered[uri] = registration;
+		}
 
-		// also register with custom URI
-		registration = _registered.First(x => ReferenceEquals(x.Value.Root, schema)).Value;
-		_registered[uri] = registration;
+		return registration;
 	}
 
 	/// <summary>
@@ -222,24 +226,17 @@ public class SchemaRegistry
 
 	private Registration? GetRegistration(Uri baseUri)
 	{
-		var document = _registered.GetValueOrDefault(baseUri) ??
+		var registration = _registered.GetValueOrDefault(baseUri) ??
 		               Global._registered.GetValueOrDefault(baseUri);
 
-		if (document is null)
+		if (registration is null)
 		{
-			//document = Fetch(baseUri) ?? Global.Fetch(baseUri);
-			//if (document is not null)
-			//{
-			//	Register(baseUri, document);
-
-			//	// Fetch() returns the document but not localized to an anchor.
-			//	// Register() scans the document and adds it locally.
-			//	// Now that it's in the local registry, we need to get the target identified by any anchors.
-			//	document = GetFromRegistry(_registered, baseUri);
-			//}
+			var remote = Fetch(baseUri) ?? Global.Fetch(baseUri);
+			if (remote is not null) 
+				registration = RegisterSchema(baseUri, remote);
 		}
 
-		return document;
+		return registration;
 	}
 
 	private static Uri MakeAbsolute(Uri? uri)

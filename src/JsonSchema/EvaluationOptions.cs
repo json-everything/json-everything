@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using Json.Schema.Keywords;
 
 namespace Json.Schema;
 
@@ -55,7 +54,7 @@ public class EvaluationOptions
 	public IEnumerable<Type>? IgnoredAnnotations => _ignoredAnnotationTypes;
 
 	/// <summary>
-	/// Gets or sets the culture for error messages.  Overrides <see cref="Keywords.ErrorMessages.Culture"/>.
+	/// Gets or sets the culture for error messages.  Overrides <see cref="ErrorMessages.Culture"/>.
 	/// </summary>
 	public CultureInfo? Culture { get; set; }
 

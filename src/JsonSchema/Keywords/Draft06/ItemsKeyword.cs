@@ -34,7 +34,7 @@ public class ItemsKeyword : IKeywordHandler
 
 	public virtual void BuildSubschemas(KeywordData keyword, BuildContext context)
 	{
-		if (keyword.RawValue.ValueKind == JsonValueKind.Object)
+		if (keyword.RawValue.ValueKind is (JsonValueKind.Object or JsonValueKind.True or JsonValueKind.False))
 		{
 			var defContext = context with
 			{

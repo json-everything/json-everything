@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 
@@ -34,7 +33,7 @@ public class RequiredKeyword : IKeywordHandler
 	{
 		if (context.Instance.ValueKind is not JsonValueKind.Object) return KeywordEvaluation.Ignore;
 
-		List<string>? missing = null;
+		HashSet<string>? missing = null;
 
 		var required = keyword.RawValue.EnumerateArray().Select(x => x.GetString()!);
 		foreach (var requiredProperty in required)
@@ -57,7 +56,7 @@ public class RequiredKeyword : IKeywordHandler
 			Keyword = Name,
 			IsValid = false,
 			Error = ErrorMessages.GetRequired(context.Options.Culture)
-				.ReplaceToken("missing", missing, JsonSchemaSerializerContext.Default.ListString)
+				.ReplaceToken("missing", missing, JsonSchemaSerializerContext.Default.HashSetString)
 		};
 	}
 }

@@ -34,17 +34,13 @@
 
   <ItemGroup>
     <Compile Remove="DependenciesKeyword.cs" />
-    <Compile Remove="DependentRequiredKeyword.cs" />
     <Compile Remove="DependentSchemasKeyword.cs" />
     <Compile Remove="ElseKeyword.cs" />
-    <Compile Remove="ExclusiveMaximumKeyword.cs" />
-    <Compile Remove="ExclusiveMinimumKeyword.cs" />
     <Compile Remove="Format.cs" />
     <Compile Remove="FormatKeyword.cs" />
     <Compile Remove="Formats.cs" />
     <Compile Remove="IBaseDocument.cs" />
     <Compile Remove="IfKeyword.cs" />
-    <Compile Remove="IIdKeyword.cs" />
     <Compile Remove="JsonNodeBaseDocument.cs" />
     <Compile Remove="JsonSchemaBuilder.cs" />
     <Compile Remove="JsonSchemaBuilderExtensions.cs" />
@@ -55,18 +51,10 @@
     <Compile Remove="MetaSchemas.Draft6.cs" />
     <Compile Remove="MetaSchemas.Draft7.cs" />
     <Compile Remove="MetaSchemas.DraftNext.cs" />
-    <Compile Remove="NotKeyword.cs" />
-    <Compile Remove="OneOfKeyword.cs" />
-    <Compile Remove="PatternKeyword.cs" />
-    <Compile Remove="PatternPropertiesKeyword.cs" />
     <Compile Remove="PredicateFormat.cs" />
-    <Compile Remove="PrefixItemsKeyword.cs" />
     <Compile Remove="PropertyDependenciesKeyword.cs" />
     <Compile Remove="PropertyDependency.cs" />
-    <Compile Remove="PropertyNamesKeyword.cs" />
     <Compile Remove="RegexFormat.cs" />
-    <Compile Remove="RegexOrPattern.cs" />
-    <Compile Remove="SchemaKeyword.cs" />
     <Compile Remove="ThenKeyword.cs" />
     <Compile Remove="UnevaluatedItemsKeyword.cs" />
     <Compile Remove="UnevaluatedPropertiesKeyword.cs" />

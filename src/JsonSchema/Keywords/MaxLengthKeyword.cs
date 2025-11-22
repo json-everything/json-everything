@@ -1,4 +1,6 @@
-﻿using System.Text.Json;
+﻿using System;
+using System.Globalization;
+using System.Text.Json;
 
 namespace Json.Schema.Keywords;
 
@@ -17,7 +19,12 @@ public class MaxLengthKeyword : IKeywordHandler
 		if (value.ValueKind is not JsonValueKind.Number)
 			throw new JsonSchemaException($"'{Name}' value must be a number, found {value.ValueKind}");
 
-		var max = value.GetInt64();
+		var number = value.GetDouble();
+		var rounded = Math.Truncate(number);
+		if (number != rounded)
+			throw new JsonSchemaException($"'{Name}' value must be a integer, found {value.ValueKind}");
+
+		var max = (long)rounded;
 		if (max < 0)
 			throw new JsonSchemaException($"'{Name}' value must be non-negative, found {max}");
 
@@ -32,10 +39,11 @@ public class MaxLengthKeyword : IKeywordHandler
 	{
 		if (context.Instance.ValueKind is not JsonValueKind.String) return KeywordEvaluation.Ignore;
 
-		var instance = context.Instance.GetString()!.Length;
+		var str = context.Instance.GetString();
+		var length = new StringInfo(str!).LengthInTextElements;
 		var max = (long)keyword.Value!;
 
-		if (instance <= max)
+		if (length <= max)
 			return new KeywordEvaluation
 			{
 				Keyword = Name,
@@ -47,7 +55,7 @@ public class MaxLengthKeyword : IKeywordHandler
 			Keyword = Name,
 			IsValid = false,
 			Error = ErrorMessages.GetMaxLength(context.Options.Culture)
-				.ReplaceToken("received", instance)
+				.ReplaceToken("received", length)
 				.ReplaceToken("limit", max)
 		};
 	}

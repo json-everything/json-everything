@@ -6,14 +6,14 @@ using Json.Pointer;
 namespace Json.Schema.Keywords;
 
 /// <summary>
-/// Handles `allOf`.
+/// Handles `oneOf`.
 /// </summary>
-public class AllOfKeyword : IKeywordHandler
+public class OneOfKeyword : IKeywordHandler
 {
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
-	public string Name => "allOf";
+	public string Name => "oneOf";
 
 	public virtual object? ValidateKeywordValue(JsonElement value)
 	{
@@ -74,7 +74,7 @@ public class AllOfKeyword : IKeywordHandler
 		return new KeywordEvaluation
 		{
 			Keyword = Name,
-			IsValid = subschemaEvaluations.All(x => x.IsValid),
+			IsValid = subschemaEvaluations.Count(x => x.IsValid) == 1,
 			Details = subschemaEvaluations.ToArray()
 		};
 	}

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 
@@ -41,8 +42,8 @@ public class ContainsKeyword : IKeywordHandler
 
 		var limits = new ContainsLimits
 		{
-			Min = context.LocalSchema.TryGetProperty("minContains", out var minContains) ? minContains.GetInt32() : 1,
-			Max = context.LocalSchema.TryGetProperty("maxContains", out var maxContains) ? maxContains.GetInt32() : null
+			Min = context.LocalSchema.TryGetProperty("minContains", out var minContains) ? (int) Math.Truncate(minContains.GetDouble()) : 1,
+			Max = context.LocalSchema.TryGetProperty("maxContains", out var maxContains) ? (int)Math.Truncate(maxContains.GetDouble()) : null
 		};
 		keyword.Value = limits;
 	}
