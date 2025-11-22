@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
-using System.Threading.Tasks;
 using Json.Pointer;
 using Json.Schema.Keywords;
 using Json.Schema.Keywords.Draft201909;
@@ -22,7 +21,6 @@ public class JsonSchema
 {
 	private const string _unknownKeywordsAnnotationKey = "$unknownKeywords";
 
-	private readonly Dictionary<string, KeywordData>? _keywords;
 	private BuildOptions _options;
 
 	/// <summary>
@@ -294,8 +292,8 @@ public class JsonSchema
 	{
 		if (BoolValue.HasValue) return BoolValue.Value ? "true" : "false";
 
-		var idKeyword = _keywords!.SingleOrDefault(x => x.Value.Handler is IdKeyword);
-		return idKeyword.Value?.RawValue.GetString() ?? BaseUri.OriginalString;
+		var idKeyword = Root.Keywords.SingleOrDefault(x => x.Handler is IdKeyword);
+		return idKeyword?.RawValue.GetString() ?? BaseUri.OriginalString;
 	}
 }
 
@@ -348,21 +346,24 @@ public class JsonSchemaNode
 
 		foreach (var evaluation in keywordEvaluations)
 		{
-			if (evaluation.Details is null) continue;
-
-			foreach (var nestedResult in evaluation.Details)
+			if (evaluation.Details is not null)
 			{
-				results.Details ??= [];
-				results.Details.Add(nestedResult);
+				foreach (var nestedResult in evaluation.Details)
+				{
+					results.Details ??= [];
+					results.Details.Add(nestedResult);
+				}
 			}
-		}
-
-		foreach (var evaluation in keywordEvaluations)
-		{
-			if (evaluation.Error is null) continue;
-
-			results.Errors ??= [];
-			results.Errors[evaluation.Keyword] = evaluation.Error!;
+			if (evaluation.Error is not null)
+			{
+				results.Errors ??= [];
+				results.Errors[evaluation.Keyword] = evaluation.Error!;
+			}
+			else if (evaluation.Annotation is not null)
+			{
+				results.Annotations ??= [];
+				results.Annotations[evaluation.Keyword] = evaluation.Annotation.Value;
+			}
 		}
 
 		if (newScope)
@@ -391,7 +392,7 @@ public readonly struct KeywordEvaluation
 
 	public required string Keyword { get; init; }
 	public required bool IsValid { get; init; }
-	public string[]? Annotations { get; init; }
+	public JsonElement? Annotation { get; init; }
 	public EvaluationResults[]? Details { get; init; }
 	public string? Error { get; init; }
 

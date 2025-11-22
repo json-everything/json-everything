@@ -79,6 +79,16 @@ public static partial class ErrorMessages
 	/// <param name="name">The token name (without brackets)</param>
 	/// <param name="value">The value.</param>
 	/// <returns>The detokenized string.</returns>
+	public static string ReplaceToken(this string message, string name, bool value) => 
+		ReplaceToken(message, name, value, JsonSchemaSerializerContext.Default.Boolean);
+
+	/// <summary>
+	/// Replaces tokens in the form of `[[token]]` with a specified value, serialized as JSON.
+	/// </summary>
+	/// <param name="message">The message template.</param>
+	/// <param name="name">The token name (without brackets)</param>
+	/// <param name="value">The value.</param>
+	/// <returns>The detokenized string.</returns>
 	public static string ReplaceToken(this string message, string name, int value) => 
 		ReplaceToken(message, name, value, JsonSchemaSerializerContext.Default.Int32);
 
@@ -140,6 +150,6 @@ public static partial class ErrorMessages
 	/// <param name="name">The token name (without brackets)</param>
 	/// <param name="value">The value.</param>
 	/// <returns>The detokenized string.</returns>
-	public static string ReplaceToken(this string message, string name, JsonNode value) =>
-		ReplaceToken(message, name, value, JsonSchemaSerializerContext.Default.JsonNode);
+	public static string ReplaceToken(this string message, string name, JsonElement value) =>
+		ReplaceToken(message, name, value, JsonSchemaSerializerContext.Default.JsonElement);
 }

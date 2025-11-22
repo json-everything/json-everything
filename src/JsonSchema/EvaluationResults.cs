@@ -51,7 +51,7 @@ public class EvaluationResults
 	/// <summary>
 	/// The collection of annotations from this node.
 	/// </summary>
-	public Dictionary<string, JsonNode?>? Annotations { get; set; }
+	public Dictionary<string, JsonElement>? Annotations { get; set; }
 
 	/// <summary>
 	/// The collection of error from this node.
@@ -69,9 +69,9 @@ public class EvaluationResults
 
 	internal bool IncludeDroppedAnnotations { get; }
 
-	internal IReadOnlyDictionary<string, JsonNode?>? AnnotationsToSerialize =>
+	internal IReadOnlyDictionary<string, JsonElement>? AnnotationsToSerialize =>
 		Annotations is not null && Annotations.Count != 0
-			? Annotations!.Where(x => !(_backgroundAnnotations?.Contains(x.Key) ?? false)).ToDictionary(x => x.Key, x => x.Value)
+			? Annotations.Where(x => !(_backgroundAnnotations?.Contains(x.Key) ?? false)).ToDictionary(x => x.Key, x => x.Value)
 			: null;
 
 	internal EvaluationResults(JsonPointer evaluationPath, Uri schemaLocation, JsonPointer instanceLocation, EvaluationOptions options)
@@ -195,7 +195,7 @@ public class EvaluationResults
 	/// </summary>
 	/// <param name="keyword">The annotation key.  Typically the name of the keyword.</param>
 	/// <param name="value">The annotation value.</param>
-	public void SetAnnotation(string keyword, JsonNode? value)
+	public void SetAnnotation(string keyword, JsonElement value)
 	{
 		if (_ignoredAnnotations?.Any(x => x == keyword) ?? false) return;
 
@@ -210,9 +210,9 @@ public class EvaluationResults
 	/// <param name="keyword">The annotation key.</param>
 	/// <param name="annotation"></param>
 	/// <returns>The annotation or null.</returns>
-	public bool TryGetAnnotation(string keyword, out JsonNode? annotation)
+	public bool TryGetAnnotation(string keyword, out JsonElement annotation)
 	{
-		annotation = null;
+		annotation = default;
 		if (Annotations is null || Annotations.Count == 0) return false;
 		return Annotations!.TryGetValue(keyword, out annotation);
 	}
@@ -220,9 +220,9 @@ public class EvaluationResults
 	/// <summary>
 	/// Gets all annotations of a particular data type for the current evaluation level.
 	/// </summary>
-	/// <param name="keyword">The key under which the annotation is stored.  Typically a keyword.</param>
+	/// <param name="keyword">The key under which the annotation is stored.  Typically, a keyword.</param>
 	/// <returns>The set of all annotations for the current evaluation level.</returns>
-	public IEnumerable<JsonNode?> GetAllAnnotations(string keyword)
+	public IEnumerable<JsonElement?> GetAllAnnotations(string keyword)
 	{
 		if (Annotations is not null && Annotations!.TryGetValue(keyword, out var annotation))
 			yield return annotation;
@@ -289,7 +289,7 @@ public class EvaluationResultsJsonConverter : WeaklyTypedJsonConverter<Evaluatio
 			if (value.AnnotationsToSerialize != null)
 			{
 				writer.WritePropertyName("annotations");
-				options.WriteDictionary(writer, value.AnnotationsToSerialize!, JsonSchemaSerializerContext.Default.JsonNode);
+				options.WriteDictionary(writer, value.AnnotationsToSerialize!, JsonSchemaSerializerContext.Default.JsonElement);
 			}
 		}
 		else
@@ -302,7 +302,7 @@ public class EvaluationResultsJsonConverter : WeaklyTypedJsonConverter<Evaluatio
 			if (value is { IncludeDroppedAnnotations: true, AnnotationsToSerialize: not null })
 			{
 				writer.WritePropertyName("droppedAnnotations");
-				options.WriteDictionary(writer, value.AnnotationsToSerialize!, JsonSchemaSerializerContext.Default.JsonNode);
+				options.WriteDictionary(writer, value.AnnotationsToSerialize!, JsonSchemaSerializerContext.Default.JsonElement);
 			}
 		}
 

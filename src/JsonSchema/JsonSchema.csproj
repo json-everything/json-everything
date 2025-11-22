@@ -33,19 +33,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="ContentEncodingKeyword.cs" />
-    <Compile Remove="ContentMediaTypeKeyword.cs" />
-    <Compile Remove="ContentSchemaKeyword.cs" />
-    <Compile Remove="DefaultKeyword.cs" />
-    <Compile Remove="DefinitionsKeyword.cs" />
     <Compile Remove="DependenciesKeyword.cs" />
     <Compile Remove="DependentRequiredKeyword.cs" />
     <Compile Remove="DependentSchemasKeyword.cs" />
-    <Compile Remove="DeprecatedKeyword.cs" />
-    <Compile Remove="DescriptionKeyword.cs" />
     <Compile Remove="ElseKeyword.cs" />
     <Compile Remove="EnumKeyword.cs" />
-    <Compile Remove="ExamplesKeyword.cs" />
     <Compile Remove="ExclusiveMaximumKeyword.cs" />
     <Compile Remove="ExclusiveMinimumKeyword.cs" />
     <Compile Remove="Format.cs" />
@@ -58,7 +50,6 @@
     <Compile Remove="JsonSchemaBuilder.cs" />
     <Compile Remove="JsonSchemaBuilderExtensions.cs" />
     <Compile Remove="JsonSchemaExtensions.KeywordAccess.cs" />
-    <Compile Remove="MaxContainsKeyword.cs" />
     <Compile Remove="MaximumKeyword.cs" />
     <Compile Remove="MaxItemsKeyword.cs" />
     <Compile Remove="MaxLengthKeyword.cs" />
@@ -69,7 +60,6 @@
     <Compile Remove="MetaSchemas.Draft6.cs" />
     <Compile Remove="MetaSchemas.Draft7.cs" />
     <Compile Remove="MetaSchemas.DraftNext.cs" />
-    <Compile Remove="MinContainsKeyword.cs" />
     <Compile Remove="MinimumKeyword.cs" />
     <Compile Remove="MinItemsKeyword.cs" />
     <Compile Remove="MinLengthKeyword.cs" />
@@ -84,13 +74,11 @@
     <Compile Remove="PropertyDependenciesKeyword.cs" />
     <Compile Remove="PropertyDependency.cs" />
     <Compile Remove="PropertyNamesKeyword.cs" />
-    <Compile Remove="ReadOnlyKeyword.cs" />
     <Compile Remove="RegexFormat.cs" />
     <Compile Remove="RegexOrPattern.cs" />
     <Compile Remove="RequiredKeyword.cs" />
     <Compile Remove="SchemaKeyword.cs" />
     <Compile Remove="ThenKeyword.cs" />
-    <Compile Remove="TitleKeyword.cs" />
     <Compile Remove="UnevaluatedItemsKeyword.cs" />
     <Compile Remove="UnevaluatedPropertiesKeyword.cs" />
     <Compile Remove="UniqueItemsKeyword.cs" />
@@ -104,7 +92,6 @@
     <Compile Remove="VocabularyAttribute.cs" />
     <Compile Remove="VocabularyKeyword.cs" />
     <Compile Remove="VocabularyRegistry.cs" />
-    <Compile Remove="WriteOnlyKeyword.cs" />
   </ItemGroup>
 
   <ItemGroup>
