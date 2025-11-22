@@ -33,13 +33,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="AdditionalItemsKeyword.cs" />
-    <Compile Remove="AdditionalPropertiesKeyword.cs" />
-    <Compile Remove="AllOfKeyword.cs" />
-    <Compile Remove="AnyOfKeyword.cs" />
-    <Compile Remove="CommentKeyword.cs" />
-    <Compile Remove="ConstKeyword.cs" />
-    <Compile Remove="ContainsKeyword.cs" />
     <Compile Remove="ContentEncodingKeyword.cs" />
     <Compile Remove="ContentMediaTypeKeyword.cs" />
     <Compile Remove="ContentSchemaKeyword.cs" />

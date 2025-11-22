@@ -34,7 +34,9 @@ public class AdditionalItemsKeyword : IKeywordHandler
 		};
 
 		var node = JsonSchema.BuildNode(defContext);
-		keyword.Value = items.EnumerateArray().Count(); // how is there a .GetPropertyCount(), but not a .GetItemCount()?
+		keyword.Value = items.ValueKind == JsonValueKind.Undefined
+			? 0
+			: items.EnumerateArray().Count(); // how is there a .GetPropertyCount(), but not a .GetItemCount()?
 		keyword.Subschemas = [node];
 	}
 
@@ -55,7 +57,7 @@ public class AdditionalItemsKeyword : IKeywordHandler
 			{
 				InstanceLocation = context.InstanceLocation.Combine(i),
 				Instance = instance,
-				EvaluationPath = evaluationPath
+				EvaluationPath = evaluationPath.Combine(Name)
 			};
 
 			subschemaEvaluations.Add(subschema.Evaluate(itemContext));
