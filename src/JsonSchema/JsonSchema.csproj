@@ -98,8 +98,6 @@
     <Compile Remove="PropertyDependency.cs" />
     <Compile Remove="PropertyNamesKeyword.cs" />
     <Compile Remove="ReadOnlyKeyword.cs" />
-    <Compile Remove="RecursiveAnchorKeyword.cs" />
-    <Compile Remove="RecursiveRefKeyword.cs" />
     <Compile Remove="RegexFormat.cs" />
     <Compile Remove="RegexOrPattern.cs" />
     <Compile Remove="RequiredKeyword.cs" />

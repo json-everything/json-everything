@@ -4,7 +4,7 @@ namespace Json.Schema;
 
 public partial class SchemaKeywordRegistry
 {
-	public static SchemaKeywordRegistry Draft202012 { get; } = new(
+	public static SchemaKeywordRegistry V1 { get; } = new(
 		//new AdditionalItemsKeyword(),
 		//new AdditionalPropertiesKeyword(),
 		//new AllOfKeyword(),
@@ -25,7 +25,7 @@ public partial class SchemaKeywordRegistry
 		//new DeprecatedKeyword(),
 		//new DescriptionKeyword(),
 		new DynamicAnchorKeyword(),
-		new Keywords.Draft202012.DynamicRefKeyword(),
+		new DynamicRefKeyword(),
 		//new ElseKeyword(),
 		//new EnumKeyword(),
 		//new ExamplesKeyword(),

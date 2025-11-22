@@ -15,10 +15,10 @@ public class PropertiesKeyword : IKeywordHandler
 	/// </summary>
 	public string Name => "properties";
 
-	public object? ValidateValue(JsonElement value)
+	public virtual object? ValidateValue(JsonElement value)
 	{
 		if (value.ValueKind != JsonValueKind.Object)
-			throw new JsonSchemaException($"'properties' value must be an object, found {value.ValueKind}");
+			throw new JsonSchemaException($"'{Name}' value must be an object, found {value.ValueKind}");
 
 		if (value.EnumerateObject().Any(x => x.Value.ValueKind is not (JsonValueKind.Object or JsonValueKind.True or JsonValueKind.False)))
 			throw new JsonSchemaException("Values must be valid schemas");
@@ -26,7 +26,7 @@ public class PropertiesKeyword : IKeywordHandler
 		return null;
 	}
 
-	public void BuildSubschemas(KeywordData keyword, BuildContext context)
+	public virtual void BuildSubschemas(KeywordData keyword, BuildContext context)
 	{
 		var subschemas = new List<JsonSchemaNode>();
 		foreach (var definition in keyword.RawValue.EnumerateObject())
@@ -43,7 +43,7 @@ public class PropertiesKeyword : IKeywordHandler
 		keyword.Subschemas = subschemas.ToArray();
 	}
 
-	public KeywordEvaluation Evaluate(KeywordData keyword, EvaluationContext context)
+	public virtual KeywordEvaluation Evaluate(KeywordData keyword, EvaluationContext context)
 	{
 		if (context.Instance.ValueKind != JsonValueKind.Object) return KeywordEvaluation.Ignore;
 

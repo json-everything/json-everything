@@ -15,18 +15,18 @@ public class RefKeyword : IKeywordHandler
 	/// </summary>
 	public string Name => "$ref";
 
-	public object? ValidateValue(JsonElement value)
+	public virtual object? ValidateValue(JsonElement value)
 	{
 		if (value.ValueKind != JsonValueKind.String)
-			throw new JsonSchemaException($"'$ref' value must be a string, found {value.ValueKind}");
+			throw new JsonSchemaException($"'{Name}' value must be a string, found {value.ValueKind}");
 
 		if (!Uri.TryCreate(value.GetString(), UriKind.RelativeOrAbsolute, out var uri))
-			throw new JsonSchemaException("'$ref' value must be a valid URI");
+			throw new JsonSchemaException($"'{Name}' value must be a valid URI");
 
 		return uri;
 	}
 
-	public void BuildSubschemas(KeywordData keyword, BuildContext context)
+	public virtual void BuildSubschemas(KeywordData keyword, BuildContext context)
 	{
 		var reference = (Uri)keyword.Value!;
 		var newUri = new Uri(context.BaseUri, reference);
@@ -56,7 +56,7 @@ public class RefKeyword : IKeywordHandler
 			keyword.Subschemas = [targetSchema];
 	}
 
-	public KeywordEvaluation Evaluate(KeywordData keyword, EvaluationContext context)
+	public virtual KeywordEvaluation Evaluate(KeywordData keyword, EvaluationContext context)
 	{
 		var newUri = (Uri)keyword.Value!;
 		var subschema = keyword.Subschemas.FirstOrDefault();

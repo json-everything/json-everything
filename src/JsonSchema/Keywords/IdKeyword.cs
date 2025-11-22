@@ -15,24 +15,24 @@ public class IdKeyword : IKeywordHandler //, IIdKeyword
 	/// </summary>
 	public string Name => "$id";
 
-	public object? ValidateValue(JsonElement value)
+	public virtual object? ValidateValue(JsonElement value)
 	{
 		if (value.ValueKind != JsonValueKind.String || 
 		    !Uri.TryCreate(value.GetString(), UriKind.RelativeOrAbsolute, out var uri))
-			throw new JsonSchemaException("$id requires a string in the format of a URI");
+			throw new JsonSchemaException($"'{Name}' requires a string in the format of a URI");
 
 		var testUri = new Uri(_testUri, uri);
 		if (!string.IsNullOrEmpty(testUri.Fragment) && testUri.Fragment != "#")
-			throw new JsonSchemaException("$id must not contain a fragment");
+			throw new JsonSchemaException($"'{Name}' must not contain a fragment");
 
 		return uri;
 	}
 
-	public void BuildSubschemas(KeywordData keyword, BuildContext context)
+	public virtual void BuildSubschemas(KeywordData keyword, BuildContext context)
 	{
 	}
 
-	public KeywordEvaluation Evaluate(KeywordData keyword, EvaluationContext context)
+	public virtual KeywordEvaluation Evaluate(KeywordData keyword, EvaluationContext context)
 	{
 		return KeywordEvaluation.Ignore;
 	}

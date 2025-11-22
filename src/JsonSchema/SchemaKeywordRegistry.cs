@@ -39,7 +39,12 @@ public partial class SchemaKeywordRegistry
 
 	private readonly MultiLookupConcurrentDictionary<KeywordMetaData> _keywordData;
 
-	public static SchemaKeywordRegistry Default { get; set; } = Draft202012;
+	public static SchemaKeywordRegistry Default { get; set; }
+
+	static SchemaKeywordRegistry()
+	{
+		Default = V1;
+	}
 
 	public SchemaKeywordRegistry(params IKeywordHandler[] keywordData)
 	{

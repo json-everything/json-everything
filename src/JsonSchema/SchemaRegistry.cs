@@ -132,6 +132,22 @@ public class SchemaRegistry
 		};
 	}
 
+	internal void RegisterRecursiveAnchor(Uri uri, JsonSchemaNode node)
+	{
+		uri = MakeAbsolute(uri);
+		var registration = _registered.GetValueOrDefault(uri);
+		if (registration != null)
+		{
+			registration.RecursiveAnchor = node;
+			return;
+		}
+
+		_registered[uri] = new Registration
+		{
+			RecursiveAnchor = node
+		};
+	}
+
 	private void RegisterSchema(Uri? uri, JsonSchema schema)
 	{
 		uri = MakeAbsolute(uri);
@@ -173,6 +189,7 @@ public class SchemaRegistry
 		return registration.Anchors!.GetValueOrDefault(anchor);
 	}
 
+	// need this to check for local dynamic anchor for 2020-12 (bookend)
 	internal JsonSchemaNode? GetDynamic(Uri baseUri, string? anchor)
 	{
 		var registration = GetRegistration(baseUri);
@@ -182,12 +199,26 @@ public class SchemaRegistry
 		return registration.DynamicAnchors!.GetValueOrDefault(anchor);
 	}
 
-	internal JsonSchemaNode? Get(DynamicScope scope, string anchor) =>
+	internal JsonSchemaNode? GetDynamic(DynamicScope scope, string anchor) =>
 		scope
 			.Reverse()
 			.Select(GetRegistration)
-			.Select(registration => registration?.DynamicAnchors?.GetValueOrDefault(anchor))
+			.Select(x => x?.DynamicAnchors?.GetValueOrDefault(anchor))
 			.FirstOrDefault();
+
+	internal JsonSchemaNode? GetRecursive(DynamicScope scope)
+	{
+		Registration? target = null;
+		foreach (var uri in scope)
+		{
+			var registration = GetRegistration(uri);
+			if (registration?.RecursiveAnchor is null) break;
+
+			target = registration;
+		}
+
+		return target?.RecursiveAnchor;
+	}
 
 	private Registration? GetRegistration(Uri baseUri)
 	{
