@@ -15,7 +15,7 @@ public class ItemsKeyword : IKeywordHandler
 	/// </summary>
 	public string Name => "items";
 
-	public virtual object? ValidateValue(JsonElement value)
+	public virtual object? ValidateKeywordValue(JsonElement value)
 	{
 		switch (value.ValueKind)
 		{

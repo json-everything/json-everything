@@ -13,7 +13,7 @@ public class RecursiveAnchorKeyword : IKeywordHandler
 	/// </summary>
 	public string Name => "$recursiveAnchor";
 
-	public virtual object? ValidateValue(JsonElement value)
+	public virtual object? ValidateKeywordValue(JsonElement value)
 	{
 		return value.ValueKind switch
 		{

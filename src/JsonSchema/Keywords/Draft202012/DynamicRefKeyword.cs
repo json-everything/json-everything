@@ -17,7 +17,7 @@ public class DynamicRefKeyword : Json.Schema.Keywords.DynamicRefKeyword
 		public bool IsDynamic { get; set; }
 	}
 
-	public override object? ValidateValue(JsonElement value)
+	public override object? ValidateKeywordValue(JsonElement value)
 	{
 		if (value.ValueKind != JsonValueKind.String)
 			throw new JsonSchemaException($"'{Name}' value must be a string, found {value.ValueKind}");

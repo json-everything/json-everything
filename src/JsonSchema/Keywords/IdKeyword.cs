@@ -15,7 +15,7 @@ public class IdKeyword : IKeywordHandler //, IIdKeyword
 	/// </summary>
 	public string Name => "$id";
 
-	public virtual object? ValidateValue(JsonElement value)
+	public virtual object? ValidateKeywordValue(JsonElement value)
 	{
 		if (value.ValueKind != JsonValueKind.String || 
 		    !Uri.TryCreate(value.GetString(), UriKind.RelativeOrAbsolute, out var uri))
@@ -23,7 +23,7 @@ public class IdKeyword : IKeywordHandler //, IIdKeyword
 
 		var testUri = new Uri(_testUri, uri);
 		if (!string.IsNullOrEmpty(testUri.Fragment) && testUri.Fragment != "#")
-			throw new JsonSchemaException($"'{Name}' must not contain a fragment");
+			throw new JsonSchemaException($"'{Name}' must not contain a non-empty fragment");
 
 		return uri;
 	}

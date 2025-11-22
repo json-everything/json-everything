@@ -86,6 +86,276 @@ public static partial class ErrorMessages
 	}
 
 	/// <summary>
+	/// Gets or sets the error message for <see cref="EnumKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the value provided in the JSON instance
+	///   - [[values]] - the available values in the schema
+	///
+	/// The default messages are static and do not use these tokens as enum values
+	/// may be any JSON type and could be quite large.  They are provided to support
+	/// custom messages.
+	/// </remarks>
+	public static string? Enum { get; set; }
+
+	/// <summary>
+	/// Gets the error message for <see cref="EnumKeyword"/> for a specific culture.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the value provided in the JSON instance
+	///   - [[values]] - the available values in the schema
+	///
+	/// The default messages are static and do not use these tokens as enum values
+	/// may be any JSON type and could be quite large.  They are provided to support
+	/// custom messages.
+	/// </remarks>
+	public static string GetEnum(CultureInfo? culture)
+	{
+		return Enum ?? Get(culture);
+	}
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="MinimumKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the value provided in the JSON instance
+	///   - [[limit]] - the upper limit in the schema
+	/// </remarks>
+	public static string? Maximum { get; set; }
+
+	/// <summary>
+	/// Gets the error message for <see cref="MinimumKeyword"/> for a specific culture.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the value provided in the JSON instance
+	///   - [[limit]] - the upper limit in the schema
+	/// </remarks>
+	public static string GetMaximum(CultureInfo? culture)
+	{
+		return Maximum ?? Get(culture);
+	}
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="MaxItemsKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the number of items provided in the JSON instance
+	///   - [[limit]] - the upper limit specified in the schema
+	/// </remarks>
+	public static string? MaxItems { get; set; }
+
+	/// <summary>
+	/// Gets the error message for <see cref="MaxItemsKeyword"/> for a specific culture.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the number of items provided in the JSON instance
+	///   - [[limit]] - the upper limit specified in the schema
+	/// </remarks>
+	public static string GetMaxItems(CultureInfo? culture)
+	{
+		return MaxItems ?? Get(culture);
+	}
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="MaxLengthKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the length of the JSON string
+	///   - [[limit]] - the upper limit specified in the schema
+	/// </remarks>
+	public static string? MaxLength { get; set; }
+
+	/// <summary>
+	/// Gets the error message for <see cref="MaxLengthKeyword"/> for a specific culture.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the length of the JSON string
+	///   - [[limit]] - the upper limit specified in the schema
+	/// </remarks>
+	public static string GetMaxLength(CultureInfo? culture)
+	{
+		return MaxLength ?? Get(culture);
+	}
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="MaxPropertiesKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the number of properties provided in the JSON instance
+	///   - [[limit]] - the upper limit specified in the schema
+	/// </remarks>
+	public static string? MaxProperties { get; set; }
+
+	/// <summary>
+	/// Gets the error message for <see cref="MaxPropertiesKeyword"/> for a specific culture.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the number of properties provided in the JSON instance
+	///   - [[limit]] - the upper limit specified in the schema
+	/// </remarks>
+	public static string GetMaxProperties(CultureInfo? culture)
+	{
+		return MaxProperties ?? Get(culture);
+	}
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="MinimumKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the value provided in the JSON instance
+	///   - [[limit]] - the lower limit in the schema
+	/// </remarks>
+	public static string? Minimum { get; set; }
+
+	/// <summary>
+	/// Gets the error message for <see cref="MinimumKeyword"/> for a specific culture.
+	/// </summary>
+	/// <param name="culture"></param>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the value provided in the JSON instance
+	///   - [[limit]] - the lower limit in the schema
+	/// </remarks>
+	public static string GetMinimum(CultureInfo? culture)
+	{
+		return Minimum ?? Get(culture);
+	}
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="MinItemsKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the number of items provided in the JSON instance
+	///   - [[limit]] - the lower limit specified in the schema
+	/// </remarks>
+	public static string? MinItems { get; set; }
+
+	/// <summary>
+	/// Gets the error message for <see cref="MinItemsKeyword"/> for a specific culture.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the number of items provided in the JSON instance
+	///   - [[limit]] - the lower limit specified in the schema
+	/// </remarks>
+	public static string GetMinItems(CultureInfo? culture)
+	{
+		return MinItems ?? Get(culture);
+	}
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="MinLengthKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the length of the JSON string
+	///   - [[limit]] - the lower limit specified in the schema
+	/// </remarks>
+	public static string? MinLength { get; set; }
+
+	/// <summary>
+	/// Gets the error message for <see cref="MinLengthKeyword"/> for a specific culture.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the length of the JSON string
+	///   - [[limit]] - the lower limit specified in the schema
+	/// </remarks>
+	public static string GetMinLength(CultureInfo? culture)
+	{
+		return MinLength ?? Get(culture);
+	}
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="MinPropertiesKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the number of properties provided in the JSON instance
+	///   - [[limit]] - the lower limit specified in the schema
+	/// </remarks>
+	public static string? MinProperties { get; set; }
+
+	/// <summary>
+	/// Gets the error message for <see cref="MinPropertiesKeyword"/> for a specific culture.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the number of properties provided in the JSON instance
+	///   - [[limit]] - the lower limit specified in the schema
+	/// </remarks>
+	public static string GetMinProperties(CultureInfo? culture)
+	{
+		return MinProperties ?? Get(culture);
+	}
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="MultipleOfKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the value provided in the JSON instance
+	///   - [[divisor]] - the required divisor
+	/// </remarks>
+	public static string? MultipleOf { get; set; }
+
+	/// <summary>
+	/// Gets the error message for <see cref="MultipleOfKeyword"/> for a specific culture.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the value provided in the JSON instance
+	///   - [[divisor]] - the required divisor
+	/// </remarks>
+	public static string GetMultipleOf(CultureInfo? culture)
+	{
+		return MultipleOf ?? Get(culture);
+	}
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="RequiredKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[missing]] - the properties missing from the JSON instance
+	/// </remarks>
+	public static string? Required { get; set; }
+
+	/// <summary>
+	/// Gets the error message for <see cref="RequiredKeyword"/> for a specific culture.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[missing]] - the properties missing from the JSON instance
+	/// </remarks>
+	public static string GetRequired(CultureInfo? culture)
+	{
+		return Required ?? Get(culture);
+	}
+
+	/// <summary>
 	/// Gets or sets the error message for <see cref="TypeKeyword"/>.
 	/// </summary>
 	/// <remarks>

@@ -21,7 +21,7 @@ public partial class AnchorKeyword : IKeywordHandler
 	public virtual Regex AnchorPattern { get; } = new("^[A-Za-z_][-A-Za-z0-9._]*$", RegexOptions.Compiled);
 #endif
 
-	public virtual object? ValidateValue(JsonElement value)
+	public virtual object? ValidateKeywordValue(JsonElement value)
 	{
 		if (value.ValueKind != JsonValueKind.String)
 			throw new JsonSchemaException($"'{Name}' value must be a string, found {value.ValueKind}");

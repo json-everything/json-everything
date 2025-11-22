@@ -12,7 +12,7 @@ public class WriteOnlyKeyword : IKeywordHandler
 	/// </summary>
 	public string Name => "writeOnly";
 
-	public virtual object? ValidateValue(JsonElement value)
+	public virtual object? ValidateKeywordValue(JsonElement value)
 	{
 		if (value.ValueKind is not (JsonValueKind.True or JsonValueKind.False))
 			throw new JsonSchemaException($"'{Name}' value must be a boolean, found {value.ValueKind}");

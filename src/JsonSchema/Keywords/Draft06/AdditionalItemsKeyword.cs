@@ -14,7 +14,7 @@ public class AdditionalItemsKeyword : IKeywordHandler
 	/// </summary>
 	public string Name => "additionalItems";
 
-	public virtual object? ValidateValue(JsonElement value)
+	public virtual object? ValidateKeywordValue(JsonElement value)
 	{
 		if (value.ValueKind is not (JsonValueKind.Object or JsonValueKind.True or JsonValueKind.False))
 			throw new JsonSchemaException($"'{Name}' value must be a valid schema, found {value.ValueKind}");
@@ -35,7 +35,7 @@ public class AdditionalItemsKeyword : IKeywordHandler
 
 		var node = JsonSchema.BuildNode(defContext);
 		keyword.Value = items.ValueKind == JsonValueKind.Undefined
-			? 0
+			? null
 			: items.EnumerateArray().Count(); // how is there a .GetPropertyCount(), but not a .GetItemCount()?
 		keyword.Subschemas = [node];
 	}
@@ -44,14 +44,15 @@ public class AdditionalItemsKeyword : IKeywordHandler
 	{
 		if (context.Instance.ValueKind != JsonValueKind.Array) return KeywordEvaluation.Ignore;
 
-		var itemsCount = (int)keyword.Value!;
+		var itemsCount = (int?)keyword.Value;
+		if (itemsCount is null) return KeywordEvaluation.Ignore;
 
 		var subschemaEvaluations = new List<EvaluationResults>();
 		var subschema = keyword.Subschemas[0];
 
 		var evaluationPath = context.EvaluationPath.Combine(Name);
 		var i = 0;
-		foreach (var instance in context.Instance.EnumerateArray().Skip(itemsCount))
+		foreach (var instance in context.Instance.EnumerateArray().Skip(itemsCount.Value))
 		{
 			var itemContext = context with
 			{

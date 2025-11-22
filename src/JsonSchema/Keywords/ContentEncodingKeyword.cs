@@ -12,7 +12,7 @@ public class ContentEncodingKeyword : IKeywordHandler
 	/// </summary>
 	public string Name => "contentEncoding";
 
-	public virtual object? ValidateValue(JsonElement value)
+	public virtual object? ValidateKeywordValue(JsonElement value)
 	{
 		if (value.ValueKind is not (JsonValueKind.String))
 			throw new JsonSchemaException($"'{Name}' value must be a string, found {value.ValueKind}");

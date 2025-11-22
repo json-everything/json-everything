@@ -144,7 +144,7 @@ public class JsonSchema
 				                  throw new UnreachableException("Cannot get evaluation order for keyword"),
 				RawValue = value.Clone(),
 				Handler = handler,
-				Value = handler.ValidateValue(value)
+				Value = handler.ValidateKeywordValue(value)
 			};
 			handler.BuildSubschemas(data, context);
 
@@ -176,12 +176,20 @@ public class JsonSchema
 		};
 
 		// TODO: for draft 6/7, might need to register an anchor stored in $id
+		var oldIdKeyword = keywordData.FirstOrDefault(x => x.Handler is Keywords.Draft06.IdKeyword);
+		if (oldIdKeyword is not null)
+		{
+			var uri = (Uri)oldIdKeyword.Value!;
+			if (uri.OriginalString.StartsWith("#"))
+				context.Options.SchemaRegistry.RegisterAnchor(context.BaseUri, uri.OriginalString[1..], node);
+		}
+
 		var anchorKeyword = keywordData.FirstOrDefault(x => x.Handler is AnchorKeyword);
-		if (anchorKeyword is not null) 
+		if (anchorKeyword is not null)
 			context.Options.SchemaRegistry.RegisterAnchor(context.BaseUri, (string)anchorKeyword.Value!, node);
 
 		var dynamicAnchorKeyword = keywordData.FirstOrDefault(x => x.Handler is DynamicAnchorKeyword);
-		if (dynamicAnchorKeyword is not null) 
+		if (dynamicAnchorKeyword is not null)
 			context.Options.SchemaRegistry.RegisterDynamicAnchor(context.BaseUri, (string)dynamicAnchorKeyword.Value!, node);
 
 		var recursiveAnchorKeyword = keywordData.FirstOrDefault(x => x.Handler is RecursiveAnchorKeyword);
@@ -301,7 +309,7 @@ public interface IKeywordHandler
 {
 	string Name { get; }
 
-	object? ValidateValue(JsonElement value);
+	object? ValidateKeywordValue(JsonElement value);
 	void BuildSubschemas(KeywordData keyword, BuildContext context);
 	KeywordEvaluation Evaluate(KeywordData keyword, EvaluationContext context);
 }

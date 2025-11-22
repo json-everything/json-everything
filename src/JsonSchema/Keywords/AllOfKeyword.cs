@@ -16,7 +16,7 @@ public class AllOfKeyword : IKeywordHandler
 	/// </summary>
 	public string Name => "allOf";
 
-	public virtual object? ValidateValue(JsonElement value)
+	public virtual object? ValidateKeywordValue(JsonElement value)
 	{
 		if (value.ValueKind is not JsonValueKind.Array)
 			throw new JsonSchemaException($"'{Name}' value must be an array, found {value.ValueKind}.");

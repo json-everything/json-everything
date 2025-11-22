@@ -15,7 +15,7 @@ public class RefKeyword : IKeywordHandler
 	/// </summary>
 	public string Name => "$ref";
 
-	public virtual object? ValidateValue(JsonElement value)
+	public virtual object? ValidateKeywordValue(JsonElement value)
 	{
 		if (value.ValueKind != JsonValueKind.String)
 			throw new JsonSchemaException($"'{Name}' value must be a string, found {value.ValueKind}");

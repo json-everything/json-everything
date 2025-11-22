@@ -23,7 +23,7 @@ public class AdditionalPropertiesKeyword : IKeywordHandler
 	/// </summary>
 	public string Name => "additionalProperties";
 
-	public virtual object? ValidateValue(JsonElement value)
+	public virtual object? ValidateKeywordValue(JsonElement value)
 	{
 		if (value.ValueKind is not (JsonValueKind.Object or JsonValueKind.True or JsonValueKind.False))
 			throw new JsonSchemaException($"'{Name}' value must be a valid schema, found {value.ValueKind}");
