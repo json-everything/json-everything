@@ -9,12 +9,12 @@ namespace Json.Schema.Keywords;
 /// Handles `additionalProperties`.
 /// </summary>
 [DependsOnAnnotationsFrom(typeof(PropertiesKeyword))]
-//[DependsOnAnnotationsFrom(typeof(PatternPropertiesKeyword))]
+[DependsOnAnnotationsFrom(typeof(PatternPropertiesKeyword))]
 public class AdditionalPropertiesKeyword : IKeywordHandler
 {
 	private class KnownProperties
 	{
-		public string[] Properties { get; set; } = [];
+		public HashSet<string> Properties { get; set; } = [];
 		public Regex[] PatternProperties { get; set; } = [];
 	}
 
@@ -45,7 +45,18 @@ public class AdditionalPropertiesKeyword : IKeywordHandler
 		var knownProperties = new KnownProperties();
 
 		if (context.LocalSchema.TryGetProperty("properties", out var properties))
-			knownProperties.Properties = properties.EnumerateObject().Select(x => x.Name).ToArray();
+			knownProperties.Properties =
+			[
+				..properties
+					.EnumerateObject()
+					.Select(x => x.Name)
+			];
+
+		if (context.LocalSchema.TryGetProperty("patternProperties", out var patternProperties))
+			knownProperties.PatternProperties = patternProperties
+				.EnumerateObject()
+				.Select(x => new Regex(x.Name, RegexOptions.ECMAScript | RegexOptions.Compiled))
+				.ToArray();
 
 		keyword.Value = knownProperties;
 	}
@@ -54,10 +65,7 @@ public class AdditionalPropertiesKeyword : IKeywordHandler
 	{
 		if (context.Instance.ValueKind != JsonValueKind.Object) return KeywordEvaluation.Ignore;
 
-		// TODO: handle properties/patternProperties
 		var knownProperties = (KnownProperties) keyword.Value!;
-
-		var propertiesToSkip = new HashSet<string>(knownProperties.Properties);
 
 		var subschemaEvaluations = new List<EvaluationResults>();
 		var subschema = keyword.Subschemas[0];
@@ -65,13 +73,14 @@ public class AdditionalPropertiesKeyword : IKeywordHandler
 		var evaluationPath = context.EvaluationPath.Combine(Name);
 		foreach (var instance in context.Instance.EnumerateObject())
 		{
-			if (propertiesToSkip.Contains(instance.Name)) continue;
+			if (knownProperties.Properties.Contains(instance.Name)) continue;
+			if (knownProperties.PatternProperties.Any(x => x.IsMatch(instance.Name))) continue;
 
 			var itemContext = context with
 			{
 				InstanceLocation = context.InstanceLocation.Combine(instance.Name),
 				Instance = instance.Value,
-				EvaluationPath = evaluationPath.Combine(Name)
+				EvaluationPath = evaluationPath
 			};
 
 			subschemaEvaluations.Add(subschema.Evaluate(itemContext));

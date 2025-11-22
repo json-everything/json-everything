@@ -1,4 +1,6 @@
-﻿using System.Text.Json;
+﻿using System;
+using System.Globalization;
+using System.Text.Json;
 
 namespace Json.Schema.Keywords;
 
@@ -17,7 +19,12 @@ public class MinLengthKeyword : IKeywordHandler
 		if (value.ValueKind is not JsonValueKind.Number)
 			throw new JsonSchemaException($"'{Name}' value must be a number, found {value.ValueKind}");
 
-		var min = value.GetInt64();
+		var number = value.GetDouble();
+		var rounded = Math.Truncate(number);
+		if (number != rounded)
+			throw new JsonSchemaException($"'{Name}' value must be a integer, found {value.ValueKind}");
+
+		var min = (long)rounded;
 		if (min < 0)
 			throw new JsonSchemaException($"'{Name}' value must be non-negative, found {min}");
 
@@ -32,10 +39,11 @@ public class MinLengthKeyword : IKeywordHandler
 	{
 		if (context.Instance.ValueKind is not JsonValueKind.String) return KeywordEvaluation.Ignore;
 
-		var instance = context.Instance.GetString()!.Length;
+		var str = context.Instance.GetString();
+		var length = new StringInfo(str!).LengthInTextElements; 
 		var min = (long)keyword.Value!;
 
-		if (min <= instance)
+		if (min <= length)
 			return new KeywordEvaluation
 			{
 				Keyword = Name,
@@ -47,7 +55,7 @@ public class MinLengthKeyword : IKeywordHandler
 			Keyword = Name,
 			IsValid = false,
 			Error = ErrorMessages.GetMinLength(context.Options.Culture)
-				.ReplaceToken("received", instance)
+				.ReplaceToken("received", length)
 				.ReplaceToken("limit", min)
 		};
 	}

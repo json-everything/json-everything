@@ -86,6 +86,28 @@ public static partial class ErrorMessages
 	}
 
 	/// <summary>
+	/// Gets or sets the error message for <see cref="DependentRequiredKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[missing]] - the value in the schema
+	/// </remarks>
+	public static string? DependentRequired { get; set; }
+
+	/// <summary>
+	/// Gets the error message for <see cref="DependentRequiredKeyword"/> for a specific culture.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[missing]] - the value in the schema
+	/// </remarks>
+	public static string GetDependentRequired(CultureInfo? culture)
+	{
+		return DependentRequired ?? Get(culture);
+	}
+
+	/// <summary>
 	/// Gets or sets the error message for <see cref="EnumKeyword"/>.
 	/// </summary>
 	/// <remarks>
@@ -115,6 +137,54 @@ public static partial class ErrorMessages
 	public static string GetEnum(CultureInfo? culture)
 	{
 		return Enum ?? Get(culture);
+	}
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="ExclusiveMaximumKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the value provided in the JSON instance
+	///   - [[limit]] - the upper limit in the schema
+	/// </remarks>
+	public static string? ExclusiveMaximum { get; set; }
+
+	/// <summary>
+	/// Gets the error message for <see cref="ExclusiveMaximumKeyword"/> for a specific culture.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the value provided in the JSON instance
+	///   - [[limit]] - the upper limit in the schema
+	/// </remarks>
+	public static string GetExclusiveMaximum(CultureInfo? culture)
+	{
+		return ExclusiveMaximum ?? Get(culture);
+	}
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="ExclusiveMinimumKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the value provided in the JSON instance
+	///   - [[limit]] - the lower limit in the schema
+	/// </remarks>
+	public static string? ExclusiveMinimum { get; set; }
+
+	/// <summary>
+	/// Gets the error message for <see cref="ExclusiveMinimumKeyword"/> for a specific culture.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[received]] - the value provided in the JSON instance
+	///   - [[limit]] - the lower limit in the schema
+	/// </remarks>
+	public static string GetExclusiveMinimum(CultureInfo? culture)
+	{
+		return ExclusiveMinimum ?? Get(culture);
 	}
 
 	/// <summary>
@@ -334,6 +404,50 @@ public static partial class ErrorMessages
 	}
 
 	/// <summary>
+	/// Gets or sets the error message for <see cref="OneOfKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[count]] - the number of subschemas that passed validation
+	/// </remarks>
+	public static string? OneOf { get; set; }
+
+	/// <summary>
+	/// Gets the error message for <see cref="OneOfKeyword"/> for a specific culture.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[count]] - the number of subschemas that passed validation
+	/// </remarks>
+	public static string GetOneOf(CultureInfo? culture)
+	{
+		return OneOf ?? Get(culture);
+	}
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="PatternKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[pattern]] - the regular expression
+	/// </remarks>
+	public static string? Pattern { get; set; }
+
+	/// <summary>
+	/// Gets the error message for <see cref="PatternKeyword"/> for a specific culture.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[pattern]] - the regular expression
+	/// </remarks>
+	public static string GetPattern(CultureInfo? culture)
+	{
+		return Pattern ?? Get(culture);
+	}
+
+	/// <summary>
 	/// Gets or sets the error message for <see cref="RequiredKeyword"/>.
 	/// </summary>
 	/// <remarks>
@@ -353,6 +467,30 @@ public static partial class ErrorMessages
 	public static string GetRequired(CultureInfo? culture)
 	{
 		return Required ?? Get(culture);
+	}
+
+	/// <summary>
+	/// Gets or sets the error message for when the schema cannot be validated
+	/// against the meta-schema.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[uri]] - the URI of the meta-schema
+	/// </remarks>
+	public static string? MetaSchemaValidation { get; set; }
+
+	/// <summary>
+	/// Gets or sets the error message for when the schema cannot be validated
+	/// against the meta-schema.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[uri]] - the URI of the meta-schema
+	/// </remarks>
+	public static string GetMetaSchemaValidation(CultureInfo? culture)
+	{
+		return MetaSchemaValidation ?? Get(culture);
 	}
 
 	/// <summary>

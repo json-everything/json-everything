@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System;
+using System.Text.Json;
 
 namespace Json.Schema.Keywords;
 
@@ -14,9 +15,18 @@ public class MaxContainsKeyword : IKeywordHandler
 
 	public object? ValidateKeywordValue(JsonElement value)
 	{
-		if (value.ValueKind is not (JsonValueKind.Number) || !value.TryGetInt32(out _))
-			throw new JsonSchemaException($"'{Name}' value must be an integer, found {value.ValueKind}");
-		
+		if (value.ValueKind is not JsonValueKind.Number)
+			throw new JsonSchemaException($"'{Name}' value must be a integer, found {value.ValueKind}");
+
+		var number = value.GetDouble();
+		var rounded = Math.Truncate(number);
+		if (number != rounded)
+			throw new JsonSchemaException($"'{Name}' value must be a integer, found {value.ValueKind}");
+
+		var max = (long)rounded;
+		if (max < 0)
+			throw new JsonSchemaException($"'{Name}' value must be non-negative, found {max}");
+
 		return null;
 	}
 

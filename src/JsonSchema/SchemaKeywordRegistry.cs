@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using Json.Schema.Keywords;
 
 namespace Json.Schema;
 
@@ -90,12 +89,12 @@ public partial class SchemaKeywordRegistry
 	{
 		var toCheck = _keywordData.Select(x => x.Value).Distinct().ToList();
 
-		//var keyword = _keywordData[SchemaKeyword.Name];
-		//keyword.Priority = -2;
-		//toCheck.Remove(keyword);
-		//keyword = _keywordData[IdKeyword.Name];
-		//keyword.Priority = -1;
-		//toCheck.Remove(keyword);
+		var keyword = _keywordData["$schema"];
+		keyword.Priority = -2;
+		toCheck.Remove(keyword);
+		keyword = _keywordData["$id"];
+		keyword.Priority = -1;
+		toCheck.Remove(keyword);
 		//keyword = _keywordData[UnevaluatedItemsKeyword.Name];
 		//keyword.Priority = long.MaxValue;
 		//toCheck.Remove(keyword);
@@ -109,9 +108,11 @@ public partial class SchemaKeywordRegistry
 			var unprioritized = toCheck.Select(x => x.Type).ToArray();
 			for (var i = 0; i < toCheck.Count; i++)
 			{
-				var keyword = toCheck[i];
-				var dependencies = keyword.Type.GetCustomAttributes<DependsOnAnnotationsFromAttribute>()
-					.Select(x => x.DependentType);
+				keyword = toCheck[i];
+				var dependencies = keyword.Type
+					.GetCustomAttributes<DependsOnAnnotationsFromAttribute>()
+					.Select(x => x.DependentType)
+					.ToArray();
 				foreach (var dependency in dependencies)
 				{
 					var metaData = _keywordData[dependency];

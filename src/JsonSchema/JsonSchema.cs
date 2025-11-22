@@ -112,6 +112,9 @@ public class JsonSchema
 
 		var node = BuildNode(context);
 
+		if (node == JsonSchemaNode.True) return True;
+		if (node == JsonSchemaNode.False) return False;
+
 		var schema = new JsonSchema(node, context.Options) { BaseUri = node.BaseUri };
 		context.Options.SchemaRegistry.Register(schema);
 
@@ -175,7 +178,6 @@ public class JsonSchema
 			Keywords = keywordData.OrderBy(x => x.EvaluationOrder).ToArray()
 		};
 
-		// TODO: for draft 6/7, might need to register an anchor stored in $id
 		var oldIdKeyword = keywordData.FirstOrDefault(x => x.Handler is Keywords.Draft06.IdKeyword);
 		if (oldIdKeyword is not null)
 		{
