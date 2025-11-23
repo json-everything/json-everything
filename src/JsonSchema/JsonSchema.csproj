@@ -51,7 +51,6 @@
     <Compile Remove="ThenKeyword.cs" />
     <Compile Remove="UnevaluatedItemsKeyword.cs" />
     <Compile Remove="UnevaluatedPropertiesKeyword.cs" />
-    <Compile Remove="UniqueItemsKeyword.cs" />
     <Compile Remove="UnrecognizedKeyword.cs" />
     <Compile Remove="Vocabularies.cs" />
     <Compile Remove="Vocabularies.Draft201909.cs" />
