@@ -62,17 +62,24 @@ public class Validation
 				collection.IsOptional = fileName.Contains("optional");
 				foreach (var test in collection.Tests)
 				{
+					var keywords = draftFolder switch
+					{
+						"draft6" => SchemaKeywordRegistry.Draft06,
+						"draft7" => SchemaKeywordRegistry.Draft07,
+						"draft2019-09" => SchemaKeywordRegistry.Draft201909,
+						"draft2020-12" => SchemaKeywordRegistry.Draft202012,
+						"draft-next" => SchemaKeywordRegistry.V1,
+						_ => throw new ArgumentOutOfRangeException(nameof(draftFolder), $"{draftFolder} is unsupported")
+					};
+
+					if (fileName.Contains("format/".AdjustForPlatform()) &&
+					    // uri-template will throw an exception as it's explicitly unsupported
+					    shortFileName != "uri-template")
+						keywords = keywords.UseFormatValidation();
+
 					var buildOptions = new BuildOptions
 					{
-						KeywordRegistry = draftFolder switch
-						{
-							"draft6" => SchemaKeywordRegistry.Draft06,
-							"draft7" => SchemaKeywordRegistry.Draft07,
-							"draft2019-09" => SchemaKeywordRegistry.Draft201909,
-							"draft2020-12" => SchemaKeywordRegistry.Draft202012,
-							"draft-next" => SchemaKeywordRegistry.V1,
-							_ => throw new ArgumentOutOfRangeException(nameof(draftFolder), $"{draftFolder} is unsupported")
-						},
+						KeywordRegistry = keywords,
 						SchemaRegistry = new()
 					};
 					var optional = collection.IsOptional ? "(optional) / " : null;

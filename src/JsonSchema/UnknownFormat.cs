@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Nodes;
+﻿using System.Text.Json;
 
 namespace Json.Schema;
 
@@ -16,10 +16,10 @@ public sealed class UnknownFormat : Format
 	/// <summary>
 	/// Validates an instance against a format and provides an error message.
 	/// </summary>
-	/// <param name="node">The node to validate.</param>
+	/// <param name="value"></param>
 	/// <param name="errorMessage">An error message.</param>
 	/// <returns>`true`.  Override to return another value.</returns>
-	public override bool Validate(JsonNode? node, out string? errorMessage)
+	public override bool Validate(JsonElement value, out string? errorMessage)
 	{
 		errorMessage = null;
 		return true;

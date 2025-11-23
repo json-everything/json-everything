@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using System.Text.Json.Nodes;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 
 namespace Json.Schema;
@@ -36,19 +36,19 @@ public class RegexFormat : Format
 	/// <summary>
 	/// Validates an instance against a format and provides an error message.
 	/// </summary>
-	/// <param name="node">The node to validate.</param>
+	/// <param name="value"></param>
 	/// <param name="errorMessage">An error message.</param>
 	/// <returns>`true` if the value is a match for the regular expression; `false` otherwise.</returns>
-	public override bool Validate(JsonNode? node, out string? errorMessage)
+	public override bool Validate(JsonElement value, out string? errorMessage)
 	{
-		if (node.GetSchemaValueType() != SchemaValueType.String)
+		if (value.GetSchemaValueType() != SchemaValueType.String)
 		{
 			errorMessage = null;
 			return true;
 		}
 
-		var str = node!.GetValue<string>();
-		var isMatch =  _regex.IsMatch(str);
+		var str = value.GetString();
+		var isMatch =  _regex.IsMatch(str!);
 
 		if (!isMatch)
 		{
