@@ -52,7 +52,7 @@ public partial class SchemaKeywordRegistry
 		new TypeKeyword(),
 		//new UnevaluatedItemsKeyword(),
 		//new UnevaluatedPropertiesKeyword(),
-		//new UniqueItemsKeyword(),
+		new UniqueItemsKeyword(),
 		//new VocabularyKeyword(),
 		new WriteOnlyKeyword()
 	);

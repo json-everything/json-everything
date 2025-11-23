@@ -607,4 +607,26 @@ public static partial class ErrorMessages
 	{
 		return Type ?? Get(culture);
 	}
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="UniqueItemsKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[duplicates]] - the indices of duplicate pairs as a comma-delimited list of "(x, y)" items
+	/// </remarks>
+	public static string? UniqueItems { get; set; }
+
+	/// <summary>
+	/// Gets the error message for <see cref="UniqueItemsKeyword"/> for a specific culture.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[duplicates]] - the indices of duplicate pairs as a comma-delimited list of "(x, y)" items
+	/// </remarks>
+	public static string GetUniqueItems(CultureInfo? culture)
+	{
+		return UniqueItems ?? Get(culture);
+	}
 }

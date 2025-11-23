@@ -46,10 +46,10 @@ public partial class SchemaKeywordRegistry
 		new SchemaKeyword(),
 		//new ThenKeyword(),
 		new TitleKeyword(),
-		new TypeKeyword()
+		new TypeKeyword(),
 		//new UnevaluatedItemsKeyword(),
 		//new UnevaluatedPropertiesKeyword(),
-		//new UniqueItemsKeyword(),
+		new UniqueItemsKeyword()
 		//new VocabularyKeyword(),
 	);
 }
