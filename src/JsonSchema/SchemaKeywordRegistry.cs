@@ -26,13 +26,6 @@ public partial class SchemaKeywordRegistry
 			Name = handler.Name;
 			Handler = handler;
 			Type = handler.GetType();
-			
-			//var nameAttribute = type.GetCustomAttribute<SchemaKeywordAttribute>() ??
-			//                    throw new ArgumentException($"Keyword implementation `{type.Name}` does not carry `{nameof(SchemaKeywordAttribute)}`");
-			//Name = nameAttribute.Name;
-			
-			//var supportedVersionAttributes = type.GetCustomAttributes<SchemaSpecVersionAttribute>();
-			//SupportedVersions = supportedVersionAttributes.Aggregate(SpecVersion.Unspecified, (total, current) => total | current.Version);
 		}
 	}
 
@@ -45,14 +38,26 @@ public partial class SchemaKeywordRegistry
 		Default = V1;
 	}
 
-	public SchemaKeywordRegistry(params IKeywordHandler[] keywordData)
+	public SchemaKeywordRegistry(params IKeywordHandler[] keywords)
 	{
 		_keywordData = [];
 		_keywordData.AddLookup(x => x.Name);
 		_keywordData.AddLookup(x => x.Type);
-		foreach (var type in keywordData)
+		foreach (var keyword in keywords)
 		{
-			var metaData = new KeywordMetaData(type);
+			var metaData = new KeywordMetaData(keyword);
+			_keywordData.Add(metaData);
+		}
+	}
+
+	public SchemaKeywordRegistry(SchemaKeywordRegistry source)
+	{
+		_keywordData = [];
+		_keywordData.AddLookup(x => x.Name);
+		_keywordData.AddLookup(x => x.Type);
+		foreach (var metadata in source._keywordData)
+		{
+			var metaData = new KeywordMetaData(metadata.Value.Handler);
 			_keywordData.Add(metaData);
 		}
 	}
@@ -64,6 +69,8 @@ public partial class SchemaKeywordRegistry
 	public void Register<T>(T handler)
 		where T : IKeywordHandler
 	{
+		CheckWellKnown();
+
 		_keywordData.Add(new KeywordMetaData(handler));
 
 		EvaluateDependencies();
@@ -76,16 +83,20 @@ public partial class SchemaKeywordRegistry
 	public void Unregister<T>()
 		where T : IKeywordHandler
 	{
+		CheckWellKnown();
+
 		if (_keywordData.TryGetValue(typeof(T), out var metaData))
 			_keywordData.Remove(metaData);
+
+		EvaluateDependencies();
 	}
 
-	public IKeywordHandler? GetHandler(string keyword)
+	internal IKeywordHandler? GetHandler(string keyword)
 	{
 		return _keywordData.GetValueOrDefault(keyword)?.Handler;
 	}
 
-	internal void EvaluateDependencies()
+	private void EvaluateDependencies()
 	{
 		var toCheck = _keywordData.Select(x => x.Value).Distinct().ToList();
 
@@ -134,5 +145,15 @@ public partial class SchemaKeywordRegistry
 	internal long? GetEvaluationOrder(string keyword)
 	{
 		return _keywordData.GetValueOrDefault(keyword)?.Priority;
+	}
+
+	private void CheckWellKnown()
+	{
+		if (ReferenceEquals(this, Draft06) ||
+		    ReferenceEquals(this, Draft06) ||
+		    ReferenceEquals(this, Draft06) ||
+		    ReferenceEquals(this, Draft06) ||
+		    ReferenceEquals(this, Draft06))
+			throw new InvalidOperationException("Editing the well-known keyword registries is not permitted.");
 	}
 }

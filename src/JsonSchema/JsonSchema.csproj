@@ -33,12 +33,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="DependenciesKeyword.cs" />
-    <Compile Remove="DependentSchemasKeyword.cs" />
     <Compile Remove="ElseKeyword.cs" />
-    <Compile Remove="Format.cs" />
-    <Compile Remove="FormatKeyword.cs" />
-    <Compile Remove="Formats.cs" />
     <Compile Remove="IBaseDocument.cs" />
     <Compile Remove="IfKeyword.cs" />
     <Compile Remove="JsonNodeBaseDocument.cs" />
@@ -51,15 +46,12 @@
     <Compile Remove="MetaSchemas.Draft6.cs" />
     <Compile Remove="MetaSchemas.Draft7.cs" />
     <Compile Remove="MetaSchemas.DraftNext.cs" />
-    <Compile Remove="PredicateFormat.cs" />
     <Compile Remove="PropertyDependenciesKeyword.cs" />
     <Compile Remove="PropertyDependency.cs" />
-    <Compile Remove="RegexFormat.cs" />
     <Compile Remove="ThenKeyword.cs" />
     <Compile Remove="UnevaluatedItemsKeyword.cs" />
     <Compile Remove="UnevaluatedPropertiesKeyword.cs" />
     <Compile Remove="UniqueItemsKeyword.cs" />
-    <Compile Remove="UnknownFormat.cs" />
     <Compile Remove="UnrecognizedKeyword.cs" />
     <Compile Remove="Vocabularies.cs" />
     <Compile Remove="Vocabularies.Draft201909.cs" />

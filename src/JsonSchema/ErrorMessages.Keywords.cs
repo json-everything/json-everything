@@ -108,6 +108,28 @@ public static partial class ErrorMessages
 	}
 
 	/// <summary>
+	/// Gets or sets the error message for <see cref="DependentSchemasKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[value]] - the value in the schema
+	/// </remarks>
+	public static string? DependentSchemas { get; set; }
+
+	/// <summary>
+	/// Gets the error message for <see cref="DependentSchemasKeyword"/> for a specific culture.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[value]] - the value in the schema
+	/// </remarks>
+	public static string GetDependentSchemas(CultureInfo? culture)
+	{
+		return DependentSchemas ?? Get(culture);
+	}
+
+	/// <summary>
 	/// Gets or sets the error message for <see cref="EnumKeyword"/>.
 	/// </summary>
 	/// <remarks>
@@ -185,6 +207,75 @@ public static partial class ErrorMessages
 	public static string GetExclusiveMinimum(CultureInfo? culture)
 	{
 		return ExclusiveMinimum ?? Get(culture);
+	}
+
+	/// <summary>
+	/// Gets or sets the error message for an unknown format.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[format]] - the format key
+	/// </remarks>
+	public static string? UnknownFormat { get; set; }
+
+	/// <summary>
+	/// Gets the error message for an unknown format.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[format]] - the format key
+	/// </remarks>
+	public static string GetUnknownFormat(CultureInfo? culture)
+	{
+		return UnknownFormat ?? Get(culture);
+	}
+
+	/// <summary>
+	/// Gets or sets the error message for the <see cref="FormatKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[format]] - the format key
+	/// </remarks>
+	public static string? Format { get; set; }
+
+	/// <summary>
+	/// Gets the error message for <see cref="FormatKeyword"/> for a specific culture.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[format]] - the format key
+	/// </remarks>
+	public static string GetFormat(CultureInfo? culture)
+	{
+		return Format ?? Get(culture);
+	}
+
+	/// <summary>
+	/// Gets or sets the error message for the <see cref="FormatKeyword"/> with
+	/// additional information from the format validation.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[format]] - the format key
+	///   - [[detail]] - the detail
+	/// </remarks>
+	public static string? FormatWithDetail { get; set; }
+
+	/// <summary>
+	/// Gets the error message for <see cref="FormatKeyword"/> for a specific culture.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[format]] - the format key
+	///   - [[detail]] - the detail
+	/// </remarks>
+	public static string GetFormatWithDetail(CultureInfo? culture)
+	{
+		return FormatWithDetail ?? Get(culture);
 	}
 
 	/// <summary>

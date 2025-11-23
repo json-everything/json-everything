@@ -3,14 +3,14 @@
 namespace Json.Schema.Keywords;
 
 /// <summary>
-/// Handles `description`.
+/// Handles `format`.
 /// </summary>
-public class DescriptionKeyword : IKeywordHandler
+public class FormatKeyword : IKeywordHandler
 {
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
-	public string Name => "description";
+	public string Name => "format";
 
 	public virtual object? ValidateKeywordValue(JsonElement value)
 	{
@@ -26,11 +26,16 @@ public class DescriptionKeyword : IKeywordHandler
 
 	public virtual KeywordEvaluation Evaluate(KeywordData keyword, EvaluationContext context)
 	{
+		var formatName = keyword.RawValue.GetString()!;
+		var format = Formats.Get(formatName);
+
+		var valid = format.Validate(context.Instance, out var error);
 		return new KeywordEvaluation
 		{
 			Keyword = Name,
-			IsValid = true,
-			Annotation = keyword.RawValue
+			IsValid = valid,
+			Annotation = keyword.RawValue,
+			Error = error
 		};
 	}
 }
