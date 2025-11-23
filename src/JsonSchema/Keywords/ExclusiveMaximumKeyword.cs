@@ -28,11 +28,9 @@ public class ExclusiveMaximumKeyword : IKeywordHandler
 	{
 		if (context.Instance.ValueKind is not JsonValueKind.Number) return KeywordEvaluation.Ignore;
 
-		// TODO: number handling
-		var instance = context.Instance.GetDouble();
-		var max = keyword.RawValue.GetDouble();
+		var comparison = JsonMath.NumberCompare(context.Instance, keyword.RawValue);
 
-		if (instance < max)
+		if (comparison < 0)
 			return new KeywordEvaluation
 			{
 				Keyword = Name,
@@ -44,8 +42,8 @@ public class ExclusiveMaximumKeyword : IKeywordHandler
 			Keyword = Name,
 			IsValid = false,
 			Error = ErrorMessages.GetExclusiveMaximum(context.Options.Culture)
-				.ReplaceToken("received", instance)
-				.ReplaceToken("limit", max)
+				.ReplaceToken("received", context.Instance)
+				.ReplaceToken("limit", keyword.RawValue)
 		};
 	}
 }

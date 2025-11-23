@@ -59,16 +59,6 @@ public class EvaluationOptions
 	public CultureInfo? Culture { get; set; }
 
 	/// <summary>
-	/// Determines how floating point values are processed.
-	/// </summary>
-	public NumberProcessing NumberProcessing { get; set; }
-
-	/// <summary>
-	/// Determines how integer values are processed.
-	/// </summary>
-	public IntegerProcessing IntegerProcessing { get; set; }
-
-	/// <summary>
 	/// Creates a deep copy of the options.
 	/// </summary>
 	/// <param name="other">The source options.</param>

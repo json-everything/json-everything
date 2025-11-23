@@ -28,11 +28,9 @@ public class MinimumKeyword : IKeywordHandler
 	{
 		if (context.Instance.ValueKind is not JsonValueKind.Number) return KeywordEvaluation.Ignore;
 
-		// TODO: number handling
-		var instance = context.Instance.GetDouble();
-		var min = keyword.RawValue.GetDouble();
+		var comparison = JsonMath.NumberCompare(context.Instance, keyword.RawValue);
 
-		if (min <= instance)
+		if (comparison >= 0)
 			return new KeywordEvaluation
 			{
 				Keyword = Name,
@@ -44,8 +42,8 @@ public class MinimumKeyword : IKeywordHandler
 			Keyword = Name,
 			IsValid = false,
 			Error = ErrorMessages.GetMinimum(context.Options.Culture)
-				.ReplaceToken("received", instance)
-				.ReplaceToken("limit", min)
+				.ReplaceToken("received", context.Instance)
+				.ReplaceToken("limit", keyword.RawValue)
 		};
 	}
 }
