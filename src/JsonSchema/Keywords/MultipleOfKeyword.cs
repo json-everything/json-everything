@@ -1,7 +1,4 @@
-﻿using System;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using Json.More;
+﻿using System.Text.Json;
 
 namespace Json.Schema.Keywords;
 
@@ -31,11 +28,7 @@ public class MultipleOfKeyword : IKeywordHandler
 	{
 		if (context.Instance.ValueKind is not JsonValueKind.Number) return KeywordEvaluation.Ignore;
 
-		// TODO: number handling
-		var instance = context.Instance.GetDouble();
-		var dividend = keyword.RawValue.GetDouble();
-
-		if (instance % dividend == 0)
+		if (JsonMath.Divides(context.Instance, keyword.RawValue))
 			return new KeywordEvaluation
 			{
 				Keyword = Name,
@@ -47,8 +40,8 @@ public class MultipleOfKeyword : IKeywordHandler
 			Keyword = Name,
 			IsValid = false,
 			Error = ErrorMessages.GetMultipleOf(context.Options.Culture)
-				.ReplaceToken("received", instance)
-				.ReplaceToken("divisor", dividend)
+				.ReplaceToken("received", context.Instance)
+				.ReplaceToken("divisor", keyword.RawValue)
 		};
 	}
 }
