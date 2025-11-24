@@ -58,6 +58,7 @@ public class PatternPropertiesKeyword : IKeywordHandler
 
 		var regexes = (Dictionary<string, Regex>)keyword.Value!;
 		var subschemaEvaluations = new List<EvaluationResults>();
+		var propertyNames = new HashSet<string>();
 
 		var properties = context.Instance.EnumerateObject().ToArray();
 
@@ -71,6 +72,8 @@ public class PatternPropertiesKeyword : IKeywordHandler
 
 			foreach (var property in toEvaluate)
 			{
+				propertyNames.Add(property.Name);
+
 				var propContext = context with
 				{
 					InstanceLocation = context.InstanceLocation.Combine(property.Name),
@@ -86,7 +89,8 @@ public class PatternPropertiesKeyword : IKeywordHandler
 		{
 			Keyword = Name,
 			IsValid = subschemaEvaluations.All(x => x.IsValid),
-			Details = subschemaEvaluations.ToArray()
+			Details = subschemaEvaluations.ToArray(),
+			Annotation = JsonSerializer.SerializeToElement(propertyNames, JsonSchemaSerializerContext.Default.HashSetString)
 		};
 	}
 }

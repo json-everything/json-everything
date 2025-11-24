@@ -48,17 +48,21 @@ public class PropertiesKeyword : IKeywordHandler
 		if (context.Instance.ValueKind != JsonValueKind.Object) return KeywordEvaluation.Ignore;
 
 		var subschemaEvaluations = new List<EvaluationResults>();
+		var propertyNames = new HashSet<string>();
 
 		foreach (var subschema in keyword.Subschemas)
 		{
 			var instance = subschema.RelativePath.Evaluate(context.Instance);
 			if (!instance.HasValue) continue;
 
+			var propertyName = subschema.RelativePath[0].ToString();
+			propertyNames.Add(propertyName);
+
 			var propContext = context with
 			{
 				InstanceLocation = context.InstanceLocation.Combine(subschema.RelativePath),
 				Instance = instance.Value,
-				EvaluationPath = context.EvaluationPath.Combine(Name, subschema.RelativePath[0].ToString())
+				EvaluationPath = context.EvaluationPath.Combine(Name, propertyName)
 			};
 
 			subschemaEvaluations.Add(subschema.Evaluate(propContext));
@@ -68,7 +72,8 @@ public class PropertiesKeyword : IKeywordHandler
 		{
 			Keyword = Name,
 			IsValid = subschemaEvaluations.All(x => x.IsValid),
-			Details = subschemaEvaluations.ToArray()
+			Details = subschemaEvaluations.ToArray(),
+			Annotation = JsonSerializer.SerializeToElement(propertyNames, JsonSchemaSerializerContext.Default.HashSetString)
 		};
 	}
 }

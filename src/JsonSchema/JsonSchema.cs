@@ -55,7 +55,7 @@ public class JsonSchema
 	private JsonSchema(bool value)
 	{
 		BoolValue = value;
-		Root = value ? JsonSchemaNode.True : JsonSchemaNode.False;
+		Root = value ? JsonSchemaNode.True() : JsonSchemaNode.False();
 		BaseUri = Root.BaseUri;
 	}
 
@@ -112,11 +112,12 @@ public class JsonSchema
 
 		var node = BuildNode(context);
 
-		if (node == JsonSchemaNode.True) return True;
-		if (node == JsonSchemaNode.False) return False;
+		if (node.Source.ValueKind == JsonValueKind.True) return True;
+		if (node.Source.ValueKind == JsonValueKind.False) return False;
 
 		var schema = new JsonSchema(node, context.Options) { BaseUri = node.BaseUri };
 		context.Options.SchemaRegistry.Register(schema);
+		context.BaseUri = node.BaseUri;
 
 		TryResolveReferences(node, context);
 		DetectCycles(node);
@@ -126,8 +127,8 @@ public class JsonSchema
 
 	public static JsonSchemaNode BuildNode(BuildContext context)
 	{
-		if (context.LocalSchema.ValueKind == JsonValueKind.True) return JsonSchemaNode.True;
-		if (context.LocalSchema.ValueKind == JsonValueKind.False) return JsonSchemaNode.False;
+		if (context.LocalSchema.ValueKind == JsonValueKind.True) return JsonSchemaNode.True();
+		if (context.LocalSchema.ValueKind == JsonValueKind.False) return JsonSchemaNode.False();
 
 		if (context.LocalSchema.ValueKind != JsonValueKind.Object)
 			throw new ArgumentException($"Schemas may only booleans or objects.  Received {context.LocalSchema.ValueKind}");
@@ -224,7 +225,11 @@ public class JsonSchema
 		{
 			foreach (var subNode in keyword.Subschemas)
 			{
-				TryResolveReferences(subNode, context, checkedNodes);
+				var subschemaContext = context with
+				{
+					BaseUri = subNode.BaseUri
+				};
+				TryResolveReferences(subNode, subschemaContext, checkedNodes);
 			}
 		}
 	}
@@ -264,6 +269,7 @@ public class JsonSchema
 			Options = options,
 			BuildOptions = _options,
 			Instance = instance,
+			EvaluationPath = JsonPointer.Empty,
 			Scope = new(BaseUri)
 		};
 
@@ -318,12 +324,12 @@ public interface IKeywordHandler
 
 public class JsonSchemaNode
 {
-	public static readonly JsonSchemaNode True = new()
+	public static JsonSchemaNode True() => new()
 	{
 		BaseUri = new Uri("https://json-schema.org/true"),
 		Source = JsonDocument.Parse("true").RootElement
 	};
-	public static readonly JsonSchemaNode False = new()
+	public static JsonSchemaNode False() => new()
 	{
 		BaseUri = new Uri("https://json-schema.org/false"),
 		Source = JsonDocument.Parse("false").RootElement
@@ -336,45 +342,46 @@ public class JsonSchemaNode
 
 	public EvaluationResults Evaluate(EvaluationContext context)
 	{
-		var newScope = !Equals(BaseUri, context.Scope.LocalScope);
-		if (newScope) 
-			context.Scope.Push(BaseUri);
-
 		var results = new EvaluationResults(context.EvaluationPath, BaseUri, context.InstanceLocation, context.Options);
-		if (this == True) return results;
-		if (this == False)
+		if (Source.ValueKind == JsonValueKind.True) return results;
+		if (Source.ValueKind == JsonValueKind.False)
 		{
 			results.IsValid = false;
 			results.Errors = new() { [""] = ErrorMessages.FalseSchema };
 			return results;
 		}
-		
-		var keywordEvaluations = Keywords.Select(x => x.Handler.Evaluate(x, context)).ToArray();
 
-		if (!keywordEvaluations.All(x => x.IsValid))
-			results.IsValid = false;
+		var newScope = !Equals(BaseUri, context.Scope.LocalScope);
+		if (newScope)
+			context.Scope.Push(BaseUri);
 
-		foreach (var evaluation in keywordEvaluations)
+		results.IsValid = true;
+		context.EvaluatedKeywords = [];
+		foreach (var keyword in Keywords.OrderBy(x => x.EvaluationOrder))
 		{
-			if (evaluation.Details is not null)
+			var evaluation = keyword.Handler.Evaluate(keyword, context);
+			context.EvaluatedKeywords.Add(evaluation);
+
+			results.IsValid &= evaluation.IsValid;
+			if (evaluation.Details is { Length: > 0 })
 			{
-				foreach (var nestedResult in evaluation.Details)
-				{
-					results.Details ??= [];
-					results.Details.Add(nestedResult);
-				}
+				results.Details ??= [];
+				results.Details.AddRange(evaluation.Details);
 			}
 			if (evaluation.Error is not null)
 			{
 				results.Errors ??= [];
 				results.Errors[evaluation.Keyword] = evaluation.Error!;
 			}
-			else if (evaluation.Annotation is not null)
+			if (evaluation.Annotation is not null)
 			{
 				results.Annotations ??= [];
 				results.Annotations[evaluation.Keyword] = evaluation.Annotation.Value;
 			}
 		}
+
+		if (!results.IsValid)
+			results.Annotations?.Clear();
 
 		if (newScope)
 			context.Scope.Pop();

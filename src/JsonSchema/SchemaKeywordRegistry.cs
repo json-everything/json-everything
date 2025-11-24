@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using Json.Schema.Keywords;
 
 namespace Json.Schema;
 
@@ -48,6 +49,7 @@ public partial class SchemaKeywordRegistry
 			var metaData = new KeywordMetaData(keyword);
 			_keywordData.Add(metaData);
 		}
+		EvaluateDependencies();
 	}
 
 	public SchemaKeywordRegistry(SchemaKeywordRegistry source)
@@ -60,6 +62,7 @@ public partial class SchemaKeywordRegistry
 			var metaData = new KeywordMetaData(metadata.Value.Handler);
 			_keywordData.Add(metaData);
 		}
+		EvaluateDependencies();
 	}
 
 	/// <summary>
@@ -100,18 +103,26 @@ public partial class SchemaKeywordRegistry
 	{
 		var toCheck = _keywordData.Select(x => x.Value).Distinct().ToList();
 
-		var keyword = _keywordData["$schema"];
-		keyword.Priority = -2;
-		toCheck.Remove(keyword);
-		keyword = _keywordData["$id"];
-		keyword.Priority = -1;
-		toCheck.Remove(keyword);
-		//keyword = _keywordData[UnevaluatedItemsKeyword.Name];
-		//keyword.Priority = long.MaxValue;
-		//toCheck.Remove(keyword);
-		//keyword = _keywordData[UnevaluatedPropertiesKeyword.Name];
-		//keyword.Priority = long.MaxValue;
-		//toCheck.Remove(keyword);
+		if (_keywordData.TryGetValue("$schema", out var keyword))
+		{
+			keyword.Priority = -2;
+			toCheck.Remove(keyword);
+		}
+		if (_keywordData.TryGetValue("$id", out keyword))
+		{
+			keyword.Priority = -1;
+			toCheck.Remove(keyword);
+		}
+		if (_keywordData.TryGetValue("unevaluatedItems", out keyword))
+		{
+			keyword.Priority = long.MaxValue;
+			toCheck.Remove(keyword);
+		}
+		if (_keywordData.TryGetValue("unevaluatedProperties", out keyword))
+		{
+			keyword.Priority = long.MaxValue;
+			toCheck.Remove(keyword);
+		}
 
 		var priority = 0;
 		while (toCheck.Count != 0)

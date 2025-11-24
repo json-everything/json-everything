@@ -224,6 +224,12 @@ public class SchemaRegistry
 		return target?.RecursiveAnchor;
 	}
 
+	internal JsonSchemaNode? GetRecursive(Uri uri)
+	{
+		var registration = GetRegistration(uri);
+		return registration?.RecursiveAnchor;
+	}
+
 	private Registration? GetRegistration(Uri baseUri)
 	{
 		var registration = _registered.GetValueOrDefault(baseUri) ??
