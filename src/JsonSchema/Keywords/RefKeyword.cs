@@ -13,7 +13,7 @@ public class RefKeyword : IKeywordHandler
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
-	public string Name => "$ref";
+	public virtual string Name => "$ref";
 
 	public virtual object? ValidateKeywordValue(JsonElement value)
 	{
@@ -34,9 +34,11 @@ public class RefKeyword : IKeywordHandler
 		keyword.Value = newUri;
 	}
 
-	internal void TryResolve(KeywordData keyword, BuildContext context)
+	internal virtual void TryResolve(KeywordData keyword, BuildContext context)
 	{
-		var newUri = (Uri)keyword.Value!;
+		var newUri = (Uri?)keyword.Value;
+		if (newUri is null) return;
+
 		var fragment = newUri.Fragment;
 
 		JsonSchemaNode? targetSchema;

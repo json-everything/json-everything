@@ -24,7 +24,6 @@ public class AdditionalItemsKeyword : IKeywordHandler
 
 	public virtual void BuildSubschemas(KeywordData keyword, BuildContext context)
 	{
-		// TODO: check items, if object return
 		if (context.LocalSchema.TryGetProperty("items", out var items) &&
 		    items.ValueKind != JsonValueKind.Array) return;
 

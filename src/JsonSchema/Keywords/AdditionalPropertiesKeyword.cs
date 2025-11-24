@@ -33,7 +33,6 @@ public class AdditionalPropertiesKeyword : IKeywordHandler
 
 	public virtual void BuildSubschemas(KeywordData keyword, BuildContext context)
 	{
-
 		var defContext = context with
 		{
 			LocalSchema = keyword.RawValue
@@ -68,6 +67,7 @@ public class AdditionalPropertiesKeyword : IKeywordHandler
 		var knownProperties = (KnownProperties) keyword.Value!;
 
 		var subschemaEvaluations = new List<EvaluationResults>();
+		var propertyNames = new HashSet<string>();
 		var subschema = keyword.Subschemas[0];
 
 		var evaluationPath = context.EvaluationPath.Combine(Name);
@@ -75,6 +75,8 @@ public class AdditionalPropertiesKeyword : IKeywordHandler
 		{
 			if (knownProperties.Properties.Contains(instance.Name)) continue;
 			if (knownProperties.PatternProperties.Any(x => x.IsMatch(instance.Name))) continue;
+
+			propertyNames.Add(instance.Name);
 
 			var itemContext = context with
 			{
@@ -90,7 +92,8 @@ public class AdditionalPropertiesKeyword : IKeywordHandler
 		{
 			Keyword = Name,
 			IsValid = subschemaEvaluations.All(x => x.IsValid),
-			Details = subschemaEvaluations.ToArray()
+			Details = subschemaEvaluations.ToArray(),
+			Annotation = JsonSerializer.SerializeToElement(propertyNames, JsonSchemaSerializerContext.Default.HashSetString)
 		};
 	}
 }

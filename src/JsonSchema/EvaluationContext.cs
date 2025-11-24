@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Text.Json;
 using Json.Pointer;
 
@@ -27,15 +27,6 @@ public struct EvaluationContext
 	public DynamicScope Scope { get; internal init; }
 
 	public JsonElement Instance { get; init; }
-	
-	/// <summary>
-	/// Gets the spec version that the schema is currently being evaluated under.
-	/// </summary>
-	/// <remarks>
-	/// This property is informed by the `$schema` keyword and <see cref="EvaluationOptions.EvaluateAs"/>,
-	/// taking `$schema` as priority.
-	/// </remarks>
-	public Uri EvaluatingAs { get; private set; }
 
 	public JsonPointer EvaluationPath { get; init; }
 
@@ -43,5 +34,5 @@ public struct EvaluationContext
 
 	public BuildOptions BuildOptions { get; internal init; }
 
-	public EvaluationContext(){}
+	public List<KeywordEvaluation>? EvaluatedKeywords { get; internal set; }
 }

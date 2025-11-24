@@ -7,7 +7,6 @@ namespace Json.Schema.Keywords;
 /// <summary>
 /// Handles `items`.
 /// </summary>
-//[DependsOnAnnotationsFrom(typeof(PrefixItemsKeyword))]
 public class ItemsKeyword : IKeywordHandler
 {
 	/// <summary>
@@ -32,20 +31,23 @@ public class ItemsKeyword : IKeywordHandler
 
 		var node = JsonSchema.BuildNode(defContext);
 		keyword.Subschemas = [node];
+
+		if (context.LocalSchema.TryGetProperty("prefixItems", out var items))
+			keyword.Value = items.EnumerateArray().Count();
 	}
 
 	public virtual KeywordEvaluation Evaluate(KeywordData keyword, EvaluationContext context)
 	{
 		if (context.Instance.ValueKind != JsonValueKind.Array) return KeywordEvaluation.Ignore;
-	
-		// TODO: handle prefixItems
+
+		var prefixItemsCount = (int?)keyword.Value ?? 0;
 
 		var subschemaEvaluations = new List<EvaluationResults>();
 		var subschema = keyword.Subschemas[0];
 
 		var evaluationPath = context.EvaluationPath.Combine(Name);
 		var i = 0;
-		foreach (var instance in context.Instance.EnumerateArray())
+		foreach (var instance in context.Instance.EnumerateArray().Skip(prefixItemsCount))
 		{
 			var itemContext = context with
 			{
