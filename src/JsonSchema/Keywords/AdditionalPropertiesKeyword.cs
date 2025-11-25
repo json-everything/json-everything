@@ -91,9 +91,9 @@ public class AdditionalPropertiesKeyword : IKeywordHandler
 		return new KeywordEvaluation
 		{
 			Keyword = Name,
-			IsValid = subschemaEvaluations.All(x => x.IsValid),
+			IsValid = subschemaEvaluations.Count == 0 || subschemaEvaluations.All(x => x.IsValid),
 			Details = subschemaEvaluations.ToArray(),
-			Annotation = JsonSerializer.SerializeToElement(propertyNames, JsonSchemaSerializerContext.Default.HashSetString)
+			Annotation = JsonElementExtensions.True
 		};
 	}
 }

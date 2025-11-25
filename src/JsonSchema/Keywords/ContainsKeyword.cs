@@ -57,7 +57,6 @@ public class ContainsKeyword : IKeywordHandler
 		var subschemaEvaluations = new List<EvaluationResults>();
 		var subschema = keyword.Subschemas[0];
 
-		var evaluationPath = context.EvaluationPath.Combine(Name);
 		var i = 0;
 		foreach (var instance in context.Instance.EnumerateArray())
 		{
@@ -65,28 +64,32 @@ public class ContainsKeyword : IKeywordHandler
 			{
 				InstanceLocation = context.InstanceLocation.Combine(i),
 				Instance = instance,
-				EvaluationPath = evaluationPath.Combine(Name)
+				EvaluationPath = context.EvaluationPath.Combine(Name)
 			};
 
 			subschemaEvaluations.Add(subschema.Evaluate(itemContext));
 			i++;
 		}
 
-		var found = subschemaEvaluations.Count(x => x.IsValid);
+		var found = subschemaEvaluations
+			.Select((x, j) => (x.IsValid, j))
+			.Where(x => x.IsValid)
+			.Select(x => x.j)
+			.ToArray();
 		var valid = true;
 		string? error = null;
-		if (limits.Min > found)
+		if (limits.Min > found.Length)
 		{
 			valid = false;
 			error = ErrorMessages.GetContainsTooFew(context.Options.Culture)
-				.ReplaceToken("received", found)
+				.ReplaceToken("received", found.Length)
 				.ReplaceToken("minimum", limits.Min);
 		}
-		else if (found > limits.Max)
+		else if (found.Length > limits.Max)
 		{
 			valid = false;
 			error = ErrorMessages.GetContainsTooMany(context.Options.Culture)
-				.ReplaceToken("received", found)
+				.ReplaceToken("received", found.Length)
 				.ReplaceToken("maximum", limits.Max.Value);
 		}
 
@@ -95,7 +98,8 @@ public class ContainsKeyword : IKeywordHandler
 			Keyword = Name,
 			IsValid = valid,
 			Details = subschemaEvaluations.ToArray(),
-			Error = error
+			Error = error,
+			Annotation = JsonSerializer.SerializeToElement(found, JsonSchemaSerializerContext.Default.Int32Array)
 		};
 	}
 }

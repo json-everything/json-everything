@@ -50,7 +50,7 @@ public class AdditionalItemsKeyword : IKeywordHandler
 		var subschema = keyword.Subschemas[0];
 
 		var evaluationPath = context.EvaluationPath.Combine(Name);
-		var i = 0;
+		var i = itemsCount.Value;
 		foreach (var instance in context.Instance.EnumerateArray().Skip(itemsCount.Value))
 		{
 			var itemContext = context with
@@ -67,8 +67,9 @@ public class AdditionalItemsKeyword : IKeywordHandler
 		return new KeywordEvaluation
 		{
 			Keyword = Name,
-			IsValid = subschemaEvaluations.All(x => x.IsValid),
-			Details = subschemaEvaluations.ToArray()
+			IsValid = subschemaEvaluations.Count == 0 || subschemaEvaluations.All(x => x.IsValid),
+			Details = subschemaEvaluations.ToArray(),
+			Annotation = JsonElementExtensions.True
 		};
 	}
 }

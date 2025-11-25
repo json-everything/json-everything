@@ -63,8 +63,9 @@ public class ItemsKeyword : IKeywordHandler
 		return new KeywordEvaluation
 		{
 			Keyword = Name,
-			IsValid = subschemaEvaluations.All(x => x.IsValid),
-			Details = subschemaEvaluations.ToArray()
+			IsValid = subschemaEvaluations.Count == 0 || subschemaEvaluations.All(x => x.IsValid),
+			Details = subschemaEvaluations.ToArray(),
+			Annotation = JsonElementExtensions.True
 		};
 	}
 }
