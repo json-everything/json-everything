@@ -17,9 +17,8 @@ class Program
 
 		var runner = new Runner();
 		runner.Parse();
-		
 #else
-		var summary = BenchmarkRunner.Run<Runner>();
+		var summary = BenchmarkRunner.Run<SingleSchemaRunner>();
 #endif
 	}
 }
