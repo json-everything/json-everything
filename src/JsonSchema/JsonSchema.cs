@@ -101,7 +101,7 @@ public class JsonSchema
 		return Build(element, options);
 	}
 
-	private static Uri GenerateBaseUri() => new($"https://json-everything.lib/{Guid.NewGuid().ToString("N")[..10]}");
+	private static Uri GenerateBaseUri() => new($"https://json-everything.lib/{Guid.NewGuid():N}");
 
 	public static JsonSchema Build(JsonElement root, BuildOptions? options = null)
 	{
