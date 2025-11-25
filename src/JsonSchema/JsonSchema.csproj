@@ -17,8 +17,8 @@
     <IncludeBuildOutput>false</IncludeBuildOutput>
 
     <PackageId>JsonSchema.Net</PackageId>
-    <JsonSchemaNetVersion>7.4.0</JsonSchemaNetVersion>
-    <AssemblyVersion>7.0.0.0</AssemblyVersion>
+    <JsonSchemaNetVersion>8.0.0</JsonSchemaNetVersion>
+    <AssemblyVersion>8.0.0.0</AssemblyVersion>
     <FileVersion>$(JsonSchemaNetVersion)</FileVersion>
     <Version>$(JsonSchemaNetVersion)</Version>
     <Authors>Greg Dennis</Authors>
@@ -33,9 +33,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="ElseKeyword.cs" />
     <Compile Remove="IBaseDocument.cs" />
-    <Compile Remove="IfKeyword.cs" />
     <Compile Remove="JsonNodeBaseDocument.cs" />
     <Compile Remove="JsonSchemaBuilder.cs" />
     <Compile Remove="JsonSchemaBuilderExtensions.cs" />
@@ -48,7 +46,6 @@
     <Compile Remove="MetaSchemas.DraftNext.cs" />
     <Compile Remove="PropertyDependenciesKeyword.cs" />
     <Compile Remove="PropertyDependency.cs" />
-    <Compile Remove="ThenKeyword.cs" />
     <Compile Remove="UnrecognizedKeyword.cs" />
     <Compile Remove="Vocabularies.cs" />
     <Compile Remove="Vocabularies.Draft201909.cs" />
