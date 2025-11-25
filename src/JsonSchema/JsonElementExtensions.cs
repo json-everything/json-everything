@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text.Json;
+using Json.More;
 
 namespace Json.Schema;
 
@@ -8,6 +9,9 @@ namespace Json.Schema;
 /// </summary>
 public static class JsonElementExtensions
 {
+	public static JsonElement True = true.AsJsonElement();
+	public static JsonElement False = false.AsJsonElement();
+
 	/// <summary>
 	/// Provides the JSON Schema type for a value.
 	/// </summary>

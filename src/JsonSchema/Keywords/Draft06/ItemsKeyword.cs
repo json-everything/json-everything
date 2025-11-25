@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using Json.More;
 using Json.Pointer;
 
 namespace Json.Schema.Keywords.Draft06;
@@ -69,6 +70,7 @@ public class ItemsKeyword : IKeywordHandler
 	{
 		if (context.Instance.ValueKind != JsonValueKind.Array) return KeywordEvaluation.Ignore;
 
+		JsonElement annotation;
 		var subschemaEvaluations = new List<EvaluationResults>();
 		if (keyword.RawValue.ValueKind == JsonValueKind.Object)
 		{
@@ -88,6 +90,8 @@ public class ItemsKeyword : IKeywordHandler
 				subschemaEvaluations.Add(subschema.Evaluate(itemContext));
 				i++;
 			}
+
+			annotation = JsonElementExtensions.True;
 		}
 		else
 		{
@@ -107,13 +111,16 @@ public class ItemsKeyword : IKeywordHandler
 				subschemaEvaluations.Add(subschema.Evaluate(itemContext));
 				i++;
 			}
+
+			annotation = (i - 1).AsJsonElement();
 		}
 
 		return new KeywordEvaluation
 		{
 			Keyword = Name,
-			IsValid = subschemaEvaluations.All(x => x.IsValid),
-			Details = subschemaEvaluations.ToArray()
+			IsValid = subschemaEvaluations.Count == 0 || subschemaEvaluations.All(x => x.IsValid),
+			Details = subschemaEvaluations.ToArray(),
+			Annotation = annotation
 		};
 	}
 }

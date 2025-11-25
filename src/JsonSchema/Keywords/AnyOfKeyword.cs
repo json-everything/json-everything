@@ -77,7 +77,7 @@ public class AnyOfKeyword : IKeywordHandler
 		return new KeywordEvaluation
 		{
 			Keyword = Name,
-			IsValid = subschemaEvaluations.Any(x => x.IsValid),
+			IsValid = subschemaEvaluations.Count == 0 || subschemaEvaluations.Any(x => x.IsValid),
 			Details = subschemaEvaluations.ToArray()
 		};
 	}

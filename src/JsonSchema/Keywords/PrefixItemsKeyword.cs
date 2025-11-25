@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using Json.More;
 using Json.Pointer;
 
 namespace Json.Schema.Keywords;
@@ -56,12 +57,11 @@ public class PrefixItemsKeyword : IKeywordHandler
 		var i = 0;
 		foreach (var (subschema, instance) in pairs)
 		{
-			var evaluationPath = context.EvaluationPath.Combine(i);
 			var itemContext = context with
 			{
 				InstanceLocation = context.InstanceLocation.Combine(i),
 				Instance = instance,
-				EvaluationPath = evaluationPath.Combine(Name, i)
+				EvaluationPath = context.EvaluationPath.Combine(Name, i)
 			};
 
 			subschemaEvaluations.Add(subschema.Evaluate(itemContext));
@@ -71,8 +71,9 @@ public class PrefixItemsKeyword : IKeywordHandler
 		return new KeywordEvaluation
 		{
 			Keyword = Name,
-			IsValid = subschemaEvaluations.All(x => x.IsValid),
-			Details = subschemaEvaluations.ToArray()
+			IsValid = subschemaEvaluations.Count == 0 || subschemaEvaluations.All(x => x.IsValid),
+			Details = subschemaEvaluations.ToArray(),
+			Annotation = (subschemaEvaluations.Count - 1).AsJsonElement()
 		};
 	}
 }
