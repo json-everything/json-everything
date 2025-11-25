@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
-using System.Text.Json.Nodes;
-using Json.More;
 using NUnit.Framework;
 using TestHelpers;
 
@@ -133,7 +131,22 @@ public class Validation
 		TestConsole.WriteLine(JsonSerializer.Serialize(test.Data, TestEnvironment.TestOutputSerializerOptions));
 		TestConsole.WriteLine();
 
-		var schema = Measure.Run("Build", () => JsonSchema.Build(collection.Schema, buildOptions));
+		JsonSchema schema;
+		try
+		{
+			schema = Measure.Run("Build", () => JsonSchema.Build(collection.Schema, buildOptions));
+		}
+		catch (Exception e)
+		{
+			Console.WriteLine(e);
+			if (collection.IsOptional)
+			{
+				Assert.Inconclusive();
+				return;
+			}
+
+			throw;
+		}
 
 		var result = Measure.Run("Evaluate", () => schema.Evaluate(test.Data, evaluationOptions));
 
@@ -145,30 +158,6 @@ public class Validation
 		if (collection.IsOptional && result.IsValid != test.Valid)
 			Assert.Inconclusive("Test optional");
 		Assert.That(result.IsValid, Is.EqualTo(test.Valid));
-	}
-
-	private static bool InstanceIsDeserializable(in JsonNode? testData)
-	{
-		try
-		{
-			var value = (testData as JsonValue)?.GetValue<object>();
-			if (value is null) return true;
-			if (value is string) return false;
-			if (value is JsonElement { ValueKind: JsonValueKind.Number } element)
-				return element.TryGetDecimal(out _);
-			if (value.GetType().IsNumber())
-			{
-				// some tests involve numbers larger than c# can handle.  fortunately, they're optional.
-				return true;
-			}
-
-			return true;
-		}
-		catch (Exception e)
-		{
-			TestConsole.WriteLine(e.Message);
-			return false;
-		}
 	}
 
 	[Test]

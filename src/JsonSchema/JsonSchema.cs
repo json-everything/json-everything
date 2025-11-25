@@ -362,7 +362,8 @@ public class JsonSchemaNode
 			var evaluation = keyword.Handler.Evaluate(keyword, context);
 			context.EvaluatedKeywords.Add(evaluation);
 
-			results.IsValid &= evaluation.IsValid;
+			results.IsValid &= evaluation.IsValid || !evaluation.ContributesToValidation;
+
 			if (evaluation.Details is { Length: > 0 })
 			{
 				results.Details ??= [];
@@ -412,6 +413,8 @@ public readonly struct KeywordEvaluation
 	public JsonElement? Annotation { get; init; }
 	public EvaluationResults[]? Details { get; init; }
 	public string? Error { get; init; }
+
+	public bool ContributesToValidation { get; init; } = true;
 
 	public KeywordEvaluation(){}
 }

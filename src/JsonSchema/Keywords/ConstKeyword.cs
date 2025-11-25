@@ -32,7 +32,7 @@ public class ConstKeyword : IKeywordHandler
 				IsValid = false,
 				Keyword = Name,
 				Error = ErrorMessages.GetConst(context.Options.Culture)
-					.ReplaceToken("value", context.Instance.ToJsonString())
+					.ReplaceToken("value", keyword.RawValue.ToJsonString())
 			};
 		}
 
