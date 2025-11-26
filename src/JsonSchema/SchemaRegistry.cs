@@ -36,41 +36,6 @@ public class SchemaRegistry
 		set => _fetch = value;
 	}
 
-	public SchemaRegistry()
-	{
-		Register(MetaSchemas.Draft6);
-
-		//Register(MetaSchemas.Draft7);
-
-		//Register(MetaSchemas.Draft201909);
-		//Register(MetaSchemas.Core201909);
-		//Register(MetaSchemas.Applicator201909);
-		//Register(MetaSchemas.Validation201909);
-		//Register(MetaSchemas.Metadata201909);
-		//Register(MetaSchemas.Format201909);
-		//Register(MetaSchemas.Content201909);
-
-		//Register(MetaSchemas.Draft202012);
-		//Register(MetaSchemas.Core202012);
-		//Register(MetaSchemas.Applicator202012);
-		//Register(MetaSchemas.Validation202012);
-		//Register(MetaSchemas.Metadata202012);
-		//Register(MetaSchemas.Unevaluated202012);
-		//Register(MetaSchemas.FormatAnnotation202012);
-		//Register(MetaSchemas.FormatAssertion202012);
-		//Register(MetaSchemas.Content202012);
-
-		//Register(MetaSchemas.DraftNext);
-		//Register(MetaSchemas.CoreNext);
-		//Register(MetaSchemas.ApplicatorNext);
-		//Register(MetaSchemas.ValidationNext);
-		//Register(MetaSchemas.MetadataNext);
-		//Register(MetaSchemas.UnevaluatedNext);
-		//Register(MetaSchemas.FormatAnnotationNext);
-		//Register(MetaSchemas.FormatAssertionNext);
-		//Register(MetaSchemas.ContentNext);
-	}
-
 	/// <summary>
 	/// Registers a schema by URI.
 	/// </summary>

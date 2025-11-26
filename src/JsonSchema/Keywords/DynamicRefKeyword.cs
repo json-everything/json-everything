@@ -15,11 +15,19 @@ public partial class DynamicRefKeyword : IKeywordHandler
 
 #if NET7_0_OR_GREATER
 	public virtual Regex AnchorPattern { get; } = GetAnchorPatternRegex();
-	[GeneratedRegex("^[A-Za-z_][-A-Za-z0-9._]*$", RegexOptions.Compiled)]
+	[GeneratedRegex("^#[A-Za-z_][-A-Za-z0-9._]*$", RegexOptions.Compiled)]
 	private static partial Regex GetAnchorPatternRegex();
 #else
-	public virtual Regex AnchorPattern { get; } = new("^[A-Za-z_][-A-Za-z0-9._]*$", RegexOptions.Compiled);
+	public virtual Regex AnchorPattern { get; } = new("^#[A-Za-z_][-A-Za-z0-9._]*$", RegexOptions.Compiled);
 #endif
+	// TODO: this is the correct version - uncomment after updating to latest test suite
+//#if NET7_0_OR_GREATER
+//	public virtual Regex AnchorPattern { get; } = GetAnchorPatternRegex();
+//	[GeneratedRegex("^[A-Za-z_][-A-Za-z0-9._]*$", RegexOptions.Compiled)]
+//	private static partial Regex GetAnchorPatternRegex();
+//#else
+//	public virtual Regex AnchorPattern { get; } = new("^[A-Za-z_][-A-Za-z0-9._]*$", RegexOptions.Compiled);
+//#endif
 
 	public virtual object? ValidateKeywordValue(JsonElement value)
 	{

@@ -48,6 +48,11 @@ public class BuildOptions
 	/// </summary>
 	public bool AllowReferencesIntoUnknownKeywords { get; set; } = true;
 
+	static BuildOptions()
+	{
+		_ = MetaSchemas.Draft201909;
+	}
+
 	public BuildOptions()
 		: this(SchemaRegistry.Global, SchemaKeywordRegistry.Default)
 	{
