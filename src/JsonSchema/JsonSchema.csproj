@@ -32,6 +32,12 @@
     <PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
   </PropertyGroup>
 
+	<ItemGroup>
+		<!--<EmbeddedResource Include="..\..\Meta-Schemas\**\*.json" />-->
+		<EmbeddedResource Include="..\..\Meta-Schemas\**\*.json" Link="Meta-Schemas\%(RecursiveDir)%(Filename)%(Extension)" />
+		<EmbeddedResource Remove="..\..\Meta-Schemas\OpenAPI\**" />
+	</ItemGroup>
+
   <ItemGroup>
     <Compile Remove="IBaseDocument.cs" />
     <Compile Remove="JsonNodeBaseDocument.cs" />

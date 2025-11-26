@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using Json.Schema.Keywords;
 
 namespace Json.Schema;
 
