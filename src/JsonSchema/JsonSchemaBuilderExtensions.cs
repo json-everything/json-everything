@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 
@@ -18,9 +19,9 @@ public static class JsonSchemaBuilderExtensions
 	/// <param name="builder">The builder.</param>
 	/// <param name="schema">The schema for `additionalItems`.</param>
 	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder AdditionalItems(this JsonSchemaBuilder builder, JsonSchema schema)
+	public static JsonSchemaBuilder AdditionalItems(this JsonSchemaBuilder builder, JsonSchemaBuilder schema)
 	{
-		builder.Add(new AdditionalItemsKeyword(schema));
+		builder.Add("additionalItems", schema);
 		return builder;
 	}
 
@@ -30,9 +31,9 @@ public static class JsonSchemaBuilderExtensions
 	/// <param name="builder">The builder.</param>
 	/// <param name="schema">The schema for `additionalProperties`.</param>
 	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder AdditionalProperties(this JsonSchemaBuilder builder, JsonSchema schema)
+	public static JsonSchemaBuilder AdditionalProperties(this JsonSchemaBuilder builder, JsonSchemaBuilder schema)
 	{
-		builder.Add(new AdditionalPropertiesKeyword(schema));
+		builder.Add("additionalProperties", schema);
 		return builder;
 	}
 
@@ -42,9 +43,9 @@ public static class JsonSchemaBuilderExtensions
 	/// <param name="builder">The builder.</param>
 	/// <param name="schemas">The schemas for `allOf`.</param>
 	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder AllOf(this JsonSchemaBuilder builder, params JsonSchema[] schemas)
+	public static JsonSchemaBuilder AllOf(this JsonSchemaBuilder builder, params JsonSchemaBuilder[] schemas)
 	{
-		builder.Add(new AllOfKeyword(schemas));
+		builder.Add("allOf", schemas);
 		return builder;
 	}
 
@@ -54,9 +55,9 @@ public static class JsonSchemaBuilderExtensions
 	/// <param name="builder">The builder.</param>
 	/// <param name="schemas">The schemas for `allOf`.</param>
 	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder AllOf(this JsonSchemaBuilder builder, IEnumerable<JsonSchema> schemas)
+	public static JsonSchemaBuilder AllOf(this JsonSchemaBuilder builder, IEnumerable<JsonSchemaBuilder> schemas)
 	{
-		builder.Add(new AllOfKeyword(schemas));
+		builder.Add("allOf", schemas);
 		return builder;
 	}
 
@@ -68,7 +69,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder Anchor(this JsonSchemaBuilder builder, string reference)
 	{
-		builder.Add(new AnchorKeyword(reference));
+		builder.Add("$anchor", reference);
 		return builder;
 	}
 
@@ -78,9 +79,9 @@ public static class JsonSchemaBuilderExtensions
 	/// <param name="builder">The builder.</param>
 	/// <param name="schemas">The schemas for `anyOf`.</param>
 	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder AnyOf(this JsonSchemaBuilder builder, params JsonSchema[] schemas)
+	public static JsonSchemaBuilder AnyOf(this JsonSchemaBuilder builder, params JsonSchemaBuilder[] schemas)
 	{
-		builder.Add(new AnyOfKeyword(schemas));
+		builder.Add("anyOf", schemas);
 		return builder;
 	}
 
@@ -90,9 +91,9 @@ public static class JsonSchemaBuilderExtensions
 	/// <param name="builder">The builder.</param>
 	/// <param name="schemas">The schemas for `anyOf`.</param>
 	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder AnyOf(this JsonSchemaBuilder builder, IEnumerable<JsonSchema> schemas)
+	public static JsonSchemaBuilder AnyOf(this JsonSchemaBuilder builder, IEnumerable<JsonSchemaBuilder> schemas)
 	{
-		builder.Add(new AnyOfKeyword(schemas));
+		builder.Add("anyOf", schemas);
 		return builder;
 	}
 
@@ -104,7 +105,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder Comment(this JsonSchemaBuilder builder, string comment)
 	{
-		builder.Add(new CommentKeyword(comment));
+		builder.Add("$comment", comment);
 		return builder;
 	}
 
@@ -116,7 +117,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder Const(this JsonSchemaBuilder builder, JsonNode? node)
 	{
-		builder.Add(new ConstKeyword(node));
+		builder.Add("const", node);
 		return builder;
 	}
 
@@ -126,9 +127,9 @@ public static class JsonSchemaBuilderExtensions
 	/// <param name="builder">The builder.</param>
 	/// <param name="schema">The schema for `contains`.</param>
 	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder Contains(this JsonSchemaBuilder builder, JsonSchema schema)
+	public static JsonSchemaBuilder Contains(this JsonSchemaBuilder builder, JsonSchemaBuilder schema)
 	{
-		builder.Add(new ContainsKeyword(schema));
+		builder.Add("contains", schema);
 		return builder;
 	}
 
@@ -140,7 +141,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder Default(this JsonSchemaBuilder builder, JsonNode? node)
 	{
-		builder.Add(new DefaultKeyword(node));
+		builder.Add("default", node);
 		return builder;
 	}
 
@@ -150,9 +151,9 @@ public static class JsonSchemaBuilderExtensions
 	/// <param name="builder">The builder.</param>
 	/// <param name="defs">The schema definition map.</param>
 	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder Definitions(this JsonSchemaBuilder builder, IReadOnlyDictionary<string, JsonSchema> defs)
+	public static JsonSchemaBuilder Definitions(this JsonSchemaBuilder builder, IReadOnlyDictionary<string, JsonSchemaBuilder> defs)
 	{
-		builder.Add(new DefinitionsKeyword(defs));
+		builder.Add("definitions", defs);
 		return builder;
 	}
 
@@ -162,9 +163,9 @@ public static class JsonSchemaBuilderExtensions
 	/// <param name="builder">The builder.</param>
 	/// <param name="defs">The schema definition map.</param>
 	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder Definitions(this JsonSchemaBuilder builder, params (string name, JsonSchema schema)[] defs)
+	public static JsonSchemaBuilder Definitions(this JsonSchemaBuilder builder, params (string name, JsonSchemaBuilder schema)[] defs)
 	{
-		builder.Add(new DefinitionsKeyword(defs.ToDictionary(x => x.name, x => x.schema)));
+		builder.Add("definitions", defs);
 		return builder;
 	}
 
@@ -174,9 +175,9 @@ public static class JsonSchemaBuilderExtensions
 	/// <param name="builder">The builder.</param>
 	/// <param name="defs">The schema definition map.</param>
 	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder Defs(this JsonSchemaBuilder builder, IReadOnlyDictionary<string, JsonSchema> defs)
+	public static JsonSchemaBuilder Defs(this JsonSchemaBuilder builder, IReadOnlyDictionary<string, JsonSchemaBuilder> defs)
 	{
-		builder.Add(new DefsKeyword(defs));
+		builder.Add("$defs", defs);
 		return builder;
 	}
 
@@ -186,9 +187,9 @@ public static class JsonSchemaBuilderExtensions
 	/// <param name="builder">The builder.</param>
 	/// <param name="defs">The schema definition map.</param>
 	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder Defs(this JsonSchemaBuilder builder, params (string name, JsonSchema schema)[] defs)
+	public static JsonSchemaBuilder Defs(this JsonSchemaBuilder builder, params (string name, JsonSchemaBuilder schema)[] defs)
 	{
-		builder.Add(new DefsKeyword(defs.ToDictionary(x => x.name, x => x.schema)));
+		builder.Add("$defs", defs);
 		return builder;
 	}
 
@@ -200,7 +201,11 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder Dependencies(this JsonSchemaBuilder builder, IReadOnlyDictionary<string, SchemaOrPropertyList> deps)
 	{
-		builder.Add(new DependenciesKeyword(deps));
+		builder.Add("dependencies", new JsonObject(deps
+			.ToDictionary(x => x.Key,
+				x => x.Value.Requirements is not null
+					? (JsonNode?)new JsonArray(x.Value.Requirements)
+					: x.Value.Schema!.Keywords)));
 		return builder;
 	}
 
@@ -212,7 +217,11 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder Dependencies(this JsonSchemaBuilder builder, params (string name, SchemaOrPropertyList dep)[] deps)
 	{
-		builder.Add(new DependenciesKeyword(deps.ToDictionary(x => x.name, x => x.dep)));
+		builder.Add("dependencies", new JsonObject(deps
+			.ToDictionary(x => x.name,
+				x => x.dep.Requirements is not null
+					? (JsonNode?)new JsonArray(x.dep.Requirements)
+					: x.dep.Schema!.Keywords)));
 		return builder;
 	}
 
@@ -224,7 +233,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder DependentRequired(this JsonSchemaBuilder builder, IReadOnlyDictionary<string, IReadOnlyList<string>> deps)
 	{
-		builder.Add(new DependentRequiredKeyword(deps));
+		builder.Add("dependentRequired", new JsonObject(deps.ToDictionary(x => x.Key, x => (JsonNode?)new JsonArray(x.Value.Select(v => (JsonNode?)v).ToArray()))));
 		return builder;
 	}
 
@@ -236,7 +245,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder DependentRequired(this JsonSchemaBuilder builder, params (string name, IEnumerable<string> properties)[] deps)
 	{
-		builder.Add(new DependentRequiredKeyword(deps.ToDictionary(x => x.name, x => (IReadOnlyList<string>)x.properties.ToArray())));
+		builder.Add("dependentRequired", new JsonObject(deps.ToDictionary(x => x.name, x => (JsonNode?)new JsonArray(x.properties.Select(v => (JsonNode?)v).ToArray()))));
 		return builder;
 	}
 
@@ -246,9 +255,9 @@ public static class JsonSchemaBuilderExtensions
 	/// <param name="builder">The builder.</param>
 	/// <param name="deps">The dependencies.</param>
 	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder DependentSchemas(this JsonSchemaBuilder builder, IReadOnlyDictionary<string, JsonSchema> deps)
+	public static JsonSchemaBuilder DependentSchemas(this JsonSchemaBuilder builder, IReadOnlyDictionary<string, JsonSchemaBuilder> deps)
 	{
-		builder.Add(new DependentSchemasKeyword(deps));
+		builder.Add("dependentRequired", deps);
 		return builder;
 	}
 
@@ -258,9 +267,9 @@ public static class JsonSchemaBuilderExtensions
 	/// <param name="builder">The builder.</param>
 	/// <param name="deps">The dependencies.</param>
 	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder DependentSchemas(this JsonSchemaBuilder builder, params (string name, JsonSchema schema)[] deps)
+	public static JsonSchemaBuilder DependentSchemas(this JsonSchemaBuilder builder, params (string name, JsonSchemaBuilder schema)[] deps)
 	{
-		builder.Add(new DependentSchemasKeyword(deps.ToDictionary(x => x.name, x => x.schema)));
+		builder.Add("dependentRequired", deps);
 		return builder;
 	}
 
@@ -272,7 +281,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder Deprecated(this JsonSchemaBuilder builder, bool deprecated)
 	{
-		builder.Add(new DeprecatedKeyword(deprecated));
+		builder.Add("deprecated", deprecated);
 		return builder;
 	}
 
@@ -284,7 +293,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder Description(this JsonSchemaBuilder builder, string description)
 	{
-		builder.Add(new DescriptionKeyword(description));
+		builder.Add("description", description);
 		return builder;
 	}
 
@@ -296,7 +305,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder DynamicAnchor(this JsonSchemaBuilder builder, string reference)
 	{
-		builder.Add(new DynamicAnchorKeyword(reference));
+		builder.Add("$dynamicAnchor", reference);
 		return builder;
 	}
 
@@ -308,7 +317,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder DynamicRef(this JsonSchemaBuilder builder, Uri reference)
 	{
-		builder.Add(new DynamicRefKeyword(reference));
+		builder.Add("$dynamicRef", reference.OriginalString);
 		return builder;
 	}
 
@@ -320,7 +329,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder DynamicRef(this JsonSchemaBuilder builder, string reference)
 	{
-		builder.Add(new DynamicRefKeyword(new Uri(reference, UriKind.RelativeOrAbsolute)));
+		builder.Add("$dynamicAnchor", reference);
 		return builder;
 	}
 
@@ -330,9 +339,9 @@ public static class JsonSchemaBuilderExtensions
 	/// <param name="builder">The builder.</param>
 	/// <param name="schema">The schema for `else`.</param>
 	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder Else(this JsonSchemaBuilder builder, JsonSchema schema)
+	public static JsonSchemaBuilder Else(this JsonSchemaBuilder builder, JsonSchemaBuilder schema)
 	{
-		builder.Add(new ElseKeyword(schema));
+		builder.Add("else", schema);
 		return builder;
 	}
 
@@ -344,7 +353,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder Enum(this JsonSchemaBuilder builder, IEnumerable<JsonNode?> elements)
 	{
-		builder.Add(new EnumKeyword(elements));
+		builder.Add("enum", new JsonArray(elements.ToArray()));
 		return builder;
 	}
 
@@ -356,7 +365,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder Enum(this JsonSchemaBuilder builder, params JsonNode?[] elements)
 	{
-		builder.Add(new EnumKeyword(elements));
+		builder.Add("enum", new JsonArray(elements));
 		return builder;
 	}
 
@@ -371,7 +380,7 @@ public static class JsonSchemaBuilderExtensions
 	/// </remarks>
 	public static JsonSchemaBuilder Enum(this JsonSchemaBuilder builder, IEnumerable<string> elements)
 	{
-		builder.Add(new EnumKeyword(elements.Select(x => (JsonNode?)x)));
+		builder.Add("enum", new JsonArray(elements.Select(x => (JsonNode?)x).ToArray()));
 		return builder;
 	}
 
@@ -383,7 +392,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder Examples(this JsonSchemaBuilder builder, IEnumerable<JsonNode?> elements)
 	{
-		builder.Add(new ExamplesKeyword(elements));
+		builder.Add("examples", new JsonArray(elements.ToArray()));
 		return builder;
 	}
 
@@ -395,7 +404,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder Examples(this JsonSchemaBuilder builder, params JsonNode?[] elements)
 	{
-		builder.Add(new ExamplesKeyword(elements));
+		builder.Add("examples", new JsonArray(elements));
 		return builder;
 	}
 
@@ -407,7 +416,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder ExclusiveMaximum(this JsonSchemaBuilder builder, decimal max)
 	{
-		builder.Add(new ExclusiveMaximumKeyword(max));
+		builder.Add("exclusiveMaximum", max);
 		return builder;
 	}
 
@@ -419,7 +428,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder ExclusiveMinimum(this JsonSchemaBuilder builder, decimal min)
 	{
-		builder.Add(new ExclusiveMinimumKeyword(min));
+		builder.Add("exclusiveMinimum", min);
 		return builder;
 	}
 
@@ -431,7 +440,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder Format(this JsonSchemaBuilder builder, string format)
 	{
-		builder.Add(new FormatKeyword(Formats.Get(format)));
+		builder.Add("format", format);
 		return builder;
 	}
 
@@ -443,7 +452,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder Format(this JsonSchemaBuilder builder, Format format)
 	{
-		builder.Add(new FormatKeyword(format));
+		builder.Add("format", format.Key);
 		return builder;
 	}
 
@@ -455,8 +464,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder Id(this JsonSchemaBuilder builder, Uri id)
 	{
-		builder.Add(new IdKeyword(id));
-		builder.TrySetBaseUri(id);
+		builder.Add("$id", id.OriginalString);
 		return builder;
 	}
 
@@ -468,9 +476,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder Id(this JsonSchemaBuilder builder, string id)
 	{
-		var uri = new Uri(id, UriKind.RelativeOrAbsolute);
-		builder.Add(new IdKeyword(uri));
-		builder.TrySetBaseUri(uri);
+		builder.Add("$id", id);
 		return builder;
 	}
 
@@ -480,9 +486,9 @@ public static class JsonSchemaBuilderExtensions
 	/// <param name="builder">The builder.</param>
 	/// <param name="schema">The schema for `if`.</param>
 	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder If(this JsonSchemaBuilder builder, JsonSchema schema)
+	public static JsonSchemaBuilder If(this JsonSchemaBuilder builder, JsonSchemaBuilder schema)
 	{
-		builder.Add(new IfKeyword(schema));
+		builder.Add("if", schema);
 		return builder;
 	}
 
@@ -492,9 +498,9 @@ public static class JsonSchemaBuilderExtensions
 	/// <param name="builder">The builder.</param>
 	/// <param name="schema">The schema for `items`.</param>
 	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder Items(this JsonSchemaBuilder builder, JsonSchema schema)
+	public static JsonSchemaBuilder Items(this JsonSchemaBuilder builder, JsonSchemaBuilder schema)
 	{
-		builder.Add(new ItemsKeyword(schema));
+		builder.Add("items", schema);
 		return builder;
 	}
 
@@ -504,9 +510,9 @@ public static class JsonSchemaBuilderExtensions
 	/// <param name="builder">The builder.</param>
 	/// <param name="schemas">The schemas for `items`.</param>
 	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder Items(this JsonSchemaBuilder builder, IEnumerable<JsonSchema> schemas)
+	public static JsonSchemaBuilder Items(this JsonSchemaBuilder builder, IEnumerable<JsonSchemaBuilder> schemas)
 	{
-		builder.Add(new ItemsKeyword(schemas));
+		builder.Add("items", schemas);
 		return builder;
 	}
 
@@ -518,7 +524,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder MaxContains(this JsonSchemaBuilder builder, uint value)
 	{
-		builder.Add(new MaxContainsKeyword(value));
+		builder.Add("maxContains", value);
 		return builder;
 	}
 
@@ -530,7 +536,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder Maximum(this JsonSchemaBuilder builder, decimal value)
 	{
-		builder.Add(new MaximumKeyword(value));
+		builder.Add("maximum", value);
 		return builder;
 	}
 
@@ -542,7 +548,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder MaxItems(this JsonSchemaBuilder builder, uint value)
 	{
-		builder.Add(new MaxItemsKeyword(value));
+		builder.Add("maxItems", value);
 		return builder;
 	}
 
@@ -554,7 +560,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder MaxLength(this JsonSchemaBuilder builder, uint value)
 	{
-		builder.Add(new MaxLengthKeyword(value));
+		builder.Add("maxLength", value);
 		return builder;
 	}
 
@@ -566,7 +572,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder MaxProperties(this JsonSchemaBuilder builder, uint value)
 	{
-		builder.Add(new MaxPropertiesKeyword(value));
+		builder.Add("maxProperties", value);
 		return builder;
 	}
 
@@ -578,7 +584,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder MinContains(this JsonSchemaBuilder builder, uint value)
 	{
-		builder.Add(new MinContainsKeyword(value));
+		builder.Add("minContains", value);
 		return builder;
 	}
 
@@ -590,7 +596,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder Minimum(this JsonSchemaBuilder builder, decimal value)
 	{
-		builder.Add(new MinimumKeyword(value));
+		builder.Add("minimum", value);
 		return builder;
 	}
 
@@ -602,7 +608,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder MinItems(this JsonSchemaBuilder builder, uint value)
 	{
-		builder.Add(new MinItemsKeyword(value));
+		builder.Add("minItems", value);
 		return builder;
 	}
 
@@ -614,7 +620,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder MinLength(this JsonSchemaBuilder builder, uint value)
 	{
-		builder.Add(new MinLengthKeyword(value));
+		builder.Add("minLength", value);
 		return builder;
 	}
 
@@ -626,7 +632,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder MinProperties(this JsonSchemaBuilder builder, uint value)
 	{
-		builder.Add(new MinPropertiesKeyword(value));
+		builder.Add("minProperties", value);
 		return builder;
 	}
 
@@ -638,7 +644,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder MultipleOf(this JsonSchemaBuilder builder, decimal value)
 	{
-		builder.Add(new MultipleOfKeyword(value));
+		builder.Add("multipleOf", value);
 		return builder;
 	}
 
@@ -648,9 +654,9 @@ public static class JsonSchemaBuilderExtensions
 	/// <param name="builder">The builder.</param>
 	/// <param name="schema">The schema for `not`.</param>
 	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder Not(this JsonSchemaBuilder builder, JsonSchema schema)
+	public static JsonSchemaBuilder Not(this JsonSchemaBuilder builder, JsonSchemaBuilder schema)
 	{
-		builder.Add(new NotKeyword(schema));
+		builder.Add("not", schema);
 		return builder;
 	}
 
@@ -660,9 +666,9 @@ public static class JsonSchemaBuilderExtensions
 	/// <param name="builder">The builder.</param>
 	/// <param name="schemas">The schema for `oneOf`.</param>
 	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder OneOf(this JsonSchemaBuilder builder, params JsonSchema[] schemas)
+	public static JsonSchemaBuilder OneOf(this JsonSchemaBuilder builder, params JsonSchemaBuilder[] schemas)
 	{
-		builder.Add(new OneOfKeyword(schemas));
+		builder.Add("oneOf", schemas);
 		return builder;
 	}
 
@@ -672,9 +678,9 @@ public static class JsonSchemaBuilderExtensions
 	/// <param name="builder">The builder.</param>
 	/// <param name="schemas">The schemas for `oneOf`.</param>
 	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder OneOf(this JsonSchemaBuilder builder, IEnumerable<JsonSchema> schemas)
+	public static JsonSchemaBuilder OneOf(this JsonSchemaBuilder builder, IEnumerable<JsonSchemaBuilder> schemas)
 	{
-		builder.Add(new OneOfKeyword(schemas));
+		builder.Add("oneOf", schemas);
 		return builder;
 	}
 
@@ -686,7 +692,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder Pattern(this JsonSchemaBuilder builder, Regex pattern)
 	{
-		builder.Add(new PatternKeyword(pattern));
+		builder.Add("pattern", pattern.ToString());
 		return builder;
 	}
 
@@ -698,7 +704,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder Pattern(this JsonSchemaBuilder builder, [StringSyntax(StringSyntaxAttribute.Regex)] string pattern)
 	{
-		builder.Add(new PatternKeyword(pattern));
+		builder.Add("pattern", pattern);
 		return builder;
 	}
 
@@ -708,9 +714,9 @@ public static class JsonSchemaBuilderExtensions
 	/// <param name="builder">The builder.</param>
 	/// <param name="props">The property schemas.</param>
 	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder PatternProperties(this JsonSchemaBuilder builder, IReadOnlyDictionary<Regex, JsonSchema> props)
+	public static JsonSchemaBuilder PatternProperties(this JsonSchemaBuilder builder, IReadOnlyDictionary<Regex, JsonSchemaBuilder> props)
 	{
-		builder.Add(new PatternPropertiesKeyword(props));
+		builder.Add("patternProperties", props.ToDictionary(x => x.Key.ToString(), x => x.Value));
 		return builder;
 	}
 
@@ -720,9 +726,9 @@ public static class JsonSchemaBuilderExtensions
 	/// <param name="builder">The builder.</param>
 	/// <param name="props">The property schemas.</param>
 	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder PatternProperties(this JsonSchemaBuilder builder, params (Regex pattern, JsonSchema schema)[] props)
+	public static JsonSchemaBuilder PatternProperties(this JsonSchemaBuilder builder, params (Regex pattern, JsonSchemaBuilder schema)[] props)
 	{
-		builder.Add(new PatternPropertiesKeyword(props));
+		builder.Add("patternProperties", props.ToDictionary(x => x.pattern.ToString(), x => x.schema));
 		return builder;
 	}
 
@@ -732,9 +738,9 @@ public static class JsonSchemaBuilderExtensions
 	/// <param name="builder">The builder.</param>
 	/// <param name="props">The property schemas.</param>
 	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder PatternProperties(this JsonSchemaBuilder builder, IReadOnlyDictionary<string, JsonSchema> props)
+	public static JsonSchemaBuilder PatternProperties(this JsonSchemaBuilder builder, IReadOnlyDictionary<string, JsonSchemaBuilder> props)
 	{
-		builder.Add(new PatternPropertiesKeyword(props));
+		builder.Add("patternProperties", props.ToDictionary(x => x.Key, x => x.Value));
 		return builder;
 	}
 
@@ -744,9 +750,9 @@ public static class JsonSchemaBuilderExtensions
 	/// <param name="builder">The builder.</param>
 	/// <param name="props">The property schemas.</param>
 	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder PatternProperties(this JsonSchemaBuilder builder, params (string pattern, JsonSchema schema)[] props)
+	public static JsonSchemaBuilder PatternProperties(this JsonSchemaBuilder builder, params (string pattern, JsonSchemaBuilder schema)[] props)
 	{
-		builder.Add(new PatternPropertiesKeyword(props));
+		builder.Add("patternProperties", props.ToDictionary(x => x.pattern, x => x.schema));
 		return builder;
 	}
 
@@ -756,9 +762,9 @@ public static class JsonSchemaBuilderExtensions
 	/// <param name="builder">The builder.</param>
 	/// <param name="schemas">The schemas for `prefixItems`.</param>
 	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder PrefixItems(this JsonSchemaBuilder builder, params JsonSchema[] schemas)
+	public static JsonSchemaBuilder PrefixItems(this JsonSchemaBuilder builder, params JsonSchemaBuilder[] schemas)
 	{
-		builder.Add(new PrefixItemsKeyword(schemas));
+		builder.Add("prefixItems", schemas);
 		return builder;
 	}
 
@@ -768,9 +774,9 @@ public static class JsonSchemaBuilderExtensions
 	/// <param name="builder">The builder.</param>
 	/// <param name="schemas">The schemas for `prefixItems`.</param>
 	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder PrefixItems(this JsonSchemaBuilder builder, IEnumerable<JsonSchema> schemas)
+	public static JsonSchemaBuilder PrefixItems(this JsonSchemaBuilder builder, IEnumerable<JsonSchemaBuilder> schemas)
 	{
-		builder.Add(new PrefixItemsKeyword(schemas));
+		builder.Add("prefixItems", schemas);
 		return builder;
 	}
 
@@ -780,9 +786,9 @@ public static class JsonSchemaBuilderExtensions
 	/// <param name="builder">The builder.</param>
 	/// <param name="props">The property schemas.</param>
 	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder Properties(this JsonSchemaBuilder builder, IReadOnlyDictionary<string, JsonSchema> props)
+	public static JsonSchemaBuilder Properties(this JsonSchemaBuilder builder, IReadOnlyDictionary<string, JsonSchemaBuilder> props)
 	{
-		builder.Add(new PropertiesKeyword(props));
+		builder.Add("properties", props);
 		return builder;
 	}
 
@@ -792,35 +798,35 @@ public static class JsonSchemaBuilderExtensions
 	/// <param name="builder">The builder.</param>
 	/// <param name="props">The property schemas.</param>
 	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder Properties(this JsonSchemaBuilder builder, params (string name, JsonSchema schema)[] props)
+	public static JsonSchemaBuilder Properties(this JsonSchemaBuilder builder, params (string name, JsonSchemaBuilder schema)[] props)
 	{
-		builder.Add(new PropertiesKeyword(props.ToDictionary(x => x.name, x => x.schema)));
+		builder.Add("properties", props);
 		return builder;
 	}
 
-	/// <summary>
-	/// Adds a `propertyDependencies` keyword.
-	/// </summary>
-	/// <param name="builder">The builder.</param>
-	/// <param name="dependencies">The property dependency schemas.</param>
-	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder PropertyDependencies(this JsonSchemaBuilder builder, IReadOnlyDictionary<string, PropertyDependency> dependencies)
-	{
-		builder.Add(new PropertyDependenciesKeyword(dependencies.ToDictionary(x => x.Key, x => x.Value)));
-		return builder;
-	}
+	///// <summary>
+	///// Adds a `propertyDependencies` keyword.
+	///// </summary>
+	///// <param name="builder">The builder.</param>
+	///// <param name="dependencies">The property dependency schemas.</param>
+	///// <returns>The builder.</returns>
+	//public static JsonSchemaBuilder PropertyDependencies(this JsonSchemaBuilder builder, IReadOnlyDictionary<string, PropertyDependency> dependencies)
+	//{
+	//	builder.Add(new PropertyDependenciesKeyword(dependencies.ToDictionary(x => x.Key, x => x.Value)));
+	//	return builder;
+	//}
 
-	/// <summary>
-	/// Adds a `propertyDependencies` keyword.
-	/// </summary>
-	/// <param name="builder">The builder.</param>
-	/// <param name="dependencies">The property dependency schemas.</param>
-	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder PropertyDependencies(this JsonSchemaBuilder builder, params (string property, PropertyDependency dependency)[] dependencies)
-	{
-		builder.Add(new PropertyDependenciesKeyword(dependencies.ToDictionary(x => x.property, x => x.dependency)));
-		return builder;
-	}
+	///// <summary>
+	///// Adds a `propertyDependencies` keyword.
+	///// </summary>
+	///// <param name="builder">The builder.</param>
+	///// <param name="dependencies">The property dependency schemas.</param>
+	///// <returns>The builder.</returns>
+	//public static JsonSchemaBuilder PropertyDependencies(this JsonSchemaBuilder builder, params (string property, PropertyDependency dependency)[] dependencies)
+	//{
+	//	builder.Add(new PropertyDependenciesKeyword(dependencies.ToDictionary(x => x.property, x => x.dependency)));
+	//	return builder;
+	//}
 
 	/// <summary>
 	/// Add a `propertyNames` keyword.
@@ -828,9 +834,9 @@ public static class JsonSchemaBuilderExtensions
 	/// <param name="builder">The builder.</param>
 	/// <param name="schema">The schema for `propertyNames`.</param>
 	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder PropertyNames(this JsonSchemaBuilder builder, JsonSchema schema)
+	public static JsonSchemaBuilder PropertyNames(this JsonSchemaBuilder builder, JsonSchemaBuilder schema)
 	{
-		builder.Add(new PropertyNamesKeyword(schema));
+		builder.Add("propertyNames", schema);
 		return builder;
 	}
 
@@ -842,7 +848,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder ReadOnly(this JsonSchemaBuilder builder, bool value)
 	{
-		builder.Add(new ReadOnlyKeyword(value));
+		builder.Add("readOnly", value);
 		return builder;
 	}
 
@@ -857,7 +863,7 @@ public static class JsonSchemaBuilderExtensions
 	/// </remarks>
 	public static JsonSchemaBuilder RecursiveAnchor(this JsonSchemaBuilder builder, bool value = true)
 	{
-		builder.Add(new RecursiveAnchorKeyword(value));
+		builder.Add("$recursiveAnchor", value);
 		return builder;
 	}
 
@@ -869,7 +875,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder RecursiveRef(this JsonSchemaBuilder builder, Uri reference)
 	{
-		builder.Add(new RecursiveRefKeyword(reference));
+		builder.Add("$recursiveRef", reference.OriginalString);
 		return builder;
 	}
 
@@ -881,7 +887,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder RecursiveRef(this JsonSchemaBuilder builder, string reference)
 	{
-		builder.Add(new RecursiveRefKeyword(new Uri(reference, UriKind.RelativeOrAbsolute)));
+		builder.Add("$recursiveRef", reference);
 		return builder;
 	}
 
@@ -893,7 +899,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder Ref(this JsonSchemaBuilder builder, Uri reference)
 	{
-		builder.Add(new RefKeyword(reference));
+		builder.Add("$ref", reference.OriginalString);
 		return builder;
 	}
 
@@ -905,7 +911,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder Ref(this JsonSchemaBuilder builder, string reference)
 	{
-		builder.Add(new RefKeyword(new Uri(reference, UriKind.RelativeOrAbsolute)));
+		builder.Add("$ref", reference);
 		return builder;
 	}
 
@@ -917,7 +923,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder Required(this JsonSchemaBuilder builder, IEnumerable<string> properties)
 	{
-		builder.Add(new RequiredKeyword(properties));
+		builder.Add("required", new JsonArray(properties.Select(x => (JsonNode?)x).ToArray()));
 		return builder;
 	}
 
@@ -929,7 +935,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder Required(this JsonSchemaBuilder builder, params string[] properties)
 	{
-		builder.Add(new RequiredKeyword(properties));
+		builder.Add("required", new JsonArray(properties.Select(x => (JsonNode?)x).ToArray()));
 		return builder;
 	}
 
@@ -941,7 +947,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder Schema(this JsonSchemaBuilder builder, Uri uri)
 	{
-		builder.Add(new SchemaKeyword(uri));
+		builder.Add("$schema", uri.OriginalString);
 		return builder;
 	}
 
@@ -953,7 +959,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder Schema(this JsonSchemaBuilder builder, string uri)
 	{
-		builder.Add(new SchemaKeyword(new Uri(uri, UriKind.Absolute)));
+		builder.Add("$schema", uri);
 		return builder;
 	}
 
@@ -963,9 +969,9 @@ public static class JsonSchemaBuilderExtensions
 	/// <param name="builder">The builder.</param>
 	/// <param name="schema">The schema for `then`.</param>
 	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder Then(this JsonSchemaBuilder builder, JsonSchema schema)
+	public static JsonSchemaBuilder Then(this JsonSchemaBuilder builder, JsonSchemaBuilder schema)
 	{
-		builder.Add(new ThenKeyword(schema));
+		builder.Add("then", schema);
 		return builder;
 	}
 
@@ -977,7 +983,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder Title(this JsonSchemaBuilder builder, string title)
 	{
-		builder.Add(new TitleKeyword(title));
+		builder.Add("title", title);
 		return builder;
 	}
 
@@ -989,7 +995,11 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder Type(this JsonSchemaBuilder builder, SchemaValueType type)
 	{
-		builder.Add(new TypeKeyword(type));
+		var types = GetString(type);
+		if (types.Length == 1)
+			builder.Add("type", types[0]);
+		else
+			builder.Add("type", new JsonArray(types));
 		return builder;
 	}
 
@@ -1001,7 +1011,12 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder Type(this JsonSchemaBuilder builder, params SchemaValueType[] types)
 	{
-		builder.Add(new TypeKeyword(types));
+		var type = types.Aggregate((SchemaValueType)0, (t, x) => t | x);
+		var strings = GetString(type);
+		if (strings.Length == 1)
+			builder.Add("type", strings[0]);
+		else
+			builder.Add("type", new JsonArray(strings));
 		return builder;
 	}
 
@@ -1013,8 +1028,35 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder Type(this JsonSchemaBuilder builder, IEnumerable<SchemaValueType> types)
 	{
-		builder.Add(new TypeKeyword(types));
+		var type = types.Aggregate((SchemaValueType)0, (t, x) => t | x);
+		var strings = GetString(type);
+		if (strings.Length == 1)
+			builder.Add("type", strings[0]);
+		else
+			builder.Add("type", new JsonArray(strings));
 		return builder;
+	}
+
+	private static JsonNode?[] GetString(SchemaValueType type)
+	{
+		var strings = new List<JsonNode?>();
+		
+		if (type.HasFlag(SchemaValueType.Null))
+			strings.Add("null");
+		if (type.HasFlag(SchemaValueType.Boolean))
+			strings.Add("boolean");
+		if (type.HasFlag(SchemaValueType.Object))
+			strings.Add("object");
+		if (type.HasFlag(SchemaValueType.Array))
+			strings.Add("array");
+		if (type.HasFlag(SchemaValueType.Number))
+			strings.Add("number");
+		if (type.HasFlag(SchemaValueType.String))
+			strings.Add("string");
+		if (type.HasFlag(SchemaValueType.Integer))
+			strings.Add("integer");
+		
+		return strings.ToArray();
 	}
 
 	/// <summary>
@@ -1023,9 +1065,9 @@ public static class JsonSchemaBuilderExtensions
 	/// <param name="builder">The builder.</param>
 	/// <param name="schema">The schema for `unevaluatedItems`.</param>
 	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder UnevaluatedItems(this JsonSchemaBuilder builder, JsonSchema schema)
+	public static JsonSchemaBuilder UnevaluatedItems(this JsonSchemaBuilder builder, JsonSchemaBuilder schema)
 	{
-		builder.Add(new UnevaluatedItemsKeyword(schema));
+		builder.Add("unevaluatedItems", schema);
 		return builder;
 	}
 
@@ -1035,9 +1077,9 @@ public static class JsonSchemaBuilderExtensions
 	/// <param name="builder">The builder.</param>
 	/// <param name="schema">The schema for `unevaluatedProperties`.</param>
 	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder UnevaluatedProperties(this JsonSchemaBuilder builder, JsonSchema schema)
+	public static JsonSchemaBuilder UnevaluatedProperties(this JsonSchemaBuilder builder, JsonSchemaBuilder schema)
 	{
-		builder.Add(new UnevaluatedPropertiesKeyword(schema));
+		builder.Add("unevaluatedItems", schema);
 		return builder;
 	}
 
@@ -1049,70 +1091,70 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder UniqueItems(this JsonSchemaBuilder builder, bool value)
 	{
-		builder.Add(new UniqueItemsKeyword(value));
+		builder.Add("uniqueItems", value);
 		return builder;
 	}
 
-	/// <summary>
-	/// Adds a keyword that's not recognized by any vocabulary - extra data - to the schema.
-	/// </summary>
-	/// <param name="builder">The builder.</param>
-	/// <param name="name">The keyword name.</param>
-	/// <param name="value">The value.</param>
-	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder Unrecognized(this JsonSchemaBuilder builder, string name, JsonNode? value)
-	{
-		builder.Add(new UnrecognizedKeyword(name, value));
-		return builder;
-	}
+	///// <summary>
+	///// Adds a keyword that's not recognized by any vocabulary - extra data - to the schema.
+	///// </summary>
+	///// <param name="builder">The builder.</param>
+	///// <param name="name">The keyword name.</param>
+	///// <param name="value">The value.</param>
+	///// <returns>The builder.</returns>
+	//public static JsonSchemaBuilder Unrecognized(this JsonSchemaBuilder builder, string name, JsonNode? value)
+	//{
+	//	builder.Add(new UnrecognizedKeyword(name, value));
+	//	return builder;
+	//}
 
-	/// <summary>
-	/// Add an `$vocabulary` keyword.
-	/// </summary>
-	/// <param name="builder">The builder.</param>
-	/// <param name="vocabs">The vocabulary callouts.</param>
-	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder Vocabulary(this JsonSchemaBuilder builder, params (Uri id, bool required)[] vocabs)
-	{
-		builder.Add(new VocabularyKeyword(vocabs.ToDictionary(x => x.id, x => x.required)));
-		return builder;
-	}
+	///// <summary>
+	///// Add an `$vocabulary` keyword.
+	///// </summary>
+	///// <param name="builder">The builder.</param>
+	///// <param name="vocabs">The vocabulary callouts.</param>
+	///// <returns>The builder.</returns>
+	//public static JsonSchemaBuilder Vocabulary(this JsonSchemaBuilder builder, params (Uri id, bool required)[] vocabs)
+	//{
+	//	builder.Add(new VocabularyKeyword(vocabs.ToDictionary(x => x.id, x => x.required)));
+	//	return builder;
+	//}
 
-	/// <summary>
-	/// Add an `$vocabulary` keyword.
-	/// </summary>
-	/// <param name="builder">The builder.</param>
-	/// <param name="vocabs">The vocabulary callouts.</param>
-	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder Vocabulary(this JsonSchemaBuilder builder, params (string id, bool required)[] vocabs)
-	{
-		builder.Add(new VocabularyKeyword(vocabs.ToDictionary(x => new Uri(x.id, UriKind.Absolute), x => x.required)));
-		return builder;
-	}
+	///// <summary>
+	///// Add an `$vocabulary` keyword.
+	///// </summary>
+	///// <param name="builder">The builder.</param>
+	///// <param name="vocabs">The vocabulary callouts.</param>
+	///// <returns>The builder.</returns>
+	//public static JsonSchemaBuilder Vocabulary(this JsonSchemaBuilder builder, params (string id, bool required)[] vocabs)
+	//{
+	//	builder.Add(new VocabularyKeyword(vocabs.ToDictionary(x => new Uri(x.id, UriKind.Absolute), x => x.required)));
+	//	return builder;
+	//}
 
-	/// <summary>
-	/// Add an `$vocabulary` keyword.
-	/// </summary>
-	/// <param name="builder">The builder.</param>
-	/// <param name="vocabs">The vocabulary callouts.</param>
-	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder Vocabulary(this JsonSchemaBuilder builder, IReadOnlyDictionary<Uri, bool> vocabs)
-	{
-		builder.Add(new VocabularyKeyword(vocabs));
-		return builder;
-	}
+	///// <summary>
+	///// Add an `$vocabulary` keyword.
+	///// </summary>
+	///// <param name="builder">The builder.</param>
+	///// <param name="vocabs">The vocabulary callouts.</param>
+	///// <returns>The builder.</returns>
+	//public static JsonSchemaBuilder Vocabulary(this JsonSchemaBuilder builder, IReadOnlyDictionary<Uri, bool> vocabs)
+	//{
+	//	builder.Add(new VocabularyKeyword(vocabs));
+	//	return builder;
+	//}
 
-	/// <summary>
-	/// Add an `$vocabulary` keyword.
-	/// </summary>
-	/// <param name="builder">The builder.</param>
-	/// <param name="vocabs">The vocabulary callouts.</param>
-	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder Vocabulary(this JsonSchemaBuilder builder, IReadOnlyDictionary<string, bool> vocabs)
-	{
-		builder.Add(new VocabularyKeyword(vocabs.ToDictionary(x => new Uri(x.Key, UriKind.Absolute), x => x.Value)));
-		return builder;
-	}
+	///// <summary>
+	///// Add an `$vocabulary` keyword.
+	///// </summary>
+	///// <param name="builder">The builder.</param>
+	///// <param name="vocabs">The vocabulary callouts.</param>
+	///// <returns>The builder.</returns>
+	//public static JsonSchemaBuilder Vocabulary(this JsonSchemaBuilder builder, IReadOnlyDictionary<string, bool> vocabs)
+	//{
+	//	builder.Add(new VocabularyKeyword(vocabs.ToDictionary(x => new Uri(x.Key, UriKind.Absolute), x => x.Value)));
+	//	return builder;
+	//}
 
 	/// <summary>
 	/// Add a `writeOnly` keyword.
@@ -1122,7 +1164,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder WriteOnly(this JsonSchemaBuilder builder, bool value)
 	{
-		builder.Add(new WriteOnlyKeyword(value));
+		builder.Add("writeOnly", value);
 		return builder;
 	}
 
@@ -1133,7 +1175,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <param name="root">The root instance.</param>
 	/// <param name="options">The options to use for this evaluation.</param>
 	/// <returns>A <see cref="EvaluationResults"/> that provides the outcome of the evaluation.</returns>
-	public static EvaluationResults Evaluate(this JsonSchemaBuilder builder, JsonNode? root, EvaluationOptions? options = null)
+	public static EvaluationResults Evaluate(this JsonSchemaBuilder builder, JsonElement root, EvaluationOptions? options = null)
 	{
 		return builder.Build().Evaluate(root, options);
 	}

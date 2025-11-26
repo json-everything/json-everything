@@ -35,15 +35,7 @@
   <ItemGroup>
     <Compile Remove="IBaseDocument.cs" />
     <Compile Remove="JsonNodeBaseDocument.cs" />
-    <Compile Remove="JsonSchemaBuilder.cs" />
-    <Compile Remove="JsonSchemaBuilderExtensions.cs" />
     <Compile Remove="JsonSchemaExtensions.KeywordAccess.cs" />
-    <Compile Remove="MetaSchemas.cs" />
-    <Compile Remove="MetaSchemas.Draft201909.cs" />
-    <Compile Remove="MetaSchemas.Draft202012.cs" />
-    <Compile Remove="MetaSchemas.Draft6.cs" />
-    <Compile Remove="MetaSchemas.Draft7.cs" />
-    <Compile Remove="MetaSchemas.DraftNext.cs" />
     <Compile Remove="PropertyDependenciesKeyword.cs" />
     <Compile Remove="PropertyDependency.cs" />
     <Compile Remove="UnrecognizedKeyword.cs" />

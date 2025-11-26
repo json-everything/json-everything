@@ -38,7 +38,7 @@ public class SchemaRegistry
 
 	public SchemaRegistry()
 	{
-		//Register(MetaSchemas.Draft6);
+		Register(MetaSchemas.Draft6);
 
 		//Register(MetaSchemas.Draft7);
 

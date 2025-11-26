@@ -70,21 +70,26 @@ public class JsonSchema
 	/// Loads text from a file and deserializes a <see cref="JsonSchema"/>.
 	/// </summary>
 	/// <param name="fileName">The filename to load, URL-decoded.</param>
-	/// <param name="options">Serializer options.</param>
+	/// <param name="options">(optional) Serializer options.</param>
+	/// <param name="baseUri">(optional) The base URI for this schema.</param>
 	/// <returns>A new <see cref="JsonSchema"/>.</returns>
 	/// <exception cref="JsonException">Could not deserialize a portion of the schema.</exception>
 	/// <remarks>The filename needs to not be URL-encoded as <see cref="Uri"/> attempts to encode it.</remarks>
-	public static JsonSchema FromFile(string fileName, BuildOptions? options = null)
+	public static JsonSchema FromFile(string fileName, BuildOptions? options = null, Uri? baseUri = null)
 	{
 		var text = File.ReadAllText(fileName);
-		var schema = FromText(text, options);
-		var path = Path.GetFullPath(fileName);
-		// For some reason, full *nix file paths (which start with '/') don't work quite right when
-		// being prepended with 'file:///'.  It seems the '////' is interpreted as '//' and the
-		// first folder in the path is then interpreted as the host.  To account for this, we
-		// need to prepend with 'file://' instead.
-		var protocol = path.StartsWith("/") ? "file://" : "file:///";
-		schema.BaseUri = new Uri($"{protocol}{path}");
+		var schema = FromText(text, options, baseUri);
+
+		if (schema.BaseUri.Host == "json-everything.lib")
+		{
+			var path = Path.GetFullPath(fileName);
+			// For some reason, full *nix file paths (which start with '/') don't work quite right when
+			// being prepended with 'file:///'.  It seems the '////' is interpreted as '//' and the
+			// first folder in the path is then interpreted as the host.  To account for this, we
+			// need to prepend with 'file://' instead.
+			var protocol = path.StartsWith("/") ? "file://" : "file:///";
+			schema.BaseUri = new Uri($"{protocol}{path}");
+		}
 		return schema;
 	}
 
@@ -93,19 +98,20 @@ public class JsonSchema
 	/// </summary>
 	/// <param name="jsonText">The text to parse.</param>
 	/// <param name="options">Serializer options.</param>
+	/// <param name="baseUri">(optional) The base URI for this schema.</param>
 	/// <returns>A new <see cref="JsonSchema"/>.</returns>
 	/// <exception cref="JsonException">Could not deserialize a portion of the schema.</exception>
-	public static JsonSchema FromText(string jsonText, BuildOptions? options = null)
+	public static JsonSchema FromText(string jsonText, BuildOptions? options = null, Uri? baseUri = null)
 	{
 		var element = JsonDocument.Parse(jsonText).RootElement;
-		return Build(element, options);
+		return Build(element, options, baseUri);
 	}
 
 	private static Uri GenerateBaseUri() => new($"https://json-everything.lib/{Guid.NewGuid():N}");
 
-	public static JsonSchema Build(JsonElement root, BuildOptions? options = null)
+	public static JsonSchema Build(JsonElement root, BuildOptions? options = null, Uri? baseUri = null)
 	{
-		var context = new BuildContext(options, root, GenerateBaseUri())
+		var context = new BuildContext(options, root, baseUri ?? GenerateBaseUri())
 		{
 			LocalSchema = root
 		};
@@ -276,20 +282,38 @@ public class JsonSchema
 		return Root.Evaluate(context);
 	}
 
-	public JsonSchemaNode? FindSubschema(JsonPointer pointer, BuildOptions options)
+	public JsonSchemaNode? FindSubschema(JsonPointer pointer, BuildContext context)
 	{
 		var subschema = Root;
-		while (pointer.SegmentCount != 0)
+		var currentPointer = pointer;
+		while (currentPointer.SegmentCount != 0)
 		{
-			var keyword = subschema.Keywords.FirstOrDefault(x => pointer.StartsWith(JsonPointer.Create(x.Handler.Name)));
-			if (keyword is null) return null;
+			var keyword = subschema.Keywords.FirstOrDefault(x => currentPointer.StartsWith(JsonPointer.Create(x.Handler.Name)));
+			if (keyword is null)
+			{
+				subschema = null;
+				break;
+			}
 
-			pointer = pointer.GetLocal(pointer.SegmentCount - 1);
+			currentPointer = currentPointer.GetLocal(currentPointer.SegmentCount - 1);
 
-			subschema = keyword.Subschemas.FirstOrDefault(x => pointer.StartsWith(x.RelativePath));
-			if (subschema is null) return null;
+			subschema = keyword.Subschemas.FirstOrDefault(x => currentPointer.StartsWith(x.RelativePath));
+			if (subschema is null) break;
 
-			pointer = pointer.GetLocal(pointer.SegmentCount - subschema.RelativePath.SegmentCount);
+			currentPointer = currentPointer.GetLocal(currentPointer.SegmentCount - subschema.RelativePath.SegmentCount);
+		}
+
+		if (subschema == null)
+		{
+			var localSchema = pointer.Evaluate(Root.Source);
+			if (localSchema.HasValue)
+			{
+				var newContext = context with
+				{
+					LocalSchema = localSchema.Value
+				};
+				subschema = BuildNode(newContext);
+			}
 		}
 
 		return subschema;
