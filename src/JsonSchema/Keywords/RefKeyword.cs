@@ -46,7 +46,7 @@ public class RefKeyword : IKeywordHandler
 		{
 			var targetBase = context.Options.SchemaRegistry.Get(newUri);
 
-			targetSchema = targetBase?.FindSubschema(pointerFragment, context.Options);
+			targetSchema = targetBase?.FindSubschema(pointerFragment, context);
 		}
 		else
 		{

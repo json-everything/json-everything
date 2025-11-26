@@ -71,7 +71,7 @@ public class SingleSchemaRunner
 	[Arguments(1)]
 	//[Arguments(5)]
 	[Arguments(10)]
-	//[Arguments(50)]
+	[Arguments(50)]
 	public int BuildOnce(int n)
 	{
 		int i = 0;

@@ -67,7 +67,7 @@ public class DynamicRefKeyword : Json.Schema.Keywords.DynamicRefKeyword
 		{
 			var targetBase = context.Options.SchemaRegistry.Get(reference.Uri);
 
-			targetSchema = targetBase?.FindSubschema(pointerFragment, context.Options);
+			targetSchema = targetBase?.FindSubschema(pointerFragment, context);
 		}
 		else
 		{

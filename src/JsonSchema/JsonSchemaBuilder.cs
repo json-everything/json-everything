@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace Json.Schema;
 
@@ -9,22 +11,67 @@ namespace Json.Schema;
 /// </summary>
 public class JsonSchemaBuilder
 {
-	private readonly Dictionary<string, IJsonSchemaKeyword> _keywords = [];
-	private Uri? _baseUri;
+	internal readonly JsonNode Keywords = new JsonObject();
 
-	internal void TrySetBaseUri(Uri uri)
+	public static JsonSchemaBuilder Empty { get; } = new();
+	public static JsonSchemaBuilder True { get; } = new(true);
+	public static JsonSchemaBuilder False { get; } = new(false);
+
+	public JsonSchemaBuilder(){}
+
+	private JsonSchemaBuilder(bool value)
 	{
-		if (uri.IsAbsoluteUri)
-			_baseUri = uri;
+		Keywords = value;
 	}
 
 	/// <summary>
-	/// Adds a new keyword.
+	/// Adds a new keyword with a value.
 	/// </summary>
 	/// <param name="keyword">The keyword to add.</param>
-	public void Add(IJsonSchemaKeyword keyword)
+	/// <param name="value">The value.</param>
+	public void Add(string keyword, JsonNode? value)
 	{
-		_keywords[keyword.Keyword()] = keyword;
+		Keywords[keyword] = value;
+	}
+
+	/// <summary>
+	/// Adds a new keyword with a nested schema.
+	/// </summary>
+	/// <param name="keyword">The keyword to add.</param>
+	/// <param name="builder">Another builder.</param>
+	public void Add(string keyword, JsonSchemaBuilder builder)
+	{
+		Keywords[keyword] = builder.Keywords;
+	}
+
+	/// <summary>
+	/// Adds a new keyword with a nested schema.
+	/// </summary>
+	/// <param name="keyword">The keyword to add.</param>
+	/// <param name="builders">Another builder.</param>
+	public void Add(string keyword, IEnumerable<JsonSchemaBuilder> builders)
+	{
+		Keywords[keyword] = new JsonArray(builders.Select(x => (JsonNode?)x.Keywords).ToArray());
+	}
+
+	/// <summary>
+	/// Adds a new keyword with a nested schema.
+	/// </summary>
+	/// <param name="keyword">The keyword to add.</param>
+	/// <param name="builders">Another builder.</param>
+	public void Add(string keyword, IEnumerable<(string, JsonSchemaBuilder)> builders)
+	{
+		Keywords[keyword] = new JsonObject(builders.ToDictionary(x => x.Item1, x => (JsonNode?)x.Item2.Keywords));
+	}
+
+	/// <summary>
+	/// Adds a new keyword with a nested schema.
+	/// </summary>
+	/// <param name="keyword">The keyword to add.</param>
+	/// <param name="builders">Another builder.</param>
+	public void Add(string keyword, IEnumerable<KeyValuePair<string, JsonSchemaBuilder>> builders)
+	{
+		Keywords[keyword] = new JsonObject(builders.ToDictionary(x => x.Key, x => (JsonNode?)x.Value.Keywords));
 	}
 
 	/// <summary>
@@ -33,46 +80,39 @@ public class JsonSchemaBuilder
 	/// <typeparam name="T">the keyword type.</typeparam>
 	/// <returns>The keyword, if it exists; `null` otherwise.</returns>
 	public T? Get<T>()
-		where T : IJsonSchemaKeyword
+		where T : IKeywordHandler
 	{
-		return _keywords.Values.OfType<T>().SingleOrDefault();
+		throw new NotImplementedException();
+		//return _keywords.Values.OfType<T>().SingleOrDefault();
 	}
 
 	/// <summary>
 	/// Creates a new <see cref="JsonSchema"/>.
 	/// </summary>
 	/// <returns>A JSON Schema that simply refers back to the root schema.</returns>
-	public static JsonSchema RefRoot()
+	public static JsonSchemaBuilder RefRoot()
 	{
-		return new JsonSchemaBuilder().Ref(new Uri("#", UriKind.RelativeOrAbsolute)).Build();
+		return new JsonSchemaBuilder().Ref(new Uri("#", UriKind.RelativeOrAbsolute));
 	}
 
 	/// <summary>
 	/// Creates a new <see cref="JsonSchema"/>.
 	/// </summary>
 	/// <returns>A JSON Schema that simply refers back to the recursive root schema.</returns>
-	public static JsonSchema RecursiveRefRoot()
+	public static JsonSchemaBuilder RecursiveRefRoot()
 	{
-		return new JsonSchemaBuilder().RecursiveRef(new Uri("#", UriKind.RelativeOrAbsolute)).Build();
+		return new JsonSchemaBuilder().RecursiveRef(new Uri("#", UriKind.RelativeOrAbsolute));
 	}
 
 	/// <summary>
 	/// Builds the schema.
 	/// </summary>
 	/// <returns>A <see cref="JsonSchema"/>.</returns>
-	public JsonSchema Build()
+	public JsonSchema Build(BuildOptions? options = null, Uri? baseUri = null)
 	{
-		var duplicates = _keywords.GroupBy(k => k.Value.Keyword())
-			.Where(g => g.Count() > 1)
-			.Select(g => g.Key)
-			.ToArray();
-		if (duplicates.Any())
-			throw new ArgumentException($"Found duplicate keywords: [{string.Join(", ", duplicates)}]");
+		var root = JsonSerializer.SerializeToElement(Keywords, JsonSchemaSerializerContext.Default.JsonNode);
 
-		var build = new JsonSchema(_keywords.Values);
-		if (_baseUri != null)
-			build.BaseUri = _baseUri;
-		return build;
+		return JsonSchema.Build(root, options, baseUri);
 	}
 
 	/// <summary>

@@ -105,9 +105,9 @@ public class Validation
 		{
 			try
 			{
-				var schema = JsonSchema.FromFile(fileName);
 				var uri = new Uri(fileName.Replace(remotesPath, "http://localhost:1234").Replace('\\', '/'));
-				SchemaRegistry.Global.Register(uri, schema);
+				var schema = JsonSchema.FromFile(fileName, baseUri: uri);
+				SchemaRegistry.Global.Register(uri, schema); // it seems a number of remotes have `$id`s different from their file path
 			}
 			catch (JsonSchemaException e)
 			{
