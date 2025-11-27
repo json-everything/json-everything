@@ -43,7 +43,7 @@ public partial class SchemaKeywordRegistry
 		new PropertiesKeyword(),
 		new PropertyNamesKeyword(),
 		new ReadOnlyKeyword(),
-		new Keywords.Draft06.RefKeyword(),
+		new RefKeyword(),
 		new RequiredKeyword(),
 		new SchemaKeyword(),
 		new ThenKeyword(),
@@ -51,5 +51,5 @@ public partial class SchemaKeywordRegistry
 		new TypeKeyword(),
 		new UniqueItemsKeyword(),
 		new WriteOnlyKeyword()
-	);
+	) { RefIgnoresSiblingKeywords = true };
 }

@@ -35,6 +35,7 @@ public partial class DynamicAnchorKeyword : IKeywordHandler
 
 	public virtual void BuildSubschemas(KeywordData keyword, BuildContext context)
 	{
+
 	}
 
 	public virtual KeywordEvaluation Evaluate(KeywordData keyword, EvaluationContext context)

@@ -34,15 +34,7 @@ public static class MetaSchemas
 	public static readonly JsonSchema Validation202012;
 
 	public static readonly Uri V1Id = new("https://json-schema.org/draft/next/schema");
-	public static readonly JsonSchema ApplicatorNext;
-	public static readonly JsonSchema ContentNext;
-	public static readonly JsonSchema CoreNext;
-	public static readonly JsonSchema FormatAnnotationNext;
-	public static readonly JsonSchema FormatAssertionNext;
-	public static readonly JsonSchema MetadataNext;
 	public static readonly JsonSchema V1;
-	public static readonly JsonSchema UnevaluatedNext;
-	public static readonly JsonSchema ValidationNext;
 
 	static MetaSchemas()
 	{
@@ -66,11 +58,7 @@ public static class MetaSchemas
 		Validation202012 = Load("_2020_12.validation");
 		V1 = Load("v1");
 
-		// The vocabs register the "only single" version of this keyword,
-		// but we want the "allow arrays" version, so we need to initialize
-		// the vocabs then re-register the items keyword.
-		//_ = Vocabularies.MetaData201909;
-		//KeywordRegistry.Register(ItemsKeywordHandler.AllowArrays);
+		SchemaRegistry.Global.Register(new Uri("https://json-schema.org/v1", UriKind.Absolute), V1);
 	}
 
 	private static JsonSchema Load(string resourceName)

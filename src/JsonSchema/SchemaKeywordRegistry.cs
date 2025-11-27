@@ -34,6 +34,8 @@ public partial class SchemaKeywordRegistry
 
 	public static SchemaKeywordRegistry Default { get; set; }
 
+	public bool RefIgnoresSiblingKeywords { get; set; }
+
 	static SchemaKeywordRegistry()
 	{
 		Default = V1;
@@ -94,17 +96,18 @@ public partial class SchemaKeywordRegistry
 		EvaluateDependencies();
 	}
 
-	internal IKeywordHandler? GetHandler(string keyword)
+	internal IKeywordHandler GetHandler(string keyword)
 	{
-		return _keywordData.GetValueOrDefault(keyword)?.Handler;
+		var handler = _keywordData.GetValueOrDefault(keyword)?.Handler;
+
+		return handler ?? AnnotationKeyword.Instance;
 	}
 
 	private void EvaluateDependencies()
 	{
 		var toCheck = _keywordData.Select(x => x.Value).Distinct().ToList();
 
-		if (_keywordData.TryGetValue("$ref", out var keyword) &&
-		    keyword.Handler is RefKeyword {IgnoresSiblingKeywords:true})
+		if (_keywordData.TryGetValue("$ref", out var keyword) && RefIgnoresSiblingKeywords)
 		{
 			keyword.Priority = -3;
 			toCheck.Remove(keyword);

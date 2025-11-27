@@ -17,7 +17,7 @@
     <IncludeBuildOutput>false</IncludeBuildOutput>
 
     <PackageId>JsonSchema.Net</PackageId>
-    <JsonSchemaNetVersion>8.0.0</JsonSchemaNetVersion>
+    <JsonSchemaNetVersion>8.0.0-beta1</JsonSchemaNetVersion>
     <AssemblyVersion>8.0.0.0</AssemblyVersion>
     <FileVersion>$(JsonSchemaNetVersion)</FileVersion>
     <Version>$(JsonSchemaNetVersion)</Version>
@@ -44,15 +44,12 @@
     <Compile Remove="JsonSchemaExtensions.KeywordAccess.cs" />
     <Compile Remove="PropertyDependenciesKeyword.cs" />
     <Compile Remove="PropertyDependency.cs" />
-    <Compile Remove="UnrecognizedKeyword.cs" />
     <Compile Remove="Vocabularies.cs" />
     <Compile Remove="Vocabularies.Draft201909.cs" />
     <Compile Remove="Vocabularies.Draft202012.cs" />
     <Compile Remove="Vocabularies.DraftNext.cs" />
     <Compile Remove="Vocabulary.cs" />
-    <Compile Remove="VocabularyAttribute.cs" />
     <Compile Remove="VocabularyKeyword.cs" />
-    <Compile Remove="VocabularyRegistry.cs" />
   </ItemGroup>
 
   <ItemGroup>

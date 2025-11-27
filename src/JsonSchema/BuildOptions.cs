@@ -50,7 +50,7 @@ public class BuildOptions
 
 	static BuildOptions()
 	{
-		_ = MetaSchemas.ValidationNext;
+		_ = MetaSchemas.V1;
 	}
 
 	public BuildOptions()
