@@ -38,11 +38,11 @@ public partial class SchemaKeywordRegistry
 		new PatternPropertiesKeyword(),
 		new PropertiesKeyword(),
 		new PropertyNamesKeyword(),
-		new Keywords.Draft06.RefKeyword(),
+		new RefKeyword(),
 		new RequiredKeyword(),
 		new SchemaKeyword(),
 		new TitleKeyword(),
 		new TypeKeyword(),
 		new UniqueItemsKeyword()
-	);
+	) { RefIgnoresSiblingKeywords = true };
 }

@@ -19,8 +19,6 @@ namespace Json.Schema;
 [DebuggerDisplay("{ToDebugString()}")]
 public class JsonSchema
 {
-	private const string _unknownKeywordsAnnotationKey = "$unknownKeywords";
-
 	private readonly BuildOptions _options;
 
 	/// <summary>
@@ -140,7 +138,7 @@ public class JsonSchema
 			throw new ArgumentException($"Schemas may only booleans or objects.  Received {context.LocalSchema.ValueKind}");
 
 		var onlyHandleRef = context.LocalSchema.TryGetProperty("$ref", out _) &&
-		                    context.Options.KeywordRegistry.GetHandler("$ref") is RefKeyword { IgnoresSiblingKeywords: true };
+		                    context.Options.KeywordRegistry.RefIgnoresSiblingKeywords;
 
 		var keywordData = new List<KeywordData>();
 		foreach (var property in context.LocalSchema.EnumerateObject())
@@ -149,15 +147,16 @@ public class JsonSchema
 			var value = property.Value;
 
 			var handler = context.Options.KeywordRegistry.GetHandler(keyword);
-			if (handler is null) continue; // TODO: for v1, throw exception if not x-*
+			// TODO: for v1, throw exception if not x-*
 
 			var data = new KeywordData
 			{
-				EvaluationOrder = context.Options.KeywordRegistry.GetEvaluationOrder(keyword) ??
-				                  throw new UnreachableException("Cannot get evaluation order for keyword"),
+				EvaluationOrder = context.Options.KeywordRegistry.GetEvaluationOrder(keyword) ?? 0,
 				RawValue = value.Clone(),
 				Handler = handler,
-				Value = handler.ValidateKeywordValue(value)
+				Value = handler is AnnotationKeyword
+					? keyword
+					: handler.ValidateKeywordValue(value)
 			};
 			handler.BuildSubschemas(data, context);
 

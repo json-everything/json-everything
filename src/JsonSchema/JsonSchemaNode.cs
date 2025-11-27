@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Text.Json;
 using Json.Pointer;
-using Json.Schema.Keywords.Draft06;
+using Json.Schema.Keywords;
 
 namespace Json.Schema;
 
@@ -64,7 +64,9 @@ public class JsonSchemaNode
 				results.Annotations[evaluation.Keyword] = evaluation.Annotation.Value;
 			}
 
-			if (keyword.Handler is RefKeyword { IgnoresSiblingKeywords: true }) break;
+			if (keyword.Handler is RefKeyword &&
+				context.BuildOptions.KeywordRegistry.RefIgnoresSiblingKeywords)
+				break;
 		}
 
 		if (!results.IsValid)
