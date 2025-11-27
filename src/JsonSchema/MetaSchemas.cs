@@ -33,14 +33,14 @@ public static class MetaSchemas
 	public static readonly JsonSchema Unevaluated202012;
 	public static readonly JsonSchema Validation202012;
 
-	public static readonly Uri DraftNextId = new("https://json-schema.org/draft/next/schema");
+	public static readonly Uri V1Id = new("https://json-schema.org/draft/next/schema");
 	public static readonly JsonSchema ApplicatorNext;
 	public static readonly JsonSchema ContentNext;
 	public static readonly JsonSchema CoreNext;
 	public static readonly JsonSchema FormatAnnotationNext;
 	public static readonly JsonSchema FormatAssertionNext;
 	public static readonly JsonSchema MetadataNext;
-	public static readonly JsonSchema DraftNext;
+	public static readonly JsonSchema V1;
 	public static readonly JsonSchema UnevaluatedNext;
 	public static readonly JsonSchema ValidationNext;
 
@@ -64,15 +64,7 @@ public static class MetaSchemas
 		Draft202012 = Load("_2020_12.schema");
 		Unevaluated202012 = Load("_2020_12.unevaluated");
 		Validation202012 = Load("_2020_12.validation");
-		ApplicatorNext = Load("Next.applicator");
-		ContentNext = Load("Next.content");
-		CoreNext = Load("Next.core");
-		FormatAnnotationNext = Load("Next.format-annotation");
-		FormatAssertionNext = Load("Next.format-assertion");
-		MetadataNext = Load("Next.meta-data");
-		DraftNext = Load("Next.schema");
-		UnevaluatedNext = Load("Next.unevaluated");
-		ValidationNext = Load("Next.validation");
+		V1 = Load("v1");
 
 		// The vocabs register the "only single" version of this keyword,
 		// but we want the "allow arrays" version, so we need to initialize
@@ -83,7 +75,6 @@ public static class MetaSchemas
 
 	private static JsonSchema Load(string resourceName)
 	{
-		var resourceNames = typeof(MetaSchemas).Assembly.GetManifestResourceNames();
 		var resourceStream = typeof(MetaSchemas).Assembly.GetManifestResourceStream(@$"Json.Schema.Meta_Schemas.{resourceName}.json");
 		using var reader = new StreamReader(resourceStream!, Encoding.UTF8);
 

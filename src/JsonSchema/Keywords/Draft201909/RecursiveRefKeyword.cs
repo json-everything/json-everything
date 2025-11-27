@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text.Json;
+using Json.Schema.Keywords.Draft06;
 
 namespace Json.Schema.Keywords.Draft201909;
 

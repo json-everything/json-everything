@@ -50,7 +50,7 @@ public class BuildOptions
 
 	static BuildOptions()
 	{
-		_ = MetaSchemas.Draft201909;
+		_ = MetaSchemas.ValidationNext;
 	}
 
 	public BuildOptions()

@@ -43,7 +43,7 @@ public partial class SchemaKeywordRegistry
 		new PropertiesKeyword(),
 		new PropertyNamesKeyword(),
 		new ReadOnlyKeyword(),
-		new RefKeyword(),
+		new Keywords.Draft06.RefKeyword(),
 		new RequiredKeyword(),
 		new SchemaKeyword(),
 		new ThenKeyword(),

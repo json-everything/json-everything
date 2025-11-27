@@ -38,7 +38,7 @@ public partial class SchemaKeywordRegistry
 		new PatternPropertiesKeyword(),
 		new PropertiesKeyword(),
 		new PropertyNamesKeyword(),
-		new RefKeyword(),
+		new Keywords.Draft06.RefKeyword(),
 		new RequiredKeyword(),
 		new SchemaKeyword(),
 		new TitleKeyword(),

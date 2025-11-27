@@ -21,7 +21,7 @@ public class JsonSchema
 {
 	private const string _unknownKeywordsAnnotationKey = "$unknownKeywords";
 
-	private BuildOptions _options;
+	private readonly BuildOptions _options;
 
 	/// <summary>
 	/// The `true` schema.  Passes all instances.
@@ -139,6 +139,9 @@ public class JsonSchema
 		if (context.LocalSchema.ValueKind != JsonValueKind.Object)
 			throw new ArgumentException($"Schemas may only booleans or objects.  Received {context.LocalSchema.ValueKind}");
 
+		var onlyHandleRef = context.LocalSchema.TryGetProperty("$ref", out _) &&
+		                    context.Options.KeywordRegistry.GetHandler("$ref") is RefKeyword { IgnoresSiblingKeywords: true };
+
 		var keywordData = new List<KeywordData>();
 		foreach (var property in context.LocalSchema.EnumerateObject())
 		{
@@ -160,11 +163,14 @@ public class JsonSchema
 
 			if (handler is IdKeyword)
 			{
-				var newUri = new Uri(context.BaseUri, (Uri)data.Value!);
-				context.BaseUri = newUri;
+				if (!onlyHandleRef)
+				{
+					var newUri = new Uri(context.BaseUri, (Uri)data.Value!);
+					context.BaseUri = newUri;
+				}
 			}
-			else
-				keywordData.Add(data);
+				
+			keywordData.Add(data);
 		}
 
 		var embeddedResources = keywordData
@@ -188,9 +194,11 @@ public class JsonSchema
 		var oldIdKeyword = keywordData.FirstOrDefault(x => x.Handler is Keywords.Draft06.IdKeyword);
 		if (oldIdKeyword is not null)
 		{
+			var handler = (Keywords.Draft06.IdKeyword)oldIdKeyword.Handler;
 			var uri = (Uri)oldIdKeyword.Value!;
-			if (uri.OriginalString.StartsWith("#"))
-				context.Options.SchemaRegistry.RegisterAnchor(context.BaseUri, uri.OriginalString[1..], node);
+			var anchor = uri.OriginalString[1..];
+			if (uri.OriginalString.StartsWith("#") && handler.AnchorPattern.IsMatch(anchor))
+				context.Options.SchemaRegistry.RegisterAnchor(context.BaseUri, anchor, node);
 		}
 
 		var anchorKeyword = keywordData.FirstOrDefault(x => x.Handler is AnchorKeyword);
@@ -334,126 +342,5 @@ public class JsonSchema
 
 		var idKeyword = Root.Keywords.SingleOrDefault(x => x.Handler is IdKeyword);
 		return idKeyword?.RawValue.GetString() ?? BaseUri.OriginalString;
-	}
-}
-
-public interface IKeywordHandler
-{
-	string Name { get; }
-
-	object? ValidateKeywordValue(JsonElement value);
-	void BuildSubschemas(KeywordData keyword, BuildContext context);
-	KeywordEvaluation Evaluate(KeywordData keyword, EvaluationContext context);
-}
-
-public class JsonSchemaNode
-{
-	public static JsonSchemaNode True() => new()
-	{
-		BaseUri = new Uri("https://json-schema.org/true"),
-		Source = JsonDocument.Parse("true").RootElement
-	};
-	public static JsonSchemaNode False() => new()
-	{
-		BaseUri = new Uri("https://json-schema.org/false"),
-		Source = JsonDocument.Parse("false").RootElement
-	};
-
-	public required Uri BaseUri { get; set; }
-	public JsonElement Source { get; set; }
-	public KeywordData[] Keywords { get; init; } = [];
-	public JsonPointer RelativePath { get; set; }
-
-	public EvaluationResults Evaluate(EvaluationContext context)
-	{
-		var results = new EvaluationResults(context.EvaluationPath, BaseUri, context.InstanceLocation, context.Options);
-		if (Source.ValueKind == JsonValueKind.True) return results;
-		if (Source.ValueKind == JsonValueKind.False)
-		{
-			results.IsValid = false;
-			results.Errors = new() { [""] = ErrorMessages.FalseSchema };
-			return results;
-		}
-
-		var newScope = !Equals(BaseUri, context.Scope.LocalScope);
-		if (newScope)
-			context.Scope.Push(BaseUri);
-
-		results.IsValid = true;
-		context.EvaluatedKeywords = [];
-		foreach (var keyword in Keywords.OrderBy(x => x.EvaluationOrder))
-		{
-			var evaluation = keyword.Handler.Evaluate(keyword, context);
-			context.EvaluatedKeywords.Add(evaluation);
-
-			results.IsValid &= evaluation.IsValid || !evaluation.ContributesToValidation;
-
-			if (evaluation.Details is { Length: > 0 })
-			{
-				results.Details ??= [];
-				results.Details.AddRange(evaluation.Details);
-			}
-			if (evaluation.Error is not null)
-			{
-				results.Errors ??= [];
-				results.Errors[evaluation.Keyword] = evaluation.Error!;
-			}
-			if (evaluation.Annotation is not null)
-			{
-				results.Annotations ??= [];
-				results.Annotations[evaluation.Keyword] = evaluation.Annotation.Value;
-			}
-		}
-
-		if (!results.IsValid)
-			results.Annotations?.Clear();
-
-		if (newScope)
-			context.Scope.Pop();
-
-		return results;
-	}
-}
-
-public class KeywordData
-{
-	public required long EvaluationOrder { get; set; }
-	public required IKeywordHandler Handler { get; set; }
-	public required JsonElement RawValue { get; set; }
-	public JsonSchemaNode[] Subschemas { get; set; } = [];
-	public object? Value { get; set; }
-}
-
-public readonly struct KeywordEvaluation
-{
-	public static KeywordEvaluation Ignore = new()
-	{
-		Keyword = Guid.NewGuid().ToString("N"),
-		IsValid = true
-	};
-
-	public required string Keyword { get; init; }
-	public required bool IsValid { get; init; }
-	public JsonElement? Annotation { get; init; }
-	public EvaluationResults[]? Details { get; init; }
-	public string? Error { get; init; }
-
-	public bool ContributesToValidation { get; init; } = true;
-
-	public KeywordEvaluation(){}
-}
-
-public struct BuildContext
-{
-	public BuildOptions Options { get; }
-	public JsonElement RootSchema { get; }
-	public Uri BaseUri { get; set; }
-	public JsonElement LocalSchema { get; set; }
-
-	internal BuildContext(BuildOptions? options, JsonElement rootSchema, Uri baseUri)
-	{
-		Options = options ?? BuildOptions.Default;
-		RootSchema = rootSchema;
-		BaseUri = baseUri;
 	}
 }

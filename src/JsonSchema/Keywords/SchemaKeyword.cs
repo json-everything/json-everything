@@ -32,6 +32,7 @@ public class SchemaKeyword : IKeywordHandler
 			"https://json-schema.org/draft/2019-09/schema" => SchemaKeywordRegistry.Draft201909,
 			"https://json-schema.org/draft/2020-12/schema" => SchemaKeywordRegistry.Draft202012,
 			"https://json-schema.org/draft/next/schema" => SchemaKeywordRegistry.V1, // TODO: remove before publish
+			"https://json-schema.org/v1" => SchemaKeywordRegistry.V1,
 			"https://json-schema.org/v1/2026" => SchemaKeywordRegistry.V1,
 			_ => context.Options.KeywordRegistry
 		};
