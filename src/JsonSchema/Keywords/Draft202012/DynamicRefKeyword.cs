@@ -13,7 +13,6 @@ public class DynamicRefKeyword : Json.Schema.Keywords.DynamicRefKeyword
 	private class DynamicRefInfo
 	{
 		public required Uri Uri { get; set; }
-		public bool RefIsLocal { get; set; }
 		public bool IsDynamic { get; set; }
 	}
 
@@ -34,22 +33,18 @@ public class DynamicRefKeyword : Json.Schema.Keywords.DynamicRefKeyword
 		var newUri = new Uri(context.BaseUri, reference.Uri);
 
 		reference.Uri = newUri; // need an absolute URI for .Fragment to work
-		// For URI equality see https://docs.microsoft.com/en-us/dotnet/api/system.uri.op_equality?view=netcore-3.1
-		// tl;dr - URI equality doesn't consider fragments
-		reference.RefIsLocal = Equals(newUri, context.BaseUri);
 	}
 
 	internal override void TryResolve(KeywordData keyword, BuildContext context)
 	{
 		// This method only resolves static refs.
 		// Occurs when (any of)
-		//   - the dynamic ref specifies a base URI
 		//   - the dynamic ref has a pointer fragment
 		//   - there is no dynamic anchor in the local schema resource
 		var reference = (DynamicRefInfo)keyword.Value!;
 		var fragment = reference.Uri.Fragment;
 		var fragmentIsPointer = JsonPointer.TryParse(fragment, out var pointerFragment);
-		if (reference.RefIsLocal && !fragmentIsPointer)
+		if (!fragmentIsPointer)
 		{
 			// check for local dynamic anchor
 			// if there is one, reference is dynamic, so we leave
@@ -72,7 +67,9 @@ public class DynamicRefKeyword : Json.Schema.Keywords.DynamicRefKeyword
 		else
 		{
 			var anchorFragment = fragment[1..]; // drop #
-			targetSchema = context.Options.SchemaRegistry.Get(reference.Uri, anchorFragment);
+			targetSchema = context.Options.SchemaRegistry.Get(reference.Uri, anchorFragment) ??
+						   // 2020-12 supports $dynamicAnchor also acting as an $anchor when $dynamicRef acts as $ref
+			               context.Options.SchemaRegistry.GetDynamic(reference.Uri, anchorFragment);
 		}
 
 		if (targetSchema is not null)

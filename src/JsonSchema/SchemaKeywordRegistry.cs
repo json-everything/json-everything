@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using Json.Schema.Keywords;
 
 namespace Json.Schema;
 
@@ -102,7 +103,13 @@ public partial class SchemaKeywordRegistry
 	{
 		var toCheck = _keywordData.Select(x => x.Value).Distinct().ToList();
 
-		if (_keywordData.TryGetValue("$schema", out var keyword))
+		if (_keywordData.TryGetValue("$ref", out var keyword) &&
+		    keyword.Handler is RefKeyword {IgnoresSiblingKeywords:true})
+		{
+			keyword.Priority = -3;
+			toCheck.Remove(keyword);
+		}
+		if (_keywordData.TryGetValue("$schema", out keyword))
 		{
 			keyword.Priority = -2;
 			toCheck.Remove(keyword);

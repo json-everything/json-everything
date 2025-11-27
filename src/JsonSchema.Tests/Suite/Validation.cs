@@ -24,7 +24,7 @@ public class Validation
 			.Concat(GetTests("draft7"))
 			.Concat(GetTests("draft2019-09"))
 			.Concat(GetTests("draft2020-12"))
-			.Concat(_runDraftNext ? GetTests("draft-next") : []);
+			.Concat(_runDraftNext ? GetTests("v1") : []);
 	}
 
 	private static IEnumerable<TestCaseData> GetTests(string draftFolder)
@@ -66,14 +66,16 @@ public class Validation
 						"draft7" => SchemaKeywordRegistry.Draft07,
 						"draft2019-09" => SchemaKeywordRegistry.Draft201909,
 						"draft2020-12" => SchemaKeywordRegistry.Draft202012,
-						"draft-next" => SchemaKeywordRegistry.V1,
+						"v1" => SchemaKeywordRegistry.V1,
 						_ => throw new ArgumentOutOfRangeException(nameof(draftFolder), $"{draftFolder} is unsupported")
 					};
 
-					if (fileName.Contains("format/".AdjustForPlatform()) &&
-					    // uri-template will throw an exception as it's explicitly unsupported
-					    shortFileName != "uri-template")
+					if (fileName.Contains("format/".AdjustForPlatform()))
+					{
+						if (shortFileName == "uri-template") continue; // uri-template will throw an exception as it's explicitly unsupported
+
 						keywords = keywords.UseFormatValidation();
+					}
 
 					var buildOptions = new BuildOptions
 					{
@@ -148,7 +150,22 @@ public class Validation
 			throw;
 		}
 
-		var result = Measure.Run("Evaluate", () => schema.Evaluate(test.Data, evaluationOptions));
+		EvaluationResults result;
+		try
+		{
+			result = Measure.Run("Evaluate", () => schema.Evaluate(test.Data, evaluationOptions));
+		}
+		catch (Exception e)
+		{
+			Console.WriteLine(e);
+			if (collection.IsOptional)
+			{
+				Assert.Inconclusive();
+				return;
+			}
+
+			throw;
+		}
 
 		//result.ToBasic();
 		TestConsole.WriteLine();

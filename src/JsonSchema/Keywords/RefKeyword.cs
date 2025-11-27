@@ -15,6 +15,8 @@ public class RefKeyword : IKeywordHandler
 	/// </summary>
 	public virtual string Name => "$ref";
 
+	public virtual bool IgnoresSiblingKeywords => false;
+
 	public virtual object? ValidateKeywordValue(JsonElement value)
 	{
 		if (value.ValueKind != JsonValueKind.String)

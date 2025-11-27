@@ -85,6 +85,8 @@ public class SchemaRegistry
 		var registration = _registered.GetValueOrDefault(uri);
 		if (registration != null)
 		{
+			registration.Anchors ??= [];
+			registration.Anchors.Add(anchor, node);
 			registration.DynamicAnchors ??= [];
 			registration.DynamicAnchors.Add(anchor, node);
 			return;
@@ -92,6 +94,7 @@ public class SchemaRegistry
 
 		_registered[uri] = new Registration
 		{
+			Anchors = new() { [anchor] = node },
 			DynamicAnchors = new() { [anchor] = node }
 		};
 	}
@@ -168,12 +171,18 @@ public class SchemaRegistry
 		return registration.DynamicAnchors!.GetValueOrDefault(anchor);
 	}
 
-	internal JsonSchemaNode? GetDynamic(DynamicScope scope, string anchor) =>
-		scope
-			.Reverse()
-			.Select(GetRegistration)
-			.Select(x => x?.DynamicAnchors?.GetValueOrDefault(anchor))
-			.FirstOrDefault();
+	internal JsonSchemaNode? GetDynamic(DynamicScope scope, string anchor)
+	{
+		var uris = scope
+			.Reverse();
+		var registrations = uris
+			.Select(GetRegistration);
+		var anchors = registrations
+			.Select(x => x?.DynamicAnchors?.GetValueOrDefault(anchor));
+		var selected = anchors
+			.FirstOrDefault(x => x is not null);
+		return selected;
+	}
 
 	internal JsonSchemaNode? GetRecursive(DynamicScope scope)
 	{
