@@ -40,7 +40,12 @@ var schema = JsonSerializer.Deserialize<JsonSchema>(content);
 Or build it explicitly in code:
 
 ```c#
-var schema = new JsonSchemaBuilder()
+var element = JsonDocument.Parse(content).RootElement;
+var schema = JsonSchema.Build(element);
+
+// or
+
+var fluentSchema = new JsonSchemaBuilder()
     .Comment("a comment")
     .Title("A title for my schema")
     .Type(SchemaValueType.Object)

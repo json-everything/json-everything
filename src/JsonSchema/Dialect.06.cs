@@ -2,41 +2,31 @@
 
 namespace Json.Schema;
 
-public partial class SchemaKeywordRegistry
+public partial class Dialect
 {
-	public static SchemaKeywordRegistry Draft201909 { get; } = new(
+	public static Dialect Draft06 { get; } = new(
 		new Keywords.Draft06.AdditionalItemsKeyword(),
 		new AdditionalPropertiesKeyword(),
 		new AllOfKeyword(),
-		new Keywords.Draft201909.AnchorKeyword(),
 		new AnyOfKeyword(),
 		new CommentKeyword(),
 		new ConstKeyword(),
-		new ContainsKeyword(),
-		new ContentEncodingKeyword(),
-		new ContentMediaTypeKeyword(),
-		new ContentSchemaKeyword(),
+		new Keywords.Draft06.ContainsKeyword(),
 		new DefaultKeyword(),
-		new DefsKeyword(),
-		new DependentRequiredKeyword(),
-		new DependentSchemasKeyword(),
-		new DeprecatedKeyword(),
+		new Keywords.Draft06.DefinitionsKeyword(),
+		new DependenciesKeyword(),
 		new DescriptionKeyword(),
-		new ElseKeyword(),
 		new EnumKeyword(),
 		new ExamplesKeyword(),
 		new ExclusiveMaximumKeyword(),
 		new ExclusiveMinimumKeyword(),
 		new Keywords.Draft06.FormatKeyword(),
-		new IdKeyword(),
-		new IfKeyword(),
+		new Keywords.Draft06.IdKeyword(),
 		new Keywords.Draft06.ItemsKeyword(),
-		new MaxContainsKeyword(),
 		new MaximumKeyword(),
 		new MaxItemsKeyword(),
 		new MaxLengthKeyword(),
 		new MaxPropertiesKeyword(),
-		new MinContainsKeyword(),
 		new MinimumKeyword(),
 		new MinItemsKeyword(),
 		new MinLengthKeyword(),
@@ -48,19 +38,11 @@ public partial class SchemaKeywordRegistry
 		new PatternPropertiesKeyword(),
 		new PropertiesKeyword(),
 		new PropertyNamesKeyword(),
-		new ReadOnlyKeyword(),
-		new Keywords.Draft201909.RecursiveAnchorKeyword(),
-		new Keywords.Draft201909.RecursiveRefKeyword(),
 		new RefKeyword(),
 		new RequiredKeyword(),
 		new SchemaKeyword(),
-		new ThenKeyword(),
 		new TitleKeyword(),
 		new TypeKeyword(),
-		new Keywords.Draft201909.UnevaluatedItemsKeyword(),
-		new UnevaluatedPropertiesKeyword(),
-		new UniqueItemsKeyword(),
-		//new VocabularyKeyword(),
-		new WriteOnlyKeyword()
-	);
+		new UniqueItemsKeyword()
+	) { RefIgnoresSiblingKeywords = true };
 }

@@ -9,7 +9,7 @@ namespace Json.Schema;
 /// <summary>
 /// Manages which keywords are known by the system.
 /// </summary>
-public partial class SchemaKeywordRegistry
+public partial class Dialect
 {
 	[DebuggerDisplay("{Name} / {Priority}")]
 	private class KeywordMetaData
@@ -32,16 +32,16 @@ public partial class SchemaKeywordRegistry
 
 	private readonly MultiLookupConcurrentDictionary<KeywordMetaData> _keywordData;
 
-	public static SchemaKeywordRegistry Default { get; set; }
+	public static Dialect Default { get; set; }
 
 	public bool RefIgnoresSiblingKeywords { get; set; }
 
-	static SchemaKeywordRegistry()
+	static Dialect()
 	{
 		Default = V1;
 	}
 
-	public SchemaKeywordRegistry(params IKeywordHandler[] keywords)
+	public Dialect(params IKeywordHandler[] keywords)
 	{
 		_keywordData = [];
 		_keywordData.AddLookup(x => x.Name);
@@ -54,7 +54,7 @@ public partial class SchemaKeywordRegistry
 		EvaluateDependencies();
 	}
 
-	public SchemaKeywordRegistry(SchemaKeywordRegistry source)
+	public Dialect(Dialect source)
 	{
 		_keywordData = [];
 		_keywordData.AddLookup(x => x.Name);

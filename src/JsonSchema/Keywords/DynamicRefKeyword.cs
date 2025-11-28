@@ -34,7 +34,6 @@ public partial class DynamicRefKeyword : IKeywordHandler
 		if (value.ValueKind != JsonValueKind.String)
 			throw new JsonSchemaException($"'{Name}' value must be a string, found {value.ValueKind}");
 
-		// TODO: may need options passed in to allow #
 		var anchor = value.GetString()!;
 		if (!AnchorPattern.IsMatch(anchor))
 			throw new JsonSchemaException($"'{Name}' value must match '{AnchorPattern}'");

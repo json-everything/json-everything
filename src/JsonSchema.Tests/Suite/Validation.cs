@@ -62,11 +62,11 @@ public class Validation
 				{
 					var keywords = draftFolder switch
 					{
-						"draft6" => SchemaKeywordRegistry.Draft06,
-						"draft7" => SchemaKeywordRegistry.Draft07,
-						"draft2019-09" => SchemaKeywordRegistry.Draft201909,
-						"draft2020-12" => SchemaKeywordRegistry.Draft202012,
-						"v1" => SchemaKeywordRegistry.V1,
+						"draft6" => Dialect.Draft06,
+						"draft7" => Dialect.Draft07,
+						"draft2019-09" => Dialect.Draft201909,
+						"draft2020-12" => Dialect.Draft202012,
+						"v1" => Dialect.V1,
 						_ => throw new ArgumentOutOfRangeException(nameof(draftFolder), $"{draftFolder} is unsupported")
 					};
 

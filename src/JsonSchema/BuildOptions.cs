@@ -19,7 +19,7 @@ public class BuildOptions
 	/// <remarks>Use this property to access or query the set of supported keywords for schema validation and
 	/// processing. The returned registry is read-only and reflects the current configuration of recognized
 	/// keywords.</remarks>
-	public SchemaKeywordRegistry KeywordRegistry { get; set; }
+	public Dialect KeywordRegistry { get; set; }
 
 	/// <summary>
 	/// Specifies whether the `format` keyword should fail validations for
@@ -31,34 +31,17 @@ public class BuildOptions
 	/// </remarks>
 	public bool OnlyKnownFormats { get; set; }
 
-	/// <summary>
-	/// Specifies whether custom keywords that aren't defined in vocabularies
-	/// should be processed.  Default is false.
-	/// </summary>
-	/// <remarks>
-	/// Custom keywords are those which have associated <see cref="IJsonSchemaKeyword"/>
-	/// implementations.  Unrecognized keywords, for which annotations should
-	/// be collected, are not considered "custom."
-	/// </remarks>
-	public bool ProcessCustomKeywords { get; set; }
-
-	/// <summary>
-	/// Gets or sets whether `$ref` is permitted to navigate into unknown keywords
-	/// where subschemas aren't expected.  Default is true.
-	/// </summary>
-	public bool AllowReferencesIntoUnknownKeywords { get; set; } = true;
-
 	static BuildOptions()
 	{
 		_ = MetaSchemas.V1;
 	}
 
 	public BuildOptions()
-		: this(SchemaRegistry.Global, SchemaKeywordRegistry.Default)
+		: this(SchemaRegistry.Global, Dialect.Default)
 	{
 	}
 
-	private BuildOptions(SchemaRegistry schemaRegistry, SchemaKeywordRegistry keywordRegistry)
+	private BuildOptions(SchemaRegistry schemaRegistry, Dialect keywordRegistry)
 	{
 		SchemaRegistry = schemaRegistry;
 		KeywordRegistry = keywordRegistry;

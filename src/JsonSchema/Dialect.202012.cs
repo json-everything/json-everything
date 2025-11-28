@@ -2,31 +2,42 @@
 
 namespace Json.Schema;
 
-public partial class SchemaKeywordRegistry
+public partial class Dialect
 {
-	public static SchemaKeywordRegistry Draft06 { get; } = new(
-		new Keywords.Draft06.AdditionalItemsKeyword(),
+	public static Dialect Draft202012 { get; } = new(
 		new AdditionalPropertiesKeyword(),
 		new AllOfKeyword(),
+		new AnchorKeyword(),
 		new AnyOfKeyword(),
 		new CommentKeyword(),
 		new ConstKeyword(),
-		new Keywords.Draft06.ContainsKeyword(),
+		new ContainsKeyword(),
+		new ContentEncodingKeyword(),
+		new ContentMediaTypeKeyword(),
+		new ContentSchemaKeyword(),
 		new DefaultKeyword(),
-		new Keywords.Draft06.DefinitionsKeyword(),
-		new DependenciesKeyword(),
+		new DefsKeyword(),
+		new DependentRequiredKeyword(),
+		new DependentSchemasKeyword(),
+		new DeprecatedKeyword(),
 		new DescriptionKeyword(),
+		new DynamicAnchorKeyword(),
+		new Keywords.Draft202012.DynamicRefKeyword(),
+		new ElseKeyword(),
 		new EnumKeyword(),
 		new ExamplesKeyword(),
 		new ExclusiveMaximumKeyword(),
 		new ExclusiveMinimumKeyword(),
 		new Keywords.Draft06.FormatKeyword(),
-		new Keywords.Draft06.IdKeyword(),
-		new Keywords.Draft06.ItemsKeyword(),
+		new IdKeyword(),
+		new IfKeyword(),
+		new ItemsKeyword(),
+		new MaxContainsKeyword(),
 		new MaximumKeyword(),
 		new MaxItemsKeyword(),
 		new MaxLengthKeyword(),
 		new MaxPropertiesKeyword(),
+		new MinContainsKeyword(),
 		new MinimumKeyword(),
 		new MinItemsKeyword(),
 		new MinLengthKeyword(),
@@ -36,13 +47,20 @@ public partial class SchemaKeywordRegistry
 		new OneOfKeyword(),
 		new PatternKeyword(),
 		new PatternPropertiesKeyword(),
+		new PrefixItemsKeyword(),
 		new PropertiesKeyword(),
 		new PropertyNamesKeyword(),
+		new ReadOnlyKeyword(),
 		new RefKeyword(),
 		new RequiredKeyword(),
 		new SchemaKeyword(),
+		new ThenKeyword(),
 		new TitleKeyword(),
 		new TypeKeyword(),
-		new UniqueItemsKeyword()
-	) { RefIgnoresSiblingKeywords = true };
+		new UnevaluatedItemsKeyword(),
+		new UnevaluatedPropertiesKeyword(),
+		new UniqueItemsKeyword(),
+		//new VocabularyKeyword(),
+		new WriteOnlyKeyword()
+	);
 }

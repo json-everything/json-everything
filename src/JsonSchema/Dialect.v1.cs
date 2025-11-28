@@ -2,9 +2,9 @@
 
 namespace Json.Schema;
 
-public partial class SchemaKeywordRegistry
+public partial class Dialect
 {
-	public static SchemaKeywordRegistry V1 { get; } = new(
+	public static Dialect V1 { get; } = new(
 		new AdditionalPropertiesKeyword(),
 		new AllOfKeyword(),
 		new AnchorKeyword(),
