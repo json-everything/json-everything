@@ -11,7 +11,7 @@ public class SchemaRegistry
 {
 	private class Registration
 	{
-		public JsonSchema? Root { get; set; }
+		public IBaseDocument? Root { get; set; }
 		public Dictionary<string, JsonSchemaNode>? Anchors { get; set; }
 		public Dictionary<string, JsonSchemaNode>? DynamicAnchors { get; set; }
 		public JsonSchemaNode? RecursiveAnchor { get; set; }
@@ -20,7 +20,7 @@ public class SchemaRegistry
 	private static readonly Uri _empty = new("https://json-everything.lib/");
 
 	private readonly Dictionary<Uri, Registration> _registered = [];
-	private Func<Uri, JsonSchema?>? _fetch;
+	private Func<Uri, IBaseDocument?>? _fetch;
 
 	/// <summary>
 	/// The global registry.
@@ -30,7 +30,7 @@ public class SchemaRegistry
 	/// <summary>
 	/// Gets or sets a method to enable automatic download of schemas by `$id` URI.
 	/// </summary>
-	public Func<Uri, JsonSchema?> Fetch
+	public Func<Uri, IBaseDocument?> Fetch
 	{
 		get => _fetch ??= _ => null;
 		set => _fetch = value;
@@ -115,7 +115,7 @@ public class SchemaRegistry
 		};
 	}
 
-	private Registration RegisterSchema(Uri? uri, JsonSchema schema)
+	private Registration RegisterSchema(Uri? uri, IBaseDocument schema)
 	{
 		var schemaUri = MakeAbsolute(schema.BaseUri);
 		var registration = _registered.GetValueOrDefault(schemaUri);
@@ -150,7 +150,7 @@ public class SchemaRegistry
 	/// </returns>
 	// For URI equality see https://docs.microsoft.com/en-us/dotnet/api/system.uri.op_equality?view=netcore-3.1
 	// tl;dr - URI equality doesn't consider fragments
-	public JsonSchema? Get(Uri uri) => GetRegistration(uri)?.Root;
+	public IBaseDocument? Get(Uri uri) => GetRegistration(uri)?.Root;
 
 	internal JsonSchemaNode? Get(Uri baseUri, string? anchor)
 	{

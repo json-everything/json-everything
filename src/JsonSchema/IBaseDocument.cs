@@ -24,7 +24,7 @@ public interface IBaseDocument
 	/// Finds a schema within the document.
 	/// </summary>
 	/// <param name="pointer">A JSON Pointer to the location of the schema within the document.</param>
-	/// <param name="options">Evaluation options.  This is needed for internal processing.</param>
+	/// <param name="context">Build context.</param>
 	/// <returns>A JSON Schema, if found.</returns>
-	JsonSchemaNode? FindSubschema(JsonPointer pointer, BuildOptions options);
+	JsonSchemaNode? FindSubschema(JsonPointer pointer, BuildContext context);
 }

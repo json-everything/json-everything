@@ -11,8 +11,8 @@ namespace Json.Schema;
 /// </summary>
 public class JsonNodeBaseDocument : IBaseDocument
 {
-	private readonly JsonNode _node;
-	private readonly ConcurrentDictionary<JsonPointer, JsonSchema?> _foundSubschemas;
+	private readonly JsonElement _node;
+	private readonly ConcurrentDictionary<JsonPointer, JsonSchemaNode?> _foundSubschemas;
 
 	/// <summary>
 	/// Gets the base URI that applies to this schema.  This may be defined by a parent schema.
@@ -31,10 +31,10 @@ public class JsonNodeBaseDocument : IBaseDocument
 	/// </summary>
 	/// <param name="node">The JsonNode.</param>
 	/// <param name="baseUri">The identifying base URI.</param>
-	public JsonNodeBaseDocument(JsonNode node, Uri baseUri)
+	public JsonNodeBaseDocument(JsonElement node, Uri baseUri)
 	{
-		_node = node;
-		_foundSubschemas = new ConcurrentDictionary<JsonPointer, JsonSchema?>();
+		_node = node.Clone();
+		_foundSubschemas = new ConcurrentDictionary<JsonPointer, JsonSchemaNode?>();
 
 		BaseUri = baseUri;
 	}
@@ -43,22 +43,20 @@ public class JsonNodeBaseDocument : IBaseDocument
 	/// Finds a schema within the document.
 	/// </summary>
 	/// <param name="pointer">A JSON Pointer to the location of the schema within the document.</param>
-	/// <param name="options">Evaluation options.  This is needed for internal processing.</param>
+	/// <param name="context">Build context.</param>
 	/// <returns>A JSON Schema, if found.</returns>
-	public JsonSchema? FindSubschema(JsonPointer pointer, EvaluationOptions options)
+	public JsonSchemaNode? FindSubschema(JsonPointer pointer, BuildContext context)
 	{
-		return _foundSubschemas.GetOrAdd(pointer, jsonPointer =>
+		return _foundSubschemas.GetOrAdd(pointer, _ =>
 		{
-			if (!jsonPointer.TryEvaluate(_node, out var location)) return null;
+			var localSchema = pointer.Evaluate(_node);
+			if (localSchema is null) return null;
 
-			var schema = location.Deserialize(JsonSchemaSerializerContext.Default.JsonSchema);
-			if (schema != null)
+			var newContext = context with
 			{
-				schema.BaseUri = BaseUri;
-				options.SchemaRegistry.Initialize(BaseUri, schema);
-			}
-
-			return schema;
+				LocalSchema = localSchema.Value
+			};
+			return JsonSchema.BuildNode(newContext);
 		});
 	}
 }

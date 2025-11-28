@@ -17,7 +17,7 @@ namespace Json.Schema;
 /// Represents a JSON Schema.
 /// </summary>
 [DebuggerDisplay("{ToDebugString()}")]
-public class JsonSchema
+public class JsonSchema : IBaseDocument
 {
 	private readonly BuildOptions _options;
 

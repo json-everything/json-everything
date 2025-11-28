@@ -39,8 +39,6 @@
 	</ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="IBaseDocument.cs" />
-    <Compile Remove="JsonNodeBaseDocument.cs" />
     <Compile Remove="JsonSchemaExtensions.KeywordAccess.cs" />
     <Compile Remove="PropertyDependenciesKeyword.cs" />
     <Compile Remove="PropertyDependency.cs" />
