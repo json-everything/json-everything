@@ -27,13 +27,13 @@ public class SchemaKeyword : IKeywordHandler
 		var uri = (Uri)keyword.Value!;
 		context.Options.KeywordRegistry = uri.OriginalString switch
 		{
-			"http://json-schema.org/draft-06/schema#" => SchemaKeywordRegistry.Draft06,
-			"http://json-schema.org/draft-07/schema#" => SchemaKeywordRegistry.Draft07,
-			"https://json-schema.org/draft/2019-09/schema" => SchemaKeywordRegistry.Draft201909,
-			"https://json-schema.org/draft/2020-12/schema" => SchemaKeywordRegistry.Draft202012,
-			"https://json-schema.org/draft/next/schema" => SchemaKeywordRegistry.V1, // TODO: remove before publish
-			"https://json-schema.org/v1" => SchemaKeywordRegistry.V1,
-			"https://json-schema.org/v1/2026" => SchemaKeywordRegistry.V1,
+			"http://json-schema.org/draft-06/schema#" => Dialect.Draft06,
+			"http://json-schema.org/draft-07/schema#" => Dialect.Draft07,
+			"https://json-schema.org/draft/2019-09/schema" => Dialect.Draft201909,
+			"https://json-schema.org/draft/2020-12/schema" => Dialect.Draft202012,
+			"https://json-schema.org/draft/next/schema" => Dialect.V1, // TODO: remove before publish
+			"https://json-schema.org/v1" => Dialect.V1,
+			"https://json-schema.org/v1/2026" => Dialect.V1,
 			_ => context.Options.KeywordRegistry
 		};
 	}

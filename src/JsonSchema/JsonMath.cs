@@ -205,8 +205,8 @@ public static class JsonMath
 		var dividendSpan = dividend.GetRawText().AsSpan();
 		var divisorSpan = divisor.GetRawText().AsSpan();
 
-		var (dividendNeg, dividendStart, dividendLen, dividendExp) = NormalizeNumber(dividendSpan);
-		var (divisorNeg, divisorStart, divisorLen, divisorExp) = NormalizeNumber(divisorSpan);
+		var (_, dividendStart, dividendLen, dividendExp) = NormalizeNumber(dividendSpan);
+		var (_, divisorStart, divisorLen, divisorExp) = NormalizeNumber(divisorSpan);
 
 		if (divisorLen == 0)
 			return false;

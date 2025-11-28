@@ -2,12 +2,13 @@
 
 namespace Json.Schema;
 
-public partial class SchemaKeywordRegistry
+public partial class Dialect
 {
-	public static SchemaKeywordRegistry Draft202012 { get; } = new(
+	public static Dialect Draft201909 { get; } = new(
+		new Keywords.Draft06.AdditionalItemsKeyword(),
 		new AdditionalPropertiesKeyword(),
 		new AllOfKeyword(),
-		new AnchorKeyword(),
+		new Keywords.Draft201909.AnchorKeyword(),
 		new AnyOfKeyword(),
 		new CommentKeyword(),
 		new ConstKeyword(),
@@ -21,8 +22,6 @@ public partial class SchemaKeywordRegistry
 		new DependentSchemasKeyword(),
 		new DeprecatedKeyword(),
 		new DescriptionKeyword(),
-		new DynamicAnchorKeyword(),
-		new Keywords.Draft202012.DynamicRefKeyword(),
 		new ElseKeyword(),
 		new EnumKeyword(),
 		new ExamplesKeyword(),
@@ -31,7 +30,7 @@ public partial class SchemaKeywordRegistry
 		new Keywords.Draft06.FormatKeyword(),
 		new IdKeyword(),
 		new IfKeyword(),
-		new ItemsKeyword(),
+		new Keywords.Draft06.ItemsKeyword(),
 		new MaxContainsKeyword(),
 		new MaximumKeyword(),
 		new MaxItemsKeyword(),
@@ -47,17 +46,18 @@ public partial class SchemaKeywordRegistry
 		new OneOfKeyword(),
 		new PatternKeyword(),
 		new PatternPropertiesKeyword(),
-		new PrefixItemsKeyword(),
 		new PropertiesKeyword(),
 		new PropertyNamesKeyword(),
 		new ReadOnlyKeyword(),
+		new Keywords.Draft201909.RecursiveAnchorKeyword(),
+		new Keywords.Draft201909.RecursiveRefKeyword(),
 		new RefKeyword(),
 		new RequiredKeyword(),
 		new SchemaKeyword(),
 		new ThenKeyword(),
 		new TitleKeyword(),
 		new TypeKeyword(),
-		new UnevaluatedItemsKeyword(),
+		new Keywords.Draft201909.UnevaluatedItemsKeyword(),
 		new UnevaluatedPropertiesKeyword(),
 		new UniqueItemsKeyword(),
 		//new VocabularyKeyword(),

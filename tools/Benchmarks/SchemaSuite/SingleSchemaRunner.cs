@@ -45,7 +45,7 @@ public class SingleSchemaRunner
 
 	private static readonly BuildOptions _buildOptions = new()
 	{
-		KeywordRegistry = SchemaKeywordRegistry.Draft201909
+		KeywordRegistry = Dialect.Draft201909
 	};
 
 	//[Benchmark]

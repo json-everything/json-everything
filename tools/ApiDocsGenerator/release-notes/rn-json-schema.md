@@ -4,6 +4,10 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "09.01"
 ---
+# [8.0.0-beta]() {#release-schema-8.0.0}
+
+
+
 # [7.4.0](https://github.com/json-everything/json-everything/pull/921) {#release-schema-7.4.0}
 
 Replaces `ValidatingJsonConverter.OutputFormat` and `.RequireFormatValidation` with a full `.Options` property.  Previous properties have been marked obsolete and redirected to new property.  Supports _JsonSchema.Net.Generation_ v5.1.0.
