@@ -12,7 +12,7 @@ public static class __ModuleInitialization
 {
 	private static int _initialized;
 
-	//[ModuleInitializer]
+	[ModuleInitializer]
 	public static void Initialize()
 	{
 		if (System.Threading.Interlocked.Exchange(ref _initialized, 1) == 1) return;

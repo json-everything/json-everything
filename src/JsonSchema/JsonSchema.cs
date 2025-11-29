@@ -333,6 +333,7 @@ public class JsonSchema : IBaseDocument
 			{
 				var newContext = context with
 				{
+					BaseUri = BaseUri,
 					LocalSchema = localSchema.Value
 				};
 				subschema = BuildNode(newContext);

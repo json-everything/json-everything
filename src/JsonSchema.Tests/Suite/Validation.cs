@@ -60,7 +60,7 @@ public class Validation
 				collection.IsOptional = fileName.Contains("optional");
 				foreach (var test in collection.Tests)
 				{
-					var keywords = draftFolder switch
+					var dialect = draftFolder switch
 					{
 						"draft6" => Dialect.Draft06,
 						"draft7" => Dialect.Draft07,
@@ -72,7 +72,7 @@ public class Validation
 
 					var buildOptions = new BuildOptions
 					{
-						Dialect = keywords,
+						Dialect = dialect,
 						SchemaRegistry = new()
 					};
 					var optional = collection.IsOptional ? "(optional) / " : null;
@@ -89,8 +89,6 @@ public class Validation
 	[OneTimeSetUp]
 	public void LoadRemoteSchemas()
 	{
-		__ModuleInitialization.Initialize();
-
 		// ReSharper disable once HeuristicUnreachableCode
 		var remotesPath = Path.Combine(TestContext.CurrentContext.WorkDirectory, _useExternal ? _externalRemoteSchemasPath : _remoteSchemasPath)
 			.AdjustForPlatform();
@@ -102,8 +100,24 @@ public class Validation
 		{
 			try
 			{
+				Dialect? dialect;
+				if (fileName.Contains("draft6"))
+					dialect = Dialect.Draft06;
+				else if (fileName.Contains("draft7"))
+					dialect = Dialect.Draft07;
+				else if (fileName.Contains("draft2019-09"))
+					dialect = Dialect.Draft201909;
+				else if (fileName.Contains("draft2020-12"))
+					dialect = Dialect.Draft202012;
+				else
+					dialect = Dialect.V1;
+
+				var buildOptions = new BuildOptions
+				{
+					Dialect = dialect
+				};
 				var uri = new Uri(fileName.Replace(remotesPath, "http://localhost:1234").Replace('\\', '/'));
-				var schema = JsonSchema.FromFile(fileName, baseUri: uri);
+				var schema = JsonSchema.FromFile(fileName, buildOptions, uri);
 				SchemaRegistry.Global.Register(uri, schema); // it seems a number of remotes have `$id`s different from their file path
 			}
 			catch (JsonSchemaException e)
