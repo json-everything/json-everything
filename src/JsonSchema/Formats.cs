@@ -1033,9 +1033,37 @@ public static partial class Formats
 	{
 		if (node.GetSchemaValueType() != SchemaValueType.String) return true;
 
+		var pattern = node.GetString()!;
+
+		// Check for .NET-specific escapes that are not valid in ECMA-262
+		// ECMA-262 valid escapes: b, f, n, r, t, v, 0 (null), x (hex), u (unicode),
+		// c (control), and special regex chars like ., *, +, ?, [, ], {, }, (, ), |, ^, $, \, /
+		// .NET-specific (invalid in ECMA-262): a (alert), e (escape), A, G, z, Z (anchors)
+		for (int i = 0; i < pattern.Length - 1; i++)
+		{
+			if (pattern[i] == '\\')
+			{
+				var next = pattern[i + 1];
+				// .NET-specific escapes not in ECMA-262
+				if (next == 'a' || // alert/bell
+				    next == 'e' || // escape
+				    next == 'A' || // start of string (use ^ in ECMA-262)
+				    next == 'G' || // end of previous match
+				    next == 'z' || // end of string before newline (use $ in ECMA-262)  
+				    next == 'Z')   // end of string (use $ in ECMA-262)
+				{
+					return false;
+				}
+				// \p and \P (Unicode property escapes) - these are ES2018+ but .NET ECMAScript mode rejects them
+				// \k (named backreference) - ECMA-262 supports this, .NET ECMAScript mode should too
+				// Lookbehinds (?<=...) and (?<!...) - ES2018+ but .NET doesn't support in ECMAScript mode
+				// Named groups (?<name>...) - ES2018+ but .NET doesn't support in ECMAScript mode
+			}
+		}
+
 		try
 		{
-			_ = new Regex(node.GetString()!, RegexOptions.ECMAScript);
+			_ = new Regex(pattern, RegexOptions.ECMAScript);
 			return true;
 		}
 		catch
