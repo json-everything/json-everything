@@ -1,10 +1,15 @@
 ﻿using Json.Schema.Keywords;
-using Json.Schema.Keywords.Draft06;
 
 namespace Json.Schema;
 
 public partial class Dialect
 {
+	/// <summary>
+	/// Gets the JSON Schema dialect definition for Draft 7.
+	/// </summary>
+	/// <remarks>Use this property to evaluate schemas that conform to the Draft 7 specification.
+	/// The dialect includes all standard Draft 7 keywords and allows unknown keywords. Sibling keywords are
+	/// ignored when resolving references using the "$ref" keyword.</remarks>
 	public static Dialect Draft07 { get; } = new(
 		Keywords.Draft06.AdditionalItemsKeyword.Instance,
 		AdditionalPropertiesKeyword.Instance,
@@ -17,7 +22,7 @@ public partial class Dialect
 		ContentMediaTypeKeyword.Instance,
 		DefaultKeyword.Instance,
 		Keywords.Draft06.DefinitionsKeyword.Instance,
-		DependenciesKeyword.Instance,
+		Keywords.Draft06.DependenciesKeyword.Instance,
 		DescriptionKeyword.Instance,
 		ElseKeyword.Instance,
 		EnumKeyword.Instance,

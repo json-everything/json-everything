@@ -4,7 +4,7 @@ using Json.Pointer;
 namespace Json.Schema;
 
 /// <summary>
-/// Represents an identifiable or locatable base document that may be or contain a JSON Schema.
+/// Represents an identifiable base document that may be or may contain a JSON Schema.
 /// </summary>
 public interface IBaseDocument
 {

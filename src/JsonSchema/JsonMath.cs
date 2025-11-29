@@ -3,8 +3,28 @@ using System.Text.Json;
 
 namespace Json.Schema;
 
+/// <summary>
+/// Provides static methods for performing mathematical operations and comparisons on JSON numeric values represented by
+/// <see cref="System.Text.Json.JsonElement"/> instances.
+/// </summary>
+/// <remarks>The methods in this class are designed to work directly with the textual representation of JSON
+/// numbers, enabling precise comparison and divisibility checks without converting to .NET numeric types. This is
+/// useful for scenarios where exact JSON number semantics are required, such as schema validation or custom JSON
+/// processing. All methods are thread-safe and do not modify the input <see cref="JsonElement"/> instances.</remarks>
 public static class JsonMath
 {
+	/// <summary>
+	/// Compares two JSON number values represented by <see cref="JsonElement"/> instances and determines their relative
+	/// order.
+	/// </summary>
+	/// <remarks>This method performs a numeric comparison based on the JSON number representations, handling
+	/// differences in sign, digit sequence, and exponent. Both parameters must represent valid JSON numbers; otherwise,
+	/// the result is undefined.</remarks>
+	/// <param name="a">The first <see cref="JsonElement"/> containing a JSON number to compare.</param>
+	/// <param name="b">The second <see cref="JsonElement"/> containing a JSON number to compare.</param>
+	/// <returns>A signed integer that indicates the relative order of the numbers: less than zero if <paramref name="a"/> is less
+	/// than <paramref name="b"/>; zero if they are equal; greater than zero if <paramref name="a"/> is greater than
+	/// <paramref name="b"/>.</returns>
 	public static int NumberCompare(JsonElement a, JsonElement b)
 	{
 		var aSpan = a.GetRawText().AsSpan();
@@ -200,6 +220,15 @@ public static class JsonMath
 		return (isNegative, firstNonZero, significantDigits, exponentValue);
 	}
 
+	/// <summary>
+	/// Determines whether the numeric value represented by the specified JSON element is evenly divisible by the value of
+	/// another JSON element.
+	/// </summary>
+	/// <remarks>Both parameters must represent valid JSON numbers. If the divisor is zero or not a valid number,
+	/// the method returns false. If the dividend is zero, the method returns true.</remarks>
+	/// <param name="dividend">The JSON element representing the dividend. Must contain a valid numeric value.</param>
+	/// <param name="divisor">The JSON element representing the divisor. Must contain a valid numeric value.</param>
+	/// <returns>true if the dividend is evenly divisible by the divisor; otherwise, false.</returns>
 	public static bool Divides(JsonElement dividend, JsonElement divisor)
 	{
 		var dividendSpan = dividend.GetRawText().AsSpan();

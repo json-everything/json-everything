@@ -9,7 +9,13 @@ namespace Json.Schema;
 /// </summary>
 public static class JsonElementExtensions
 {
+	/// <summary>
+	/// Represents a JSON element with the boolean value <see langword="true"/>.
+	/// </summary>
 	public static JsonElement True = true.AsJsonElement();
+	/// <summary>
+	/// Represents a JSON Boolean value of <see langword="false"/> as a <see cref="JsonElement"/>.
+	/// </summary>
 	public static JsonElement False = false.AsJsonElement();
 
 	/// <summary>

@@ -5,9 +5,6 @@ using Json.Pointer;
 
 namespace Json.Schema;
 
-/// <summary>
-/// A serializer context for this library.
-/// </summary>
 [JsonSerializable(typeof(JsonSchema))]
 [JsonSerializable(typeof(SchemaValueType))]
 [JsonSerializable(typeof(EvaluationResults))]

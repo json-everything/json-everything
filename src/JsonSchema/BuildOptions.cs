@@ -1,5 +1,12 @@
 ﻿namespace Json.Schema;
 
+/// <summary>
+/// Provides configuration options for schema building, including registries and dialect selection.
+/// </summary>
+/// <remarks>Use this class to customize how schemas are built, such as specifying registries for
+/// schemas, vocabularies, and dialects. The options set in this class determine how schema resolution and dialect
+/// selection are performed during the build process. The static <see cref="Default"/> property provides a set of
+/// default options suitable for most scenarios.</remarks>
 public class BuildOptions
 {
 	/// <summary>
@@ -29,14 +36,4 @@ public class BuildOptions
 	/// Gets the dialect to be used when building schemas with these options.
 	/// </summary>
 	public Dialect Dialect { get; set; } = Dialect.Default;
-
-	/// <summary>
-	/// Specifies whether the `format` keyword should fail validations for
-	/// unknown formats.  Default is false.
-	/// </summary>
-	/// <remarks>
-	///	This option is applied whether `format` is using annotation or
-	/// assertion behavior.
-	/// </remarks>
-	public bool OnlyKnownFormats { get; set; }
 }

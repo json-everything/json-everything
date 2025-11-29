@@ -5,8 +5,12 @@ using System.Linq;
 namespace Json.Schema;
 
 /// <summary>
-/// A registry for schemas.
+/// Provides a registry for storing and retrieving JSON schemas and other base documents by URI and anchor.
 /// </summary>
+/// <remarks>The registry supports registering schemas with unique URIs and enables lookup by URI or anchor.
+/// Schemas can be fetched automatically using the <see cref="Fetch"/> delegate if not already registered. The <see
+/// cref="Global"/> property provides a shared, application-wide registry instance. Getting schemas via
+/// local instances fall back to the global registry.</remarks>
 public class SchemaRegistry
 {
 	private class Registration

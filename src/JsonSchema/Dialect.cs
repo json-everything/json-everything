@@ -7,6 +7,15 @@ using Json.Schema.Keywords;
 
 namespace Json.Schema;
 
+/// <summary>
+/// Represents a JSON Schema dialect, defining the set of supported keywords and validation rules for a specific schema
+/// version.
+/// </summary>
+/// <remarks>A dialect encapsulates the behavior and interpretation of JSON Schema keywords according to a
+/// particular specification draft. Use a specific dialect instance, such as <see cref="Draft06"/>, to validate or
+/// process schemas that conform to that draft. Dialects may differ in supported keywords, validation semantics, and
+/// handling of unknown keywords. This class is typically used to select the appropriate schema version when working
+/// with JSON Schema documents.</remarks>
 public partial class Dialect
 {
 	[DebuggerDisplay("{Name} / {Priority}")]

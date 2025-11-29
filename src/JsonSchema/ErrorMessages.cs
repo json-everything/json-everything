@@ -31,7 +31,19 @@ public static partial class ErrorMessages
     {
     }
 
-    private static string Get(CultureInfo? culture = null, [CallerMemberName] string? key = null)
+	/// <summary>
+	/// Retrieves a localized error message string for the specified key and culture.
+	/// </summary>
+	/// <remarks>If the <paramref name="key"/> parameter begins with "Get", that prefix is removed before looking up
+	/// the resource. This method is typically used within error-handling code to retrieve user-facing error messages based
+	/// on the calling member.</remarks>
+	/// <param name="culture">The culture to use when retrieving the error message. If null, the default culture or the current thread's culture
+	/// is used.</param>
+	/// <param name="key">The resource key identifying the error message to retrieve. If not specified, the caller's member name is used.</param>
+	/// <returns>A localized error message string corresponding to the specified key and culture.</returns>
+	/// <exception cref="ArgumentNullException">Thrown if <paramref name="key"/> is null.</exception>
+	/// <exception cref="KeyNotFoundException">Thrown if an error message resource with the specified key cannot be found.</exception>
+    public static string Get(CultureInfo? culture = null, [CallerMemberName] string? key = null)
     {
         if (key == null) throw new ArgumentNullException(nameof(key), "Cannot get a null-keyed resource");
 

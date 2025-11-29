@@ -35,12 +35,8 @@ public class JsonSchema : IBaseDocument
 	/// </summary>
 	public bool? BoolValue { get; }
 
-	/// <summary>
-	/// Gets the base URI that applies to this schema.  This may be defined by a parent schema.
-	/// </summary>
 	/// <remarks>
-	/// This property is initialized to a generated random value that matches `https://json-everything.net/{random}`
-	/// where `random` is 10 hex characters.
+	/// This property is initialized to a generated random value that matches `https://json-everything.lib/{random-guid}`.
 	///
 	/// It may change after the initial evaluation based on whether the schema contains an `$id` keyword
 	/// or is a child of another schema.
@@ -111,6 +107,20 @@ public class JsonSchema : IBaseDocument
 
 	private static Uri GenerateBaseUri() => new($"https://json-everything.lib/{Guid.NewGuid():N}");
 
+	/// <summary>
+	/// Builds a JsonSchema instance from the specified JSON schema root element, applying the provided build options and
+	/// base URI if specified.
+	/// </summary>
+	/// <remarks>The returned schema is registered with the provided or global schema registry. Reference
+	/// resolution and cycle detection are performed during the build process. The base URI is set on the resulting schema
+	/// and used for reference resolution.</remarks>
+	/// <param name="root">The root JsonElement representing the JSON schema to be parsed and built. Must be a valid JSON schema object.</param>
+	/// <param name="options">Optional build options that control schema parsing behavior, such as registry usage and dialect settings. If null,
+	/// default options are used.</param>
+	/// <param name="baseUri">An optional base URI to associate with the schema for resolving references if the schema does not contain an $id
+	/// keyword. If null, a default base URI is generated.</param>
+	/// <returns>A JsonSchema instance representing the parsed schema. Returns a singleton schema for boolean schemas (<see
+	/// langword="true"/> or <see langword="false"/>), or a constructed schema for object-based definitions.</returns>
 	public static JsonSchema Build(JsonElement root, BuildOptions? options = null, Uri? baseUri = null)
 	{
 		options ??= BuildOptions.Default;
@@ -137,6 +147,23 @@ public class JsonSchema : IBaseDocument
 		return schema;
 	}
 
+	/// <summary>
+	/// Builds a new JSON schema node from the specified build context, interpreting the local schema and its keywords
+	/// according to the active dialect.
+	/// </summary>
+	/// <remarks>This method processes schema keywords and handles dialect-specific behaviors, such as anchor
+	/// registration and embedded resource management. The resulting node reflects the schema's structure and metadata as
+	/// defined in the context.
+	/// 
+	/// Use this method from keywords to build subschemas.
+	///
+	/// Individual keywords may throw various exceptions during the validation phase.
+	/// </remarks>
+	/// <param name="context">The build context containing the local schema, dialect, base URI, and options used to construct the schema node.
+	/// Must not be null.</param>
+	/// <returns>A JsonSchemaNode representing the parsed schema, including its keywords and any registered anchors or embedded
+	/// resources.</returns>
+	/// <exception cref="ArgumentException">Thrown if the local schema is not a boolean or an object.</exception>
 	public static JsonSchemaNode BuildNode(BuildContext context)
 	{
 		if (context.LocalSchema.ValueKind == JsonValueKind.True) return JsonSchemaNode.True();
@@ -290,6 +317,12 @@ public class JsonSchema : IBaseDocument
 		}
 	}
 
+	/// <summary>
+	/// Evaluates the specified JSON instance against the schema and returns the results.
+	/// </summary>
+	/// <param name="instance">The JSON data to be evaluated against the schema.</param>
+	/// <param name="options">(Optional) Evaluation settings that control validation behavior. If null, default options are used.</param>
+	/// <returns>An EvaluationResults object containing the outcome of the schema validation, including any errors or annotations.</returns>
 	public EvaluationResults Evaluate(JsonElement instance, EvaluationOptions? options = null)
 	{
 		options ??= EvaluationOptions.Default;
@@ -306,6 +339,13 @@ public class JsonSchema : IBaseDocument
 		return Root.Evaluate(context);
 	}
 
+	/// <summary>
+	/// Finds the subschema node within the root schema that corresponds to the specified JSON pointer.
+	/// </summary>
+	/// <param name="pointer">The JSON pointer indicating the location of the subschema to find within the root schema.</param>
+	/// <param name="context">The build context used for schema evaluation and node construction if the subschema is not found directly.</param>
+	/// <returns>A <see cref="JsonSchemaNode"/> representing the subschema at the specified pointer, or <see langword="null"/> if no
+	/// matching subschema exists.</returns>
 	public JsonSchemaNode? FindSubschema(JsonPointer pointer, BuildContext context)
 	{
 		var subschema = Root;

@@ -4,6 +4,12 @@ namespace Json.Schema;
 
 public partial class Dialect
 {
+	/// <summary>
+	/// Gets the JSON Schema dialect definition for Draft 2019-09.
+	/// </summary>
+	/// <remarks>Use this property to evaluate schemas that conform to the Draft 2019-09 specification.
+	/// The dialect includes all standard Draft 2019-09 keywords and allows unknown keywords. Sibling keywords are
+	/// processed when resolving references using the "$ref" keyword.</remarks>
 	public static Dialect Draft201909 { get; } = new(
 		Keywords.Draft06.AdditionalItemsKeyword.Instance,
 		AdditionalPropertiesKeyword.Instance,

@@ -4,6 +4,13 @@ using System.Linq;
 
 namespace Json.Schema;
 
+/// <summary>
+/// Provides a registry for managing JSON Schema vocabularies, allowing registration and unregistration of custom
+/// vocabularies in addition to well-known official vocabularies.
+/// </summary>
+/// <remarks>The registry maintains a set of official vocabularies that cannot be modified or removed. Use the
+/// <see cref="Global"/> property to access a shared, application-wide registry instance. Getting vocabularies via
+/// local instances fall back to the global registry.</remarks>
 public class VocabularyRegistry
 {
 	private readonly Dictionary<Uri, Vocabulary> _vocabs = new();

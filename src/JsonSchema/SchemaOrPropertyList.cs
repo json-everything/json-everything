@@ -4,6 +4,12 @@ using System.Text.Json.Nodes;
 
 namespace Json.Schema;
 
+/// <summary>
+/// Represents either a JSON schema definition or a list of required property names for use in schema composition and
+/// validation scenarios.
+/// </summary>
+/// <remarks>This type will not need to be interacted with directly. Use implicit conversion from a <see cref="JsonSchemaBuilder"/>
+/// to represent a schema, or from a list or array of strings to represent required properties.</remarks>
 public class SchemaOrPropertyList
 {
 	internal JsonSchemaBuilder? Schema { get; }

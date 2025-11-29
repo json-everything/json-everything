@@ -7,25 +7,59 @@ using Json.Schema.Keywords;
 
 namespace Json.Schema;
 
+/// <summary>
+/// Represents a subschema.
+/// </summary>
+/// <remarks>A JsonSchemaNode provides the context and data necessary for evaluating a subschema
+/// against an instance. It supports evaluation of schema logic, including handling of boolean schemas and keyword-based
+/// validation.</remarks>
 [DebuggerDisplay("{BaseUri}")]
 public class JsonSchemaNode
 {
-	public static JsonSchemaNode True() => new()
+	internal static JsonSchemaNode True() => new()
 	{
 		BaseUri = new Uri("https://json-schema.org/true"),
 		Source = JsonDocument.Parse("true").RootElement
 	};
-	public static JsonSchemaNode False() => new()
+	internal static JsonSchemaNode False() => new()
 	{
 		BaseUri = new Uri("https://json-schema.org/false"),
 		Source = JsonDocument.Parse("false").RootElement
 	};
 
-	public required Uri BaseUri { get; set; }
-	public JsonElement Source { get; set; }
-	public KeywordData[] Keywords { get; init; } = [];
-	public JsonPointer RelativePath { get; set; }
+	/// <summary>
+	/// Gets or sets the base URI used for resolving relative paths or requests.
+	/// </summary>
+	/// <remarks>The base URI should be an absolute URI.</remarks>
+	public required Uri BaseUri { get; init; }
 
+	/// <summary>
+	/// Gets the original JSON source data associated with this instance.
+	/// </summary>
+	/// <remarks>Use this property to access the raw JSON content for inspection or further processing.</remarks>
+	public JsonElement Source { get; init; }
+
+	/// <summary>
+	/// Gets the collection of keyword data associated with this instance.
+	/// </summary>
+	public KeywordData[] Keywords { get; init; } = [];
+
+	/// <summary>
+	/// Gets the relative JSON pointer path associated with this instance.
+	/// </summary>
+	public JsonPointer RelativePath { get; init; }
+
+	/// <summary>
+	/// Evaluates the schema against the provided context and returns the results of the evaluation.
+	/// </summary>
+	/// <remarks>If the schema is a boolean schema, the evaluation result is determined immediately. For schemas
+	/// with keywords, each keyword is evaluated in order, and the overall validity is determined by their contributions.
+	/// The method manages evaluation scope and tracks evaluated keywords, errors, and annotations as
+	/// appropriate.</remarks>
+	/// <param name="context">The evaluation context containing the instance data, schema location, and evaluation options to use during schema
+	/// evaluation. Cannot be null.</param>
+	/// <returns>An EvaluationResults object containing the outcome of the schema evaluation, including validity, errors,
+	/// annotations, and details. The results reflect the evaluation of all applicable keywords in the schema.</returns>
 	public EvaluationResults Evaluate(EvaluationContext context)
 	{
 		var results = new EvaluationResults(context.EvaluationPath, BaseUri, context.InstanceLocation, context.Options);

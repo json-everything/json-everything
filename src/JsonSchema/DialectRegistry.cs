@@ -5,6 +5,12 @@ using Json.Schema.Keywords.Draft201909;
 
 namespace Json.Schema;
 
+/// <summary>
+/// Provides a registry for managing and retrieving JSON Schema dialects by their unique identifiers.
+/// </summary>
+/// <remarks>The registry allows registration and unregistration of custom dialects. A global singleton instance is available via the <see
+/// cref="Global"/> property for application-wide access. Getting dialects via
+/// local instances fall back to the global registry.</remarks>
 public class DialectRegistry
 {
 	private readonly Dictionary<Uri, Dialect> _dialects = new();
@@ -75,7 +81,8 @@ public class DialectRegistry
 		_dialects[MetaSchemas.Draft7Id] = Dialect.Draft07;
 		_dialects[MetaSchemas.Draft201909Id] = Dialect.Draft201909;
 		_dialects[MetaSchemas.Draft202012Id] = Dialect.Draft202012;
-		_dialects[MetaSchemas.V1_2026Id] = Dialect.V1;
+		_dialects[MetaSchemas.V1_2026Id] = Dialect.V1_2026;
+
 		_dialects[MetaSchemas.V1Id] = Dialect.V1;
 
 		_wellKnownDialects = _dialects.Keys.ToArray();

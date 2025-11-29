@@ -1,10 +1,17 @@
 ﻿using Json.Schema.Keywords;
+// ReSharper disable UnusedMember.Global
 
 namespace Json.Schema;
 
 public partial class Dialect
 {
-	public static Dialect V1 { get; } = new(
+	/// <summary>
+	/// Gets the JSON Schema dialect definition for v1/2026.
+	/// </summary>
+	/// <remarks>Use this property to evaluate schemas that conform to the v1/2026 specification.
+	/// The dialect includes all standard v1/2026 keywords and disallows unknown keywords. Sibling keywords are
+	/// processed when resolving references using the "$ref" keyword.</remarks>
+	public static Dialect V1_2026 { get; } = new(
 		AdditionalPropertiesKeyword.Instance,
 		AllOfKeyword.Instance,
 		AnchorKeyword.Instance,
@@ -67,4 +74,7 @@ public partial class Dialect
 		Id = MetaSchemas.Draft201909Id,
 		_readOnly = true
 	};
+
+	public static Dialect V1 { get; } = V1_2026;
+
 }

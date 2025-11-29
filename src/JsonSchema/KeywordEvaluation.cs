@@ -3,6 +3,14 @@ using System.Text.Json;
 
 namespace Json.Schema;
 
+/// <summary>
+/// Represents the result of evaluating a keyword, including its validity, associated annotation, and any subschema
+/// evaluation results.
+/// </summary>
+/// <remarks>Use this struct to capture the outcome of a keyword evaluation, such as in schema validation
+/// scenarios. The struct provides information about the keyword, whether it was valid, any related annotation data,
+/// subschema results, and error information if applicable. The static Ignore field can be used to represent a keyword
+/// evaluation that should be excluded from further processing.</remarks>
 public readonly struct KeywordEvaluation
 {
 	public static readonly KeywordEvaluation Ignore = new()

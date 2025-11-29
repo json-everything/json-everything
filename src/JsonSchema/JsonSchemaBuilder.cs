@@ -17,6 +17,12 @@ public class JsonSchemaBuilder
 	public static JsonSchemaBuilder True { get; } = new(true);
 	public static JsonSchemaBuilder False { get; } = new(false);
 
+	/// <summary>
+	/// Initializes a new instance of the JsonSchemaBuilder class.
+	/// </summary>
+	/// <remarks>Use this constructor to create a new JsonSchemaBuilder for defining and constructing JSON schema
+	/// objects. The builder can be configured with various schema properties and constraints before generating the final
+	/// schema.</remarks>
 	public JsonSchemaBuilder(){}
 
 	private JsonSchemaBuilder(bool value)
