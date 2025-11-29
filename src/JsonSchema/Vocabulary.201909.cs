@@ -44,7 +44,7 @@ public partial class Vocabulary
 		Json.Schema.Keywords.Draft201909.RecursiveRefKeyword.Instance,
 		RefKeyword.Instance,
 		SchemaKeyword.Instance,
-		VocabularyKeyword.Instance
+		Json.Schema.Keywords.Draft201909.VocabularyKeyword.Instance
 	);
 
 	public static Vocabulary Draft201909_Format { get; } = new(

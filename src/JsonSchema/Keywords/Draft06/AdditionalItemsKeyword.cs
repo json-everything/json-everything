@@ -7,19 +7,33 @@ namespace Json.Schema.Keywords.Draft06;
 /// <summary>
 /// Handles `additionalItems`.
 /// </summary>
+/// <remarks>
+/// This keyword is used to validate items in an array not covered by the `items` keyword.
+/// </remarks>
 public class AdditionalItemsKeyword : IKeywordHandler
 {
+	/// <summary>
+	/// Gets the singleton instance of the <see cref="AdditionalItemsKeyword"/>.
+	/// </summary>
 	public static AdditionalItemsKeyword Instance { get; } = new();
 
 	/// <summary>
-	/// The JSON name of the keyword.
+	/// Gets the name of the handled keyword.
 	/// </summary>
 	public string Name => "additionalItems";
 
+	/// <summary>
+	/// Initializes a new instance of the <see cref="AdditionalItemsKeyword"/> class.
+	/// </summary>
 	protected AdditionalItemsKeyword()
 	{
 	}
 
+	/// <summary>
+	/// Validates the specified JSON element as a keyword value and optionally returns a value to be shared across the other methods.
+	/// </summary>
+	/// <param name="value">The JSON element to validate and convert. Represents the value to be checked for keyword compliance.</param>
+	/// <returns>An object that is shared with the other methods.  This object is saved to <see cref="KeywordData.Value"/>.</returns>
 	public virtual object? ValidateKeywordValue(JsonElement value)
 	{
 		if (value.ValueKind is not (JsonValueKind.Object or JsonValueKind.True or JsonValueKind.False))
@@ -28,6 +42,11 @@ public class AdditionalItemsKeyword : IKeywordHandler
 		return null;
 	}
 
+	/// <summary>
+	/// Builds and registers subschemas based on the specified keyword data within the provided build context.
+	/// </summary>
+	/// <param name="keyword">The keyword data used to determine which subschemas to build. Cannot be null.</param>
+	/// <param name="context">The context in which subschemas are constructed and registered. Cannot be null.</param>
 	public virtual void BuildSubschemas(KeywordData keyword, BuildContext context)
 	{
 		if (context.LocalSchema.TryGetProperty("items", out var items) &&
@@ -45,6 +64,12 @@ public class AdditionalItemsKeyword : IKeywordHandler
 		keyword.Subschemas = [node];
 	}
 
+	/// <summary>
+	/// Evaluates the specified keyword using the provided evaluation context and returns the result of the evaluation.
+	/// </summary>
+	/// <param name="keyword">The keyword data to be evaluated. Cannot be null.</param>
+	/// <param name="context">The context in which the keyword evaluation is performed. Cannot be null.</param>
+	/// <returns>A KeywordEvaluation object containing the results of the evaluation.</returns>
 	public virtual KeywordEvaluation Evaluate(KeywordData keyword, EvaluationContext context)
 	{
 		if (context.Instance.ValueKind != JsonValueKind.Array) return KeywordEvaluation.Ignore;

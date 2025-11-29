@@ -8,6 +8,9 @@ namespace Json.Schema.Keywords.Draft202012;
 /// <summary>
 /// Handles `$dynamicRef`.
 /// </summary>
+/// <remarks>
+/// This keyword is used to create a dynamic reference to a schema.
+/// </remarks>
 public class DynamicRefKeyword : Json.Schema.Keywords.DynamicRefKeyword
 {
 	private class DynamicRefInfo
@@ -16,12 +19,23 @@ public class DynamicRefKeyword : Json.Schema.Keywords.DynamicRefKeyword
 		public bool IsDynamic { get; set; }
 	}
 
-	public static DynamicRefKeyword Instance { get; } = new();
+	/// <summary>
+	/// Gets the singleton instance of the <see cref="DynamicRefKeyword"/>.
+	/// </summary>
+	public new static DynamicRefKeyword Instance { get; } = new();
 
+	/// <summary>
+	/// Initializes a new instance of the <see cref="DynamicRefKeyword"/> class.
+	/// </summary>
 	protected DynamicRefKeyword()
 	{
 	}
 
+	/// <summary>
+	/// Validates the specified JSON element as a keyword value and optionally returns a value to be shared across the other methods.
+	/// </summary>
+	/// <param name="value">The JSON element to validate and convert. Represents the value to be checked for keyword compliance.</param>
+	/// <returns>An object that is shared with the other methods.  This object is saved to <see cref="KeywordData.Value"/>.</returns>
 	public override object? ValidateKeywordValue(JsonElement value)
 	{
 		if (value.ValueKind != JsonValueKind.String)
@@ -33,6 +47,11 @@ public class DynamicRefKeyword : Json.Schema.Keywords.DynamicRefKeyword
 		return new DynamicRefInfo { Uri = uri };
 	}
 
+	/// <summary>
+	/// Builds and registers subschemas based on the specified keyword data within the provided build context.
+	/// </summary>
+	/// <param name="keyword">The keyword data used to determine which subschemas to build. Cannot be null.</param>
+	/// <param name="context">The context in which subschemas are constructed and registered. Cannot be null.</param>
 	public override void BuildSubschemas(KeywordData keyword, BuildContext context)
 	{
 		var reference = (DynamicRefInfo)keyword.Value!;
@@ -82,6 +101,12 @@ public class DynamicRefKeyword : Json.Schema.Keywords.DynamicRefKeyword
 			keyword.Subschemas = [targetSchema];
 	}
 
+	/// <summary>
+	/// Evaluates the specified keyword using the provided evaluation context and returns the result of the evaluation.
+	/// </summary>
+	/// <param name="keyword">The keyword data to be evaluated. Cannot be null.</param>
+	/// <param name="context">The context in which the keyword evaluation is performed. Cannot be null.</param>
+	/// <returns>A KeywordEvaluation object containing the results of the evaluation.</returns>
 	public override KeywordEvaluation Evaluate(KeywordData keyword, EvaluationContext context)
 	{
 		var reference = (DynamicRefInfo)keyword.Value!;

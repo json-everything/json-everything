@@ -1,4 +1,5 @@
 ﻿using Json.Schema.Keywords;
+using Json.Schema.Keywords.Draft06;
 
 namespace Json.Schema;
 

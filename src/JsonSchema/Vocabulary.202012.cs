@@ -41,7 +41,7 @@ public partial class Vocabulary
 		IdKeyword.Instance,
 		RefKeyword.Instance,
 		SchemaKeyword.Instance,
-		VocabularyKeyword.Instance
+		Json.Schema.Keywords.Draft201909.VocabularyKeyword.Instance
 	);
 
 	public static Vocabulary Draft202012_FormatAnnotation { get; } = new(

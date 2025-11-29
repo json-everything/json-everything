@@ -1,29 +1,30 @@
-﻿using System.Text.Json;
+﻿using System;
+using System.Text.Json;
 
-namespace Json.Schema.Keywords;
+namespace Json.Schema.Keywords.Draft201909;
 
 /// <summary>
-/// Handles `writeOnly`.
+/// Handles `$vocabulary`.
 /// </summary>
 /// <remarks>
-/// This keyword is used to indicate that a property is write-only.  It does not affect validation, but it does produce an annotation.
+/// This keyword is used in the meta-schema to declare which vocabularies a schema uses.
 /// </remarks>
-public class WriteOnlyKeyword : IKeywordHandler
+public class VocabularyKeyword : IKeywordHandler
 {
 	/// <summary>
-	/// Gets the singleton instance of the <see cref="WriteOnlyKeyword"/>.
+	/// Gets the singleton instance of the <see cref="VocabularyKeyword"/>.
 	/// </summary>
-	public static WriteOnlyKeyword Instance { get; } = new();
+	public static VocabularyKeyword Instance { get; } = new();
 
 	/// <summary>
 	/// Gets the name of the handled keyword.
 	/// </summary>
-	public string Name => "writeOnly";
+	public string Name => "$vocabulary";
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="WriteOnlyKeyword"/> class.
+	/// Initializes a new instance of the <see cref="VocabularyKeyword"/> class.
 	/// </summary>
-	protected WriteOnlyKeyword()
+	protected VocabularyKeyword()
 	{
 	}
 
@@ -32,10 +33,21 @@ public class WriteOnlyKeyword : IKeywordHandler
 	/// </summary>
 	/// <param name="value">The JSON element to validate and convert. Represents the value to be checked for keyword compliance.</param>
 	/// <returns>An object that is shared with the other methods.  This object is saved to <see cref="KeywordData.Value"/>.</returns>
-	public virtual object? ValidateKeywordValue(JsonElement value)
+	public object? ValidateKeywordValue(JsonElement value)
 	{
-		if (value.ValueKind is not (JsonValueKind.True or JsonValueKind.False))
-			throw new JsonSchemaException($"'{Name}' value must be a boolean, found {value.ValueKind}");
+		if (value.ValueKind != JsonValueKind.Object)
+			throw new JsonSchemaException($"'{Name}' requires a object.");
+
+		foreach (var entry in value.EnumerateObject())
+		{
+			var uri = entry.Name;
+			var required = entry.Value;
+
+			if (!Uri.TryCreate(uri, UriKind.Absolute, out _))
+				throw new JsonSchemaException($"'{Name}' keys must be absolute URIs.");
+			if (required.ValueKind is not (JsonValueKind.True or JsonValueKind.False))
+				throw new JsonSchemaException($"'{Name}' values must be booleans.");
+		}
 
 		return null;
 	}
@@ -45,7 +57,7 @@ public class WriteOnlyKeyword : IKeywordHandler
 	/// </summary>
 	/// <param name="keyword">The keyword data used to determine which subschemas to build. Cannot be null.</param>
 	/// <param name="context">The context in which subschemas are constructed and registered. Cannot be null.</param>
-	public virtual void BuildSubschemas(KeywordData keyword, BuildContext context)
+	public void BuildSubschemas(KeywordData keyword, BuildContext context)
 	{
 	}
 
@@ -55,13 +67,8 @@ public class WriteOnlyKeyword : IKeywordHandler
 	/// <param name="keyword">The keyword data to be evaluated. Cannot be null.</param>
 	/// <param name="context">The context in which the keyword evaluation is performed. Cannot be null.</param>
 	/// <returns>A KeywordEvaluation object containing the results of the evaluation.</returns>
-	public virtual KeywordEvaluation Evaluate(KeywordData keyword, EvaluationContext context)
+	public KeywordEvaluation Evaluate(KeywordData keyword, EvaluationContext context)
 	{
-		return new KeywordEvaluation
-		{
-			Keyword = Name,
-			IsValid = true,
-			Annotation = keyword.RawValue
-		};
+		return KeywordEvaluation.Ignore;
 	}
 }

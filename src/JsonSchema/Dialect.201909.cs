@@ -60,7 +60,7 @@ public partial class Dialect
 		Keywords.Draft201909.UnevaluatedItemsKeyword.Instance,
 		UnevaluatedPropertiesKeyword.Instance,
 		UniqueItemsKeyword.Instance,
-		VocabularyKeyword.Instance,
+		Keywords.Draft201909.VocabularyKeyword.Instance,
 		WriteOnlyKeyword.Instance
 	)
 	{
