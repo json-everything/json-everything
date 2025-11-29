@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
@@ -6,9 +7,6 @@ using Json.Schema.Keywords;
 
 namespace Json.Schema;
 
-/// <summary>
-/// Manages which keywords are known by the system.
-/// </summary>
 public partial class Dialect
 {
 	[DebuggerDisplay("{Name} / {Priority}")]
@@ -31,68 +29,48 @@ public partial class Dialect
 	}
 
 	private readonly MultiLookupConcurrentDictionary<KeywordMetaData> _keywordData;
+	private bool _readOnly;
 
-	public static Dialect Default { get; set; }
+	public static Dialect Default { get; set; } = null!;
 
-	public bool RefIgnoresSiblingKeywords { get; set; }
-
-	static Dialect()
+	public bool RefIgnoresSiblingKeywords
 	{
-		Default = V1;
+		get;
+		set
+		{
+			CheckWellKnown();
+			field = value;
+		}
 	}
 
-	public Dialect(params IKeywordHandler[] keywords)
+	public Uri? Id { get; init; }
+
+	public Dialect(params IEnumerable<IKeywordHandler> keywords)
 	{
 		_keywordData = [];
 		_keywordData.AddLookup(x => x.Name);
 		_keywordData.AddLookup(x => x.Type);
 		foreach (var keyword in keywords)
 		{
-			var metaData = new KeywordMetaData(keyword);
-			_keywordData.Add(metaData);
+			var keywordData = new KeywordMetaData(keyword);
+			_keywordData.Add(keywordData);
 		}
 		EvaluateDependencies();
 	}
 
-	public Dialect(Dialect source)
+	internal Dialect(IEnumerable<Vocabulary> vocabs)
 	{
 		_keywordData = [];
 		_keywordData.AddLookup(x => x.Name);
 		_keywordData.AddLookup(x => x.Type);
-		foreach (var metadata in source._keywordData)
+		foreach (var vocab in vocabs)
 		{
-			var metaData = new KeywordMetaData(metadata.Value.Handler);
-			_keywordData.Add(metaData);
+			foreach (var keyword in vocab.Keywords)
+			{
+				var metaData = new KeywordMetaData(keyword);
+				_keywordData.Add(metaData);
+			}
 		}
-		EvaluateDependencies();
-	}
-
-	/// <summary>
-	/// Registers a new keyword type.
-	/// </summary>
-	/// <typeparam name="T">The keyword type.</typeparam>
-	public void Register<T>(T handler)
-		where T : IKeywordHandler
-	{
-		CheckWellKnown();
-
-		_keywordData.Add(new KeywordMetaData(handler));
-
-		EvaluateDependencies();
-	}
-
-	/// <summary>
-	/// Unregisters a keyword type.
-	/// </summary>
-	/// <typeparam name="T">The keyword type.</typeparam>
-	public void Unregister<T>()
-		where T : IKeywordHandler
-	{
-		CheckWellKnown();
-
-		if (_keywordData.TryGetValue(typeof(T), out var metaData))
-			_keywordData.Remove(metaData);
-
 		EvaluateDependencies();
 	}
 
@@ -109,10 +87,15 @@ public partial class Dialect
 
 		if (_keywordData.TryGetValue("$ref", out var keyword) && RefIgnoresSiblingKeywords)
 		{
-			keyword.Priority = -3;
+			keyword.Priority = -4;
 			toCheck.Remove(keyword);
 		}
 		if (_keywordData.TryGetValue("$schema", out keyword))
+		{
+			keyword.Priority = -3;
+			toCheck.Remove(keyword);
+		}
+		if (_keywordData.TryGetValue("$vocabulary", out keyword))
 		{
 			keyword.Priority = -2;
 			toCheck.Remove(keyword);
@@ -169,11 +152,7 @@ public partial class Dialect
 
 	private void CheckWellKnown()
 	{
-		if (ReferenceEquals(this, Draft06) ||
-		    ReferenceEquals(this, Draft06) ||
-		    ReferenceEquals(this, Draft06) ||
-		    ReferenceEquals(this, Draft06) ||
-		    ReferenceEquals(this, Draft06))
+		if (_readOnly)
 			throw new InvalidOperationException("Editing the well-known keyword registries is not permitted.");
 	}
 }

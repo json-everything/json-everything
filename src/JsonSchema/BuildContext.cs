@@ -9,11 +9,13 @@ public struct BuildContext
 	public JsonElement RootSchema { get; }
 	public Uri BaseUri { get; set; }
 	public JsonElement LocalSchema { get; set; }
+	public Dialect Dialect { get; set; }
 
-	internal BuildContext(BuildOptions? options, JsonElement rootSchema, Uri baseUri)
+	internal BuildContext(BuildOptions options, JsonElement rootSchema, Uri baseUri)
 	{
-		Options = options ?? BuildOptions.Default;
+		Options = options;
 		RootSchema = rootSchema;
 		BaseUri = baseUri;
+		Dialect = Options.Dialect;
 	}
 }

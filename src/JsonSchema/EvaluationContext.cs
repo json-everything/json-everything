@@ -32,7 +32,9 @@ public struct EvaluationContext
 
 	public JsonPointer InstanceLocation { get; init; }
 
-	public BuildOptions BuildOptions { get; internal init; }
+	public SchemaRegistry SchemaRegistry { get; internal init; }
+
+	public bool RefIgnoresSiblingKeywords { get; internal init; }
 
 	public List<KeywordEvaluation>? EvaluatedKeywords { get; internal set; }
 }

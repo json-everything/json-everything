@@ -7,6 +7,8 @@ namespace Json.Schema.Keywords.Draft06;
 /// </summary>
 public class FormatKeyword : Json.Schema.Keywords.FormatKeyword
 {
+	public bool RequireFormatValidation { get; set; }
+
 	public override object? ValidateKeywordValue(JsonElement value)
 	{
 		if (value.ValueKind is not (JsonValueKind.String))

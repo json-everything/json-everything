@@ -70,16 +70,9 @@ public class Validation
 						_ => throw new ArgumentOutOfRangeException(nameof(draftFolder), $"{draftFolder} is unsupported")
 					};
 
-					if (fileName.Contains("format/".AdjustForPlatform()))
-					{
-						if (shortFileName == "uri-template") continue; // uri-template will throw an exception as it's explicitly unsupported
-
-						keywords = keywords.UseFormatValidation();
-					}
-
 					var buildOptions = new BuildOptions
 					{
-						KeywordRegistry = keywords,
+						Dialect = keywords,
 						SchemaRegistry = new()
 					};
 					var optional = collection.IsOptional ? "(optional) / " : null;
@@ -96,6 +89,8 @@ public class Validation
 	[OneTimeSetUp]
 	public void LoadRemoteSchemas()
 	{
+		__ModuleInitialization.Initialize();
+
 		// ReSharper disable once HeuristicUnreachableCode
 		var remotesPath = Path.Combine(TestContext.CurrentContext.WorkDirectory, _useExternal ? _externalRemoteSchemasPath : _remoteSchemasPath)
 			.AdjustForPlatform();

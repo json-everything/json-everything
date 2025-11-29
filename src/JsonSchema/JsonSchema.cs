@@ -19,7 +19,8 @@ namespace Json.Schema;
 [DebuggerDisplay("{ToDebugString()}")]
 public class JsonSchema : IBaseDocument
 {
-	private readonly BuildOptions _options;
+	private readonly SchemaRegistry _schemaRegistry;
+	private readonly bool _refIgnoresSiblingKeywords;
 
 	/// <summary>
 	/// The `true` schema.  Passes all instances.
@@ -57,10 +58,11 @@ public class JsonSchema : IBaseDocument
 		BaseUri = Root.BaseUri;
 	}
 
-	private JsonSchema(JsonSchemaNode root, BuildOptions options)
+	private JsonSchema(JsonSchemaNode root, SchemaRegistry schemaRegistry, bool refIgnoresSiblingKeywords)
 	{
+		_schemaRegistry = schemaRegistry;
+		_refIgnoresSiblingKeywords = refIgnoresSiblingKeywords;
 		Root = root;
-		_options = options;
 		BaseUri = Root.BaseUri;
 	}
 
@@ -109,6 +111,7 @@ public class JsonSchema : IBaseDocument
 
 	public static JsonSchema Build(JsonElement root, BuildOptions? options = null, Uri? baseUri = null)
 	{
+		options ??= BuildOptions.Default;
 		var context = new BuildContext(options, root, baseUri ?? GenerateBaseUri())
 		{
 			LocalSchema = root
@@ -119,7 +122,10 @@ public class JsonSchema : IBaseDocument
 		if (node.Source.ValueKind == JsonValueKind.True) return True;
 		if (node.Source.ValueKind == JsonValueKind.False) return False;
 
-		var schema = new JsonSchema(node, context.Options) { BaseUri = node.BaseUri };
+		var schema = new JsonSchema(node, context.Options.SchemaRegistry, context.Dialect.RefIgnoresSiblingKeywords)
+		{
+			BaseUri = node.BaseUri
+		};
 		context.Options.SchemaRegistry.Register(schema);
 		context.BaseUri = node.BaseUri;
 
@@ -138,7 +144,7 @@ public class JsonSchema : IBaseDocument
 			throw new ArgumentException($"Schemas may only booleans or objects.  Received {context.LocalSchema.ValueKind}");
 
 		var onlyHandleRef = context.LocalSchema.TryGetProperty("$ref", out _) &&
-		                    context.Options.KeywordRegistry.RefIgnoresSiblingKeywords;
+		                    context.Dialect.RefIgnoresSiblingKeywords;
 
 		var keywordData = new List<KeywordData>();
 		foreach (var property in context.LocalSchema.EnumerateObject())
@@ -146,18 +152,24 @@ public class JsonSchema : IBaseDocument
 			var keyword = property.Name;
 			var value = property.Value;
 
-			var handler = context.Options.KeywordRegistry.GetHandler(keyword);
+			var handler = context.Dialect.GetHandler(keyword);
 			// TODO: for v1, throw exception if not x-*
 
 			var data = new KeywordData
 			{
-				EvaluationOrder = context.Options.KeywordRegistry.GetEvaluationOrder(keyword) ?? 0,
+				EvaluationOrder = context.Dialect.GetEvaluationOrder(keyword) ?? 0,
 				RawValue = value.Clone(),
 				Handler = handler,
 				Value = handler is AnnotationKeyword
 					? keyword
 					: handler.ValidateKeywordValue(value)
 			};
+			if (handler is SchemaKeyword)
+			{
+				var uri = (Uri)data.Value!;
+				context.Dialect = context.Options.DialectRegistry.Get(uri, context.Options.SchemaRegistry, context.Options.VocabularyRegistry);
+			}
+			
 			handler.BuildSubschemas(data, context);
 
 			if (handler is IdKeyword)
@@ -179,7 +191,10 @@ public class JsonSchema : IBaseDocument
 		{
 			if (embeddedResource.BaseUri == True.BaseUri || embeddedResource.BaseUri == False.BaseUri) continue;
 
-			var schema = new JsonSchema(embeddedResource, context.Options) { BaseUri = embeddedResource.BaseUri };
+			var schema = new JsonSchema(embeddedResource, context.Options.SchemaRegistry, context.Dialect.RefIgnoresSiblingKeywords)
+			{
+				BaseUri = embeddedResource.BaseUri
+			};
 			context.Options.SchemaRegistry.Register(schema);
 		}
 
@@ -280,7 +295,8 @@ public class JsonSchema : IBaseDocument
 		var context = new EvaluationContext
 		{
 			Options = options,
-			BuildOptions = _options,
+			SchemaRegistry = _schemaRegistry,
+			RefIgnoresSiblingKeywords = _refIgnoresSiblingKeywords,
 			Instance = instance,
 			EvaluationPath = JsonPointer.Empty,
 			Scope = new(BaseUri)

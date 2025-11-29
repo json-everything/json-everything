@@ -83,7 +83,7 @@ public class DynamicRefKeyword : Json.Schema.Keywords.DynamicRefKeyword
 		if (reference.IsDynamic)
 		{
 			var anchor = reference.Uri.Fragment[1..];
-			subschema = context.BuildOptions.SchemaRegistry.GetDynamic(context.Scope, anchor);
+			subschema = context.SchemaRegistry.GetDynamic(context.Scope, anchor);
 			if (subschema is null)
 				throw new RefResolutionException(context.Scope.LocalScope, anchor, AnchorType.Dynamic);
 		}
