@@ -9,10 +9,16 @@ namespace Json.Schema.Keywords;
 [DependsOnAnnotationsFrom<IfKeyword>]
 public class ThenKeyword : IKeywordHandler
 {
+	public static ThenKeyword Instance { get; set; } = new();
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
 	public string Name => "then";
+
+	protected ThenKeyword()
+	{
+	}
 
 	public virtual object? ValidateKeywordValue(JsonElement value)
 	{

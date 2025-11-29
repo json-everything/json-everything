@@ -7,10 +7,16 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public class MaximumKeyword : IKeywordHandler
 {
+	public static MaximumKeyword Instance { get; set; } = new();
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
 	public string Name => "maximum";
+
+	protected MaximumKeyword()
+	{
+	}
 
 	public virtual object? ValidateKeywordValue(JsonElement value)
 	{

@@ -9,6 +9,8 @@ namespace Json.Schema.Keywords.Draft06;
 /// </summary>
 public partial class IdKeyword : Json.Schema.Keywords.IdKeyword
 {
+	public new static IdKeyword Instance { get; set; } = new();
+
 #if NET7_0_OR_GREATER
 	public Regex AnchorPattern { get; } = GetAnchorPatternRegex();
 	[GeneratedRegex("^[A-Za-z][-A-Za-z0-9.:_]*$", RegexOptions.Compiled)]
@@ -16,6 +18,10 @@ public partial class IdKeyword : Json.Schema.Keywords.IdKeyword
 #else
 	public Regex AnchorPattern { get; } = new("^[A-Za-z][-A-Za-z0-9.:_]*$", RegexOptions.Compiled);
 #endif
+
+	protected IdKeyword()
+	{
+	}
 
 	public override object? ValidateKeywordValue(JsonElement value)
 	{

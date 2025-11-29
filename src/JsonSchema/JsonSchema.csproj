@@ -146,10 +146,6 @@
     </EmbeddedResource>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Keywords\Draft07\" />
-  </ItemGroup>
-
   <!--<Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Copy SourceFiles="$(TargetDir)$(DocumentationFile)" DestinationFolder="..\..\doc-tool\xml\" SkipUnchangedFiles="True" OverwriteReadOnlyFiles="True" />
   </Target>-->

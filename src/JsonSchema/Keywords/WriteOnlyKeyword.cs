@@ -7,10 +7,16 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public class WriteOnlyKeyword : IKeywordHandler
 {
+	public static WriteOnlyKeyword Instance { get; set; } = new();
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
 	public string Name => "writeOnly";
+
+	protected WriteOnlyKeyword()
+	{
+	}
 
 	public virtual object? ValidateKeywordValue(JsonElement value)
 	{

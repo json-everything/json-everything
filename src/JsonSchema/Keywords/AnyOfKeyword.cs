@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
-using System.Text.Json.Serialization;
-using Json.More;
 using Json.Pointer;
 
 namespace Json.Schema.Keywords;
@@ -13,10 +10,16 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public class AnyOfKeyword : IKeywordHandler
 {
+	public static AnyOfKeyword Instance { get; set; } = new();
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
 	public string Name => "anyOf";
+
+	protected AnyOfKeyword()
+	{
+	}
 
 	public virtual object? ValidateKeywordValue(JsonElement value)
 	{

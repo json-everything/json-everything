@@ -11,10 +11,16 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public class PrefixItemsKeyword : IKeywordHandler
 {
+	public static PrefixItemsKeyword Instance { get; set; } = new();
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
 	public string Name => "prefixItems";
+
+	protected PrefixItemsKeyword()
+	{
+	}
 
 	public virtual object? ValidateKeywordValue(JsonElement value)
 	{

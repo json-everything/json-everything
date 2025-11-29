@@ -8,10 +8,16 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public class PatternKeyword : IKeywordHandler
 {
+	public static PatternKeyword Instance { get; set; } = new();
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
 	public string Name => "pattern";
+
+	protected PatternKeyword()
+	{
+	}
 
 	public virtual object? ValidateKeywordValue(JsonElement value)
 	{

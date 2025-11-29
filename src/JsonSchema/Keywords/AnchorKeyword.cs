@@ -8,6 +8,8 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public partial class AnchorKeyword : IKeywordHandler
 {
+	public static AnchorKeyword Instance { get; set; } = new();
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
@@ -20,6 +22,10 @@ public partial class AnchorKeyword : IKeywordHandler
 #else
 	public virtual Regex AnchorPattern { get; } = new("^[A-Za-z_][-A-Za-z0-9._]*$", RegexOptions.Compiled);
 #endif
+
+	protected AnchorKeyword()
+	{
+	}
 
 	public virtual object? ValidateKeywordValue(JsonElement value)
 	{

@@ -7,10 +7,16 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public class NotKeyword : IKeywordHandler
 {
+	public static NotKeyword Instance { get; set; } = new();
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
 	public string Name => "not";
+
+	protected NotKeyword()
+	{
+	}
 
 	public virtual object? ValidateKeywordValue(JsonElement value)
 	{

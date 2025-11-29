@@ -10,10 +10,16 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public class DefsKeyword : IKeywordHandler
 {
+	public static DefsKeyword Instance { get; set; } = new();
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
 	public string Name => "$defs";
+
+	protected DefsKeyword()
+	{
+	}
 
 	public virtual object? ValidateKeywordValue(JsonElement value)
 	{

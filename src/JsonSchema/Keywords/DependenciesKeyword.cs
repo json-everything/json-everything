@@ -10,7 +10,7 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public class DependenciesKeyword : IKeywordHandler
 {
-	private struct SchemaOrPropertyList
+	protected struct SchemaOrPropertyList
 	{
 		public JsonSchemaNode? Schema { get; }
 		public string[]? Requirements { get; }
@@ -26,10 +26,16 @@ public class DependenciesKeyword : IKeywordHandler
 		}
 	}
 
+	public static DependenciesKeyword Instance { get; set; } = new();
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
 	public string Name => "dependencies";
+
+	protected DependenciesKeyword()
+	{
+	}
 
 	public virtual object? ValidateKeywordValue(JsonElement value)
 	{

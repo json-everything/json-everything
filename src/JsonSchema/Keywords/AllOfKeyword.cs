@@ -10,10 +10,16 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public class AllOfKeyword : IKeywordHandler
 {
+	public static AllOfKeyword Instance { get; set; } = new();
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
 	public string Name => "allOf";
+
+	protected AllOfKeyword()
+	{
+	}
 
 	public virtual object? ValidateKeywordValue(JsonElement value)
 	{

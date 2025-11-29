@@ -55,16 +55,13 @@ public class SingleSchemaRunner
 	//[Arguments(50)]
 	public int BuildAlways(int n)
 	{
-		int i = 0;
-
 		for (int j = 0; j < n; j++)
 		{
 			var schema = JsonSchema.Build(_schema, _buildOptions);
 			_ = schema.Evaluate(_instance);
 		}
-		i++;
 
-		return i;
+		return n;
 	}
 
 	[Benchmark]
@@ -74,14 +71,12 @@ public class SingleSchemaRunner
 	[Arguments(50)]
 	public int BuildOnce(int n)
 	{
-		int i = 0;
 		var schema = JsonSchema.Build(_schema, _buildOptions);
 		for (int j = 0; j < n; j++)
 		{
 			_ = schema.Evaluate(_instance);
 		}
-		i++;
 
-		return i;
+		return n;
 	}
 }

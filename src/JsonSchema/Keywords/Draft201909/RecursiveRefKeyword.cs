@@ -9,10 +9,16 @@ namespace Json.Schema.Keywords.Draft201909;
 /// </summary>
 public class RecursiveRefKeyword : RefKeyword
 {
+	public static RecursiveRefKeyword Instance { get; set; } = new();
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
 	public override string Name => "$recursiveRef";
+
+	protected RecursiveRefKeyword()
+	{
+	}
 
 	public override object? ValidateKeywordValue(JsonElement value)
 	{

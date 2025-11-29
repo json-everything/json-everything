@@ -1,5 +1,6 @@
 ﻿using System;
 using Json.Schema.Keywords;
+// ReSharper disable InconsistentNaming
 
 namespace Json.Schema;
 
@@ -7,82 +8,82 @@ public partial class Vocabulary
 {
 	public static Vocabulary Draft201909_Applicator { get; } = new(
 		new Uri("https://json-schema.org/draft/2019-09/vocab/applicator"),
-		new Keywords.Draft06.AdditionalItemsKeyword(),
-		new AdditionalPropertiesKeyword(),
-		new AllOfKeyword(),
-		new AnyOfKeyword(),
-		new ContainsKeyword(),
-		new DependentSchemasKeyword(),
-		new ElseKeyword(),
-		new IfKeyword(),
-		new Keywords.Draft06.ItemsKeyword(),
-		new NotKeyword(),
-		new OneOfKeyword(),
-		new PatternPropertiesKeyword(),
-		new PropertiesKeyword(),
-		new PropertyNamesKeyword(),
-		new ThenKeyword(),
-		new Keywords.Draft201909.UnevaluatedItemsKeyword(),
-		new UnevaluatedPropertiesKeyword()
+		Json.Schema.Keywords.Draft06.AdditionalItemsKeyword.Instance,
+		AdditionalPropertiesKeyword.Instance,
+		AllOfKeyword.Instance,
+		AnyOfKeyword.Instance,
+		ContainsKeyword.Instance,
+		DependentSchemasKeyword.Instance,
+		ElseKeyword.Instance,
+		IfKeyword.Instance,
+		Json.Schema.Keywords.Draft06.ItemsKeyword.Instance,
+		NotKeyword.Instance,
+		OneOfKeyword.Instance,
+		PatternPropertiesKeyword.Instance,
+		PropertiesKeyword.Instance,
+		PropertyNamesKeyword.Instance,
+		ThenKeyword.Instance,
+		Json.Schema.Keywords.Draft201909.UnevaluatedItemsKeyword.Instance,
+		UnevaluatedPropertiesKeyword.Instance
 	);
 
 	public static Vocabulary Draft201909_Content { get; } = new(
 		new Uri("https://json-schema.org/draft/2019-09/vocab/content"),
-		new ContentEncodingKeyword(),
-		new ContentMediaTypeKeyword(),
-		new ContentSchemaKeyword()
+		ContentEncodingKeyword.Instance,
+		ContentMediaTypeKeyword.Instance,
+		ContentSchemaKeyword.Instance
 	);
 
 	public static Vocabulary Draft201909_Core { get; } = new(
 		new Uri("https://json-schema.org/draft/2019-09/vocab/core"),
-		new Keywords.Draft201909.AnchorKeyword(),
-		new CommentKeyword(),
-		new DefsKeyword(),
-		new IdKeyword(),
-		new Keywords.Draft201909.RecursiveAnchorKeyword(),
-		new Keywords.Draft201909.RecursiveRefKeyword(),
-		new RefKeyword(),
-		new SchemaKeyword(),
-		new VocabularyKeyword()
+		Json.Schema.Keywords.Draft201909.AnchorKeyword.Instance,
+		CommentKeyword.Instance,
+		DefsKeyword.Instance,
+		IdKeyword.Instance,
+		Json.Schema.Keywords.Draft201909.RecursiveAnchorKeyword.Instance,
+		Json.Schema.Keywords.Draft201909.RecursiveRefKeyword.Instance,
+		RefKeyword.Instance,
+		SchemaKeyword.Instance,
+		VocabularyKeyword.Instance
 	);
 
 	public static Vocabulary Draft201909_Format { get; } = new(
 		new Uri("https://json-schema.org/draft/2019-09/vocab/format"),
-		new Keywords.Draft06.FormatKeyword()
+		Json.Schema.Keywords.Draft06.FormatKeyword.Annotate
 	);
 
 	public static Vocabulary Draft201909_MetaData { get; } = new(
 		new Uri("https://json-schema.org/draft/2019-09/vocab/meta-data"),
-		new DefaultKeyword(),
-		new DeprecatedKeyword(),
-		new DescriptionKeyword(),
-		new ExamplesKeyword(),
-		new ReadOnlyKeyword(),
-		new TitleKeyword(),
-		new WriteOnlyKeyword()
+		DefaultKeyword.Instance,
+		DeprecatedKeyword.Instance,
+		DescriptionKeyword.Instance,
+		ExamplesKeyword.Instance,
+		ReadOnlyKeyword.Instance,
+		TitleKeyword.Instance,
+		WriteOnlyKeyword.Instance
 	);
 
 	public static Vocabulary Draft201909_Validation { get; } = new(
 		new Uri("https://json-schema.org/draft/2019-09/vocab/validation"),
-		new ConstKeyword(),
-		new DependentRequiredKeyword(),
-		new EnumKeyword(),
-		new ExclusiveMaximumKeyword(),
-		new ExclusiveMinimumKeyword(),
-		new MaxContainsKeyword(),
-		new MaximumKeyword(),
-		new MaxItemsKeyword(),
-		new MaxLengthKeyword(),
-		new MaxPropertiesKeyword(),
-		new MinContainsKeyword(),
-		new MinimumKeyword(),
-		new MinItemsKeyword(),
-		new MinLengthKeyword(),
-		new MinPropertiesKeyword(),
-		new MultipleOfKeyword(),
-		new PatternKeyword(),
-		new RequiredKeyword(),
-		new TypeKeyword(),
-		new UniqueItemsKeyword()
+		ConstKeyword.Instance,
+		DependentRequiredKeyword.Instance,
+		EnumKeyword.Instance,
+		ExclusiveMaximumKeyword.Instance,
+		ExclusiveMinimumKeyword.Instance,
+		MaxContainsKeyword.Instance,
+		MaximumKeyword.Instance,
+		MaxItemsKeyword.Instance,
+		MaxLengthKeyword.Instance,
+		MaxPropertiesKeyword.Instance,
+		MinContainsKeyword.Instance,
+		MinimumKeyword.Instance,
+		MinItemsKeyword.Instance,
+		MinLengthKeyword.Instance,
+		MinPropertiesKeyword.Instance,
+		MultipleOfKeyword.Instance,
+		PatternKeyword.Instance,
+		RequiredKeyword.Instance,
+		TypeKeyword.Instance,
+		UniqueItemsKeyword.Instance
 	);
 }

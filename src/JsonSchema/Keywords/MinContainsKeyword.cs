@@ -8,10 +8,16 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public class MinContainsKeyword : IKeywordHandler
 {
+	public static MinContainsKeyword Instance { get; set; } = new();
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
 	public string Name => "minContains";
+
+	protected MinContainsKeyword()
+	{
+	}
 
 	public object? ValidateKeywordValue(JsonElement value)
 	{

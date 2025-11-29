@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
+﻿using System.Linq;
 using System.Text.Json;
-using System.Text.Json.Nodes;
-using System.Text.Json.Serialization;
 using Json.More;
 
 namespace Json.Schema.Keywords;
@@ -14,10 +9,16 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public class EnumKeyword : IKeywordHandler
 {
+	public static EnumKeyword Instance { get; set; } = new();
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
 	public string Name => "enum";
+
+	protected EnumKeyword()
+	{
+	}
 
 	public object? ValidateKeywordValue(JsonElement value)
 	{

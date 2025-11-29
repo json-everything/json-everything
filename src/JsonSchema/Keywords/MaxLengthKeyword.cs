@@ -9,10 +9,16 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public class MaxLengthKeyword : IKeywordHandler
 {
+	public static MaxLengthKeyword Instance { get; set; } = new();
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
 	public string Name => "maxLength";
+
+	protected MaxLengthKeyword()
+	{
+	}
 
 	public virtual object? ValidateKeywordValue(JsonElement value)
 	{

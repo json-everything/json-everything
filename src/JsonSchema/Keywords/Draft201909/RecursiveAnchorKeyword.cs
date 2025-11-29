@@ -8,10 +8,16 @@ namespace Json.Schema.Keywords.Draft201909;
 /// </summary>
 public class RecursiveAnchorKeyword : IKeywordHandler
 {
+	public static RecursiveAnchorKeyword Instance { get; set; } = new();
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
 	public string Name => "$recursiveAnchor";
+
+	protected RecursiveAnchorKeyword()
+	{
+	}
 
 	public virtual object? ValidateKeywordValue(JsonElement value)
 	{

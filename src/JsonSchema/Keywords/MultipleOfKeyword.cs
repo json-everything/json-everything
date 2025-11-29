@@ -7,10 +7,16 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public class MultipleOfKeyword : IKeywordHandler
 {
+	public static MultipleOfKeyword Instance { get; set; } = new();
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
 	public string Name => "multipleOf";
+
+	protected MultipleOfKeyword()
+	{
+	}
 
 	public virtual object? ValidateKeywordValue(JsonElement value)
 	{

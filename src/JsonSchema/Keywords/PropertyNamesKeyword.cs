@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using Json.More;
@@ -11,10 +10,16 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public class PropertyNamesKeyword : IKeywordHandler
 {
+	public static PropertyNamesKeyword Instance { get; set; } = new();
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
 	public string Name => "propertyNames";
+
+	protected PropertyNamesKeyword()
+	{
+	}
 
 	public virtual object? ValidateKeywordValue(JsonElement value)
 	{

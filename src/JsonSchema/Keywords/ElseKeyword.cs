@@ -9,10 +9,16 @@ namespace Json.Schema.Keywords;
 [DependsOnAnnotationsFrom<IfKeyword>]
 public class ElseKeyword : IKeywordHandler
 {
+	public static ElseKeyword Instance { get; set; } = new();
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
 	public string Name => "else";
+
+	protected ElseKeyword()
+	{
+	}
 
 	public virtual object? ValidateKeywordValue(JsonElement value)
 	{

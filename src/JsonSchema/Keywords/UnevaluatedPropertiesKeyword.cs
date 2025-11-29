@@ -12,10 +12,16 @@ namespace Json.Schema.Keywords;
 [DependsOnAnnotationsFrom<UnevaluatedPropertiesKeyword>]
 public class UnevaluatedPropertiesKeyword : IKeywordHandler
 {
+	public static UnevaluatedPropertiesKeyword Instance { get; set; } = new();
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
 	public string Name => "unevaluatedProperties";
+
+	protected UnevaluatedPropertiesKeyword()
+	{
+	}
 
 	public virtual object? ValidateKeywordValue(JsonElement value)
 	{

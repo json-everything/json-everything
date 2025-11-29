@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Text.Json;
 
 namespace Json.Schema.Keywords;
@@ -9,10 +8,16 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public class MinPropertiesKeyword : IKeywordHandler
 {
+	public static MinPropertiesKeyword Instance { get; set; } = new();
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
 	public string Name => "minProperties";
+
+	protected MinPropertiesKeyword()
+	{
+	}
 
 	public virtual object? ValidateKeywordValue(JsonElement value)
 	{
@@ -39,11 +44,7 @@ public class MinPropertiesKeyword : IKeywordHandler
 	{
 		if (context.Instance.ValueKind is not JsonValueKind.Object) return KeywordEvaluation.Ignore;
 
-#if NET8_0
-		var instance = context.Instance.EnumerateObject().Count();
-#else
 		var instance = context.Instance.GetPropertyCount();
-#endif
 		var min = (long)keyword.Value!;
 
 		if (min <= instance)

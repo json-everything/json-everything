@@ -17,10 +17,16 @@ public class ContainsKeyword : IKeywordHandler
 		public int? Max { get; init; }
 	}
 
+	public static ContainsKeyword Instance { get; set; } = new();
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
 	public string Name => "contains";
+
+	internal ContainsKeyword()
+	{
+	}
 
 	public virtual object? ValidateKeywordValue(JsonElement value)
 	{
