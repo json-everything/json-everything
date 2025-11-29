@@ -36,7 +36,17 @@ public partial class Dialect
 	public bool RefIgnoresSiblingKeywords
 	{
 		get;
-		set
+		init
+		{
+			CheckWellKnown();
+			field = value;
+		}
+	}
+
+	public bool AllowUnknownKeywords
+	{
+		get;
+		init
 		{
 			CheckWellKnown();
 			field = value;
@@ -78,7 +88,9 @@ public partial class Dialect
 	{
 		var handler = _keywordData.GetValueOrDefault(keyword)?.Handler;
 
-		return handler ?? AnnotationKeyword.Instance;
+		return handler ?? (AllowUnknownKeywords
+			? AnnotationKeyword.Instance
+			: throw new JsonSchemaException($"Unknown keywords ({keyword}) are disallowed for this dialect."));
 	}
 
 	private void EvaluateDependencies()

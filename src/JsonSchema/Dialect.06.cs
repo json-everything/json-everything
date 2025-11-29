@@ -48,6 +48,7 @@ public partial class Dialect
 	{
 		Id = MetaSchemas.Draft6Id,
 		RefIgnoresSiblingKeywords = true,
+		AllowUnknownKeywords = true,
 		_readOnly = true
 	};
 }

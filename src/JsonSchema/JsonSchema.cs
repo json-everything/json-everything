@@ -6,8 +6,6 @@ using System.Linq;
 using System.Text.Json;
 using Json.Pointer;
 using Json.Schema.Keywords;
-using Json.Schema.Keywords.Draft201909;
-using AnchorKeyword = Json.Schema.Keywords.AnchorKeyword;
 
 // ReSharper disable LocalizableElement
 
@@ -51,12 +49,16 @@ public class JsonSchema : IBaseDocument
 
 	public JsonSchemaNode Root { get; }
 
+	public JsonElement? this[string keyword] => Root.Keywords.FirstOrDefault(x => x.Handler.Name == keyword)?.RawValue;
+
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 	private JsonSchema(bool value)
 	{
 		BoolValue = value;
 		Root = value ? JsonSchemaNode.True() : JsonSchemaNode.False();
 		BaseUri = Root.BaseUri;
 	}
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 
 	private JsonSchema(JsonSchemaNode root, SchemaRegistry schemaRegistry, bool refIgnoresSiblingKeywords)
 	{
@@ -153,7 +155,6 @@ public class JsonSchema : IBaseDocument
 			var value = property.Value;
 
 			var handler = context.Dialect.GetHandler(keyword);
-			// TODO: for v1, throw exception if not x-*
 
 			var data = new KeywordData
 			{
@@ -223,14 +224,14 @@ public class JsonSchema : IBaseDocument
 		if (dynamicAnchorKeyword is not null)
 			context.Options.SchemaRegistry.RegisterDynamicAnchor(context.BaseUri, (string)dynamicAnchorKeyword.Value!, node);
 
-		var recursiveAnchorKeyword = keywordData.FirstOrDefault(x => x.Handler is RecursiveAnchorKeyword);
+		var recursiveAnchorKeyword = keywordData.FirstOrDefault(x => x.Handler is Keywords.Draft201909.RecursiveAnchorKeyword);
 		if (recursiveAnchorKeyword?.Value is true)
 			context.Options.SchemaRegistry.RegisterRecursiveAnchor(context.BaseUri, node);
 
 		return node;
 	}
 
-	public static void TryResolveReferences(JsonSchemaNode node, BuildContext context, HashSet<JsonSchemaNode>? checkedNodes = null)
+	private static void TryResolveReferences(JsonSchemaNode node, BuildContext context, HashSet<JsonSchemaNode>? checkedNodes = null)
 	{
 		checkedNodes ??= [];
 		if (!checkedNodes.Add(node)) return;
@@ -262,7 +263,7 @@ public class JsonSchema : IBaseDocument
 		}
 	}
 
-	public static void DetectCycles(JsonSchemaNode node, HashSet<JsonSchemaNode>? checkedNodes = null)
+	private static void DetectCycles(JsonSchemaNode node, HashSet<JsonSchemaNode>? checkedNodes = null)
 	{
 		checkedNodes ??= [];
 		if (!checkedNodes.Add(node)) return;
