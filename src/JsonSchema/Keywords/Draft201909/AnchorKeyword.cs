@@ -7,7 +7,7 @@ namespace Json.Schema.Keywords.Draft201909;
 /// </summary>
 public partial class AnchorKeyword : Json.Schema.Keywords.AnchorKeyword
 {
-	public static AnchorKeyword Instance { get; set; } = new();
+	public static AnchorKeyword Instance { get; } = new();
 
 #if NET7_0_OR_GREATER
 	public override Regex AnchorPattern { get; } = GetAnchorPatternRegex();

@@ -8,7 +8,7 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public class MinContainsKeyword : IKeywordHandler
 {
-	public static MinContainsKeyword Instance { get; set; } = new();
+	public static MinContainsKeyword Instance { get; } = new();
 
 	/// <summary>
 	/// The JSON name of the keyword.

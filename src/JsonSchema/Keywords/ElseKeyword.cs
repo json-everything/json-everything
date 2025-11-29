@@ -9,7 +9,7 @@ namespace Json.Schema.Keywords;
 [DependsOnAnnotationsFrom<IfKeyword>]
 public class ElseKeyword : IKeywordHandler
 {
-	public static ElseKeyword Instance { get; set; } = new();
+	public static ElseKeyword Instance { get; } = new();
 
 	/// <summary>
 	/// The JSON name of the keyword.

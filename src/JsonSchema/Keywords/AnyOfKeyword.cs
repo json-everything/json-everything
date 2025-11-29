@@ -10,7 +10,7 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public class AnyOfKeyword : IKeywordHandler
 {
-	public static AnyOfKeyword Instance { get; set; } = new();
+	public static AnyOfKeyword Instance { get; } = new();
 
 	/// <summary>
 	/// The JSON name of the keyword.

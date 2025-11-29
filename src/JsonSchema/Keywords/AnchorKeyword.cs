@@ -8,7 +8,7 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public partial class AnchorKeyword : IKeywordHandler
 {
-	public static AnchorKeyword Instance { get; set; } = new();
+	public static AnchorKeyword Instance { get; } = new();
 
 	/// <summary>
 	/// The JSON name of the keyword.

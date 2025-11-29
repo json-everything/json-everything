@@ -22,7 +22,7 @@ public class TypeKeyword : IKeywordHandler
 			{ "null", SchemaValueType.Null }
 		}.ToImmutableDictionary();
 
-	public static TypeKeyword Instance { get; set; } = new();
+	public static TypeKeyword Instance { get; } = new();
 
 	public string Name => "type";
 

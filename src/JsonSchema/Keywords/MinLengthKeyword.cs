@@ -9,14 +9,14 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public class MinLengthKeyword : IKeywordHandler
 {
-	public static MinLengthKeyword Instance { get; set; } = new();
+	public static MinLengthKeyword Instance { get; } = new();
 
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
 	public string Name => "minLength";
 
-	private MinLengthKeyword()
+	protected MinLengthKeyword()
 	{
 	}
 

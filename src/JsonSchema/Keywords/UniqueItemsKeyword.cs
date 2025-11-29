@@ -10,7 +10,7 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public class UniqueItemsKeyword : IKeywordHandler
 {
-	public static UniqueItemsKeyword Instance { get; set; } = new();
+	public static UniqueItemsKeyword Instance { get; } = new();
 
 	/// <summary>
 	/// The JSON name of the keyword.

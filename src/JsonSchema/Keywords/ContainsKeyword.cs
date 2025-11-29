@@ -17,14 +17,14 @@ public class ContainsKeyword : IKeywordHandler
 		public int? Max { get; init; }
 	}
 
-	public static ContainsKeyword Instance { get; set; } = new();
+	public static ContainsKeyword Instance { get; } = new();
 
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
 	public string Name => "contains";
 
-	internal ContainsKeyword()
+	protected ContainsKeyword()
 	{
 	}
 

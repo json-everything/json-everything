@@ -9,7 +9,7 @@ namespace Json.Schema.Keywords.Draft06;
 /// </summary>
 public partial class IdKeyword : Json.Schema.Keywords.IdKeyword
 {
-	public new static IdKeyword Instance { get; set; } = new();
+	public new static IdKeyword Instance { get; } = new();
 
 #if NET7_0_OR_GREATER
 	public Regex AnchorPattern { get; } = GetAnchorPatternRegex();

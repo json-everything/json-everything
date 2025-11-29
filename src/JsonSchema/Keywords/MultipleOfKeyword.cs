@@ -7,7 +7,7 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public class MultipleOfKeyword : IKeywordHandler
 {
-	public static MultipleOfKeyword Instance { get; set; } = new();
+	public static MultipleOfKeyword Instance { get; } = new();
 
 	/// <summary>
 	/// The JSON name of the keyword.

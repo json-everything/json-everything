@@ -7,7 +7,7 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public class ExclusiveMinimumKeyword : IKeywordHandler
 {
-	public static ExclusiveMinimumKeyword Instance { get; set; } = new();
+	public static ExclusiveMinimumKeyword Instance { get; } = new();
 
 	/// <summary>
 	/// The JSON name of the keyword.

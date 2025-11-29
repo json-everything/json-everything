@@ -7,14 +7,14 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public class TitleKeyword : IKeywordHandler
 {
-	public static TitleKeyword Instance { get; set; } = new();
+	public static TitleKeyword Instance { get; } = new();
 
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
 	public string Name => "title";
 
-	private TitleKeyword()
+	protected TitleKeyword()
 	{
 	}
 

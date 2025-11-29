@@ -8,7 +8,7 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public class MaxPropertiesKeyword : IKeywordHandler
 {
-	public static MaxPropertiesKeyword Instance { get; set; } = new();
+	public static MaxPropertiesKeyword Instance { get; } = new();
 
 	/// <summary>
 	/// The JSON name of the keyword.

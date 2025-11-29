@@ -9,7 +9,7 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public class DependentRequiredKeyword : IKeywordHandler
 {
-	public static DependentRequiredKeyword Instance { get; set; } = new();
+	public static DependentRequiredKeyword Instance { get; } = new();
 
 	/// <summary>
 	/// The JSON name of the keyword.

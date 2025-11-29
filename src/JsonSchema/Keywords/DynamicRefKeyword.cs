@@ -8,7 +8,7 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public partial class DynamicRefKeyword : IKeywordHandler
 {
-	public static DynamicRefKeyword Instance { get; set; } = new();
+	public static DynamicRefKeyword Instance { get; } = new();
 
 	/// <summary>
 	/// The JSON name of the keyword.

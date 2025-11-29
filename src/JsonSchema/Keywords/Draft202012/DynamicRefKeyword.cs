@@ -16,7 +16,7 @@ public class DynamicRefKeyword : Json.Schema.Keywords.DynamicRefKeyword
 		public bool IsDynamic { get; set; }
 	}
 
-	public static DynamicRefKeyword Instance { get; set; } = new();
+	public static DynamicRefKeyword Instance { get; } = new();
 
 	protected DynamicRefKeyword()
 	{

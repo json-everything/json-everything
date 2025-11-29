@@ -9,7 +9,7 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public class MaxItemsKeyword : IKeywordHandler
 {
-	public static MaxItemsKeyword Instance { get; set; } = new();
+	public static MaxItemsKeyword Instance { get; } = new();
 
 	/// <summary>
 	/// The JSON name of the keyword.

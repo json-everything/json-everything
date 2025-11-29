@@ -9,7 +9,7 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public class ItemsKeyword : IKeywordHandler
 {
-	public static ItemsKeyword Instance { get; set; } = new();
+	public static ItemsKeyword Instance { get; } = new();
 
 	/// <summary>
 	/// The JSON name of the keyword.

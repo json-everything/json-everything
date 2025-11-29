@@ -7,7 +7,7 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public class ReadOnlyKeyword : IKeywordHandler
 {
-	public static ReadOnlyKeyword Instance { get; set; } = new();
+	public static ReadOnlyKeyword Instance { get; } = new();
 
 	/// <summary>
 	/// The JSON name of the keyword.

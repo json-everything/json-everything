@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Text.Json;
-using Json.Schema.Keywords.Draft06;
 
 namespace Json.Schema.Keywords.Draft201909;
 
@@ -9,7 +8,7 @@ namespace Json.Schema.Keywords.Draft201909;
 /// </summary>
 public class RecursiveRefKeyword : RefKeyword
 {
-	public static RecursiveRefKeyword Instance { get; set; } = new();
+	public static RecursiveRefKeyword Instance { get; } = new();
 
 	/// <summary>
 	/// The JSON name of the keyword.

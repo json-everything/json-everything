@@ -11,7 +11,7 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public class PrefixItemsKeyword : IKeywordHandler
 {
-	public static PrefixItemsKeyword Instance { get; set; } = new();
+	public static PrefixItemsKeyword Instance { get; } = new();
 
 	/// <summary>
 	/// The JSON name of the keyword.

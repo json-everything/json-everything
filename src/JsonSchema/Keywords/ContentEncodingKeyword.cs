@@ -7,7 +7,7 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public class ContentEncodingKeyword : IKeywordHandler
 {
-	public static ContentEncodingKeyword Instance { get; set; } = new();
+	public static ContentEncodingKeyword Instance { get; } = new();
 
 	/// <summary>
 	/// The JSON name of the keyword.

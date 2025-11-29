@@ -7,7 +7,7 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public class ExclusiveMaximumKeyword : IKeywordHandler
 {
-	public static ExclusiveMaximumKeyword Instance { get; set; } = new();
+	public static ExclusiveMaximumKeyword Instance { get; } = new();
 
 	/// <summary>
 	/// The JSON name of the keyword.

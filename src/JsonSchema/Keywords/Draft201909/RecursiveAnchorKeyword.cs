@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text.Json;
+﻿using System.Text.Json;
 
 namespace Json.Schema.Keywords.Draft201909;
 
@@ -8,7 +7,7 @@ namespace Json.Schema.Keywords.Draft201909;
 /// </summary>
 public class RecursiveAnchorKeyword : IKeywordHandler
 {
-	public static RecursiveAnchorKeyword Instance { get; set; } = new();
+	public static RecursiveAnchorKeyword Instance { get; } = new();
 
 	/// <summary>
 	/// The JSON name of the keyword.

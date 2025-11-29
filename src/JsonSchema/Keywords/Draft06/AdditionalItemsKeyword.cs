@@ -9,14 +9,14 @@ namespace Json.Schema.Keywords.Draft06;
 /// </summary>
 public class AdditionalItemsKeyword : IKeywordHandler
 {
-	public static AdditionalItemsKeyword Instance { get; set; } = new();
+	public static AdditionalItemsKeyword Instance { get; } = new();
 
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
 	public string Name => "additionalItems";
 
-	private AdditionalItemsKeyword()
+	protected AdditionalItemsKeyword()
 	{
 	}
 
