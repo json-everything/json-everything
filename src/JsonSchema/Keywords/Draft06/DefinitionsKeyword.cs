@@ -10,7 +10,7 @@ namespace Json.Schema.Keywords.Draft06;
 /// </summary>
 public class DefinitionsKeyword : IKeywordHandler
 {
-	public static DefinitionsKeyword Instance { get; set; } = new();
+	public static DefinitionsKeyword Instance { get; } = new();
 
 	/// <summary>
 	/// The JSON name of the keyword.

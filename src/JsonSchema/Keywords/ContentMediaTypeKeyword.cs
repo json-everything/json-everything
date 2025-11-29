@@ -7,7 +7,7 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public class ContentMediaTypeKeyword : IKeywordHandler
 {
-	public static ContentMediaTypeKeyword Instance { get; set; } = new();
+	public static ContentMediaTypeKeyword Instance { get; } = new();
 
 	/// <summary>
 	/// The JSON name of the keyword.

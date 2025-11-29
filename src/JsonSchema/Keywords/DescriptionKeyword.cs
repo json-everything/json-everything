@@ -7,7 +7,7 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public class DescriptionKeyword : IKeywordHandler
 {
-	public static DescriptionKeyword Instance { get; set; } = new();
+	public static DescriptionKeyword Instance { get; } = new();
 
 	/// <summary>
 	/// The JSON name of the keyword.

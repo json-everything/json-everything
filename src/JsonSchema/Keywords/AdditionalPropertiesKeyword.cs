@@ -18,7 +18,7 @@ public class AdditionalPropertiesKeyword : IKeywordHandler
 		public Regex[] PatternProperties { get; set; } = [];
 	}
 
-	public static AdditionalPropertiesKeyword Instance { get; set; } = new();
+	public static AdditionalPropertiesKeyword Instance { get; } = new();
 
 	/// <summary>
 	/// The JSON name of the keyword.

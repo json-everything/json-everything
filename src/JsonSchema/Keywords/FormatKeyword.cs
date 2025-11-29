@@ -7,7 +7,7 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public class FormatKeyword : IKeywordHandler
 {
-	public static FormatKeyword Instance { get; set; } = new();
+	public static FormatKeyword Instance { get; } = new();
 
 	/// <summary>
 	/// The JSON name of the keyword.

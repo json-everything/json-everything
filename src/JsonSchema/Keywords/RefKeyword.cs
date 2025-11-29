@@ -10,7 +10,7 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public class RefKeyword : IKeywordHandler
 {
-	public static RefKeyword Instance { get; set; } = new();
+	public static RefKeyword Instance { get; } = new();
 
 	/// <summary>
 	/// The JSON name of the keyword.

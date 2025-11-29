@@ -8,7 +8,7 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public partial class DynamicAnchorKeyword : IKeywordHandler
 {
-	public static DynamicAnchorKeyword Instance { get; set; } = new();
+	public static DynamicAnchorKeyword Instance { get; } = new();
 
 	/// <summary>
 	/// The JSON name of the keyword.
@@ -22,6 +22,7 @@ public partial class DynamicAnchorKeyword : IKeywordHandler
 #else
 	public virtual Regex AnchorPattern { get; } = new("^[A-Za-z_][-A-Za-z0-9._]*$", RegexOptions.Compiled);
 #endif
+
 	protected DynamicAnchorKeyword()
 	{
 	}

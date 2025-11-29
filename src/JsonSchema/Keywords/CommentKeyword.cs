@@ -7,14 +7,14 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public class CommentKeyword : IKeywordHandler
 {
-	public static CommentKeyword Instance { get; set; } = new();
+	public static CommentKeyword Instance { get; } = new();
 
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
 	public string Name => "$comment";
 
-	private CommentKeyword()
+	protected CommentKeyword()
 	{
 	}
 

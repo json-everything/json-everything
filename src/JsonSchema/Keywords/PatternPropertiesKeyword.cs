@@ -12,7 +12,7 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public class PatternPropertiesKeyword : IKeywordHandler
 {
-	public static PatternPropertiesKeyword Instance { get; set; } = new();
+	public static PatternPropertiesKeyword Instance { get; } = new();
 
 	/// <summary>
 	/// The JSON name of the keyword.

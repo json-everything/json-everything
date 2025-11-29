@@ -7,7 +7,7 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public class DefaultKeyword : IKeywordHandler
 {
-	public static DefaultKeyword Instance { get; set; } = new();
+	public static DefaultKeyword Instance { get; } = new();
 
 	/// <summary>
 	/// The JSON name of the keyword.

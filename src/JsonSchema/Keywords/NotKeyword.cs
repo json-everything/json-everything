@@ -7,7 +7,7 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public class NotKeyword : IKeywordHandler
 {
-	public static NotKeyword Instance { get; set; } = new();
+	public static NotKeyword Instance { get; } = new();
 
 	/// <summary>
 	/// The JSON name of the keyword.

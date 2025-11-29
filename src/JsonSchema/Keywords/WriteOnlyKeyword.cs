@@ -7,7 +7,7 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public class WriteOnlyKeyword : IKeywordHandler
 {
-	public static WriteOnlyKeyword Instance { get; set; } = new();
+	public static WriteOnlyKeyword Instance { get; } = new();
 
 	/// <summary>
 	/// The JSON name of the keyword.

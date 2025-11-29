@@ -26,7 +26,7 @@ public class DependenciesKeyword : IKeywordHandler
 		}
 	}
 
-	public static DependenciesKeyword Instance { get; set; } = new();
+	public static DependenciesKeyword Instance { get; } = new();
 
 	/// <summary>
 	/// The JSON name of the keyword.

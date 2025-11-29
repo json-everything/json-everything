@@ -8,14 +8,14 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public class ConstKeyword : IKeywordHandler
 {
-	public static ConstKeyword Instance { get; set; } = new();
+	public static ConstKeyword Instance { get; } = new();
 
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
 	public string Name => "const";
 
-	private ConstKeyword()
+	protected ConstKeyword()
 	{
 	}
 
