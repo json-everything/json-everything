@@ -10,10 +10,16 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public class RefKeyword : IKeywordHandler
 {
+	public static RefKeyword Instance { get; set; } = new();
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
 	public virtual string Name => "$ref";
+
+	protected RefKeyword()
+	{
+	}
 
 	public virtual object? ValidateKeywordValue(JsonElement value)
 	{

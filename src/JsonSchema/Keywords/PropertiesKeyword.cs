@@ -10,10 +10,16 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public class PropertiesKeyword : IKeywordHandler
 {
+	public static PropertiesKeyword Instance { get; set; } = new();
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
 	public string Name => "properties";
+
+	protected PropertiesKeyword()
+	{
+	}
 
 	public virtual object? ValidateKeywordValue(JsonElement value)
 	{

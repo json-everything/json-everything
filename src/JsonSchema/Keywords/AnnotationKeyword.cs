@@ -15,6 +15,10 @@ public class AnnotationKeyword : IKeywordHandler
 	/// </summary>
 	public string Name { get; } = Guid.NewGuid().ToString("N");
 
+	protected AnnotationKeyword()
+	{
+	}
+
 	public object? ValidateKeywordValue(JsonElement value)
 	{
 		return null;

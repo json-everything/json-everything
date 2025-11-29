@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text.Json;
+﻿using System.Text.Json;
 
 namespace Json.Schema.Keywords;
 
@@ -8,10 +7,16 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public class CommentKeyword : IKeywordHandler
 {
+	public static CommentKeyword Instance { get; set; } = new();
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
 	public string Name => "$comment";
+
+	private CommentKeyword()
+	{
+	}
 
 	public virtual object? ValidateKeywordValue(JsonElement value)
 	{

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Text.Json;
 
 namespace Json.Schema.Keywords;
@@ -9,10 +8,16 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public class MaxPropertiesKeyword : IKeywordHandler
 {
+	public static MaxPropertiesKeyword Instance { get; set; } = new();
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
 	public string Name => "maxProperties";
+
+	protected MaxPropertiesKeyword()
+	{
+	}
 
 	public virtual object? ValidateKeywordValue(JsonElement value)
 	{
@@ -39,11 +44,7 @@ public class MaxPropertiesKeyword : IKeywordHandler
 	{
 		if (context.Instance.ValueKind is not JsonValueKind.Object) return KeywordEvaluation.Ignore;
 
-#if NET8_0
-		var instance = context.Instance.EnumerateObject().Count();
-#else
 		var instance = context.Instance.GetPropertyCount();
-#endif
 		var max = (long)keyword.Value!;
 
 		if (instance <= max)

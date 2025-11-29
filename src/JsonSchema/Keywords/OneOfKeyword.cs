@@ -10,10 +10,16 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public class OneOfKeyword : IKeywordHandler
 {
+	public static OneOfKeyword Instance { get; set; } = new();
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
 	public string Name => "oneOf";
+
+	protected OneOfKeyword()
+	{
+	}
 
 	public virtual object? ValidateKeywordValue(JsonElement value)
 	{

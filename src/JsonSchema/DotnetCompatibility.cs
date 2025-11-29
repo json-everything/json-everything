@@ -1,10 +1,13 @@
-﻿#if NETSTANDARD2_0
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json;
 
 namespace Json.Schema;
 
 internal static class DotnetCompatibility
 {
+#if !NET8_0_OR_GREATER
+
 	public static TValue? GetValueOrDefault<TKey, TValue>(this IReadOnlyDictionary<TKey, TValue> dictionary, TKey key)
 	{
 		return dictionary.TryGetValue(key, out var value) ? value : default;
@@ -17,6 +20,12 @@ internal static class DotnetCompatibility
 		dictionary.Add(key, value);
 		return true;
 	}
-}
 
 #endif
+
+#if !NET9_0_OR_GREATER
+
+	public static int GetPropertyCount(this JsonElement element) => element.EnumerateObject().Count();
+
+#endif
+}

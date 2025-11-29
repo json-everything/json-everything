@@ -7,10 +7,16 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public class FormatKeyword : IKeywordHandler
 {
+	public static FormatKeyword Instance { get; set; } = new();
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
 	public string Name => "format";
+
+	protected FormatKeyword()
+	{
+	}
 
 	public virtual object? ValidateKeywordValue(JsonElement value)
 	{

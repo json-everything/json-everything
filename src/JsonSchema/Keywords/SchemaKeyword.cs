@@ -8,10 +8,16 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public class SchemaKeyword : IKeywordHandler
 {
+	public static SchemaKeyword Instance { get; set; } = new();
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
 	public string Name => "$schema";
+
+	protected SchemaKeyword()
+	{
+	}
 
 	public object? ValidateKeywordValue(JsonElement value)
 	{

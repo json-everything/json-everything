@@ -9,6 +9,12 @@ namespace Json.Schema.Keywords.Draft06;
 /// </summary>
 public class ContainsKeyword : Json.Schema.Keywords.ContainsKeyword
 {
+	public new static ContainsKeyword Instance { get; set; } = new();
+
+	protected ContainsKeyword()
+	{
+	}
+
 	public override void BuildSubschemas(KeywordData keyword, BuildContext context)
 	{
 		var defContext = context with

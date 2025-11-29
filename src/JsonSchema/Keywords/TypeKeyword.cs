@@ -10,8 +10,6 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public class TypeKeyword : IKeywordHandler
 {
-	public string Name => "type";
-
 	private static readonly ImmutableDictionary<string, SchemaValueType> _types =
 		new Dictionary<string, SchemaValueType>
 		{
@@ -23,6 +21,14 @@ public class TypeKeyword : IKeywordHandler
 			{ "boolean", SchemaValueType.Boolean },
 			{ "null", SchemaValueType.Null }
 		}.ToImmutableDictionary();
+
+	public static TypeKeyword Instance { get; set; } = new();
+
+	public string Name => "type";
+
+	protected TypeKeyword()
+	{
+	}
 
 	public object? ValidateKeywordValue(JsonElement value)
 	{

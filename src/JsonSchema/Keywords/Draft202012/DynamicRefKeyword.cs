@@ -16,6 +16,12 @@ public class DynamicRefKeyword : Json.Schema.Keywords.DynamicRefKeyword
 		public bool IsDynamic { get; set; }
 	}
 
+	public static DynamicRefKeyword Instance { get; set; } = new();
+
+	protected DynamicRefKeyword()
+	{
+	}
+
 	public override object? ValidateKeywordValue(JsonElement value)
 	{
 		if (value.ValueKind != JsonValueKind.String)

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text.Json;
+﻿using System.Text.Json;
 using Json.More;
 
 namespace Json.Schema.Keywords;
@@ -9,10 +8,16 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public class ConstKeyword : IKeywordHandler
 {
+	public static ConstKeyword Instance { get; set; } = new();
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
 	public string Name => "const";
+
+	private ConstKeyword()
+	{
+	}
 
 	public object? ValidateKeywordValue(JsonElement value)
 	{

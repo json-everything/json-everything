@@ -7,10 +7,16 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public class TitleKeyword : IKeywordHandler
 {
+	public static TitleKeyword Instance { get; set; } = new();
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
 	public string Name => "title";
+
+	private TitleKeyword()
+	{
+	}
 
 	public virtual object? ValidateKeywordValue(JsonElement value)
 	{

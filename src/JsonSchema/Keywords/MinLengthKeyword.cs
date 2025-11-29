@@ -9,10 +9,16 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public class MinLengthKeyword : IKeywordHandler
 {
+	public static MinLengthKeyword Instance { get; set; } = new();
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
 	public string Name => "minLength";
+
+	private MinLengthKeyword()
+	{
+	}
 
 	public virtual object? ValidateKeywordValue(JsonElement value)
 	{

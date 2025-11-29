@@ -10,10 +10,16 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public class UniqueItemsKeyword : IKeywordHandler
 {
+	public static UniqueItemsKeyword Instance { get; set; } = new();
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
 	public string Name => "uniqueItems";
+
+	protected UniqueItemsKeyword()
+	{
+	}
 
 	public virtual object? ValidateKeywordValue(JsonElement value)
 	{

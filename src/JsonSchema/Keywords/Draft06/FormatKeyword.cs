@@ -7,7 +7,15 @@ namespace Json.Schema.Keywords.Draft06;
 /// </summary>
 public class FormatKeyword : Json.Schema.Keywords.FormatKeyword
 {
-	public bool RequireFormatValidation { get; set; }
+	private readonly bool _requireFormatValidation;
+
+	public static FormatKeyword Annotate { get; set; } = new(false);
+	public static FormatKeyword Validate { get; set; } = new(true);
+
+	protected FormatKeyword(bool requireFormatValidation)
+	{
+		_requireFormatValidation = requireFormatValidation;
+	}
 
 	public override object? ValidateKeywordValue(JsonElement value)
 	{
@@ -23,7 +31,7 @@ public class FormatKeyword : Json.Schema.Keywords.FormatKeyword
 
 	public override KeywordEvaluation Evaluate(KeywordData keyword, EvaluationContext context)
 	{
-		if (context.Options.RequireFormatValidation)
+		if (context.Options.RequireFormatValidation || _requireFormatValidation)
 			return base.Evaluate(keyword, context);
 
 		return new KeywordEvaluation

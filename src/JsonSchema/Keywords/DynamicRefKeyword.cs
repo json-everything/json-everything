@@ -8,6 +8,8 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public partial class DynamicRefKeyword : IKeywordHandler
 {
+	public static DynamicRefKeyword Instance { get; set; } = new();
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
@@ -20,7 +22,7 @@ public partial class DynamicRefKeyword : IKeywordHandler
 #else
 	public virtual Regex AnchorPattern { get; } = new("^#[A-Za-z_][-A-Za-z0-9._]*$", RegexOptions.Compiled);
 #endif
-	// TODO: this is the correct version - uncomment after updating to latest test suite
+	// TODO: this is the correct version - uncomment before publishing
 //#if NET7_0_OR_GREATER
 //	public virtual Regex AnchorPattern { get; } = GetAnchorPatternRegex();
 //	[GeneratedRegex("^[A-Za-z_][-A-Za-z0-9._]*$", RegexOptions.Compiled)]
@@ -28,6 +30,10 @@ public partial class DynamicRefKeyword : IKeywordHandler
 //#else
 //	public virtual Regex AnchorPattern { get; } = new("^[A-Za-z_][-A-Za-z0-9._]*$", RegexOptions.Compiled);
 //#endif
+
+	protected DynamicRefKeyword()
+	{
+	}
 
 	public virtual object? ValidateKeywordValue(JsonElement value)
 	{

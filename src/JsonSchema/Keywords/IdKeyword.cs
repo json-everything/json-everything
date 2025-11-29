@@ -10,10 +10,16 @@ public class IdKeyword : IKeywordHandler //, IIdKeyword
 {
 	private static readonly Uri _testUri = new("https://json-everything.test");
 
+	public static IdKeyword Instance { get; set; } = new();
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
 	public string Name => "$id";
+
+	protected IdKeyword()
+	{
+	}
 
 	public virtual object? ValidateKeywordValue(JsonElement value)
 	{

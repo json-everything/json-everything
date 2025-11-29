@@ -7,10 +7,16 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public class MinimumKeyword : IKeywordHandler
 {
+	public static MinimumKeyword Instance { get; set; } = new();
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
 	public string Name => "minimum";
+
+	protected MinimumKeyword()
+	{
+	}
 
 	public virtual object? ValidateKeywordValue(JsonElement value)
 	{

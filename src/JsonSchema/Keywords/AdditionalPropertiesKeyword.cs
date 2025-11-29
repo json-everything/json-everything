@@ -18,10 +18,16 @@ public class AdditionalPropertiesKeyword : IKeywordHandler
 		public Regex[] PatternProperties { get; set; } = [];
 	}
 
+	public static AdditionalPropertiesKeyword Instance { get; set; } = new();
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
 	public string Name => "additionalProperties";
+
+	protected AdditionalPropertiesKeyword()
+	{
+	}
 
 	public virtual object? ValidateKeywordValue(JsonElement value)
 	{

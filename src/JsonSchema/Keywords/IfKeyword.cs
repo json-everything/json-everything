@@ -7,10 +7,16 @@ namespace Json.Schema.Keywords;
 /// </summary>
 public class IfKeyword : IKeywordHandler
 {
+	public static IfKeyword Instance { get; set; } = new();
+
 	/// <summary>
 	/// The JSON name of the keyword.
 	/// </summary>
 	public string Name => "if";
+
+	protected IfKeyword()
+	{
+	}
 
 	public virtual object? ValidateKeywordValue(JsonElement value)
 	{
