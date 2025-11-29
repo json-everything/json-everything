@@ -23,6 +23,9 @@ public class FormatKeyword : Json.Schema.Keywords.FormatKeyword
 
 	public override KeywordEvaluation Evaluate(KeywordData keyword, EvaluationContext context)
 	{
+		if (context.Options.RequireFormatValidation)
+			return base.Evaluate(keyword, context);
+
 		return new KeywordEvaluation
 		{
 			Keyword = Name,
