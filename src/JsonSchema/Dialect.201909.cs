@@ -1,4 +1,5 @@
-﻿using Json.Schema.Keywords;
+﻿using System;
+using Json.Schema.Keywords;
 
 namespace Json.Schema;
 
@@ -60,7 +61,11 @@ public partial class Dialect
 		new Keywords.Draft201909.UnevaluatedItemsKeyword(),
 		new UnevaluatedPropertiesKeyword(),
 		new UniqueItemsKeyword(),
-		//new VocabularyKeyword(),
+		new VocabularyKeyword(),
 		new WriteOnlyKeyword()
-	);
+	)
+	{
+		Id = MetaSchemas.Draft201909Id,
+		_readOnly = true
+	};
 }

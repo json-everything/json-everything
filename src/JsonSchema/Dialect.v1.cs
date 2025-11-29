@@ -62,5 +62,9 @@ public partial class Dialect
 		new UnevaluatedPropertiesKeyword(),
 		new UniqueItemsKeyword(),
 		new WriteOnlyKeyword()
-	);
+	)
+	{
+		Id = MetaSchemas.Draft201909Id,
+		_readOnly = true
+	};
 }

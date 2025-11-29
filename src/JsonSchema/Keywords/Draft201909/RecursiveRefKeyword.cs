@@ -43,7 +43,7 @@ public class RecursiveRefKeyword : RefKeyword
 		var recursiveRef = keyword.Value is null;
 		if (recursiveRef)
 		{
-			var subschema = context.BuildOptions.SchemaRegistry.GetRecursive(context.Scope);
+			var subschema = context.SchemaRegistry.GetRecursive(context.Scope);
 			if (subschema is null)
 				throw new RefResolutionException(context.Scope.LocalScope, string.Empty, AnchorType.Recursive);
 

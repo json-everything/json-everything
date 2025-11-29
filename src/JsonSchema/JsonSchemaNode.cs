@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.Json;
 using Json.Pointer;
@@ -6,6 +7,7 @@ using Json.Schema.Keywords;
 
 namespace Json.Schema;
 
+[DebuggerDisplay("{BaseUri}")]
 public class JsonSchemaNode
 {
 	public static JsonSchemaNode True() => new()
@@ -65,7 +67,7 @@ public class JsonSchemaNode
 			}
 
 			if (keyword.Handler is RefKeyword &&
-				context.BuildOptions.KeywordRegistry.RefIgnoresSiblingKeywords)
+				context.RefIgnoresSiblingKeywords)
 				break;
 		}
 

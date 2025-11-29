@@ -44,5 +44,10 @@ public partial class Dialect
 		new TitleKeyword(),
 		new TypeKeyword(),
 		new UniqueItemsKeyword()
-	) { RefIgnoresSiblingKeywords = true };
+	)
+	{
+		Id = MetaSchemas.Draft6Id,
+		RefIgnoresSiblingKeywords = true,
+		_readOnly = true
+	};
 }

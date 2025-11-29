@@ -11,15 +11,24 @@ public class BuildOptions
 	/// The local schema registry.  If a schema is not found here, it will
 	/// automatically check the global registry as well.
 	/// </summary>
-	public SchemaRegistry SchemaRegistry { get; set; }
+	public SchemaRegistry SchemaRegistry { get; set; } = SchemaRegistry.Global;
 
 	/// <summary>
-	/// Gets the registry that manages schema keywords and their associated handlers.
+	/// The local vocabulary registry.  If a vocabulary is not found here, it will
+	/// automatically check the global registry as well.
 	/// </summary>
-	/// <remarks>Use this property to access or query the set of supported keywords for schema validation and
-	/// processing. The returned registry is read-only and reflects the current configuration of recognized
-	/// keywords.</remarks>
-	public Dialect KeywordRegistry { get; set; }
+	public VocabularyRegistry VocabularyRegistry { get; set; } = VocabularyRegistry.Global;
+
+	/// <summary>
+	/// The local dialect registry.  If a dialect is not found here, it will
+	/// automatically check the global registry as well.
+	/// </summary>
+	public DialectRegistry DialectRegistry { get; set; } = DialectRegistry.Global;
+
+	/// <summary>
+	/// Gets the dialect to be used when building schemas with these options.
+	/// </summary>
+	public Dialect Dialect { get; set; } = Dialect.Default;
 
 	/// <summary>
 	/// Specifies whether the `format` keyword should fail validations for
@@ -30,20 +39,4 @@ public class BuildOptions
 	/// assertion behavior.
 	/// </remarks>
 	public bool OnlyKnownFormats { get; set; }
-
-	static BuildOptions()
-	{
-		_ = MetaSchemas.V1;
-	}
-
-	public BuildOptions()
-		: this(SchemaRegistry.Global, Dialect.Default)
-	{
-	}
-
-	private BuildOptions(SchemaRegistry schemaRegistry, Dialect keywordRegistry)
-	{
-		SchemaRegistry = schemaRegistry;
-		KeywordRegistry = keywordRegistry;
-	}
 }

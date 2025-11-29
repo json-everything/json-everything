@@ -61,7 +61,7 @@ public class TestSuiteRunner
 			foreach (var collection in collections!)
 			{
 				collection.IsOptional = fileName.Contains("optional");
-				var keywords = draftFolder switch
+				var dialect = draftFolder switch
 				{
 					"draft6" => Dialect.Draft06,
 					"draft7" => Dialect.Draft07,
@@ -71,14 +71,9 @@ public class TestSuiteRunner
 					_ => throw new ArgumentOutOfRangeException(nameof(draftFolder), $"{draftFolder} is unsupported")
 				};
 
-				if (fileName.Contains("format/".AdjustForPlatform()) &&
-					// uri-template will throw an exception as it's explicitly unsupported
-					shortFileName != "uri-template")
-					keywords = keywords.UseFormatValidation();
-
 				collection.BuildOptions = new BuildOptions
 				{
-					KeywordRegistry = keywords,
+					Dialect = dialect,
 					SchemaRegistry = new()
 				};
 				collection.EvaluationOptions = evaluationOptions;

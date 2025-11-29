@@ -55,7 +55,7 @@ public partial class DynamicRefKeyword : IKeywordHandler
 	public virtual KeywordEvaluation Evaluate(KeywordData keyword, EvaluationContext context)
 	{
 		var anchor = (string)keyword.Value!;
-		var subschema = context.BuildOptions.SchemaRegistry.GetDynamic(context.Scope, anchor);
+		var subschema = context.SchemaRegistry.GetDynamic(context.Scope, anchor);
 		if (subschema is null)
 			throw new RefResolutionException(context.Scope.LocalScope, anchor, AnchorType.Dynamic);
 
