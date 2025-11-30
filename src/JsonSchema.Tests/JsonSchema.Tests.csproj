@@ -16,7 +16,6 @@
 
 	<ItemGroup>
 		<Compile Remove="AutoEvaluationTests.cs" />
-		<Compile Remove="BuilderExtensions.cs" />
 		<Compile Remove="BundlingTests.cs" />
 		<Compile Remove="EvaluationOptionsTests.cs" />
 		<Compile Remove="ExtensionTests.cs" />
@@ -24,7 +23,6 @@
 		<Compile Remove="LearnJsonEverythingTestFixture.cs" />
 		<Compile Remove="OutputTests.cs" />
 		<Compile Remove="TraversalTests.cs" />
-		<Compile Remove="VocabularyTests.cs" />
 		<Compile Remove="Suite\Output.cs" />
 		<Compile Remove="Suite\ValidationOptimized.cs" />
 

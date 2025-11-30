@@ -17,11 +17,6 @@ public class EvaluationOptions
 	public static EvaluationOptions Default { get; } = new();
 
 	/// <summary>
-	/// Indicates whether the schema should be validated against its `$schema` value.
-	/// this is not typically necessary.
-	/// </summary>
-	public bool ValidateAgainstMetaSchema { get; set; }
-	/// <summary>
 	/// Specifies the output format.
 	/// </summary>
 	public OutputFormat OutputFormat { get; set; }
@@ -68,7 +63,6 @@ public class EvaluationOptions
 		var options = new EvaluationOptions
 		{
 			OutputFormat = other.OutputFormat,
-			ValidateAgainstMetaSchema = other.ValidateAgainstMetaSchema,
 			RequireFormatValidation = other.RequireFormatValidation,
 			PreserveDroppedAnnotations = other.PreserveDroppedAnnotations,
 			AddAnnotationForUnknownKeywords = other.AddAnnotationForUnknownKeywords,

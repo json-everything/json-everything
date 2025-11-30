@@ -172,6 +172,8 @@ public partial class Dialect
 		return _keywordData.GetValueOrDefault(keyword)?.Priority;
 	}
 
+	internal IEnumerable<IKeywordHandler> GetKeywords() => _keywordData.Select(x => x.Value.Handler).Distinct();
+
 	private void CheckWellKnown()
 	{
 		if (_readOnly)

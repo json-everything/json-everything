@@ -2,9 +2,7 @@
 using System.Globalization;
 using System.Text.Encodings.Web;
 using System.Text.Json;
-using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
-using Json.More;
 using NUnit.Framework;
 using TestHelpers;
 
@@ -12,145 +10,131 @@ namespace Json.Schema.Tests;
 
 public partial class VocabularyTests
 {
-	[SchemaKeyword(Name)]
-	[SchemaSpecVersion(SpecVersion.Draft201909 | SpecVersion.Draft202012)]
-	[JsonConverter(typeof(MinDateJsonConverter))]
-	[Vocabulary("http://mydates.com/vocabulary")]
-	public class MinDateKeyword : IJsonSchemaKeyword
+	public class MinDateKeyword : IKeywordHandler
 	{
-		internal const string Name = "minDate";
+		public static readonly MinDateKeyword Instance = new();
 
-		public DateTime Date { get; }
+		public string Name => "minDate";
 
-		public MinDateKeyword(DateTime date)
+		private MinDateKeyword()
 		{
-			Date = date;
 		}
 
-		public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
-			ReadOnlySpan<KeywordConstraint> localConstraints,
-			EvaluationContext context)
+		public object? ValidateKeywordValue(JsonElement value)
 		{
-			return new KeywordConstraint(Name, (e, _) =>
-			{
-				var dateString = e.LocalInstance!.GetValue<string>();
-				var date = DateTime.Parse(dateString);
+			if (value.ValueKind is not JsonValueKind.String)
+				throw new JsonSchemaException($"'{Name}' value must be a string, found {value.ValueKind}");
 
-				if (date < Date)
-					e.Results.Fail(Name, "[[provided:O]] must be on or after [[value:O]]"
-						.ReplaceToken("provided", date, VocabularySerializerContext.Default.DateTime)
-						.ReplaceToken("value", Date, VocabularySerializerContext.Default.DateTime));
-
-			});
+			return DateTime.Parse(value.GetString()!, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal);
 		}
-	}
 
-	public class MinDateJsonConverter : WeaklyTypedJsonConverter<MinDateKeyword>
-	{
-		public override MinDateKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		public void BuildSubschemas(KeywordData keyword, BuildContext context)
 		{
-			if (reader.TokenType != JsonTokenType.String)
-				throw new JsonException("Expected string");
+		}
 
-			var dateString = reader.GetString();
+		public KeywordEvaluation Evaluate(KeywordData keyword, EvaluationContext context)
+		{
+			if (context.Instance.ValueKind is not JsonValueKind.String) return KeywordEvaluation.Ignore;
+
+			var dateString = context.Instance.GetString();
 			var date = DateTime.Parse(dateString!, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal);
-			return new MinDateKeyword(date);
-		}
+			var expectedDate = (DateTime)keyword.Value!;
 
-		public override void Write(Utf8JsonWriter writer, MinDateKeyword value, JsonSerializerOptions options)
-		{
-			writer.WriteStringValue(value.Date.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ssK"));
-		}
-	}
-
-	[SchemaKeyword(Name)]
-	[SchemaSpecVersion(SpecVersion.Draft7 | SpecVersion.Draft201909 | SpecVersion.Draft202012)]
-	[JsonConverter(typeof(NonVocabMinDateJsonConverter))]
-	public class NonVocabMinDateKeyword : IJsonSchemaKeyword
-	{
-		internal const string Name = "minDate-nv";
-
-		public DateTime Date { get; }
-
-		public NonVocabMinDateKeyword(DateTime date)
-		{
-			Date = date;
-		}
-
-		public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
-			ReadOnlySpan<KeywordConstraint> localConstraints,
-			EvaluationContext context)
-		{
-			return new KeywordConstraint(Name, (e, _) =>
+			if (date < expectedDate)
 			{
-				var dateString = e.LocalInstance!.GetValue<string>();
-				var date = DateTime.Parse(dateString);
-
-				if (date < Date)
-					e.Results.Fail(Name, "[[provided:O]] must be on or after [[value:O]]"
+				return new KeywordEvaluation
+				{
+					Keyword = Name,
+					IsValid = false,
+					Error = "[[provided:O]] must be on or after [[value:O]]"
 						.ReplaceToken("provided", date, VocabularySerializerContext.Default.DateTime)
-						.ReplaceToken("value", Date, VocabularySerializerContext.Default.DateTime));
+						.ReplaceToken("value", expectedDate, VocabularySerializerContext.Default.DateTime)
+				};
+			}
 
-			});
+			return new KeywordEvaluation
+			{
+				Keyword = Name,
+				IsValid = true
+			};
 		}
 	}
 
-	public class NonVocabMinDateJsonConverter : WeaklyTypedJsonConverter<NonVocabMinDateKeyword>
+	public class NonVocabMinDateKeyword : IKeywordHandler
 	{
-		public override NonVocabMinDateKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-		{
-			if (reader.TokenType != JsonTokenType.String)
-				throw new JsonException("Expected string");
+		public static readonly NonVocabMinDateKeyword Instance = new();
 
-			var dateString = reader.GetString();
+		public string Name => "minDate-nv";
+
+		private NonVocabMinDateKeyword()
+		{
+		}
+
+		public object? ValidateKeywordValue(JsonElement value)
+		{
+			if (value.ValueKind is not JsonValueKind.String)
+				throw new JsonSchemaException($"'{Name}' value must be a string, found {value.ValueKind}");
+
+			return DateTime.Parse(value.GetString()!, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal);
+		}
+
+		public void BuildSubschemas(KeywordData keyword, BuildContext context)
+		{
+		}
+
+		public KeywordEvaluation Evaluate(KeywordData keyword, EvaluationContext context)
+		{
+			if (context.Instance.ValueKind is not JsonValueKind.String) return KeywordEvaluation.Ignore;
+
+			var dateString = context.Instance.GetString();
 			var date = DateTime.Parse(dateString!, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal);
-			return new NonVocabMinDateKeyword(date);
-		}
+			var expectedDate = (DateTime)keyword.Value!;
 
-		public override void Write(Utf8JsonWriter writer, NonVocabMinDateKeyword value, JsonSerializerOptions options)
-		{
-			writer.WriteStringValue(value.Date.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ssK"));
+			if (date < expectedDate)
+			{
+				return new KeywordEvaluation
+				{
+					Keyword = Name,
+					IsValid = false,
+					Error = "[[provided:O]] must be on or after [[value:O]]"
+						.ReplaceToken("provided", date, VocabularySerializerContext.Default.DateTime)
+						.ReplaceToken("value", expectedDate, VocabularySerializerContext.Default.DateTime)
+				};
+			}
+
+			return new KeywordEvaluation
+			{
+				Keyword = Name,
+				IsValid = true
+			};
 		}
 	}
 
-	[SchemaKeyword(Name)]
-	[SchemaSpecVersion(SpecVersion.Draft201909 | SpecVersion.Draft202012)]
-	[JsonConverter(typeof(MaxDateJsonConverter))]
-	[Vocabulary("http://mydates.com/vocabulary")]
-	public class MaxDateKeyword : IJsonSchemaKeyword
+	public class MaxDateKeyword : IKeywordHandler
 	{
-		internal const string Name = "maxDate";
+		public static readonly MaxDateKeyword Instance = new();
 
-		public DateTime Date { get; }
+		public string Name => "maxDate";
 
-		public MaxDateKeyword(DateTime date)
+		private MaxDateKeyword()
 		{
-			Date = date;
 		}
 
-		public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
-			ReadOnlySpan<KeywordConstraint> localConstraints,
-			EvaluationContext context)
+		public object? ValidateKeywordValue(JsonElement value)
+		{
+			if (value.ValueKind is not JsonValueKind.String)
+				throw new JsonSchemaException($"'{Name}' value must be a string, found {value.ValueKind}");
+
+			return DateTime.Parse(value.GetString()!, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal);
+		}
+
+		public void BuildSubschemas(KeywordData keyword, BuildContext context)
+		{
+		}
+
+		public KeywordEvaluation Evaluate(KeywordData keyword, EvaluationContext context)
 		{
 			throw new NotImplementedException();
-		}
-	}
-
-	public class MaxDateJsonConverter : WeaklyTypedJsonConverter<MaxDateKeyword>
-	{
-		public override MaxDateKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-		{
-			if (reader.TokenType != JsonTokenType.String)
-				throw new JsonException("Expected string");
-
-			var dateString = reader.GetString();
-			var date = DateTime.Parse(dateString!, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal);
-			return new MaxDateKeyword(date);
-		}
-
-		public override void Write(Utf8JsonWriter writer, MaxDateKeyword value, JsonSerializerOptions options)
-		{
-			writer.WriteStringValue(value.Date.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ssK"));
 		}
 	}
 
@@ -169,57 +153,61 @@ public partial class VocabularyTests
 		};
 
 	public static readonly Vocabulary DatesVocabulary =
-		new("http://mydates.com/vocabulary", typeof(MinDateKeyword), typeof(MaxDateKeyword));
+		new(new Uri("http://mydates.com/vocabulary"), MinDateKeyword.Instance, MaxDateKeyword.Instance);
 
 	public static readonly JsonSchema DatesMetaSchema =
 		new JsonSchemaBuilder()
 			.Id("http://mydates.com/schema")
 			.Schema(MetaSchemas.Draft201909Id)
 			.Vocabulary(
-				(Vocabularies.Core201909Id, true),
-				("http://mydates.com/vocabulary", true)
+				(Vocabulary.Draft201909_Core.Id, true),
+				(new Uri("http://mydates.com/vocabulary"), true)
 			)
 			.Properties(
-				(MinDateKeyword.Name, new JsonSchemaBuilder()
+				(MinDateKeyword.Instance.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.String)
 					.Format(Formats.DateTime)
 				),
-				(MaxDateKeyword.Name, new JsonSchemaBuilder()
+				(MaxDateKeyword.Instance.Name, new JsonSchemaBuilder()
 					.Type(SchemaValueType.String)
 					.Format(Formats.DateTime)
 				)
 			);
 
-	[OneTimeSetUp]
-	public void Setup()
-	{
-		SchemaKeywordRegistry.Register<MinDateKeyword>(VocabularySerializerContext.Default);
-		SchemaKeywordRegistry.Register<NonVocabMinDateKeyword>(VocabularySerializerContext.Default);
-		SchemaKeywordRegistry.Register<MaxDateKeyword>(VocabularySerializerContext.Default);
-	}
+	private static readonly Dialect DatesDialect = Dialect.Draft201909.With(
+		[MinDateKeyword.Instance, MaxDateKeyword.Instance],
+		id: new Uri("http://mydates.com/schema"),
+		allowUnknownKeywords: true
+	);
 
-	[OneTimeTearDown]
-	public void TearDown()
-	{
-		SchemaKeywordRegistry.Unregister<MinDateKeyword>();
-		SchemaKeywordRegistry.Unregister<NonVocabMinDateKeyword>();
-		SchemaKeywordRegistry.Unregister<MaxDateKeyword>();
-	}
+	private static readonly Dialect NonVocabDialect201909 = Dialect.Draft201909.With(
+		[NonVocabMinDateKeyword.Instance],
+		allowUnknownKeywords: true
+	);
+
+	private static readonly Dialect NonVocabDialect07 = Dialect.Draft07.With(
+		[NonVocabMinDateKeyword.Instance],
+		allowUnknownKeywords: true
+	);
 
 	[Test]
 	public void SchemaValidation_ValidateMetaSchemaTrue_VocabularyNotKnown()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var dialectRegistry = new DialectRegistry();
+		dialectRegistry.Register(DatesDialect);
+
+		var buildOptions = new BuildOptions { DialectRegistry = dialectRegistry };
+		buildOptions.SchemaRegistry.Register(DatesMetaSchema);
+
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.Schema("http://mydates.com/schema")
 			.MinDate(DateTime.Now.ToUniversalTime().AddDays(-1));
-		var instance = JsonNode.Parse($"\"{DateTime.Now.ToUniversalTime():O}\"");
+		var instance = JsonDocument.Parse($"\"{DateTime.Now.ToUniversalTime():O}\"").RootElement;
 
 		var options = new EvaluationOptions
 		{
-			ValidateAgainstMetaSchema = true,
 			OutputFormat = OutputFormat.List
 		};
-		options.SchemaRegistry.Register(DatesMetaSchema);
 
 		TestConsole.WriteLine(JsonSerializer.Serialize(schema, _serializerOptions));
 		TestConsole.WriteLine();
@@ -232,14 +220,18 @@ public partial class VocabularyTests
 	[Test]
 	public void SchemaValidation_ValidateMetaSchemaFalse_VocabularyNotKnown()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var dialectRegistry = new DialectRegistry();
+		dialectRegistry.Register(DatesDialect);
+
+		var buildOptions = new BuildOptions { DialectRegistry = dialectRegistry };
+		buildOptions.SchemaRegistry.Register(DatesMetaSchema);
+
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.Schema("http://mydates.com/schema")
 			.MinDate(DateTime.Now.ToUniversalTime().AddDays(-1));
-		var instance = JsonNode.Parse($"\"{DateTime.Now.ToUniversalTime():O}\"");
+		var instance = JsonDocument.Parse($"\"{DateTime.Now.ToUniversalTime():O}\"").RootElement;
 
-		var options = new EvaluationOptions();
-		options.SchemaRegistry.Register(DatesMetaSchema);
-		var results = schema.Evaluate(instance, options);
+		var results = schema.Evaluate(instance);
 
 		TestConsole.WriteLine(JsonSerializer.Serialize(schema, _serializerOptions));
 		TestConsole.WriteLine();
@@ -252,10 +244,11 @@ public partial class VocabularyTests
 	[Test]
 	public void SchemaValidation_ValidateMetaSchemaFalse_NonVocab_Draft201909_NoCustomKeywords()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { Dialect = Dialect.Draft201909 };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.Schema(MetaSchemas.Draft201909Id)
 			.NonVocabMinDate(DateTime.Now.ToUniversalTime().AddDays(1));
-		var instance = JsonNode.Parse($"\"{DateTime.Now.ToUniversalTime():O}\"");
+		var instance = JsonDocument.Parse($"\"{DateTime.Now.ToUniversalTime():O}\"").RootElement;
 
 		var results = schema.Evaluate(instance);
 
@@ -270,14 +263,14 @@ public partial class VocabularyTests
 	[Test]
 	public void SchemaValidation_ValidateMetaSchemaFalse_NonVocab_Draft201909_WithCustomKeywords()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { Dialect = NonVocabDialect201909 };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.Schema(MetaSchemas.Draft201909Id)
 			.NonVocabMinDate(DateTime.Now.ToUniversalTime().AddDays(1));
-		var instance = JsonNode.Parse($"\"{DateTime.Now.ToUniversalTime():O}\"");
+		var instance = JsonDocument.Parse($"\"{DateTime.Now.ToUniversalTime():O}\"").RootElement;
 
 		var results = schema.Evaluate(instance, new EvaluationOptions
 		{
-			ProcessCustomKeywords = true,
 			OutputFormat = OutputFormat.List
 		});
 
@@ -292,10 +285,11 @@ public partial class VocabularyTests
 	[Test]
 	public void SchemaValidation_ValidateMetaSchemaFalse_NonVocab_Draft7()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { Dialect = NonVocabDialect07 };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.Schema(MetaSchemas.Draft7Id)
 			.NonVocabMinDate(DateTime.Now.ToUniversalTime().AddDays(1));
-		var instance = JsonNode.Parse($"\"{DateTime.Now.ToUniversalTime():O}\"");
+		var instance = JsonDocument.Parse($"\"{DateTime.Now.ToUniversalTime():O}\"").RootElement;
 
 		var results = schema.Evaluate(instance);
 
@@ -310,43 +304,48 @@ public partial class VocabularyTests
 	[Test]
 	public void SchemaValidation_ValidateMetaSchemaTrue_VocabularyKnown()
 	{
-		try
+		var dialectRegistry = new DialectRegistry();
+		dialectRegistry.Register(DatesDialect);
+
+		var buildOptions = new BuildOptions
 		{
-			JsonSchema schema = new JsonSchemaBuilder()
-				.Schema("http://mydates.com/schema")
-				.MinDate(DateTime.Now.ToUniversalTime().AddDays(-1));
-			var instance = JsonNode.Parse($"\"{DateTime.Now.ToUniversalTime():O}\"");
+			DialectRegistry = dialectRegistry,
+			VocabularyRegistry = new VocabularyRegistry()
+		};
+		buildOptions.VocabularyRegistry.Register(DatesVocabulary);
+		buildOptions.SchemaRegistry.Register(DatesMetaSchema);
 
-			var options = new EvaluationOptions
-			{
-				ValidateAgainstMetaSchema = true,
-				OutputFormat = OutputFormat.List
-			};
-			options.SchemaRegistry.Register(DatesMetaSchema);
-			VocabularyRegistry.Register(DatesVocabulary);
-			var results = schema.Evaluate(instance, options);
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
+			.Schema("http://mydates.com/schema")
+			.MinDate(DateTime.Now.ToUniversalTime().AddDays(-1));
+		var instance = JsonDocument.Parse($"\"{DateTime.Now.ToUniversalTime():O}\"").RootElement;
 
-			TestConsole.WriteLine(JsonSerializer.Serialize(schema, _serializerOptions));
-			TestConsole.WriteLine();
-			TestConsole.WriteLine(instance);
-			TestConsole.WriteLine();
-
-			results.AssertValid();
-		}
-		finally
+		var options = new EvaluationOptions
 		{
-			VocabularyRegistry.Unregister(DatesVocabulary);
-		}
+			OutputFormat = OutputFormat.List
+		};
+		var results = schema.Evaluate(instance, options);
+
+		TestConsole.WriteLine(JsonSerializer.Serialize(schema, _serializerOptions));
+		TestConsole.WriteLine();
+		TestConsole.WriteLine(instance);
+		TestConsole.WriteLine();
+
+		results.AssertValid();
 	}
 
 	[Test]
 	public void MetaSchemaValidation_VocabularyNotKnown()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var dialectRegistry = new DialectRegistry();
+		dialectRegistry.Register(DatesDialect);
+
+		var buildOptions = new BuildOptions { DialectRegistry = dialectRegistry };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.Schema("http://mydates.com/schema")
 			.MinDate(DateTime.Now.AddDays(-1));
 
-		var schemaAsJson = JsonNode.Parse(JsonSerializer.Serialize(schema, _basicOptions));
+		var schemaAsJson = JsonDocument.Parse(JsonSerializer.Serialize(schema, _basicOptions)).RootElement;
 		var results = DatesMetaSchema.Evaluate(schemaAsJson, new EvaluationOptions{OutputFormat = OutputFormat.List});
 
 		TestConsole.WriteLine(schemaAsJson);
@@ -358,156 +357,108 @@ public partial class VocabularyTests
 	[Test]
 	public void MetaSchemaValidation_VocabularyKnown()
 	{
-		try
+		var dialectRegistry = new DialectRegistry();
+		dialectRegistry.Register(DatesDialect);
+
+		var buildOptions = new BuildOptions
 		{
-			JsonSchema schema = new JsonSchemaBuilder()
-				.Schema("http://mydates.com/schema")
-				.MinDate(DateTime.Now.AddDays(-1));
+			DialectRegistry = dialectRegistry,
+			VocabularyRegistry = new VocabularyRegistry()
+		};
+		buildOptions.VocabularyRegistry.Register(DatesVocabulary);
 
-			var schemaAsJson = JsonNode.Parse(JsonSerializer.Serialize(schema, _basicOptions));
-			var options = new EvaluationOptions();
-			VocabularyRegistry.Register(DatesVocabulary);
-			var results = DatesMetaSchema.Evaluate(schemaAsJson, options);
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
+			.Schema("http://mydates.com/schema")
+			.MinDate(DateTime.Now.AddDays(-1));
 
-			TestConsole.WriteLine(schemaAsJson);
-			TestConsole.WriteLine();
+		var schemaAsJson = JsonDocument.Parse(JsonSerializer.Serialize(schema, _basicOptions)).RootElement;
+		var results = DatesMetaSchema.Evaluate(schemaAsJson);
 
-			results.AssertValid();
-		}
-		finally
-		{
-			VocabularyRegistry.Unregister(DatesVocabulary);
-		}
+		TestConsole.WriteLine(schemaAsJson);
+		TestConsole.WriteLine();
+
+		results.AssertValid();
 	}
 
-	[SchemaKeyword(Name)]
-	[SchemaSpecVersion(SpecVersion.Draft202012)]
-	[JsonConverter(typeof(Draft4ExclusiveMinimumJsonConverter))]
-	public class Draft4ExclusiveMinimumKeyword : IJsonSchemaKeyword
+	public class Draft4ExclusiveMinimumKeyword : IKeywordHandler
 	{
-		internal const string Name = "exclusiveMinimum";
+		public static readonly Draft4ExclusiveMinimumKeyword Instance = new();
 
-		private readonly ExclusiveMinimumKeyword? _postDraft6Keyword;
+		public string Name => "exclusiveMinimum";
 
-		public bool? BoolValue { get; }
-		public decimal? NumberValue => _postDraft6Keyword?.Value;
-
-		public Draft4ExclusiveMinimumKeyword(bool value)
+		private Draft4ExclusiveMinimumKeyword()
 		{
-			BoolValue = value;
 		}
 
-		public Draft4ExclusiveMinimumKeyword(decimal value)
+		public object? ValidateKeywordValue(JsonElement value)
 		{
-			_postDraft6Keyword = new ExclusiveMinimumKeyword(value);
+			if (value.ValueKind is not (JsonValueKind.True or JsonValueKind.False))
+				throw new JsonSchemaException($"'{Name}' value must be a boolean, found {value.ValueKind}");
+
+			return value.GetBoolean();
 		}
 
-		public KeywordConstraint GetConstraint(SchemaConstraint schemaConstraint,
-			ReadOnlySpan<KeywordConstraint> localConstraints,
-			EvaluationContext context)
+		public void BuildSubschemas(KeywordData keyword, BuildContext context)
 		{
-			if (BoolValue.HasValue)
+			// Store the minimum value if present in sibling keywords
+			if (context.LocalSchema.TryGetProperty("minimum", out var minimumValue))
 			{
-				var minimumConstraint = localConstraints.GetKeywordConstraint<MinimumKeyword>();
+				keyword.Value = (keyword.Value, minimumValue);
+			}
+		}
 
-				var constraint = new KeywordConstraint(Name, (e, _) =>
+		public KeywordEvaluation Evaluate(KeywordData keyword, EvaluationContext context)
+		{
+			if (context.Instance.ValueKind is not JsonValueKind.Number) return KeywordEvaluation.Ignore;
+
+			var (isExclusive, minimum) = ((bool, JsonElement))keyword.Value!;
+			if (!isExclusive)
+			{
+				return new KeywordEvaluation
 				{
-					if (!BoolValue.Value) return;
-
-					var minimum = (decimal?) 5;// context.LocalSchema.GetMinimum();
-
-					if (!minimum.HasValue) return;
-
-					var schemaValueType = e.LocalInstance.GetSchemaValueType();
-					if (schemaValueType is not (SchemaValueType.Number or SchemaValueType.Integer)) return;
-
-					var number = e.LocalInstance!.AsValue().GetNumber();
-					if (number == minimum)
-						e.Results.Fail(Name, "minimum is exclusive");
-				});
-				if (minimumConstraint != null)
-					constraint.SiblingDependencies = [minimumConstraint];
-				return constraint;
+					Keyword = Name,
+					IsValid = true
+				};
 			}
 
-			return _postDraft6Keyword!.GetConstraint(schemaConstraint, localConstraints, context);
-		}
-	}
-
-	public class Draft4ExclusiveMinimumJsonConverter : WeaklyTypedJsonConverter<Draft4ExclusiveMinimumKeyword>
-	{
-		public override Draft4ExclusiveMinimumKeyword Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-		{
-			return reader.TokenType switch
+			var comparison = JsonMath.NumberCompare(context.Instance, minimum);
+			if (comparison == 0)
 			{
-				JsonTokenType.True or JsonTokenType.False => new Draft4ExclusiveMinimumKeyword(reader.GetBoolean()),
-				JsonTokenType.Number => new Draft4ExclusiveMinimumKeyword(reader.GetDecimal()),
-				_ => throw new JsonException("Expected boolean or number")
+				return new KeywordEvaluation
+				{
+					Keyword = Name,
+					IsValid = false,
+					Error = "minimum is exclusive"
+				};
+			}
+
+			return new KeywordEvaluation
+			{
+				Keyword = Name,
+				IsValid = true
 			};
 		}
-
-		public override void Write(Utf8JsonWriter writer, Draft4ExclusiveMinimumKeyword value, JsonSerializerOptions options)
-		{
-			if (value.BoolValue.HasValue)
-				writer.WriteBoolean(Draft4ExclusiveMinimumKeyword.Name, value.BoolValue.Value);
-			else
-				writer.WriteNumber(Draft4ExclusiveMinimumKeyword.Name, value.NumberValue!.Value);
-		}
 	}
-
+	
 	[TestCase(3, false)]
 	[TestCase(8, true)]
 	[TestCase(5, false)]
 	[TestCase(5.1, true)]
 	public void Draft4ExclusiveMinimumOverride(decimal instanceValue, bool isValid)
 	{
-		try
-		{
-			SchemaKeywordRegistry.Register<Draft4ExclusiveMinimumKeyword>(VocabularySerializerContext.Default);
+		var draft4Dialect = Dialect.Draft202012.With([Draft4ExclusiveMinimumKeyword.Instance]);
 
-			var schemaText = @"{
+		var schemaText = @"{
 	""minimum"": 5,
 	""exclusiveMinimum"": true
 }";
-			var schema = JsonSchema.FromText(schemaText);
+		var schema = JsonSchema.FromText(schemaText, new BuildOptions { Dialect = draft4Dialect });
 
-			JsonNode instance = instanceValue;
+		var instance = JsonDocument.Parse(instanceValue.ToString(System.Globalization.CultureInfo.InvariantCulture)).RootElement;
 
-			var result = schema.Evaluate(instance);
+		var result = schema.Evaluate(instance);
 
-			Assert.That(result.IsValid, Is.EqualTo(isValid));
-		}
-		finally
-		{
-			SchemaKeywordRegistry.Register<ExclusiveMinimumKeyword>();
-		}
-	}
-
-	[TestCase(3, false)]
-	[TestCase(8, true)]
-	[TestCase(5, false)]
-	[TestCase(5.1, true)]
-	public void Draft4ExclusiveMinimumOverrideWithDraft6Usage(decimal instanceValue, bool isValid)
-	{
-		try
-		{
-			SchemaKeywordRegistry.Register<Draft4ExclusiveMinimumKeyword>(VocabularySerializerContext.Default);
-
-			var schemaText = @"{
-	""exclusiveMinimum"": 5
-}";
-			var schema = JsonSchema.FromText(schemaText);
-
-			JsonNode instance = instanceValue;
-
-			var result = schema.Evaluate(instance);
-
-			Assert.That(result.IsValid, Is.EqualTo(isValid));
-		}
-		finally
-		{
-			SchemaKeywordRegistry.Register<ExclusiveMinimumKeyword>();
-		}
+		Assert.That(result.IsValid, Is.EqualTo(isValid));
 	}
 
 	[JsonSerializable(typeof(Draft4ExclusiveMinimumKeyword))]
