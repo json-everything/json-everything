@@ -56,7 +56,7 @@ public partial class DynamicAnchorKeyword : IKeywordHandler
 
 		var anchor = value.GetString()!;
 		if (!AnchorPattern.IsMatch(anchor))
-			throw new JsonSchemaException($"'{Name}' value must match '{AnchorPattern}'");
+			throw new JsonSchemaException($"'{Name}' value '{anchor}' must match '{AnchorPattern}'");
 
 		return anchor;
 	}

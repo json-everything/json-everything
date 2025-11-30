@@ -5,7 +5,6 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Sockets;
 using System.Text.Json;
-using System.Text.Json.Nodes;
 using Json.More;
 using NUnit.Framework;
 using TestHelpers;
@@ -19,33 +18,32 @@ public class SelfValidationTest
 {
 	public static IEnumerable<TestCaseData> TestData =>
 		[
-			new TestCaseData(MetaSchemas.Draft6) { TestName = nameof(MetaSchemas.Draft6) },
+			new(MetaSchemas.Draft6) { TestName = nameof(MetaSchemas.Draft6) },
 
-			new TestCaseData(MetaSchemas.Draft7) { TestName = nameof(MetaSchemas.Draft7) },
+			new(MetaSchemas.Draft7) { TestName = nameof(MetaSchemas.Draft7) },
 
-			new TestCaseData(MetaSchemas.Draft201909) { TestName = nameof(MetaSchemas.Draft201909) },
-			new TestCaseData(MetaSchemas.Core201909) { TestName = nameof(MetaSchemas.Core201909) },
-			new TestCaseData(MetaSchemas.Applicator201909) { TestName = nameof(MetaSchemas.Applicator201909) },
-			new TestCaseData(MetaSchemas.Validation201909) { TestName = nameof(MetaSchemas.Validation201909) },
-			new TestCaseData(MetaSchemas.Metadata201909) { TestName = nameof(MetaSchemas.Metadata201909) },
-			new TestCaseData(MetaSchemas.Format201909) { TestName = nameof(MetaSchemas.Format201909) },
-			new TestCaseData(MetaSchemas.Content201909) { TestName = nameof(MetaSchemas.Content201909) },
+			new(MetaSchemas.Draft201909) { TestName = nameof(MetaSchemas.Draft201909) },
+			new(MetaSchemas.Core201909) { TestName = nameof(MetaSchemas.Core201909) },
+			new(MetaSchemas.Applicator201909) { TestName = nameof(MetaSchemas.Applicator201909) },
+			new(MetaSchemas.Validation201909) { TestName = nameof(MetaSchemas.Validation201909) },
+			new(MetaSchemas.Metadata201909) { TestName = nameof(MetaSchemas.Metadata201909) },
+			new(MetaSchemas.Format201909) { TestName = nameof(MetaSchemas.Format201909) },
+			new(MetaSchemas.Content201909) { TestName = nameof(MetaSchemas.Content201909) },
 
-			new TestCaseData(MetaSchemas.Draft202012) { TestName = nameof(MetaSchemas.Draft202012) },
-			new TestCaseData(MetaSchemas.Core202012) { TestName = nameof(MetaSchemas.Core202012) },
-			new TestCaseData(MetaSchemas.Applicator202012) { TestName = nameof(MetaSchemas.Applicator202012) },
-			new TestCaseData(MetaSchemas.Metadata202012) { TestName = nameof(MetaSchemas.Metadata202012) },
-			new TestCaseData(MetaSchemas.FormatAnnotation202012) { TestName = nameof(MetaSchemas.FormatAnnotation202012) },
-			new TestCaseData(MetaSchemas.FormatAssertion202012) { TestName = nameof(MetaSchemas.FormatAssertion202012) },
-			new TestCaseData(MetaSchemas.Content202012) { TestName = nameof(MetaSchemas.Content202012) },
-			new TestCaseData(MetaSchemas.Unevaluated202012) { TestName = nameof(MetaSchemas.Unevaluated202012) },
+			new(MetaSchemas.Draft202012) { TestName = nameof(MetaSchemas.Draft202012) },
+			new(MetaSchemas.Core202012) { TestName = nameof(MetaSchemas.Core202012) },
+			new(MetaSchemas.Applicator202012) { TestName = nameof(MetaSchemas.Applicator202012) },
+			new(MetaSchemas.Metadata202012) { TestName = nameof(MetaSchemas.Metadata202012) },
+			new(MetaSchemas.FormatAnnotation202012) { TestName = nameof(MetaSchemas.FormatAnnotation202012) },
+			new(MetaSchemas.FormatAssertion202012) { TestName = nameof(MetaSchemas.FormatAssertion202012) },
+			new(MetaSchemas.Content202012) { TestName = nameof(MetaSchemas.Content202012) },
+			new(MetaSchemas.Unevaluated202012) { TestName = nameof(MetaSchemas.Unevaluated202012) },
 		];
 
 	[TestCaseSource(nameof(TestData))]
 	public void Hardcoded(JsonSchema schema)
 	{
-		var json = JsonSerializer.Serialize(schema, TestEnvironment.SerializerOptions);
-		var validation = schema.Evaluate(JsonNode.Parse(json), new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
+		var validation = schema.Evaluate(schema.Root.Source, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
 
 		validation.AssertValid();
 	}
@@ -55,20 +53,25 @@ public class SelfValidationTest
 	{
 		try
 		{
-			var localSchemaJson = JsonSerializer.Serialize(schema, TestEnvironment.TestOutputSerializerOptions);
+			var buildOptions = new BuildOptions
+			{
+				SchemaRegistry = new()
+			};
 
-			var onlineSchemaJson = new HttpClient().GetStringAsync(schema.Keywords!.OfType<IdKeyword>().Single().Id).Result;
-			var onlineSchema = JsonSerializer.Deserialize<JsonSchema>(onlineSchemaJson, TestEnvironment.SerializerOptions);
+			var onlineSchemaJson = new HttpClient().GetStringAsync(schema["$id"]!.Value.GetString()!).Result;
+			var onlineSchema = JsonSchema.FromText(onlineSchemaJson, buildOptions);
 
-			var localValidation = schema.Evaluate(JsonNode.Parse(onlineSchemaJson));
-			var onlineValidation = onlineSchema!.Evaluate(JsonNode.Parse(localSchemaJson));
+			var onlineInstance = JsonDocument.Parse(onlineSchemaJson).RootElement;
+			var localInstance = schema.Root.Source;
+			var localValidation = schema.Evaluate(onlineInstance);
+			var onlineValidation = onlineSchema.Evaluate(localInstance);
 
 			try
 			{
 				TestConsole.WriteLine("Asserting schema equality");
-				var asNode = JsonSerializer.SerializeToNode(schema, TestEnvironment.SerializerOptions);
-				var onlineAsNode = JsonSerializer.SerializeToNode(onlineSchema, TestEnvironment.SerializerOptions);
-				Assert.That(() => asNode.IsEquivalentTo(onlineAsNode));
+				var asElement = schema.Root.Source;
+				var onlineAsElement = onlineSchema.Root.Source;
+				Assert.That(() => asElement.IsEquivalentTo(onlineAsElement));
 
 				TestConsole.WriteLine("Validating local against online");
 				onlineValidation.AssertValid();
@@ -78,7 +81,7 @@ public class SelfValidationTest
 			catch (Exception)
 			{
 				TestConsole.WriteLine("Online {0}", onlineSchemaJson);
-				TestConsole.WriteLine("Local {0}", localSchemaJson);
+				TestConsole.WriteLine("Local {0}", schema.Root.Source);
 				throw;
 			}
 		}
@@ -102,15 +105,4 @@ public class SelfValidationTest
 		}
 	}
 
-	[TestCaseSource(nameof(TestData))]
-	public void RoundTrip(JsonSchema schema)
-	{
-		var json = JsonSerializer.Serialize(schema, TestEnvironment.TestOutputSerializerOptions);
-		TestConsole.WriteLine(json);
-		var returnTrip = JsonSerializer.Deserialize<JsonSchema>(json, TestEnvironment.SerializerOptions);
-
-		var asNode = JsonSerializer.SerializeToNode(schema, TestEnvironment.SerializerOptions);
-		var onlineAsNode = JsonSerializer.SerializeToNode(returnTrip, TestEnvironment.SerializerOptions);
-		JsonAssert.AreEquivalent(onlineAsNode, asNode);
-	}
 }

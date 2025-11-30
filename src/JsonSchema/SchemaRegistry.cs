@@ -24,7 +24,7 @@ public class SchemaRegistry
 	private static readonly Uri _empty = new("https://json-everything.lib/");
 
 	private readonly Dictionary<Uri, Registration> _registered = [];
-	private Func<Uri, IBaseDocument?>? _fetch;
+	private Func<Uri, SchemaRegistry, IBaseDocument?>? _fetch;
 
 	/// <summary>
 	/// The global registry.
@@ -34,9 +34,9 @@ public class SchemaRegistry
 	/// <summary>
 	/// Gets or sets a method to enable automatic download of schemas by `$id` URI.
 	/// </summary>
-	public Func<Uri, IBaseDocument?> Fetch
+	public Func<Uri, SchemaRegistry, IBaseDocument?> Fetch
 	{
-		get => _fetch ??= _ => null;
+		get => _fetch ??= (_,_) => null;
 		set => _fetch = value;
 	}
 
@@ -210,12 +210,16 @@ public class SchemaRegistry
 
 	private Registration? GetRegistration(Uri baseUri)
 	{
-		var registration = _registered.GetValueOrDefault(baseUri) ??
-		               Global._registered.GetValueOrDefault(baseUri);
+		var registration = _registered.GetValueOrDefault(baseUri);
+		if (registration == null && !ReferenceEquals(this, Global))
+			registration = Global._registered.GetValueOrDefault(baseUri);
 
 		if (registration is null)
 		{
-			var remote = Fetch(baseUri) ?? Global.Fetch(baseUri);
+			var remote = Fetch(baseUri, this);
+			if (remote == null && !ReferenceEquals(this, Global))
+				remote = Global.Fetch(baseUri, this);
+
 			if (remote is not null) 
 				registration = RegisterSchema(baseUri, remote);
 		}

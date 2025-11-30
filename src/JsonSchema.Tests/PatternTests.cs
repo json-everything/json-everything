@@ -1,6 +1,4 @@
-﻿using System;
-using System.Text.Json;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using NUnit.Framework;
 
 namespace Json.Schema.Tests;
@@ -19,11 +17,7 @@ public class PatternTests
 			}
 			""";
 
-#if NET481
-		Assert.Throws<ArgumentException>(() => JsonSerializer.Deserialize(schemaText, TestSerializerContext.Default.JsonSchema));
-#else
-		Assert.Throws<RegexParseException>(() => JsonSerializer.Deserialize(schemaText, TestSerializerContext.Default.JsonSchema));
-#endif
+		Assert.Throws<RegexParseException>(() => JsonSchema.FromText(schemaText));
 	}
 
 	[Test]
@@ -38,11 +32,6 @@ public class PatternTests
 			}
 			""";
 
-
-#if NET481
-		Assert.Throws<ArgumentException>(() => JsonSerializer.Deserialize(schemaText, TestSerializerContext.Default.JsonSchema));
-#else
-		Assert.Throws<RegexParseException>(() => JsonSerializer.Deserialize(schemaText, TestSerializerContext.Default.JsonSchema));
-#endif
+		Assert.Throws<RegexParseException>(() => JsonSchema.FromText(schemaText));
 	}
 }

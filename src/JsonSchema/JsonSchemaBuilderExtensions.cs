@@ -330,7 +330,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder DynamicRef(this JsonSchemaBuilder builder, string reference)
 	{
-		builder.Add("$dynamicAnchor", reference);
+		builder.Add("$dynamicRef", reference);
 		return builder;
 	}
 

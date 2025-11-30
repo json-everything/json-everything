@@ -1,45 +1,10 @@
-﻿using System.Text.Json.Nodes;
+﻿using System.Text.Json;
 using NUnit.Framework;
 
 namespace Json.Schema.Tests;
 
 public class SlackTests
 {
-	[Test]
-	public void MultiDraftSelfValidation()
-	{
-		var json =
-			@"{
-					""$id"": ""http://localhost/"",
-					""$defs"": {
-						""M"": {
-							""$id"": ""http://localhost/M"",
-							""$schema"": ""https://json-schema.org/draft/2020-12/schema"",
-							""$defs"": {
-								""MarkConfig"": { ""type"": ""integer"" }
-							}   
-						},  
-						""C"": {
-							""$id"": ""http://localhost/C"",
-							""$schema"": ""http://json-schema.org/draft-06/schema#"",
-							""$defs"": {
-								""Config"": { ""$ref"": ""http://localhost/M#/$defs/MarkConfig"" }
-							},  
-							""$ref"": ""http://localhost/C#/$defs/Config""
-						}   
-					},  
-					""$ref"": ""/C""
-				}";
-
-		var schema = JsonSchema.FromText(json);
-		var instance = JsonNode.Parse(json);
-
-		Assert.Throws<RefResolutionException>(() => schema.Evaluate(instance, new EvaluationOptions
-		{
-			OutputFormat = OutputFormat.Hierarchical
-		}));
-	}
-
 	[Test]
 	public void TypeNonNullAndNullFailsValidation()
 	{
@@ -55,14 +20,14 @@ public class SlackTests
 			)
 			.Required("test");
 
-		var instance = new JsonObject
-		{
-			["test"] = new JsonObject
+		var instance = JsonDocument.Parse("""
 			{
-				["a"] = "aaa",
-				["b"] = null
+				"test": {
+					"a": "aaa",
+					"b": null
+				}
 			}
-		};
+			""").RootElement;
 
 		var results = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
 

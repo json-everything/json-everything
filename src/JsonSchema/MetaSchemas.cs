@@ -34,74 +34,130 @@ public static class MetaSchemas
 	/// </summary>
 	public static Uri Draft201909Id { get; } = new("https://json-schema.org/draft/2019-09/schema");
 	/// <summary>
+	/// Gets the meta-schema for the JSON Schema Draft 2019-09 specification.
+	/// </summary>
+	public static JsonSchema Draft201909 { get; internal set; }
+	/// <summary>
+	/// Gets the canonical URI identifying the Applicator meta-schema for the JSON Schema Draft 2019-09 specification.
+	/// </summary>
+	public static Uri Applicator201909Id { get; } = new("https://json-schema.org/draft/2019-09/meta/applicator");
+	/// <summary>
 	/// Gets the Applicator meta-schema for the JSON Schema Draft 2019-09 specification.
 	/// </summary>
 	public static JsonSchema Applicator201909 { get; internal set; }
+	/// <summary>
+	/// Gets the canonical URI identifying the Content meta-schema for the JSON Schema Draft 2019-09 specification.
+	/// </summary>
+	public static Uri Content201909Id { get; } = new("https://json-schema.org/draft/2019-09/meta/content");
 	/// <summary>
 	/// Gets the Content meta-schema for the JSON Schema Draft 2019-09 specification.
 	/// </summary>
 	public static JsonSchema Content201909 { get; internal set; }
 	/// <summary>
+	/// Gets the canonical URI identifying the Core meta-schema for the JSON Schema Draft 2019-09 specification.
+	/// </summary>
+	public static Uri Core201909Id { get; } = new("https://json-schema.org/draft/2019-09/meta/core");
+	/// <summary>
 	/// Gets the Core meta-schema for the JSON Schema Draft 2019-09 specification.
 	/// </summary>
 	public static JsonSchema Core201909 { get; internal set; }
+	/// <summary>
+	/// Gets the canonical URI identifying the Format meta-schema for the JSON Schema Draft 2019-09 specification.
+	/// </summary>
+	public static Uri Format201909Id { get; } = new("https://json-schema.org/draft/2019-09/meta/format");
 	/// <summary>
 	/// Gets the Format meta-schema for the JSON Schema Draft 2019-09 specification.
 	/// </summary>
 	public static JsonSchema Format201909 { get; internal set; }
 	/// <summary>
+	/// Gets the canonical URI identifying the Meta-Data meta-schema for the JSON Schema Draft 2019-09 specification.
+	/// </summary>
+	public static Uri Metadata201909Id { get; } = new("https://json-schema.org/draft/2019-09/meta/meta-data");
+	/// <summary>
 	/// Gets the Meta-Data meta-schema for the JSON Schema Draft 2019-09 specification.
 	/// </summary>
 	public static JsonSchema Metadata201909 { get; internal set; }
 	/// <summary>
+	/// Gets the canonical URI identifying the Validation meta-schema for the JSON Schema Draft 2019-09 specification.
+	/// </summary>
+	public static Uri Validation201909Id { get; } = new("https://json-schema.org/draft/2019-09/meta/validation");
+	/// <summary>
 	/// Gets the Validation meta-schema for the JSON Schema Draft 2019-09 specification.
 	/// </summary>
 	public static JsonSchema Validation201909 { get; internal set; }
-	/// <summary>
-	/// Gets the meta-schema for the JSON Schema Draft 2019-09 specification.
-	/// </summary>
-	public static JsonSchema Draft201909 { get; internal set; }
 
 	/// <summary>
 	/// Gets the canonical URI identifying the JSON Schema Draft 2020-12 meta-schema.
 	/// </summary>
 	public static Uri Draft202012Id { get; } = new("https://json-schema.org/draft/2020-12/schema");
 	/// <summary>
+	/// Gets the meta-schema for the JSON Schema Draft 2020-12 specification.
+	/// </summary>
+	public static JsonSchema Draft202012 { get; internal set; }
+	/// <summary>
+	/// Gets the canonical URI identifying the Applicator meta-schema for the JSON Schema Draft 2020-12 specification.
+	/// </summary>
+	public static Uri Applicator202012Id { get; } = new("https://json-schema.org/draft/2020-12/meta/applicator");
+	/// <summary>
 	/// Gets the Applicator meta-schema for the JSON Schema Draft 2020-12 specification.
 	/// </summary>
 	public static JsonSchema Applicator202012 { get; internal set; }
+	/// <summary>
+	/// Gets the canonical URI identifying the Content meta-schema for the JSON Schema Draft 2020-12 specification.
+	/// </summary>
+	public static Uri Content202012Id { get; } = new("https://json-schema.org/draft/2020-12/meta/content");
 	/// <summary>
 	/// Gets the Content meta-schema for the JSON Schema Draft 2020-12 specification.
 	/// </summary>
 	public static JsonSchema Content202012 { get; internal set; }
 	/// <summary>
+	/// Gets the canonical URI identifying the Core meta-schema for the JSON Schema Draft 2020-12 specification.
+	/// </summary>
+	public static Uri Core202012Id { get; } = new("https://json-schema.org/draft/2020-12/meta/core");
+	/// <summary>
 	/// Gets the Core meta-schema for the JSON Schema Draft 2020-12 specification.
 	/// </summary>
 	public static JsonSchema Core202012 { get; internal set; }
+	/// <summary>
+	/// Gets the canonical URI identifying the Format-Annotation meta-schema for the JSON Schema Draft 2020-12 specification.
+	/// </summary>
+	public static Uri FormatAnnotation202012Id { get; } = new("https://json-schema.org/draft/2020-12/meta/format-annotation");
 	/// <summary>
 	/// Gets the Format-Annotation meta-schema for the JSON Schema Draft 2020-12 specification.
 	/// </summary>
 	public static JsonSchema FormatAnnotation202012 { get; internal set; }
 	/// <summary>
+	/// Gets the canonical URI identifying the Format-Assertion meta-schema for the JSON Schema Draft 2020-12 specification.
+	/// </summary>
+	public static Uri FormatAssertion202012Id { get; } = new("https://json-schema.org/draft/2020-12/meta/format-assertion");
+	/// <summary>
 	/// Gets the Format-Assertion meta-schema for the JSON Schema Draft 2020-12 specification.
 	/// </summary>
 	public static JsonSchema FormatAssertion202012 { get; internal set; }
+	/// <summary>
+	/// Gets the canonical URI identifying the Meta-Data meta-schema for the JSON Schema Draft 2020-12 specification.
+	/// </summary>
+	public static Uri Metadata202012Id { get; } = new("https://json-schema.org/draft/2020-12/meta/meta-data");
 	/// <summary>
 	/// Gets the Meta-Data meta-schema for the JSON Schema Draft 2020-12 specification.
 	/// </summary>
 	public static JsonSchema Metadata202012 { get; internal set; }
 	/// <summary>
+	/// Gets the canonical URI identifying the Unevaluated meta-schema for the JSON Schema Draft 2020-12 specification.
+	/// </summary>
+	public static Uri Unevaluated202012Id { get; } = new("https://json-schema.org/draft/2020-12/meta/unevaluated");
+	/// <summary>
 	/// Gets the Unevaluated meta-schema for the JSON Schema Draft 2020-12 specification.
 	/// </summary>
 	public static JsonSchema Unevaluated202012 { get; internal set; }
 	/// <summary>
+	/// Gets the canonical URI identifying the Validation meta-schema for the JSON Schema Draft 2020-12 specification.
+	/// </summary>
+	public static Uri Validation202012Id { get; } = new("https://json-schema.org/draft/2020-12/meta/validation");
+	/// <summary>
 	/// Gets the Validation meta-schema for the JSON Schema Draft 2020-12 specification.
 	/// </summary>
 	public static JsonSchema Validation202012 { get; internal set; }
-	/// <summary>
-	/// Gets the meta-schema for the JSON Schema Draft 2020-12 specification.
-	/// </summary>
-	public static JsonSchema Draft202012 { get; internal set; }
 
 	/// <summary>
 	/// Gets the URI that identifies version 1 of the JSON Schema specification.

@@ -16,6 +16,7 @@ namespace Json.Schema;
 /// process schemas that conform to that draft. Dialects may differ in supported keywords, validation semantics, and
 /// handling of unknown keywords. This class is typically used to select the appropriate schema version when working
 /// with JSON Schema documents.</remarks>
+[DebuggerDisplay("{Id}")]
 public partial class Dialect
 {
 	[DebuggerDisplay("{Name} / {Priority}")]
