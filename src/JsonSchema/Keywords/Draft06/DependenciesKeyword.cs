@@ -108,10 +108,10 @@ public class DependenciesKeyword : IKeywordHandler
 			{
 				var defContext = context with
 				{
-					LocalSchema = property.Value
+					LocalSchema = property.Value,
+					RelativePath = JsonPointer.Create(property.Name)
 				};
 				var node = JsonSchema.BuildNode(defContext);
-				node.RelativePath = JsonPointer.Create(property.Name);
 				dependencies.Add(property.Name, new SchemaOrPropertyList(node));
 				subschemas.Add(node);
 			}

@@ -59,11 +59,10 @@ public class DependentSchemasKeyword : IKeywordHandler
 		{
 			var defContext = context with
 			{
-				LocalSchema = definition.Value
+				LocalSchema = definition.Value,
+				RelativePath = JsonPointer.Create(definition.Name)
 			};
-			var node = JsonSchema.BuildNode(defContext);
-			node.RelativePath = JsonPointer.Create(definition.Name);
-			subschemas.Add(node);
+			subschemas.Add(JsonSchema.BuildNode(defContext));
 		}
 
 		keyword.Subschemas = subschemas.ToArray();

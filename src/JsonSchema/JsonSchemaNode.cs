@@ -18,15 +18,19 @@ public class JsonSchemaNode
 {
 	private const string _unknownKeywordsAnnotation = "$unknownKeywords";
 
+	private static readonly Uri _trueBaseUri = new Uri("https://json-schema.org/true");
+	private static readonly JsonElement _trueElement = JsonDocument.Parse("true").RootElement;
 	internal static JsonSchemaNode True() => new()
 	{
-		BaseUri = new Uri("https://json-schema.org/true"),
-		Source = JsonDocument.Parse("true").RootElement
+		BaseUri = _trueBaseUri,
+		Source = _trueElement
 	};
+	private static readonly Uri _falseBaseUri = new Uri("https://json-schema.org/false");
+	private static readonly JsonElement _falseElement = JsonDocument.Parse("false").RootElement;
 	internal static JsonSchemaNode False() => new()
 	{
-		BaseUri = new Uri("https://json-schema.org/false"),
-		Source = JsonDocument.Parse("false").RootElement
+		BaseUri = _falseBaseUri,
+		Source = _falseElement
 	};
 
 	/// <summary>
@@ -47,11 +51,11 @@ public class JsonSchemaNode
 	public KeywordData[] Keywords { get; init; } = [];
 
 	/// <summary>
-	/// Gets or sets a JSON Pointer this subschema from the parent subschema.
+	/// Gets a JSON Pointer to this subschema from the parent subschema, excluding the intermediate keyword.
 	/// </summary>
-	/// <remarks>This schema may be just a keyword name, such as would be the case for `additionalProperties`,
-	/// or it may contain additional segments, such as `properties` also containing the property name.</remarks>
-	public JsonPointer RelativePath { get; set; }
+	public JsonPointer RelativePath { get; internal set; }
+
+	internal JsonPointer PathFromResourceRoot { get; set; }
 
 	/// <summary>
 	/// Evaluates the schema against the provided context and returns the results of the evaluation.
@@ -66,8 +70,16 @@ public class JsonSchemaNode
 	/// annotations, and details. The results reflect the evaluation of all applicable keywords in the schema.</returns>
 	public EvaluationResults Evaluate(EvaluationContext context)
 	{
-		var results = new EvaluationResults(context.EvaluationPath, BaseUri, context.InstanceLocation, context.Options);
-		if (Source.ValueKind == JsonValueKind.True) return results;
+		var baseUri = (BaseUri == _trueBaseUri || BaseUri == _falseBaseUri)
+			? context.Scope.LocalScope
+			: BaseUri;
+		baseUri = new Uri(baseUri, $"#{PathFromResourceRoot}");
+
+		var results = new EvaluationResults(context.EvaluationPath, baseUri, context.InstanceLocation, context.Options);
+		if (Source.ValueKind == JsonValueKind.True)
+		{
+			return results;
+		}
 		if (Source.ValueKind == JsonValueKind.False)
 		{
 			results.IsValid = false;
@@ -91,14 +103,20 @@ public class JsonSchemaNode
 			if (evaluation.Details is { Length: > 0 })
 			{
 				results.Details ??= [];
-				results.Details.AddRange(evaluation.Details);
+				foreach (var detail in evaluation.Details)
+				{
+					detail.Parent = results;
+					results.Details.Add(detail);
+				}
 			}
 			if (evaluation.Error is not null)
 			{
 				results.Errors ??= [];
 				results.Errors[evaluation.Keyword] = evaluation.Error!;
 			}
-			if (evaluation.Annotation is not null)
+			if (evaluation.Annotation is not null &&
+			    (context.Options.IgnoredAnnotations == null ||
+			    !context.Options.IgnoredAnnotations.Contains(keyword.Handler.GetType())))
 			{
 				results.Annotations ??= [];
 				results.Annotations[evaluation.Keyword] = evaluation.Annotation.Value;

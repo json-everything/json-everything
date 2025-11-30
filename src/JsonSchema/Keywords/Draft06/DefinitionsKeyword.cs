@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using Json.Pointer;
@@ -58,11 +59,10 @@ public class DefinitionsKeyword : IKeywordHandler
 		{
 			var defContext = context with
 			{
-				LocalSchema = definition.Value
+				LocalSchema = definition.Value,
+				RelativePath = JsonPointer.Create(definition.Name)
 			};
-			var node = JsonSchema.BuildNode(defContext);
-			node.RelativePath = JsonPointer.Create(definition.Name);
-			subschemas.Add(node);
+			subschemas.Add(JsonSchema.BuildNode(defContext));
 		}
 
 		keyword.Subschemas = subschemas.ToArray();

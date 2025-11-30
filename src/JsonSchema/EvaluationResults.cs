@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Json.More;
 using Json.Pointer;
+using Json.Schema.Keywords;
 
 namespace Json.Schema;
 
@@ -17,9 +18,7 @@ public class EvaluationResults
 	private readonly Uri _currentUri;
 	private readonly HashSet<string>? _backgroundAnnotations;
 	private readonly HashSet<string>? _ignoredAnnotations;
-	private JsonPointer? _reference;
 	private Uri? _schemaLocation;
-	private List<EvaluationResults>? _details;
 
 	/// <summary>
 	/// Indicates whether the validation passed or failed.
@@ -60,9 +59,7 @@ public class EvaluationResults
 	/// <summary>
 	/// Gets the parent result.
 	/// </summary>
-	public EvaluationResults? Parent { get; private set; }
-
-	internal bool Exclude { get; private set; }
+	public EvaluationResults? Parent { get; set; }
 
 	internal OutputFormat Format { get; private set; } = OutputFormat.Hierarchical;
 
@@ -76,7 +73,7 @@ public class EvaluationResults
 	internal EvaluationResults(JsonPointer evaluationPath, Uri schemaLocation, JsonPointer instanceLocation, EvaluationOptions options)
 	{
 		EvaluationPath = evaluationPath;
-		_currentUri = schemaLocation;
+		_schemaLocation = schemaLocation;
 		InstanceLocation = instanceLocation;
 
 		IncludeDroppedAnnotations = options.PreserveDroppedAnnotations;
@@ -101,27 +98,28 @@ public class EvaluationResults
 		_backgroundAnnotations = other._backgroundAnnotations;
 	}
 
-	internal void SetSchemaReference(JsonPointer pointer)
-	{
-		_reference = pointer;
-	}
-
 	private Uri BuildSchemaLocation()
 	{
-		var localEvaluationPathStart = 0;
-		for (var i = 0; i < EvaluationPath.SegmentCount; i++)
+		var localEvaluationPathSegmentCount = EvaluationPath.SegmentCount;
+		for (var i = EvaluationPath.SegmentCount - 1; i >= 0; i--)
 		{
 			var segment = EvaluationPath[i];
-			//if (segment == RefKeyword.Name ||
-			//    segment == RecursiveRefKeyword.Name ||
-			//    segment == DynamicRefKeyword.Name)
-			//	localEvaluationPathStart = i + 1;
+			if (segment == RefKeyword.Instance.Name ||
+			    segment == Keywords.Draft201909.RecursiveRefKeyword.Instance.Name ||
+			    segment == DynamicRefKeyword.Instance.Name)
+			{
+				localEvaluationPathSegmentCount = i + 1;
+				break;
+			}
 		}
 
-		if (_reference == null && _currentUri == Parent?._currentUri)
-			_reference = Parent._reference;
-		var fragment = _reference ?? JsonPointer.Empty;
-		fragment = fragment.Combine(EvaluationPath.GetLocal(localEvaluationPathStart));  // 2 allocations
+		JsonPointer fragment; // 2 allocations
+		if (localEvaluationPathSegmentCount == 0)
+			fragment = JsonPointer.Empty;
+		else if (localEvaluationPathSegmentCount == EvaluationPath.SegmentCount)
+			fragment = EvaluationPath;
+		else
+			fragment = EvaluationPath.GetLocal(localEvaluationPathSegmentCount);
 
 		return fragment == JsonPointer.Empty
 			? _currentUri
@@ -140,17 +138,17 @@ public class EvaluationResults
 		children.Insert(0, new EvaluationResults(this) { Parent = this });
 		Annotations?.Clear();
 		Errors?.Clear();
-		if (_details == null)
-			_details = [];
+		if (Details == null)
+			Details = [];
 		else
-			_details.Clear();
+			Details.Clear();
 		foreach (var child in children)
 		{
-			child._details?.Clear();
+			child.Details?.Clear();
 			child.Format = OutputFormat.List;
 		}
 		//_details.AddRange(children.Where(x => (x.IsValid && x.HasAnnotations) || (!x.IsValid && x.HasErrors)));
-		_details.AddRange(children);
+		Details.AddRange(children);
 		Format = OutputFormat.List;
 	}
 
@@ -170,7 +168,7 @@ public class EvaluationResults
 			{
 				toProcess.Enqueue(nestedResult);
 			}
-			current._details?.Clear();
+			current.Details?.Clear();
 		}
 
 		// we still include the root because it may have annotations
@@ -183,7 +181,7 @@ public class EvaluationResults
 	/// </summary>
 	public void ToFlag()
 	{
-		_details?.Clear();
+		Details?.Clear();
 		Annotations?.Clear();
 		Errors?.Clear();
 		Format = OutputFormat.Flag;
@@ -258,8 +256,6 @@ public class EvaluationResultsJsonConverter : WeaklyTypedJsonConverter<Evaluatio
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, EvaluationResults value, JsonSerializerOptions options)
 	{
-		if (value.Exclude) return;
-
 		writer.WriteStartObject();
 
 		writer.WriteBoolean("valid", value.IsValid);

@@ -99,7 +99,6 @@ public class AdditionalPropertiesKeyword : IKeywordHandler
 		var knownProperties = (KnownProperties) keyword.Value!;
 
 		var subschemaEvaluations = new List<EvaluationResults>();
-		var propertyNames = new HashSet<string>();
 		var subschema = keyword.Subschemas[0];
 
 		var evaluationPath = context.EvaluationPath.Combine(Name);
@@ -107,8 +106,6 @@ public class AdditionalPropertiesKeyword : IKeywordHandler
 		{
 			if (knownProperties.Properties.Contains(instance.Name)) continue;
 			if (knownProperties.PatternProperties.Any(x => x.IsMatch(instance.Name))) continue;
-
-			propertyNames.Add(instance.Name);
 
 			var itemContext = context with
 			{

@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Xml.Linq;
 using Json.More;
 using Json.Pointer;
 using Json.Schema.Keywords;
@@ -128,7 +130,7 @@ public class JsonSchema : IBaseDocument
 	public static JsonSchema Build(JsonElement root, BuildOptions? options = null, Uri? baseUri = null)
 	{
 		options ??= BuildOptions.Default;
-		var context = new BuildContext(options, root, baseUri ?? GenerateBaseUri())
+		var context = new BuildContext(options, baseUri ?? GenerateBaseUri())
 		{
 			LocalSchema = root
 		};
@@ -170,8 +172,19 @@ public class JsonSchema : IBaseDocument
 	/// <exception cref="ArgumentException">Thrown if the local schema is not a boolean or an object.</exception>
 	public static JsonSchemaNode BuildNode(BuildContext context)
 	{
-		if (context.LocalSchema.ValueKind == JsonValueKind.True) return JsonSchemaNode.True();
-		if (context.LocalSchema.ValueKind == JsonValueKind.False) return JsonSchemaNode.False();
+		if (context.LocalSchema.ValueKind == JsonValueKind.True)
+		{
+			var trueNode = JsonSchemaNode.True();
+			trueNode.RelativePath = context.RelativePath;
+			return trueNode;
+		}
+
+		if (context.LocalSchema.ValueKind == JsonValueKind.False)
+		{
+			var falseNode = JsonSchemaNode.False();
+			falseNode.RelativePath = context.RelativePath;
+			return falseNode;
+		}
 
 		if (context.LocalSchema.ValueKind != JsonValueKind.Object)
 			throw new ArgumentException($"Schemas may only booleans or objects.  Received {context.LocalSchema.ValueKind}");
@@ -200,20 +213,25 @@ public class JsonSchema : IBaseDocument
 			{
 				// can't set the dialect from within the keyword because context is a struct
 				var uri = (Uri)data.Value!;
-				context.Dialect = context.Options.DialectRegistry.Get(uri, context.Options.SchemaRegistry, context.Options.VocabularyRegistry);
+				context.Dialect = context.Options.DialectRegistry.Get(uri, context.Options.SchemaRegistry, context.Options.VocabularyRegistry, context.Dialect);
 			}
-			
-			handler.BuildSubschemas(data, context);
-
-			if (handler is IdKeyword)
+			else if (handler is IdKeyword && !onlyHandleRef)
 			{
-				if (!onlyHandleRef)
-				{
-					var newUri = new Uri(context.BaseUri, (Uri)data.Value!);
-					context.BaseUri = newUri;
-				}
+				context.PathFromResourceRoot = JsonPointer.Empty;
+				context.BaseUri = new Uri(context.BaseUri, (Uri)data.Value!);
 			}
-				
+
+			var keywordContext = context with
+			{
+				PathFromResourceRoot = context.PathFromResourceRoot.Combine(keyword)
+			};
+			handler.BuildSubschemas(data, keywordContext);
+
+			foreach (var subschema in data.Subschemas)
+			{
+				subschema.PathFromResourceRoot = keywordContext.PathFromResourceRoot.Combine(subschema.RelativePath);
+			}
+
 			keywordData.Add(data);
 		}
 
@@ -235,7 +253,8 @@ public class JsonSchema : IBaseDocument
 		{
 			BaseUri = context.BaseUri,
 			Source = context.LocalSchema,
-			Keywords = keywordData.OrderBy(x => x.EvaluationOrder).ToArray()
+			Keywords = keywordData.OrderBy(x => x.EvaluationOrder).ToArray(),
+			RelativePath = context.RelativePath
 		};
 
 		var oldIdKeyword = keywordData.FirstOrDefault(x => x.Handler is Keywords.Draft06.IdKeyword);
@@ -341,7 +360,22 @@ public class JsonSchema : IBaseDocument
 			Scope = new(BaseUri)
 		};
 
-		return Root.Evaluate(context);
+		var results = Root.Evaluate(context);
+		switch (options.OutputFormat)
+		{
+			case OutputFormat.Flag:
+				results.ToFlag();
+				break;
+			case OutputFormat.List:
+				results.ToList();
+				break;
+			case OutputFormat.Hierarchical:
+				break;
+			default:
+				throw new ArgumentOutOfRangeException("options.OutputFormat");
+		}
+
+		return results;
 	}
 
 	/// <summary>
@@ -380,7 +414,8 @@ public class JsonSchema : IBaseDocument
 				var newContext = context with
 				{
 					BaseUri = BaseUri,
-					LocalSchema = localSchema.Value
+					LocalSchema = localSchema.Value,
+					PathFromResourceRoot = pointer
 				};
 				subschema = BuildNode(newContext);
 			}

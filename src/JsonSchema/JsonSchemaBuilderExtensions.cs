@@ -205,8 +205,8 @@ public static class JsonSchemaBuilderExtensions
 		builder.Add("dependencies", new JsonObject(deps
 			.ToDictionary(x => x.Key,
 				x => x.Value.Requirements is not null
-					? (JsonNode?)new JsonArray(x.Value.Requirements)
-					: x.Value.Schema!.Keywords)));
+					? JsonSerializer.SerializeToNode(x.Value.Requirements, JsonSchemaSerializerContext.Default.StringArray)
+					: x.Value.Schema!.Keywords.DeepClone())));
 		return builder;
 	}
 
@@ -221,8 +221,8 @@ public static class JsonSchemaBuilderExtensions
 		builder.Add("dependencies", new JsonObject(deps
 			.ToDictionary(x => x.name,
 				x => x.dep.Requirements is not null
-					? (JsonNode?)new JsonArray(x.dep.Requirements)
-					: x.dep.Schema!.Keywords)));
+					? JsonSerializer.SerializeToNode(x.dep.Requirements, JsonSchemaSerializerContext.Default.StringArray)
+					: x.dep.Schema!.Keywords.DeepClone())));
 		return builder;
 	}
 

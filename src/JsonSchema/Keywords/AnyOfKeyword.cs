@@ -67,10 +67,10 @@ public class AnyOfKeyword : IKeywordHandler
 		{
 			var defContext = context with
 			{
-				LocalSchema = definition
+				LocalSchema = definition,
+				RelativePath = JsonPointer.Create(index)
 			};
 			var node = JsonSchema.BuildNode(defContext);
-			node.RelativePath = JsonPointer.Create(index);
 
 			subschemas.Add(node);
 			index++;
@@ -92,10 +92,9 @@ public class AnyOfKeyword : IKeywordHandler
 		var i = 0;
 		foreach (var subschema in keyword.Subschemas)
 		{
-			var evaluationPath = context.EvaluationPath.Combine(i);
 			var itemContext = context with
 			{
-				EvaluationPath = evaluationPath.Combine(Name, i)
+				EvaluationPath = context.EvaluationPath.Combine(Name, i)
 			};
 
 			subschemaEvaluations.Add(subschema.Evaluate(itemContext));

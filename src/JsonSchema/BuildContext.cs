@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text.Json;
+using Json.Pointer;
 
 namespace Json.Schema;
 
@@ -13,15 +14,16 @@ namespace Json.Schema;
 public struct BuildContext
 {
 	public BuildOptions Options { get; }
-	public JsonElement RootSchema { get; }
 	public Uri BaseUri { get; set; }
 	public JsonElement LocalSchema { get; set; }
 	public Dialect Dialect { get; set; }
+	public JsonPointer RelativePath { get; set; }
 
-	internal BuildContext(BuildOptions options, JsonElement rootSchema, Uri baseUri)
+	internal JsonPointer PathFromResourceRoot { get; set; } = JsonPointer.Empty;
+
+	internal BuildContext(BuildOptions options, Uri baseUri)
 	{
 		Options = options;
-		RootSchema = rootSchema;
 		BaseUri = baseUri;
 		Dialect = Options.Dialect;
 	}

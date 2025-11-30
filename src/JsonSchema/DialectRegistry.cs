@@ -37,7 +37,7 @@ public class DialectRegistry
 		_dialects.Remove(dialectId);
 	}
 
-	internal Dialect Get(Uri uri, SchemaRegistry schemaRegistry, VocabularyRegistry vocabularyRegistry)
+	internal Dialect Get(Uri uri, SchemaRegistry schemaRegistry, VocabularyRegistry vocabularyRegistry, Dialect basis)
 	{
 		var dialect = _dialects.GetValueOrDefault(uri) ??
 			Global._dialects.GetValueOrDefault(uri);
@@ -69,7 +69,12 @@ public class DialectRegistry
 			keywords.AddRange(vocab.Keywords);
 		}
 
-		dialect = new Dialect(keywords){Id = uri};
+		dialect = new Dialect(keywords)
+		{
+			Id = uri,
+			AllowUnknownKeywords = basis.AllowUnknownKeywords,
+			RefIgnoresSiblingKeywords = basis.RefIgnoresSiblingKeywords
+		};
 		_dialects[uri] = dialect;
 
 		return dialect;

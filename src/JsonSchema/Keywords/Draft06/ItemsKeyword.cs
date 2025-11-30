@@ -79,10 +79,10 @@ public class ItemsKeyword : IKeywordHandler
 			{
 				var defContext = context with
 				{
-					LocalSchema = definition
+					LocalSchema = definition,
+					RelativePath = JsonPointer.Create(index)
 				};
 				var node = JsonSchema.BuildNode(defContext);
-				node.RelativePath = JsonPointer.Create(index);
 
 				subschemas.Add(node);
 				index++;

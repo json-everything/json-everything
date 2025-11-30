@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json.Nodes;
 
 namespace Json.Schema;
 
@@ -13,7 +12,7 @@ namespace Json.Schema;
 public class SchemaOrPropertyList
 {
 	internal JsonSchemaBuilder? Schema { get; }
-	internal JsonArray? Requirements { get; }
+	internal string[]? Requirements { get; }
 
 	private SchemaOrPropertyList(JsonSchemaBuilder schema)
 	{
@@ -22,7 +21,7 @@ public class SchemaOrPropertyList
 
 	private SchemaOrPropertyList(IEnumerable<string> requirements)
 	{
-		Requirements = new JsonArray(requirements.Select(x => (JsonNode?)x).ToArray());
+		Requirements = requirements.ToArray();
 	}
 
 	/// <summary>
