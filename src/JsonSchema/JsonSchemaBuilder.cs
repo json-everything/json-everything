@@ -11,6 +11,7 @@ namespace Json.Schema;
 /// </summary>
 public class JsonSchemaBuilder
 {
+	private readonly BuildOptions? _buildOptions;
 	internal readonly JsonNode Keywords = new JsonObject();
 
 	public static JsonSchemaBuilder Empty { get; } = new();
@@ -23,7 +24,10 @@ public class JsonSchemaBuilder
 	/// <remarks>Use this constructor to create a new JsonSchemaBuilder for defining and constructing JSON schema
 	/// objects. The builder can be configured with various schema properties and constraints before generating the final
 	/// schema.</remarks>
-	public JsonSchemaBuilder(){}
+	public JsonSchemaBuilder(BuildOptions? buildOptions = null)
+	{
+		_buildOptions = buildOptions;
+	}
 
 	private JsonSchemaBuilder(bool value)
 	{
@@ -111,22 +115,34 @@ public class JsonSchemaBuilder
 	}
 
 	/// <summary>
-	/// Builds the schema.
+	/// Builds a JSON schema from the configured keywords and returns a corresponding <see cref="JsonSchema"/> instance.
 	/// </summary>
-	/// <returns>A <see cref="JsonSchema"/>.</returns>
+	/// <param name="options">(Optional) Build options that control schema generation behavior.  Overrides build options
+	/// passed into the constructor.</param>
+	/// <param name="baseUri">(Optional) A base URI to associate with the generated schema. If specified, it is used to resolve relative
+	/// references within the schema.</param>
+	/// <returns>A <see cref="JsonSchema"/> instance representing the constructed schema based on the provided options and base URI.</returns>
 	public JsonSchema Build(BuildOptions? options = null, Uri? baseUri = null)
 	{
 		var root = JsonSerializer.SerializeToElement(Keywords, JsonSchemaSerializerContext.Default.JsonNode);
 
-		return JsonSchema.Build(root, options, baseUri);
+		return JsonSchema.Build(root, options ?? _buildOptions, baseUri);
 	}
 
 	/// <summary>
-	/// For convenience, implicitly calls <see cref="Build()"/>.
+	/// For convenience, implicitly calls <see cref="Build(BuildOptions, Uri)"/>.
 	/// </summary>
 	/// <returns>A <see cref="JsonSchema"/>.</returns>
 	public static implicit operator JsonSchema(JsonSchemaBuilder builder)
 	{
 		return builder.Build();
 	}
+
+	/// <summary>
+	/// Defines an implicit conversion from a Boolean value to a JsonSchemaBuilder representing either the 'true' or
+	/// 'false' JSON Schema.
+	/// </summary>
+	/// <param name="schema">A Boolean value indicating whether to create a schema that always validates (<see langword="true"/>) or never
+	/// validates (<see langword="false"/>).</param>
+	public static implicit operator JsonSchemaBuilder(bool schema) => schema ? True : False;
 }

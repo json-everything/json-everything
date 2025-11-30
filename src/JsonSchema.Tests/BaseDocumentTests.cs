@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Text.Json;
-using System.Text.Json.Nodes;
-using FluentAssertions;
 using NUnit.Framework;
 
 namespace Json.Schema.Tests;
@@ -11,31 +9,39 @@ public class BaseDocumentTests
 	[Test]
 	public void SchemasEmbeddedInJsonCanBeReferenced_Valid()
 	{
-		JsonSchema targetSchema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions
+		{
+			SchemaRegistry = new()
+		};
+
+		JsonSchema targetSchema = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.Integer);
 
-		var json = new JsonObject
-		{
-			["prop1"] = "foo",
-			["prop2"] = new JsonArray
-			(
-				"bar",
-				JsonSerializer.SerializeToNode(targetSchema, TestEnvironment.SerializerOptions)
-			)
-		};
+		var schemaAsText = JsonSerializer.Serialize(targetSchema, TestEnvironment.SerializerOptions);
+
+		var jsonText = $$"""
+						 {
+						   "prop1": "foo",
+						   "prop2": [
+						     "bar",
+						     {{schemaAsText}}
+						   ]
+						 }
+						 """;
+		var json = JsonDocument.Parse(jsonText).RootElement;
 
 		var options = new EvaluationOptions
 		{
 			OutputFormat = OutputFormat.List
 		};
 
-		var jsonBaseDoc = new JsonNodeBaseDocument(json, new Uri("http://localhost:1234/doc"));
-		options.SchemaRegistry.Register(jsonBaseDoc);
+		var jsonBaseDoc = new JsonElementBaseDocument(json, new Uri("http://localhost:1234/doc"));
+		buildOptions.SchemaRegistry.Register(jsonBaseDoc);
 
-		JsonSchema subjectSchema = new JsonSchemaBuilder()
+		JsonSchema subjectSchema = new JsonSchemaBuilder(buildOptions)
 			.Ref("http://localhost:1234/doc#/prop2/1");
 
-		JsonNode instance = 42;
+		var instance = JsonDocument.Parse("42").RootElement;
 
 		var result = subjectSchema.Evaluate(instance, options);
 
@@ -45,31 +51,39 @@ public class BaseDocumentTests
 	[Test]
 	public void SchemasEmbeddedInJsonCanBeReferenced_Invalid()
 	{
-		JsonSchema targetSchema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions
+		{
+			SchemaRegistry = new()
+		};
+
+		JsonSchema targetSchema = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.Integer);
 
-		var json = new JsonObject
-		{
-			["prop1"] = "foo",
-			["prop2"] = new JsonArray
-			(
-				"bar",
-				JsonSerializer.SerializeToNode(targetSchema, TestEnvironment.SerializerOptions)
-			)
-		};
+		var schemaAsText = JsonSerializer.Serialize(targetSchema, TestEnvironment.SerializerOptions);
+
+		var jsonText = $$"""
+						 {
+						   "prop1": "foo",
+						   "prop2": [
+						     "bar",
+						     {{schemaAsText}}
+						   ]
+						 }
+						 """;
+		var json = JsonDocument.Parse(jsonText).RootElement;
 
 		var options = new EvaluationOptions
 		{
 			OutputFormat = OutputFormat.List
 		};
 
-		var jsonBaseDoc = new JsonNodeBaseDocument(json, new Uri("http://localhost:1234/doc"));
-		options.SchemaRegistry.Register(jsonBaseDoc);
+		var jsonBaseDoc = new JsonElementBaseDocument(json, new Uri("http://localhost:1234/doc"));
+		buildOptions.SchemaRegistry.Register(jsonBaseDoc);
 
-		JsonSchema subjectSchema = new JsonSchemaBuilder()
+		JsonSchema subjectSchema = new JsonSchemaBuilder(buildOptions)
 			.Ref("http://localhost:1234/doc#/prop2/1");
 
-		JsonNode instance = "baz"!;
+		var instance = JsonDocument.Parse("\"baz\"").RootElement;
 
 		var result = subjectSchema.Evaluate(instance, options);
 
@@ -79,35 +93,39 @@ public class BaseDocumentTests
 	[Test]
 	public void ReferencesFromWithinEmbeddedSchemas()
 	{
-		var json = new JsonObject
+		var buildOptions = new BuildOptions
 		{
-			["prop1"] = "foo",
-			["prop2"] = new JsonArray
-			(
-				"bar",
-				new JsonObject
-				{
-					["type"] = "integer"
-				}
-			),
-			["prop3"] = new JsonObject
-			{
-				["$ref"] = "#/prop2/1"
-			}
+			SchemaRegistry = new()
 		};
+
+		var jsonText = """
+		               {
+		                 "prop1": "foo",
+		                 "prop2": [
+		                   "bar",
+		                   {
+		                     "type": "integer"
+		                   }
+		                 ],
+		                 "prop3": {
+		                   "$ref": "#/prop2/1"
+		                 }
+		               }
+		               """;
+		var json = JsonDocument.Parse(jsonText).RootElement;
 
 		var options = new EvaluationOptions
 		{
 			OutputFormat = OutputFormat.List
 		};
 
-		var jsonBaseDoc = new JsonNodeBaseDocument(json, new Uri("http://localhost:1234/doc"));
-		options.SchemaRegistry.Register(jsonBaseDoc);
+		var jsonBaseDoc = new JsonElementBaseDocument(json, new Uri("http://localhost:1234/doc"));
+		buildOptions.SchemaRegistry.Register(jsonBaseDoc);
 
-		JsonSchema subjectSchema = new JsonSchemaBuilder()
+		JsonSchema subjectSchema = new JsonSchemaBuilder(buildOptions)
 			.Ref("http://localhost:1234/doc#/prop3");
 
-		JsonNode instance = 42;
+		var instance = JsonDocument.Parse("42").RootElement;
 
 		var result = subjectSchema.Evaluate(instance, options);
 
@@ -117,42 +135,43 @@ public class BaseDocumentTests
 	[Test]
 	public void NestedReferencesFromWithinEmbeddedSchemas()
 	{
-		var json = new JsonObject
+		var buildOptions = new BuildOptions
 		{
-			["prop1"] = "foo",
-			["prop2"] = new JsonArray
-			(
-				"bar",
-				new JsonObject
-				{
-					["type"] = "integer"
-				}
-			),
-			["prop3"] = new JsonObject
-			{
-				["properties"] = new JsonObject
-				{
-					["data"] = new JsonObject
-					{
-						["$ref"] = "#/prop2/1"
-					}
-
-				}
-			}
+			SchemaRegistry = new()
 		};
+
+		var jsonText = """
+		               {
+		                 "prop1": "foo",
+		                 "prop2": [
+		                   "bar",
+		                   {
+		                     "type": "integer"
+		                   }
+		                 ],
+		                 "prop3": {
+		                   "properties": {
+		                     "data": {
+		                       "$ref": "#/prop2/1"
+		                     }
+		                   }
+		                 }
+		               }
+		               """;
+		var json = JsonDocument.Parse(jsonText).RootElement;
 
 		var options = new EvaluationOptions
 		{
 			OutputFormat = OutputFormat.List
 		};
 
-		var jsonBaseDoc = new JsonNodeBaseDocument(json, new Uri("http://localhost:1234/doc"));
-		options.SchemaRegistry.Register(jsonBaseDoc);
+		var jsonBaseDoc = new JsonElementBaseDocument(json, new Uri("http://localhost:1234/doc"));
+		buildOptions.SchemaRegistry.Register(jsonBaseDoc);
 
-		JsonSchema subjectSchema = new JsonSchemaBuilder()
+		JsonSchema subjectSchema = new JsonSchemaBuilder(buildOptions)
 			.Ref("http://localhost:1234/doc#/prop3");
 
-		JsonNode instance = new JsonObject { ["data"] = 42 };
+		var instance = JsonDocument.Parse("""{ "data": 42 }""").RootElement;
 
 		var result = subjectSchema.Evaluate(instance, options);
 
@@ -162,44 +181,46 @@ public class BaseDocumentTests
 	[Test]
 	public void ReferenceEmbeddedSchemaStartingWithOtherEmbeddedSchema()
 	{
-		var subjectSchemaJson = new JsonObject
+		// TODO: having an issue with this.  Starting at /prop3 automatically generates
+		//       an ID for that subschema, causing the $ref to resolve to that subschema
+		//       location instead of the document root.
+		var buildOptions = new BuildOptions
 		{
-			["properties"] = new JsonObject
-			{
-				["data"] = new JsonObject
-				{
-					["$ref"] = "#/prop2/1"
-				}
-
-			}
+			SchemaRegistry = new()
 		};
 
-		var json = new JsonObject
-		{
-			["prop1"] = "foo",
-			["prop2"] = new JsonArray
-			(
-				"bar",
-				new JsonObject
-				{
-					["type"] = "integer"
-				}
-			),
-			["prop3"] = subjectSchemaJson
-		};
+		var jsonText = """
+		               {
+		                 "prop1": "foo",
+		                 "prop2": [
+		                   "bar",
+		                   {
+		                     "type": "integer"
+		                   }
+		                 ],
+		                 "prop3": {
+		                   "properties": {
+		                     "data": {
+		                       "$ref": "#/prop2/1"
+		                     }
+		                   }
+		                 }
+		               }
+		               """;
+		var json = JsonDocument.Parse(jsonText).RootElement;
+		var subjectSchemaJson = json.GetProperty("prop3");
 
 		var options = new EvaluationOptions
 		{
 			OutputFormat = OutputFormat.List
 		};
 
-		var jsonBaseDoc = new JsonNodeBaseDocument(json, new Uri("http://localhost:1234/doc"));
-		options.SchemaRegistry.Register(jsonBaseDoc);
+		var jsonBaseDoc = new JsonElementBaseDocument(json, new Uri("http://localhost:1234/doc"));
+		buildOptions.SchemaRegistry.Register(jsonBaseDoc);
 
-		var subjectSchema = subjectSchemaJson.Deserialize(TestSerializerContext.Default.JsonSchema)!;
-		subjectSchema.BaseUri = jsonBaseDoc.BaseUri;
+		var subjectSchema = JsonSchema.Build(subjectSchemaJson, buildOptions);
 
-		JsonNode instance = new JsonObject { ["data"] = 42 };
+		var instance = JsonDocument.Parse("""{ "data": 42 }""").RootElement;
 
 		var result = subjectSchema.Evaluate(instance, options);
 

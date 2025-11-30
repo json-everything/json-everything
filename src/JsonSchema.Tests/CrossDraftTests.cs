@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Text.Json.Nodes;
+using System.Text.Json;
 using NUnit.Framework;
 
 namespace Json.Schema.Tests;
@@ -10,21 +10,20 @@ public class CrossDraftTests
 	{
 		get
 		{
-			yield return new TestCaseData(new JsonObject
-			{
-				["foo"] = new JsonArray("string", 42)
-			}, true);
-			yield return new TestCaseData(new JsonObject
-			{
-				["foo"] = new JsonArray("string", "other string")
-			}, false);
+			yield return new TestCaseData(JsonDocument.Parse("""{ "foo": ["string", 42] }""").RootElement, true);
+			yield return new TestCaseData(JsonDocument.Parse("""{ "foo": ["string", "other string"] }""").RootElement, false);
 		}
 	}
 
 	[TestCaseSource(nameof(ArrayItemsIsAllowedForDraft7Cases))]
-	public void ArrayItemsIsAllowedForDraft7(JsonNode instance, bool valid)
+	public void ArrayItemsIsAllowedForDraft7(JsonElement instance, bool valid)
 	{
-		var schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions
+		{
+			SchemaRegistry = new()
+		};
+
+		var schema = new JsonSchemaBuilder(buildOptions)
 			.Schema(MetaSchemas.Draft202012Id)
 			.Id("base")
 			.Type(SchemaValueType.Object)
@@ -36,11 +35,10 @@ public class CrossDraftTests
 					.Schema(MetaSchemas.Draft7Id)
 					.Id("foo")
 					.Type(SchemaValueType.Array)
-					.Items(new JsonSchema[]
-					{
+					.Items([
 						new JsonSchemaBuilder().Type(SchemaValueType.String),
 						new JsonSchemaBuilder().Type(SchemaValueType.Integer)
-					})
+					])
 				)
 			)
 			.Build();
@@ -58,11 +56,19 @@ public class CrossDraftTests
 			result.AssertInvalid();
 	}
 
-	[TestCase(SpecVersion.Draft6)]
-	[TestCase(SpecVersion.Draft7)]
-	public void ContainsShouldIgnoreMinContainsForEarlierDrafts(SpecVersion version)
+	[TestCase("http://json-schema.org/draft-06/schema#")]
+	[TestCase("http://json-schema.org/draft-07/schema#")]
+	public void ContainsShouldIgnoreMinContainsForEarlierDrafts(string metaSchemaId)
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var dialect = metaSchemaId switch
+		{
+			"http://json-schema.org/draft-06/schema#" => Dialect.Draft06,
+			"http://json-schema.org/draft-07/schema#" => Dialect.Draft07,
+			_ => throw new System.ArgumentOutOfRangeException(nameof(metaSchemaId), metaSchemaId, null)
+		};
+		var buildOptions = new BuildOptions { Dialect = dialect };
+
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.Array)
 			.Items(new JsonSchemaBuilder()
 				.Type(SchemaValueType.Integer)
@@ -71,10 +77,9 @@ public class CrossDraftTests
 			// Introduced with Draft 2019-09
 			.MinContains(2);
 
-		var instance = new JsonArray(2, 3, 4, 5);
-		var options = new EvaluationOptions { EvaluateAs = version };
+		var instance = JsonDocument.Parse("[2, 3, 4, 5]").RootElement;
 
-		var results = schema.Evaluate(instance, options);
+		var results = schema.Evaluate(instance);
 
 		results.AssertValid();
 	}

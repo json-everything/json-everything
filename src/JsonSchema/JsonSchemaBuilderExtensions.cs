@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
+using Json.Schema.Keywords;
 
 namespace Json.Schema;
 
@@ -281,7 +282,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder Deprecated(this JsonSchemaBuilder builder, bool deprecated)
 	{
-		builder.Add("deprecated", deprecated);
+		builder.Add("deprecated", (JsonNode)deprecated);
 		return builder;
 	}
 
@@ -848,7 +849,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder ReadOnly(this JsonSchemaBuilder builder, bool value)
 	{
-		builder.Add("readOnly", value);
+		builder.Add("readOnly", (JsonNode)value);
 		return builder;
 	}
 
@@ -863,7 +864,7 @@ public static class JsonSchemaBuilderExtensions
 	/// </remarks>
 	public static JsonSchemaBuilder RecursiveAnchor(this JsonSchemaBuilder builder, bool value = true)
 	{
-		builder.Add("$recursiveAnchor", value);
+		builder.Add("$recursiveAnchor", (JsonNode)value);
 		return builder;
 	}
 
@@ -1091,70 +1092,70 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder UniqueItems(this JsonSchemaBuilder builder, bool value)
 	{
-		builder.Add("uniqueItems", value);
+		builder.Add("uniqueItems", (JsonNode)value);
 		return builder;
 	}
 
-	///// <summary>
-	///// Adds a keyword that's not recognized by any vocabulary - extra data - to the schema.
-	///// </summary>
-	///// <param name="builder">The builder.</param>
-	///// <param name="name">The keyword name.</param>
-	///// <param name="value">The value.</param>
-	///// <returns>The builder.</returns>
-	//public static JsonSchemaBuilder Unrecognized(this JsonSchemaBuilder builder, string name, JsonNode? value)
-	//{
-	//	builder.Add(new UnrecognizedKeyword(name, value));
-	//	return builder;
-	//}
+	/// <summary>
+	/// Adds a keyword that's not recognized by any vocabulary - extra data - to the schema.
+	/// </summary>
+	/// <param name="builder">The builder.</param>
+	/// <param name="name">The keyword name.</param>
+	/// <param name="value">The value.</param>
+	/// <returns>The builder.</returns>
+	public static JsonSchemaBuilder Unrecognized(this JsonSchemaBuilder builder, string name, JsonNode? value)
+	{
+		builder.Add(name, value);
+		return builder;
+	}
 
-	///// <summary>
-	///// Add an `$vocabulary` keyword.
-	///// </summary>
-	///// <param name="builder">The builder.</param>
-	///// <param name="vocabs">The vocabulary callouts.</param>
-	///// <returns>The builder.</returns>
-	//public static JsonSchemaBuilder Vocabulary(this JsonSchemaBuilder builder, params (Uri id, bool required)[] vocabs)
-	//{
-	//	builder.Add(new VocabularyKeyword(vocabs.ToDictionary(x => x.id, x => x.required)));
-	//	return builder;
-	//}
+	/// <summary>
+	/// Add an `$vocabulary` keyword.
+	/// </summary>
+	/// <param name="builder">The builder.</param>
+	/// <param name="vocabs">The vocabulary callouts.</param>
+	/// <returns>The builder.</returns>
+	public static JsonSchemaBuilder Vocabulary(this JsonSchemaBuilder builder, params (Uri id, bool required)[] vocabs)
+	{
+		builder.Add("$vocabulary", new JsonObject(vocabs.ToDictionary(x => x.id.OriginalString, x => (JsonNode?)x.required)));
+		return builder;
+	}
 
-	///// <summary>
-	///// Add an `$vocabulary` keyword.
-	///// </summary>
-	///// <param name="builder">The builder.</param>
-	///// <param name="vocabs">The vocabulary callouts.</param>
-	///// <returns>The builder.</returns>
-	//public static JsonSchemaBuilder Vocabulary(this JsonSchemaBuilder builder, params (string id, bool required)[] vocabs)
-	//{
-	//	builder.Add(new VocabularyKeyword(vocabs.ToDictionary(x => new Uri(x.id, UriKind.Absolute), x => x.required)));
-	//	return builder;
-	//}
+	/// <summary>
+	/// Add an `$vocabulary` keyword.
+	/// </summary>
+	/// <param name="builder">The builder.</param>
+	/// <param name="vocabs">The vocabulary callouts.</param>
+	/// <returns>The builder.</returns>
+	public static JsonSchemaBuilder Vocabulary(this JsonSchemaBuilder builder, params (string id, bool required)[] vocabs)
+	{
+		builder.Add("$vocabulary", new JsonObject(vocabs.ToDictionary(x => x.id, x => (JsonNode?)x.required)));
+		return builder;
+	}
 
-	///// <summary>
-	///// Add an `$vocabulary` keyword.
-	///// </summary>
-	///// <param name="builder">The builder.</param>
-	///// <param name="vocabs">The vocabulary callouts.</param>
-	///// <returns>The builder.</returns>
-	//public static JsonSchemaBuilder Vocabulary(this JsonSchemaBuilder builder, IReadOnlyDictionary<Uri, bool> vocabs)
-	//{
-	//	builder.Add(new VocabularyKeyword(vocabs));
-	//	return builder;
-	//}
+	/// <summary>
+	/// Add an `$vocabulary` keyword.
+	/// </summary>
+	/// <param name="builder">The builder.</param>
+	/// <param name="vocabs">The vocabulary callouts.</param>
+	/// <returns>The builder.</returns>
+	public static JsonSchemaBuilder Vocabulary(this JsonSchemaBuilder builder, IReadOnlyDictionary<Uri, bool> vocabs)
+	{
+		builder.Add("$vocabulary", new JsonObject(vocabs.ToDictionary(x => x.Key.OriginalString, x => (JsonNode?)x.Value)));
+		return builder;
+	}
 
-	///// <summary>
-	///// Add an `$vocabulary` keyword.
-	///// </summary>
-	///// <param name="builder">The builder.</param>
-	///// <param name="vocabs">The vocabulary callouts.</param>
-	///// <returns>The builder.</returns>
-	//public static JsonSchemaBuilder Vocabulary(this JsonSchemaBuilder builder, IReadOnlyDictionary<string, bool> vocabs)
-	//{
-	//	builder.Add(new VocabularyKeyword(vocabs.ToDictionary(x => new Uri(x.Key, UriKind.Absolute), x => x.Value)));
-	//	return builder;
-	//}
+	/// <summary>
+	/// Add an `$vocabulary` keyword.
+	/// </summary>
+	/// <param name="builder">The builder.</param>
+	/// <param name="vocabs">The vocabulary callouts.</param>
+	/// <returns>The builder.</returns>
+	public static JsonSchemaBuilder Vocabulary(this JsonSchemaBuilder builder, IReadOnlyDictionary<string, bool> vocabs)
+	{
+		builder.Add("$vocabulary", new JsonObject(vocabs.ToDictionary(x => x.Key, x => (JsonNode?)x.Value)));
+		return builder;
+	}
 
 	/// <summary>
 	/// Add a `writeOnly` keyword.
@@ -1164,7 +1165,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder WriteOnly(this JsonSchemaBuilder builder, bool value)
 	{
-		builder.Add("writeOnly", value);
+		builder.Add("writeOnly", (JsonNode)value);
 		return builder;
 	}
 

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.Pointer;
@@ -17,6 +18,7 @@ namespace Json.Schema;
 [JsonSerializable(typeof(bool))]
 [JsonSerializable(typeof(int[]))]
 [JsonSerializable(typeof(long))]
+[JsonSerializable(typeof(JsonElement))]
 [JsonSerializable(typeof(JsonNode))]
 [JsonSerializable(typeof(Dictionary<string, string[]>))]
 [JsonSerializable(typeof(HashSet<string>))]

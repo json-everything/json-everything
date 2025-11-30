@@ -4,6 +4,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Serialization;
+using Json.More;
 using Json.Pointer;
 using Json.Schema.Keywords;
 
@@ -15,6 +17,7 @@ namespace Json.Schema;
 /// Represents a JSON Schema.
 /// </summary>
 [DebuggerDisplay("{ToDebugString()}")]
+[JsonConverter(typeof(JsonSchemaJsonConverter))]
 public class JsonSchema : IBaseDocument
 {
 	private readonly SchemaRegistry _schemaRegistry;
@@ -41,7 +44,7 @@ public class JsonSchema : IBaseDocument
 	/// It may change after the initial evaluation based on whether the schema contains an `$id` keyword
 	/// or is a child of another schema.
 	/// </remarks>
-	public Uri BaseUri { get; set; }
+	public Uri BaseUri { get; private set; }
 
 	public JsonSchemaNode Root { get; }
 
@@ -65,7 +68,7 @@ public class JsonSchema : IBaseDocument
 	}
 
 	/// <summary>
-	/// Loads text from a file and deserializes a <see cref="JsonSchema"/>.
+	/// Loads text from a file and builds a <see cref="JsonSchema"/>.
 	/// </summary>
 	/// <param name="fileName">The filename to load, URL-decoded.</param>
 	/// <param name="options">(optional) Serializer options.</param>
@@ -92,17 +95,18 @@ public class JsonSchema : IBaseDocument
 	}
 
 	/// <summary>
-	/// Deserializes a <see cref="JsonSchema"/> from text.
+	/// Builds a <see cref="JsonSchema"/> from text.
 	/// </summary>
 	/// <param name="jsonText">The text to parse.</param>
-	/// <param name="options">Serializer options.</param>
+	/// <param name="buildOptions">(optional) The build options.</param>
 	/// <param name="baseUri">(optional) The base URI for this schema.</param>
+	/// <param name="jsonOptions">(optional) Options for parsing a <see cref="JsonDocument"/>.</param>
 	/// <returns>A new <see cref="JsonSchema"/>.</returns>
 	/// <exception cref="JsonException">Could not deserialize a portion of the schema.</exception>
-	public static JsonSchema FromText(string jsonText, BuildOptions? options = null, Uri? baseUri = null)
+	public static JsonSchema FromText(string jsonText, BuildOptions? buildOptions = null, Uri? baseUri = null, JsonDocumentOptions? jsonOptions = null)
 	{
-		var element = JsonDocument.Parse(jsonText).RootElement;
-		return Build(element, options, baseUri);
+		var element = JsonDocument.Parse(jsonText, jsonOptions ?? default).RootElement;
+		return Build(element, buildOptions, baseUri);
 	}
 
 	private static Uri GenerateBaseUri() => new($"https://json-everything.lib/{Guid.NewGuid():N}");
@@ -194,6 +198,7 @@ public class JsonSchema : IBaseDocument
 			};
 			if (handler is SchemaKeyword)
 			{
+				// can't set the dialect from within the keyword because context is a struct
 				var uri = (Uri)data.Value!;
 				context.Dialect = context.Options.DialectRegistry.Get(uri, context.Options.SchemaRegistry, context.Options.VocabularyRegistry);
 			}
@@ -399,5 +404,19 @@ public class JsonSchema : IBaseDocument
 
 		var idKeyword = Root.Keywords.SingleOrDefault(x => x.Handler is IdKeyword);
 		return idKeyword?.RawValue.GetString() ?? BaseUri.OriginalString;
+	}
+}
+
+public class JsonSchemaJsonConverter : JsonConverter<JsonSchema>
+{
+	public override JsonSchema? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+	{
+		var element = options.Read(ref reader, JsonSchemaSerializerContext.Default.JsonElement);
+		return JsonSchema.Build(element);
+	}
+
+	public override void Write(Utf8JsonWriter writer, JsonSchema value, JsonSerializerOptions options)
+	{
+		options.Write(writer, value.Root.Source, JsonSchemaSerializerContext.Default.JsonElement);
 	}
 }

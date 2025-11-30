@@ -9,9 +9,9 @@ namespace Json.Schema;
 /// <summary>
 /// Provides a general <see cref="IBaseDocument"/> implementation for a <see cref="JsonNode"/>.
 /// </summary>
-public class JsonNodeBaseDocument : IBaseDocument
+public class JsonElementBaseDocument : IBaseDocument
 {
-	private readonly JsonElement _node;
+	private readonly JsonElement _root;
 	private readonly ConcurrentDictionary<JsonPointer, JsonSchemaNode?> _foundSubschemas;
 
 	/// <summary>
@@ -20,13 +20,13 @@ public class JsonNodeBaseDocument : IBaseDocument
 	public Uri BaseUri { get; }
 
 	/// <summary>
-	/// Creates a new <see cref="JsonNodeBaseDocument"/>.
+	/// Creates a new <see cref="JsonElementBaseDocument"/>.
 	/// </summary>
 	/// <param name="node">The JsonNode.</param>
 	/// <param name="baseUri">The identifying base URI.</param>
-	public JsonNodeBaseDocument(JsonElement node, Uri baseUri)
+	public JsonElementBaseDocument(JsonElement node, Uri baseUri)
 	{
-		_node = node.Clone();
+		_root = node.Clone();
 		_foundSubschemas = new ConcurrentDictionary<JsonPointer, JsonSchemaNode?>();
 
 		BaseUri = baseUri;
@@ -42,12 +42,13 @@ public class JsonNodeBaseDocument : IBaseDocument
 	{
 		return _foundSubschemas.GetOrAdd(pointer, _ =>
 		{
-			var localSchema = pointer.Evaluate(_node);
+			var localSchema = pointer.Evaluate(_root);
 			if (localSchema is null) return null;
 
 			var newContext = context with
 			{
-				LocalSchema = localSchema.Value
+				LocalSchema = localSchema.Value,
+				BaseUri = BaseUri
 			};
 			return JsonSchema.BuildNode(newContext);
 		});

@@ -16,6 +16,8 @@ namespace Json.Schema;
 [DebuggerDisplay("{BaseUri}")]
 public class JsonSchemaNode
 {
+	private const string _unknownKeywordsAnnotation = "$unknownKeywords";
+
 	internal static JsonSchemaNode True() => new()
 	{
 		BaseUri = new Uri("https://json-schema.org/true"),
@@ -34,20 +36,22 @@ public class JsonSchemaNode
 	public required Uri BaseUri { get; init; }
 
 	/// <summary>
-	/// Gets the original JSON source data associated with this instance.
+	/// Gets the original JSON source data this subschema.
 	/// </summary>
 	/// <remarks>Use this property to access the raw JSON content for inspection or further processing.</remarks>
 	public JsonElement Source { get; init; }
 
 	/// <summary>
-	/// Gets the collection of keyword data associated with this instance.
+	/// Gets the collection of keyword data this subschema.
 	/// </summary>
 	public KeywordData[] Keywords { get; init; } = [];
 
 	/// <summary>
-	/// Gets the relative JSON pointer path associated with this instance.
+	/// Gets or sets a JSON Pointer this subschema from the parent subschema.
 	/// </summary>
-	public JsonPointer RelativePath { get; init; }
+	/// <remarks>This schema may be just a keyword name, such as would be the case for `additionalProperties`,
+	/// or it may contain additional segments, such as `properties` also containing the property name.</remarks>
+	public JsonPointer RelativePath { get; set; }
 
 	/// <summary>
 	/// Evaluates the schema against the provided context and returns the results of the evaluation.
@@ -107,6 +111,19 @@ public class JsonSchemaNode
 
 		if (!results.IsValid)
 			results.Annotations?.Clear();
+
+		if (context.Options.AddAnnotationForUnknownKeywords)
+		{
+			var unknownKeywords = Keywords
+				.Where(x => x.Handler is AnnotationKeyword)
+				.Select(x => (string)x.Value!)
+				.ToArray();
+			if (unknownKeywords.Length != 0)
+			{
+				results.Annotations ??= [];
+				results.Annotations[_unknownKeywordsAnnotation] = JsonSerializer.SerializeToElement(unknownKeywords, JsonSchemaSerializerContext.Default.StringArray);
+			}
+		}
 
 		if (newScope)
 			context.Scope.Pop();

@@ -44,14 +44,14 @@ public class SchemaRegistry
 	/// Registers a schema by URI.
 	/// </summary>
 	/// <param name="document">The schema.</param>
-	public void Register(JsonSchema document) => Register(document.BaseUri, document);
+	public void Register(IBaseDocument document) => Register(document.BaseUri, document);
 
 	/// <summary>
 	/// Registers a schema by URI.
 	/// </summary>
 	/// <param name="uri">The URI ID of the schema..</param>
 	/// <param name="document">The schema.</param>
-	public void Register(Uri? uri, JsonSchema document) => RegisterSchema(uri, document);
+	public void Register(Uri? uri, IBaseDocument document) => RegisterSchema(uri, document);
 
 	///// <summary>
 	///// Registers a new meta-schema URI.

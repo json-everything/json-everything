@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
-using System.Text.Json.Nodes;
+using Json.More;
+using Json.Schema.Keywords;
 using NUnit.Framework;
 using TestHelpers;
 
@@ -16,12 +17,13 @@ public class UnrecognizedKeywordTests
 	{
 		var schemaText = "{\"foo\": \"bar\"}";
 
-		var schema = JsonSerializer.Deserialize<JsonSchema>(schemaText, TestEnvironment.SerializerOptions);
+		var buildOptions = new BuildOptions { Dialect = Dialect.Draft202012 };
+		var schema = JsonSchema.FromText(schemaText, buildOptions);
 
 		Assert.Multiple(() =>
 		{
-			Assert.That(schema!.Keywords!, Has.Count.EqualTo(1));
-			Assert.That(schema.Keywords!.First(), Is.InstanceOf<UnrecognizedKeyword>());
+			Assert.That(schema.Root.Keywords, Has.Length.EqualTo(1));
+			Assert.That(schema.Root.Keywords.First().Handler, Is.InstanceOf<AnnotationKeyword>());
 		});
 	}
 
@@ -30,13 +32,15 @@ public class UnrecognizedKeywordTests
 	{
 		var schemaText = "{\"foo\": \"bar\"}";
 
-		var schema = JsonSerializer.Deserialize<JsonSchema>(schemaText, TestEnvironment.SerializerOptions);
+		var buildOptions = new BuildOptions { Dialect = Dialect.Draft202012 };
+		var schema = JsonSchema.FromText(schemaText, buildOptions);
 
-		var result = schema!.Evaluate(new JsonObject(), new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
+		var instance = JsonDocument.Parse("{}").RootElement;
+		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
 
 		result.AssertValid();
 		Assert.That(result.Annotations!.Count, Is.EqualTo(1));
-		JsonAssert.AreEquivalent("bar", result.Annotations!["foo"]);
+		JsonAssert.AreEquivalent("bar".AsJsonElement(), result.Annotations!["foo"]);
 	}
 
 	[Test]
@@ -44,9 +48,11 @@ public class UnrecognizedKeywordTests
 	{
 		var schemaText = "{\"foo\": \"bar\"}";
 
-		var schema = JsonSerializer.Deserialize<JsonSchema>(schemaText, TestEnvironment.SerializerOptions);
+		var buildOptions = new BuildOptions { Dialect = Dialect.Draft202012 };
+		var schema = JsonSchema.FromText(schemaText, buildOptions);
 
-		var result = schema!.Evaluate(new JsonObject(), new EvaluationOptions
+		var instance = JsonDocument.Parse("{}").RootElement;
+		var result = schema.Evaluate(instance, new EvaluationOptions
 		{
 			OutputFormat = OutputFormat.Hierarchical,
 			AddAnnotationForUnknownKeywords = true
@@ -54,7 +60,8 @@ public class UnrecognizedKeywordTests
 
 		result.AssertValid();
 		Assert.That(result.Annotations!, Has.Count.EqualTo(2));
-		JsonAssert.AreEquivalent(new JsonArray("foo"), result.Annotations!["$unknownKeywords"]);
+		var expectedArray = JsonDocument.Parse("[\"foo\"]").RootElement;
+		JsonAssert.AreEquivalent(expectedArray, result.Annotations!["$unknownKeywords"]);
 	}
 
 	[Test]
@@ -64,10 +71,10 @@ public class UnrecognizedKeywordTests
 			.Schema(MetaSchemas.Draft202012Id)
 			.Dependencies(new Dictionary<string, SchemaOrPropertyList>
 			{
-				["foo"] = (JsonSchema)false
+				["foo"] = (JsonSchemaBuilder)false
 			});
 
-		var instance = new JsonObject { ["bar"] = 5 };
+		var instance = JsonDocument.Parse("{\"bar\": 5}").RootElement;
 		var result = schema.Evaluate(instance, new EvaluationOptions
 		{
 			OutputFormat = OutputFormat.Hierarchical,
@@ -76,22 +83,26 @@ public class UnrecognizedKeywordTests
 
 		result.AssertValid();
 		Assert.That(result.Annotations!, Has.Count.EqualTo(2));
-		JsonAssert.AreEquivalent(new JsonObject { ["foo"] = false }, result.Annotations!["dependencies"]);
-		JsonAssert.AreEquivalent(new JsonArray("dependencies"), result.Annotations["$unknownKeywords"]);
+		var expectedDeps = JsonDocument.Parse("{\"foo\": false}").RootElement;
+		JsonAssert.AreEquivalent(expectedDeps, result.Annotations!["dependencies"]);
+		var expectedKeywords = JsonDocument.Parse("[\"dependencies\"]").RootElement;
+		JsonAssert.AreEquivalent(expectedKeywords, result.Annotations["$unknownKeywords"]);
 	}
 
 	[Test]
 	public void FooProducesAnAnnotation_Constructed()
 	{
-		var schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { Dialect = Dialect.Draft202012 };
+		var schema = new JsonSchemaBuilder(buildOptions)
 			.Unrecognized("foo", "bar")
 			.Build();
 
-		var result = schema.Evaluate(new JsonObject(), new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
+		var instance = JsonDocument.Parse("{}").RootElement;
+		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
 
 		result.AssertValid();
 		Assert.That(result.Annotations!, Has.Count.EqualTo(1));
-		JsonAssert.AreEquivalent("bar", result.Annotations!["foo"]);
+		JsonAssert.AreEquivalent("bar".AsJsonElement(), result.Annotations!["foo"]);
 	}
 
 	[Test]
@@ -107,7 +118,7 @@ public class UnrecognizedKeywordTests
 			.Unrecognized("foo", "bar")
 			.Build();
 
-		var instance = new JsonObject();
+		var instance = JsonDocument.Parse("{}").RootElement;
 
 		var result = schema.Evaluate(instance, options);
 
@@ -121,7 +132,7 @@ public class UnrecognizedKeywordTests
 
 		result.AssertValid();
 		Assert.That(result.Annotations!, Has.Count.EqualTo(1));
-		JsonAssert.AreEquivalent("bar", result.Annotations!["foo"]);
+		JsonAssert.AreEquivalent("bar".AsJsonElement(), result.Annotations!["foo"]);
 	}
 
 	[Test]
@@ -129,10 +140,56 @@ public class UnrecognizedKeywordTests
 	{
 		var schemaText = "{\"foo\":\"bar\"}";
 
-		var schema = JsonSerializer.Deserialize<JsonSchema>(schemaText, TestEnvironment.SerializerOptions);
+		var buildOptions = new BuildOptions { Dialect = Dialect.Draft202012 };
+		var schema = JsonSchema.FromText(schemaText, buildOptions);
 
 		var reText = JsonSerializer.Serialize(schema, TestEnvironment.SerializerOptions);
 
 		Assert.That(reText, Is.EqualTo(schemaText));	
+	}
+
+	[Test]
+	public void FooIsNotAKeyword_DefaultDialect_ThrowsException()
+	{
+		var schemaText = "{\"foo\": \"bar\"}";
+
+		var ex = Assert.Throws<JsonSchemaException>(() => JsonSchema.FromText(schemaText));
+		Assert.That(ex!.Message, Does.Contain("Unknown keywords (foo) are disallowed for this dialect."));
+	}
+
+	[Test]
+	public void FooProducesAnAnnotation_DefaultDialect_ThrowsException()
+	{
+		var schemaText = "{\"foo\": \"bar\"}";
+
+		var ex = Assert.Throws<JsonSchemaException>(() => JsonSchema.FromText(schemaText));
+		Assert.That(ex!.Message, Does.Contain("Unknown keywords (foo) are disallowed for this dialect."));
+	}
+
+	[Test]
+	public void UnknownKeywordAnnotationIsProduced_DefaultDialect_ThrowsException()
+	{
+		var schemaText = "{\"foo\": \"bar\"}";
+
+		var ex = Assert.Throws<JsonSchemaException>(() => JsonSchema.FromText(schemaText));
+		Assert.That(ex!.Message, Does.Contain("Unknown keywords (foo) are disallowed for this dialect."));
+	}
+
+	[Test]
+	public void FooProducesAnAnnotation_Constructed_DefaultDialect_ThrowsException()
+	{
+		var ex = Assert.Throws<JsonSchemaException>(() => new JsonSchemaBuilder()
+			.Unrecognized("foo", "bar")
+			.Build());
+		Assert.That(ex!.Message, Does.Contain("Unknown keywords (foo) are disallowed for this dialect."));
+	}
+
+	[Test]
+	public void FooIsIncludedInSerialization_DefaultDialect_ThrowsException()
+	{
+		var schemaText = "{\"foo\":\"bar\"}";
+
+		var ex = Assert.Throws<JsonSchemaException>(() => JsonSchema.FromText(schemaText));
+		Assert.That(ex!.Message, Does.Contain("Unknown keywords (foo) are disallowed for this dialect."));
 	}
 }
