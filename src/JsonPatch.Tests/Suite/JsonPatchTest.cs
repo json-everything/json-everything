@@ -107,7 +107,7 @@ public class JsonPatchTestJsonConverter : WeaklyTypedJsonConverter<JsonPatchTest
 
 	public override JsonPatchTest? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		var node = JsonSerializer.Deserialize<JsonNode?>(ref reader, options);
+		var node = JsonSerializer.Deserialize<JsonElement>(ref reader, options);
 
 		try
 		{
