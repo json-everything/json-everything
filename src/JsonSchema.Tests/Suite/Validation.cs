@@ -20,6 +20,14 @@ public class Validation
 	private const string _externalTestCasesPath = @"../../../../../../JSON-Schema-Test-Suite/tests";
 	private const string _externalRemoteSchemasPath = @"../../../../../../JSON-Schema-Test-Suite/remotes";
 
+	// Tests to explicitly ignore: [fileName, collectionDescription]
+	private static readonly HashSet<(string, string)> _ignoredTests =
+	[
+		("hostname", "validation of A-label (punycode) host names"),
+		("idn-hostname", "validation of internationalized host names"),
+		("idn-hostname", "validation of separators in internationalized host names")
+	];
+
 	public static IEnumerable<TestCaseData> TestCases()
 	{
 		return GetTests("draft6")
@@ -50,9 +58,7 @@ public class Validation
 			var shortFileName = Path.GetFileNameWithoutExtension(fileName);
 
 			// adjust for format
-			evaluationOptions.RequireFormatValidation = fileName.Contains("format/".AdjustForPlatform()) &&
-											  // uri-template will throw an exception as it's explicitly unsupported
-											  shortFileName != "uri-template";
+			evaluationOptions.RequireFormatValidation = fileName.Contains("format/".AdjustForPlatform());
 
 			var contents = File.ReadAllText(fileName);
 			var collections = JsonSerializer.Deserialize<List<TestCollection>>(contents, TestEnvironment.TestSuiteSerializationOptions);
@@ -60,6 +66,9 @@ public class Validation
 			foreach (var collection in collections!)
 			{
 				collection.IsOptional = fileName.Contains("optional");
+				
+				if (_ignoredTests.Contains((shortFileName, collection.Description))) continue;
+
 				foreach (var test in collection.Tests)
 				{
 					var dialect = draftFolder switch

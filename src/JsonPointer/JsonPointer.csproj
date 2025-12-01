@@ -16,9 +16,9 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageId>JsonPointer.Net</PackageId>
-    <Version>5.3.1</Version>
-    <FileVersion>5.3.1</FileVersion>
-    <AssemblyVersion>5.0.0.0</AssemblyVersion>
+    <Version>6.0.0</Version>
+    <FileVersion>6.0.0</FileVersion>
+    <AssemblyVersion>6.0.0.0</AssemblyVersion>
     <Authors>Greg Dennis</Authors>
     <Description>JSON Pointer built on the System.Text.Json namespace</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>

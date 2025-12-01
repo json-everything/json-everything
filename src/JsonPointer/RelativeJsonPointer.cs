@@ -126,6 +126,10 @@ public readonly struct RelativeJsonPointer : IEquatable<RelativeJsonPointer>
 		while (i < span.Length && char.IsDigit(span[i])) i++;
 		if (i == 0) throw new PointerParseException($"`{nameof(source)}` must start with a non-negative integer");
 
+		// Check for leading zero followed by other digits
+		if (i > 1 && span[0] == '0')
+			throw new PointerParseException($"`{nameof(source)}` cannot have a leading zero in the parent steps");
+
 		var parentSteps = span[..i].AsUint();
 
 		if (i == span.Length) return new RelativeJsonPointer(parentSteps, JsonPointer.Empty);
@@ -176,6 +180,13 @@ public readonly struct RelativeJsonPointer : IEquatable<RelativeJsonPointer>
 		while (i < span.Length && char.IsDigit(span[i])) i++;
 
 		if (i == 0)
+		{
+			relativePointer = default;
+			return false;
+		}
+
+		// Check for leading zero followed by other digits
+		if (i > 1 && span[0] == '0')
 		{
 			relativePointer = default;
 			return false;
