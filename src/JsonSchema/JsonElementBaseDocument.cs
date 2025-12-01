@@ -48,9 +48,13 @@ public class JsonElementBaseDocument : IBaseDocument
 			var newContext = context with
 			{
 				LocalSchema = localSchema.Value,
-				BaseUri = BaseUri
+				BaseUri = BaseUri,
+				PathFromResourceRoot = pointer
 			};
-			return JsonSchema.BuildNode(newContext);
+			var node = JsonSchema.BuildNode(newContext);
+			node.PathFromResourceRoot = pointer;
+
+			return node;
 		});
 	}
 }

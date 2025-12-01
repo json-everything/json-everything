@@ -81,19 +81,9 @@ public class JsonSchema : IBaseDocument
 	public static JsonSchema FromFile(string fileName, BuildOptions? options = null, Uri? baseUri = null)
 	{
 		var text = File.ReadAllText(fileName);
-		var schema = FromText(text, options, baseUri);
+		baseUri ??= new Uri(fileName);
 
-		if (schema.BaseUri.Host == "json-everything.lib")
-		{
-			var path = Path.GetFullPath(fileName);
-			// For some reason, full *nix file paths (which start with '/') don't work quite right when
-			// being prepended with 'file:///'.  It seems the '////' is interpreted as '//' and the
-			// first folder in the path is then interpreted as the host.  To account for this, we
-			// need to prepend with 'file://' instead.
-			var protocol = path.StartsWith("/") ? "file://" : "file:///";
-			schema.BaseUri = new Uri($"{protocol}{path}");
-		}
-		return schema;
+		return FromText(text, options, baseUri);
 	}
 
 	/// <summary>
@@ -218,12 +208,12 @@ public class JsonSchema : IBaseDocument
 			else if (handler is IdKeyword && !onlyHandleRef)
 			{
 				context.PathFromResourceRoot = JsonPointer.Empty;
-				context.BaseUri = new Uri(context.BaseUri, (Uri)data.Value!);
+				context.BaseUri = context.BaseUri.Resolve((Uri)data.Value!);
 			}
 
 			var keywordContext = context with
 			{
-				PathFromResourceRoot = context.PathFromResourceRoot.Combine(keyword)
+				PathFromResourceRoot = context.PathFromResourceRoot.Combine(context.RelativePath).Combine(keyword)
 			};
 			handler.BuildSubschemas(data, keywordContext);
 
@@ -418,6 +408,7 @@ public class JsonSchema : IBaseDocument
 					PathFromResourceRoot = pointer
 				};
 				subschema = BuildNode(newContext);
+				subschema.PathFromResourceRoot = pointer;
 			}
 		}
 
@@ -447,7 +438,14 @@ public class JsonSchemaJsonConverter : JsonConverter<JsonSchema>
 	public override JsonSchema? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		var element = options.Read(ref reader, JsonSchemaSerializerContext.Default.JsonElement);
-		return JsonSchema.Build(element);
+		try
+		{
+			return JsonSchema.Build(element);
+		}
+		catch (Exception e)
+		{
+			throw new JsonException("An error occurred while deserializing a schema.  See inner exception for details.", e);
+		}
 	}
 
 	public override void Write(Utf8JsonWriter writer, JsonSchema value, JsonSerializerOptions options)

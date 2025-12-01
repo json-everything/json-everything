@@ -233,7 +233,7 @@ public class SchemaRegistry
 
 		if (uri.IsAbsoluteUri) return uri;
 
-		return new Uri(_empty, uri);
+		return _empty.Resolve(uri);
 	}
 
 	internal void CopyFrom(SchemaRegistry other)

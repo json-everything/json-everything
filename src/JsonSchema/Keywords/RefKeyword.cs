@@ -54,7 +54,7 @@ public class RefKeyword : IKeywordHandler
 	public virtual void BuildSubschemas(KeywordData keyword, BuildContext context)
 	{
 		var reference = (Uri)keyword.Value!;
-		var newUri = new Uri(context.BaseUri, reference);
+		var newUri = context.BaseUri.Resolve(reference);
 
 		keyword.Value = newUri;
 	}

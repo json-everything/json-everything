@@ -15,9 +15,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Compile Remove="GithubTests.cs" />
-		<Compile Remove="LearnJsonEverythingTestFixture.cs" />
-		<Compile Remove="TraversalTests.cs" />
 		<Compile Remove="Suite\Output.cs" />
 		<Compile Remove="Suite\ValidationOptimized.cs" />
 

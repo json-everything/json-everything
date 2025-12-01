@@ -55,7 +55,7 @@ public class DynamicRefKeyword : Json.Schema.Keywords.DynamicRefKeyword
 	public override void BuildSubschemas(KeywordData keyword, BuildContext context)
 	{
 		var reference = (DynamicRefInfo)keyword.Value!;
-		var newUri = new Uri(context.BaseUri, reference.Uri);
+		var newUri = context.BaseUri.Resolve(reference.Uri);
 
 		reference.Uri = newUri; // need an absolute URI for .Fragment to work
 	}

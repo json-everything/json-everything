@@ -530,11 +530,11 @@ public class OutputTests
 	}
 
 	[Test]
-	public void AdditionalItemsDoesNotGiveExtraErrors()
+	public void ItemsDoesNotGiveExtraErrors()
 	{
 		JsonSchema schema = new JsonSchemaBuilder(_buildOptions)
-			.Items([true, false ])
-			.AdditionalItems(false);
+			.PrefixItems(true, false)
+			.Items(false);
 
 		var instance = JsonDocument.Parse("[1,2]").RootElement;
 
@@ -543,7 +543,7 @@ public class OutputTests
 		var serialized = JsonSerializer.Serialize(result, TestEnvironment.TestOutputSerializerOptions);
 		TestConsole.WriteLine(serialized);
 
-		Assert.That(serialized, Does.Not.Contain("additionalItems"));
+		Assert.That(serialized, Does.Not.Contain("items"));
 	}
 
 	[Test]
@@ -801,7 +801,7 @@ public class OutputTests
 			  "instanceLocation": "",
 			  "annotations": {
 			    "title": "a title",
-			    "additionalProperties": []
+			    "additionalProperties": true
 			  },
 			  "details": [
 			    {

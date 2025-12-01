@@ -41,7 +41,7 @@ public class IdKeyword : IKeywordHandler //, IIdKeyword
 		    !Uri.TryCreate(value.GetString(), UriKind.RelativeOrAbsolute, out var uri))
 			throw new JsonSchemaException($"'{Name}' requires a string in the format of a URI");
 
-		var testUri = new Uri(_testUri, uri);
+		var testUri = _testUri.Resolve(uri);
 		if (!string.IsNullOrEmpty(testUri.Fragment) && testUri.Fragment != "#")
 			throw new JsonSchemaException($"'{Name}' must not contain a non-empty fragment");
 

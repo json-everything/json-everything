@@ -51,7 +51,7 @@ public class JsonSchemaBuilder
 	/// <param name="builder">Another builder.</param>
 	public void Add(string keyword, JsonSchemaBuilder builder)
 	{
-		Keywords[keyword] = builder.Keywords;
+		Keywords[keyword] = builder.Keywords.DeepClone();
 	}
 
 	/// <summary>
@@ -61,7 +61,7 @@ public class JsonSchemaBuilder
 	/// <param name="builders">Another builder.</param>
 	public void Add(string keyword, IEnumerable<JsonSchemaBuilder> builders)
 	{
-		Keywords[keyword] = new JsonArray(builders.Select(x => (JsonNode?)x.Keywords).ToArray());
+		Keywords[keyword] = new JsonArray(builders.Select(x => (JsonNode?)x.Keywords.DeepClone()).ToArray());
 	}
 
 	/// <summary>
@@ -71,7 +71,7 @@ public class JsonSchemaBuilder
 	/// <param name="builders">Another builder.</param>
 	public void Add(string keyword, IEnumerable<(string, JsonSchemaBuilder)> builders)
 	{
-		Keywords[keyword] = new JsonObject(builders.ToDictionary(x => x.Item1, x => (JsonNode?)x.Item2.Keywords));
+		Keywords[keyword] = new JsonObject(builders.ToDictionary(x => x.Item1, x => (JsonNode?)x.Item2.Keywords.DeepClone()));
 	}
 
 	/// <summary>
@@ -81,7 +81,7 @@ public class JsonSchemaBuilder
 	/// <param name="builders">Another builder.</param>
 	public void Add(string keyword, IEnumerable<KeyValuePair<string, JsonSchemaBuilder>> builders)
 	{
-		Keywords[keyword] = new JsonObject(builders.ToDictionary(x => x.Key, x => (JsonNode?)x.Value.Keywords));
+		Keywords[keyword] = new JsonObject(builders.ToDictionary(x => x.Key, x => (JsonNode?)x.Value.Keywords.DeepClone()));
 	}
 
 	/// <summary>

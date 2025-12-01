@@ -1080,7 +1080,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder UnevaluatedProperties(this JsonSchemaBuilder builder, JsonSchemaBuilder schema)
 	{
-		builder.Add("unevaluatedItems", schema);
+		builder.Add("unevaluatedProperties", schema);
 		return builder;
 	}
 
