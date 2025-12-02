@@ -39,7 +39,7 @@ public class PrefixItemsKeyword : IKeywordHandler
 	public virtual object? ValidateKeywordValue(JsonElement value)
 	{
 		if (value.ValueKind is not JsonValueKind.Array)
-			throw new JsonSchemaException($"'{Name}' value must be an object, found {value.ValueKind}");
+			throw new JsonSchemaException($"'{Name}' value must be an array, found {value.ValueKind}");
 
 		if (value.EnumerateArray().Any(x => x.ValueKind is not (JsonValueKind.Object or JsonValueKind.True or JsonValueKind.False)))
 			throw new JsonSchemaException("Values must be valid schemas");

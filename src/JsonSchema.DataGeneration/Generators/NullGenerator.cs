@@ -1,4 +1,6 @@
-﻿namespace Json.Schema.DataGeneration.Generators;
+﻿using System.Text.Json.Nodes;
+
+namespace Json.Schema.DataGeneration.Generators;
 
 internal class NullGenerator : IDataGenerator
 {
@@ -12,6 +14,6 @@ internal class NullGenerator : IDataGenerator
 
 	public GenerationResult Generate(RequirementsContext context)
 	{
-		return GenerationResult.Success(null);
+		return GenerationResult.Success((JsonNode?)null);
 	}
 }

@@ -36,6 +36,9 @@ public class EnumKeyword : IKeywordHandler
 	/// <returns>An object that is shared with the other methods.  This object is saved to <see cref="KeywordData.Value"/>.</returns>
 	public object? ValidateKeywordValue(JsonElement value)
 	{
+		if (value.ValueKind is not JsonValueKind.Array)
+			throw new JsonSchemaException($"'{Name}' value must be an array, found {value.ValueKind}");
+
 		return null;
 	}
 

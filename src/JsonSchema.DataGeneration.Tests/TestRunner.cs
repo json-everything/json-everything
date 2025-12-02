@@ -18,20 +18,19 @@ public static class TestRunner
 			TypeInfoResolverChain = { DataGenerationTestsSerializerContext.Default }
 		};
 
-	public static void Run(JsonSchema schema, EvaluationOptions? options = null)
+	public static void Run(JsonSchema schema, BuildOptions options)
 	{
-		options ??= EvaluationOptions.Default;
-
 		var result = schema.GenerateData(options);
 
 		Assert.That(result.IsSuccess, Is.True, "failed generation");
-		TestConsole.WriteLine(JsonSerializer.Serialize(result.Result, SerializerOptions));
-		var validation = schema.Evaluate(result.Result, options);
+		var resultElt = JsonSerializer.SerializeToElement(result.Result, SerializerOptions);
+		TestConsole.WriteLine(resultElt.GetRawText());
+		var validation = schema.Evaluate(resultElt);
 		TestConsole.WriteLine(JsonSerializer.Serialize(validation, SerializerOptions));
 		Assert.That(validation.IsValid, Is.True, "failed validation");
 	}
 
-	public static void RunFailure(JsonSchema schema, EvaluationOptions? options = null)
+	public static void RunFailure(JsonSchema schema, BuildOptions options)
 	{
 		var result = schema.GenerateData(options);
 

@@ -1,25 +1,26 @@
-﻿using System.Linq;
+﻿using Json.Schema.Keywords;
 
 namespace Json.Schema.DataGeneration.Requirements;
 
 internal class ContainsRequirementsGatherer : IRequirementsGatherer
 {
-	public void AddRequirements(RequirementsContext context, JsonSchema schema, EvaluationOptions options)
+	public void AddRequirements(RequirementsContext context, JsonSchemaNode schema, BuildOptions options)
 	{
-		var contains = schema.Keywords?.OfType<ContainsKeyword>().FirstOrDefault()?.Schema;
+		var contains = schema.GetKeyword<ContainsKeyword>() ??
+		               schema.GetKeyword<Keywords.Draft06.ContainsKeyword>();
 		if (contains != null)
 		{
 			if (context.Contains != null)
-				context.Contains.And(contains.GetRequirements(options));
+				context.Contains.And(contains.Subschemas[0].GetRequirements(options));
 			else
-				context.Contains = contains.GetRequirements(options);
+				context.Contains = contains.Subschemas[0].GetRequirements(options);
 		}
 
 		var range = NumberRangeSet.Full;
-		var minimum = schema.Keywords?.OfType<MinContainsKeyword>().FirstOrDefault()?.Value;
+		var minimum = (long?)schema.GetKeyword<MinContainsKeyword>()?.Value;
 		if (minimum != null)
 			range = range.Floor(minimum.Value);
-		var maximum = schema.Keywords?.OfType<MaxContainsKeyword>().FirstOrDefault()?.Value;
+		var maximum = (long?)schema.GetKeyword<MaxContainsKeyword>()?.Value;
 		if (maximum != null)
 			range = range.Ceiling(maximum.Value);
 		if (range != NumberRangeSet.Full)

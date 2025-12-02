@@ -141,7 +141,7 @@ public class ValidatingJsonConverter : JsonConverterFactory
 
 internal interface IValidatingJsonConverter
 {
-	EvaluationOptions Options { get; set; }
+	EvaluationOptions? Options { get; set; }
 }
 
 internal class ValidatingJsonConverter<T> : WeaklyTypedJsonConverter<T>, IValidatingJsonConverter

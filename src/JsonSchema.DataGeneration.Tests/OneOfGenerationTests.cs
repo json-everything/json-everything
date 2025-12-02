@@ -8,20 +8,22 @@ internal class OneOfGenerationTests
 	[Test]
 	public void OneOfWithDifferentTypesButOneTypeIsDuplicatedForcingTheOther()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.OneOf(
 				new JsonSchemaBuilder().Type(SchemaValueType.Integer),
 				new JsonSchemaBuilder().Type(SchemaValueType.Integer),
 				new JsonSchemaBuilder().Type(SchemaValueType.String)
 			);
 
-		Run(schema);
+		Run(schema, buildOptions);
 	}
 
 	[Test]
 	public void OneOfWithMultipleOfCannotBeMultipleOfBoth()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.Integer)
 			.OneOf(
 				new JsonSchemaBuilder()
@@ -32,6 +34,6 @@ internal class OneOfGenerationTests
 			.Minimum(0)
 			.Maximum(50);
 
-		Run(schema);
+		Run(schema, buildOptions);
 	}
 }

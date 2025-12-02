@@ -1,33 +1,33 @@
-﻿using System.Linq;
+﻿using Json.Schema.Keywords;
 
 namespace Json.Schema.DataGeneration.Requirements;
 
 internal class NumberRequirementsGatherer : IRequirementsGatherer
 {
-	public void AddRequirements(RequirementsContext context, JsonSchema schema, EvaluationOptions options)
+	public void AddRequirements(RequirementsContext context, JsonSchemaNode schema, BuildOptions options)
 	{
 		var supportsNumbers = false;
 
 		var range = NumberRangeSet.Full;
-		var minimum = schema.Keywords?.OfType<MinimumKeyword>().FirstOrDefault()?.Value;
+		var minimum = schema.GetKeyword<MinimumKeyword>()?.RawValue.GetDecimal();
 		if (minimum != null)
 		{
 			range = range.Floor(minimum.Value);
 			supportsNumbers = true;
 		}
-		minimum = schema.Keywords?.OfType<ExclusiveMinimumKeyword>().FirstOrDefault()?.Value;
+		minimum = schema.GetKeyword<ExclusiveMinimumKeyword>()?.RawValue.GetDecimal();
 		if (minimum != null)
 		{
 			range = range.Floor((minimum.Value, false));
 			supportsNumbers = true;
 		}
-		var maximum = schema.Keywords?.OfType<MaximumKeyword>().FirstOrDefault()?.Value;
+		var maximum = schema.GetKeyword<MaximumKeyword>()?.RawValue.GetDecimal();
 		if (maximum != null)
 		{
 			range = range.Ceiling(maximum.Value);
 			supportsNumbers = true;
 		}
-		maximum = schema.Keywords?.OfType<ExclusiveMaximumKeyword>().FirstOrDefault()?.Value;
+		maximum = schema.GetKeyword<ExclusiveMaximumKeyword>()?.RawValue.GetDecimal();
 		if (maximum != null)
 		{
 			range = range.Ceiling((maximum.Value, false));
@@ -42,7 +42,7 @@ internal class NumberRequirementsGatherer : IRequirementsGatherer
 			supportsNumbers = true;
 		}
 
-		var multipleOf = schema.Keywords?.OfType<MultipleOfKeyword>().FirstOrDefault()?.Value;
+		var multipleOf = schema.GetKeyword<MultipleOfKeyword>()?.RawValue.GetDecimal();
 		if (multipleOf != null)
 		{
 			if (context.Multiples != null)

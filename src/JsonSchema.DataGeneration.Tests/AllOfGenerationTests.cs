@@ -9,26 +9,28 @@ internal class AllOfGenerationTests
 	[Test]
 	public void AllOfWithMinAndMaxNumber()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.AllOf(
 				new JsonSchemaBuilder().Type(SchemaValueType.Number),
 				new JsonSchemaBuilder().Minimum(10),
 				new JsonSchemaBuilder().Maximum(20)
 			);
 
-		Run(schema);
+		Run(schema, buildOptions);
 	}
 
 	[Test]
 	public void AllOfWithDifferentTypesFails()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.AllOf(
 				new JsonSchemaBuilder().Type(SchemaValueType.Number),
 				new JsonSchemaBuilder().Type(SchemaValueType.String)
 			);
 
-		var result = schema.GenerateData();
+		var result = schema.GenerateData(buildOptions);
 
 		Assert.That(result.IsSuccess, Is.False, "generation succeeded somehow");
 	}

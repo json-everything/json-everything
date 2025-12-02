@@ -10,104 +10,114 @@ public class StringGenerationTests
 	[Test]
 	public void SimpleString()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.String);
 
-		Run(schema);
+		Run(schema, buildOptions);
 	}
 
 	[Test]
 	public void MinLength()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.String)
 			.MinLength(30);
 
-		Run(schema);
+		Run(schema, buildOptions);
 	}
 
 	[Test]
 	public void MaxLength()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.String)
 			.MaxLength(20);
 
-		Run(schema);
+		Run(schema, buildOptions);
 	}
 
 	[Test]
 	public void SpecifiedRange()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.String)
 			.MinLength(10)
 			.MaxLength(20);
 
-		Run(schema);
+		Run(schema, buildOptions);
 	}
 
 	[Test]
 	public void ContainsDog()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.String)
 			.Pattern("dog");
 
-		Run(schema);
+		Run(schema, buildOptions);
 	}
 
 	[Test]
 	public void ContainsDogWithSizeConstraints()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.String)
 			.Pattern("dog")
 			.MinLength(10)
 			.MaxLength(20);
 
-		Assert.Throws<NotSupportedException>(() => Run(schema));
+		Assert.Throws<NotSupportedException>(() => Run(schema, buildOptions));
 	}
 
 	[Test]
 	public void DoesNotContainDog()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.String)
 			.Not(new JsonSchemaBuilder().Pattern("dog"));
 
-		Assert.Throws<NotSupportedException>(() => Run(schema));
+		Assert.Throws<NotSupportedException>(() => Run(schema, buildOptions));
 	}
 
 	[Test]
 	public void DoesNotContainDogWithSizeConstraints()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.String)
 			.Not(new JsonSchemaBuilder().Pattern("dog"))
 			.MinLength(10)
 			.MaxLength(20);
 
-		Assert.Throws<NotSupportedException>(() => Run(schema));
+		Assert.Throws<NotSupportedException>(() => Run(schema, buildOptions));
 	}
 
 	[Test]
 	public void ContainsCatAndDoesNotContainDogWithSizeConstraints()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.String)
 			.Not(new JsonSchemaBuilder().Pattern("dog"))
 			.Pattern("cat")
 			.MinLength(10)
 			.MaxLength(20);
 
-		Assert.Throws<NotSupportedException>(() => Run(schema));
+		Assert.Throws<NotSupportedException>(() => Run(schema, buildOptions));
 	}
 
 	[Test]
 	public void ContainsEitherCatOrDog()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.String)
 			.AnyOf(
 				new JsonSchemaBuilder().Pattern("dog"),
@@ -116,13 +126,14 @@ public class StringGenerationTests
 			.MinLength(10)
 			.MaxLength(20);
 
-		Assert.Throws<NotSupportedException>(() => Run(schema));
+		Assert.Throws<NotSupportedException>(() => Run(schema, buildOptions));
 	}
 
 	[Test]
 	public void ContainsExclusivelyEitherCatOrDog()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.String)
 			.OneOf(
 				new JsonSchemaBuilder().Pattern("dog"),
@@ -131,183 +142,201 @@ public class StringGenerationTests
 			.MinLength(10)
 			.MaxLength(20);
 
-		Assert.Throws<NotSupportedException>(() => Run(schema));
+		Assert.Throws<NotSupportedException>(() => Run(schema, buildOptions));
 	}
 
 	[Test]
 	public void FormatDate()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.String)
 			.Format(Formats.Date);
 
-		Run(schema, new EvaluationOptions { RequireFormatValidation = true });
+		Run(schema, buildOptions);
 	}
 
 	[Test]
 	public void FormatDateTime()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.String)
 			.Format(Formats.DateTime);
 
-		Run(schema, new EvaluationOptions { RequireFormatValidation = true });
+		Run(schema, buildOptions);
 	}
 
 	[Test]
 	public void FormatDuration()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.String)
 			.Format(Formats.Duration);
 
-		Run(schema, new EvaluationOptions { RequireFormatValidation = true });
+		Run(schema, buildOptions);
 	}
 
 	[Test]
 	public void FormatEmail()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.String)
 			.Format(Formats.Email);
 
-		Run(schema, new EvaluationOptions { RequireFormatValidation = true });
+		Run(schema, buildOptions);
 	}
 
 	[Test]
 	public void FormatHostname()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.String)
 			.Format(Formats.Hostname);
 
-		Run(schema, new EvaluationOptions { RequireFormatValidation = true });
+		Run(schema, buildOptions);
 	}
 
 	[Test]
 	public void FormatIdnEmail()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.String)
 			.Format(Formats.IdnEmail);
 
-		Run(schema, new EvaluationOptions { RequireFormatValidation = true });
+		Run(schema, buildOptions);
 	}
 
 	[Test]
 	public void FormatIdnHostname()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.String)
 			.Format(Formats.IdnHostname);
 
-		Run(schema, new EvaluationOptions { RequireFormatValidation = true });
+		Run(schema, buildOptions);
 	}
 
 	[Test]
 	public void FormatIpv4()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.String)
 			.Format(Formats.Ipv4);
 
-		Run(schema, new EvaluationOptions { RequireFormatValidation = true });
+		Run(schema, buildOptions);
 	}
 
 	[Test]
 	public void FormatIpv6()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.String)
 			.Format(Formats.Ipv6);
 
-		Run(schema, new EvaluationOptions { RequireFormatValidation = true });
+		Run(schema, buildOptions);
 	}
 
 	[Test]
 	public void FormatIri()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.String)
 			.Format(Formats.Iri);
 
-		Run(schema, new EvaluationOptions { RequireFormatValidation = true });
+		Run(schema, buildOptions);
 	}
 
 	[Test]
 	public void FormatIriReference()
 	{
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.String)
 			.Format(Formats.IriReference);
 
-		Run(schema, new EvaluationOptions { RequireFormatValidation = true });
+		Run(schema, buildOptions);
 	}
 
 	[Test]
 	public void FormatJsonPointer()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.String)
 			.Format(Formats.JsonPointer);
 
-		Run(schema, new EvaluationOptions { RequireFormatValidation = true });
+		Run(schema, buildOptions);
 	}
 
 	[Test]
 	public void FormatRelativeJsonPointer()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.String)
 			.Format(Formats.RelativeJsonPointer);
 
-		Run(schema, new EvaluationOptions { RequireFormatValidation = true });
+		Run(schema, buildOptions);
 	}
 
 	[Test]
 	public void FormatTime()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.String)
 			.Format(Formats.Time);
 
-		Run(schema, new EvaluationOptions { RequireFormatValidation = true });
+		Run(schema, buildOptions);
 	}
 
 	[Test]
 	public void FormatUri()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.String)
 			.Format(Formats.Uri);
 
-		Run(schema, new EvaluationOptions { RequireFormatValidation = true });
+		Run(schema, buildOptions);
 	}
 
 	[Test]
 	public void FormatUriReference()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.String)
 			.Format(Formats.UriReference);
 
-		Run(schema, new EvaluationOptions { RequireFormatValidation = true });
+		Run(schema, buildOptions);
 	}
 
 	[Test]
 	public void FormatUuid()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.String)
 			.Format(Formats.Uuid);
 
-		Run(schema, new EvaluationOptions { RequireFormatValidation = true });
+		Run(schema, buildOptions);
 	}
 
 	[Test]
 	public void MultipleFormats()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.AllOf(
 				new JsonSchemaBuilder()
 					.Type(SchemaValueType.String)
@@ -317,7 +346,7 @@ public class StringGenerationTests
 					.Format(Formats.Uuid)
 			);
 
-		var result = schema.GenerateData();
+		var result = schema.GenerateData(buildOptions);
 
 		TestConsole.WriteLine(result.ErrorMessage);
 		Assert.That(result.IsSuccess, Is.False);

@@ -9,9 +9,10 @@ public class NullGenerationTests
 	[Test]
 	public void GenerateNull()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.Null);
 
-		Run(schema);
+		Run(schema, buildOptions);
 	}
 }

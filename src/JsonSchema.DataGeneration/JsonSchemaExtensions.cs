@@ -39,13 +39,13 @@ public static class JsonSchemaExtensions
 	/// Attempts to generate sample data that meets the requirements of the schema.
 	/// </summary>
 	/// <param name="schema">The schema.</param>
-	/// <param name="options">A set of evaluation options.</param>
+	/// <param name="options">A set of build options.</param>
 	/// <returns>A result object indicating success and containing the result or error message.</returns>
-	public static GenerationResult GenerateData(this JsonSchema schema, EvaluationOptions? options = null)
+	public static GenerationResult GenerateData(this JsonSchema schema, BuildOptions? options = null)
 	{
-		options ??= EvaluationOptions.Default;
+		options ??= BuildOptions.Default;
 		options.SchemaRegistry.Register(schema);
-		var requirements = GetRequirements(schema, options);
+		var requirements = schema.Root.GetRequirements(options);
 
 		return requirements.GenerateData();
 	}
@@ -81,10 +81,9 @@ public static class JsonSchemaExtensions
 		return GenerationResult.Fail("Could not generate data that validates against the schema.");
 	}
 
-	private static readonly IEnumerable<IRequirementsGatherer> _requirementsGatherers =
-			new IRequirementsGatherer[]
-			{
-				new AllOfRequirementsGatherer(),
+	private static readonly IRequirementsGatherer[] _requirementsGatherers =
+	[
+		new AllOfRequirementsGatherer(),
 				new AnyOfRequirementsGatherer(),
 				new ConditionalRequirementsGatherer(),
 				new ConstRequirementsGatherer(),
@@ -98,10 +97,10 @@ public static class JsonSchemaExtensions
 				new PropertiesRequirementsGatherer(),
 				new RefRequirementsGatherer(),
 				new StringRequirementsGatherer(),
-				new TypeRequirementsGatherer(),
-			};
+				new TypeRequirementsGatherer()
+	];
 
-	internal static RequirementsContext GetRequirements(this JsonSchema schema, EvaluationOptions options)
+	internal static RequirementsContext GetRequirements(this JsonSchemaNode schema, BuildOptions options)
 	{
 		var context = new RequirementsContext();
 		foreach (var gatherer in _requirementsGatherers)

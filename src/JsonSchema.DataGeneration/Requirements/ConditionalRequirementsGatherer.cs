@@ -1,29 +1,30 @@
 ﻿using System.Linq;
+using Json.Schema.Keywords;
 
 namespace Json.Schema.DataGeneration.Requirements;
 
 internal class ConditionalRequirementsGatherer : IRequirementsGatherer
 {
-	public void AddRequirements(RequirementsContext context, JsonSchema schema, EvaluationOptions options)
+	public void AddRequirements(RequirementsContext context, JsonSchemaNode schema, BuildOptions options)
 	{
-		var ifKeyword = schema.Keywords?.OfType<IfKeyword>().FirstOrDefault();
-		var thenKeyword = schema.Keywords?.OfType<ThenKeyword>().FirstOrDefault();
-		var elseKeyword = schema.Keywords?.OfType<ElseKeyword>().FirstOrDefault();
+		var ifKeyword = schema.GetKeyword<IfKeyword>();
+		var thenKeyword = schema.GetKeyword<ThenKeyword>();
+		var elseKeyword = schema.GetKeyword<ElseKeyword>();
 
 		if (ifKeyword != null)
 		{
 			RequirementsContext? ifthen = null;
 			if (thenKeyword != null)
 			{
-				ifthen = ifKeyword.Schema.GetRequirements(options);
-				ifthen.And(thenKeyword.Schema.GetRequirements(options));
+				ifthen = ifKeyword.Subschemas[0].GetRequirements(options);
+				ifthen.And(thenKeyword.Subschemas[0].GetRequirements(options));
 			}
 
 			RequirementsContext? ifelse = null;
 			if (elseKeyword != null)
 			{
-				ifelse = ifKeyword.Schema.GetRequirements(options).Break();
-				ifelse.And(elseKeyword.Schema.GetRequirements(options));
+				ifelse = ifKeyword.Subschemas[0].GetRequirements(options).Break();
+				ifelse.And(elseKeyword.Subschemas[0].GetRequirements(options));
 			}
 
 			if (ifthen == null && ifelse == null) return;

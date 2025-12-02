@@ -45,7 +45,8 @@ internal class GithubTests
               ""additionalProperties"" : true
             }
             ";
-		var schema = JsonSchema.FromText(schemaText);
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		var schema = JsonSchema.FromText(schemaText, buildOptions);
 
 		// This is intermittent, but 10 times seems to be enough to cause this to fail.
 		for (int i = 0; i < 10; i++)
@@ -61,7 +62,8 @@ internal class GithubTests
 	[Test]
 	public void Issue646_EitherPropertyButNotBoth_WithNot()
 	{
-		var schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		var schema = new JsonSchemaBuilder(buildOptions)
 			.Schema(MetaSchemas.Draft202012Id)
 			.OneOf(
 				new JsonSchemaBuilder()
@@ -78,9 +80,10 @@ internal class GithubTests
 			.Build();
 
 		var generationResult = schema.GenerateData();
-		TestConsole.WriteLine(JsonSerializer.Serialize(generationResult.Result, TestRunner.SerializerOptions));
+		var resultElt = JsonSerializer.SerializeToElement(generationResult.Result, TestRunner.SerializerOptions);
+		TestConsole.WriteLine(resultElt.GetRawText());
 
-		var result = schema.Evaluate(generationResult.Result);
+		var result = schema.Evaluate(resultElt);
 
 		result.AssertValid();
 	}
@@ -88,7 +91,8 @@ internal class GithubTests
 	[Test]
 	public void Issue646_EitherPropertyButNotBoth_WithFalse()
 	{
-		var schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		var schema = new JsonSchemaBuilder(buildOptions)
 			.Schema(MetaSchemas.Draft202012Id)
 			.OneOf(
 				new JsonSchemaBuilder()
@@ -105,9 +109,10 @@ internal class GithubTests
 			.Build();
 
 		var generationResult = schema.GenerateData();
-		TestConsole.WriteLine(JsonSerializer.Serialize(generationResult.Result, TestRunner.SerializerOptions));
+		var resultElt = JsonSerializer.SerializeToElement(generationResult.Result, TestRunner.SerializerOptions);
+		TestConsole.WriteLine(resultElt.GetRawText());
 
-		var result = schema.Evaluate(generationResult.Result);
+		var result = schema.Evaluate(resultElt);
 
 		result.AssertValid();
 	}
@@ -115,7 +120,8 @@ internal class GithubTests
 	[Test]
 	public void Issue646_EitherPropertyButNotBoth_WithIntegerAndFalse()
 	{
-		var schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		var schema = new JsonSchemaBuilder(buildOptions)
 			.Schema(MetaSchemas.Draft202012Id)
 			.OneOf(
 				new JsonSchemaBuilder()
@@ -132,9 +138,10 @@ internal class GithubTests
 			.Build();
 
 		var generationResult = schema.GenerateData();
-		TestConsole.WriteLine(JsonSerializer.Serialize(generationResult.Result, TestRunner.SerializerOptions));
+		var resultElt = JsonSerializer.SerializeToElement(generationResult.Result, TestRunner.SerializerOptions);
+		TestConsole.WriteLine(resultElt.GetRawText());
 
-		var result = schema.Evaluate(generationResult.Result);
+		var result = schema.Evaluate(resultElt);
 
 		result.AssertValid();
 	}
@@ -142,7 +149,8 @@ internal class GithubTests
 	[Test]
 	public void Issue646_PropertyWithFalse()
 	{
-		var schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		var schema = new JsonSchemaBuilder(buildOptions)
 			.Schema(MetaSchemas.Draft202012Id)
 			.Type(SchemaValueType.Object)
 			.Properties(
@@ -153,9 +161,10 @@ internal class GithubTests
 			.Build();
 
 		var generationResult = schema.GenerateData();
-		TestConsole.WriteLine(JsonSerializer.Serialize(generationResult.Result, TestRunner.SerializerOptions));
+		var resultElt = JsonSerializer.SerializeToElement(generationResult.Result, TestRunner.SerializerOptions);
+		TestConsole.WriteLine(resultElt.GetRawText());
 
-		var result = schema.Evaluate(generationResult.Result);
+		var result = schema.Evaluate(resultElt);
 
 		result.AssertValid();
 	}
@@ -163,7 +172,8 @@ internal class GithubTests
 	[Test]
 	public void Issue647_EitherPropertyButNotBoth_WithUnevaluatedProperties()
 	{
-		var schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		var schema = new JsonSchemaBuilder(buildOptions)
 			.Schema(MetaSchemas.Draft202012Id)
 			.OneOf(
 				new JsonSchemaBuilder()
@@ -181,9 +191,10 @@ internal class GithubTests
 			.Build();
 
 		var generationResult = schema.GenerateData();
-		TestConsole.WriteLine(JsonSerializer.Serialize(generationResult.Result, TestRunner.SerializerOptions));
+		var resultElt = JsonSerializer.SerializeToElement(generationResult.Result, TestRunner.SerializerOptions);
+		TestConsole.WriteLine(resultElt.GetRawText());
 
-		var result = schema.Evaluate(generationResult.Result);
+		var result = schema.Evaluate(resultElt);
 
 		result.AssertValid();
 	}

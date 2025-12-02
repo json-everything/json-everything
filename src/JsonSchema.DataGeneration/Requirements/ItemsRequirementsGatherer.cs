@@ -1,21 +1,25 @@
 ﻿using System.Linq;
+using System.Text.Json;
+using Json.Schema.Keywords;
+using Json.Schema.Keywords.Draft06;
+using ItemsKeyword = Json.Schema.Keywords.ItemsKeyword;
 
 namespace Json.Schema.DataGeneration.Requirements;
 
 internal class ItemsRequirementsGatherer : IRequirementsGatherer
 {
-	public void AddRequirements(RequirementsContext context, JsonSchema schema, EvaluationOptions options)
+	public void AddRequirements(RequirementsContext context, JsonSchemaNode schema, BuildOptions options)
 	{
 		var supportsArrays = false;
 
 		var range = NumberRangeSet.Full;
-		var minimum = schema.Keywords?.OfType<MinItemsKeyword>().FirstOrDefault()?.Value;
+		var minimum = (long?)schema.GetKeyword<MinItemsKeyword>()?.Value;
 		if (minimum != null)
 		{
 			range = range.Floor(minimum.Value);
 			supportsArrays = true;
 		}
-		var maximum = schema.Keywords?.OfType<MaxItemsKeyword>().FirstOrDefault()?.Value;
+		var maximum = (long?)schema.GetKeyword<MaxItemsKeyword>()?.Value;
 		if (maximum != null)
 		{
 			range = range.Ceiling(maximum.Value);
@@ -29,15 +33,15 @@ internal class ItemsRequirementsGatherer : IRequirementsGatherer
 				context.ItemCounts = range;
 		}
 
-		var items = schema.Keywords?.OfType<ItemsKeyword>().FirstOrDefault();
+		var items = schema.GetKeyword<ItemsKeyword>();
 		if (items != null)
 		{
-			if (items.SingleSchema != null)
+			if (items.RawValue.ValueKind is JsonValueKind.Object or JsonValueKind.True or JsonValueKind.False)
 			{
 				if (context.RemainingItems != null)
-					context.RemainingItems.And(items.SingleSchema.GetRequirements(options));
+					context.RemainingItems.And(items.Subschemas[0].GetRequirements(options));
 				else
-					context.RemainingItems = items.SingleSchema.GetRequirements(options);
+					context.RemainingItems = items.Subschemas[0].GetRequirements(options);
 			}
 			else
 			{
@@ -46,12 +50,12 @@ internal class ItemsRequirementsGatherer : IRequirementsGatherer
 					// need to AND the schemas together sequentially
 				}
 				else
-					context.SequentialItems = items.ArraySchemas!.Select(x => x.GetRequirements(options)).ToList();
+					context.SequentialItems = items.Subschemas.Select(x => x.GetRequirements(options)).ToList();
 			}
 			supportsArrays = true;
 		}
 
-		var prefixItems = schema.Keywords?.OfType<PrefixItemsKeyword>().FirstOrDefault()?.ArraySchemas;
+		var prefixItems = schema.GetKeyword<PrefixItemsKeyword>();
 		if (prefixItems != null)
 		{
 			if (context.SequentialItems != null)
@@ -59,27 +63,27 @@ internal class ItemsRequirementsGatherer : IRequirementsGatherer
 				// need to AND the schemas together sequentially
 			}
 			else
-				context.SequentialItems = prefixItems.Select(x => x.GetRequirements(options)).ToList();
+				context.SequentialItems = prefixItems.Subschemas.Select(x => x.GetRequirements(options)).ToList();
 			supportsArrays = true;
 		}
 
-		var additionalItems = schema.Keywords?.OfType<AdditionalItemsKeyword>().FirstOrDefault()?.Schema;
+		var additionalItems = schema.GetKeyword<AdditionalItemsKeyword>();
 		if (additionalItems != null)
 		{
 			if (context.RemainingItems != null)
-				context.RemainingItems.And(additionalItems.GetRequirements(options));
+				context.RemainingItems.And(additionalItems.Subschemas[0].GetRequirements(options));
 			else
-				context.RemainingItems = additionalItems.GetRequirements(options);
+				context.RemainingItems = additionalItems.Subschemas[0].GetRequirements(options);
 			supportsArrays = true;
 		}
 
-		additionalItems = schema.Keywords?.OfType<UnevaluatedItemsKeyword>().FirstOrDefault()?.Schema;
+		additionalItems = schema.GetKeyword<UnevaluatedItemsKeyword>();
 		if (additionalItems != null)
 		{
 			if (context.RemainingItems != null)
-				context.RemainingItems.And(additionalItems.GetRequirements(options));
+				context.RemainingItems.And(additionalItems.Subschemas[0].GetRequirements(options));
 			else
-				context.RemainingItems = additionalItems.GetRequirements(options);
+				context.RemainingItems = additionalItems.Subschemas[0].GetRequirements(options);
 			supportsArrays = true;
 		}
 

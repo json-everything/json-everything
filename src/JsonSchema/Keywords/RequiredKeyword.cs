@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using Json.Schema.Keywords.Draft06;
 
 namespace Json.Schema.Keywords;
 
@@ -42,7 +43,7 @@ public class RequiredKeyword : IKeywordHandler
 		if (!value.EnumerateArray().All(x => x.ValueKind is JsonValueKind.String))
 			throw new JsonSchemaException($"'{Name}' value must be an array of strings.");
 
-		return null;
+		return value.EnumerateArray().Select(x => x.GetString()!).ToArray();
 	}
 
 	/// <summary>
@@ -66,7 +67,7 @@ public class RequiredKeyword : IKeywordHandler
 
 		HashSet<string>? missing = null;
 
-		var required = keyword.RawValue.EnumerateArray().Select(x => x.GetString()!);
+		var required = (string[])keyword.Value!;
 		foreach (var requiredProperty in required)
 		{
 			if (context.Instance.TryGetProperty(requiredProperty, out _)) continue;

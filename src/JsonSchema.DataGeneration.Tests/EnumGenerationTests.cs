@@ -9,9 +9,10 @@ public class EnumGenerationTests
 	[Test]
 	public void EnumPicksAValue()
 	{
-		var schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		var schema = new JsonSchemaBuilder(buildOptions)
 			.Enum("these", "are", "all", "the", "options");
 
-		Run(schema);
+		Run(schema, buildOptions);
 	}
 }
