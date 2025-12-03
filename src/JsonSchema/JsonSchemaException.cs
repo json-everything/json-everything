@@ -15,4 +15,8 @@ public class JsonSchemaException : Exception
 		: base(message)
 	{
 	}
+	public JsonSchemaException(string message, Exception innerException)
+		: base(message, innerException)
+	{
+	}
 }

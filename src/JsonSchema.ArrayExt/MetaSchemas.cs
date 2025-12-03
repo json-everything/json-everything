@@ -1,4 +1,7 @@
 ﻿using System;
+using System.IO;
+using System.Text;
+using System.Text.Json;
 
 namespace Json.Schema.ArrayExt;
 
@@ -8,85 +11,34 @@ namespace Json.Schema.ArrayExt;
 public static class MetaSchemas
 {
 	/// <summary>
-	/// The array extensions vocabulary meta-schema ID.
-	/// </summary>
-	public static readonly Uri ArrayExtId = new("https://json-everything.net/meta/vocab/array-ext");
-	/// <summary>
 	/// The ID for the draft 2020-12 extension vocabulary which includes the array extensions vocabulary.
 	/// </summary>
 	// ReSharper disable once InconsistentNaming
-	public static readonly Uri ArrayExt_202012Id = new("https://json-everything.net/meta/array-ext");
+	public static Uri ArrayExt_202012Id { get; } = new("https://json-everything.net/meta/array-ext");
 
 	/// <summary>
 	/// The array extensions vocabulary meta-schema.
 	/// </summary>
-	public static readonly JsonSchema ArrayExt =
-		new JsonSchemaBuilder()
-			.Schema(Schema.MetaSchemas.Draft202012Id)
-			.Id(ArrayExtId)
-			.Title("Array extensions meta-schema")
-			.Properties(
-				(UniqueKeysKeyword.Name, new JsonSchemaBuilder()
-					.Type(SchemaValueType.Array)
-					.Items(new JsonSchemaBuilder()
-						.Type(SchemaValueType.String)
-						.Format(Formats.JsonPointer))
-				),
-				(OrderingKeyword.Name, new JsonSchemaBuilder()
-					.Type(SchemaValueType.Array)
-					.Items(new JsonSchemaBuilder()
-						.Type(SchemaValueType.Object)
-						.Properties(
-							("by", new JsonSchemaBuilder()
-								.Type(SchemaValueType.String)
-								.Format(Formats.JsonPointer)
-							),
-							("direction", new JsonSchemaBuilder()
-								.Enum("asc", "desc")
-								.Default("asc")
-							),
-							("culture", new JsonSchemaBuilder()
-								.OneOf(
-									new JsonSchemaBuilder().Const("none"),
-									new JsonSchemaBuilder()
-										.Type(SchemaValueType.String)
-										.Pattern("^[a-z]{2}(-[A-Z]{2})$")
-								)
-								.Default("none")
-							),
-							("ignoreCase", new JsonSchemaBuilder()
-								.Type(SchemaValueType.Boolean)
-								.Default(false)
-							)
-						)
-						.Required("by")
-					)
-					.MinItems(1)
-				)
-			);
+	public static JsonSchema ArrayExt { get; private set; }
 
 	/// <summary>
-	/// A meta-schema which incorporates the array extensions vocabulary.
+	/// Registers the all components required to use the array extensions vocabulary.
 	/// </summary>
-	// ReSharper disable once InconsistentNaming
-	public static readonly JsonSchema ArrayExt_202012 =
-		new JsonSchemaBuilder()
-			.Schema(Schema.MetaSchemas.Draft202012Id)
-			.Id(ArrayExt_202012Id)
-			.Vocabulary(
-				(Schema.Vocabularies.Core202012Id, true),
-				(Schema.Vocabularies.Applicator202012Id, true),
-				(Schema.Vocabularies.Validation202012Id, true),
-				(Schema.Vocabularies.Metadata202012Id, true),
-				(Schema.Vocabularies.FormatAnnotation202012Id, true),
-				(Schema.Vocabularies.Content202012Id, true),
-				(Schema.Vocabularies.Unevaluated202012Id, true),
-				(Vocabularies.ArrayExtId, true)
-			)
-			.DynamicAnchor("meta")
-			.Title("Array extensions 2020-12 meta-schema")
-			.AllOf(
-				new JsonSchemaBuilder().Ref(Schema.MetaSchemas.Draft202012Id),
-				new JsonSchemaBuilder().Ref(ArrayExtId)
-			);
+	public static void Register(BuildOptions? buildOptions = null)
+	{
+		buildOptions ??= BuildOptions.Default;
+
+		ArrayExt = LoadMetaSchema("array-ext", buildOptions);
+	}
+
+	private static JsonSchema LoadMetaSchema(string resourceName, BuildOptions buildOptions)
+	{
+		var resourceStream = typeof(MetaSchemas).Assembly.GetManifestResourceStream(@$"Json.Schema.Meta_Schemas.{resourceName}.json");
+		using var reader = new StreamReader(resourceStream!, Encoding.UTF8);
+
+		var text = reader.ReadToEnd();
+		var json = JsonDocument.Parse(text).RootElement;
+
+		return JsonSchema.Build(json, buildOptions);
+	}
 }

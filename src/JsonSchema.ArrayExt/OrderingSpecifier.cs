@@ -9,7 +9,7 @@ namespace Json.Schema.ArrayExt;
 /// <summary>
 /// Represents a single ordering characteristic.
 /// </summary>
-public class OrderingSpecifier
+public struct OrderingSpecifier
 {
 	/// <summary>
 	/// Gets a pointer to the value.

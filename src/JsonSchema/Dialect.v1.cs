@@ -71,8 +71,7 @@ public partial class Dialect
 		WriteOnlyKeyword.Instance
 	)
 	{
-		Id = MetaSchemas.Draft201909Id,
-		_readOnly = true
+		Id = MetaSchemas.V1_2026Id
 	};
 
 	public static Dialect V1 { get; } = V1_2026;

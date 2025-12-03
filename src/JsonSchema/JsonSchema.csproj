@@ -10,7 +10,7 @@
     <IsAotCompatible Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net7.0'))">true</IsAotCompatible>	  
     <RootNamespace>Json.Schema</RootNamespace>
     <AssemblyName>JsonSchema.Net</AssemblyName>
-    <!--<DocumentationFile>JsonSchema.Net.xml</DocumentationFile>-->
+    <DocumentationFile>JsonSchema.Net.xml</DocumentationFile>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>../../json-everything.snk</AssemblyOriginatorKeyFile>
 
@@ -33,9 +33,9 @@
   </PropertyGroup>
 
 	<ItemGroup>
-		<!--<EmbeddedResource Include="..\..\Meta-Schemas\**\*.json" />-->
 		<EmbeddedResource Include="..\..\Meta-Schemas\**\*.json" Link="Meta-Schemas\%(RecursiveDir)%(Filename)%(Extension)" />
 		<EmbeddedResource Remove="..\..\Meta-Schemas\OpenAPI\**" />
+		<EmbeddedResource Remove="..\..\Meta-Schemas\array-ext.json" />
 	</ItemGroup>
 
   <ItemGroup>
@@ -146,7 +146,7 @@
     </EmbeddedResource>
   </ItemGroup>
 
-  <!--<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Copy SourceFiles="$(TargetDir)$(DocumentationFile)" DestinationFolder="..\..\doc-tool\xml\" SkipUnchangedFiles="True" OverwriteReadOnlyFiles="True" />
-  </Target>-->
+  </Target>
 </Project>

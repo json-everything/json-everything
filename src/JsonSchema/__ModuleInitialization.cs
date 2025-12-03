@@ -8,7 +8,7 @@ using System.Text.Json;
 
 namespace Json.Schema;
 
-public static class __ModuleInitialization
+internal static class __ModuleInitialization
 {
 	private static int _initialized;
 

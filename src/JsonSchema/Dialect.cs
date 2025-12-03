@@ -39,29 +39,12 @@ public partial class Dialect
 	}
 
 	private readonly MultiLookupConcurrentDictionary<KeywordMetaData> _keywordData;
-	private bool _readOnly;
 
 	public static Dialect Default { get; set; } = null!;
 
-	public bool RefIgnoresSiblingKeywords
-	{
-		get;
-		init
-		{
-			CheckWellKnown();
-			field = value;
-		}
-	}
+	public bool RefIgnoresSiblingKeywords { get; init; }
 
-	public bool AllowUnknownKeywords
-	{
-		get;
-		init
-		{
-			CheckWellKnown();
-			field = value;
-		}
-	}
+	public bool AllowUnknownKeywords { get; init; }
 
 	public Uri? Id { get; init; }
 
@@ -173,10 +156,4 @@ public partial class Dialect
 	}
 
 	internal IEnumerable<IKeywordHandler> GetKeywords() => _keywordData.Select(x => x.Value.Handler).Distinct();
-
-	private void CheckWellKnown()
-	{
-		if (_readOnly)
-			throw new InvalidOperationException("Editing the well-known keyword registries is not permitted.");
-	}
 }

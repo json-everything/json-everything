@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using Json.Pointer;
 
 namespace Json.Schema.ArrayExt;
@@ -15,9 +17,9 @@ public static class JsonSchemaBuilderExtensions
 	/// <param name="builder">The builder.</param>
 	/// <param name="keys">The collection of pointers to the keys which should be unique within the array.</param>
 	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder UniqueKeys(this JsonSchemaBuilder builder, IEnumerable<JsonPointer> keys)
+	public static JsonSchemaBuilder UniqueKeys(this JsonSchemaBuilder builder, params IEnumerable<JsonPointer> keys)
 	{
-		builder.Add(new UniqueKeysKeyword(keys));
+		builder.Add("uniqueKeys", new JsonArray(keys.Select(x => (JsonNode?)x.ToString()).ToArray()));
 		return builder;
 	}
 
@@ -27,33 +29,9 @@ public static class JsonSchemaBuilderExtensions
 	/// <param name="builder">The builder.</param>
 	/// <param name="keys">The collection of pointers to the keys which should be unique within the array.</param>
 	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder UniqueKeys(this JsonSchemaBuilder builder, IEnumerable<string> keys)
+	public static JsonSchemaBuilder UniqueKeys(this JsonSchemaBuilder builder, params IEnumerable<string> keys)
 	{
-		builder.Add(new UniqueKeysKeyword(keys.Select(JsonPointer.Parse)));
-		return builder;
-	}
-
-	/// <summary>
-	/// Adds a `uniqueKeys` keyword.
-	/// </summary>
-	/// <param name="builder">The builder.</param>
-	/// <param name="keys">The collection of pointers to the keys which should be unique within the array.</param>
-	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder UniqueKeys(this JsonSchemaBuilder builder, params JsonPointer[] keys)
-	{
-		builder.Add(new UniqueKeysKeyword(keys));
-		return builder;
-	}
-
-	/// <summary>
-	/// Adds a `uniqueKeys` keyword.
-	/// </summary>
-	/// <param name="builder">The builder.</param>
-	/// <param name="keys">The collection of pointers to the keys which should be unique within the array.</param>
-	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder UniqueKeys(this JsonSchemaBuilder builder, params string[] keys)
-	{
-		builder.Add(new UniqueKeysKeyword(keys.Select(JsonPointer.Parse)));
+		builder.Add("uniqueKeys", new JsonArray(keys.Select(x => (JsonNode?)x).ToArray()));
 		return builder;
 	}
 
@@ -63,9 +41,9 @@ public static class JsonSchemaBuilderExtensions
 	/// <param name="builder">The builder.</param>
 	/// <param name="specifiers">The collection of ordering specifiers.</param>
 	/// <returns>The builder.</returns>
-	public static JsonSchemaBuilder Ordering(this JsonSchemaBuilder builder, params OrderingSpecifier[] specifiers)
+	public static JsonSchemaBuilder Ordering(this JsonSchemaBuilder builder, params IEnumerable<OrderingSpecifier> specifiers)
 	{
-		builder.Add(new OrderingKeyword(specifiers));
+		builder.Add("ordering", JsonSerializer.SerializeToNode(specifiers.ToArray(), JsonSchemaArrayExtSerializerContext.Default.OrderingSpecifierArray));
 		return builder;
 	}
 }
