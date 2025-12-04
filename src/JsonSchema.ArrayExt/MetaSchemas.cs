@@ -14,7 +14,7 @@ public static class MetaSchemas
 	/// The ID for the draft 2020-12 extension vocabulary which includes the array extensions vocabulary.
 	/// </summary>
 	// ReSharper disable once InconsistentNaming
-	public static Uri ArrayExt_202012Id { get; } = new("https://json-everything.net/meta/array-ext");
+	public static Uri ArrayExt_202012Id { get; } = new("https://json-everything.net/meta/vocab/array-ext");
 
 	/// <summary>
 	/// The array extensions vocabulary meta-schema.
@@ -28,12 +28,14 @@ public static class MetaSchemas
 	{
 		buildOptions ??= BuildOptions.Default;
 
+		buildOptions.DialectRegistry.Register(Dialect.ArrayExt_202012);
+
 		ArrayExt = LoadMetaSchema("array-ext", buildOptions);
 	}
 
 	private static JsonSchema LoadMetaSchema(string resourceName, BuildOptions buildOptions)
 	{
-		var resourceStream = typeof(MetaSchemas).Assembly.GetManifestResourceStream(@$"Json.Schema.Meta_Schemas.{resourceName}.json");
+		var resourceStream = typeof(MetaSchemas).Assembly.GetManifestResourceStream(@$"Json.Schema.ArrayExt.Meta_Schemas.{resourceName}.json");
 		using var reader = new StreamReader(resourceStream!, Encoding.UTF8);
 
 		var text = reader.ReadToEnd();

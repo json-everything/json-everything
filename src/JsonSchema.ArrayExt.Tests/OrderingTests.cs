@@ -1,4 +1,4 @@
-using System.Text.Json.Nodes;
+using System.Text.Json;
 using Json.Pointer;
 using Json.Schema.Tests;
 using NUnit.Framework;
@@ -10,12 +10,14 @@ public class OrderingTests
 	[Test]
 	public void NumberDirectionAscending_Passing()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
+			.Schema(MetaSchemas.ArrayExt_202012Id)
 			.Type(SchemaValueType.Array)
 			.Items(new JsonSchemaBuilder().Type(SchemaValueType.Integer))
 			.Ordering(new OrderingSpecifier(JsonPointer.Empty, Direction.Ascending));
 
-		var instance = new JsonArray(2, 3, 4, 5);
+		var instance = JsonDocument.Parse("[2, 3, 4, 5]").RootElement;
 
 		var result = schema.Evaluate(instance);
 
@@ -25,12 +27,14 @@ public class OrderingTests
 	[Test]
 	public void NumberDirectionAscending_Duplicate_Passing()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
+			.Schema(MetaSchemas.ArrayExt_202012Id)
 			.Type(SchemaValueType.Array)
 			.Items(new JsonSchemaBuilder().Type(SchemaValueType.Integer))
 			.Ordering(new OrderingSpecifier(JsonPointer.Empty, Direction.Ascending));
 
-		var instance = new JsonArray(2, 3, 3, 5);
+		var instance = JsonDocument.Parse("[2, 3, 3, 5]").RootElement;
 
 		var result = schema.Evaluate(instance);
 
@@ -40,12 +44,14 @@ public class OrderingTests
 	[Test]
 	public void NumberDirectionAscending_Failing()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
+			.Schema(MetaSchemas.ArrayExt_202012Id)
 			.Type(SchemaValueType.Array)
 			.Items(new JsonSchemaBuilder().Type(SchemaValueType.Integer))
 			.Ordering(new OrderingSpecifier(JsonPointer.Empty, Direction.Ascending));
 
-		var instance = new JsonArray(2, 3, 1, 5);
+		var instance = JsonDocument.Parse("[2, 3, 1, 5]").RootElement;
 
 		var result = schema.Evaluate(instance);
 
@@ -55,12 +61,14 @@ public class OrderingTests
 	[Test]
 	public void NumberDirectionDescending_Passing()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
+			.Schema(MetaSchemas.ArrayExt_202012Id)
 			.Type(SchemaValueType.Array)
 			.Items(new JsonSchemaBuilder().Type(SchemaValueType.Integer))
 			.Ordering(new OrderingSpecifier(JsonPointer.Empty, Direction.Descending));
 
-		var instance = new JsonArray(5, 4, 3, 2);
+		var instance = JsonDocument.Parse("[5, 4, 3, 2]").RootElement;
 
 		var result = schema.Evaluate(instance);
 
@@ -70,12 +78,14 @@ public class OrderingTests
 	[Test]
 	public void NumberDirectionDescending_Duplicate_Passing()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
+			.Schema(MetaSchemas.ArrayExt_202012Id)
 			.Type(SchemaValueType.Array)
 			.Items(new JsonSchemaBuilder().Type(SchemaValueType.Integer))
 			.Ordering(new OrderingSpecifier(JsonPointer.Empty, Direction.Descending));
 
-		var instance = new JsonArray(5, 4, 4, 2);
+		var instance = JsonDocument.Parse("[5, 4, 4, 2]").RootElement;
 
 		var result = schema.Evaluate(instance);
 
@@ -85,12 +95,14 @@ public class OrderingTests
 	[Test]
 	public void NumberDirectionDescending_Failing()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
+			.Schema(MetaSchemas.ArrayExt_202012Id)
 			.Type(SchemaValueType.Array)
 			.Items(new JsonSchemaBuilder().Type(SchemaValueType.Integer))
 			.Ordering(new OrderingSpecifier(JsonPointer.Empty, Direction.Descending));
 
-		var instance = new JsonArray(5, 4, 6, 2);
+		var instance = JsonDocument.Parse("[5, 4, 6, 2]").RootElement;
 
 		var result = schema.Evaluate(instance);
 
@@ -100,12 +112,14 @@ public class OrderingTests
 	[Test]
 	public void StringDirectionAscending_Passing()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
+			.Schema(MetaSchemas.ArrayExt_202012Id)
 			.Type(SchemaValueType.Array)
 			.Items(new JsonSchemaBuilder().Type(SchemaValueType.String))
 			.Ordering(new OrderingSpecifier(JsonPointer.Empty, Direction.Ascending));
 
-		var instance = new JsonArray("alpha", "beta", "charlie", "delta");
+		var instance = JsonDocument.Parse("""["alpha", "beta", "charlie", "delta"]""").RootElement;
 
 		var result = schema.Evaluate(instance);
 
@@ -115,12 +129,14 @@ public class OrderingTests
 	[Test]
 	public void StringDirectionAscending_Duplicate_Passing()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
+			.Schema(MetaSchemas.ArrayExt_202012Id)
 			.Type(SchemaValueType.Array)
 			.Items(new JsonSchemaBuilder().Type(SchemaValueType.String))
 			.Ordering(new OrderingSpecifier(JsonPointer.Empty, Direction.Ascending));
 
-		var instance = new JsonArray("alpha", "beta", "beta", "delta");
+		var instance = JsonDocument.Parse("""["alpha", "beta", "beta", "delta"]""").RootElement;
 
 		var result = schema.Evaluate(instance);
 
@@ -130,12 +146,14 @@ public class OrderingTests
 	[Test]
 	public void StringDirectionAscending_Failing()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
+			.Schema(MetaSchemas.ArrayExt_202012Id)
 			.Type(SchemaValueType.Array)
 			.Items(new JsonSchemaBuilder().Type(SchemaValueType.String))
 			.Ordering(new OrderingSpecifier(JsonPointer.Empty, Direction.Ascending));
 
-		var instance = new JsonArray("alpha", "charlie", "beta", "delta");
+		var instance = JsonDocument.Parse("""["alpha", "charlie", "beta", "delta"]""").RootElement;
 
 		var result = schema.Evaluate(instance);
 
@@ -145,12 +163,14 @@ public class OrderingTests
 	[Test]
 	public void StringDirectionDescending_Passing()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
+			.Schema(MetaSchemas.ArrayExt_202012Id)
 			.Type(SchemaValueType.Array)
 			.Items(new JsonSchemaBuilder().Type(SchemaValueType.String))
 			.Ordering(new OrderingSpecifier(JsonPointer.Empty, Direction.Descending));
 
-		var instance = new JsonArray("delta", "charlie", "beta", "alpha");
+		var instance = JsonDocument.Parse("""["delta", "charlie", "beta", "alpha"]""").RootElement;
 
 		var result = schema.Evaluate(instance);
 
@@ -160,12 +180,14 @@ public class OrderingTests
 	[Test]
 	public void StringDirectionDescending_Duplicate_Passing()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
+			.Schema(MetaSchemas.ArrayExt_202012Id)
 			.Type(SchemaValueType.Array)
 			.Items(new JsonSchemaBuilder().Type(SchemaValueType.String))
 			.Ordering(new OrderingSpecifier(JsonPointer.Empty, Direction.Descending));
 
-		var instance = new JsonArray("delta", "charlie", "charlie", "alpha");
+		var instance = JsonDocument.Parse("""["delta", "charlie", "charlie", "alpha"]""").RootElement;
 
 		var result = schema.Evaluate(instance);
 
@@ -175,12 +197,14 @@ public class OrderingTests
 	[Test]
 	public void StringDirectionDescending_Failing()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
+			.Schema(MetaSchemas.ArrayExt_202012Id)
 			.Type(SchemaValueType.Array)
 			.Items(new JsonSchemaBuilder().Type(SchemaValueType.String))
 			.Ordering(new OrderingSpecifier(JsonPointer.Empty, Direction.Descending));
 
-		var instance = new JsonArray("delta", "beta", "charlie", "alpha");
+		var instance = JsonDocument.Parse("""["delta", "beta", "charlie", "alpha"]""").RootElement;
 
 		var result = schema.Evaluate(instance);
 
@@ -191,11 +215,12 @@ public class OrderingTests
 	public void IgnoreCaseFalse_Passing()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
+			.Schema(MetaSchemas.ArrayExt_202012Id)
 			.Type(SchemaValueType.Array)
 			.Items(new JsonSchemaBuilder().Type(SchemaValueType.String))
 			.Ordering(new OrderingSpecifier(JsonPointer.Empty, ignoreCase: false));
 
-		var instance = new JsonArray("alpha", "beta", "charlie", "delta");
+		var instance = JsonDocument.Parse("""["alpha", "beta", "charlie", "delta"]""").RootElement;
 
 		var result = schema.Evaluate(instance);
 
@@ -206,11 +231,12 @@ public class OrderingTests
 	public void IgnoreCaseFalse_Failing()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
+			.Schema(MetaSchemas.ArrayExt_202012Id)
 			.Type(SchemaValueType.Array)
 			.Items(new JsonSchemaBuilder().Type(SchemaValueType.String))
 			.Ordering(new OrderingSpecifier(JsonPointer.Empty, ignoreCase: false));
 
-		var instance = new JsonArray("alpha", "Beta", "charlie", "delta");
+		var instance = JsonDocument.Parse("""["alpha", "Beta", "charlie", "delta"]""").RootElement;
 
 		var result = schema.Evaluate(instance);
 
@@ -221,11 +247,12 @@ public class OrderingTests
 	public void IgnoreCaseTrue()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
+			.Schema(MetaSchemas.ArrayExt_202012Id)
 			.Type(SchemaValueType.Array)
 			.Items(new JsonSchemaBuilder().Type(SchemaValueType.String))
 			.Ordering(new OrderingSpecifier(JsonPointer.Empty, ignoreCase: true));
 
-		var instance = new JsonArray("alpha", "Beta", "charlie", "delta");
+		var instance = JsonDocument.Parse("""["alpha", "Beta", "charlie", "delta"]""").RootElement;
 
 		var result = schema.Evaluate(instance);
 

@@ -8,7 +8,8 @@ public class TestEnvironment
 	[OneTimeSetUp]
 	public void Setup()
 	{
-		Vocabularies.Register();
+		BuildOptions.Default.Dialect = Dialect.ArrayExt_202012;
+		MetaSchemas.Register();
 		EvaluationOptions.Default.OutputFormat = OutputFormat.Hierarchical;
 	}
 }

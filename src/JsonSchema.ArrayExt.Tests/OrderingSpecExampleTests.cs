@@ -1,4 +1,4 @@
-using System.Text.Json.Nodes;
+using System.Text.Json;
 using Json.Pointer;
 using Json.Schema.Tests;
 using NUnit.Framework;
@@ -24,7 +24,7 @@ public class OrderingSpecExampleTests
 	private static readonly JsonSchema _multipleSpecifiers =
 		new JsonSchemaBuilder()
 			.Schema(MetaSchemas.ArrayExt_202012Id)
-			.Id("https://json-everything.test/single")
+			.Id("https://json-everything.test/multiple")
 			.Type(SchemaValueType.Array)
 			.Items(new JsonSchemaBuilder()
 				.Type(SchemaValueType.Object)
@@ -41,13 +41,16 @@ public class OrderingSpecExampleTests
 	[Test]
 	public void SingleSpecifierPassingInstance()
 	{
-		var instance = JsonNode.Parse(@"[
-  { ""foo"": 1, ""bar"": ""ipsum"" },
-  { ""foo"": 1, ""bar"": ""Lorem"" },
-  { ""foo"": 2, ""bar"": ""dolor"" },
-  { ""foo"": 3, ""bar"": ""sit"" },
-  { ""foo"": 5, ""bar"": ""amet"" }
-]");
+		var instance = JsonDocument.Parse(
+			"""
+			[
+			  { "foo": 1, "bar": "ipsum" },
+			  { "foo": 1, "bar": "Lorem" },
+			  { "foo": 2, "bar": "dolor" },
+			  { "foo": 3, "bar": "sit" },
+			  { "foo": 5, "bar": "amet" }
+			]
+			""").RootElement;
 
 		var result = _singleSpecifier.Evaluate(instance);
 
@@ -57,13 +60,16 @@ public class OrderingSpecExampleTests
 	[Test]
 	public void SingleSpecifierFailingInstance()
 	{
-		var instance = JsonNode.Parse(@"[
-  { ""foo"": 1, ""bar"": ""Lorem"" },
-  { ""foo"": 5, ""bar"": ""amet"" },
-  { ""foo"": 2, ""bar"": ""dolor"" },
-  { ""foo"": 1, ""bar"": ""ipsum"" },
-  { ""foo"": 3, ""bar"": ""sit"" }
-]");
+		var instance = JsonDocument.Parse(
+			"""
+			[
+			  { "foo": 1, "bar": "Lorem" },
+			  { "foo": 5, "bar": "amet" },
+			  { "foo": 2, "bar": "dolor" },
+			  { "foo": 1, "bar": "ipsum" },
+			  { "foo": 3, "bar": "sit" }
+			]
+			""").RootElement;
 
 		var result = _singleSpecifier.Evaluate(instance);
 
@@ -74,13 +80,16 @@ public class OrderingSpecExampleTests
 	public void MultipleSpecifierPassingInstance()
 	{
 		// string is descending
-		var instance = JsonNode.Parse(@"[
-  { ""foo"": 1, ""bar"": ""ipsum"" },
-  { ""foo"": 1, ""bar"": ""Lorem"" },
-  { ""foo"": 2, ""bar"": ""dolor"" },
-  { ""foo"": 3, ""bar"": ""sit"" },
-  { ""foo"": 5, ""bar"": ""amet"" }
-]");
+		var instance = JsonDocument.Parse(
+			"""
+			[
+			  { "foo": 1, "bar": "ipsum" },
+			  { "foo": 1, "bar": "Lorem" },
+			  { "foo": 2, "bar": "dolor" },
+			  { "foo": 3, "bar": "sit" },
+			  { "foo": 5, "bar": "amet" }
+			]
+			""").RootElement;
 
 		var result = _multipleSpecifiers.Evaluate(instance);
 
@@ -91,13 +100,16 @@ public class OrderingSpecExampleTests
 	public void MultipleSpecifierFailingInstance_Secondary()
 	{
 		// string is descending
-		var instance = JsonNode.Parse(@"[
-  { ""foo"": 1, ""bar"": ""Lorem"" },
-  { ""foo"": 1, ""bar"": ""ipsum"" },
-  { ""foo"": 2, ""bar"": ""dolor"" },
-  { ""foo"": 3, ""bar"": ""sit"" },
-  { ""foo"": 5, ""bar"": ""amet"" }
-]");
+		var instance = JsonDocument.Parse(
+			"""
+			[
+			  { "foo": 1, "bar": "Lorem" },
+			  { "foo": 1, "bar": "ipsum" },
+			  { "foo": 2, "bar": "dolor" },
+			  { "foo": 3, "bar": "sit" },
+			  { "foo": 5, "bar": "amet" }
+			]
+			""").RootElement;
 
 		var result = _multipleSpecifiers.Evaluate(instance);
 
@@ -107,13 +119,16 @@ public class OrderingSpecExampleTests
 	[Test]
 	public void MultipleSpecifierPassingInstance_WrongPriority()
 	{
-		var instance = JsonNode.Parse(@"[
-  { ""foo"": 1, ""bar"": ""Lorem"" },
-  { ""foo"": 5, ""bar"": ""amet"" },
-  { ""foo"": 2, ""bar"": ""dolor"" },
-  { ""foo"": 1, ""bar"": ""ipsum"" },
-  { ""foo"": 3, ""bar"": ""sit"" }
-]");
+		var instance = JsonDocument.Parse(
+			"""
+			[
+			  { "foo": 1, "bar": "Lorem" },
+			  { "foo": 5, "bar": "amet" },
+			  { "foo": 2, "bar": "dolor" },
+			  { "foo": 1, "bar": "ipsum" },
+			  { "foo": 3, "bar": "sit" }
+			]
+			""").RootElement;
 
 		var result = _multipleSpecifiers.Evaluate(instance);
 
