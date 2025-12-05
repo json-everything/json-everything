@@ -1,87 +1,43 @@
-﻿using System;
-using System.Text.Json.Nodes;
+﻿using System.IO;
+using System.Text;
+using System.Text.Json;
 
 namespace Json.Schema.Data;
 
 /// <summary>
-/// Defines a meta-schema for the 
+/// Provides access to the data extensions vocabulary meta-schema and methods for registering its components.
 /// </summary>
+/// <remarks>Use this class to register and retrieve the meta-schema required for working with the data
+/// vocabulary in JSON Schema processing. All members are static and intended for application-wide
+/// configuration.</remarks>
 public static class MetaSchemas
 {
 	/// <summary>
-	/// The data vocabulary meta-schema ID.
+	/// The array extensions vocabulary meta-schema.
 	/// </summary>
-	public static readonly Uri DataId = new("https://json-everything.net/meta/vocab/data-2023");
-	/// <summary>
-	/// The ID for the draft 2020-12 extension vocabulary which includes the array extensions vocabulary.
-	/// </summary>
-	// ReSharper disable once InconsistentNaming
-	public static readonly Uri Data_202012Id = new("https://json-everything.net/meta/data-2023");
+	public static JsonSchema Data { get; private set; } = null!;
 
 	/// <summary>
-	/// The data vocabulary meta-schema.
+	/// Registers the all components required to use the array extensions vocabulary.
 	/// </summary>
-	public static readonly JsonSchema Data =
-		new JsonSchemaBuilder()
-			.Id(DataId)
-			.Schema(Schema.MetaSchemas.Draft202012Id)
-			.Title("Referenced data meta-schema")
-			.Properties(
-				(DataKeyword.Name, new JsonSchemaBuilder()
-					.AdditionalProperties(new JsonSchemaBuilder()
-						.Type(SchemaValueType.String)
-						.OneOf(
-							new JsonSchemaBuilder().Format(Formats.JsonPointer),
-							new JsonSchemaBuilder().Format(Formats.RelativeJsonPointer),
-							new JsonSchemaBuilder().Format("json-path"),
-							new JsonSchemaBuilder()
-								.Format(Formats.IriReference)
-								.Pattern("^#")
-							,
-							new JsonSchemaBuilder().Format(Formats.Iri)
-						)
-					)
-					.PropertyNames(new JsonSchemaBuilder()
-						.Not(new JsonSchemaBuilder()
-							.Enum(
-								IdKeyword.Name,
-								SchemaKeyword.Name,
-								RefKeyword.Name,
-								AnchorKeyword.Name,
-								DynamicRefKeyword.Name,
-								DynamicAnchorKeyword.Name,
-								VocabularyKeyword.Name,
-								CommentKeyword.Name,
-								DefsKeyword.Name
-							)
-						)
-					)
-					.Default(new JsonObject())
-				)
-			);
+	public static void Register(BuildOptions? buildOptions = null)
+	{
+		buildOptions ??= BuildOptions.Default;
 
-	/// <summary>
-	/// A 2020-12 meta-schema which incorporates the data vocabulary.
-	/// </summary>
-	// ReSharper disable once InconsistentNaming
-	public static readonly JsonSchema Data_202012 =
-		new JsonSchemaBuilder()
-			.Id(Data_202012Id)
-			.Schema(Schema.MetaSchemas.Draft202012Id)
-			.Vocabulary(
-				(Schema.Vocabularies.Core202012Id, true),
-				(Schema.Vocabularies.Applicator202012Id, true),
-				(Schema.Vocabularies.Validation202012Id, true),
-				(Schema.Vocabularies.Metadata202012Id, true),
-				(Schema.Vocabularies.FormatAnnotation202012Id, true),
-				(Schema.Vocabularies.Content202012Id, true),
-				(Schema.Vocabularies.Unevaluated202012Id, true),
-				(Vocabularies.DataId, true)
-			)
-			.DynamicAnchor("meta")
-			.Title("Data 2020-12 meta-schema")
-			.AllOf(
-				new JsonSchemaBuilder().Ref(Schema.MetaSchemas.Draft202012Id),
-				new JsonSchemaBuilder().Ref(DataId)
-			);
+		buildOptions.DialectRegistry.Register(Dialect.Data_202012);
+		buildOptions.VocabularyRegistry.Register(Vocabulary.Data);
+
+		Data = LoadMetaSchema("data_2023", buildOptions);
+	}
+
+	private static JsonSchema LoadMetaSchema(string resourceName, BuildOptions buildOptions)
+	{
+		var resourceStream = typeof(MetaSchemas).Assembly.GetManifestResourceStream(@$"Json.Schema.Data.Meta_Schemas.{resourceName}.json");
+		using var reader = new StreamReader(resourceStream!, Encoding.UTF8);
+
+		var text = reader.ReadToEnd();
+		var json = JsonDocument.Parse(text).RootElement;
+
+		return JsonSchema.Build(json, buildOptions);
+	}
 }

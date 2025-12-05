@@ -57,6 +57,10 @@ public class JsonSchemaNode
 
 	internal JsonPointer PathFromResourceRoot { get; set; }
 
+	internal JsonSchemaNode()
+	{
+	}
+
 	/// <summary>
 	/// Evaluates the schema against the provided context and returns the results of the evaluation.
 	/// </summary>
@@ -147,17 +151,5 @@ public class JsonSchemaNode
 			context.Scope.Pop();
 
 		return results;
-	}
-}
-
-internal static class GeneralExtensions
-{
-	public static Uri Resolve(this Uri baseUri, Uri reference)
-	{
-		return baseUri.IsFile && reference.OriginalString.StartsWith("#")
-			// File URIs have a quirk with fragment-only references
-			? new Uri(baseUri.AbsoluteUri + reference)
-			// Standard URI resolution works for everything else
-			: new Uri(baseUri, reference);
 	}
 }

@@ -42,5 +42,10 @@ public class KeywordData
 
 	internal long EvaluationOrder { get; set; }
 
-	internal KeywordData(){}
+	internal BuildContext Context { get; }
+
+	internal KeywordData(BuildContext context)
+	{
+		Context = context;
+	}
 }

@@ -69,7 +69,7 @@ public class NotKeyword : IKeywordHandler
 		{
 			EvaluationPath = context.EvaluationPath.Combine(Name)
 		};
-		var result =subschema.Evaluate(oneOfContext);
+		var result = subschema.Evaluate(oneOfContext);
 
 		return new KeywordEvaluation
 		{

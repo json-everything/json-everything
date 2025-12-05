@@ -188,7 +188,7 @@ public class JsonSchema : IBaseDocument
 
 			var handler = context.Dialect.GetHandler(keyword);
 
-			var data = new KeywordData
+			var data = new KeywordData(context)
 			{
 				EvaluationOrder = context.Dialect.GetEvaluationOrder(keyword) ?? 0,
 				RawValue = value.Clone(),
@@ -343,6 +343,7 @@ public class JsonSchema : IBaseDocument
 			Options = options,
 			SchemaRegistry = _schemaRegistry,
 			RefIgnoresSiblingKeywords = _refIgnoresSiblingKeywords,
+			InstanceRoot = instance,
 			Instance = instance,
 			EvaluationPath = JsonPointer.Empty,
 			Scope = new(BaseUri)

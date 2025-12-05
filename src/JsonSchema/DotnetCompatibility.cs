@@ -4,7 +4,7 @@ using System.Text.Json;
 
 namespace Json.Schema;
 
-internal static class DotnetCompatibility
+public static class DotnetCompatibility
 {
 #if !NET8_0_OR_GREATER
 

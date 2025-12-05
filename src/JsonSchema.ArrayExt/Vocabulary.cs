@@ -1,7 +1,4 @@
 ﻿using System;
-using System.IO;
-using System.Text;
-using System.Text.Json;
 using Json.Schema.ArrayExt.Keywords;
 
 namespace Json.Schema.ArrayExt;

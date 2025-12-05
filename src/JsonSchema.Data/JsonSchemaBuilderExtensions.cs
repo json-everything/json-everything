@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using Json.Path;
 using Json.Pointer;
+using Json.Schema.Data.Keywords;
 
 namespace Json.Schema.Data;
 

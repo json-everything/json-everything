@@ -36,6 +36,7 @@
 		<EmbeddedResource Include="..\..\Meta-Schemas\**\*.json" Link="Meta-Schemas\%(RecursiveDir)%(Filename)%(Extension)" />
 		<EmbeddedResource Remove="..\..\Meta-Schemas\OpenAPI\**" />
 		<EmbeddedResource Remove="..\..\Meta-Schemas\array-ext.json" />
+		<EmbeddedResource Remove="..\..\Meta-Schemas\data-2023.json" />
 	</ItemGroup>
 
   <ItemGroup>

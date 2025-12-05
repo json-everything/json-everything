@@ -1,7 +1,8 @@
-﻿using System.Text.Json.Nodes;
+﻿using System;
+using System.Text.Json;
 using Json.Pointer;
 
-namespace Json.Schema.Data;
+namespace Json.Schema.Data.Keywords;
 
 /// <summary>
 /// Handles data references that are Relative JSON Pointers.
@@ -23,20 +24,16 @@ public class RelativeJsonPointerIdentifier : IDataResourceIdentifier
 	}
 
 	/// <summary>
-	/// Resolves a resource.
+	/// Attempts to resolve a value from the specified JSON element.
 	/// </summary>
-	/// <param name="evaluation">The evaluation being process.  This will help identify.</param>
-	/// <param name="registry">The schema registry.</param>
-	/// <param name="value">The value, if <paramref name="evaluation"/> was resolvable.</param>
-	/// <returns>True if resolution was successful; false otherwise.</returns>
-	public bool TryResolve(KeywordEvaluation evaluation, SchemaRegistry registry, out JsonNode? value)
+	/// <param name="root">The root <see cref="JsonElement"/> to search for the desired value.</param>
+	/// <param name="keyword">The keyword data.</param>
+	/// <param name="value">When this method returns, contains the resolved <see cref="JsonElement"/> if the operation succeeds; otherwise,
+	/// contains the default value.</param>
+	/// <returns>true if the value was successfully resolved; otherwise, false.</returns>
+	public bool TryResolve(JsonElement root, KeywordData keyword, out JsonElement value)
 	{
-		if (evaluation.LocalInstance == null)
-		{
-			value = null;
-			return false;
-		}
-		return Target.TryEvaluate(evaluation.LocalInstance, out value);
+		throw new NotImplementedException("Relative JSON Pointer support is unavailable");
 	}
 
 	/// <summary>Returns a string that represents the current object.</summary>

@@ -33,7 +33,12 @@ public struct EvaluationContext
 	public DynamicScope Scope { get; internal init; }
 
 	/// <summary>
-	/// Gets the JSON element that represents the instance data for this object.
+	/// Gets the JSON element that represents the instance data root.
+	/// </summary>
+	public JsonElement InstanceRoot { get; init; }
+
+	/// <summary>
+	/// Gets the JSON element that represents the instance data.
 	/// </summary>
 	public JsonElement Instance { get; init; }
 

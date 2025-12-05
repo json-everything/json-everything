@@ -33,6 +33,10 @@
     <PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
   </PropertyGroup>
 
+	<ItemGroup>
+		<EmbeddedResource Include="..\..\Meta-Schemas\data-2023.json" Link="Meta-Schemas\%(RecursiveDir)%(Filename)%(Extension)" />
+	</ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="PolySharp" Version="1.15.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />

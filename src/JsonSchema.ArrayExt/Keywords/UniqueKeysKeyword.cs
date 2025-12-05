@@ -48,7 +48,7 @@ public class UniqueKeysKeyword : IKeywordHandler
 	/// </summary>
 	/// <param name="value">The JSON element to validate and convert. Represents the value to be checked for keyword compliance.</param>
 	/// <returns>An object that is shared with the other methods.  This object is saved to <see cref="KeywordData.Value"/>.</returns>
-	public object? ValidateKeywordValue(JsonElement value)
+	public virtual object? ValidateKeywordValue(JsonElement value)
 	{
 		if (value.ValueKind is not JsonValueKind.Array)
 			throw new JsonSchemaException($"'{Name}' value must be an array, found {value.ValueKind}.");
@@ -70,7 +70,7 @@ public class UniqueKeysKeyword : IKeywordHandler
 	/// </summary>
 	/// <param name="keyword">The keyword data used to determine which subschemas to build. Cannot be null.</param>
 	/// <param name="context">The context in which subschemas are constructed and registered. Cannot be null.</param>
-	public void BuildSubschemas(KeywordData keyword, BuildContext context)
+	public virtual void BuildSubschemas(KeywordData keyword, BuildContext context)
 	{
 	}
 
@@ -80,7 +80,7 @@ public class UniqueKeysKeyword : IKeywordHandler
 	/// <param name="keyword">The keyword data to be evaluated. Cannot be null.</param>
 	/// <param name="context">The context in which the keyword evaluation is performed. Cannot be null.</param>
 	/// <returns>A KeywordEvaluation object containing the results of the evaluation.</returns>
-	public KeywordEvaluation Evaluate(KeywordData keyword, EvaluationContext context)
+	public virtual KeywordEvaluation Evaluate(KeywordData keyword, EvaluationContext context)
 	{
 		var pointers = (List<JsonPointer>)keyword.Value!;
 

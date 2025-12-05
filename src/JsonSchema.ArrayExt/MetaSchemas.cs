@@ -1,25 +1,21 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Text;
 using System.Text.Json;
 
 namespace Json.Schema.ArrayExt;
 
 /// <summary>
-/// Defines a meta-schema for the 
+/// Provides access to meta-schemas and registration methods for the array extensions vocabulary used in JSON Schema
+/// processing.
 /// </summary>
+/// <remarks>Use this class to register and retrieve the meta-schema required for validating schemas that utilize
+/// the array extensions vocabulary. All members are static and intended for application-wide configuration.</remarks>
 public static class MetaSchemas
 {
 	/// <summary>
-	/// The ID for the draft 2020-12 extension vocabulary which includes the array extensions vocabulary.
-	/// </summary>
-	// ReSharper disable once InconsistentNaming
-	public static Uri ArrayExt_202012Id { get; } = new("https://json-everything.net/meta/vocab/array-ext");
-
-	/// <summary>
 	/// The array extensions vocabulary meta-schema.
 	/// </summary>
-	public static JsonSchema ArrayExt { get; private set; }
+	public static JsonSchema ArrayExt { get; private set; } = null!;
 
 	/// <summary>
 	/// Registers the all components required to use the array extensions vocabulary.
@@ -29,6 +25,7 @@ public static class MetaSchemas
 		buildOptions ??= BuildOptions.Default;
 
 		buildOptions.DialectRegistry.Register(Dialect.ArrayExt_202012);
+		buildOptions.VocabularyRegistry.Register(Vocabulary.ArrayExt);
 
 		ArrayExt = LoadMetaSchema("array-ext", buildOptions);
 	}

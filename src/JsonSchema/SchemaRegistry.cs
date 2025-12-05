@@ -149,7 +149,7 @@ public class SchemaRegistry
 	/// </summary>
 	/// <param name="uri">The URI ID.</param>
 	/// <returns>
-	/// The schema, if registered in either this or the global registry;4
+	/// The schema, if registered in either this or the global registry;
 	/// otherwise null.
 	/// </returns>
 	// For URI equality see https://docs.microsoft.com/en-us/dotnet/api/system.uri.op_equality?view=netcore-3.1
