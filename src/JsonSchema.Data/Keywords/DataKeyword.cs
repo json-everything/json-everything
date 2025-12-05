@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using Json.Path;
 using Json.Pointer;
@@ -10,6 +12,21 @@ namespace Json.Schema.Data.Keywords;
 /// </summary>
 public class DataKeyword : IKeywordHandler
 {
+	internal static readonly string[] CoreKeywords =
+	[
+		"$anchor",
+		"$comment",
+		"$defs",
+		"$dynamicAnchor",
+		"$dynamicRef",
+		"$id",
+		"$recursiveAnchor",
+		"$recursiveRef",
+		"$ref",
+		"$schema",
+		"$vocabulary"
+	];
+
 	/// <summary>
 	/// Gets or sets the singleton instance of the DataKeyword class.
 	/// </summary>
@@ -37,11 +54,14 @@ public class DataKeyword : IKeywordHandler
 		var spec = new DataSpec();
 		foreach (var property in value.EnumerateObject())
 		{
+			if (CoreKeywords.Contains(property.Name))
+				throw new JsonSchemaException($"'{Name}' property values cannot be core keywords, found {property.Value.ValueKind}.");
+
 			if (property.Value.ValueKind is not JsonValueKind.String)
 				throw new JsonSchemaException($"'{Name}' property values must be strings, found {property.Value.ValueKind}.");
 
 			var reference = property.Value.GetString()!;
-			if (JsonPointer.TryParse(reference, out var pointer))
+			if (!reference.StartsWith("#") && JsonPointer.TryParse(reference, out var pointer))
 				spec.References[property.Name] = new JsonPointerIdentifier(pointer);
 			else if (RelativeJsonPointer.TryParse(reference, out var relativePointer))
 				spec.References[property.Name] = new RelativeJsonPointerIdentifier(relativePointer);
@@ -63,22 +83,6 @@ public class DataKeyword : IKeywordHandler
 	/// <param name="context">The context in which subschemas are constructed and registered. Cannot be null.</param>
 	public virtual void BuildSubschemas(KeywordData keyword, BuildContext context)
 	{
-		var spec = (DataSpec)keyword.Value!;
-		foreach (var reference in spec.References)
-		{
-			if (reference.Value is not UriIdentifier uriIdentifier) continue;
-
-			var uri = new Uri(context.BaseUri, uriIdentifier.Target);
-			var targetDocument = context.Options.GetDataRegistry().Get(uri);
-
-			if (targetDocument is null || !reference.Value.TryResolve(targetDocument.Value, keyword, out var data))
-			{
-				spec.Unresolved.Add(uriIdentifier.Target.OriginalString);
-				continue;
-			}
-
-			spec.Data[reference.Key] = data;
-		}
 	}
 
 	/// <summary>
@@ -90,23 +94,35 @@ public class DataKeyword : IKeywordHandler
 	public virtual KeywordEvaluation Evaluate(KeywordData keyword, EvaluationContext context)
 	{
 		var spec = (DataSpec)keyword.Value!;
+		var buildContext = BuildContext.From(keyword);
+		var unresolved = new List<string>();
 		foreach (var reference in spec.References)
 		{
-			if (reference.Value is UriIdentifier) continue;
-
-			if (!reference.Value.TryResolve(context.InstanceRoot, keyword, out var data))
+			JsonElement instance;
+			if (reference.Value is UriIdentifier uriIdentifier)
 			{
-				spec.Unresolved.Add(reference.Value.ToString()!);
+				var uri = buildContext.BaseUri.Resolve(uriIdentifier.Target);
+				instance = buildContext.Options.GetDataRegistry().Get(uri) ??
+				           (buildContext.Options.SchemaRegistry.Get(uri) as JsonSchema)?.Root.Source ??
+				           default;
+			}
+			else
+			{
+				instance = context.InstanceRoot;
+			}
+
+			if (!reference.Value.TryResolve(instance, out var data))
+			{
+				unresolved.Add(reference.Value.ToString()!);
 				continue;
 			}
 
 			spec.Data[reference.Key] = data;
 		}
 
-		if (spec.Unresolved.Count != 0)
-			throw new DataRefResolutionException(spec.Unresolved);
+		if (unresolved.Count != 0)
+			throw new DataRefResolutionException(unresolved);
 
-		var buildContext = BuildContext.From(keyword);
 		buildContext.LocalSchema = JsonSerializer.SerializeToElement(spec.Data, JsonSchemaDataSerializerContext.Default.DictionaryStringJsonElement);
 		var subschema = JsonSchema.BuildNode(buildContext);
 
@@ -119,7 +135,7 @@ public class DataKeyword : IKeywordHandler
 		return new KeywordEvaluation
 		{
 			Keyword = Name,
-			IsValid = !result.IsValid,
+			IsValid = result.IsValid,
 			Details = [result]
 		};
 	}

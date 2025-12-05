@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Nodes;
+﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
 #pragma warning disable CS8618
@@ -10,7 +10,7 @@ public class TestCase
 	[JsonPropertyName("description")]
 	public string Description { get; set; }
 	[JsonPropertyName("data")]
-	public JsonNode? Data { get; set; }
+	public JsonElement Data { get; set; }
 	[JsonPropertyName("valid")]
 	public bool Valid { get; set; }
 	[JsonPropertyName("error")]

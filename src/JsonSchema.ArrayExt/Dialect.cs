@@ -15,7 +15,8 @@ public static class Dialect
 	/// <summary>
 	/// The ID for the draft 2020-12 extension vocabulary which includes the array extensions vocabulary.
 	/// </summary>
-	public static readonly Uri ArrayExtId = new("https://json-everything.net/meta/array-ext");
+	// ReSharper disable once InconsistentNaming
+	public static readonly Uri ArrayExt_202012Id = new("https://json-everything.net/meta/array-ext");
 
 	/// <summary>
 	/// Represents the JSON Schema dialect for Draft 2020-12 with array extension keywords added.
@@ -29,7 +30,7 @@ public static class Dialect
 				OrderingKeyword.Instance,
 				UniqueKeysKeyword.Instance
 			],
-			ArrayExtId,
+			ArrayExt_202012Id,
 			false,
 			true);
 }

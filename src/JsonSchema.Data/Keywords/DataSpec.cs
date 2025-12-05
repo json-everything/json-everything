@@ -7,5 +7,4 @@ internal class DataSpec
 {
 	public Dictionary<string, IDataResourceIdentifier> References { get; } = new();
 	public Dictionary<string, JsonElement> Data { get; } = new();
-	public List<string> Unresolved { get; } = new();
 }

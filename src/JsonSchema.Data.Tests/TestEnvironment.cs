@@ -7,6 +7,7 @@ using NUnit.Framework;
 
 namespace Json.Schema.Data.Tests;
 
+[SetUpFixture]
 public class TestEnvironment
 {
 	public static readonly JsonSerializerOptions SerializerOptions =
@@ -20,7 +21,8 @@ public class TestEnvironment
 	[OneTimeSetUp]
 	public void Setup()
 	{
-		Vocabularies.Register();
+		BuildOptions.Default.Dialect = Dialect.Data_202012;
+		MetaSchemas.Register();
 		EvaluationOptions.Default.OutputFormat = OutputFormat.Hierarchical;
 	}
 }

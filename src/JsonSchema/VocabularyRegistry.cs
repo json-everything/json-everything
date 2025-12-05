@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Humanizer.Inflections;
 
 namespace Json.Schema;
 
@@ -20,7 +21,7 @@ public class VocabularyRegistry
 
 	public void Register(Vocabulary vocabulary)
 	{
-		if (_wellKnownVocabs.Contains(vocabulary.Id))
+		if (_wellKnownVocabs?.Contains(vocabulary.Id) == true)
 			throw new ArgumentException("Cannot overwrite official vocabularies");
 
 		_vocabs[vocabulary.Id] = vocabulary;
@@ -28,7 +29,7 @@ public class VocabularyRegistry
 
 	public void Unregister(Uri vocabularyId)
 	{
-		if (_wellKnownVocabs.Contains(vocabularyId))
+		if (_wellKnownVocabs?.Contains(vocabularyId) == true)
 			throw new ArgumentException("Cannot remove official vocabularies");
 
 		_vocabs.Remove(vocabularyId);

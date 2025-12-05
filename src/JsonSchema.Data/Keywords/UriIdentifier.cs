@@ -9,6 +9,8 @@ namespace Json.Schema.Data.Keywords;
 /// </summary>
 public class UriIdentifier : IDataResourceIdentifier
 {
+	private static readonly Uri _base = new("https://json-everything.lib");
+
 	/// <summary>
 	/// The URI target.
 	/// </summary>
@@ -27,27 +29,16 @@ public class UriIdentifier : IDataResourceIdentifier
 	/// Attempts to resolve a value from the specified JSON element.
 	/// </summary>
 	/// <param name="root">The root <see cref="JsonElement"/> to search for the desired value.</param>
-	/// <param name="keyword">The keyword data.</param>
 	/// <param name="value">When this method returns, contains the resolved <see cref="JsonElement"/> if the operation succeeds; otherwise,
 	/// contains the default value.</param>
 	/// <returns>true if the value was successfully resolved; otherwise, false.</returns>
-	public bool TryResolve(JsonElement root, KeywordData keyword, out JsonElement value)
+	public bool TryResolve(JsonElement root, out JsonElement value)
 	{
-		var context = BuildContext.From(keyword);
-		var newUri = new Uri(context.BaseUri, Target);
-
 		value = default;
-		var fragment = newUri.Fragment;
+		var fragment = _base.Resolve(Target).Fragment;
 		if (JsonPointer.TryParse(fragment, out var pointerFragment))
 		{
-			var targetRoot = context.Options.GetDataRegistry().Get(newUri);
-			if (targetRoot is null)
-			{
-				value = default;
-				return false;
-			}
-
-			value = pointerFragment.Evaluate(targetRoot.Value) ?? default;
+			value = pointerFragment.Evaluate(root) ?? default;
 		}
 		else if (!string.IsNullOrWhiteSpace(fragment))
 		{

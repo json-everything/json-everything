@@ -12,7 +12,7 @@ public class OrderingTests
 	{
 		var buildOptions = new BuildOptions { SchemaRegistry = new() };
 		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
-			.Schema(MetaSchemas.ArrayExt_202012Id)
+			.Schema(Dialect.ArrayExt_202012Id)
 			.Type(SchemaValueType.Array)
 			.Items(new JsonSchemaBuilder().Type(SchemaValueType.Integer))
 			.Ordering(new OrderingSpecifier(JsonPointer.Empty, Direction.Ascending));
@@ -29,7 +29,7 @@ public class OrderingTests
 	{
 		var buildOptions = new BuildOptions { SchemaRegistry = new() };
 		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
-			.Schema(MetaSchemas.ArrayExt_202012Id)
+			.Schema(Dialect.ArrayExt_202012Id)
 			.Type(SchemaValueType.Array)
 			.Items(new JsonSchemaBuilder().Type(SchemaValueType.Integer))
 			.Ordering(new OrderingSpecifier(JsonPointer.Empty, Direction.Ascending));
@@ -46,7 +46,7 @@ public class OrderingTests
 	{
 		var buildOptions = new BuildOptions { SchemaRegistry = new() };
 		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
-			.Schema(MetaSchemas.ArrayExt_202012Id)
+			.Schema(Dialect.ArrayExt_202012Id)
 			.Type(SchemaValueType.Array)
 			.Items(new JsonSchemaBuilder().Type(SchemaValueType.Integer))
 			.Ordering(new OrderingSpecifier(JsonPointer.Empty, Direction.Ascending));
@@ -63,7 +63,7 @@ public class OrderingTests
 	{
 		var buildOptions = new BuildOptions { SchemaRegistry = new() };
 		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
-			.Schema(MetaSchemas.ArrayExt_202012Id)
+			.Schema(Dialect.ArrayExt_202012Id)
 			.Type(SchemaValueType.Array)
 			.Items(new JsonSchemaBuilder().Type(SchemaValueType.Integer))
 			.Ordering(new OrderingSpecifier(JsonPointer.Empty, Direction.Descending));
@@ -80,7 +80,7 @@ public class OrderingTests
 	{
 		var buildOptions = new BuildOptions { SchemaRegistry = new() };
 		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
-			.Schema(MetaSchemas.ArrayExt_202012Id)
+			.Schema(Dialect.ArrayExt_202012Id)
 			.Type(SchemaValueType.Array)
 			.Items(new JsonSchemaBuilder().Type(SchemaValueType.Integer))
 			.Ordering(new OrderingSpecifier(JsonPointer.Empty, Direction.Descending));
@@ -97,7 +97,7 @@ public class OrderingTests
 	{
 		var buildOptions = new BuildOptions { SchemaRegistry = new() };
 		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
-			.Schema(MetaSchemas.ArrayExt_202012Id)
+			.Schema(Dialect.ArrayExt_202012Id)
 			.Type(SchemaValueType.Array)
 			.Items(new JsonSchemaBuilder().Type(SchemaValueType.Integer))
 			.Ordering(new OrderingSpecifier(JsonPointer.Empty, Direction.Descending));
@@ -114,7 +114,7 @@ public class OrderingTests
 	{
 		var buildOptions = new BuildOptions { SchemaRegistry = new() };
 		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
-			.Schema(MetaSchemas.ArrayExt_202012Id)
+			.Schema(Dialect.ArrayExt_202012Id)
 			.Type(SchemaValueType.Array)
 			.Items(new JsonSchemaBuilder().Type(SchemaValueType.String))
 			.Ordering(new OrderingSpecifier(JsonPointer.Empty, Direction.Ascending));
@@ -131,7 +131,7 @@ public class OrderingTests
 	{
 		var buildOptions = new BuildOptions { SchemaRegistry = new() };
 		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
-			.Schema(MetaSchemas.ArrayExt_202012Id)
+			.Schema(Dialect.ArrayExt_202012Id)
 			.Type(SchemaValueType.Array)
 			.Items(new JsonSchemaBuilder().Type(SchemaValueType.String))
 			.Ordering(new OrderingSpecifier(JsonPointer.Empty, Direction.Ascending));
@@ -148,7 +148,7 @@ public class OrderingTests
 	{
 		var buildOptions = new BuildOptions { SchemaRegistry = new() };
 		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
-			.Schema(MetaSchemas.ArrayExt_202012Id)
+			.Schema(Dialect.ArrayExt_202012Id)
 			.Type(SchemaValueType.Array)
 			.Items(new JsonSchemaBuilder().Type(SchemaValueType.String))
 			.Ordering(new OrderingSpecifier(JsonPointer.Empty, Direction.Ascending));
@@ -165,7 +165,7 @@ public class OrderingTests
 	{
 		var buildOptions = new BuildOptions { SchemaRegistry = new() };
 		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
-			.Schema(MetaSchemas.ArrayExt_202012Id)
+			.Schema(Dialect.ArrayExt_202012Id)
 			.Type(SchemaValueType.Array)
 			.Items(new JsonSchemaBuilder().Type(SchemaValueType.String))
 			.Ordering(new OrderingSpecifier(JsonPointer.Empty, Direction.Descending));
@@ -182,7 +182,7 @@ public class OrderingTests
 	{
 		var buildOptions = new BuildOptions { SchemaRegistry = new() };
 		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
-			.Schema(MetaSchemas.ArrayExt_202012Id)
+			.Schema(Dialect.ArrayExt_202012Id)
 			.Type(SchemaValueType.Array)
 			.Items(new JsonSchemaBuilder().Type(SchemaValueType.String))
 			.Ordering(new OrderingSpecifier(JsonPointer.Empty, Direction.Descending));
@@ -199,7 +199,7 @@ public class OrderingTests
 	{
 		var buildOptions = new BuildOptions { SchemaRegistry = new() };
 		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
-			.Schema(MetaSchemas.ArrayExt_202012Id)
+			.Schema(Dialect.ArrayExt_202012Id)
 			.Type(SchemaValueType.Array)
 			.Items(new JsonSchemaBuilder().Type(SchemaValueType.String))
 			.Ordering(new OrderingSpecifier(JsonPointer.Empty, Direction.Descending));
@@ -215,7 +215,7 @@ public class OrderingTests
 	public void IgnoreCaseFalse_Passing()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
-			.Schema(MetaSchemas.ArrayExt_202012Id)
+			.Schema(Dialect.ArrayExt_202012Id)
 			.Type(SchemaValueType.Array)
 			.Items(new JsonSchemaBuilder().Type(SchemaValueType.String))
 			.Ordering(new OrderingSpecifier(JsonPointer.Empty, ignoreCase: false));
@@ -231,7 +231,7 @@ public class OrderingTests
 	public void IgnoreCaseFalse_Failing()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
-			.Schema(MetaSchemas.ArrayExt_202012Id)
+			.Schema(Dialect.ArrayExt_202012Id)
 			.Type(SchemaValueType.Array)
 			.Items(new JsonSchemaBuilder().Type(SchemaValueType.String))
 			.Ordering(new OrderingSpecifier(JsonPointer.Empty, ignoreCase: false));
@@ -247,7 +247,7 @@ public class OrderingTests
 	public void IgnoreCaseTrue()
 	{
 		JsonSchema schema = new JsonSchemaBuilder()
-			.Schema(MetaSchemas.ArrayExt_202012Id)
+			.Schema(Dialect.ArrayExt_202012Id)
 			.Type(SchemaValueType.Array)
 			.Items(new JsonSchemaBuilder().Type(SchemaValueType.String))
 			.Ordering(new OrderingSpecifier(JsonPointer.Empty, ignoreCase: true));

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text.Json;
 using Json.Path;
 using Json.Pointer;
@@ -37,6 +38,9 @@ public class OptionalDataKeyword : IKeywordHandler
 		var spec = new DataSpec();
 		foreach (var property in value.EnumerateObject())
 		{
+			if (DataKeyword.CoreKeywords.Contains(property.Name))
+				throw new JsonSchemaException($"'{Name}' property values cannot be core keywords, found {property.Value.ValueKind}.");
+
 			if (property.Value.ValueKind is not JsonValueKind.String)
 				throw new JsonSchemaException($"'{Name}' property values must be strings, found {property.Value.ValueKind}.");
 
@@ -63,22 +67,6 @@ public class OptionalDataKeyword : IKeywordHandler
 	/// <param name="context">The context in which subschemas are constructed and registered. Cannot be null.</param>
 	public virtual void BuildSubschemas(KeywordData keyword, BuildContext context)
 	{
-		var spec = (DataSpec)keyword.Value!;
-		foreach (var reference in spec.References)
-		{
-			if (reference.Value is not UriIdentifier uriIdentifier) continue;
-
-			var uri = new Uri(context.BaseUri, uriIdentifier.Target);
-			var targetDocument = context.Options.GetDataRegistry().Get(uri);
-
-			if (targetDocument is null || !reference.Value.TryResolve(targetDocument.Value, keyword, out var data))
-			{
-				spec.Unresolved.Add(uriIdentifier.Target.OriginalString);
-				continue;
-			}
-
-			spec.Data[reference.Key] = data;
-		}
 	}
 
 	/// <summary>
@@ -90,20 +78,27 @@ public class OptionalDataKeyword : IKeywordHandler
 	public virtual KeywordEvaluation Evaluate(KeywordData keyword, EvaluationContext context)
 	{
 		var spec = (DataSpec)keyword.Value!;
+		var buildContext = BuildContext.From(keyword);
 		foreach (var reference in spec.References)
 		{
-			if (reference.Value is UriIdentifier) continue;
-
-			if (!reference.Value.TryResolve(context.InstanceRoot, keyword, out var data))
+			JsonElement instance;
+			if (reference.Value is UriIdentifier uriIdentifier)
 			{
-				spec.Unresolved.Add(reference.Value.ToString()!);
-				continue;
+				var uri = buildContext.BaseUri.Resolve(uriIdentifier.Target);
+				instance = buildContext.Options.GetDataRegistry().Get(uri) ??
+				           (buildContext.Options.SchemaRegistry.Get(uri) as JsonSchema)?.Root.Source ??
+				           default;
 			}
+			else
+			{
+				instance = context.InstanceRoot;
+			}
+
+			if (!reference.Value.TryResolve(instance, out var data)) continue;
 
 			spec.Data[reference.Key] = data;
 		}
 
-		var buildContext = BuildContext.From(keyword);
 		buildContext.LocalSchema = JsonSerializer.SerializeToElement(spec.Data, JsonSchemaDataSerializerContext.Default.DictionaryStringJsonElement);
 		var subschema = JsonSchema.BuildNode(buildContext);
 
@@ -116,7 +111,7 @@ public class OptionalDataKeyword : IKeywordHandler
 		return new KeywordEvaluation
 		{
 			Keyword = Name,
-			IsValid = !result.IsValid,
+			IsValid = result.IsValid,
 			Details = [result]
 		};
 	}

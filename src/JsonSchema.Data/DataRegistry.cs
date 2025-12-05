@@ -29,9 +29,9 @@ public class DataRegistry
 	/// <summary>
 	/// Gets or sets a method to enable automatic download of data by URI ID.
 	/// </summary>
-	public Func<Uri, JsonElement?> Fetch
+	public Func<Uri, JsonElement> Fetch
 	{
-		get => field ??= _ => null;
+		get => field ??= _ => default;
 		set;
 	}
 
@@ -64,6 +64,9 @@ public class DataRegistry
 
 		if (resolved.ValueKind == JsonValueKind.Undefined)
 			resolved = Global._registered.GetValueOrDefault(uri);
+
+		if (resolved.ValueKind == JsonValueKind.Undefined)
+			resolved = Fetch(uri);
 
 		if (resolved.ValueKind == JsonValueKind.Undefined)
 			return null;

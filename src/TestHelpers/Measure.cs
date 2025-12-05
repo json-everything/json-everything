@@ -1,8 +1,6 @@
-﻿using System;
-using System.Diagnostics;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 
-namespace Json.Schema.Tests;
+namespace TestHelpers;
 
 public static class Measure
 {

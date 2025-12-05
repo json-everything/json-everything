@@ -27,7 +27,7 @@ public static class MetaSchemas
 		buildOptions.DialectRegistry.Register(Dialect.Data_202012);
 		buildOptions.VocabularyRegistry.Register(Vocabulary.Data);
 
-		Data = LoadMetaSchema("data_2023", buildOptions);
+		Data = LoadMetaSchema("data-2023", buildOptions);
 	}
 
 	private static JsonSchema LoadMetaSchema(string resourceName, BuildOptions buildOptions)

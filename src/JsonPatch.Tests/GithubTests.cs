@@ -197,7 +197,7 @@ public class GithubTests
 		var targetObj = new Target543 { Values = [1, 2, 3, 4] };
 		var target = JsonSerializer.SerializeToNode(targetObj, TestEnvironment.SerializerOptions);
 
-		var jsonPointer = JsonPointer.Create("Values", -1);
+		var jsonPointer = JsonPointer.Create("Values", "-");
 		var jsonPatch = new JsonPatch(PatchOperation.Add(jsonPointer, (JsonNode)42));
 
 		var expected = new JsonObject
