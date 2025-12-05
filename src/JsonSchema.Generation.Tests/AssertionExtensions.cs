@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using Json.Schema.Keywords;
 using TestHelpers;
 
 // ReSharper disable LocalizableElement
@@ -19,17 +20,17 @@ public static class AssertionExtensions
 		JsonAssert.AreEquivalent(expectedAsNode, actualAsNode);
 	}
 
-	public static void AssertEqual(PropertiesKeyword expected, PropertiesKeyword actual)
-	{
-		TestConsole.WriteLine("Expected");
-		var expectedAsNode = JsonSerializer.SerializeToNode(expected, TestSerializerContext.Default.PropertiesKeyword);
-		TestConsole.WriteLine(expectedAsNode);
-		TestConsole.WriteLine();
-		TestConsole.WriteLine("Actual");
-		var actualAsNode = JsonSerializer.SerializeToNode(actual, TestSerializerContext.Default.PropertiesKeyword);
-		TestConsole.WriteLine(actualAsNode);
-		JsonAssert.AreEquivalent(expectedAsNode, actualAsNode);
-	}
+	//public static void AssertEqual(PropertiesKeyword expected, PropertiesKeyword actual)
+	//{
+	//	TestConsole.WriteLine("Expected");
+	//	var expectedAsNode = JsonSerializer.SerializeToNode(expected, TestSerializerContext.Default.PropertiesKeyword);
+	//	TestConsole.WriteLine(expectedAsNode);
+	//	TestConsole.WriteLine();
+	//	TestConsole.WriteLine("Actual");
+	//	var actualAsNode = JsonSerializer.SerializeToNode(actual, TestSerializerContext.Default.PropertiesKeyword);
+	//	TestConsole.WriteLine(actualAsNode);
+	//	JsonAssert.AreEquivalent(expectedAsNode, actualAsNode);
+	//}
 
 	public static void VerifyGeneration<T>(JsonSchema expected, SchemaGeneratorConfiguration? config = null)
 	{

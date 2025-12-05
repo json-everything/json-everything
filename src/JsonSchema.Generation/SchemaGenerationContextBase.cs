@@ -45,7 +45,7 @@ public abstract class SchemaGenerationContextBase
 	/// </summary>
 	/// <param name="builder">The schema builder.</param>
 	/// <returns>The schema builder (for fluent syntax support).</returns>
-	public JsonSchema Apply(JsonSchemaBuilder? builder = null)
+	public JsonSchemaBuilder Apply(JsonSchemaBuilder? builder = null)
 	{
 		if (ReferenceEquals(this, True)) return true;
 		if (ReferenceEquals(this, False)) return false;
