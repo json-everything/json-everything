@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text;
 using System.Text.Json;
 
@@ -12,6 +13,12 @@ namespace Json.Schema.Data;
 /// configuration.</remarks>
 public static class MetaSchemas
 {
+	/// <summary>
+	/// The ID for the draft 2020-12 extension vocabulary which includes the data vocabulary.
+	/// </summary>
+	// ReSharper disable once InconsistentNaming
+	public static readonly Uri Data_202012Id = new("https://json-everything.net/meta/data-2023");
+
 	/// <summary>
 	/// The array extensions vocabulary meta-schema.
 	/// </summary>

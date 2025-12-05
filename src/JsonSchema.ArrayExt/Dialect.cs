@@ -13,12 +13,6 @@ namespace Json.Schema.ArrayExt;
 public static class Dialect
 {
 	/// <summary>
-	/// The ID for the draft 2020-12 extension vocabulary which includes the array extensions vocabulary.
-	/// </summary>
-	// ReSharper disable once InconsistentNaming
-	public static readonly Uri ArrayExt_202012Id = new("https://json-everything.net/meta/array-ext");
-
-	/// <summary>
 	/// Represents the JSON Schema dialect for Draft 2020-12 with array extension keywords added.
 	/// </summary>
 	/// <remarks>This dialect includes support for array ordering and unique keys via the OrderingKeyword and
@@ -30,7 +24,7 @@ public static class Dialect
 				OrderingKeyword.Instance,
 				UniqueKeysKeyword.Instance
 			],
-			ArrayExt_202012Id,
+			MetaSchemas.ArrayExt_202012Id,
 			false,
 			true);
 }

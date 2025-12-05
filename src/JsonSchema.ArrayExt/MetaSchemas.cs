@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text;
 using System.Text.Json;
 
@@ -12,6 +13,12 @@ namespace Json.Schema.ArrayExt;
 /// the array extensions vocabulary. All members are static and intended for application-wide configuration.</remarks>
 public static class MetaSchemas
 {
+	/// <summary>
+	/// The ID for the draft 2020-12 extension vocabulary which includes the array extensions vocabulary.
+	/// </summary>
+	// ReSharper disable once InconsistentNaming
+	public static readonly Uri ArrayExt_202012Id = new("https://json-everything.net/meta/array-ext");
+
 	/// <summary>
 	/// The array extensions vocabulary meta-schema.
 	/// </summary>

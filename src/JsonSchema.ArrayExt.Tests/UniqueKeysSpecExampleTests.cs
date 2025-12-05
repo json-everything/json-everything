@@ -8,7 +8,7 @@ public class UniqueKeysSpecExampleTests
 {
 	private static readonly BuildOptions _buildOptions = new() { SchemaRegistry = new() };
 	private readonly JsonSchema _singleKeySchema = new JsonSchemaBuilder(_buildOptions)
-		.Schema(Dialect.ArrayExt_202012Id)
+		.Schema(MetaSchemas.ArrayExt_202012Id)
 		.Type(SchemaValueType.Array)
 		.Items(new JsonSchemaBuilder()
 			.Type(SchemaValueType.Object)
@@ -18,7 +18,7 @@ public class UniqueKeysSpecExampleTests
 		)
 		.UniqueKeys("/foo");
 	private readonly JsonSchema _multiKeySchema = new JsonSchemaBuilder(_buildOptions)
-		.Schema(Dialect.ArrayExt_202012Id)
+		.Schema(MetaSchemas.ArrayExt_202012Id)
 		.Type(SchemaValueType.Array)
 		.Items(new JsonSchemaBuilder()
 			.Type(SchemaValueType.Object)

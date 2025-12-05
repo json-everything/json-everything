@@ -18,14 +18,14 @@ public class JsonSchemaNode
 {
 	private const string _unknownKeywordsAnnotation = "$unknownKeywords";
 
-	private static readonly Uri _trueBaseUri = new Uri("https://json-schema.org/true");
+	private static readonly Uri _trueBaseUri = new("https://json-schema.org/true");
 	private static readonly JsonElement _trueElement = JsonDocument.Parse("true").RootElement;
 	internal static JsonSchemaNode True() => new()
 	{
 		BaseUri = _trueBaseUri,
 		Source = _trueElement
 	};
-	private static readonly Uri _falseBaseUri = new Uri("https://json-schema.org/false");
+	private static readonly Uri _falseBaseUri = new("https://json-schema.org/false");
 	private static readonly JsonElement _falseElement = JsonDocument.Parse("false").RootElement;
 	internal static JsonSchemaNode False() => new()
 	{
@@ -55,7 +55,10 @@ public class JsonSchemaNode
 	/// </summary>
 	public JsonPointer RelativePath { get; internal set; }
 
-	internal JsonPointer PathFromResourceRoot { get; set; }
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+	[Obsolete("This is only for advanced usage.")]
+	public JsonPointer PathFromResourceRoot { get; set; }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
 	internal JsonSchemaNode()
 	{

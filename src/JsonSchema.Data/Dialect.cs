@@ -1,5 +1,4 @@
-﻿using System;
-using Json.Schema.Data.Keywords;
+﻿using Json.Schema.Data.Keywords;
 
 namespace Json.Schema.Data;
 
@@ -13,12 +12,6 @@ namespace Json.Schema.Data;
 public static class Dialect
 {
 	/// <summary>
-	/// The ID for the draft 2020-12 extension vocabulary which includes the data vocabulary.
-	/// </summary>
-	// ReSharper disable once InconsistentNaming
-	public static readonly Uri Data_202012Id = new("https://json-everything.net/meta/data-2023");
-
-	/// <summary>
 	/// Provides the JSON Schema dialect definition for the 2020-12 draft with support for the 'data' and 'optionalData'
 	/// keywords.
 	/// </summary>
@@ -31,7 +24,7 @@ public static class Dialect
 				DataKeyword.Instance,
 				OptionalDataKeyword.Instance
 			],
-			Data_202012Id,
+			MetaSchemas.Data_202012Id,
 			false,
 			true);
 }

@@ -8,7 +8,7 @@ public class Tests
 {
 	private static readonly JsonSchema _instanceRef =
 		new JsonSchemaBuilder()
-			.Schema(Dialect.Data_202012Id)
+			.Schema(MetaSchemas.Data_202012Id)
 			.Type(SchemaValueType.Object)
 			.Properties(
 				("foo", new JsonSchemaBuilder()
@@ -19,7 +19,7 @@ public class Tests
 
 	private static readonly JsonSchema _instanceRefOptional =
 		new JsonSchemaBuilder()
-			.Schema(Dialect.Data_202012Id)
+			.Schema(MetaSchemas.Data_202012Id)
 			.Type(SchemaValueType.Object)
 			.Properties(
 				("foo", new JsonSchemaBuilder()
@@ -30,7 +30,7 @@ public class Tests
 
 	private static readonly JsonSchema _instanceRelativeRef =
 		new JsonSchemaBuilder()
-			.Schema(Dialect.Data_202012Id)
+			.Schema(MetaSchemas.Data_202012Id)
 			.Type(SchemaValueType.Object)
 			.Properties(
 				("foo", new JsonSchemaBuilder()
@@ -132,7 +132,7 @@ public class Tests
 
 		JsonSchema externalRef =
 			new JsonSchemaBuilder(buildOptions)
-				.Schema(Dialect.Data_202012Id)
+				.Schema(MetaSchemas.Data_202012Id)
 				.Type(SchemaValueType.Object)
 				.Properties(
 					("foo", new JsonSchemaBuilder()
@@ -162,7 +162,7 @@ public class Tests
 
 		JsonSchema externalRef =
 			new JsonSchemaBuilder(buildOptions)
-				.Schema(Dialect.Data_202012Id)
+				.Schema(MetaSchemas.Data_202012Id)
 				.Type(SchemaValueType.Object)
 				.Properties(
 					("foo", new JsonSchemaBuilder()
@@ -180,7 +180,7 @@ public class Tests
 	}
 
 	private static readonly JsonSchema _pathRef = new JsonSchemaBuilder()
-		.Schema(Dialect.Data_202012Id)
+		.Schema(MetaSchemas.Data_202012Id)
 		.Type(SchemaValueType.Object)
 		.Properties(
 			("options", new JsonSchemaBuilder()

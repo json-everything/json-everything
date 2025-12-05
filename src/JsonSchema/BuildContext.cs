@@ -35,7 +35,10 @@ public struct BuildContext
 	/// <remarks>For example, for the `properties` keyword, this pointer indicates the property name.</remarks>
 	public JsonPointer RelativePath { get; set; }
 
-	internal JsonPointer PathFromResourceRoot { get; set; } = JsonPointer.Empty;
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+	[Obsolete("This is only for advanced usage.")]
+	public JsonPointer PathFromResourceRoot { get; set; } = JsonPointer.Empty;
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
 	internal BuildContext(BuildOptions options, Uri baseUri)
 	{

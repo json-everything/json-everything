@@ -9,7 +9,7 @@ public class OrderingSpecExampleTests
 {
 	private static readonly JsonSchema _singleSpecifier =
 		new JsonSchemaBuilder()
-			.Schema(Dialect.ArrayExt_202012Id)
+			.Schema(MetaSchemas.ArrayExt_202012Id)
 			.Id("https://json-everything.test/single")
 			.Type(SchemaValueType.Array)
 			.Items(new JsonSchemaBuilder()
@@ -23,7 +23,7 @@ public class OrderingSpecExampleTests
 
 	private static readonly JsonSchema _multipleSpecifiers =
 		new JsonSchemaBuilder()
-			.Schema(Dialect.ArrayExt_202012Id)
+			.Schema(MetaSchemas.ArrayExt_202012Id)
 			.Id("https://json-everything.test/multiple")
 			.Type(SchemaValueType.Array)
 			.Items(new JsonSchemaBuilder()
