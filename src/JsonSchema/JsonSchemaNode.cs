@@ -80,7 +80,9 @@ public class JsonSchemaNode
 		var baseUri = (BaseUri == _trueBaseUri || BaseUri == _falseBaseUri)
 			? context.Scope.LocalScope
 			: BaseUri;
+#pragma warning disable CS0618 // Type or member is obsolete
 		baseUri = new Uri(baseUri, $"#{PathFromResourceRoot}");
+#pragma warning restore CS0618 // Type or member is obsolete
 
 		var results = new EvaluationResults(context.EvaluationPath, baseUri, context.InstanceLocation, context.Options);
 		if (Source.ValueKind == JsonValueKind.True)

@@ -10,10 +10,10 @@
 		<RootNamespace>Json.Schema.Generation.Tests</RootNamespace>
 		<SignAssembly>true</SignAssembly>
 		<AssemblyOriginatorKeyFile>../../json-everything.snk</AssemblyOriginatorKeyFile>
-		<NoWarn>IDE1006,CS8618,CS1591</NoWarn>
-		<JsonSerializerIsReflectionEnabledByDefault Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net7.0'))">false</JsonSerializerIsReflectionEnabledByDefault>
-		<DocumentationFile>JsonSchema.Net.Generation.Tests.xml</DocumentationFile>
-	</PropertyGroup>
+    <JsonSerializerIsReflectionEnabledByDefault Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net7.0'))">false</JsonSerializerIsReflectionEnabledByDefault>
+    <DocumentationFile>JsonSchema.Net.Generation.Tests.xml</DocumentationFile>
+    <NoWarn>IDE1006,CS8618,CS1591</NoWarn>
+  </PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="NUnit" Version="4.2.2" />

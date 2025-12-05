@@ -1,4 +1,7 @@
-﻿using NUnit.Framework;
+﻿using System.Text.Json;
+using Json.More;
+using NUnit.Framework;
+using TestHelpers;
 using static Json.Schema.Generation.Tests.AssertionExtensions;
 
 namespace Json.Schema.Generation.Tests;
@@ -28,14 +31,31 @@ public class CommentsTests
 		var config = new SchemaGeneratorConfiguration();
 		config.RegisterXmlCommentFile<TypeCommentedModel>("JsonSchema.Net.Generation.Tests.xml");
 
-		JsonSchema schema = new JsonSchemaBuilder().FromType<TypeCommentedModel>(config);
+		var builder = new JsonSchemaBuilder();
+		builder.FromType<TypeCommentedModel>(config);
 
-		Assert.Multiple(() =>
-		{
-			Assert.That(schema.GetDescription(), Is.EqualTo("Type commented model description"));
+		var schema = builder.Build();
+		TestConsole.WriteLine(schema.Root.Source);
 
-			Assert.That(schema.GetProperties()?["Inner"].GetDescription(), Is.EqualTo("Type commented inner model description"));
-		});
+		var expected = JsonDocument.Parse(
+			"""
+			{
+			  "type": "object",
+			  "description": "Type commented model description",
+			  "properties": {
+			    "Foo": {"type": "integer"},
+			    "Inner": {
+			      "type": "object",
+			      "description": "Type commented inner model description",
+			      "properties": {
+			        "Bar": {"type": "integer"}
+			      }
+			    }
+			  }
+			}
+			""").RootElement;
+	
+		Assert.That(expected.IsEquivalentTo(schema.Root.Source));
 	}
 
 	private class MemberCommentedModel
@@ -52,9 +72,26 @@ public class CommentsTests
 		var config = new SchemaGeneratorConfiguration();
 		config.RegisterXmlCommentFile<MemberCommentedModel>("JsonSchema.Net.Generation.Tests.xml");
 
-		JsonSchema schema = new JsonSchemaBuilder().FromType<MemberCommentedModel>(config);
+		var builder = new JsonSchemaBuilder();
+		builder.FromType<MemberCommentedModel>(config);
 
-		Assert.That(schema.GetProperties()?["Bar"].GetDescription(), Is.EqualTo("Bar is for counting"));
+		var schema = builder.Build();
+		TestConsole.WriteLine(schema.Root.Source);
+
+		var expected = JsonDocument.Parse(
+			"""
+			{
+			  "type": "object",
+			  "properties": {
+			    "Bar": {
+			      "type": "integer",
+			      "description": "Bar is for counting"
+			    }
+			  }
+			}
+			""").RootElement;
+	
+		Assert.That(expected.IsEquivalentTo(schema.Root.Source));
 	}
 
 	/// <summary>
@@ -74,9 +111,38 @@ public class CommentsTests
 		var config = new SchemaGeneratorConfiguration();
 		config.RegisterXmlCommentFile<TypeAndMemberCommentedModel>("JsonSchema.Net.Generation.Tests.xml");
 
-		JsonSchema schema = new JsonSchemaBuilder().FromType<TypeAndMemberCommentedModel>(config);
+		var builder = new JsonSchemaBuilder();
+		builder.FromType<TypeAndMemberCommentedModel>(config);
 
-		Assert.That(schema.GetProperties()?["Inner"].GetDescription(), Is.EqualTo("This overrides the type description"));
+		var schema = builder.Build();
+		TestConsole.WriteLine(schema.Root.Source);
+
+		var expected = JsonDocument.Parse(
+			"""
+			{
+			  "description": "Type commented model description",
+			  "type": "object",
+			  "properties": {
+			    "Inner": {
+			      "$ref": "#/$defs/typeCommentedInnerModelInCommentsTests",
+			      "description": "This overrides the type description"
+			    }
+			  },
+			  "$defs": {
+			    "typeCommentedInnerModelInCommentsTests": {
+			      "description": "Type commented inner model description",
+			      "type": "object",
+			      "properties": {
+			        "Bar": {
+			          "type": "integer"
+			        }
+			      }
+			    }
+			  }
+			}
+			""").RootElement;
+	
+		Assert.That(expected.IsEquivalentTo(schema.Root.Source));
 	}
 
 	/// <summary>

@@ -307,14 +307,20 @@ public class ClientTests
 		builder.FromType<Type544_ObsoleteProperties>();
 
 		var schema = builder.Build();
-		var schemaJson = JsonSerializer.Serialize(schema, TestSerializerContext.Default.JsonSchema);
-		TestConsole.WriteLine(schemaJson);
+		TestConsole.WriteLine(schema.Root.Source);
 
-		Assert.Multiple(() =>
-		{
-			Assert.That(schema.GetProperties()!["BBB"].Keywords!, Has.Count.EqualTo(1));
-			Assert.That(schema.GetProperties()!["BBB"].Keywords!.First().Keyword(), Is.EqualTo("type"));
-		});
+		var expected = JsonDocument.Parse(
+			"""
+			{
+			  "type": "object",
+			  "properties": {
+			    "AAA": {"type": "integer", "deprecated": true},
+			    "BBB": {"type": "integer"},
+			    "CCC": {"type": "integer", "deprecated": true}
+			  }
+			}
+			""").RootElement;
+		Assert.That(expected.IsEquivalentTo(schema.Root.Source));
 	}
 
 	private class Type551_MinItemsOnString
@@ -327,15 +333,22 @@ public class ClientTests
 	[Test]
 	public void Issue551_MinMaxItemsOnStringProperty()
 	{
-		JsonSchema schema = new JsonSchemaBuilder().FromType<Type551_MinItemsOnString>();
-		var schemaJson = JsonSerializer.Serialize(schema, TestSerializerContext.Default.JsonSchema);
-		TestConsole.WriteLine(schemaJson);
+		var builder = new JsonSchemaBuilder();
+		builder.FromType<Type551_MinItemsOnString>();
 
-		Assert.Multiple(() =>
-		{
-			Assert.That(schema.GetProperties()!["Value"].Keywords!, Has.Count.EqualTo(1));
-			Assert.That(schema.GetProperties()!["Value"].Keywords!.First().Keyword(), Is.EqualTo("type"));
-		});
+		var schema = builder.Build();
+		TestConsole.WriteLine(schema.Root.Source);
+
+		var expected = JsonDocument.Parse(
+			"""
+			{
+			  "type": "object",
+			  "properties": {
+			    "Value": {"type": "string"}
+			  }
+			}
+			""").RootElement;
+		Assert.That(expected.IsEquivalentTo(schema.Root.Source));
 	}
 
 	private class Issue696_NullableDecimalWithMultipleOf
@@ -354,7 +367,7 @@ public class ClientTests
 			  "type": "object",
 			  "properties": {
 			    "Apr": {
-			      "type": ["number", "null"],
+			      "type": ["null", "number"],
 			      "multipleOf": 0.1
 			    }
 			  }
@@ -473,7 +486,7 @@ public class ClientTests
 	[Test]
 	public void Issue815_UsingCSharpRequiredKeyword()
 	{
-		JsonSchema expected = new JsonSchemaBuilder()
+		JsonSchema expected = new JsonSchemaBuilder(new BuildOptions { SchemaRegistry = new() })
 			.Id(GeneratedSchemaUri)
 			.Type(SchemaValueType.Object)
 			.Properties(
@@ -481,7 +494,7 @@ public class ClientTests
 			)
 			.Required("ShouldRef");
 
-		JsonSchema actual = new JsonSchemaBuilder().FromType<ShouldRefToExternalSchemaUsingIdAttributeWithRequiredKeyword>();
+		JsonSchema actual = new JsonSchemaBuilder(new BuildOptions { SchemaRegistry = new() }).FromType<ShouldRefToExternalSchemaUsingIdAttributeWithRequiredKeyword>();
 
 		AssertEqual(expected, actual);
 	}
@@ -497,7 +510,8 @@ public class ClientTests
 			)
 			.Required("ShouldRef");
 
-		JsonSchema actual = new JsonSchemaBuilder().FromType<ShouldRefToExternalSchemaUsingIdAttributeWithRequiredKeyword>();
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema actual = new JsonSchemaBuilder(buildOptions).FromType<ShouldRefToExternalSchemaUsingIdAttributeWithRequiredKeyword>();
 
 		AssertEqual(expected, actual);
 	}
@@ -632,7 +646,6 @@ public class ClientTests
 			.Properties(
 				("EnumProp", new JsonSchemaBuilder().Enum("active", "inactive"))
 			);
-
 
 		var schema = new JsonSchemaBuilder().FromType<Issue890_EnumMemberName>();
 

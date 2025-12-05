@@ -1,4 +1,7 @@
-﻿using NUnit.Framework;
+﻿using System.Text.Json;
+using Json.More;
+using NUnit.Framework;
+using TestHelpers;
 
 namespace Json.Schema.Generation.Tests;
 
@@ -18,16 +21,31 @@ public class BoundaryTests
 	[Test]
 	public void MaximumRangeIsClamped()
 	{
-		var schema = new JsonSchemaBuilder()
-			.FromType<BoundaryTestSubject>()
-			.Build();
+		var builder = new JsonSchemaBuilder();
+		builder.FromType<BoundaryTestSubject>();
 
-		Assert.Multiple(() =>
-		{
-			Assert.That(schema.GetProperties()!["Value"].GetExclusiveMaximum(), Is.EqualTo(decimal.MaxValue));
-			Assert.That(schema.GetProperties()!["Value"].GetExclusiveMinimum(), Is.EqualTo(decimal.MinValue));
-			Assert.That(schema.GetProperties()!["Value"].GetMaximum(), Is.EqualTo(decimal.MaxValue));
-			Assert.That(schema.GetProperties()!["Value"].GetMinimum(), Is.EqualTo(decimal.MinValue));
-		});
+		var schema = builder.Build();
+		TestConsole.WriteLine(schema.Root.Source);
+
+		var maxValue = decimal.MaxValue.ToString(System.Globalization.CultureInfo.InvariantCulture);
+		var minValue = decimal.MinValue.ToString(System.Globalization.CultureInfo.InvariantCulture);
+
+		var expected = JsonDocument.Parse(
+			$$"""
+			{
+			  "type": "object",
+			  "properties": {
+			    "Value": {
+			      "type": "integer",
+			      "minimum": {{minValue}},
+			      "maximum": {{maxValue}},
+			      "exclusiveMinimum": {{minValue}},
+			      "exclusiveMaximum": {{maxValue}}
+			    }
+			  }
+			}
+			""").RootElement;
+	
+		Assert.That(expected.IsEquivalentTo(schema.Root.Source));
 	}
 }

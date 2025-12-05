@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
+using Json.More;
 using NUnit.Framework;
+using TestHelpers;
 
 using static Json.Schema.Generation.Tests.AssertionExtensions;
 // ReSharper disable ClassNeverInstantiated.Local
@@ -109,23 +112,32 @@ public class NullabilityTests
 	[TestCaseSource(nameof(MemberCases))]
 	public void MemberNullability(Type type, SchemaValueType valueType)
 	{
-		// Nullability affects root schema so only PropertiesKeywords are compared
-		var expected = new JsonSchemaBuilder()
-			.Properties(
-				(nameof(ReferenceMember.Property), new JsonSchemaBuilder().Type(valueType)))
-			.Build()
-			.Keywords!
-			.OfType<PropertiesKeyword>()
-			.First();
+		var builder = new JsonSchemaBuilder();
+		builder.FromType(type);
 
-		var actual = new JsonSchemaBuilder()
-			.FromType(type)
-			.Build()
-			.Keywords!
-			.OfType<PropertiesKeyword>()
-			.First();
+		var schema = builder.Build();
+		TestConsole.WriteLine(schema.Root.Source);
 
-		AssertEqual(expected, actual);
+		var typeValue = valueType switch
+		{
+			SchemaValueType.String => "\"string\"",
+			SchemaValueType.Integer => "\"integer\"",
+			SchemaValueType.String | SchemaValueType.Null => "[\"null\", \"string\"]",
+			SchemaValueType.Integer | SchemaValueType.Null => "[\"null\", \"integer\"]",
+			_ => throw new ArgumentOutOfRangeException(nameof(valueType))
+		};
+
+		var expected = JsonDocument.Parse(
+			$$"""
+			{
+			  "type": "object",
+			  "properties": {
+			    "Property": {"type": {{typeValue}}}
+			  }
+			}
+			""").RootElement;
+	
+		Assert.That(expected.IsEquivalentTo(schema.Root.Source));
 	}
 
 	public class EnumMember
@@ -178,26 +190,27 @@ public class NullabilityTests
 	[TestCaseSource(nameof(EnumMemberCases))]
 	public void EnumMemberNullability(Type type, bool containsNull)
 	{
-		var values = Enum.GetNames(typeof(DayOfWeek)).ToList();
+		var builder = new JsonSchemaBuilder();
+		builder.FromType(type);
+
+		var schema = builder.Build();
+		TestConsole.WriteLine(schema.Root.Source);
+
+		var enumValues = string.Join(", ", Enum.GetNames(typeof(DayOfWeek)).Select(v => $"\"{v}\""));
 		if (containsNull)
-			values.Add(null!);
-		// Nullability affects root schema so only PropertiesKeywords are compared
-		var expected = new JsonSchemaBuilder()
-			.Properties(
-				(nameof(ReferenceMember.Property), new JsonSchemaBuilder().Enum(values)))
-			.Build()
-			.Keywords!
-			.OfType<PropertiesKeyword>()
-			.First();
+			enumValues += ", null";
 
-		var actual = new JsonSchemaBuilder()
-			.FromType(type)
-			.Build()
-			.Keywords!
-			.OfType<PropertiesKeyword>()
-			.First();
-
-		AssertEqual(expected, actual);
+		var expected = JsonDocument.Parse(
+			$$"""
+			{
+			  "type": "object",
+			  "properties": {
+			    "Property": {"enum": [{{enumValues}}]}
+			  }
+			}
+			""").RootElement;
+	
+		Assert.That(expected.IsEquivalentTo(schema.Root.Source));
 	}
 
 	public static IEnumerable<TestCaseData> TypeCases

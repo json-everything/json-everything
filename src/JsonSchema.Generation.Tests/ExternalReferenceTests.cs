@@ -88,14 +88,14 @@ public class ExternalReferenceTests
 	[Test]
 	public void GeneratesRefForExternalReferenceUsingIdAttribute()
 	{
-		JsonSchema expected = new JsonSchemaBuilder()
+		JsonSchema expected = new JsonSchemaBuilder(new BuildOptions { SchemaRegistry = new() })
 			.Id(GeneratedSchemaUri)
 			.Type(SchemaValueType.Object)
 			.Properties(
 				("ShouldRef", new JsonSchemaBuilder().Ref(ExternalSchemaUri))
 			);
 
-		JsonSchema actual = new JsonSchemaBuilder().FromType<ShouldRefToExternalSchemaUsingIdAttribute>();
+		JsonSchema actual = new JsonSchemaBuilder(new BuildOptions{SchemaRegistry = new()}).FromType<ShouldRefToExternalSchemaUsingIdAttribute>();
 
 		AssertionExtensions.AssertEqual(expected, actual);
 	}

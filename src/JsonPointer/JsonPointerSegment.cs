@@ -92,6 +92,16 @@ public readonly ref struct JsonPointerSegment
     }
 
     /// <summary>
+    /// Compares this segment with an integer.
+    /// </summary>
+    /// <param name="value">The value to compare against</param>
+    /// <returns>True if the segment matches the value, false otherwise</returns>
+    public bool Equals(int value)
+    {
+        return SegmentEquals(value.ToString().AsSpan());
+    }
+
+    /// <summary>
     /// Compares this segment with another segment.
     /// </summary>
     /// <param name="other">The segment to compare against.</param>

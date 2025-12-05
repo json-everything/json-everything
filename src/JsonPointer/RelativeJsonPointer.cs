@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
@@ -332,6 +331,19 @@ public readonly struct RelativeJsonPointer : IEquatable<RelativeJsonPointer>
 		}
 	}
 
+	/// <summary>
+	/// Determines whether two specified RelativeJsonPointer instances are equal.
+	/// </summary>
+	/// <param name="left">The first RelativeJsonPointer to compare.</param>
+	/// <param name="right">The second RelativeJsonPointer to compare.</param>
+	/// <returns>true if the two RelativeJsonPointer instances are equal; otherwise, false.</returns>
 	public static bool operator ==(RelativeJsonPointer left, RelativeJsonPointer right) => left.Equals(right);
+
+	/// <summary>
+	/// Determines whether two RelativeJsonPointer instances are not equal.
+	/// </summary>
+	/// <param name="left">The first RelativeJsonPointer to compare.</param>
+	/// <param name="right">The second RelativeJsonPointer to compare.</param>
+	/// <returns>true if the specified RelativeJsonPointer instances are not equal; otherwise, false.</returns>
 	public static bool operator !=(RelativeJsonPointer left, RelativeJsonPointer right) => !left.Equals(right);
 }

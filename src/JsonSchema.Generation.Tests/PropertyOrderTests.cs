@@ -1,5 +1,8 @@
 ﻿using System.Linq;
+using System.Text.Json;
+using Json.More;
 using NUnit.Framework;
+using TestHelpers;
 // ReSharper disable ClassNeverInstantiated.Local
 
 namespace Json.Schema.Generation.Tests;
@@ -25,16 +28,24 @@ public class PropertyOrderTests
 			PropertyOrder = PropertyOrder.AsDeclared
 		};
 
-		JsonSchema schema = new JsonSchemaBuilder()
-			.FromType<SpecifiedOrder>(config);
+		var builder = new JsonSchemaBuilder();
+		builder.FromType<SpecifiedOrder>(config);
 
-		var properties = schema.Keywords!.OfType<PropertiesKeyword>().Single();
+		var schema = builder.Build();
+		TestConsole.WriteLine(schema.Root.Source);
 
-		Assert.Multiple(() =>
-		{
-			Assert.That(properties.Properties.Keys.First(), Is.EqualTo(nameof(SpecifiedOrder.Second)));
-			Assert.That(properties.Properties.Keys.Last(), Is.EqualTo(nameof(SpecifiedOrder.First)));
-		});
+		var expected = JsonDocument.Parse(
+			"""
+			{
+			  "type": "object",
+			  "properties": {
+			    "Second": {"type": "integer"},
+			    "First": {"type": "integer"}
+			  }
+			}
+			""").RootElement;
+	
+		Assert.That(expected.IsEquivalentTo(schema.Root.Source));
 	}
 
 	[Test]
@@ -45,17 +56,25 @@ public class PropertyOrderTests
 			PropertyOrder = PropertyOrder.AsDeclared
 		};
 
-		JsonSchema schema = new JsonSchemaBuilder()
-			.FromType<SpecifiedOrderDerived>(config);
+		var builder = new JsonSchemaBuilder();
+		builder.FromType<SpecifiedOrderDerived>(config);
 
-		var properties = schema.Keywords!.OfType<PropertiesKeyword>().Single();
+		var schema = builder.Build();
+		TestConsole.WriteLine(schema.Root.Source);
 
-		Assert.Multiple(() =>
-		{
-			Assert.That(properties.Properties.Keys.ElementAt(0), Is.EqualTo(nameof(SpecifiedOrder.Second)));
-			Assert.That(properties.Properties.Keys.ElementAt(1), Is.EqualTo(nameof(SpecifiedOrder.First)));
-			Assert.That(properties.Properties.Keys.ElementAt(2), Is.EqualTo(nameof(SpecifiedOrderDerived.Third)));
-		});
+		var expected = JsonDocument.Parse(
+			"""
+			{
+			  "type": "object",
+			  "properties": {
+			    "Second": {"type": "integer"},
+			    "First": {"type": "integer"},
+			    "Third": {"type": "integer"}
+			  }
+			}
+			""").RootElement;
+	
+		Assert.That(expected.IsEquivalentTo(schema.Root.Source));
 	}
 
 	[Test]
@@ -66,15 +85,23 @@ public class PropertyOrderTests
 			PropertyOrder = PropertyOrder.ByName
 		};
 
-		JsonSchema schema = new JsonSchemaBuilder()
-			.FromType<SpecifiedOrder>(config);
+		var builder = new JsonSchemaBuilder();
+		builder.FromType<SpecifiedOrder>(config);
 
-		var properties = schema.Keywords!.OfType<PropertiesKeyword>().Single();
+		var schema = builder.Build();
+		TestConsole.WriteLine(schema.Root.Source);
 
-		Assert.Multiple(() =>
-		{
-			Assert.That(properties.Properties.Keys.First(), Is.EqualTo(nameof(SpecifiedOrder.First)));
-			Assert.That(properties.Properties.Keys.Last(), Is.EqualTo(nameof(SpecifiedOrder.Second)));
-		});
+		var expected = JsonDocument.Parse(
+			"""
+			{
+			  "type": "object",
+			  "properties": {
+			    "First": {"type": "integer"},
+			    "Second": {"type": "integer"}
+			  }
+			}
+			""").RootElement;
+	
+		Assert.That(expected.IsEquivalentTo(schema.Root.Source));
 	}
 }
