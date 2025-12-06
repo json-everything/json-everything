@@ -1,6 +1,6 @@
 ﻿@page "/json-schema"
 @implements IDisposable
-@using Json.Schema.DataGeneration
+@* @using Json.Schema.DataGeneration *@
 @using Json.Schema
 @using System.Text.Json
 @using Json.Schema.Generation
@@ -173,7 +173,7 @@
 		LibraryVersion.GetFor<UniqueKeysKeyword>(),
 		LibraryVersion.GetFor<DiscriminatorKeyword>(),
 		LibraryVersion.GetFor<ISchemaRefiner>(),
-		LibraryVersion.GetFor<Bound>()
+		// LibraryVersion.GetFor<Bound>()
     ];
 
     private readonly List<Dialect> _dialects =
@@ -197,7 +197,7 @@
 	{
 		Evaluate,
 		GenerateSchema,
-		GenerateData
+		// GenerateData
 	}
 
 	private class SchemaOptionsModel
@@ -256,9 +256,9 @@
 				case SchemaOperations.GenerateSchema:
 					ConfigureForSchemaGen();
 					break;
-				case SchemaOperations.GenerateData:
-					ConfigureForDataGen();
-					break;
+				// case SchemaOperations.GenerateData:
+				// 	ConfigureForDataGen();
+				// 	break;
 				case SchemaOperations.Evaluate:
 				default:
 					ConfigureForEvaluation();
@@ -297,7 +297,7 @@
 	{
 		SchemaOperations.Evaluate => "Evaluate JSON",
 		SchemaOperations.GenerateSchema => "Generate a Schema",
-		SchemaOperations.GenerateData => "Generate Data",
+		// SchemaOperations.GenerateData => "Generate Data",
 		_ => "Evaluate JSON"
 	};
 
@@ -360,9 +360,9 @@
 			case SchemaOperations.GenerateSchema:
 				await GenerateSchema();
 				break;
-			case SchemaOperations.GenerateData:
-				await GenerateData();
-				break;
+			// case SchemaOperations.GenerateData:
+			// 	await GenerateData();
+			// 	break;
 			default:
 				throw new ArgumentOutOfRangeException();
 		}
@@ -419,36 +419,36 @@
 		}
 	}
 
-	private async Task GenerateData()
-	{
-		await _outputEditor.SetLanguageAsync("json", JsRuntime);
-		await _outputEditor.SetValue(string.Empty);
+	// private async Task GenerateData()
+	// {
+	// 	await _outputEditor.SetLanguageAsync("json", JsRuntime);
+	// 	await _outputEditor.SetValue(string.Empty);
 
-		JsonSchema schema;
-		try
-		{
-			schema = YamlSerializer.Deserialize<JsonSchema>(await _schemaEditor.GetValue())!;
-		}
-		catch (Exception e)
-		{
-			await _outputEditor.SetLanguageAsync("text", JsRuntime);
-			await _outputEditor.SetValue($"Schema is invalid\n\n{e.Message}");
-			return;
-		}
+	// 	JsonSchema schema;
+	// 	try
+	// 	{
+	// 		schema = YamlSerializer.Deserialize<JsonSchema>(await _schemaEditor.GetValue())!;
+	// 	}
+	// 	catch (Exception e)
+	// 	{
+	// 		await _outputEditor.SetLanguageAsync("text", JsRuntime);
+	// 		await _outputEditor.SetValue($"Schema is invalid\n\n{e.Message}");
+	// 		return;
+	// 	}
 
-		var generationResults = schema.GenerateData();
+	// 	var generationResults = schema.GenerateData();
 
-		if (generationResults.IsSuccess)
-		{
-			var instance = JsonSerializer.Serialize(generationResults.Result, new JsonSerializerOptions {WriteIndented = true});
-			await _instanceEditor.SetValue(instance);
-			await SaveInstance();
-		}
-		else
-		{
-			await _outputEditor.SetValue(generationResults.ErrorMessage);
-		}
-	}
+	// 	if (generationResults.IsSuccess)
+	// 	{
+	// 		var instance = JsonSerializer.Serialize(generationResults.Result, new JsonSerializerOptions {WriteIndented = true});
+	// 		await _instanceEditor.SetValue(instance);
+	// 		await SaveInstance();
+	// 	}
+	// 	else
+	// 	{
+	// 		await _outputEditor.SetValue(generationResults.ErrorMessage);
+	// 	}
+	// }
 
 #pragma warning disable CS0618 // Type or member is obsolete
 	private async Task GenerateSchema()

@@ -6,9 +6,9 @@ using Json.Schema;
 namespace Json.Benchmarks.SchemaSuite;
 
 [MemoryDiagnoser]
-//[SimpleJob(RuntimeMoniker.Net80, baseline:true)]
+[SimpleJob(RuntimeMoniker.Net80, baseline:true)]
 [SimpleJob(RuntimeMoniker.Net90)]
-//[SimpleJob(RuntimeMoniker.Net10_0)]
+[SimpleJob(RuntimeMoniker.Net10_0)]
 public class SingleSchemaRunner
 {
 	private static readonly JsonElement _schema = 
@@ -48,11 +48,11 @@ public class SingleSchemaRunner
 		Dialect = Dialect.Draft201909
 	};
 
-	//[Benchmark]
-	[Arguments(1)]
-	//[Arguments(5)]
-	//[Arguments(10)]
-	//[Arguments(50)]
+	[Benchmark]
+	//[Arguments(1)]
+	[Arguments(5)]
+	[Arguments(10)]
+	[Arguments(50)]
 	public int BuildAlways(int n)
 	{
 		for (int j = 0; j < n; j++)
@@ -65,8 +65,8 @@ public class SingleSchemaRunner
 	}
 
 	[Benchmark]
-	[Arguments(1)]
-	//[Arguments(5)]
+	//[Arguments(1)]
+	[Arguments(5)]
 	[Arguments(10)]
 	[Arguments(50)]
 	public int BuildOnce(int n)
