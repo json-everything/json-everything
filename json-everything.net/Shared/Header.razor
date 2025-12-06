@@ -9,6 +9,23 @@
 			</a>
 		</div>
 		<div class="px-1">
+			<button class="navbar-brand m-2 btn btn-link p-0" @onclick="ToggleTheme" style="border: none; background: none; outline: none; box-shadow: none;">
+				<span class="tooltip-icon">
+					<i class="material-icons" style="color: white;">
+						@if (_isDarkMode)
+						{
+							<text>lightbulb_outline</text>
+						}
+						else
+						{
+							<text>lightbulb</text>
+						}
+					</i>
+					<span class="tooltip-text header-tooltip" style="top: 25px; padding: 10px; min-width: auto;">
+						Switch to @(_isDarkMode ? "light" : "dark") mode
+					</span>
+				</span>
+			</button>
 			<a class="navbar-brand m-2" href="https://blog.json-everything.net">
 				<span class="tooltip-icon">
 					blog
@@ -52,3 +69,38 @@
 		</div>
 	</div>
 </div>
+
+@inject DataManager DataManager
+@inject IJSRuntime JSRuntime
+@inject ThemeService ThemeService
+
+@code {
+	private bool _isDarkMode = false;
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			var theme = await DataManager.Get("theme");
+			_isDarkMode = theme != "light"; // default to dark mode
+			ThemeService.SetTheme(_isDarkMode);
+			await ApplyTheme();
+			StateHasChanged();
+		}
+	}
+
+	private async Task ToggleTheme()
+	{
+		_isDarkMode = !_isDarkMode;
+		ThemeService.SetTheme(_isDarkMode);
+		await ApplyTheme();
+		await DataManager.Set("theme", _isDarkMode ? "dark" : "light");
+	}
+
+	private async Task ApplyTheme()
+	{
+		await JSRuntime.InvokeVoidAsync("eval", _isDarkMode 
+			? "document.documentElement.removeAttribute('data-bs-theme')" 
+			: "document.documentElement.setAttribute('data-bs-theme', 'light')");
+	}
+}

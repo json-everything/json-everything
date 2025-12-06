@@ -1,4 +1,8 @@
-﻿<div class="container feature">
+﻿@using JsonEverythingNet.Services
+@inject ThemeService ThemeService
+@implements IDisposable
+
+<div class="container feature">
 	<div class="row justify-content-evenly align-items-center">
 		<div class="col-6 @(Flipped ? "order-1" : "")">
 			<h2 class="display-6 mb-4">
@@ -15,9 +19,9 @@
 			</div>
 		</div>
 		<div class="col-4">
-			<img src="@ImageUrl" height="250" width="250" />
+			<img src="@GetImageUrl()" height="250" width="250" />
 		</div>
-	</div>
+		</div>
 </div>
 
 
@@ -35,4 +39,28 @@
 	public string? DocsUrl { get; set; }
 	[Parameter]
 	public bool Flipped { get; set; }
+
+	private string GetImageUrl()
+	{
+		if (string.IsNullOrEmpty(ImageUrl) || ThemeService.IsDarkMode)
+			return ImageUrl ?? string.Empty;
+		
+		// Replace .png with -light.png for light mode
+		return ImageUrl.Replace(".png", "-light.png");
+	}
+
+	protected override void OnInitialized()
+	{
+		ThemeService.OnThemeChanged += HandleThemeChanged;
+	}
+
+	private void HandleThemeChanged()
+	{
+		StateHasChanged();
+	}
+
+	public void Dispose()
+	{
+		ThemeService.OnThemeChanged -= HandleThemeChanged;
+	}
 }

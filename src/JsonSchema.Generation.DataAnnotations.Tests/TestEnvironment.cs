@@ -24,5 +24,4 @@ internal static class TestEnvironment
 }
 
 [JsonSerializable(typeof(JsonSchema))]
-[JsonSerializable(typeof(PropertiesKeyword))]
 public partial class TestSerializerContext : JsonSerializerContext;

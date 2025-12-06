@@ -11,6 +11,8 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 builder.Services.AddBlazoredLocalStorageAsSingleton();
 builder.Services.AddSingleton<DataManager>();
+builder.Services.AddSingleton<ThemeService>();
+builder.Services.AddScoped<EditorOptions>();
 
 var host = builder.Build();
 var client = host.Services.GetService<HttpClient>();
