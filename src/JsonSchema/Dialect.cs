@@ -40,14 +40,38 @@ public partial class Dialect
 
 	private readonly MultiLookupConcurrentDictionary<KeywordMetaData> _keywordData;
 
+	/// <summary>
+	/// Gets or sets the default JSON Schema dialect for new <see cref="BuildOptions"/> objects.
+	/// </summary>
 	public static Dialect Default { get; set; } = null!;
 
+	/// <summary>
+	/// Gets a value indicating whether references ignore sibling keywords during processing.
+	/// </summary>
+	/// <remarks>Set this property to <see langword="true"/> to ensure that references do not consider keywords
+	/// defined by sibling elements. This can affect how references are resolved in scenarios where sibling keywords may
+	/// otherwise influence behavior.</remarks>
 	public bool RefIgnoresSiblingKeywords { get; init; }
 
+	/// <summary>
+	/// Gets a value indicating whether unknown keywords are permitted during processing.
+	/// </summary>
+	/// <remarks>Set this property to <see langword="true"/> to allow keywords that are not explicitly recognized.
+	/// This can be useful when working with extensible or user-defined keyword sets.</remarks>
 	public bool AllowUnknownKeywords { get; init; }
 
+	/// <summary>
+	/// Gets the unique identifier for the dialect.
+	/// </summary>
 	public Uri? Id { get; init; }
 
+	/// <summary>
+	/// Initializes a new instance of the Dialect class using the specified collection of keyword handlers.
+	/// </summary>
+	/// <remarks>The provided keyword handlers are used to configure the dialect's keyword metadata and dependency
+	/// evaluation. The constructor will throw an exception if any element in the collection is null.</remarks>
+	/// <param name="keywords">A collection of keyword handlers to be included in the dialect. Each handler defines the behavior and metadata for
+	/// a specific keyword. Cannot be null.</param>
 	public Dialect(params IEnumerable<IKeywordHandler> keywords)
 	{
 		_keywordData = [];
@@ -84,6 +108,14 @@ public partial class Dialect
 		return handler ?? (AllowUnknownKeywords
 			? AnnotationKeyword.Instance
 			: throw new JsonSchemaException($"Unknown keywords ({keyword}) are disallowed for this dialect."));
+	}
+
+	internal bool ProducesDependentAnnotations(Type keywordType)
+	{
+		if (!_keywordData.TryGetValue(keywordType, out var metaData))
+			throw new ArgumentException($"Keyword type `{keywordType}` not registered.");
+
+		return metaData.ProducesDependentAnnotations;
 	}
 
 	private void EvaluateDependencies()

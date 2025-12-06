@@ -5,13 +5,12 @@ using Json.Patch;
 using Json.Path;
 using Json.Pointer;
 using Json.Schema;
-using Json.Schema.ArrayExt;
+using Json.Schema.ArrayExt.Keywords;
 using Json.Schema.CodeGeneration;
-using Json.Schema.Data;
-using Json.Schema.DataGeneration;
+using Json.Schema.Data.Keywords;
 using Json.Schema.Generation.DataAnnotations;
 using Json.Schema.Generation.Generators;
-using Json.Schema.OpenApi;
+using Json.Schema.OpenApi.Keywords;
 using Yaml2JsonNode;
 
 namespace ApiDocsGenerator
@@ -30,7 +29,7 @@ namespace ApiDocsGenerator
 			await GenerateAndSaveDocs<DiscriminatorKeyword>("10.04", outputDir, "api");
 			await GenerateAndSaveDocs<ISchemaGenerator>("10.05", outputDir, "api");
 			await GenerateAndSaveDocs<StringLengthAttributeHandler>("10.06", outputDir, "api");
-			await GenerateAndSaveDocs<NumberRange>("10.07", outputDir, "api");
+			//await GenerateAndSaveDocs<NumberRange>("10.07", outputDir, "api");
 			await GenerateAndSaveDocs<JsonPath>("10.08", outputDir, "api");
 			await GenerateAndSaveDocs<JsonPatch>("10.09", outputDir, "api");
 			await GenerateAndSaveDocs<JsonPointer>("10.10", outputDir, "api");

@@ -58,7 +58,7 @@ public class SelfValidationTest
 				SchemaRegistry = new()
 			};
 
-			var onlineSchemaJson = new HttpClient().GetStringAsync(schema["$id"]!.Value.GetString()!).Result;
+			var onlineSchemaJson = new HttpClient().GetStringAsync(schema.Root.Keywords.FirstOrDefault(x => x.Handler.Name == "$id")!.RawValue.GetString()!).Result;
 			var onlineSchema = JsonSchema.FromText(onlineSchemaJson, buildOptions);
 
 			var onlineInstance = JsonDocument.Parse(onlineSchemaJson).RootElement;

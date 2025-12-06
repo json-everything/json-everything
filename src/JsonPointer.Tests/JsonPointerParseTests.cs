@@ -145,7 +145,9 @@ public class JsonPointerParseTests
 	[TestCaseSource(nameof(SpecificationExamples))]
 	public void CreateThenToString(string pointerString, string[] segments)
 	{
+#pragma warning disable CS0618 // Type or member is obsolete
 		var pointer = JsonPointer.Create(segments.Select(x => (SegmentValueStandIn)x).ToArray());
+#pragma warning restore CS0618 // Type or member is obsolete
 
 		var backToString = pointer.ToString();
 		Assert.That(backToString, Is.EqualTo(pointerString));

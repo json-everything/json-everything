@@ -46,9 +46,12 @@ public class JsonSchema : IBaseDocument
 	/// </remarks>
 	public Uri BaseUri { get; private set; }
 
+	/// <summary>
+	/// Gets the root node of the JSON Schema.
+	/// </summary>
+	/// <remarks>Use this property to access the top-level schema node, which represents the entry point for
+	/// traversing or validating the entire schema structure.</remarks>
 	public JsonSchemaNode Root { get; }
-
-	public JsonElement? this[string keyword] => Root.Keywords.FirstOrDefault(x => x.Handler.Name == keyword)?.RawValue;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 	private JsonSchema(bool value)
@@ -205,6 +208,7 @@ public class JsonSchema : IBaseDocument
 			}
 			else if (handler is IdKeyword && !onlyHandleRef)
 			{
+#pragma warning disable CS0618 // Type or member is obsolete
 				context.PathFromResourceRoot = JsonPointer.Empty;
 				context.BaseUri = context.BaseUri.Resolve((Uri)data.Value!);
 			}
@@ -218,6 +222,7 @@ public class JsonSchema : IBaseDocument
 			foreach (var subschema in data.Subschemas)
 			{
 				subschema.PathFromResourceRoot = keywordContext.PathFromResourceRoot.Combine(subschema.RelativePath);
+#pragma warning restore CS0618 // Type or member is obsolete
 			}
 
 			keywordData.Add(data);
@@ -404,10 +409,12 @@ public class JsonSchema : IBaseDocument
 				{
 					BaseUri = BaseUri,
 					LocalSchema = localSchema.Value,
+#pragma warning disable CS0618 // Type or member is obsolete
 					PathFromResourceRoot = pointer
 				};
 				subschema = BuildNode(newContext);
 				subschema.PathFromResourceRoot = pointer;
+#pragma warning restore CS0618 // Type or member is obsolete
 			}
 		}
 
@@ -432,8 +439,27 @@ public class JsonSchema : IBaseDocument
 	}
 }
 
+/// <summary>
+/// Provides custom serialization and deserialization logic for <see cref="JsonSchema"/> objects when using
+/// System.Text.Json.
+/// </summary>
+/// <remarks>Use this converter to enable reading and writing of <see cref="JsonSchema"/> instances with
+/// System.Text.Json. This converter handles the mapping between JSON schema representations and <see
+/// cref="JsonSchema"/> objects, ensuring correct parsing and formatting during serialization operations.</remarks>
 public class JsonSchemaJsonConverter : JsonConverter<JsonSchema>
 {
+	/// <summary>
+	/// Deserializes a JSON value from the specified reader into a <see cref="JsonSchema"/> instance.
+	/// </summary>
+	/// <param name="reader">The <see cref="Utf8JsonReader"/> positioned at the JSON value to read. The reader must be at the start of a valid
+	/// JSON schema object.</param>
+	/// <param name="typeToConvert">The type to convert the JSON value to. This parameter is ignored; the method always returns a <see
+	/// cref="JsonSchema"/>.</param>
+	/// <param name="options">The serializer options to use when reading the JSON value. Must not be <see langword="null"/>.</param>
+	/// <returns>A <see cref="JsonSchema"/> instance representing the deserialized schema, or <see langword="null"/> if the JSON
+	/// value is not a valid schema.</returns>
+	/// <exception cref="JsonException">Thrown when the JSON value cannot be deserialized into a valid <see cref="JsonSchema"/>. See the inner exception
+	/// for details.</exception>
 	public override JsonSchema? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
 		var element = options.Read(ref reader, JsonSchemaSerializerContext.Default.JsonElement);
@@ -447,6 +473,12 @@ public class JsonSchemaJsonConverter : JsonConverter<JsonSchema>
 		}
 	}
 
+	/// <summary>
+	/// Writes the specified JSON schema to the provided writer using the given serializer options.
+	/// </summary>
+	/// <param name="writer">The writer to which the JSON schema will be written. Must not be null.</param>
+	/// <param name="value">The JSON schema to write. Must not be null.</param>
+	/// <param name="options">The serializer options to use when writing the JSON schema. Must not be null.</param>
 	public override void Write(Utf8JsonWriter writer, JsonSchema value, JsonSerializerOptions options)
 	{
 		options.Write(writer, value.Root.Source, JsonSchemaSerializerContext.Default.JsonElement);

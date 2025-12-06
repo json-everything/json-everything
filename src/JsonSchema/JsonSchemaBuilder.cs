@@ -14,8 +14,26 @@ public class JsonSchemaBuilder
 	private readonly BuildOptions? _buildOptions;
 	internal readonly JsonNode Keywords = new JsonObject();
 
+	/// <summary>
+	/// Gets an instance of <see cref="JsonSchemaBuilder"/> that represents an empty JSON schema.
+	/// </summary>
+	/// <remarks>Use this property to obtain a schema with no defined constraints or properties. This can be useful
+	/// as a starting point for building more complex schemas or when a schema is required but no validation is
+	/// needed.</remarks>
 	public static JsonSchemaBuilder Empty { get; } = new();
+
+	/// <summary>
+	/// Gets a schema builder that creates a schema which always validates as <see langword="true"/>.
+	/// </summary>
+	/// <remarks>Use this property to obtain a schema that unconditionally accepts any JSON value. This is
+	/// equivalent to a schema defined as <c>true</c> in JSON Schema specifications.</remarks>
 	public static JsonSchemaBuilder True { get; } = new(true);
+
+	/// <summary>
+	/// Gets a schema builder that always evaluates to false, representing a schema that does not match any JSON value.
+	/// </summary>
+	/// <remarks>Use this property to create a schema that explicitly rejects all input. This can be useful for
+	/// disabling or invalidating parts of a schema in compositional scenarios.</remarks>
 	public static JsonSchemaBuilder False { get; } = new(false);
 
 	/// <summary>
@@ -82,18 +100,6 @@ public class JsonSchemaBuilder
 	public void Add(string keyword, IEnumerable<KeyValuePair<string, JsonSchemaBuilder>> builders)
 	{
 		Keywords[keyword] = new JsonObject(builders.ToDictionary(x => x.Key, x => (JsonNode?)x.Value.Keywords.DeepClone()));
-	}
-
-	/// <summary>
-	/// Gets a keyword if one has been added.
-	/// </summary>
-	/// <typeparam name="T">the keyword type.</typeparam>
-	/// <returns>The keyword, if it exists; `null` otherwise.</returns>
-	public T? Get<T>()
-		where T : IKeywordHandler
-	{
-		throw new NotImplementedException();
-		//return _keywords.Values.OfType<T>().SingleOrDefault();
 	}
 
 	/// <summary>

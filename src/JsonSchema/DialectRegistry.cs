@@ -16,8 +16,22 @@ public class DialectRegistry
 	private readonly Dictionary<Uri, Dialect> _dialects = new();
 	private Uri[] _wellKnownDialects = null!;
 
+	/// <summary>
+	/// Gets the global registry of JSON Schema dialects used throughout the application.
+	/// </summary>
+	/// <remarks>Use this property to access or configure JSON Schema dialects that should be available application-wide.
+	/// Changes to the global registry affect all components that rely on shared dialect definitions.</remarks>
 	public static DialectRegistry Global { get; } = new();
 
+	/// <summary>
+	/// Registers a custom dialect for use in the system.
+	/// </summary>
+	/// <remarks>Registering a dialect allows it to be used in subsequent operations. Official dialects cannot be
+	/// overwritten or replaced.</remarks>
+	/// <param name="dialect">The dialect to register. The dialect must have a non-null identifier and must not conflict with any official
+	/// dialects.</param>
+	/// <exception cref="ArgumentException">Thrown if <paramref name="dialect"/> has a null <c>Id</c>, or if the dialect's identifier matches an official
+	/// dialect.</exception>
 	public void Register(Dialect dialect)
 	{
 		if (dialect.Id is null)
@@ -29,6 +43,11 @@ public class DialectRegistry
 		_dialects[dialect.Id] = dialect;
 	}
 
+	/// <summary>
+	/// Unregisters a dialect identified by the specified URI, removing it from the collection of available dialects.
+	/// </summary>
+	/// <param name="dialectId">The URI that uniquely identifies the dialect to unregister. Cannot be an official dialect.</param>
+	/// <exception cref="ArgumentException">Thrown if <paramref name="dialectId"/> refers to an official dialect, which cannot be removed.</exception>
 	public void Unregister(Uri dialectId)
 	{
 		if (_wellKnownDialects.Contains(dialectId))

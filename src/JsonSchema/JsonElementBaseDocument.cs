@@ -38,6 +38,7 @@ public class JsonElementBaseDocument : IBaseDocument
 	/// <param name="pointer">A JSON Pointer to the location of the schema within the document.</param>
 	/// <param name="context">Build context.</param>
 	/// <returns>A JSON Schema, if found.</returns>
+#pragma warning disable CS0618 // Type or member is obsolete
 	public JsonSchemaNode? FindSubschema(JsonPointer pointer, BuildContext context)
 	{
 		return _foundSubschemas.GetOrAdd(pointer, _ =>
@@ -56,5 +57,6 @@ public class JsonElementBaseDocument : IBaseDocument
 
 			return node;
 		});
+#pragma warning restore CS0618 // Type or member is obsolete
 	}
 }

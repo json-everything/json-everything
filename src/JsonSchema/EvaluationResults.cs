@@ -17,7 +17,6 @@ public class EvaluationResults
 {
 	private readonly Uri _currentUri;
 	private readonly HashSet<string>? _backgroundAnnotations;
-	private readonly HashSet<string>? _ignoredAnnotations;
 	private Uri? _schemaLocation;
 
 	/// <summary>
@@ -70,6 +69,7 @@ public class EvaluationResults
 			? Annotations.Where(x => !(_backgroundAnnotations?.Contains(x.Key) ?? false)).ToDictionary(x => x.Key, x => x.Value)
 			: null;
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 	internal EvaluationResults(JsonPointer evaluationPath, Uri schemaLocation, JsonPointer instanceLocation, EvaluationOptions options)
 	{
 		EvaluationPath = evaluationPath;
@@ -77,12 +77,12 @@ public class EvaluationResults
 		InstanceLocation = instanceLocation;
 
 		IncludeDroppedAnnotations = options.PreserveDroppedAnnotations;
-		if (options.IgnoredAnnotations != null)
-		{
-			//_ignoredAnnotations = new HashSet<string>(options.IgnoredAnnotations.Where(x => !x.ProducesDependentAnnotations()).Select(x => x.Keyword()));
-			//_backgroundAnnotations = new HashSet<string>(options.IgnoredAnnotations.Where(x => x.ProducesDependentAnnotations()).Select(x => x.Keyword()));
-		}
+		//if (options.IgnoredAnnotations != null)
+		//{
+		//	_backgroundAnnotations = new HashSet<string>(options.IgnoredAnnotations.Where(x => x.ProducesDependentAnnotations()).Select(x => x.Keyword()));
+		//}
 	}
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 
 	private EvaluationResults(EvaluationResults other)
 	{
@@ -94,7 +94,6 @@ public class EvaluationResults
 		Annotations = other.Annotations?.ToDictionary(x => x.Key, x => x.Value);
 		Errors = other.Errors?.ToDictionary(x => x.Key, x => x.Value);
 		IncludeDroppedAnnotations = other.IncludeDroppedAnnotations;
-		_ignoredAnnotations = other._ignoredAnnotations;
 		_backgroundAnnotations = other._backgroundAnnotations;
 	}
 
@@ -185,53 +184,6 @@ public class EvaluationResults
 		Annotations?.Clear();
 		Errors?.Clear();
 		Format = OutputFormat.Flag;
-	}
-
-	/// <summary>
-	/// Sets an annotation.
-	/// </summary>
-	/// <param name="keyword">The annotation key.  Typically the name of the keyword.</param>
-	/// <param name="value">The annotation value.</param>
-	public void SetAnnotation(string keyword, JsonElement value)
-	{
-		if (_ignoredAnnotations?.Any(x => x == keyword) ?? false) return;
-
-		Annotations ??= [];
-
-		Annotations[keyword] = value;
-	}
-
-	/// <summary>
-	/// Tries to get an annotation.
-	/// </summary>
-	/// <param name="keyword">The annotation key.</param>
-	/// <param name="annotation"></param>
-	/// <returns>The annotation or null.</returns>
-	public bool TryGetAnnotation(string keyword, out JsonElement annotation)
-	{
-		annotation = default;
-		if (Annotations is null || Annotations.Count == 0) return false;
-		return Annotations!.TryGetValue(keyword, out annotation);
-	}
-
-	/// <summary>
-	/// Gets all annotations of a particular data type for the current evaluation level.
-	/// </summary>
-	/// <param name="keyword">The key under which the annotation is stored.  Typically, a keyword.</param>
-	/// <returns>The set of all annotations for the current evaluation level.</returns>
-	public IEnumerable<JsonElement?> GetAllAnnotations(string keyword)
-	{
-		if (Annotations is not null && Annotations!.TryGetValue(keyword, out var annotation))
-			yield return annotation;
-
-		if (Details is null || Details.Count == 0) yield break;
-
-		var validResults = Details.Where(x => x.IsValid && x.InstanceLocation == InstanceLocation);
-		var allAnnotations = validResults.SelectMany(x => x.GetAllAnnotations(keyword));
-		foreach (var nestedAnnotation in allAnnotations)
-		{
-			yield return nestedAnnotation;
-		}
 	}
 }
 

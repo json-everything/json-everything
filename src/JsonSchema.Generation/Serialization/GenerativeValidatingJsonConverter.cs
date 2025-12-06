@@ -35,7 +35,9 @@ public class GenerativeValidatingJsonConverter : ValidatingJsonConverter
 		var generateAttribute = type.GetCustomAttributes(typeof(GenerateJsonSchemaAttribute)).SingleOrDefault();
 		if (generateAttribute is not null)
 		{
+#pragma warning disable IL3050
 			var schema = new JsonSchemaBuilder().FromType(type, GeneratorConfiguration);
+#pragma warning restore IL3050
 			return schema;
 		}
 

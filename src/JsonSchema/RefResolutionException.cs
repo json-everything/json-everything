@@ -20,10 +20,6 @@ public class RefResolutionException : JsonSchemaException
 	/// Gets the type of anchor, if one exists.
 	/// </summary>
 	public AnchorType? AnchorType { get; }
-	/// <summary>
-	/// Gets a JSON Pointer, if one exists.
-	/// </summary>
-	public JsonPointer? Location { get; }
 
 	/// <summary>
 	/// Creates a new instance.
@@ -39,18 +35,6 @@ public class RefResolutionException : JsonSchemaException
 		AnchorType = anchor is null
 			? null
 			: anchorType ?? Schema.AnchorType.Static;
-	}
-
-	/// <summary>
-	/// Creates a new instance.
-	/// </summary>
-	/// <param name="baseUri">The base URI of the reference.</param>
-	/// <param name="location">The JSON Pointer location.</param>
-	public RefResolutionException(Uri baseUri, JsonPointer location)
-		: base($"Could not resolve schema '{baseUri}#{location}'")
-	{
-		BaseUri = baseUri;
-		Location = location;
 	}
 
 	private static string Format(Uri baseUri, string? anchor, AnchorType? anchorType)
@@ -71,9 +55,21 @@ public class RefResolutionException : JsonSchemaException
 	}
 }
 
+/// <summary>
+/// Specifies the type of anchor that was used during a reference resolution operation.
+/// </summary>
 public enum AnchorType
 {
+	/// <summary>
+	/// Indicates the anchor was produced by `$anchor` (Draft 2019-09+) or by `$id` (Drafts 6 &amp; 7).
+	/// </summary>
 	Static,
+	/// <summary>
+	/// Indicates the anchor was produced by `$dynamicAnchor` (Draft 2020-12+).
+	/// </summary>
 	Dynamic,
+	/// <summary>
+	/// Indicates the anchor was produced by `$recursiveAnchor` (Draft 2019-09).
+	/// </summary>
 	Recursive
 }

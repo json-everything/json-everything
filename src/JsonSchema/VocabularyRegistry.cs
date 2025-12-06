@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Humanizer.Inflections;
 
 namespace Json.Schema;
 
@@ -17,8 +16,22 @@ public class VocabularyRegistry
 	private readonly Dictionary<Uri, Vocabulary> _vocabs = new();
 	private Uri[] _wellKnownVocabs = null!;
 
+	/// <summary>
+	/// Gets the global registry of vocabularies available throughout the application.
+	/// </summary>
+	/// <remarks>Use this property to access a shared, application-wide instance of the vocabulary registry. The
+	/// global registry is intended for scenarios where a centralized vocabulary store is required. This property is
+	/// thread-safe.</remarks>
 	public static VocabularyRegistry Global { get; } = new();
 
+	/// <summary>
+	/// Registers a custom vocabulary for use within the system.
+	/// </summary>
+	/// <remarks>Registering a vocabulary allows it to be referenced and used in subsequent operations. Official
+	/// vocabularies cannot be overwritten or replaced by custom registrations.</remarks>
+	/// <param name="vocabulary">The vocabulary to register. The vocabulary's identifier must not conflict with any official vocabularies.</param>
+	/// <exception cref="ArgumentException">Thrown if the vocabulary's identifier matches an official vocabulary, preventing overwriting of well-known
+	/// vocabularies.</exception>
 	public void Register(Vocabulary vocabulary)
 	{
 		if (_wellKnownVocabs?.Contains(vocabulary.Id) == true)
@@ -27,6 +40,11 @@ public class VocabularyRegistry
 		_vocabs[vocabulary.Id] = vocabulary;
 	}
 
+	/// <summary>
+	/// Removes the vocabulary identified by the specified URI from the registry.
+	/// </summary>
+	/// <param name="vocabularyId">The URI that uniquely identifies the vocabulary to remove. Cannot be an official vocabulary.</param>
+	/// <exception cref="ArgumentException">Thrown if <paramref name="vocabularyId"/> refers to an official vocabulary, which cannot be removed.</exception>
 	public void Unregister(Uri vocabularyId)
 	{
 		if (_wellKnownVocabs?.Contains(vocabularyId) == true)

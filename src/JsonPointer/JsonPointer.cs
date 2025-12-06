@@ -326,11 +326,21 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 		return true;
 	}
 
+	/// <summary>
+	/// Determines whether the current JSON pointer starts with the specified JSON pointer.
+	/// </summary>
+	/// <param name="other">The JSON pointer to compare with the beginning of the current pointer. Cannot be null.</param>
+	/// <returns>true if the current JSON pointer starts with the specified pointer; otherwise, false.</returns>
 	public bool StartsWith(JsonPointer other)
 	{
 		return _pointer.Span.StartsWith(other._pointer.Span);
 	}
 
+	/// <summary>
+	/// Determines whether the current JSON pointer ends with the specified JSON pointer.
+	/// </summary>
+	/// <param name="other">The JSON pointer to compare with the end of the current pointer. Cannot be null.</param>
+	/// <returns>true if the current JSON pointer ends with the specified pointer; otherwise, false.</returns>
 	public bool EndsWith(JsonPointer other)
 	{
 		return _pointer.Span.EndsWith(other._pointer.Span);
@@ -368,7 +378,20 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 		return hash;
 	}
 
+	/// <summary>
+	/// Determines whether two specified JsonPointer instances are equal.
+	/// </summary>
+	/// <param name="left">The first JsonPointer to compare.</param>
+	/// <param name="right">The second JsonPointer to compare.</param>
+	/// <returns>true if the specified JsonPointer instances are equal; otherwise, false.</returns>
 	public static bool operator ==(JsonPointer left, JsonPointer right) => left.Equals(right);
+
+	/// <summary>
+	/// Determines whether two specified JsonPointer instances are not equal.
+	/// </summary>
+	/// <param name="left">The first JsonPointer to compare.</param>
+	/// <param name="right">The second JsonPointer to compare.</param>
+	/// <returns>true if the specified JsonPointer instances are not equal; otherwise, false.</returns>
 	public static bool operator !=(JsonPointer left, JsonPointer right) => !left.Equals(right);
 
 	/// <summary>
@@ -560,7 +583,7 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 		}
 
 		// Handle URL-encoded pointers
-		if (pointer[0] == '#')
+		if (pointer![0] == '#')
 		{
 			if (pointer.Length == 1)
 			{

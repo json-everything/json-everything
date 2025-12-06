@@ -133,7 +133,7 @@ public class Validation
 			}
 			catch (JsonSchemaException e)
 			{
-				TestConsole.WriteLine($"Error loading file '{fileName}'");
+				TestConsole.WriteLine($"Error loading file '{fileName}': {e}");
 			}
 		}
 	}
