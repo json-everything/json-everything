@@ -26,7 +26,7 @@
     <ProjectReference Include="..\src\JsonLogic\JsonLogic.csproj" />
     <ProjectReference Include="..\src\JsonPatch\JsonPatch.csproj" />
     <ProjectReference Include="..\src\JsonPath\JsonPath.csproj" />
-    <ProjectReference Include="..\src\JsonSchema.DataGeneration\JsonSchema.DataGeneration.csproj" />
+    <!-- <ProjectReference Include="..\src\JsonSchema.DataGeneration\JsonSchema.DataGeneration.csproj" /> -->
     <ProjectReference Include="..\src\JsonSchema.Data\JsonSchema.Data.csproj" />
     <ProjectReference Include="..\src\JsonSchema.Generation.DataAnnotations\JsonSchema.Generation.DataAnnotations.csproj" />
     <ProjectReference Include="..\src\JsonSchema.Generation\JsonSchema.Generation.csproj" />
