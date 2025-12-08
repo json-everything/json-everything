@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using Json.Schema.Serialization;
@@ -9,6 +10,7 @@ namespace Json.Schema.Generation.Serialization;
 /// Extends <see cref="ValidatingJsonConverter"/> to also allow for
 /// schema generation using <see cref="GenerateJsonSchemaAttribute"/>.
 /// </summary>
+[RequiresDynamicCode("JSON serialization and deserialization might require types that cannot be statically analyzed and might need runtime code generation. Use System.Text.Json source generation for native AOT applications.")]
 public class GenerativeValidatingJsonConverter : ValidatingJsonConverter
 {
 	/// <summary>

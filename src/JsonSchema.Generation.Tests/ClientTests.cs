@@ -624,7 +624,7 @@ public class ClientTests
 	}
 
 #if NET9_0_OR_GREATER
-	[JsonConverter(typeof(JsonStringEnumConverter))]
+	[JsonConverter(typeof(JsonStringEnumConverter<Issue890_Status>))]
 	public enum Issue890_Status
 	{
 		[JsonStringEnumMemberName("active")]

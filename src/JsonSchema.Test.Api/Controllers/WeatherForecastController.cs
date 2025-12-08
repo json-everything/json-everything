@@ -1,7 +1,8 @@
+using System.Collections.Concurrent;
 using Json.Schema.Serialization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OpenApi;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 
 namespace Json.Schema.Tests.Api.Controllers;
 
@@ -55,9 +56,11 @@ public class MyRequestSchemaTransformer : IOpenApiSchemaTransformer
 	{
 		if (context.JsonTypeInfo.Type == typeof(CreateChannelRequest))
 		{
-			schema.Type = "object";
-			schema.Properties.Add("name", new OpenApiSchema { Type = "string" });
-			schema.Properties.Add("enabled", new OpenApiSchema { Type = "boolean" });
+			schema.Type = JsonSchemaType.Object;
+			schema.Properties ??= new ConcurrentDictionary<string, IOpenApiSchema>();
+			schema.Properties.Add("name", new OpenApiSchema { Type = JsonSchemaType.String });
+			schema.Properties.Add("enabled", new OpenApiSchema { Type = JsonSchemaType.Boolean });
+			schema.Required ??= new HashSet<string>();
 			schema.Required.Add("name");
 			schema.Required.Add("enabled");
 		}
