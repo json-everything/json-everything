@@ -4,6 +4,14 @@ title: JsonSchema.Net.Generation.DataAnnotations
 icon: fas fa-tag
 order: "09.06"
 ---
+# [2.0.0](https://github.com/gregsdennis/json-everything/pull/952) {#release-schemagendataannotations-2.0.0}
+
+Updated per _JsonSchema.Net_ v8 (breaking changes).
+
+- Added `Dialect` static class.
+- Add .Net 10.0 support.
+- Update Nuget references.
+
 # [1.2.0](https://github.com/gregsdennis/json-everything/pull/822) {#release-schemagendataannotations-1.2.0}
 
 Add .Net 9.0 support.

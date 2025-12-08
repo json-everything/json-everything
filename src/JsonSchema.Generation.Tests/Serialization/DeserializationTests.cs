@@ -36,7 +36,7 @@ public class DeserializationTests
 		TypeInfoResolverChain = { TestSerializerContext.Default },
 		WriteIndented = true,
 		Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-		Converters = { new GenerativeValidatingJsonConverter { Options = { OutputFormat = OutputFormat.List } } }
+		Converters = { new GenerativeValidatingJsonConverter { EvaluationOptions = { OutputFormat = OutputFormat.List } } }
 	};
 
 	[SetUp]
@@ -284,7 +284,7 @@ public class DeserializationTests
 					TypeInfoResolverChain = { TestSerializerContext.Default },
 					WriteIndented = true,
 					Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-					Converters = { new GenerativeValidatingJsonConverter { Options = { OutputFormat = OutputFormat.List } } }
+					Converters = { new GenerativeValidatingJsonConverter { EvaluationOptions = { OutputFormat = OutputFormat.List } } }
 				};
 
 				var model = JsonSerializer.Deserialize<FooWithSchema>(jsonText, options);
@@ -314,7 +314,7 @@ public class DeserializationTests
 				TypeInfoResolverChain = { TestSerializerContext.Default },
 				WriteIndented = true,
 				Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-				Converters = { new GenerativeValidatingJsonConverter { Options = { OutputFormat = OutputFormat.List } } }
+				Converters = { new GenerativeValidatingJsonConverter { EvaluationOptions = { OutputFormat = OutputFormat.List } } }
 			};
 
 			var model = JsonSerializer.Deserialize<Point>(jsonText, options);
@@ -345,7 +345,7 @@ public class DeserializationTests
 						TypeInfoResolverChain = { TestSerializerContext.Default },
 						WriteIndented = true,
 						Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-						Converters = { new GenerativeValidatingJsonConverter { Options = { OutputFormat = OutputFormat.List } } }
+						Converters = { new GenerativeValidatingJsonConverter { EvaluationOptions = { OutputFormat = OutputFormat.List } } }
 					};
 
 					var model = JsonSerializer.Deserialize<Point>(jsonText, options);

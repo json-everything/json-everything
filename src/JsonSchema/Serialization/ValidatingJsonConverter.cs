@@ -21,38 +21,7 @@ public class ValidatingJsonConverter : JsonConverterFactory
 	/// <summary>
 	/// Provides evaluation options for the validator.
 	/// </summary>
-	public EvaluationOptions Options { get; set; } = EvaluationOptions.From(EvaluationOptions.Default);
-
-	/// <summary>
-	/// (Obsolete) Specifies the output format.
-	/// </summary>
-	[Obsolete("Use 'Options'")]
-	public OutputFormat? OutputFormat
-	{
-		get => Options.OutputFormat;
-		set
-		{
-			if (value.HasValue)
-				Options.OutputFormat = value.Value;
-		}
-	}
-	/// <summary>
-	/// (Obsolete) Specifies whether the `format` keyword should be required to provide
-	/// validation results.  Default is false, which just produces annotations
-	/// for drafts 2019-09 and prior or follows the behavior set forth by the
-	/// format-annotation vocabulary requirement in the `$vocabulary` keyword in
-	/// a meta-schema declaring draft 2020-12.
-	/// </summary>
-	[Obsolete("Use 'Options'")]
-	public bool? RequireFormatValidation
-	{
-		get => Options.RequireFormatValidation;
-		set
-		{
-			if (value.HasValue)
-				Options.RequireFormatValidation = value.Value;
-		}
-	}
+	public EvaluationOptions EvaluationOptions { get; set; } = new();
 
 	/// <summary>
 	/// Adds an explicit type/schema mapping for types external types which cannot be decorated with <see cref="JsonSchemaAttribute"/>.
@@ -135,7 +104,7 @@ public class ValidatingJsonConverter : JsonConverterFactory
 	private void SetOptions(JsonConverter converter)
 	{
 		var validatingConverter = (IValidatingJsonConverter)converter;
-		validatingConverter.Options = Options;
+		validatingConverter.Options = EvaluationOptions;
 	}
 }
 

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Json.Pointer;
+using Json.Schema.ArrayExt.Keywords;
 
 namespace Json.Schema.ArrayExt;
 

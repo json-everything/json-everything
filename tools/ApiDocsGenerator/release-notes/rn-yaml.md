@@ -4,6 +4,15 @@ title: Yaml2JsonNode
 icon: fas fa-tag
 order: "09.13"
 ---
+# [2.3.0](https://github.com/gregsdennis/json-everything/pull/952) {#release-yaml-2.3.0}
+
+- Add `JsonElement` support extensions.
+
+# [2.3.0](https://github.com/gregsdennis/json-everything/pull/952) {#release-yaml-2.3.0}
+
+- Add .Net 10.0 support.
+- Update Nuget references.
+
 # [2.2.0](https://github.com/gregsdennis/json-everything/pull/822) {#release-yaml-2.2.0}
 
 - Add .Net 9.0 support.

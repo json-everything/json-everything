@@ -4,6 +4,14 @@ title: JsonSchema.Net.Generation
 icon: fas fa-tag
 order: "09.05"
 ---
+# [6.0.0](https://github.com/json-everything/json-everything/pull/952) {#release-schemagen-6.0.0}
+
+Updated per _JsonSchema.Net_ v8 (breaking changes).
+
+- Added `Dialect` static class.
+- Add .Net 10.0 support.
+- Update Nuget references.
+
 # [5.1.1](https://github.com/json-everything/json-everything/pull/934) {#release-schemagen-5.1.1}
 
 [#890](https://github.com/gregsdennis/json-everything/issues/890) - Add support for `[JsonStringMemberName]` attribute.  Thanks to [@PJBarczyk](https://github.com/PJBarczyk) for suggesting.

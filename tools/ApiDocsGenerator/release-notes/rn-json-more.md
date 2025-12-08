@@ -4,6 +4,11 @@ title: Json.More.Net
 icon: fas fa-tag
 order: "09.13"
 ---
+# [2.2.0](https://github.com/json-everything/json-everything/pull/952) {#release-more-2.2.0}
+
+- Add .Net 10.0 support.
+- Update Nuget references.
+
 # [2.1.3](https://github.com/json-everything/json-everything/pull/934) {#release-more-2.1.3}
 
 [#895](https://github.com/json-everything/json-everything/issues/895) - Optimization to use a frozen dictionary in `EnumStringConverter`.  Thanks to [@Meir017](https://github.com/Meir017) for identifying this.

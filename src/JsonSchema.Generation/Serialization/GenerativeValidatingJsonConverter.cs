@@ -12,9 +12,14 @@ namespace Json.Schema.Generation.Serialization;
 public class GenerativeValidatingJsonConverter : ValidatingJsonConverter
 {
 	/// <summary>
+	/// Gets the build options used for the schema build step.
+	/// </summary>
+	public BuildOptions BuildOptions { get; } = new();
+
+	/// <summary>
 	/// Provides options for the generator.
 	/// </summary>
-	public SchemaGeneratorConfiguration GeneratorConfiguration { get; } = new();
+	public SchemaGeneratorConfiguration? GeneratorConfiguration { get; } = new();
 
 	/// <summary>When overridden in a derived class, determines whether the converter instance can convert the specified object type.</summary>
 	/// <param name="typeToConvert">The type of the object to check whether it can be converted by this converter instance.</param>
@@ -36,7 +41,7 @@ public class GenerativeValidatingJsonConverter : ValidatingJsonConverter
 		if (generateAttribute is not null)
 		{
 #pragma warning disable IL3050
-			var schema = new JsonSchemaBuilder().FromType(type, GeneratorConfiguration);
+			var schema = new JsonSchemaBuilder(BuildOptions).FromType(type, GeneratorConfiguration);
 #pragma warning restore IL3050
 			return schema;
 		}

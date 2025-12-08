@@ -4,7 +4,30 @@ title: JsonSchema.Net.ArrayExt
 icon: fas fa-tag
 order: "09.03"
 ---
-# [2.2.0](https://github.com/gregsdennis/json-everything/pull/822) {#release-e-2.2.0}
+# [3.0.0](https://github.com/gregsdennis/json-everything/pull/822) {#release-schemaarrayext-3.0.0}
+
+Updated per _JsonSchema.Net_ v8.
+
+## Breaking changes
+
+- Keywords
+  - now implement `IKeywordHandler`
+  - are singletons
+  - moved to `.Keywords` namespace
+- `Vocabularies` static class renamed to `Vocabulary`
+  - `.Register()` method moved to `MetaSchemas` class
+- `OrderingSpecifier` now a struct, moved to `.Keywords` namespace
+- `Direction` moved to `.Keywords` namespace
+- Removed `JsonSchemaExtensions` (keyword access)
+- Removed serialization support (no longer needed)
+
+## Other changes
+
+- Added `Dialect` static class.
+- Add .Net 10.0 support.
+- Update Nuget references.
+
+# [2.2.0](https://github.com/gregsdennis/json-everything/pull/822) {#release-schemaarrayext-2.2.0}
 
 Add .Net 9.0 support.
 

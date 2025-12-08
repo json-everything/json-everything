@@ -4,6 +4,11 @@ title: JsonLogic
 icon: fas fa-tag
 order: "09.11"
 ---
+# [5.5.0](https://github.com/json-everything/json-everything/pull/952) {#release-logic-5.5.0}
+
+- Add .Net 10.0 support.
+- Update Nuget references.
+
 # [5.4.3](https://github.com/json-everything/json-everything/pull/928) {#release-logic-5.4.3}
 
 [#927](https://github.com/gregsdennis/json-everything/issues/927) - Fix for dynamically constructed paths in VariableRule in IRule implementation.

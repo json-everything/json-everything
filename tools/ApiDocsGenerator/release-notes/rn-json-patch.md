@@ -4,6 +4,12 @@ title: JsonPatch.Net
 icon: fas fa-tag
 order: "09.09"
 ---
+# [4.0.0](https://github.com/gregsdennis/json-everything/pull/952) {#release-patch-4.0.0}
+
+- Add .Net 10 support.
+- Update Nuget references.
+- Update to _JsonPointer.Net_ v6.  No API surface changes.
+
 # [3.3.0](https://github.com/gregsdennis/json-everything/pull/848) {#release-patch-3.3.0}
 
 [#843](https://github.com/json-everything/json-everything/pull/843) - Performance improvements courtesy of [@cptjazz](https://github.com/cptjazz).

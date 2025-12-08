@@ -4,7 +4,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Json.Pointer;
 
-namespace Json.Schema.ArrayExt;
+namespace Json.Schema.ArrayExt.Keywords;
 
 /// <summary>
 /// Represents a single ordering characteristic.

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.Json;
 using Json.Schema.Generation.Generators;
 using Json.Schema.Generation.Refiners;
 using Json.Schema.Generation.XmlComments;
@@ -19,7 +18,6 @@ public class SchemaGeneratorConfiguration
 	];
 
 	private readonly Dictionary<string, string> _xmlCommentsFiles = [];
-	private PropertyNameResolver? _propertyNameResolver;
 
 	/// <summary>
 	/// Thread-static storage of the current configuration. Only to be used for reading
@@ -55,8 +53,8 @@ public class SchemaGeneratorConfiguration
 	/// </remarks>
 	public PropertyNameResolver? PropertyNameResolver
 	{
-		get => _propertyNameResolver ??= PropertyNameResolvers.AsDeclared;
-		set => _propertyNameResolver = value;
+		get => field ??= PropertyNameResolvers.AsDeclared;
+		set;
 	}
 
 	/// <summary>

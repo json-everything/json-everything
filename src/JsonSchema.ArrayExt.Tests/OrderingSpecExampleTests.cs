@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Json.Pointer;
+using Json.Schema.ArrayExt.Keywords;
 using Json.Schema.Tests;
 using NUnit.Framework;
 
