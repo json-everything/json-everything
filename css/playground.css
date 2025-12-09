@@ -28,7 +28,12 @@ div::-webkit-scrollbar-track {
 }
 
 div::-webkit-scrollbar-thumb {
-  background-color: #CCBCD9 !important;
-  border: 1px solid #1a1a1a !important;
-  border-radius: 2.5px !important;
+	background-color: #CCBCD9 !important;
+	border: 1px solid #1a1a1a !important;
+	border-radius: 2.5px !important;
+}
+
+html[data-bs-theme="light"] div::-webkit-scrollbar-thumb {
+	background-color: #6800B7 !important;
+	border: 1px solid #e0e0e0 !important;
 }

@@ -196,4 +196,43 @@ window.initResizableSidebar = function () {
         setEditorWidthsByRatio(editorRatio);
         setEditorHeightsByRatio(verticalRatio);
     }, 0);
-}; 
+};
+
+// Tooltip positioning
+document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('mouseover', function(e) {
+        const tooltipIcon = e.target.closest('.tooltip-icon');
+        if (!tooltipIcon) return;
+        
+        const tooltip = tooltipIcon.querySelector('.tooltip-text');
+        if (!tooltip) return;
+        
+        // Skip dynamic positioning for header tooltips - they use CSS positioning
+        if (tooltip.classList.contains('header-tooltip')) return;
+        
+        const rect = tooltipIcon.getBoundingClientRect();
+        const tooltipRect = tooltip.getBoundingClientRect();
+        
+        // Position to the right of the icon
+        let left = rect.right + 10;
+        let top = rect.top;
+        
+        // Check if tooltip goes off the right edge
+        if (left + tooltipRect.width > window.innerWidth) {
+            left = rect.left - tooltipRect.width - 10; // Position to the left instead
+        }
+        
+        // Check if tooltip goes off the bottom edge
+        if (top + tooltipRect.height > window.innerHeight) {
+            top = window.innerHeight - tooltipRect.height - 10;
+        }
+        
+        // Check if tooltip goes off the top edge
+        if (top < 0) {
+            top = 10;
+        }
+        
+        tooltip.style.left = left + 'px';
+        tooltip.style.top = top + 'px';
+    });
+}); 

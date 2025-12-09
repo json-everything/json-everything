@@ -43,3 +43,18 @@
 .monaco-editor {
   position: absolute !important;
 }
+
+html[data-bs-theme="light"] .editor-lang-json {
+  background: #0a7050;
+  color: white;
+}
+
+html[data-bs-theme="light"] .editor-lang-yaml {
+  background: #065a8a;
+  color: white;
+}
+
+html[data-bs-theme="light"] .editor-lang-csharp {
+  background: #e84a26;
+  color: white;
+}
