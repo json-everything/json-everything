@@ -22,7 +22,7 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: 9.0.x
+          dotnet-version: 10.0.x
       # Publish
       - name: publish schema openapi
         id: publish_schema_openapi
