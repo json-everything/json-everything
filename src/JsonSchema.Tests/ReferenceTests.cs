@@ -1,5 +1,6 @@
 using System.IO;
-using System.Text.Json.Nodes;
+using System.Text.Json;
+using Json.More;
 using NUnit.Framework;
 using TestHelpers;
 
@@ -21,44 +22,48 @@ public class ReferenceTests
 	[Test]
 	public void ReferenceFragmentFromFile()
 	{
-		var baseSchema = JsonSchema.FromFile(GetFile("base_schema"));
-		var refSchema = JsonSchema.FromFile(GetFile("ref_schema"));
-		var hashSchema = JsonSchema.FromFile(GetFile("schema_with_#_in_uri"));
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
 
-		var baseData = JsonNode.Parse(GetResource("base_data"));
+		var baseSchema = JsonSchema.FromFile(GetFile("base_schema"), buildOptions);
+		_ = JsonSchema.FromFile(GetFile("ref_schema"), buildOptions);
+		_ = JsonSchema.FromFile(GetFile("schema_with_#_in_uri"), buildOptions);
+
+		var baseData = JsonDocument.Parse(GetResource("base_data")).RootElement;
 
 		var options = new EvaluationOptions();
-		options.SchemaRegistry.Register(refSchema);
-		options.SchemaRegistry.Register(baseSchema);
-		options.SchemaRegistry.Register(hashSchema);
 
 		// in previous versions, this would still validate the instance, but since adding
 		// static analysis, the ref with the # in it is checked early
 		// and since it can't resolve, it now throws.
-		Assert.Throws<JsonSchemaException>(() => baseSchema.Evaluate(baseData, options));
+		Assert.Throws<RefResolutionException>(() => baseSchema.Evaluate(baseData, options));
 	}
 
 	[Test]
 	public void MultipleHashInUriThrowsException()
 	{
-		var baseSchema = JsonSchema.FromFile(GetFile("base_schema"));
-		var refSchema = JsonSchema.FromFile(GetFile("ref_schema"));
-		var hashSchema = JsonSchema.FromFile(GetFile("schema_with_#_in_uri"));
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+	
+		var baseSchema = JsonSchema.FromFile(GetFile("base_schema"), buildOptions);
+		_ = JsonSchema.FromFile(GetFile("ref_schema"), buildOptions);
+		_ = JsonSchema.FromFile(GetFile("schema_with_#_in_uri"), buildOptions);
 
-		var baseData = JsonNode.Parse(GetResource("base_data_hash_uri"));
+		var baseData = JsonDocument.Parse(GetResource("base_data_hash_uri")).RootElement;
 
 		var options = new EvaluationOptions();
-		options.SchemaRegistry.Register(refSchema);
-		options.SchemaRegistry.Register(baseSchema);
-		options.SchemaRegistry.Register(hashSchema);
 
-		Assert.Throws<JsonSchemaException>(()=>baseSchema.Evaluate(baseData, options));
+		Assert.Throws<RefResolutionException>(()=>baseSchema.Evaluate(baseData, options));
 	}
 
 	[Test]
 	public void RefIntoMiddleOfResourceToFindDynamicRef()
 	{
-		var refSchema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions
+		{
+			SchemaRegistry = new(),
+			Dialect = Dialect.Draft202012
+		};
+
+		_ = new JsonSchemaBuilder(buildOptions)
 			.Schema(MetaSchemas.Draft202012Id)
 			.Id("schema:ref")
 			.Defs(
@@ -69,7 +74,7 @@ public class ReferenceTests
 				)
 			)
 			.Build();
-		var schema = new JsonSchemaBuilder()
+		var schema = new JsonSchemaBuilder(buildOptions)
 			.Schema(MetaSchemas.Draft202012Id)
 			.Id("schema:local")
 			.Ref("schema:ref#/$defs/foo");
@@ -78,9 +83,8 @@ public class ReferenceTests
 		{
 			OutputFormat = OutputFormat.List
 		};
-		options.SchemaRegistry.Register(refSchema);
 
-		var instance = "string";
+		var instance = "string".AsJsonElement();
 		var result = schema.Evaluate(instance, options);
 
 		result.AssertInvalid();

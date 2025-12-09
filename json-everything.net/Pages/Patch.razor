@@ -1,4 +1,5 @@
 ﻿@page "/json-patch"
+@implements IDisposable
 @using System.Text.Json
 @using Json.Patch
 @using JsonEverythingNet.Services
@@ -9,6 +10,8 @@
 
 @inject DataManager DataManager;
 @inject IJSRuntime JsRuntime;
+@inject EditorOptions EditorOptions;
+@inject ThemeService ThemeService;
 
 <PageTitle>JSON Patch - json-everything.net</PageTitle>
 
@@ -16,7 +19,7 @@
 	<div class="sidebar">
 		<div class="sidebar-content">
 			<div class="align-items-center hstack mx-2">
-				<img src="img/json-patch.png" height="70" width="70" class="me-3" />
+				<img src="@GetImageUrl()" height="70" width="70" class="me-3" />
 				<h1 class="display-4">JSON Patch</h1>
 			</div>
 			<div class="align-items-center mx-3">
@@ -129,8 +132,8 @@
 	private string HelpSummary { get; set; } = HelpContent.PatchApply;
 	private string PatchEditorLabel { get; set; } = "Patch";
 
-	private static StandaloneEditorConstructionOptions BasicOptions(StandaloneCodeEditor _) => EditorOptions.Basic();
-	private static StandaloneEditorConstructionOptions ReadOnlyOptions(StandaloneCodeEditor _) => EditorOptions.Readonly();
+	private StandaloneEditorConstructionOptions BasicOptions(StandaloneCodeEditor _) => EditorOptions.Basic();
+	private StandaloneEditorConstructionOptions ReadOnlyOptions(StandaloneCodeEditor _) => EditorOptions.Readonly();
 
 	private static string GetDescription(PatchOperations operation) => operation switch
 	{
@@ -264,6 +267,8 @@
 	{
 		if (firstRender)
 		{
+			ThemeService.OnThemeChanged += HandleThemeChanged;
+			
 			await JsRuntime.InvokeVoidAsync("initResizableSidebar");
 			
 			await LoadSavedPatch();
@@ -272,5 +277,22 @@
 		}
 
 		await base.OnAfterRenderAsync(firstRender);
+	}
+
+	private string GetImageUrl() =>
+		ThemeService.IsDarkMode ? "img/json-patch.png" : "img/json-patch-light.png";
+
+	private void HandleThemeChanged()
+	{
+		var theme = ThemeService.MonacoTheme;
+		_patchEditor?.UpdateOptions(new EditorUpdateOptions { Theme = theme });
+		_instanceEditor?.UpdateOptions(new EditorUpdateOptions { Theme = theme });
+		_outputEditor?.UpdateOptions(new EditorUpdateOptions { Theme = theme });
+		StateHasChanged();
+	}
+
+	public void Dispose()
+	{
+		ThemeService.OnThemeChanged -= HandleThemeChanged;
 	}
 }

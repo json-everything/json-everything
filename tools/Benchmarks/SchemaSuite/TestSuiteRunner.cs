@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
-using System.Text.Json.Nodes;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Jobs;
-using Json.More;
 using Json.Schema;
 
 namespace Json.Benchmarks.SchemaSuite;
@@ -14,6 +12,7 @@ namespace Json.Benchmarks.SchemaSuite;
 [MemoryDiagnoser]
 [SimpleJob(RuntimeMoniker.Net80, baseline:true)]
 [SimpleJob(RuntimeMoniker.Net90)]
+[SimpleJob(RuntimeMoniker.Net10_0)]
 public class TestSuiteRunner
 {
 	private const string _benchmarkOffset = @"../../../../../";
@@ -28,34 +27,20 @@ public class TestSuiteRunner
 			.Concat(GetTests("draft7"))
 			.Concat(GetTests("draft2019-09"))
 			.Concat(GetTests("draft2020-12"))
-			.Concat(_runDraftNext ? GetTests("draft-next") : Enumerable.Empty<TestCollection>());
+			.Concat(_runDraftNext ? GetTests("draft-next") : []);
 	}
 
 	private static IEnumerable<TestCollection> GetTests(string draftFolder)
 	{
 		// ReSharper disable once HeuristicUnreachableCode
-
-		var testsPath = Path.Combine(Directory.GetCurrentDirectory(), _benchmarkOffset, _testCasesPath, $"{draftFolder}/")
+		var testsPath = Path.Combine(Directory.GetCurrentDirectory(), _benchmarkOffset, $"{draftFolder}/")
 			.AdjustForPlatform();
-		if (!Directory.Exists(testsPath))
-		{
-			Console.WriteLine("Cannot find directory: " + testsPath);
-			throw new DirectoryNotFoundException(testsPath);
-		}
+		if (!Directory.Exists(testsPath)) yield break;
 
 		var fileNames = Directory.GetFiles(testsPath, "*.json", SearchOption.AllDirectories);
-		var options = new EvaluationOptions
+		var evaluationOptions = new EvaluationOptions
 		{
-			OutputFormat = OutputFormat.List,
-			EvaluateAs = draftFolder switch
-			{
-				"draft6" => SpecVersion.Draft6,
-				"draft7" => SpecVersion.Draft7,
-				"draft2019-09" => SpecVersion.Draft201909,
-				"draft2020-12" => SpecVersion.Draft202012,
-				"draft-next" => SpecVersion.DraftNext,
-				_ => SpecVersion.Unspecified
-			}
+			OutputFormat = OutputFormat.Hierarchical,
 		};
 
 		foreach (var fileName in fileNames)
@@ -63,7 +48,7 @@ public class TestSuiteRunner
 			var shortFileName = Path.GetFileNameWithoutExtension(fileName);
 
 			// adjust for format
-			options.RequireFormatValidation = fileName.Contains("format/".AdjustForPlatform()) &&
+			evaluationOptions.RequireFormatValidation = fileName.Contains("format/".AdjustForPlatform()) &&
 											  // uri-template will throw an exception as it's explicitly unsupported
 											  shortFileName != "uri-template";
 
@@ -76,7 +61,22 @@ public class TestSuiteRunner
 			foreach (var collection in collections!)
 			{
 				collection.IsOptional = fileName.Contains("optional");
-				collection.Options = EvaluationOptions.From(options);
+				var dialect = draftFolder switch
+				{
+					"draft6" => Dialect.Draft06,
+					"draft7" => Dialect.Draft07,
+					"draft2019-09" => Dialect.Draft201909,
+					"draft2020-12" => Dialect.Draft202012,
+					"draft-next" => Dialect.V1,
+					_ => throw new ArgumentOutOfRangeException(nameof(draftFolder), $"{draftFolder} is unsupported")
+				};
+
+				collection.BuildOptions = new BuildOptions
+				{
+					Dialect = dialect,
+					SchemaRegistry = new()
+				};
+				collection.EvaluationOptions = evaluationOptions;
 
 				yield return collection;
 			}
@@ -94,9 +94,15 @@ public class TestSuiteRunner
 
 		foreach (var fileName in fileNames)
 		{
-			var schema = JsonSchema.FromFile(fileName);
-			var uri = new Uri(fileName.Replace(remotesPath, "http://localhost:1234").Replace('\\', '/'));
-			SchemaRegistry.Global.Register(uri, schema);
+			try
+			{
+				var schema = JsonSchema.FromFile(fileName);
+				var uri = new Uri(fileName.Replace(remotesPath, "http://localhost:1234").Replace('\\', '/'));
+				SchemaRegistry.Global.Register(uri, schema);
+			}
+			catch (JsonSchemaException)
+			{
+			}
 		}
 	}
 
@@ -111,8 +117,8 @@ public class TestSuiteRunner
 	[Arguments(1)]
 	[Arguments(5)]
 	[Arguments(10)]
-	//[Arguments(50)]
-	public int StatusQuo(int n)
+	[Arguments(50)]
+	public int BuildAlways(int n)
 	{
 		int i = 0;
 		var collections = GetAllTests();
@@ -121,7 +127,11 @@ public class TestSuiteRunner
 		{
 			foreach (var test in collection.Tests)
 			{
-				Benchmark(collection, test, n);
+				for (int j = 0; j < n; j++)
+				{
+					var schema = JsonSchema.Build(collection.Schema, collection.BuildOptions);
+					_ = schema.Evaluate(test.Data, collection.EvaluationOptions);
+				}
 				i++;
 			}
 		}
@@ -129,37 +139,29 @@ public class TestSuiteRunner
 		return i;
 	}
 
-	private void Benchmark(TestCollection collection, TestCase test, int n)
+	[Benchmark]
+	[Arguments(1)]
+	[Arguments(5)]
+	[Arguments(10)]
+	[Arguments(50)]
+	public int BuildOnce(int n)
 	{
-		if (!InstanceIsDeserializable(test.Data)) return;
+		int i = 0;
+		var collections = GetAllTests();
 
-		for (int i = 0; i < n; i++)
+		foreach (var collection in collections)
 		{
-			_ = collection.Schema.Evaluate(test.Data, collection.Options);
-		}
-	}
-
-	private static bool InstanceIsDeserializable(in JsonNode? testData)
-	{
-		try
-		{
-			var value = (testData as JsonValue)?.GetValue<object>();
-			if (value is null) return true;
-			if (value is string) return false;
-			if (value is JsonElement { ValueKind: JsonValueKind.Number } element)
-				return element.TryGetDecimal(out _);
-			if (value.GetType().IsNumber())
+			foreach (var test in collection.Tests)
 			{
-				// some tests involve numbers larger than c# can handle.  fortunately, they're optional.
-				return true;
+				var schema = JsonSchema.Build(collection.Schema, collection.BuildOptions);
+				for (int j = 0; j < n; j++)
+				{
+					_ = schema.Evaluate(test.Data, collection.EvaluationOptions);
+				}
+				i++;
 			}
+		}
 
-			return true;
-		}
-		catch (Exception e)
-		{
-			Console.WriteLine(e.Message);
-			return false;
-		}
+		return i;
 	}
 }

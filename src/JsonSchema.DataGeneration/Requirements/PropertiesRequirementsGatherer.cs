@@ -1,21 +1,21 @@
-﻿using System.Linq;
+﻿using Json.Schema.Keywords;
 
 namespace Json.Schema.DataGeneration.Requirements;
 
 internal class PropertiesRequirementsGatherer : IRequirementsGatherer
 {
-	public void AddRequirements(RequirementsContext context, JsonSchema schema, EvaluationOptions options)
+	public void AddRequirements(RequirementsContext context, JsonSchemaNode schema, BuildOptions options)
 	{
 		var supportsObjects = false;
 
 		var range = NumberRangeSet.Full;
-		var minimum = schema.Keywords?.OfType<MinPropertiesKeyword>().FirstOrDefault()?.Value;
+		var minimum = (long?)schema.GetKeyword<MinPropertiesKeyword>()?.Value;
 		if (minimum != null)
 		{
 			range = range.Floor(minimum.Value);
 			supportsObjects = true;
 		}
-		var maximum = schema.Keywords?.OfType<MaxPropertiesKeyword>().FirstOrDefault()?.Value;
+		var maximum = (long?)schema.GetKeyword<MaxPropertiesKeyword>()?.Value;
 		if (maximum != null)
 		{
 			range = range.Ceiling(maximum.Value);
@@ -30,7 +30,7 @@ internal class PropertiesRequirementsGatherer : IRequirementsGatherer
 			supportsObjects = true;
 		}
 
-		var requiredProperties = schema.Keywords?.OfType<RequiredKeyword>().FirstOrDefault()?.Properties;
+		var requiredProperties = (string[]?)schema.GetKeyword<RequiredKeyword>()?.Value;
 		if (requiredProperties != null)
 		{
 			if (context.RequiredProperties != null)
@@ -40,37 +40,38 @@ internal class PropertiesRequirementsGatherer : IRequirementsGatherer
 			supportsObjects = true;
 		}
 
-		var properties = schema.Keywords?.OfType<PropertiesKeyword>().FirstOrDefault();
+		var properties = schema.GetKeyword<PropertiesKeyword>();
 		if (properties != null)
 		{
 			context.Properties ??= [];
-			foreach (var property in properties.Properties)
+			foreach (var property in properties.Subschemas)
 			{
-				if (context.Properties.TryGetValue(property.Key, out var subschema))
-					subschema.And(property.Value.GetRequirements(options));
+				var propertyName = property.RelativePath[0].ToString();
+				if (context.Properties.TryGetValue(propertyName, out var subschema))
+					subschema.And(property.GetRequirements(options));
 				else
-					context.Properties.Add(property.Key, property.Value.GetRequirements(options));
+					context.Properties.Add(propertyName, property.GetRequirements(options));
 			}
 			supportsObjects = true;
 		}
 
-		var additionalProperties = schema.Keywords?.OfType<AdditionalPropertiesKeyword>().FirstOrDefault()?.Schema;
+		var additionalProperties = schema.GetKeyword<AdditionalPropertiesKeyword>();
 		if (additionalProperties != null)
 		{
 			if (context.RemainingProperties != null)
-				context.RemainingProperties.And(additionalProperties.GetRequirements(options));
+				context.RemainingProperties.And(additionalProperties.Subschemas[0].GetRequirements(options));
 			else
-				context.RemainingProperties = additionalProperties.GetRequirements(options);
+				context.RemainingProperties = additionalProperties.Subschemas[0].GetRequirements(options);
 			supportsObjects = true;
 		}
 
-		additionalProperties = schema.Keywords?.OfType<UnevaluatedPropertiesKeyword>().FirstOrDefault()?.Schema;
+		additionalProperties = schema.GetKeyword<UnevaluatedPropertiesKeyword>();
 		if (additionalProperties != null)
 		{
 			if (context.RemainingProperties != null)
-				context.RemainingProperties.And(additionalProperties.GetRequirements(options));
+				context.RemainingProperties.And(additionalProperties.Subschemas[0].GetRequirements(options));
 			else
-				context.RemainingProperties = additionalProperties.GetRequirements(options);
+				context.RemainingProperties = additionalProperties.Subschemas[0].GetRequirements(options);
 			supportsObjects = true;
 		}
 

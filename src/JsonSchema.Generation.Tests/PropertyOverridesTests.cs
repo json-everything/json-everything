@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System.Text.Json;
+using Json.More;
 using NUnit.Framework;
+using TestHelpers;
 
 namespace Json.Schema.Generation.Tests;
 
@@ -8,12 +10,23 @@ internal class PropertyOverridesTests
 	[Test]
 	public void TypeWithPropertyOverride_GeneratesCorrectly()
 	{
-		var schema = new JsonSchemaBuilder().FromType<DerivedClassWithProperty>().Build();
+		var builder = new JsonSchemaBuilder();
+		builder.FromType<DerivedClassWithProperty>();
 
-		Assert.That(schema, Is.Not.Null, "Schema should not be null.");
-		Assert.That(schema.GetProperties(), Is.Not.Null, "Schema should have properties.");
-		Assert.That(schema.GetProperties().ContainsKey("MyProperty"), Is.True, "Schema should contain MyProperty.");
-		Assert.That((schema.GetProperties()["MyProperty"].Keywords.First() as TypeKeyword).Type == (SchemaValueType.String | SchemaValueType.Null));
+		var schema = builder.Build();
+		TestConsole.WriteLine(schema.Root.Source);
+
+		var expected = JsonDocument.Parse(
+			"""
+			{
+			  "type": "object",
+			  "properties": {
+			    "MyProperty": {"type": ["null", "string"]}
+			  }
+			}
+			""").RootElement;
+	
+		Assert.That(expected.IsEquivalentTo(schema.Root.Source));
 	}
 }
 

@@ -29,7 +29,7 @@ public class IfIntent : ISchemaKeywordIntent
 		builder.If(Build(Subschema));
 	}
 
-	private static JsonSchema Build(IEnumerable<ISchemaKeywordIntent> subschema)
+	private static JsonSchemaBuilder Build(IEnumerable<ISchemaKeywordIntent> subschema)
 	{
 		var builder = new JsonSchemaBuilder();
 

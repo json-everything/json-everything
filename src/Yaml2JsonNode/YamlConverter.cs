@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using YamlDotNet.Core;
 using YamlDotNet.RepresentationModel;
@@ -48,6 +49,39 @@ public static class YamlConverter
 			YamlScalarNode scalar => scalar.ToJsonValue(),
 			_ => throw new NotSupportedException("This yaml isn't convertible to JSON")
 		};
+	}
+
+	/// <summary>
+	/// Converts all of the documents in a YAML stream to <see cref="JsonElement"/>s.
+	/// </summary>
+	/// <param name="yaml">The YAML stream.</param>
+	/// <returns>A collection of elements representing the YAML documents in the stream.</returns>
+	public static IEnumerable<JsonElement> ToJsonElement(this YamlStream yaml)
+	{
+		return yaml.Documents.Select(x => x.ToJsonElement());
+	}
+
+	/// <summary>
+	/// Converts a single YAML document to a <see cref="JsonElement"/>.
+	/// </summary>
+	/// <param name="yaml">The YAML document.</param>
+	/// <returns>A `JsonElement` representative of the YAML document.</returns>
+	public static JsonElement ToJsonElement(this YamlDocument yaml)
+	{
+		return yaml.RootNode.ToJsonElement();
+	}
+
+	/// <summary>
+	/// Converts a single YAML node to a <see cref="JsonElement"/>.
+	/// </summary>
+	/// <param name="yaml">The YAML node.</param>
+	/// <returns>A `JsonElement` representative of the YAML node.</returns>
+	/// <exception cref="NotSupportedException">Thrown for YAML that is not compatible with JSON.</exception>
+	public static JsonElement ToJsonElement(this YamlNode yaml)
+	{
+		var node = yaml.ToJsonNode();
+		using var doc = JsonDocument.Parse(node?.ToJsonString() ?? "null");
+		return doc.RootElement.Clone();
 	}
 
 	/// <summary>

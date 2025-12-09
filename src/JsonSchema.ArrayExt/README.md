@@ -15,7 +15,7 @@ Register the vocabulary:
 ```c#
 using Json.Schema.ArrayExt;
 
-Vocabularies.Register();
+MetaSchemas.Register();
 ```
 
 ## Sponsorship

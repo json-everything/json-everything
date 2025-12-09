@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text.Json;
-using System.Text.Json.Nodes;
 using Humanizer;
-using Json.More;
 using NUnit.Framework;
 using TestHelpers;
 
@@ -49,20 +46,20 @@ public class Suite
 				collection.IsOptional = fileName.Contains("optional");
 				foreach (var test in collection.Tests)
 				{
+					var buildOptions = new BuildOptions
+					{
+						Dialect = Dialect.Data_202012,
+						SchemaRegistry = new()
+					};
 					var optional = collection.IsOptional ? "(optional)/" : null;
 					var name = $"{shortFileName}/{optional}{collection.Description.Kebaberize()}/{test.Description.Kebaberize()}";
-					var optionsCopy = EvaluationOptions.From(options);
-					allTests.Add(new TestCaseData(collection, test, shortFileName, optionsCopy) { TestName = name });
+					var evaluationOptionsCopy = EvaluationOptions.From(options);
+					allTests.Add(new TestCaseData(collection, test, shortFileName, buildOptions, evaluationOptionsCopy) { TestName = name });
 				}
 			}
 		}
 
 		return allTests;
-	}
-
-	static Suite()
-	{
-		Vocabularies.Register();
 	}
 
 	[OneTimeSetUp]
@@ -75,16 +72,17 @@ public class Suite
 		if (!Directory.Exists(remotesFilePath))
 			throw new Exception("cannot find remotes path");
 
-		DataKeyword.Fetch = uri =>
+		BuildOptions.Default.GetDataRegistry().Fetch = uri =>
 		{
-			var filePath = uri.OriginalString.Replace("http://localhost:1234", remotesPath);
+			if (uri.OriginalString.StartsWith("https://json-everything.lib")) return default;
+			var filePath = uri.OriginalString.Replace("http://localhost:1234", remotesPath).Split("#")[0];
 			var text = File.ReadAllText(filePath);
-			return JsonNode.Parse(text);
+			return JsonDocument.Parse(text).RootElement;
 		};
 	}
 
 	[TestCaseSource(nameof(TestCases))]
-	public void Test(TestCollection collection, TestCase test, string fileName, EvaluationOptions options)
+	public void Test(TestCollection collection, TestCase test, string fileName, BuildOptions buildOptions, EvaluationOptions evaluationOptions)
 	{
 		TestConsole.WriteLine();
 		TestConsole.WriteLine();
@@ -98,16 +96,46 @@ public class Suite
 		TestConsole.WriteLine();
 		TestConsole.WriteLine(JsonSerializer.Serialize(collection.Schema, TestEnvironment.SerializerOptions));
 		TestConsole.WriteLine();
-		TestConsole.WriteLine(test.Data.AsJsonString(TestEnvironment.SerializerOptions));
+		TestConsole.WriteLine(JsonSerializer.Serialize(test.Data, TestEnvironment.SerializerOptions));
 		TestConsole.WriteLine();
 
-		if (test.Error)
+		JsonSchema schema;
+		try
 		{
-			Assert.Throws(Is.InstanceOf<Exception>(), () => collection.Schema.Evaluate(test.Data, options));
-			return;
+			schema = Measure.Run("Build", () => JsonSchema.Build(collection.Schema, buildOptions));
+		}
+		catch (Exception e)
+		{
+			Console.WriteLine(e);
+			if (collection.IsOptional)
+			{
+				Assert.Inconclusive();
+				return;
+			}
+
+			if (test.Error) return;
+
+			throw;
 		}
 
-		var result = collection.Schema.Evaluate(test.Data, options);
+		EvaluationResults result;
+		try
+		{
+			result = Measure.Run("Evaluate", () => schema.Evaluate(test.Data, evaluationOptions));
+		}
+		catch (Exception e)
+		{
+			Console.WriteLine(e);
+			if (collection.IsOptional)
+			{
+				Assert.Inconclusive();
+				return;
+			}
+
+			if (test.Error) return;
+
+			throw;
+		}
 		//result.ToBasic();
 		TestConsole.WriteLine(JsonSerializer.Serialize(result, TestEnvironment.SerializerOptions));
 

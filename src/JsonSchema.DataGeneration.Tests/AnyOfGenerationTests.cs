@@ -9,19 +9,21 @@ internal class AnyOfGenerationTests
 	[Test]
 	public void AnyOfWithDifferentTypes()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.AnyOf(
 				new JsonSchemaBuilder().Type(SchemaValueType.Number),
 				new JsonSchemaBuilder().Type(SchemaValueType.String)
 			);
 
-		Run(schema);
+		Run(schema, buildOptions);
 	}
 
 	[Test]
 	public void AnyOfWithImpossibleFirstItem()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.AnyOf(
 				new JsonSchemaBuilder()
 					.Type(SchemaValueType.Number)
@@ -30,6 +32,6 @@ internal class AnyOfGenerationTests
 				new JsonSchemaBuilder().Type(SchemaValueType.String)
 			);
 
-		Run(schema);
+		Run(schema, buildOptions);
 	}
 }

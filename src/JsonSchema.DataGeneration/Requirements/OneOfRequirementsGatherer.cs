@@ -1,16 +1,17 @@
 ﻿using System.Linq;
+using Json.Schema.Keywords;
 
 namespace Json.Schema.DataGeneration.Requirements;
 
 internal class OneOfRequirementsGatherer : IRequirementsGatherer
 {
-	public void AddRequirements(RequirementsContext context, JsonSchema schema, EvaluationOptions options)
+	public void AddRequirements(RequirementsContext context, JsonSchemaNode schema, BuildOptions options)
 	{
-		var keyword = schema.Keywords?.OfType<OneOfKeyword>().FirstOrDefault();
+		var keyword = schema.GetKeyword<OneOfKeyword>();
 		if (keyword == null) return;
 
 		context.Options ??= [];
-		var allRequirements = keyword.Schemas.Select(x => x.GetRequirements(options)).ToList();
+		var allRequirements = keyword.Subschemas.Select(x => x.GetRequirements(options)).ToList();
 		var inverted = allRequirements.Select(x => x.Break()).ToList();
 
 		var i = 0;

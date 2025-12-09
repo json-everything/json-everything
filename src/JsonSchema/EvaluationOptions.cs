@@ -10,9 +10,6 @@ namespace Json.Schema;
 public class EvaluationOptions
 {
 	private HashSet<Type>? _ignoredAnnotationTypes;
-	private bool _requireFormatValidation;
-	private bool _onlyKnownFormats;
-	private bool _processCustomKeywords;
 
 	/// <summary>
 	/// The default settings.
@@ -20,26 +17,9 @@ public class EvaluationOptions
 	public static EvaluationOptions Default { get; } = new();
 
 	/// <summary>
-	/// Indicates which specification version to process as.  This will filter the keywords
-	/// of a schema based on their support.
-	/// </summary>
-	public SpecVersion EvaluateAs { get; init; }
-
-	/// <summary>
-	/// Indicates whether the schema should be validated against its `$schema` value.
-	/// this is not typically necessary.
-	/// </summary>
-	public bool ValidateAgainstMetaSchema { get; set; }
-	/// <summary>
 	/// Specifies the output format.
 	/// </summary>
 	public OutputFormat OutputFormat { get; set; }
-
-	/// <summary>
-	/// The local schema registry.  If a schema is not found here, it will
-	/// automatically check the global registry as well.
-	/// </summary>
-	public SchemaRegistry SchemaRegistry { get; }
 
 	/// <summary>
 	/// Specifies whether the `format` keyword should be required to provide
@@ -48,55 +28,7 @@ public class EvaluationOptions
 	/// format-annotation vocabulary requirement in the `$vocabulary` keyword in
 	/// a meta-schema declaring draft 2020-12.
 	/// </summary>
-	public bool RequireFormatValidation
-	{
-		get => _requireFormatValidation;
-		set
-		{
-			if (!Equals(_requireFormatValidation, value))
-				Changed = true;
-			_requireFormatValidation = value;
-		}
-	}
-
-	/// <summary>
-	/// Specifies whether the `format` keyword should fail validations for
-	/// unknown formats.  Default is false.
-	/// </summary>
-	/// <remarks>
-	///	This option is applied whether `format` is using annotation or
-	/// assertion behavior.
-	/// </remarks>
-	public bool OnlyKnownFormats
-	{
-		get => _onlyKnownFormats;
-		set
-		{
-			if (!Equals(_onlyKnownFormats, value))
-				Changed = true;
-			_onlyKnownFormats = value;
-		}
-	}
-
-	/// <summary>
-	/// Specifies whether custom keywords that aren't defined in vocabularies
-	/// should be processed.  Default is false.
-	/// </summary>
-	/// <remarks>
-	/// Custom keywords are those which have associated <see cref="IJsonSchemaKeyword"/>
-	/// implementations.  Unrecognized keywords, for which annotations should
-	/// be collected, are not considered "custom."
-	/// </remarks>
-	public bool ProcessCustomKeywords
-	{
-		get => _processCustomKeywords;
-		set
-		{
-			if (!Equals(_processCustomKeywords, value))
-				Changed = true;
-			_processCustomKeywords = value;
-		}
-	}
+	public bool RequireFormatValidation { get; set; }
 
 	/// <summary>
 	/// If enabled, annotations that are dropped as a result of a failing
@@ -122,29 +54,6 @@ public class EvaluationOptions
 	public CultureInfo? Culture { get; set; }
 
 	/// <summary>
-	/// Gets or sets whether `$ref` is permitted to navigate into unknown keywords
-	/// where subschemas aren't expected.  Default is true.
-	/// </summary>
-	public bool AllowReferencesIntoUnknownKeywords { get; set; } = true;
-
-	internal bool Changed { get; set; }
-
-	static EvaluationOptions()
-	{
-		// It's necessary to call this from here because
-		// SchemaRegistry.Global is defined to look at the default options.
-		Default.SchemaRegistry.InitializeMetaSchemas();
-	}
-
-	/// <summary>
-	/// Create a new instance of the <see cref="EvaluationOptions"/> class.
-	/// </summary>
-	public EvaluationOptions()
-	{
-		SchemaRegistry = new SchemaRegistry(this);
-	}
-
-	/// <summary>
 	/// Creates a deep copy of the options.
 	/// </summary>
 	/// <param name="other">The source options.</param>
@@ -153,21 +62,15 @@ public class EvaluationOptions
 	{
 		var options = new EvaluationOptions
 		{
-			EvaluateAs = other.EvaluateAs,
 			OutputFormat = other.OutputFormat,
-			ValidateAgainstMetaSchema = other.ValidateAgainstMetaSchema,
 			RequireFormatValidation = other.RequireFormatValidation,
-			ProcessCustomKeywords = other.ProcessCustomKeywords,
-			OnlyKnownFormats = other.OnlyKnownFormats,
 			PreserveDroppedAnnotations = other.PreserveDroppedAnnotations,
 			AddAnnotationForUnknownKeywords = other.AddAnnotationForUnknownKeywords,
 			Culture = other.Culture,
 			_ignoredAnnotationTypes = other._ignoredAnnotationTypes == null
 				? null
-				: new HashSet<Type>(other._ignoredAnnotationTypes),
-			AllowReferencesIntoUnknownKeywords = other.AllowReferencesIntoUnknownKeywords
+				: new(other._ignoredAnnotationTypes),
 		};
-		options.SchemaRegistry.CopyFrom(other.SchemaRegistry);
 		return options;
 	}
 
@@ -176,7 +79,7 @@ public class EvaluationOptions
 	/// </summary>
 	/// <typeparam name="T">The keyword type which should not have annotations.</typeparam>
 	public void IgnoreAnnotationsFrom<T>()
-		where T : IJsonSchemaKeyword
+		where T : IKeywordHandler
 	{
 		_ignoredAnnotationTypes ??= [];
 
@@ -188,7 +91,7 @@ public class EvaluationOptions
 	/// </summary>
 	public void IgnoreAllAnnotations()
 	{
-		_ignoredAnnotationTypes = new HashSet<Type>(SchemaKeywordRegistry.KeywordTypes);
+		//_ignoredAnnotationTypes = new HashSet<Type>(SchemaKeywordRegistry.KeywordTypes);
 	}
 
 	/// <summary>
@@ -203,6 +106,7 @@ public class EvaluationOptions
 	/// Restores annotation collection for the specified keyword.
 	/// </summary>
 	public void CollectAnnotationsFrom<T>()
+		where T : IKeywordHandler
 	{
 		_ignoredAnnotationTypes?.Remove(typeof(T));
 	}

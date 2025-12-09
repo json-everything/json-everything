@@ -1,8 +1,8 @@
 ﻿@page "/json-schema"
-@using Json.Schema.DataGeneration
+@implements IDisposable
+@* @using Json.Schema.DataGeneration *@
 @using Json.Schema
 @using System.Text.Json
-@using Json.Schema.Data
 @using Json.Schema.Generation
 @using JsonEverythingNet.Services
 @using EditorOptions = JsonEverythingNet.Services.EditorOptions
@@ -10,16 +10,18 @@
 @using Microsoft.CodeAnalysis
 @using Microsoft.CodeAnalysis.CSharp
 @using System.Reflection
-@using System.Text.Json.Nodes
 @using BlazorMonaco.Editor
-@using Json.Schema.ArrayExt
+@using Json.Schema.ArrayExt.Keywords
+@using Json.Schema.Data.Keywords
 @using Json.Schema.Generation.XmlComments
-@using Json.Schema.OpenApi
+@using Json.Schema.OpenApi.Keywords
 @using Yaml2JsonNode
 
 @inject DataManager DataManager;
 @inject NavigationManager NavigationManager;
 @inject IJSRuntime JsRuntime;
+@inject EditorOptions EditorOptions;
+@inject ThemeService ThemeService;
 
 <PageTitle>JSON Schema - json-everything.net</PageTitle>
 
@@ -27,7 +29,7 @@
 	<div class="sidebar">
 		<div class="sidebar-content">
 			<div class="align-items-center hstack mx-2">
-				<img src="img/json-schema.png" height="70" width="70" class="me-3" />
+				<img src="@GetImageUrl()" height="70" width="70" class="me-3" />
 				<h1 class="display-4">JSON Schema</h1>
 			</div>
 			<div class="align-items-center mx-3">
@@ -63,11 +65,10 @@
 							</span>
 						</span>
 						<br />
-						<InputSelect @bind-Value="_options.Version" DisplayName="Spec version" class="form-control">
-							@foreach (SpecVersion version in Enum.GetValues(typeof(SpecVersion)))
+						<InputSelect @bind-Value="_options.DialectId" DisplayName="Spec version" class="form-control">
+							@foreach (var dialect in _dialects)
 							{
-								if (version is SpecVersion.Unspecified or SpecVersion.All) continue;
-								<option value="@version">@GetDescription(version)</option>
+								<option value="@dialect.Id!.OriginalString">@GetDescription(dialect)</option>
 							}
 						</InputSelect>
 					</label>
@@ -156,24 +157,36 @@
 </div>
 
 @code {
-	#pragma warning disable CS8618
-	private StandaloneCodeEditor _schemaEditor;
-	private string _schemaEditorLanguage;
-	private StandaloneCodeEditor _instanceEditor;
-	private string _instanceEditorLanguage;
-	private StandaloneCodeEditor _outputEditor;
+    #pragma warning disable CS8618
+    private StandaloneCodeEditor _schemaEditor;
+    private string _schemaEditorLanguage;
+    private StandaloneCodeEditor _instanceEditor;
+    private string _instanceEditorLanguage;
+    private StandaloneCodeEditor _outputEditor;
 
-	private readonly SchemaOptionsModel _options = new();
+    private readonly SchemaOptionsModel _options = new();
 
-	private readonly List<LibraryVersion> _libraries =
+    private readonly List<LibraryVersion> _libraries =
 	[
-		LibraryVersion.GetFor<JsonSchema>(),
-	LibraryVersion.GetFor<DataKeyword>(),
-	LibraryVersion.GetFor<UniqueKeysKeyword>(),
-	LibraryVersion.GetFor<DiscriminatorKeyword>(),
-	LibraryVersion.GetFor<ISchemaRefiner>(),
-	LibraryVersion.GetFor<Bound>()
-	];
+        LibraryVersion.GetFor<JsonSchema>(),
+		LibraryVersion.GetFor<DataKeyword>(),
+		LibraryVersion.GetFor<UniqueKeysKeyword>(),
+		LibraryVersion.GetFor<DiscriminatorKeyword>(),
+		LibraryVersion.GetFor<ISchemaRefiner>(),
+		// LibraryVersion.GetFor<Bound>()
+    ];
+
+    private readonly List<Dialect> _dialects =
+    [
+	    Dialect.Draft06,
+	    Dialect.Draft07,
+	    Dialect.Draft201909,
+	    Dialect.Draft202012,
+	    Dialect.V1_2026,
+	    Json.Schema.ArrayExt.Dialect.ArrayExt_202012,
+	    Json.Schema.Data.Dialect.Data_202012,
+	    Json.Schema.OpenApi.Dialect.OpenApi_31,
+    ];
 
 	private IEnumerable<MetadataReference> _references;
 	private SchemaOperations _operation = SchemaOperations.Evaluate;
@@ -184,21 +197,47 @@
 	{
 		Evaluate,
 		GenerateSchema,
-		GenerateData
+		// GenerateData
 	}
 
 	private class SchemaOptionsModel
 	{
 		public OutputFormat OutputFormat { get; set; } = OutputFormat.Hierarchical;
-		public SpecVersion Version { get; set; } = SpecVersion.Draft202012;
+        public Dialect Dialect { get; set; } = Dialect.Draft202012;
+		
+		public string DialectId
+		{
+			get => Dialect.Id!.OriginalString;
+			set
+			{
+				Dialect = value switch
+				{
+					"http://json-schema.org/draft-06/schema#" => Dialect.Draft06,
+					"http://json-schema.org/draft-07/schema#" => Dialect.Draft07,
+					"https://json-schema.org/draft/2019-09/schema" => Dialect.Draft201909,
+					"https://json-schema.org/draft/2020-12/schema" => Dialect.Draft202012,
+					"https://json-schema.org/v1/2026" => Dialect.V1_2026,
+					"https://json-everything.net/meta/array-ext" => Json.Schema.ArrayExt.Dialect.ArrayExt_202012,
+					"https://json-everything.net/meta/data-2023" => Json.Schema.Data.Dialect.Data_202012,
+					"https://spec.openapis.org/oas/3.1/dialect/base" => Json.Schema.OpenApi.Dialect.OpenApi_31,
+					_ => Dialect.Draft202012
+				};
+			}
+		}
+		
 		public bool ValidateFormat { get; set; }
 		public bool IncludeDroppedAnnotations { get; set; }
 		public bool AddAnnotationForUnknownKeywords { get; set; }
 
+		public BuildOptions ToBuildOptions() => new()
+		{
+			SchemaRegistry = new(),
+			Dialect = Dialect,
+		};
+
 		public EvaluationOptions ToValidationOptions() => new()
 		{
 			OutputFormat = OutputFormat,
-			EvaluateAs = Version,
 			RequireFormatValidation = ValidateFormat,
 			PreserveDroppedAnnotations = IncludeDroppedAnnotations,
 			AddAnnotationForUnknownKeywords = AddAnnotationForUnknownKeywords
@@ -217,9 +256,9 @@
 				case SchemaOperations.GenerateSchema:
 					ConfigureForSchemaGen();
 					break;
-				case SchemaOperations.GenerateData:
-					ConfigureForDataGen();
-					break;
+				// case SchemaOperations.GenerateData:
+				// 	ConfigureForDataGen();
+				// 	break;
 				case SchemaOperations.Evaluate:
 				default:
 					ConfigureForEvaluation();
@@ -232,8 +271,8 @@
 	private string SchemaEditorLabel { get; set; } = "Schema (supports JSON & YAML)";
 	private string EvaluationOptionsVisibility { get; set; } = "visible";
 
-	private static StandaloneEditorConstructionOptions BasicOptions(StandaloneCodeEditor _) => EditorOptions.Basic();
-	private static StandaloneEditorConstructionOptions ReadOnlyOptions(StandaloneCodeEditor _) => EditorOptions.Readonly();
+	private StandaloneEditorConstructionOptions BasicOptions(StandaloneCodeEditor _) => EditorOptions.Basic();
+	private StandaloneEditorConstructionOptions ReadOnlyOptions(StandaloneCodeEditor _) => EditorOptions.Readonly();
 
 	private static string GetLanguageText(string langKey) => langKey switch
 	{
@@ -241,22 +280,24 @@
 		_ => langKey
 	};
 
-	private static string GetDescription(SpecVersion draft) => draft switch
+	private static string GetDescription(Dialect dialect) => dialect.Id!.OriginalString switch
 	{
-		SpecVersion.Unspecified => "Draft 2020-12",
-		SpecVersion.Draft6 => "Draft 6",
-		SpecVersion.Draft7 => "Draft 7",
-		SpecVersion.Draft201909 => "Draft 2019-09",
-		SpecVersion.Draft202012 => "Draft 2020-12",
-		SpecVersion.DraftNext => "Draft-Next (preview)",
-		_ => "Draft 2020-12"
+		"http://json-schema.org/draft-06/schema#" => "Draft 6",
+		"http://json-schema.org/draft-07/schema#" => "Draft 7",
+		"https://json-schema.org/draft/2019-09/schema" => "Draft 2019-09",
+		"https://json-schema.org/draft/2020-12/schema" => "Draft 2020-12",
+		"https://json-schema.org/v1/2026" => "V1 2026 (preview)",
+		"https://json-everything.net/meta/array-ext" => "2020-12 + Array Extensions Vocabulary",
+        "https://json-everything.net/meta/data-2023" => "2020-12 + Data Vocabulary",
+		"https://spec.openapis.org/oas/3.1/dialect/base" => "OpenAPI 3.1",
+		_ => dialect.Id!.OriginalString
 	};
 
 	private static string GetDescription(SchemaOperations operation) => operation switch
 	{
 		SchemaOperations.Evaluate => "Evaluate JSON",
 		SchemaOperations.GenerateSchema => "Generate a Schema",
-		SchemaOperations.GenerateData => "Generate Data",
+		// SchemaOperations.GenerateData => "Generate Data",
 		_ => "Evaluate JSON"
 	};
 
@@ -319,9 +360,9 @@
 			case SchemaOperations.GenerateSchema:
 				await GenerateSchema();
 				break;
-			case SchemaOperations.GenerateData:
-				await GenerateData();
-				break;
+			// case SchemaOperations.GenerateData:
+			// 	await GenerateData();
+			// 	break;
 			default:
 				throw new ArgumentOutOfRangeException();
 		}
@@ -336,7 +377,8 @@
 		try
 		{
 			var text = await _schemaEditor.GetValue();
-			schema = YamlSerializer.Deserialize<JsonSchema>(text)!;
+			var schemaJson = YamlSerializer.Parse(text).Single().ToJsonElement();
+            schema = JsonSchema.Build(schemaJson, _options.ToBuildOptions());
 		}
 		catch (Exception e)
 		{
@@ -344,10 +386,10 @@
 			await _outputEditor.SetValue($"Schema is invalid\n\n{e.Message}");
 			return;
 		}
-		JsonNode? instance;
+		JsonElement instance;
 		try
 		{
-			instance = YamlSerializer.Parse(await _instanceEditor.GetValue()).Single().ToJsonNode();
+            instance = YamlSerializer.Parse(await _instanceEditor.GetValue()).Single().ToJsonElement();
 		}
 		catch (Exception e)
 		{
@@ -358,6 +400,7 @@
 
 		try
 		{
+
 			var results = schema.Evaluate(instance, _options.ToValidationOptions());
 
 			var serializerOptions = new JsonSerializerOptions
@@ -376,36 +419,36 @@
 		}
 	}
 
-	private async Task GenerateData()
-	{
-		await _outputEditor.SetLanguageAsync("json", JsRuntime);
-		await _outputEditor.SetValue(string.Empty);
+	// private async Task GenerateData()
+	// {
+	// 	await _outputEditor.SetLanguageAsync("json", JsRuntime);
+	// 	await _outputEditor.SetValue(string.Empty);
 
-		JsonSchema schema;
-		try
-		{
-			schema = YamlSerializer.Deserialize<JsonSchema>(await _schemaEditor.GetValue())!;
-		}
-		catch (Exception e)
-		{
-			await _outputEditor.SetLanguageAsync("text", JsRuntime);
-			await _outputEditor.SetValue($"Schema is invalid\n\n{e.Message}");
-			return;
-		}
+	// 	JsonSchema schema;
+	// 	try
+	// 	{
+	// 		schema = YamlSerializer.Deserialize<JsonSchema>(await _schemaEditor.GetValue())!;
+	// 	}
+	// 	catch (Exception e)
+	// 	{
+	// 		await _outputEditor.SetLanguageAsync("text", JsRuntime);
+	// 		await _outputEditor.SetValue($"Schema is invalid\n\n{e.Message}");
+	// 		return;
+	// 	}
 
-		var generationResults = schema.GenerateData();
+	// 	var generationResults = schema.GenerateData();
 
-		if (generationResults.IsSuccess)
-		{
-			var instance = JsonSerializer.Serialize(generationResults.Result, new JsonSerializerOptions {WriteIndented = true});
-			await _instanceEditor.SetValue(instance);
-			await SaveInstance();
-		}
-		else
-		{
-			await _outputEditor.SetValue(generationResults.ErrorMessage);
-		}
-	}
+	// 	if (generationResults.IsSuccess)
+	// 	{
+	// 		var instance = JsonSerializer.Serialize(generationResults.Result, new JsonSerializerOptions {WriteIndented = true});
+	// 		await _instanceEditor.SetValue(instance);
+	// 		await SaveInstance();
+	// 	}
+	// 	else
+	// 	{
+	// 		await _outputEditor.SetValue(generationResults.ErrorMessage);
+	// 	}
+	// }
 
 #pragma warning disable CS0618 // Type or member is obsolete
 	private async Task GenerateSchema()
@@ -533,16 +576,23 @@ namespace JsonEverythingTemp;
 		HelpSummary = language == "json" ? HelpContent.SchemaEvaluate : HelpContent.SchemaGenerateSchema;
 	}
 
+	private static bool _dialectsRegistered = false;
+
 	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
 		if (firstRender)
 		{
+			ThemeService.OnThemeChanged += HandleThemeChanged;
+			
 			await JsRuntime.InvokeVoidAsync("initResizableSidebar");
 			
-			Json.Schema.Data.Vocabularies.Register();
-			Json.Schema.ArrayExt.Vocabularies.Register();
-			Json.Schema.OpenApi.Vocabularies.Register();
-			Data2022Support.Vocabularies.Register();
+            if (!_dialectsRegistered)
+            {
+	            Json.Schema.Data.MetaSchemas.Register();
+	            Json.Schema.ArrayExt.MetaSchemas.Register();
+	            Json.Schema.OpenApi.MetaSchemas.Register();
+	            _dialectsRegistered = true;
+            }
 
 			await LoadSavedSchema();
 			await LoadSavedInstance();
@@ -597,5 +647,22 @@ namespace JsonEverythingTemp;
 			throw new DllNotFoundException("Could not load one or more .Net references. Some functions may not be available.");
 
 		_references = references;
+	}
+
+	private void HandleThemeChanged()
+	{
+		var theme = ThemeService.MonacoTheme;
+		_schemaEditor?.UpdateOptions(new EditorUpdateOptions { Theme = theme });
+		_instanceEditor?.UpdateOptions(new EditorUpdateOptions { Theme = theme });
+		_outputEditor?.UpdateOptions(new EditorUpdateOptions { Theme = theme });
+		StateHasChanged();
+	}
+
+	private string GetImageUrl() =>
+		ThemeService.IsDarkMode ? "img/json-schema.png" : "img/json-schema-light.png";
+
+	public void Dispose()
+	{
+		ThemeService.OnThemeChanged -= HandleThemeChanged;
 	}
 }

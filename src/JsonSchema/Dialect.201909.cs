@@ -1,0 +1,76 @@
+﻿using Json.Schema.Keywords;
+
+namespace Json.Schema;
+
+public partial class Dialect
+{
+	/// <summary>
+	/// Gets the JSON Schema dialect definition for Draft 2019-09.
+	/// </summary>
+	/// <remarks>Use this property to evaluate schemas that conform to the Draft 2019-09 specification.
+	/// The dialect includes all standard Draft 2019-09 keywords and allows unknown keywords. Sibling keywords are
+	/// processed when resolving references using the "$ref" keyword.</remarks>
+	public static Dialect Draft201909 { get; } = new(
+		Keywords.Draft06.AdditionalItemsKeyword.Instance,
+		AdditionalPropertiesKeyword.Instance,
+		AllOfKeyword.Instance,
+		Keywords.Draft201909.AnchorKeyword.Instance,
+		AnyOfKeyword.Instance,
+		CommentKeyword.Instance,
+		ConstKeyword.Instance,
+		ContainsKeyword.Instance,
+		ContentEncodingKeyword.Instance,
+		ContentMediaTypeKeyword.Instance,
+		ContentSchemaKeyword.Instance,
+		DefaultKeyword.Instance,
+		DefsKeyword.Instance,
+		DependentRequiredKeyword.Instance,
+		DependentSchemasKeyword.Instance,
+		DeprecatedKeyword.Instance,
+		DescriptionKeyword.Instance,
+		ElseKeyword.Instance,
+		EnumKeyword.Instance,
+		ExamplesKeyword.Instance,
+		ExclusiveMaximumKeyword.Instance,
+		ExclusiveMinimumKeyword.Instance,
+		Keywords.Draft06.FormatKeyword.Annotate,
+		IdKeyword.Instance,
+		IfKeyword.Instance,
+		Keywords.Draft06.ItemsKeyword.Instance,
+		MaxContainsKeyword.Instance,
+		MaximumKeyword.Instance,
+		MaxItemsKeyword.Instance,
+		MaxLengthKeyword.Instance,
+		MaxPropertiesKeyword.Instance,
+		MinContainsKeyword.Instance,
+		MinimumKeyword.Instance,
+		MinItemsKeyword.Instance,
+		MinLengthKeyword.Instance,
+		MinPropertiesKeyword.Instance,
+		MultipleOfKeyword.Instance,
+		NotKeyword.Instance,
+		OneOfKeyword.Instance,
+		PatternKeyword.Instance,
+		PatternPropertiesKeyword.Instance,
+		PropertiesKeyword.Instance,
+		PropertyNamesKeyword.Instance,
+		ReadOnlyKeyword.Instance,
+		Keywords.Draft201909.RecursiveAnchorKeyword.Instance,
+		Keywords.Draft201909.RecursiveRefKeyword.Instance,
+		RefKeyword.Instance,
+		RequiredKeyword.Instance,
+		SchemaKeyword.Instance,
+		ThenKeyword.Instance,
+		TitleKeyword.Instance,
+		TypeKeyword.Instance,
+		Keywords.Draft201909.UnevaluatedItemsKeyword.Instance,
+		UnevaluatedPropertiesKeyword.Instance,
+		UniqueItemsKeyword.Instance,
+		Keywords.Draft201909.VocabularyKeyword.Instance,
+		WriteOnlyKeyword.Instance
+	)
+	{
+		Id = MetaSchemas.Draft201909Id,
+		AllowUnknownKeywords = true
+	};
+}

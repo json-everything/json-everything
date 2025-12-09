@@ -9,32 +9,35 @@ public class ObjectGenerationTests
 	[Test]
 	public void GeneratesSingleProperty()
 	{
-		var schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		var schema = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.Object)
 			.Properties(
 				("foo", true)
 			);
 
-		Run(schema);
+		Run(schema, buildOptions);
 	}
 
 	[Test]
 	public void GeneratesMultipleProperties()
 	{
-		var schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		var schema = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.Object)
 			.Properties(
 				("foo", true),
 				("bar", new JsonSchemaBuilder().Type(SchemaValueType.Integer))
 			);
 
-		Run(schema);
+		Run(schema, buildOptions);
 	}
 
 	[Test]
 	public void AdditionalPropertiesFalse()
 	{
-		var schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		var schema = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.Object)
 			.Properties(
 				("foo", true),
@@ -42,13 +45,14 @@ public class ObjectGenerationTests
 			)
 			.AdditionalProperties(false);
 
-		Run(schema);
+		Run(schema, buildOptions);
 	}
 
 	[Test]
 	public void RequiredPropertyNotListedInProperties()
 	{
-		var schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		var schema = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.Object)
 			.Properties(
 				("foo", true),
@@ -56,13 +60,14 @@ public class ObjectGenerationTests
 			)
 			.Required("baz");
 
-		Run(schema);
+		Run(schema, buildOptions);
 	}
 
 	[Test]
 	public void DefineThreePickTwo()
 	{
-		var schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		var schema = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.Object)
 			.Properties(
 				("foo", true),
@@ -71,13 +76,14 @@ public class ObjectGenerationTests
 			)
 			.MaxProperties(2);
 
-		Run(schema);
+		Run(schema, buildOptions);
 	}
 
 	[Test]
 	public void DefineThreePickTwoButMustContainBaz()
 	{
-		var schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		var schema = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.Object)
 			.Properties(
 				("foo", true),
@@ -87,6 +93,6 @@ public class ObjectGenerationTests
 			.Required("baz")
 			.MaxProperties(2);
 
-		Run(schema);
+		Run(schema, buildOptions);
 	}
 }

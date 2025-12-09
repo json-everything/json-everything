@@ -4,7 +4,7 @@ using Json.Pointer;
 namespace Json.Schema;
 
 /// <summary>
-/// Represents an identifiable or locatable base document that may be or contain a JSON Schema.
+/// Represents an identifiable base document that may be or may contain a JSON Schema.
 /// </summary>
 public interface IBaseDocument
 {
@@ -24,7 +24,7 @@ public interface IBaseDocument
 	/// Finds a schema within the document.
 	/// </summary>
 	/// <param name="pointer">A JSON Pointer to the location of the schema within the document.</param>
-	/// <param name="options">Evaluation options.  This is needed for internal processing.</param>
+	/// <param name="context">Build context.</param>
 	/// <returns>A JSON Schema, if found.</returns>
-	JsonSchema? FindSubschema(JsonPointer pointer, EvaluationOptions options);
+	JsonSchemaNode? FindSubschema(JsonPointer pointer, BuildContext context);
 }

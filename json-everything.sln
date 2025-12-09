@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.31423.177
+# Visual Studio Version 18
+VisualStudioVersion = 18.0.11222.15
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonSchema", "src\JsonSchema\JsonSchema.csproj", "{B936A840-C0AC-4B19-9C8D-55A40F4C0022}"
 EndProject
@@ -15,6 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MetaSchemas", "MetaSchemas"
 	ProjectSection(SolutionItems) = preProject
 		Meta-Schemas\schema06.json = Meta-Schemas\schema06.json
 		Meta-Schemas\schema07.json = Meta-Schemas\schema07.json
+		Meta-Schemas\v1.json = Meta-Schemas\v1.json
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "schema2019-09", "schema2019-09", "{1E5D622A-CB2F-40A2-B277-06F58B1ADB63}"
@@ -86,10 +87,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonSchema.DataGeneration", "src\JsonSchema.DataGeneration\JsonSchema.DataGeneration.csproj", "{0776DED0-94A7-4034-BDDB-610C0197FE4E}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonSchema.DataGeneration.Tests", "src\JsonSchema.DataGeneration.Tests\JsonSchema.DataGeneration.Tests.csproj", "{FABD51FE-F729-4D02-8295-66A6687C6240}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonSchema.OpenApi", "src\JsonSchema.OpenApi\JsonSchema.OpenApi.csproj", "{FB6CD9FB-184B-4B8B-9DD3-F52816387E11}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OpenAPI", "OpenAPI", "{EF7AC22E-9DD7-4F23-8542-74A0D315E5E2}"
@@ -103,19 +100,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3.1", "3.1", "{B22CB191-B36
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonSchema.OpenApi.Tests", "src\JsonSchema.OpenApi.Tests\JsonSchema.OpenApi.Tests.csproj", "{6A9AD8D7-B790-4BB3-B96C-9ADBC342388B}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "next", "next", "{763E70E4-7B8E-4E05-AA64-1DD1EB6ED8EC}"
-	ProjectSection(SolutionItems) = preProject
-		Meta-Schemas\Next\applicator.json = Meta-Schemas\Next\applicator.json
-		Meta-Schemas\Next\content.json = Meta-Schemas\Next\content.json
-		Meta-Schemas\Next\core.json = Meta-Schemas\Next\core.json
-		Meta-Schemas\Next\format-annotation.json = Meta-Schemas\Next\format-annotation.json
-		Meta-Schemas\Next\format-assertion.json = Meta-Schemas\Next\format-assertion.json
-		Meta-Schemas\Next\meta-data.json = Meta-Schemas\Next\meta-data.json
-		Meta-Schemas\Next\schema.json = Meta-Schemas\Next\schema.json
-		Meta-Schemas\Next\unevaluated.json = Meta-Schemas\Next\unevaluated.json
-		Meta-Schemas\Next\validation.json = Meta-Schemas\Next\validation.json
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utilities", "Utilities", "{95A6A4EA-AF0E-439C-A0FD-B7F8BE57BD8A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yaml2JsonNode", "src\Yaml2JsonNode\Yaml2JsonNode.csproj", "{16891EEF-985F-4BDC-9C97-0D40707BF9F6}"
@@ -125,8 +109,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{A09F0319-B69A-401D-814D-43524E883850}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiDocsGenerator", "tools\ApiDocsGenerator\ApiDocsGenerator.csproj", "{63EB78DD-70B3-41BB-86D1-0E7886F8A312}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CrossProjectTesting", "tools\CrossProjectTesting\CrossProjectTesting.csproj", "{38E50AC7-002E-4FA4-AE19-E72A28CD4863}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "JSON-e", "JSON-e", "{36E07DAA-6682-41E6-A838-273677E3B16B}"
 EndProject
@@ -261,18 +243,6 @@ Global
 		{5844BA9B-31F6-4A34-A391-BE9016029BB6}.Localization|Any CPU.Build.0 = Release|Any CPU
 		{5844BA9B-31F6-4A34-A391-BE9016029BB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5844BA9B-31F6-4A34-A391-BE9016029BB6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0776DED0-94A7-4034-BDDB-610C0197FE4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0776DED0-94A7-4034-BDDB-610C0197FE4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0776DED0-94A7-4034-BDDB-610C0197FE4E}.Localization|Any CPU.ActiveCfg = Release|Any CPU
-		{0776DED0-94A7-4034-BDDB-610C0197FE4E}.Localization|Any CPU.Build.0 = Release|Any CPU
-		{0776DED0-94A7-4034-BDDB-610C0197FE4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0776DED0-94A7-4034-BDDB-610C0197FE4E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FABD51FE-F729-4D02-8295-66A6687C6240}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FABD51FE-F729-4D02-8295-66A6687C6240}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FABD51FE-F729-4D02-8295-66A6687C6240}.Localization|Any CPU.ActiveCfg = Release|Any CPU
-		{FABD51FE-F729-4D02-8295-66A6687C6240}.Localization|Any CPU.Build.0 = Release|Any CPU
-		{FABD51FE-F729-4D02-8295-66A6687C6240}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FABD51FE-F729-4D02-8295-66A6687C6240}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FB6CD9FB-184B-4B8B-9DD3-F52816387E11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FB6CD9FB-184B-4B8B-9DD3-F52816387E11}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FB6CD9FB-184B-4B8B-9DD3-F52816387E11}.Localization|Any CPU.ActiveCfg = Debug|Any CPU
@@ -303,12 +273,6 @@ Global
 		{63EB78DD-70B3-41BB-86D1-0E7886F8A312}.Localization|Any CPU.Build.0 = Release|Any CPU
 		{63EB78DD-70B3-41BB-86D1-0E7886F8A312}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{63EB78DD-70B3-41BB-86D1-0E7886F8A312}.Release|Any CPU.Build.0 = Release|Any CPU
-		{38E50AC7-002E-4FA4-AE19-E72A28CD4863}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{38E50AC7-002E-4FA4-AE19-E72A28CD4863}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{38E50AC7-002E-4FA4-AE19-E72A28CD4863}.Localization|Any CPU.ActiveCfg = Debug|Any CPU
-		{38E50AC7-002E-4FA4-AE19-E72A28CD4863}.Localization|Any CPU.Build.0 = Debug|Any CPU
-		{38E50AC7-002E-4FA4-AE19-E72A28CD4863}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{38E50AC7-002E-4FA4-AE19-E72A28CD4863}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DCAA7E94-74F1-4B18-82A1-64F274E21394}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DCAA7E94-74F1-4B18-82A1-64F274E21394}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DCAA7E94-74F1-4B18-82A1-64F274E21394}.Localization|Any CPU.ActiveCfg = Debug|Any CPU
@@ -384,17 +348,13 @@ Global
 		{86873071-9A8D-458E-8FE9-41BA2DF50651} = {8396D8E1-076D-48A5-B57F-F504C5F16D11}
 		{2C489C55-CDC4-47B6-BF94-B1D4755047A5} = {86873071-9A8D-458E-8FE9-41BA2DF50651}
 		{5844BA9B-31F6-4A34-A391-BE9016029BB6} = {86873071-9A8D-458E-8FE9-41BA2DF50651}
-		{0776DED0-94A7-4034-BDDB-610C0197FE4E} = {8396D8E1-076D-48A5-B57F-F504C5F16D11}
-		{FABD51FE-F729-4D02-8295-66A6687C6240} = {8396D8E1-076D-48A5-B57F-F504C5F16D11}
 		{FB6CD9FB-184B-4B8B-9DD3-F52816387E11} = {86873071-9A8D-458E-8FE9-41BA2DF50651}
 		{EF7AC22E-9DD7-4F23-8542-74A0D315E5E2} = {CB7DADBA-D486-42D0-A972-00DB95F697F9}
 		{B22CB191-B36C-41AE-9DE6-864C0A677641} = {EF7AC22E-9DD7-4F23-8542-74A0D315E5E2}
 		{6A9AD8D7-B790-4BB3-B96C-9ADBC342388B} = {86873071-9A8D-458E-8FE9-41BA2DF50651}
-		{763E70E4-7B8E-4E05-AA64-1DD1EB6ED8EC} = {CB7DADBA-D486-42D0-A972-00DB95F697F9}
 		{16891EEF-985F-4BDC-9C97-0D40707BF9F6} = {95A6A4EA-AF0E-439C-A0FD-B7F8BE57BD8A}
 		{9F30736E-69EC-4B7A-B78B-7C116C33F010} = {95A6A4EA-AF0E-439C-A0FD-B7F8BE57BD8A}
 		{63EB78DD-70B3-41BB-86D1-0E7886F8A312} = {A09F0319-B69A-401D-814D-43524E883850}
-		{38E50AC7-002E-4FA4-AE19-E72A28CD4863} = {A09F0319-B69A-401D-814D-43524E883850}
 		{DCAA7E94-74F1-4B18-82A1-64F274E21394} = {36E07DAA-6682-41E6-A838-273677E3B16B}
 		{02701B75-3297-4B4B-BECD-5F7D61D11B8C} = {36E07DAA-6682-41E6-A838-273677E3B16B}
 		{5DEF8F44-630F-4469-9CE1-1611DA54FA7D} = {8396D8E1-076D-48A5-B57F-F504C5F16D11}

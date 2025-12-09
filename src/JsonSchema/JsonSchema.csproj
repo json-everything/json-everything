@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-  	<TargetFrameworks>netstandard2.0;net8.0;net9.0</TargetFrameworks>
+  	<TargetFrameworks>netstandard2.0;net8.0;net9.0;net10.0</TargetFrameworks>
     <Configurations>Debug;Release;Localization</Configurations>
     <DefineConstants>$(DefineConstants)TRACE</DefineConstants>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
-    <NoWarn>IDE0290</NoWarn>
+    <NoWarn>IDE0290,CA2255</NoWarn>
     <IsAotCompatible Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net7.0'))">true</IsAotCompatible>	  
     <RootNamespace>Json.Schema</RootNamespace>
     <AssemblyName>JsonSchema.Net</AssemblyName>
@@ -17,8 +17,8 @@
     <IncludeBuildOutput>false</IncludeBuildOutput>
 
     <PackageId>JsonSchema.Net</PackageId>
-    <JsonSchemaNetVersion>7.4.0</JsonSchemaNetVersion>
-    <AssemblyVersion>7.0.0.0</AssemblyVersion>
+    <JsonSchemaNetVersion>8.0.0</JsonSchemaNetVersion>
+    <AssemblyVersion>8.0.0.0</AssemblyVersion>
     <FileVersion>$(JsonSchemaNetVersion)</FileVersion>
     <Version>$(JsonSchemaNetVersion)</Version>
     <Authors>Greg Dennis</Authors>
@@ -31,6 +31,18 @@
 
     <PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
   </PropertyGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="..\..\Meta-Schemas\**\*.json" Link="Meta-Schemas\%(RecursiveDir)%(Filename)%(Extension)" />
+		<EmbeddedResource Remove="..\..\Meta-Schemas\OpenAPI\**" />
+		<EmbeddedResource Remove="..\..\Meta-Schemas\array-ext.json" />
+		<EmbeddedResource Remove="..\..\Meta-Schemas\data-2023.json" />
+	</ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="PropertyDependenciesKeyword.cs" />
+    <Compile Remove="PropertyDependency.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="PolySharp" Version="1.15.0" PrivateAssets="all" />

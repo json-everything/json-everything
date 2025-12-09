@@ -1,5 +1,5 @@
 ﻿using System.Globalization;
-using System.Text.Json.Nodes;
+using System.Text.Json;
 using System.Threading.Tasks;
 using NUnit.Framework;
 
@@ -14,7 +14,7 @@ public class LocalizationTests
 			.Type(SchemaValueType.Number)
 			.Minimum(10);
 
-		var instance = JsonNode.Parse("5");
+		var instance = JsonDocument.Parse("5").RootElement;
 
 		var results = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
 
@@ -35,7 +35,7 @@ public class LocalizationTests
 				.Type(SchemaValueType.Number)
 				.Minimum(10);
 
-			var instance = JsonNode.Parse("5");
+			var instance = JsonDocument.Parse("5").RootElement;
 
 			var results = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
 
@@ -60,7 +60,7 @@ public class LocalizationTests
 				.Type(SchemaValueType.Number)
 				.Minimum(10);
 
-			var instance = JsonNode.Parse("5");
+			var instance = JsonDocument.Parse("5").RootElement;
 
 			var results = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
 
@@ -80,7 +80,7 @@ public class LocalizationTests
 		JsonSchema schema = new JsonSchemaBuilder()
 			.Type(SchemaValueType.Number)
 			.Minimum(10);
-		var instance = JsonNode.Parse("5");
+		var instance = JsonDocument.Parse("5").RootElement;
 
 		string RunWithCulture(CultureInfo culture)
 		{

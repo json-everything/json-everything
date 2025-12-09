@@ -14,12 +14,16 @@ public class AdditionalItemsTests
 	[Test]
 	public void TrueIsAdded()
 	{
-		var expected = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions
+		{
+			Dialect = Dialect.Draft202012
+		};
+		var expected = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.Array)
 			.Items(new JsonSchemaBuilder().Type(SchemaValueType.Integer))
 			.AdditionalItems(true);
 
-		var actual = new JsonSchemaBuilder().FromType<AdditionalItemsTrue>();
+		var actual = new JsonSchemaBuilder(buildOptions).FromType<AdditionalItemsTrue>();
 
 		AssertEqual(expected, actual);
 	}
@@ -30,12 +34,16 @@ public class AdditionalItemsTests
 	[Test]
 	public void FalseIsAdded()
 	{
-		var expected = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions
+		{
+			Dialect = Dialect.Draft202012
+		};
+		var expected = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.Array)
 			.Items(new JsonSchemaBuilder().Type(SchemaValueType.Integer))
 			.AdditionalItems(false);
 
-		var actual = new JsonSchemaBuilder().FromType<AdditionalItemsFalse>();
+		var actual = new JsonSchemaBuilder(buildOptions).FromType<AdditionalItemsFalse>();
 
 		AssertEqual(expected, actual);
 	}
@@ -46,12 +54,16 @@ public class AdditionalItemsTests
 	[Test]
 	public void TypeIsAdded()
 	{
-		var expected = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions
+		{
+			Dialect = Dialect.Draft202012
+		};
+		var expected = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.Array)
 			.Items(new JsonSchemaBuilder().Type(SchemaValueType.Integer))
 			.AdditionalItems(new JsonSchemaBuilder().Type(SchemaValueType.String));
 
-		var actual = new JsonSchemaBuilder().FromType<AdditionalItemsString>();
+		var actual = new JsonSchemaBuilder(buildOptions).FromType<AdditionalItemsString>();
 
 		AssertEqual(expected, actual);
 	}
@@ -70,7 +82,11 @@ public class AdditionalItemsTests
 	[Test]
 	public void FalseIsAddedToProp()
 	{
-		var expected = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions
+		{
+			Dialect = Dialect.Draft202012
+		};
+		var expected = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.Object)
 			.Properties(
 				("Foo", new JsonSchemaBuilder()
@@ -80,7 +96,7 @@ public class AdditionalItemsTests
 				)
 			);
 
-		var actual = new JsonSchemaBuilder().FromType<AdditionalItemsOnProp>();
+		var actual = new JsonSchemaBuilder(buildOptions).FromType<AdditionalItemsOnProp>();
 
 		AssertEqual(expected, actual);
 	}

@@ -1,4 +1,5 @@
 ﻿@page "/json-path"
+@implements IDisposable
 @using System.Text.Json
 @using Json.Path
 @using JsonEverythingNet.Services
@@ -10,6 +11,8 @@
 
 @inject DataManager DataManager;
 @inject IJSRuntime JsRuntime;
+@inject EditorOptions EditorOptions;
+@inject ThemeService ThemeService;
 
 <PageTitle>JSON Path - json-everything.net</PageTitle>
 
@@ -17,7 +20,7 @@
 	<div class="sidebar">
 		<div class="sidebar-content">
 			<div class="align-items-center hstack mx-2">
-				<img src="img/json-path.png" height="70" width="70" class="me-3" />
+				<img src="@GetImageUrl()" height="70" width="70" class="me-3" />
 				<h1 class="display-4">JSON Path</h1>
 			</div>
 			<div class="align-items-center mx-3">
@@ -151,13 +154,15 @@
 		};
 	}
 
-	private static StandaloneEditorConstructionOptions BasicOptions(StandaloneCodeEditor _) => EditorOptions.Basic();
-	private static StandaloneEditorConstructionOptions ReadOnlyOptions(StandaloneCodeEditor _) => EditorOptions.Readonly();
+	private StandaloneEditorConstructionOptions BasicOptions(StandaloneCodeEditor _) => EditorOptions.Basic();
+	private StandaloneEditorConstructionOptions ReadOnlyOptions(StandaloneCodeEditor _) => EditorOptions.Readonly();
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
 		if (firstRender)
 		{
+			ThemeService.OnThemeChanged += HandleThemeChanged;
+			
 			await JsRuntime.InvokeVoidAsync("initResizableSidebar");
 			await LoadSavedPath();
 			await LoadSavedInstance();
@@ -227,5 +232,21 @@
 	private async Task LoadSavedInstance()
 	{
 		await DataManager.LoadEditorValue(_instanceEditor, "path-instance");
+	}
+
+	private string GetImageUrl() =>
+		ThemeService.IsDarkMode ? "img/json-path.png" : "img/json-path-light.png";
+
+	private void HandleThemeChanged()
+	{
+		var theme = ThemeService.MonacoTheme;
+		_instanceEditor?.UpdateOptions(new EditorUpdateOptions { Theme = theme });
+		_outputEditor?.UpdateOptions(new EditorUpdateOptions { Theme = theme });
+		StateHasChanged();
+	}
+
+	public void Dispose()
+	{
+		ThemeService.OnThemeChanged -= HandleThemeChanged;
 	}
 }

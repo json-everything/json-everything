@@ -40,7 +40,7 @@ public class AnyOfIntent : ISchemaKeywordIntent
 		builder.AnyOf(Subschemas.Select(Build));
 	}
 
-	private static JsonSchema Build(IEnumerable<ISchemaKeywordIntent> subschema)
+	private static JsonSchemaBuilder Build(IEnumerable<ISchemaKeywordIntent> subschema)
 	{
 		var builder = new JsonSchemaBuilder();
 

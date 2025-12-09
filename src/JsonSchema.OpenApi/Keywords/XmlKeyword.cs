@@ -1,0 +1,91 @@
+﻿using System.Text.Json;
+
+namespace Json.Schema.OpenApi.Keywords;
+
+/// <summary>
+/// Handles `example`.
+/// </summary>
+public class XmlKeyword : IKeywordHandler
+{
+	/// <summary>
+	/// Gets the singleton instance of the <see cref="XmlKeyword"/>.
+	/// </summary>
+	public static XmlKeyword Instance { get; } = new();
+
+	/// <summary>
+	/// Gets the name of the handled keyword.
+	/// </summary>
+	public string Name => "xml";
+
+	private XmlKeyword()
+	{
+	}
+
+	/// <summary>
+	/// Validates the specified JSON element as a keyword value and optionally returns a value to be shared across the other methods.
+	/// </summary>
+	/// <param name="value">The JSON element to validate and convert. Represents the value to be checked for keyword compliance.</param>
+	/// <returns>An object that is shared with the other methods.  This object is saved to <see cref="KeywordData.Value"/>.</returns>
+	public virtual object? ValidateKeywordValue(JsonElement value)
+	{
+		if (value.ValueKind != JsonValueKind.Object)
+			throw new JsonSchemaException($"'{Name}' value must be an object, found {value.ValueKind}");
+
+		if (value.TryGetProperty("name", out var nameElement))
+		{
+			if (nameElement.ValueKind != JsonValueKind.String)
+				throw new JsonSchemaException("'name' must be a string");
+		}
+
+		if (value.TryGetProperty("namespace", out var namespaceElement))
+		{
+			if (namespaceElement.ValueKind != JsonValueKind.String)
+				throw new JsonSchemaException("'namespace' must be a string");
+		}
+
+		if (value.TryGetProperty("prefix", out var prefixElement))
+		{
+			if (prefixElement.ValueKind != JsonValueKind.String)
+				throw new JsonSchemaException("'prefix' must be a string");
+		}
+
+		if (value.TryGetProperty("attribute", out var attributeElement))
+		{
+			if (attributeElement.ValueKind is not (JsonValueKind.True or JsonValueKind.False))
+				throw new JsonSchemaException("'attribute' must be a boolean");
+		}
+
+		if (value.TryGetProperty("wrapped", out var wrappedElement))
+		{
+			if (wrappedElement.ValueKind is not (JsonValueKind.True or JsonValueKind.False))
+				throw new JsonSchemaException("'wrapped' must be a boolean");
+		}
+
+		return null;
+	}
+
+	/// <summary>
+	/// Builds and registers subschemas based on the specified keyword data within the provided build context.
+	/// </summary>
+	/// <param name="keyword">The keyword data used to determine which subschemas to build. Cannot be null.</param>
+	/// <param name="context">The context in which subschemas are constructed and registered. Cannot be null.</param>
+	public virtual void BuildSubschemas(KeywordData keyword, BuildContext context)
+	{
+	}
+
+	/// <summary>
+	/// Evaluates the specified keyword using the provided evaluation context and returns the result of the evaluation.
+	/// </summary>
+	/// <param name="keyword">The keyword data to be evaluated. Cannot be null.</param>
+	/// <param name="context">The context in which the keyword evaluation is performed. Cannot be null.</param>
+	/// <returns>A KeywordEvaluation object containing the results of the evaluation.</returns>
+	public virtual KeywordEvaluation Evaluate(KeywordData keyword, EvaluationContext context)
+	{
+		return new KeywordEvaluation
+		{
+			Keyword = Name,
+			IsValid = true,
+			Annotation = keyword.RawValue
+		};
+	}
+}

@@ -1,85 +1,66 @@
 ﻿using System;
-using System.Text.Json.Nodes;
+using System.Text.Json;
 
 namespace Json.Schema;
 
 /// <summary>
-/// Represents any evaluation-time work (i.e. any work that requires the instance) for keywords.
+/// Represents the result of evaluating a keyword, including its validity, associated annotation, and any subschema
+/// evaluation results.
 /// </summary>
-public class KeywordEvaluation
+/// <remarks>Use this struct to capture the outcome of a keyword evaluation, such as in schema validation
+/// scenarios. The struct provides information about the keyword, whether it was valid, any related annotation data,
+/// subschema results, and error information if applicable. The static Ignore field can be used to represent a keyword
+/// evaluation that should be excluded from further processing.</remarks>
+public readonly struct KeywordEvaluation
 {
-	private bool _evaluated;
-	private bool _skipped;
-
-	internal static KeywordEvaluation Skip { get; } = new() { _skipped = true };
-
 	/// <summary>
-	/// Gets the local instance to be evaluated.
+	/// Represents a special evaluation that indicates a keyword should be ignored during processing.
 	/// </summary>
-	public JsonNode? LocalInstance { get; }
-	/// <summary>
-	/// Gets the local results object.
-	/// </summary>
-	public EvaluationResults Results { get; }
-
-	/// <summary>
-	/// Gets any sibling evaluations for this keyword.
-	/// </summary>
-	/// <remarks>
-	/// These evaluations are sourced from the associated constraint's <see cref="KeywordConstraint.SiblingDependencies"/>.
-	/// </remarks>
-	public KeywordEvaluation[] SiblingEvaluations { get; internal set; } = [];
-	/// <summary>
-	/// Gets any child evaluations for this keyword.
-	/// </summary>
-	/// <remarks>
-	/// These evaluations are sourced from the associated constraint's <see cref="KeywordConstraint.ChildDependencies"/>.
-	///
-	/// This property is publicly settable as some keywords cannot define child constraints until the instance is available.
-	/// </remarks>
-	public SchemaEvaluation[] ChildEvaluations { get; set; } = [];
-
-	internal Guid Id { get; set; }
-	internal KeywordConstraint Constraint { get; }
-
-	internal KeywordEvaluation(KeywordConstraint constraint, JsonNode? localInstance, EvaluationResults results)
+	/// <remarks>This instance is typically used to mark keywords that are intentionally excluded from validation or
+	/// further analysis. The generated keyword value is unique for each application run.</remarks>
+	public static readonly KeywordEvaluation Ignore = new()
 	{
-		Constraint = constraint;
-		LocalInstance = localInstance;
-		Results = results;
-	}
-#pragma warning disable CS8618
-	private KeywordEvaluation(){}
-#pragma warning restore CS8618
+		Keyword = Guid.NewGuid().ToString("N"),
+		IsValid = true
+	};
 
 	/// <summary>
-	/// Indicates that the evaluation should be skipped and no work is to be done,
-	/// e.g. `then` is skipped when `if` fails validation.
+	/// Gets the keyword that produced the evaluation.
 	/// </summary>
-	public void MarkAsSkipped()
-	{
-		_skipped = true;
-	}
+	public required string Keyword { get; init; }
 
-	internal void Evaluate(EvaluationContext context)
-	{
-		if (_evaluated || _skipped) return;
+	/// <summary>
+	/// Gets a value indicating whether a validation succeeded.
+	/// </summary>
+	/// <remarks>Some keywords do not produce a validation result.
+	/// In these cases, this property will default to true.</remarks>
+	public required bool IsValid { get; init; }
+	
+	/// <summary>
+	/// Gets the a JSON annotation produced by the keyword.
+	/// </summary>
+	/// <remarks>The annotation can contain arbitrary metadata or additional information in JSON format. If no
+	/// annotation is present, the value is <see langword="null"/>.</remarks>
+	public JsonElement? Annotation { get; init; }
+	
+	/// <summary>
+	/// Gets the collection of evaluation results produced by subschemas.
+	/// </summary>
+	public EvaluationResults[]? Details { get; init; }
+	
+	/// <summary>
+	/// If validation failed, this may get an error message.
+	/// </summary>
+	/// <remarks>Not all keywords produce an error message when they fail validation.</remarks>
+	public string? Error { get; init; }
+	
+	/// <summary>
+	/// Gets a value indicating whether this member participates in validation.
+	/// </summary>
+	public bool ContributesToValidation { get; init; } = true;
 
-		foreach (var evaluation in ChildEvaluations)
-		{
-			evaluation.Evaluate(context);
-		}
-
-		Constraint.Evaluator(this, context); // this can change _skipped
-
-		if (!_skipped)
-		{
-			foreach (var evaluation in ChildEvaluations)
-			{
-				Results.AddNestedResult(evaluation.Results);
-			}
-		}
-
-		_evaluated = true;
-	}
+	/// <summary>
+	/// Initializes a new instance of the KeywordEvaluation type.
+	/// </summary>
+	public KeywordEvaluation(){}
 }

@@ -9,7 +9,8 @@ public class ArrayGenerationTests
 	[Test]
 	public void GenerateArrayOfNumbers()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.Array)
 			.Items(new JsonSchemaBuilder()
 				.Type(SchemaValueType.Integer)
@@ -20,13 +21,14 @@ public class ArrayGenerationTests
 			.MinItems(3)
 			.MaxItems(10);
 
-		Run(schema);
+		Run(schema, buildOptions);
 	}
 
 	[Test]
 	public void GenerateArrayOfNumbersNoMax()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.Array)
 			.Items(new JsonSchemaBuilder()
 				.Type(SchemaValueType.Integer)
@@ -36,13 +38,14 @@ public class ArrayGenerationTests
 			)
 			.MinItems(3);
 
-		Run(schema);
+		Run(schema, buildOptions);
 	}
 
 	[Test]
 	public void GenerateArrayOfNumbersWithAllOf()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.Array)
 			.AllOf(
 				new JsonSchemaBuilder()
@@ -58,13 +61,14 @@ public class ArrayGenerationTests
 			.MinItems(3)
 			.MaxItems(10);
 
-		Run(schema);
+		Run(schema, buildOptions);
 	}
 
 	[Test]
 	public void GenerateArrayOfNumbersWithAnyOf()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.Array)
 			.AnyOf(
 				new JsonSchemaBuilder()
@@ -80,13 +84,14 @@ public class ArrayGenerationTests
 			.MinItems(3)
 			.MaxItems(10);
 
-		Run(schema);
+		Run(schema, buildOptions);
 	}
 
 	[Test]
 	public void GenerateArrayThatContains100()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.Array)
 			.Items(new JsonSchemaBuilder()
 				.Type(SchemaValueType.Integer)
@@ -99,13 +104,14 @@ public class ArrayGenerationTests
 			.MinItems(3)
 			.MaxItems(10);
 
-		Run(schema);
+		Run(schema, buildOptions);
 	}
 
 	[Test]
 	public void GenerateArrayThatContainsAtLeastTwo100s()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.Array)
 			.Items(new JsonSchemaBuilder()
 				.Type(SchemaValueType.Integer)
@@ -119,13 +125,14 @@ public class ArrayGenerationTests
 			.MinItems(3)
 			.MaxItems(10);
 
-		Run(schema);
+		Run(schema, buildOptions);
 	}
 
 	[Test]
 	public void GenerateArrayThatContainsAtMostThree100s()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.Array)
 			.Items(new JsonSchemaBuilder()
 				.Type(SchemaValueType.Integer)
@@ -139,13 +146,14 @@ public class ArrayGenerationTests
 			.MinItems(3)
 			.MaxItems(10);
 
-		Run(schema);
+		Run(schema, buildOptions);
 	}
 
 	[Test]
 	public void GenerateArrayThatContainsBetweenTwoAndFive100s()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.Array)
 			.Items(new JsonSchemaBuilder()
 				.Type(SchemaValueType.Integer)
@@ -160,13 +168,14 @@ public class ArrayGenerationTests
 			.MinItems(3)
 			.MaxItems(20);
 
-		Run(schema);
+		Run(schema, buildOptions);
 	}
 
 	[Test]
 	public void GenerateArrayWhereMinContainsIsMoreThanMaxItems_Fails()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.Array)
 			.Items(new JsonSchemaBuilder()
 				.Type(SchemaValueType.Integer)
@@ -180,13 +189,14 @@ public class ArrayGenerationTests
 			.MinItems(3)
 			.MaxItems(10);
 
-		RunFailure(schema);
+		RunFailure(schema, buildOptions);
 	}
 
 	[Test]
 	public void GenerateSequentialArray()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.Array)
 			.PrefixItems(
 				new JsonSchemaBuilder()
@@ -203,13 +213,14 @@ public class ArrayGenerationTests
 			.MinItems(3)
 			.MaxItems(3);
 
-		Run(schema);
+		Run(schema, buildOptions);
 	}
 
 	[Test]
 	public void GenerateSequentialArrayPlusMore()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.Array)
 			.PrefixItems(
 				new JsonSchemaBuilder()
@@ -226,13 +237,14 @@ public class ArrayGenerationTests
 			.MinItems(5)
 			.MaxItems(10);
 
-		Run(schema);
+		Run(schema, buildOptions);
 	}
 
 	[Test]
 	public void GenerateSequentialArrayPlusSpecifiedMore()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.Array)
 			.PrefixItems(
 				new JsonSchemaBuilder()
@@ -254,13 +266,14 @@ public class ArrayGenerationTests
 				.Maximum(200)
 			);
 
-		Run(schema);
+		Run(schema, buildOptions);
 	}
 
 	[Test]
 	public void GenerateSequentialArrayWithFewerItems()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.Array)
 			.PrefixItems(
 				new JsonSchemaBuilder()
@@ -276,13 +289,14 @@ public class ArrayGenerationTests
 			)
 			.MaxItems(2);
 
-		Run(schema);
+		Run(schema, buildOptions);
 	}
 
 	[Test]
 	public void GenerateSequentialArrayPlusMoreAndContains()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.Array)
 			.PrefixItems(
 				new JsonSchemaBuilder()
@@ -304,13 +318,14 @@ public class ArrayGenerationTests
 				.Maximum(100)
 			);
 
-		Run(schema);
+		Run(schema, buildOptions);
 	}
 
 	[Test]
 	public void GenerateSequentialArrayWithNoMoreItems()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.Array)
 			.PrefixItems(
 				new JsonSchemaBuilder()
@@ -326,13 +341,14 @@ public class ArrayGenerationTests
 			)
 			.Items(false);
 
-		Run(schema);
+		Run(schema, buildOptions);
 	}
 
 	[Test]
 	public void GenerateSequentialArrayWithNoMoreItemsAndMinItems()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.Array)
 			.PrefixItems(
 				new JsonSchemaBuilder()
@@ -349,13 +365,14 @@ public class ArrayGenerationTests
 			.MinItems(3)
 			.Items(false);
 
-		Run(schema);
+		Run(schema, buildOptions);
 	}
 
 	[Test]
 	public void GenerateSequentialArrayWithNoMoreItemsAndMinItemsGreaterThanSequential()
 	{
-		JsonSchema schema = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		JsonSchema schema = new JsonSchemaBuilder(buildOptions)
 			.Type(SchemaValueType.Array)
 			.PrefixItems(
 				new JsonSchemaBuilder()
@@ -372,6 +389,6 @@ public class ArrayGenerationTests
 			.MinItems(4)
 			.Items(false);
 
-		RunFailure(schema);
+		RunFailure(schema, buildOptions);
 	}
 }

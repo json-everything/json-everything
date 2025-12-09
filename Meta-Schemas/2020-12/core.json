@@ -28,8 +28,7 @@
         },
         "$defs": {
             "type": "object",
-            "additionalProperties": { "$dynamicRef": "#meta" },
-            "default": {}
+            "additionalProperties": { "$dynamicRef": "#meta" }
         }
     },
     "$defs": {

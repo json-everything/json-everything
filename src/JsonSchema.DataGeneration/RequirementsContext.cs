@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json.Nodes;
-using System.Text.RegularExpressions;
+using System.Text.Json;
 using Json.More;
 
 namespace Json.Schema.DataGeneration;
 
 internal class RequirementsContext
 {
+	private static readonly JsonElement _one = 1.AsJsonElement();
+
 	public const SchemaValueType AllTypes =
 		SchemaValueType.Array |
 		SchemaValueType.Boolean |
@@ -49,9 +50,9 @@ internal class RequirementsContext
 	public List<string>? AvoidProperties { get; set; }
 	// TODO: unevaluatedProperties
 
-	public JsonNode? Const { get; set; }
+	public JsonElement? Const { get; set; }
 	public bool ConstIsSet { get; set; }
-	public List<(bool, JsonNode?)>? EnumOptions { get; set; }
+	public List<(bool, JsonElement)>? EnumOptions { get; set; }
 
 	public List<RequirementsContext>? Options { get; set; }
 
@@ -261,7 +262,7 @@ internal class RequirementsContext
 		bool BreakConst(RequirementsContext context)
 		{
 			if (!ConstIsSet) return false;
-			context.Const = Const == null ? 1 : null;
+			context.Const = _one;
 			context.ConstIsSet = true;
 			return true;
 		}
@@ -334,7 +335,7 @@ internal class RequirementsContext
 			ConstIsSet = other.ConstIsSet;
 		}
 		else if (other.ConstIsSet)
-			HasConflict = Const.IsEquivalentTo(other.Const);
+			HasConflict = Const?.IsEquivalentTo(other.Const!.Value) ?? false;
 
 		//if (Patterns == null)
 		//	Patterns = other.Patterns;

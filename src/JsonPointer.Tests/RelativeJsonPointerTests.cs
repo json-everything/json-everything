@@ -32,6 +32,7 @@ public class RelativeJsonPointerTests
 			yield return new TestCaseData("/end");
 			yield return new TestCaseData("-1/end");
 			yield return new TestCaseData("end");
+			yield return new TestCaseData("01#/foo/bar");
 		}
 	}
 

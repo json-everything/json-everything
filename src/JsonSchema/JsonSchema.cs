@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Buffers;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
-using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 using Json.More;
 using Json.Pointer;
+using Json.Schema.Keywords;
+
 // ReSharper disable LocalizableElement
 
 namespace Json.Schema;
@@ -19,285 +16,345 @@ namespace Json.Schema;
 /// <summary>
 /// Represents a JSON Schema.
 /// </summary>
-[JsonConverter(typeof(SchemaJsonConverter))]
 [DebuggerDisplay("{ToDebugString()}")]
+[JsonConverter(typeof(JsonSchemaJsonConverter))]
 public class JsonSchema : IBaseDocument
 {
-	private const string _unknownKeywordsAnnotationKey = "$unknownKeywords";
+	private readonly SchemaRegistry _schemaRegistry;
+	private readonly bool _refIgnoresSiblingKeywords;
 
-	private readonly Dictionary<string, IJsonSchemaKeyword>? _keywords;
-	// using ConcurrentStack because it has a Clear() method
-	private readonly ConcurrentStack<(DynamicScope Scope, SchemaConstraint Constraint)> _constraints = [];
-
-	private EvaluationOptions? _lastCalledOptions;
-	private bool? _isDynamic;
-
-	/// <summary>
-	/// The empty schema `{}`.  Functionally equivalent to <see cref="True"/>.
-	/// </summary>
-	public static readonly JsonSchema Empty = new([]);
 	/// <summary>
 	/// The `true` schema.  Passes all instances.
 	/// </summary>
 	public static readonly JsonSchema True = new(true) { BaseUri = new("https://json-schema.org/true") };
+
 	/// <summary>
 	/// The `false` schema.  Fails all instances.
 	/// </summary>
 	public static readonly JsonSchema False = new(false) { BaseUri = new("https://json-schema.org/false") };
 
 	/// <summary>
-	/// Gets the keywords contained in the schema.  Only populated for non-boolean schemas.
-	/// </summary>
-	public IReadOnlyCollection<IJsonSchemaKeyword>? Keywords => _keywords?.Values;
-
-	/// <summary>
-	/// Gets the keyword class by keyword name.
-	/// </summary>
-	/// <param name="keyword">The keyword name.</param>
-	/// <returns>The keyword implementation if it exists in the schema.</returns>
-	public IJsonSchemaKeyword? this[string keyword] => _keywords?.TryGetValue(keyword, out var k) ?? false ? k : null;
-
-	/// <summary>
 	/// For boolean schemas, gets the value.  Null if the schema isn't a boolean schema.
 	/// </summary>
 	public bool? BoolValue { get; }
 
-	/// <summary>
-	/// Gets the base URI that applies to this schema.  This may be defined by a parent schema.
-	/// </summary>
 	/// <remarks>
-	/// This property is initialized to a generated random value that matches `https://json-everything.net/{random}`
-	/// where `random` is 10 hex characters.
+	/// This property is initialized to a generated random value that matches `https://json-everything.lib/{random-guid}`.
 	///
 	/// It may change after the initial evaluation based on whether the schema contains an `$id` keyword
 	/// or is a child of another schema.
 	/// </remarks>
-	public Uri BaseUri { get; set; } = GenerateBaseUri();
+	public Uri BaseUri { get; private set; }
 
 	/// <summary>
-	/// Gets whether the schema defines a new schema resource.  This will only be true if it contains an `$id` keyword.
+	/// Gets the root node of the JSON Schema.
 	/// </summary>
-	public bool IsResourceRoot { get; private set; }
+	/// <remarks>Use this property to access the top-level schema node, which represents the entry point for
+	/// traversing or validating the entire schema structure.</remarks>
+	public JsonSchemaNode Root { get; }
 
-	/// <summary>
-	/// Gets the specification version as determined by analyzing the `$schema` keyword, if it exists.
-	/// </summary>
-	public SpecVersion DeclaredVersion { get; internal set; }
-
-	internal Vocabulary[]? Dialect { get; set; }
-
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 	private JsonSchema(bool value)
 	{
 		BoolValue = value;
+		Root = value ? JsonSchemaNode.True() : JsonSchemaNode.False();
+		BaseUri = Root.BaseUri;
 	}
-	internal JsonSchema(IEnumerable<IJsonSchemaKeyword> keywords)
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
+
+	private JsonSchema(JsonSchemaNode root, SchemaRegistry schemaRegistry, bool refIgnoresSiblingKeywords)
 	{
-		_keywords = keywords.ToDictionary(x => x.Keyword());
+		_schemaRegistry = schemaRegistry;
+		_refIgnoresSiblingKeywords = refIgnoresSiblingKeywords;
+		Root = root;
+		BaseUri = Root.BaseUri;
 	}
 
 	/// <summary>
-	/// Loads text from a file and deserializes a <see cref="JsonSchema"/>.
+	/// Loads text from a file and builds a <see cref="JsonSchema"/>.
 	/// </summary>
 	/// <param name="fileName">The filename to load, URL-decoded.</param>
-	/// <param name="options">Serializer options.</param>
+	/// <param name="options">(optional) Serializer options.</param>
+	/// <param name="baseUri">(optional) The base URI for this schema.</param>
 	/// <returns>A new <see cref="JsonSchema"/>.</returns>
 	/// <exception cref="JsonException">Could not deserialize a portion of the schema.</exception>
 	/// <remarks>The filename needs to not be URL-encoded as <see cref="Uri"/> attempts to encode it.</remarks>
-	[RequiresUnreferencedCode("Calls JsonSerializer.Deserialize with JsonSerializerOptions. Make sure the options object contains all relevant JsonTypeInfos before suppressing this warning.")]
-	[RequiresDynamicCode("Calls JsonSerializer.Deserialize with JsonSerializerOptions. Make sure the options object contains all relevant JsonTypeInfos before suppressing this warning.")]
-	public static JsonSchema FromFile(string fileName, JsonSerializerOptions? options)
+	public static JsonSchema FromFile(string fileName, BuildOptions? options = null, Uri? baseUri = null)
 	{
 		var text = File.ReadAllText(fileName);
-		var schema = FromText(text, options);
-		var path = Path.GetFullPath(fileName);
-		// For some reason, full *nix file paths (which start with '/') don't work quite right when
-		// being prepended with 'file:///'.  It seems the '////' is interpreted as '//' and the
-		// first folder in the path is then interpreted as the host.  To account for this, we
-		// need to prepend with 'file://' instead.
-		var protocol = path.StartsWith("/") ? "file://" : "file:///";
-		schema.BaseUri = new Uri($"{protocol}{path}");
+		baseUri ??= new Uri(fileName);
+
+		return FromText(text, options, baseUri);
+	}
+
+	/// <summary>
+	/// Builds a <see cref="JsonSchema"/> from text.
+	/// </summary>
+	/// <param name="jsonText">The text to parse.</param>
+	/// <param name="buildOptions">(optional) The build options.</param>
+	/// <param name="baseUri">(optional) The base URI for this schema.</param>
+	/// <param name="jsonOptions">(optional) Options for parsing a <see cref="JsonDocument"/>.</param>
+	/// <returns>A new <see cref="JsonSchema"/>.</returns>
+	/// <exception cref="JsonException">Could not deserialize a portion of the schema.</exception>
+	public static JsonSchema FromText(string jsonText, BuildOptions? buildOptions = null, Uri? baseUri = null, JsonDocumentOptions? jsonOptions = null)
+	{
+		var element = JsonDocument.Parse(jsonText, jsonOptions ?? default).RootElement;
+		return Build(element, buildOptions, baseUri);
+	}
+
+	private static Uri GenerateBaseUri() => new($"https://json-everything.lib/{Guid.NewGuid():N}");
+
+	/// <summary>
+	/// Builds a JsonSchema instance from the specified JSON schema root element, applying the provided build options and
+	/// base URI if specified.
+	/// </summary>
+	/// <remarks>The returned schema is registered with the provided or global schema registry. Reference
+	/// resolution and cycle detection are performed during the build process. The base URI is set on the resulting schema
+	/// and used for reference resolution.</remarks>
+	/// <param name="root">The root JsonElement representing the JSON schema to be parsed and built. Must be a valid JSON schema object.</param>
+	/// <param name="options">Optional build options that control schema parsing behavior, such as registry usage and dialect settings. If null,
+	/// default options are used.</param>
+	/// <param name="baseUri">An optional base URI to associate with the schema for resolving references if the schema does not contain an $id
+	/// keyword. If null, a default base URI is generated.</param>
+	/// <returns>A JsonSchema instance representing the parsed schema. Returns a singleton schema for boolean schemas (<see
+	/// langword="true"/> or <see langword="false"/>), or a constructed schema for object-based definitions.</returns>
+	public static JsonSchema Build(JsonElement root, BuildOptions? options = null, Uri? baseUri = null)
+	{
+		options ??= BuildOptions.Default;
+		var context = new BuildContext(options, baseUri ?? GenerateBaseUri())
+		{
+			LocalSchema = root
+		};
+
+		var node = BuildNode(context);
+
+		if (node.Source.ValueKind == JsonValueKind.True) return True;
+		if (node.Source.ValueKind == JsonValueKind.False) return False;
+
+		var schema = new JsonSchema(node, context.Options.SchemaRegistry, context.Dialect.RefIgnoresSiblingKeywords)
+		{
+			BaseUri = node.BaseUri
+		};
+		context.Options.SchemaRegistry.Register(schema);
+		context.BaseUri = node.BaseUri;
+
+		TryResolveReferences(node, context);
+		DetectCycles(node);
+
 		return schema;
 	}
 
 	/// <summary>
-	/// Loads text from a file and deserializes a <see cref="JsonSchema"/>.
+	/// Builds a new JSON schema node from the specified build context, interpreting the local schema and its keywords
+	/// according to the active dialect.
 	/// </summary>
-	/// <param name="fileName">The filename to load, URL-decoded.</param>
-	/// <returns>A new <see cref="JsonSchema"/>.</returns>
-	/// <exception cref="JsonException">Could not deserialize a portion of the schema.</exception>
-	/// <remarks>The filename needs to not be URL-encoded as <see cref="Uri"/> attempts to encode it.</remarks>
-	public static JsonSchema FromFile(string fileName)
+	/// <remarks>This method processes schema keywords and handles dialect-specific behaviors, such as anchor
+	/// registration and embedded resource management. The resulting node reflects the schema's structure and metadata as
+	/// defined in the context.
+	/// 
+	/// Use this method from keywords to build subschemas.
+	///
+	/// Individual keywords may throw various exceptions during the validation phase.
+	/// </remarks>
+	/// <param name="context">The build context containing the local schema, dialect, base URI, and options used to construct the schema node.
+	/// Must not be null.</param>
+	/// <returns>A JsonSchemaNode representing the parsed schema, including its keywords and any registered anchors or embedded
+	/// resources.</returns>
+	/// <exception cref="ArgumentException">Thrown if the local schema is not a boolean or an object.</exception>
+	public static JsonSchemaNode BuildNode(BuildContext context)
 	{
-		var text = File.ReadAllText(fileName);
-		var schema = FromText(text);
-		var path = Path.GetFullPath(fileName);
-		// For some reason, full *nix file paths (which start with '/') don't work quite right when
-		// being prepended with 'file:///'.  It seems the '////' is interpreted as '//' and the
-		// first folder in the path is then interpreted as the host.  To account for this, we
-		// need to prepend with 'file://' instead.
-		var protocol = path.StartsWith("/") ? "file://" : "file:///";
-		schema.BaseUri = new Uri($"{protocol}{path}");
-		return schema;
-	}
-
-	/// <summary>
-	/// Deserializes a <see cref="JsonSchema"/> from text.
-	/// </summary>
-	/// <param name="jsonText">The text to parse.</param>
-	/// <param name="options">Serializer options.</param>
-	/// <returns>A new <see cref="JsonSchema"/>.</returns>
-	/// <exception cref="JsonException">Could not deserialize a portion of the schema.</exception>
-	[RequiresUnreferencedCode("Calls JsonSerializer.Deserialize with JsonSerializerOptions. Make sure the options object contains all relevant JsonTypeInfos before suppressing this warning.")]
-	[RequiresDynamicCode("Calls JsonSerializer.Deserialize with JsonSerializerOptions. Make sure the options object contains all relevant JsonTypeInfos before suppressing this warning.")]
-	public static JsonSchema FromText(string jsonText, JsonSerializerOptions? options)
-	{
-		return JsonSerializer.Deserialize<JsonSchema>(jsonText, options)!;
-	}
-
-	/// <summary>
-	/// Deserializes a <see cref="JsonSchema"/> from text.
-	/// </summary>
-	/// <param name="jsonText">The text to parse.</param>
-	/// <returns>A new <see cref="JsonSchema"/>.</returns>
-	/// <exception cref="JsonException">Could not deserialize a portion of the schema.</exception>
-	public static JsonSchema FromText(string jsonText)
-	{
-		return JsonSerializer.Deserialize(jsonText, JsonSchemaSerializerContext.Default.JsonSchema)!;
-	}
-
-	/// <summary>
-	/// Deserializes a <see cref="JsonSchema"/> from a stream.
-	/// </summary>
-	/// <param name="source">A stream.</param>
-	/// <param name="options">Serializer options.</param>
-	/// <returns>A new <see cref="JsonSchema"/>.</returns>
-	[RequiresUnreferencedCode("Calls JsonSerializer.Deserialize with JsonSerializerOptions. Make sure the options object contains all relevant JsonTypeInfos before suppressing this warning.")]
-	[RequiresDynamicCode("Calls JsonSerializer.Deserialize with JsonSerializerOptions. Make sure the options object contains all relevant JsonTypeInfos before suppressing this warning.")]
-	public static ValueTask<JsonSchema> FromStream(Stream source, JsonSerializerOptions? options)
-	{
-		return JsonSerializer.DeserializeAsync<JsonSchema>(source, options)!;
-	}
-
-	/// <summary>
-	/// Deserializes a <see cref="JsonSchema"/> from a stream.
-	/// </summary>
-	/// <param name="source">A stream.</param>
-	/// <returns>A new <see cref="JsonSchema"/>.</returns>
-	public static ValueTask<JsonSchema> FromStream(Stream source)
-	{
-		return JsonSerializer.DeserializeAsync(source, JsonSchemaSerializerContext.Default.JsonSchema)!;
-	}
-
-	/// <summary>
-	/// Evaluates an instance by automatically determining the schema to use by examining
-	/// the instance's `$schema` key.
-	/// </summary>
-	/// <param name="root">The root instance.</param>
-	/// <param name="options">The options to use for this evaluation.</param>
-	/// <returns>A <see cref="EvaluationResults"/> that provides the outcome of the evaluation.</returns>
-	/// <exception cref="ArgumentException">
-	/// Throw when the instance doesn't have a `$schema` key, when the value under `$schema` is not
-	/// an absolute URI, or when the URI is not associated with a registered schema.
-	/// </exception>
-	// TODO: Not quite ready to release this.  Is it a good practice?  https://github.com/orgs/json-schema-org/discussions/473
-	internal static EvaluationResults AutoEvaluate(JsonNode? root, EvaluationOptions? options = null)
-	{
-		string? schemaId = null;
-		(root as JsonObject)?[SchemaKeyword.Name]?.AsValue().TryGetValue(out schemaId);
-		if (schemaId == null || !Uri.TryCreate(schemaId, UriKind.Absolute, out var schemaUri))
-			throw new ArgumentException("JSON must contain `$schema` with an absolute URI.", nameof(root));
-
-		options ??= EvaluationOptions.Default;
-
-		var schema = options.SchemaRegistry.Get(schemaUri) as JsonSchema ??
-		             throw new ArgumentException($"Schema URI {schemaId} unrecognized", nameof(root));
-
-		return schema.Evaluate(root, options);
-	}
-
-	private static Uri GenerateBaseUri() => new($"https://json-everything.net/{Guid.NewGuid().ToString("N")[..10]}");
-
-	/// <summary>
-	/// Gets a specified keyword if it exists.
-	/// </summary>
-	/// <typeparam name="T">The type of the keyword to get.</typeparam>
-	/// <returns>The keyword if it exists; otherwise null.</returns>
-	public T? GetKeyword<T>()
-		where T : IJsonSchemaKeyword
-	{
-		var keyword = typeof(T).Keyword();
-		return (T?)this[keyword];
-	}
-
-	/// <summary>
-	/// Gets a specified keyword if it exists.
-	/// </summary>
-	/// <param name="keyword">The keyword if it exists; otherwise null.</param>
-	/// <typeparam name="T">The type of the keyword to get.</typeparam>
-	/// <returns>true if the keyword exists; otherwise false.</returns>
-	public bool TryGetKeyword<T>([NotNullWhen(true)] out T? keyword)
-		where T : IJsonSchemaKeyword
-	{
-		var name = typeof(T).Keyword();
-		return TryGetKeyword(name, out keyword);
-
-	}
-
-	/// <summary>
-	/// Gets a specified keyword if it exists.
-	/// </summary>
-	/// <typeparam name="T">The type of the keyword to get.</typeparam>
-	/// <param name="keywordName">The name of the keyword.</param>
-	/// <param name="keyword">The keyword if it exists; otherwise null.</param>
-	/// <returns>true if the keyword exists; otherwise false.</returns>
-	public bool TryGetKeyword<T>(string keywordName, [NotNullWhen(true)] out T? keyword)
-		where T : IJsonSchemaKeyword
-	{
-		if (BoolValue.HasValue)
+		if (context.LocalSchema.ValueKind == JsonValueKind.True)
 		{
-			keyword = default;
-			return false;
+			var trueNode = JsonSchemaNode.True();
+			trueNode.RelativePath = context.RelativePath;
+			return trueNode;
 		}
 
-		if (_keywords!.TryGetValue(keywordName, out var k))
+		if (context.LocalSchema.ValueKind == JsonValueKind.False)
 		{
-			keyword = (T)k;
-			return true;
+			var falseNode = JsonSchemaNode.False();
+			falseNode.RelativePath = context.RelativePath;
+			return falseNode;
 		}
 
-		keyword = default;
-		return false;
+		if (context.LocalSchema.ValueKind != JsonValueKind.Object)
+			throw new ArgumentException($"Schemas may only booleans or objects.  Received {context.LocalSchema.ValueKind}");
+
+		var onlyHandleRef = context.LocalSchema.TryGetProperty("$ref", out _) &&
+		                    context.Dialect.RefIgnoresSiblingKeywords;
+
+		var keywordData = new List<KeywordData>();
+		foreach (var property in context.LocalSchema.EnumerateObject())
+		{
+			var keyword = property.Name;
+			var value = property.Value;
+
+			var handler = context.Dialect.GetHandler(keyword);
+
+			var data = new KeywordData(context)
+			{
+				EvaluationOrder = context.Dialect.GetEvaluationOrder(keyword) ?? 0,
+				RawValue = value.Clone(),
+				Handler = handler,
+				Value = handler is AnnotationKeyword
+					? keyword
+					: handler.ValidateKeywordValue(value)
+			};
+			if (handler is SchemaKeyword)
+			{
+				// can't set the dialect from within the keyword because context is a struct
+				var uri = (Uri)data.Value!;
+				context.Dialect = context.Options.DialectRegistry.Get(uri, context.Options.SchemaRegistry, context.Options.VocabularyRegistry, context.Dialect);
+			}
+			else if (handler is IdKeyword && !onlyHandleRef)
+			{
+#pragma warning disable CS0618 // Type or member is obsolete
+				context.PathFromResourceRoot = JsonPointer.Empty;
+				context.BaseUri = context.BaseUri.Resolve((Uri)data.Value!);
+			}
+
+			var keywordContext = context with
+			{
+				PathFromResourceRoot = context.PathFromResourceRoot.Combine(context.RelativePath).Combine(keyword)
+			};
+			handler.BuildSubschemas(data, keywordContext);
+
+			foreach (var subschema in data.Subschemas)
+			{
+				subschema.PathFromResourceRoot = keywordContext.PathFromResourceRoot.Combine(subschema.RelativePath);
+#pragma warning restore CS0618 // Type or member is obsolete
+			}
+
+			keywordData.Add(data);
+		}
+
+		var embeddedResources = keywordData
+			.SelectMany(x => x.Subschemas)
+			.Where(x => x.BaseUri != context.BaseUri);
+		foreach (var embeddedResource in embeddedResources)
+		{
+			if (embeddedResource.BaseUri == True.BaseUri || embeddedResource.BaseUri == False.BaseUri) continue;
+
+			var schema = new JsonSchema(embeddedResource, context.Options.SchemaRegistry, context.Dialect.RefIgnoresSiblingKeywords)
+			{
+				BaseUri = embeddedResource.BaseUri
+			};
+			context.Options.SchemaRegistry.Register(schema);
+		}
+
+		var node = new JsonSchemaNode
+		{
+			BaseUri = context.BaseUri,
+			Source = context.LocalSchema,
+			Keywords = keywordData.OrderBy(x => x.EvaluationOrder).ToArray(),
+			RelativePath = context.RelativePath
+		};
+
+		var oldIdKeyword = keywordData.FirstOrDefault(x => x.Handler is Keywords.Draft06.IdKeyword);
+		if (oldIdKeyword is not null)
+		{
+			var handler = (Keywords.Draft06.IdKeyword)oldIdKeyword.Handler;
+			var uri = (Uri)oldIdKeyword.Value!;
+			var anchor = uri.OriginalString[1..];
+			if (uri.OriginalString.StartsWith("#") && handler.AnchorPattern.IsMatch(anchor))
+				context.Options.SchemaRegistry.RegisterAnchor(context.BaseUri, anchor, node);
+		}
+
+		var anchorKeyword = keywordData.FirstOrDefault(x => x.Handler is AnchorKeyword);
+		if (anchorKeyword is not null)
+			context.Options.SchemaRegistry.RegisterAnchor(context.BaseUri, (string)anchorKeyword.Value!, node);
+
+		var dynamicAnchorKeyword = keywordData.FirstOrDefault(x => x.Handler is DynamicAnchorKeyword);
+		if (dynamicAnchorKeyword is not null)
+			context.Options.SchemaRegistry.RegisterDynamicAnchor(context.BaseUri, (string)dynamicAnchorKeyword.Value!, node);
+
+		var recursiveAnchorKeyword = keywordData.FirstOrDefault(x => x.Handler is Keywords.Draft201909.RecursiveAnchorKeyword);
+		if (recursiveAnchorKeyword?.Value is true)
+			context.Options.SchemaRegistry.RegisterRecursiveAnchor(context.BaseUri, node);
+
+		return node;
+	}
+
+	private static void TryResolveReferences(JsonSchemaNode node, BuildContext context, HashSet<JsonSchemaNode>? checkedNodes = null)
+	{
+		checkedNodes ??= [];
+		if (!checkedNodes.Add(node)) return;
+
+		var refKeyword = node.Keywords.SingleOrDefault(x => x.Handler is RefKeyword);
+		if (refKeyword is not null)
+		{
+			var handler = (RefKeyword)refKeyword.Handler;
+			handler.TryResolve(refKeyword, context);
+		}
+
+		var dynamicRefKeyword = node.Keywords.SingleOrDefault(x => x.Handler is DynamicRefKeyword);
+		if (dynamicRefKeyword is not null)
+		{
+			var handler = (DynamicRefKeyword)dynamicRefKeyword.Handler;
+			handler.TryResolve(dynamicRefKeyword, context);
+		}
+
+		foreach (var keyword in node.Keywords)
+		{
+			foreach (var subNode in keyword.Subschemas)
+			{
+				var subschemaContext = context with
+				{
+					BaseUri = subNode.BaseUri
+				};
+				TryResolveReferences(subNode, subschemaContext, checkedNodes);
+			}
+		}
+	}
+
+	private static void DetectCycles(JsonSchemaNode node, HashSet<JsonSchemaNode>? checkedNodes = null)
+	{
+		checkedNodes ??= [];
+		if (!checkedNodes.Add(node)) return;
+
+		var foundRefs = new HashSet<JsonSchemaNode> { node };
+
+		var refKeyword = node.Keywords.SingleOrDefault(x => x.Handler is RefKeyword);
+		if (refKeyword is null) return;
+
+		while (refKeyword is not null)
+		{
+			var nextNode = refKeyword.Subschemas.FirstOrDefault();
+			if (nextNode is null) break; // might not have resolved all refs yet
+
+			if (!foundRefs.Add(nextNode))
+				throw new JsonSchemaException($"Cycle detected starting with a reference to '{refKeyword.RawValue}'");
+
+			refKeyword = nextNode.Keywords.SingleOrDefault(x => x.Handler is RefKeyword);
+		}
+
+		foreach (var subschema in node.Keywords.SelectMany(x => x.Subschemas))
+		{
+			DetectCycles(subschema, checkedNodes);
+		}
 	}
 
 	/// <summary>
-	/// Evaluates an instance against this schema.
+	/// Evaluates the specified JSON instance against the schema and returns the results.
 	/// </summary>
-	/// <param name="root">The root instance.</param>
-	/// <param name="options">The options to use for this evaluation.</param>
-	/// <returns>A <see cref="EvaluationResults"/> that provides the outcome of the evaluation.</returns>
-	public EvaluationResults Evaluate(JsonNode? root, EvaluationOptions? options = null)
+	/// <param name="instance">The JSON data to be evaluated against the schema.</param>
+	/// <param name="options">(Optional) Evaluation settings that control validation behavior. If null, default options are used.</param>
+	/// <returns>An EvaluationResults object containing the outcome of the schema validation, including any errors or annotations.</returns>
+	public EvaluationResults Evaluate(JsonElement instance, EvaluationOptions? options = null)
 	{
 		options ??= EvaluationOptions.Default;
-		if (!ReferenceEquals(options, _lastCalledOptions) || options.Changed)
-			ClearConstraints();
-		_lastCalledOptions = options;
-		options.Changed = false;
+		var context = new EvaluationContext
+		{
+			Options = options,
+			SchemaRegistry = _schemaRegistry,
+			RefIgnoresSiblingKeywords = _refIgnoresSiblingKeywords,
+			InstanceRoot = instance,
+			Instance = instance,
+			EvaluationPath = JsonPointer.Empty,
+			Scope = new(BaseUri)
+		};
 
-		options = EvaluationOptions.From(options);
-		options.SchemaRegistry.Register(this);
-
-		var context = new EvaluationContext(options, DeclaredVersion, BaseUri);
-		var constraint = BuildConstraint(JsonPointer.Empty, JsonPointer.Empty, JsonPointer.Empty, context.Scope);
-		if (!BoolValue.HasValue)
-			PopulateConstraint(constraint, context);
-
-		var evaluation = constraint.BuildEvaluation(root, JsonPointer.Empty, JsonPointer.Empty, options);
-		evaluation.Evaluate(context);
-
-		if (options.AddAnnotationForUnknownKeywords && constraint.UnknownKeywords != null)
-			evaluation.Results.SetAnnotation(_unknownKeywordsAnnotationKey, constraint.UnknownKeywords);
-
-		var results = evaluation.Results;
+		var results = Root.Evaluate(context);
 		switch (options.OutputFormat)
 		{
 			case OutputFormat.Flag:
@@ -315,425 +372,53 @@ public class JsonSchema : IBaseDocument
 		return results;
 	}
 
-	private void ClearConstraints()
-	{
-		if (_subschemas is null)
-		{
-			using var owner = MemoryPool<JsonSchema>.Shared.Rent(CountSubschemas());
-			_ = GetSubschemas(owner);
-			if (_subschemas is null) return;
-		}
-
-		foreach (var subschema in _subschemas!)
-		{
-			subschema.ClearConstraints();
-		}
-		_constraints.Clear();
-	}
-
-	private bool IsDynamic()
-	{
-		if (BoolValue.HasValue) return false;
-		if (_isDynamic.HasValue) return _isDynamic.Value;
-
-		foreach (var keyword in Keywords!)
-		{
-			if (keyword is DynamicRefKeyword or RecursiveRefKeyword)
-			{
-				_isDynamic = true;
-				return true;
-			}
-		}
-
-		if (_subschemas is null)
-		{
-			using var owner = MemoryPool<JsonSchema>.Shared.Rent(CountSubschemas());
-			_ = GetSubschemas(owner);
-			if (_subschemas is null) return false;
-		}
-
-		foreach (var subschema in _subschemas!)
-		{
-			if (subschema.IsDynamic())
-			{
-				_isDynamic = true;
-				return true;
-			}
-		}
-
-		_isDynamic = false;
-		return false;
-	}
-
 	/// <summary>
-	/// Builds a constraint for the schema.
+	/// Finds the subschema node within the root schema that corresponds to the specified JSON pointer.
 	/// </summary>
-	/// <param name="relativeEvaluationPath">
-	/// The relative evaluation path in JSON Pointer form.  Generally this will be a keyword name,
-	/// but may have other segments, such as in the case of `properties` which also has the property name.
-	/// </param>
-	/// <param name="baseInstanceLocation">The base location within the instance that is being evaluated.</param>
-	/// <param name="relativeInstanceLocation">
-	/// The location relative to <paramref name="baseInstanceLocation"/> within the instance that
-	/// is being evaluated.
-	/// </param>
-	/// <param name="context">The evaluation context.</param>
-	/// <returns>A schema constraint.</returns>
-	/// <remarks>
-	/// The constraint returned by this method is cached by the <see cref="JsonSchema"/> object.
-	/// Different evaluation paths to this schema object may result in different constraints, so
-	/// a new constraint is saved for each dynamic scope.
-	/// </remarks>
-	public SchemaConstraint GetConstraint(JsonPointer relativeEvaluationPath, JsonPointer baseInstanceLocation, JsonPointer relativeInstanceLocation, EvaluationContext context)
+	/// <param name="pointer">The JSON pointer indicating the location of the subschema to find within the root schema.</param>
+	/// <param name="context">The build context used for schema evaluation and node construction if the subschema is not found directly.</param>
+	/// <returns>A <see cref="JsonSchemaNode"/> representing the subschema at the specified pointer, or <see langword="null"/> if no
+	/// matching subschema exists.</returns>
+	public JsonSchemaNode? FindSubschema(JsonPointer pointer, BuildContext context)
 	{
-		var baseUri = BoolValue.HasValue ? context.Scope.LocalScope : BaseUri;
-	
-		var scopedConstraint = CheckScopedConstraints(context.Scope);
-		if (scopedConstraint != null)
-			return new SchemaConstraint(relativeEvaluationPath, baseInstanceLocation.Combine(relativeInstanceLocation), relativeInstanceLocation, baseUri, this)
-			{
-				Source = scopedConstraint
-			};
-
-		var constraint = BuildConstraint(relativeEvaluationPath, baseInstanceLocation, relativeInstanceLocation, context.Scope);
-		if (!BoolValue.HasValue) 
-			PopulateConstraint(constraint, context);
-
-		return constraint;
-	}
-
-	private SchemaConstraint BuildConstraint(JsonPointer evaluationPath, JsonPointer baseInstanceLocation, JsonPointer relativeInstanceLocation, DynamicScope scope)
-	{
-		lock (_constraints)
+		var subschema = Root;
+		var currentPointer = pointer;
+		while (currentPointer.SegmentCount != 0)
 		{
-			var scopedConstraint = CheckScopedConstraints(scope);
-			if (scopedConstraint != null) return scopedConstraint;
-
-			var baseUri = BoolValue.HasValue ? scope.LocalScope : BaseUri;
-
-			var constraint = new SchemaConstraint(evaluationPath, baseInstanceLocation.Combine(relativeInstanceLocation), relativeInstanceLocation, baseUri, this);
-			_constraints.Push((new DynamicScope(scope), constraint));
-		
-			return constraint;
-		}
-	}
-
-	private SchemaConstraint? CheckScopedConstraints(DynamicScope scope)
-	{
-		SchemaConstraint? scopedConstraint;
-		if (IsDynamic())
-			(_, scopedConstraint) = _constraints.FirstOrDefault(x => x.Scope.Equals(scope));
-		else
-			scopedConstraint = _constraints.SingleOrDefault().Constraint;
-		return scopedConstraint;
-	}
-
-	private void PopulateConstraint(SchemaConstraint constraint, EvaluationContext context)
-	{
-		if (constraint.Constraints.Length != 0) return;
-		lock (constraint)
-		{
-			if (constraint.Constraints.Length != 0) return;
-
-			if (context.EvaluatingAs is SpecVersion.Draft6 or SpecVersion.Draft7)
+			var keyword = subschema.Keywords.FirstOrDefault(x => currentPointer.StartsWith(JsonPointer.Create(x.Handler.Name)));
+			if (keyword is null)
 			{
-				// base URI doesn't change for $ref schemas in draft 6/7
-				var refKeyword = (RefKeyword?) Keywords!.FirstOrDefault(x => x is RefKeyword);
-				if (refKeyword != null)
-				{
-					context.PushEvaluationPath(RefKeyword.Name);
-					var refConstraint = refKeyword.GetConstraint(constraint, [], context);  // indirect allocation
-					context.PopEvaluationPath();
-					constraint.Constraints = [refConstraint];  // allocation
-					return;
-				}
-			}
-
-			var dynamicScopeChanged = false;
-			if (context.Scope.LocalScope != BaseUri)
-			{
-				dynamicScopeChanged = true;
-				context.Scope.Push(BaseUri);
-				context.PushEvaluatingAs(DeclaredVersion);
-			}
-
-			using var constraintOwner = MemoryPool<KeywordConstraint>.Shared.Rent(Keywords!.Count);
-			var localConstraints = constraintOwner.Memory.Span;
-			var constraintCount = 0;
-
-			var version = DeclaredVersion == SpecVersion.Unspecified ? context.EvaluatingAs : DeclaredVersion;
-			if (context.Options.AddAnnotationForUnknownKeywords) 
-				constraint.UnknownKeywords = [];  // allocation;
-
-			using var dialectOwner = MemoryPool<Type>.Shared.Rent();
-			var declaredKeywordTypes = dialectOwner.Memory.Span;
-			var i = 0;
-			if (Dialect is not null)
-			{
-				foreach (var vocabulary in Dialect)
-				{
-					foreach (var keywordType in vocabulary.Keywords)
-					{
-						declaredKeywordTypes[i] = keywordType;
-						i++;
-					}
-				}
-			}
-
-			declaredKeywordTypes = declaredKeywordTypes[..i];
-
-			foreach (var keyword in Keywords.OrderBy(x => x.Priority()))
-			{
-				KeywordConstraint? keywordConstraint;
-				if (ShouldProcessKeyword(keyword, context.Options.ProcessCustomKeywords, version, declaredKeywordTypes))
-				{
-					context.PushEvaluationPath(keyword.Keyword());
-					keywordConstraint = keyword.GetConstraint(constraint, localConstraints[..constraintCount], context);  // indirect allocation
-					context.PopEvaluationPath();
-					localConstraints[constraintCount] = keywordConstraint;
-					constraintCount++;
-
-					if (keyword is UnrecognizedKeyword unrecognized) 
-						constraint.UnknownKeywords?.Add((JsonNode)unrecognized.Name);  // allocation
-
-					continue;
-				}
-
-				var typeInfo = SchemaKeywordRegistry.GetTypeInfo(keyword.GetType());
-				var json = JsonSerializer.SerializeToNode(keyword, typeInfo!);  // indirect allocation
-				keywordConstraint = KeywordConstraint.SimpleAnnotation(keyword.Keyword(), json);
-				localConstraints[constraintCount] = keywordConstraint;
-				constraintCount++;
-
-				constraint.UnknownKeywords?.Add((JsonNode)keyword.Keyword());  // allocation
-			}
-
-			constraint.Constraints = localConstraints[..constraintCount].ToArray();  // allocation
-			if (dynamicScopeChanged)
-			{
-				context.Scope.Pop();
-				context.PopEvaluatingAs();
-			}
-		}
-	}
-
-	private bool ShouldProcessKeyword(IJsonSchemaKeyword keyword, bool processCustomKeywords, SpecVersion preferredVersion, ReadOnlySpan<Type> declaredKeywordTypes)
-	{
-		if (!processCustomKeywords && Dialect is not null)
-		{
-			var found = false;
-			foreach (var type in declaredKeywordTypes)
-			{
-				if (type != keyword.GetType()) continue;
-
-				found = true;
+				subschema = null;
 				break;
 			}
 
-			if (!found) return false;
+			currentPointer = currentPointer.GetLocal(currentPointer.SegmentCount - 1);
+
+			subschema = keyword.Subschemas.FirstOrDefault(x => currentPointer.StartsWith(x.RelativePath));
+			if (subschema is null) break;
+
+			currentPointer = currentPointer.GetLocal(currentPointer.SegmentCount - subschema.RelativePath.SegmentCount);
 		}
 
-		if (!Enum.IsDefined(typeof(SpecVersion), preferredVersion) || preferredVersion == SpecVersion.Unspecified) return true;
-
-		return keyword.SupportsVersion(preferredVersion);
-	}
-
-	private JsonSchema[]? _subschemas;
-
-	internal int CountSubschemas()
-	{
-		if (BoolValue.HasValue) return 0;
-		if (_subschemas is not null) return _subschemas.Length;
-
-		return Keywords!.Sum(CountSubschemas);
-	}
-
-	private static int CountSubschemas(IJsonSchemaKeyword keyword)
-	{
-		return keyword switch
+		if (subschema == null)
 		{
-			// ReSharper disable once RedundantAlwaysMatchSubpattern
-			ISchemaContainer { Schema: not null } container => 1 + container.Schema.CountSubschemas(),
-			ISchemaCollector collector => collector.Schemas.Count + collector.Schemas.Sum(x => x.CountSubschemas()),
-			IKeyedSchemaCollector collector => collector.Schemas.Count + collector.Schemas.Values.Sum(x => x.CountSubschemas()),
-			ICustomSchemaCollector collector => collector.Schemas.Count() + collector.Schemas.Sum(x => x.CountSubschemas()),
-			_ => 0
-		};
-	}
-
-	internal ReadOnlySpan<JsonSchema> GetSubschemas(IMemoryOwner<JsonSchema> owner)
-	{
-		if (BoolValue.HasValue) return [];
-		if (_subschemas is not null) return _subschemas;
-
-		var span = owner.Memory.Span;
-
-		using var keywordOwner = MemoryPool<JsonSchema>.Shared.Rent(100000);
-		var i = 0;
-		foreach (var keyword in Keywords!)
-		{
-			foreach (var subschema in GetSubschemas(keyword, keywordOwner))
+			var localSchema = pointer.Evaluate(Root.Source);
+			if (localSchema.HasValue)
 			{
-				span[i] = subschema;
-				i++;
+				var newContext = context with
+				{
+					BaseUri = BaseUri,
+					LocalSchema = localSchema.Value,
+#pragma warning disable CS0618 // Type or member is obsolete
+					PathFromResourceRoot = pointer
+				};
+				subschema = BuildNode(newContext);
+				subschema.PathFromResourceRoot = pointer;
+#pragma warning restore CS0618 // Type or member is obsolete
 			}
 		}
 
-		_subschemas = i == 0 ? [] : span[..i].ToArray();
-
-		return i == 0 ? [] : span[..i];
-	}
-
-	private static ReadOnlySpan<JsonSchema> GetSubschemas(IJsonSchemaKeyword keyword, IMemoryOwner<JsonSchema> owner)
-	{
-		var span = owner.Memory.Span;
-
-		int i = 0;
-		switch (keyword)
-		{
-			// ReSharper disable once RedundantAlwaysMatchSubpattern
-			case ISchemaContainer { Schema: not null } container:
-				span[0] = container.Schema;
-				i++;
-				break;
-			case ISchemaCollector collector:
-				foreach (var schema in collector.Schemas)
-				{
-					span[i] = schema;
-					i++;
-				}
-				break;
-			case IKeyedSchemaCollector collector:
-				foreach (var schema in collector.Schemas.Values)
-				{
-					span[i] = schema;
-					i++;
-				}
-				break;
-			case ICustomSchemaCollector collector:
-				foreach (var schema in collector.Schemas)
-				{
-					span[i] = schema;
-					i++;
-				}
-				break;
-		}
-
-		return i == 0 ? [] : span[..i];
-	}
-
-	JsonSchema? IBaseDocument.FindSubschema(JsonPointer pointer, EvaluationOptions options)
-	{
-		object? ExtractSchemaFromData(JsonPointer localPointer, JsonNode? data, JsonSchema hostSchema)
-		{
-			if (!localPointer.TryEvaluate(data, out var value)) return null;
-
-			var asSchema = FromText(value?.ToString() ?? "null");
-			asSchema.BaseUri = hostSchema.BaseUri;
-			options.SchemaRegistry.Initialize(hostSchema.BaseUri, asSchema);
-			return asSchema;
-		}
-
-		object? CheckResolvable(object localResolvable, ref int i, string pointerSegment, ref JsonSchema hostSchema)
-		{
-			int index;
-			object? newResolvable = null;
-			switch (localResolvable)
-			{
-				case ISchemaContainer container and ISchemaCollector collector:
-					if (container.Schema != null!)
-					{
-						hostSchema = container.Schema;
-						newResolvable = hostSchema;
-						i--;
-					}
-					else if (int.TryParse(pointerSegment, out index) &&
-					         index >= 0 && index < collector.Schemas.Count)
-					{
-						hostSchema = collector.Schemas[index];
-						newResolvable = hostSchema;
-					}
-					break;
-				case ISchemaContainer container:
-					newResolvable = container.Schema;
-					// need to reprocess the segment
-					i--;
-					break;
-				case ISchemaCollector collector:
-					if (int.TryParse(pointerSegment, out index) &&
-					    index >= 0 && index < collector.Schemas.Count)
-					{
-						hostSchema = collector.Schemas[index];
-						newResolvable = hostSchema;
-					}
-					break;
-				case IKeyedSchemaCollector keyedCollector:
-					if (keyedCollector.Schemas.TryGetValue(pointerSegment, out var subschema))
-					{
-						hostSchema = subschema;
-						newResolvable = hostSchema;
-					}
-					break;
-				case ICustomSchemaCollector customCollector:
-#if NETSTANDARD2_0
-					var (found, segmentsConsumed) = customCollector.FindSubschema(pointer.GetLocal(i));
-#else
-					var (found, segmentsConsumed) = customCollector.FindSubschema(pointer[i..]);
-#endif
-					hostSchema = found!;
-					newResolvable = hostSchema;
-					i += segmentsConsumed;
-					break;
-				case JsonSchema { _keywords: not null } schema:
-					schema._keywords.TryGetValue(pointerSegment, out var k);
-					newResolvable = k;
-					break;
-				default: // non-applicator keyword
-					var typeInfo = SchemaKeywordRegistry.GetTypeInfo(localResolvable.GetType());
-					var serialized = JsonSerializer.Serialize(localResolvable, typeInfo!);
-					var json = JsonNode.Parse(serialized);
-#if NETSTANDARD2_0
-					var newPointer = pointer.GetLocal(i);
-#else
-					var newPointer = pointer[i..];
-#endif
-					i += newPointer.Count - 1;
-					return ExtractSchemaFromData(newPointer, json, hostSchema);
-			}
-
-			if (newResolvable is UnrecognizedKeyword unrecognized)
-			{
-				if (!options.AllowReferencesIntoUnknownKeywords)
-					throw new InvalidOperationException($"Encountered reference into unknown keyword: {BaseUri}#{pointer}");
-
-#if NETSTANDARD2_0
-				var newPointer = pointer.GetLocal(i+1);
-#else
-				var newPointer = pointer[(i+1)..];
-#endif
-				i += newPointer.Count;
-				return ExtractSchemaFromData(newPointer, unrecognized.Value, (JsonSchema)localResolvable);
-			}
-
-			return newResolvable;
-		}
-
-		object? resolvable = this;
-		var currentSchema = this;
-		for (var i = 0; i < pointer.Count; i++)
-		{
-			var segment = pointer[i];
-
-			resolvable = CheckResolvable(resolvable, ref i, segment, ref currentSchema);
-			if (resolvable == null) return null;
-		}
-
-		if (resolvable is JsonSchema target) return target;
-
-		var count = pointer.Count;
-		// These parameters don't really matter.  This extra check only captures the case where the
-		// last segment of the pointer is an ISchemaContainer.
-		return CheckResolvable(resolvable, ref count, null!, ref currentSchema) as JsonSchema;
+		return subschema;
 	}
 
 	/// <summary>
@@ -748,117 +433,54 @@ public class JsonSchema : IBaseDocument
 	private string ToDebugString()
 	{
 		if (BoolValue.HasValue) return BoolValue.Value ? "true" : "false";
-		var idKeyword = Keywords!.OfType<IIdKeyword>().SingleOrDefault();
-		return idKeyword?.Id.OriginalString ?? BaseUri.OriginalString;
+
+		var idKeyword = Root.Keywords.SingleOrDefault(x => x.Handler is IdKeyword);
+		return idKeyword?.RawValue.GetString() ?? BaseUri.OriginalString;
 	}
 }
 
 /// <summary>
-/// JSON converter for <see cref="JsonSchema"/>.
+/// Provides custom serialization and deserialization logic for <see cref="JsonSchema"/> objects when using
+/// System.Text.Json.
 /// </summary>
-public sealed class SchemaJsonConverter : WeaklyTypedJsonConverter<JsonSchema>
+/// <remarks>Use this converter to enable reading and writing of <see cref="JsonSchema"/> instances with
+/// System.Text.Json. This converter handles the mapping between JSON schema representations and <see
+/// cref="JsonSchema"/> objects, ensuring correct parsing and formatting during serialization operations.</remarks>
+public class JsonSchemaJsonConverter : JsonConverter<JsonSchema>
 {
-	/// <summary>Reads and converts the JSON to type <see cref="JsonSchema"/>.</summary>
-	/// <param name="reader">The reader.</param>
-	/// <param name="typeToConvert">The type to convert.</param>
-	/// <param name="options">An object that specifies serialization options to use.</param>
-	/// <returns>The converted value.</returns>
-	public override JsonSchema Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+	/// <summary>
+	/// Deserializes a JSON value from the specified reader into a <see cref="JsonSchema"/> instance.
+	/// </summary>
+	/// <param name="reader">The <see cref="Utf8JsonReader"/> positioned at the JSON value to read. The reader must be at the start of a valid
+	/// JSON schema object.</param>
+	/// <param name="typeToConvert">The type to convert the JSON value to. This parameter is ignored; the method always returns a <see
+	/// cref="JsonSchema"/>.</param>
+	/// <param name="options">The serializer options to use when reading the JSON value. Must not be <see langword="null"/>.</param>
+	/// <returns>A <see cref="JsonSchema"/> instance representing the deserialized schema, or <see langword="null"/> if the JSON
+	/// value is not a valid schema.</returns>
+	/// <exception cref="JsonException">Thrown when the JSON value cannot be deserialized into a valid <see cref="JsonSchema"/>. See the inner exception
+	/// for details.</exception>
+	public override JsonSchema? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
-		if (reader.TokenType == JsonTokenType.True) return JsonSchema.True;
-		if (reader.TokenType == JsonTokenType.False) return JsonSchema.False;
-
-		if (reader.TokenType != JsonTokenType.StartObject)
-			throw new JsonException("JSON Schema must be true, false, or an object");
-
-		if (!reader.Read())
-			throw new JsonException("Expected token");
-
-		var keywords = new List<IJsonSchemaKeyword>();
-
-		do
+		var element = options.Read(ref reader, JsonSchemaSerializerContext.Default.JsonElement);
+		try
 		{
-			switch (reader.TokenType)
-			{
-				case JsonTokenType.Comment:
-					break;
-				case JsonTokenType.PropertyName:
-					var keyword = reader.GetString()!;
-					reader.Read();
-					var keywordType = SchemaKeywordRegistry.GetImplementationType(keyword);
-					if (keywordType == null)
-					{
-						var node = options.Read(ref reader, JsonSchemaSerializerContext.Default.JsonNode);
-						var unrecognizedKeyword = new UnrecognizedKeyword(keyword, node);
-						keywords.Add(unrecognizedKeyword);
-						break;
-					}
-
-					IJsonSchemaKeyword implementation;
-					if (reader.TokenType == JsonTokenType.Null)
-						implementation = SchemaKeywordRegistry.GetNullValuedKeyword(keywordType) ??
-										 throw new InvalidOperationException($"No null instance registered for keyword `{keyword}`");
-					else
-					{
-						var typeInfo = SchemaKeywordRegistry.GetTypeInfo(keywordType);
-						implementation = options.Read(ref reader, keywordType, typeInfo) as IJsonSchemaKeyword ??
-					                  throw new InvalidOperationException($"Could not deserialize expected keyword `{keyword}`");
-					}
-					keywords.Add(implementation);
-					break;
-				case JsonTokenType.EndObject:
-					return new JsonSchema(keywords);
-				default:
-					throw new JsonException("Expected keyword or end of schema object");
-			}
-		} while (reader.Read());
-
-		throw new JsonException("Expected token");
+			return JsonSchema.Build(element);
+		}
+		catch (Exception e)
+		{
+			throw new JsonException("An error occurred while deserializing a schema.  See inner exception for details.", e);
+		}
 	}
-
-	/// <summary>Writes a specified value as JSON.</summary>
-	/// <param name="writer">The writer to write to.</param>
-	/// <param name="value">The value to convert to JSON.</param>
-	/// <param name="options">An object that specifies serialization options to use.</param>
-	public override void Write(Utf8JsonWriter writer, JsonSchema value, JsonSerializerOptions options)
-	{
-		if (value.BoolValue == true)
-		{
-			writer.WriteBooleanValue(true);
-			return;
-		}
-
-		if (value.BoolValue == false)
-		{
-			writer.WriteBooleanValue(false);
-			return;
-		}
-
-		writer.WriteStartObject();
-		foreach (var keyword in value.Keywords!)
-		{
-			writer.WritePropertyName(keyword.Keyword());
-
-			var keywordType = keyword.GetType();
-			var typeInfo = SchemaKeywordRegistry.GetTypeInfo(keywordType);
-			options.Write(writer, keyword, keywordType, typeInfo);
-		}
-
-		writer.WriteEndObject();
-	}
-}
-
-public static partial class ErrorMessages
-{
-	private static string? _falseSchema;
 
 	/// <summary>
-	/// Gets or sets the error message for the "false" schema.
+	/// Writes the specified JSON schema to the provided writer using the given serializer options.
 	/// </summary>
-	/// <remarks>No tokens are supported.</remarks>
-	public static string FalseSchema
+	/// <param name="writer">The writer to which the JSON schema will be written. Must not be null.</param>
+	/// <param name="value">The JSON schema to write. Must not be null.</param>
+	/// <param name="options">The serializer options to use when writing the JSON schema. Must not be null.</param>
+	public override void Write(Utf8JsonWriter writer, JsonSchema value, JsonSerializerOptions options)
 	{
-		get => _falseSchema ?? Get();
-		set => _falseSchema = value;
+		options.Write(writer, value.Root.Source, JsonSchemaSerializerContext.Default.JsonElement);
 	}
 }

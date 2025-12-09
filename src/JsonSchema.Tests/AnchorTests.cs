@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Text.Json.Nodes;
+using System.Text.Json;
 using NUnit.Framework;
 using TestHelpers;
 
@@ -7,16 +7,16 @@ namespace Json.Schema.Tests;
 
 public class AnchorTests
 {
-	[TestCase("inner:colon", MetaSchemas.Draft201909IdValue)]
-	[TestCase("under_score", MetaSchemas.Draft201909IdValue)]
-	[TestCase("inner-hyphen", MetaSchemas.Draft201909IdValue)]
-	[TestCase("inner.period", MetaSchemas.Draft201909IdValue)]
-	[TestCase("start0123456789end", MetaSchemas.Draft201909IdValue)]
-	[TestCase("_underscore", MetaSchemas.Draft202012IdValue)]
-	[TestCase("under_score", MetaSchemas.Draft202012IdValue)]
-	[TestCase("inner-hyphen", MetaSchemas.Draft202012IdValue)]
-	[TestCase("inner.period", MetaSchemas.Draft202012IdValue)]
-	[TestCase("start0123456789end", MetaSchemas.Draft202012IdValue)]
+	[TestCase("inner:colon", "https://json-schema.org/draft/2019-09/schema")]
+	[TestCase("under_score", "https://json-schema.org/draft/2019-09/schema")]
+	[TestCase("inner-hyphen", "https://json-schema.org/draft/2019-09/schema")]
+	[TestCase("inner.period", "https://json-schema.org/draft/2019-09/schema")]
+	[TestCase("start0123456789end", "https://json-schema.org/draft/2019-09/schema")]
+	[TestCase("_underscore", "https://json-schema.org/draft/2020-12/schema")]
+	[TestCase("under_score", "https://json-schema.org/draft/2020-12/schema")]
+	[TestCase("inner-hyphen", "https://json-schema.org/draft/2020-12/schema")]
+	[TestCase("inner.period", "https://json-schema.org/draft/2020-12/schema")]
+	[TestCase("start0123456789end", "https://json-schema.org/draft/2020-12/schema")]
 	public void ValidAnchor(string anchor, string metaSchemaUri)
 	{
 		var schema = JsonSchema.FromText(
@@ -37,26 +37,26 @@ public class AnchorTests
 			  """
 		);
 
-		var instance = new JsonObject { ["foo"] = "value" };
+		var instance = JsonDocument.Parse("""{ "foo": "value" }""").RootElement;
 
 		var results = schema.Evaluate(instance);
 
 		results.AssertValid();
 	}
 
-	[TestCase("#foo", MetaSchemas.Draft201909IdValue)]
-	[TestCase("0number", MetaSchemas.Draft201909IdValue)]
-	[TestCase(".period", MetaSchemas.Draft201909IdValue)]
-	[TestCase("-hyphen", MetaSchemas.Draft201909IdValue)]
-	[TestCase("_underscore", MetaSchemas.Draft201909IdValue)]
-	[TestCase(":colon", MetaSchemas.Draft201909IdValue)]
-	[TestCase("/a/b", MetaSchemas.Draft201909IdValue)]
-	[TestCase("#foo", MetaSchemas.Draft202012IdValue)]
-	[TestCase(".period", MetaSchemas.Draft202012IdValue)]
-	[TestCase("-hyphen", MetaSchemas.Draft202012IdValue)]
-	[TestCase(":colon", MetaSchemas.Draft202012IdValue)]
-	[TestCase("inner:colon", MetaSchemas.Draft202012IdValue)]
-	[TestCase("/a/b", MetaSchemas.Draft202012IdValue)]
+	[TestCase("#foo", "https://json-schema.org/draft/2019-09/schema")]
+	[TestCase("0number", "https://json-schema.org/draft/2019-09/schema")]
+	[TestCase(".period", "https://json-schema.org/draft/2019-09/schema")]
+	[TestCase("-hyphen", "https://json-schema.org/draft/2019-09/schema")]
+	[TestCase("_underscore", "https://json-schema.org/draft/2019-09/schema")]
+	[TestCase(":colon", "https://json-schema.org/draft/2019-09/schema")]
+	[TestCase("/a/b", "https://json-schema.org/draft/2019-09/schema")]
+	[TestCase("#foo", "https://json-schema.org/draft/2020-12/schema")]
+	[TestCase(".period", "https://json-schema.org/draft/2020-12/schema")]
+	[TestCase("-hyphen", "https://json-schema.org/draft/2020-12/schema")]
+	[TestCase(":colon", "https://json-schema.org/draft/2020-12/schema")]
+	[TestCase("inner:colon", "https://json-schema.org/draft/2020-12/schema")]
+	[TestCase("/a/b", "https://json-schema.org/draft/2020-12/schema")]
 	public void InvalidAnchor(string anchor, string metaSchemaUri)
 	{
 		JsonSchema schema;
@@ -87,7 +87,7 @@ public class AnchorTests
 			return;
 		}
 
-		var instance = new JsonObject { ["foo"] = "value" };
+		var instance = JsonDocument.Parse("""{ "foo": "value" }""").RootElement;
 
 		EvaluationResults results;
 		try

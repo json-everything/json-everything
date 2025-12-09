@@ -8,20 +8,24 @@ public class FetchTests
 	[Test]
 	public void LocalRegistryFindsRef()
 	{
-		var options = new EvaluationOptions
+		var buildOptions = new BuildOptions
 		{
-			OutputFormat = OutputFormat.Hierarchical,
-			SchemaRegistry =
+			SchemaRegistry = new SchemaRegistry
 			{
-				Fetch = uri =>
+				Fetch = (uri, registry) =>
 				{
-					if (uri.AbsoluteUri == "http://my.schema/test1")
-						return JsonSchema.FromText("{\"type\": \"string\"}");
+					if (uri.AbsoluteUri == "https://json-everything.test/LocalRegistryFindsRef")
+						return JsonSchema.FromText("{\"type\": \"string\"}", new BuildOptions { SchemaRegistry = registry });
 					return null;
 				}
 			}
 		};
-		var schema = JsonSchema.FromText("{\"$ref\":\"http://my.schema/test1\"}");
+		var schema = JsonSchema.FromText("{\"$ref\":\"https://json-everything.test/LocalRegistryFindsRef\"}", buildOptions);
+
+		var options = new EvaluationOptions
+		{
+			OutputFormat = OutputFormat.Hierarchical
+		};
 
 		using var json = JsonDocument.Parse("10");
 
@@ -35,17 +39,23 @@ public class FetchTests
 	{
 		try
 		{
+			SchemaRegistry.Global.Fetch = (uri, registry) =>
+			{
+				if (uri.AbsoluteUri == "https://json-everything.test/GlobalRegistryFindsRef")
+					return JsonSchema.FromText("{\"type\": \"string\"}", new BuildOptions { SchemaRegistry = registry });
+				return null;
+			};
+
+			var buildOptions = new BuildOptions
+			{
+				SchemaRegistry = SchemaRegistry.Global
+			};
+			var schema = JsonSchema.FromText("{\"$ref\":\"https://json-everything.test/GlobalRegistryFindsRef\"}", buildOptions);
+
 			var options = new EvaluationOptions
 			{
 				OutputFormat = OutputFormat.Hierarchical
 			};
-			SchemaRegistry.Global.Fetch = uri =>
-			{
-				if (uri.AbsoluteUri == "http://my.schema/test1")
-					return JsonSchema.FromText("{\"type\": \"string\"}");
-				return null;
-			};
-			var schema = JsonSchema.FromText("{\"$ref\":\"http://my.schema/test1\"}");
 
 			using var json = JsonDocument.Parse("10");
 
@@ -62,20 +72,24 @@ public class FetchTests
 	[Test]
 	public void LocalRegistryMissesRef()
 	{
-		var options = new EvaluationOptions
+		var buildOptions = new BuildOptions
 		{
-			OutputFormat = OutputFormat.Hierarchical,
-			SchemaRegistry =
+			SchemaRegistry = new SchemaRegistry
 			{
-				Fetch = uri =>
+				Fetch = (uri, registry) =>
 				{
-					if (uri.AbsoluteUri == "http://my.schema/test2")
-						return JsonSchema.FromText("{\"type\": \"string\"}");
+					if (uri.AbsoluteUri == "https://json-everything.test/LocalRegistryMissesRef2")
+						return JsonSchema.FromText("{\"type\": \"string\"}", new BuildOptions { SchemaRegistry = registry });
 					return null;
 				}
 			}
 		};
-		var schema = JsonSchema.FromText("{\"$ref\":\"http://my.schema/test1\"}");
+		var schema = JsonSchema.FromText("{\"$ref\":\"https://json-everything.test/LocalRegistryMissesRef1\"}", buildOptions);
+
+		var options = new EvaluationOptions
+		{
+			OutputFormat = OutputFormat.Hierarchical
+		};
 
 		using var json = JsonDocument.Parse("10");
 
@@ -87,17 +101,18 @@ public class FetchTests
 	{
 		try
 		{
+			SchemaRegistry.Global.Fetch = (uri, registry) =>
+			{
+				if (uri.AbsoluteUri == "https://json-everything.test/GlobalRegistryMissesRef2")
+					return JsonSchema.FromText("{\"type\": \"string\"}", new BuildOptions { SchemaRegistry = registry });
+				return null;
+			};
+			var schema = JsonSchema.FromText("{\"$ref\":\"https://json-everything.test/GlobalRegistryMissesRef1\"}");
+
 			var options = new EvaluationOptions
 			{
 				OutputFormat = OutputFormat.Hierarchical
 			};
-			SchemaRegistry.Global.Fetch = uri =>
-			{
-				if (uri.AbsoluteUri == "http://my.schema/test2")
-					return JsonSchema.FromText("{\"type\": \"string\"}");
-				return null;
-			};
-			var schema = JsonSchema.FromText("{\"$ref\":\"http://my.schema/test1\"}");
 
 			using var json = JsonDocument.Parse("10");
 
@@ -114,12 +129,14 @@ public class FetchTests
 	{
 		try
 		{
-			SchemaRegistry.Global.Fetch = _ => JsonSchema.FromText("{\"type\": \"string\", \"invalid\"}");
-			var schema = JsonSchema.FromText("{\"$ref\":\"http://my.schema/test1\"}");
+			SchemaRegistry.Global.Fetch = (_, registry) => JsonSchema.FromText("{\"type\": \"string\", \"invalid\"}", new BuildOptions { SchemaRegistry = registry });
 
-			using var json = JsonDocument.Parse("10");
+			var buildOptions = new BuildOptions
+			{
+				SchemaRegistry = SchemaRegistry.Global
+			};
 
-			Assert.Throws<JsonException>(() => schema.Evaluate(json.RootElement));
+			Assert.Catch<JsonException>(() => JsonSchema.FromText("{\"$ref\":\"https://json-everything.test/RefContainsBadJson\"}", buildOptions));
 		}
 		finally
 		{

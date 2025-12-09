@@ -1,0 +1,191 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Reflection;
+using Json.Schema.Keywords;
+
+namespace Json.Schema;
+
+/// <summary>
+/// Represents a JSON Schema dialect, defining the set of supported keywords and validation rules for a specific schema
+/// version.
+/// </summary>
+/// <remarks>A dialect encapsulates the behavior and interpretation of JSON Schema keywords according to a
+/// particular specification draft. Use a specific dialect instance, such as <see cref="Draft06"/>, to validate or
+/// process schemas that conform to that draft. Dialects may differ in supported keywords, validation semantics, and
+/// handling of unknown keywords. This class is typically used to select the appropriate schema version when working
+/// with JSON Schema documents.</remarks>
+[DebuggerDisplay("{Id}")]
+public partial class Dialect
+{
+	[DebuggerDisplay("{Name} / {Priority}")]
+	private class KeywordMetaData
+	{
+		public string Name { get; }
+		public Type Type { get; }
+		public IKeywordHandler Handler { get; }
+		// ReSharper disable MemberHidesStaticFromOuterClass
+		public long Priority { get; set; }
+		public bool ProducesDependentAnnotations { get; set; }
+		// ReSharper restore MemberHidesStaticFromOuterClass
+
+		public KeywordMetaData(IKeywordHandler handler)
+		{
+			Name = handler.Name;
+			Handler = handler;
+			Type = handler.GetType();
+		}
+	}
+
+	private readonly MultiLookupConcurrentDictionary<KeywordMetaData> _keywordData;
+
+	/// <summary>
+	/// Gets or sets the default JSON Schema dialect for new <see cref="BuildOptions"/> objects.
+	/// </summary>
+	public static Dialect Default { get; set; } = null!;
+
+	/// <summary>
+	/// Gets a value indicating whether references ignore sibling keywords during processing.
+	/// </summary>
+	/// <remarks>Set this property to <see langword="true"/> to ensure that references do not consider keywords
+	/// defined by sibling elements. This can affect how references are resolved in scenarios where sibling keywords may
+	/// otherwise influence behavior.</remarks>
+	public bool RefIgnoresSiblingKeywords { get; init; }
+
+	/// <summary>
+	/// Gets a value indicating whether unknown keywords are permitted during processing.
+	/// </summary>
+	/// <remarks>Set this property to <see langword="true"/> to allow keywords that are not explicitly recognized.
+	/// This can be useful when working with extensible or user-defined keyword sets.</remarks>
+	public bool AllowUnknownKeywords { get; init; }
+
+	/// <summary>
+	/// Gets the unique identifier for the dialect.
+	/// </summary>
+	public Uri? Id { get; init; }
+
+	/// <summary>
+	/// Initializes a new instance of the Dialect class using the specified collection of keyword handlers.
+	/// </summary>
+	/// <remarks>The provided keyword handlers are used to configure the dialect's keyword metadata and dependency
+	/// evaluation. The constructor will throw an exception if any element in the collection is null.</remarks>
+	/// <param name="keywords">A collection of keyword handlers to be included in the dialect. Each handler defines the behavior and metadata for
+	/// a specific keyword. Cannot be null.</param>
+	public Dialect(params IEnumerable<IKeywordHandler> keywords)
+	{
+		_keywordData = [];
+		_keywordData.AddLookup(x => x.Name);
+		_keywordData.AddLookup(x => x.Type);
+		foreach (var keyword in keywords)
+		{
+			var keywordData = new KeywordMetaData(keyword);
+			_keywordData.Add(keywordData);
+		}
+		EvaluateDependencies();
+	}
+
+	internal Dialect(IEnumerable<Vocabulary> vocabs)
+	{
+		_keywordData = [];
+		_keywordData.AddLookup(x => x.Name);
+		_keywordData.AddLookup(x => x.Type);
+		foreach (var vocab in vocabs)
+		{
+			foreach (var keyword in vocab.Keywords)
+			{
+				var metaData = new KeywordMetaData(keyword);
+				_keywordData.Add(metaData);
+			}
+		}
+		EvaluateDependencies();
+	}
+
+	internal IKeywordHandler GetHandler(string keyword)
+	{
+		var handler = _keywordData.GetValueOrDefault(keyword)?.Handler;
+
+		return handler ?? (AllowUnknownKeywords
+			? AnnotationKeyword.Instance
+			: throw new JsonSchemaException($"Unknown keywords ({keyword}) are disallowed for this dialect."));
+	}
+
+	internal bool ProducesDependentAnnotations(Type keywordType)
+	{
+		if (!_keywordData.TryGetValue(keywordType, out var metaData))
+			throw new ArgumentException($"Keyword type `{keywordType}` not registered.");
+
+		return metaData.ProducesDependentAnnotations;
+	}
+
+	private void EvaluateDependencies()
+	{
+		var toCheck = _keywordData.Select(x => x.Value).Distinct().ToList();
+
+		if (_keywordData.TryGetValue("$ref", out var keyword) && RefIgnoresSiblingKeywords)
+		{
+			keyword.Priority = -4;
+			toCheck.Remove(keyword);
+		}
+		if (_keywordData.TryGetValue("$schema", out keyword))
+		{
+			keyword.Priority = -3;
+			toCheck.Remove(keyword);
+		}
+		if (_keywordData.TryGetValue("$vocabulary", out keyword))
+		{
+			keyword.Priority = -2;
+			toCheck.Remove(keyword);
+		}
+		if (_keywordData.TryGetValue("$id", out keyword))
+		{
+			keyword.Priority = -1;
+			toCheck.Remove(keyword);
+		}
+		if (_keywordData.TryGetValue("unevaluatedItems", out keyword))
+		{
+			keyword.Priority = long.MaxValue;
+			toCheck.Remove(keyword);
+		}
+		if (_keywordData.TryGetValue("unevaluatedProperties", out keyword))
+		{
+			keyword.Priority = long.MaxValue;
+			toCheck.Remove(keyword);
+		}
+
+		var priority = 0;
+		while (toCheck.Count != 0)
+		{
+			var unprioritized = toCheck.Select(x => x.Type).ToArray();
+			for (var i = 0; i < toCheck.Count; i++)
+			{
+				keyword = toCheck[i];
+				var dependencies = keyword.Type
+					.GetCustomAttributes<DependsOnAnnotationsFromAttribute>()
+					.Select(x => x.DependentType)
+					.ToArray();
+				foreach (var dependency in dependencies)
+				{
+					var metaData = _keywordData[dependency];
+					metaData.ProducesDependentAnnotations = true;
+				}
+
+				var matches = dependencies.Intersect(unprioritized);
+				if (matches.Any()) continue;
+
+				keyword.Priority = priority;
+				toCheck.Remove(keyword);
+				i--;
+			}
+
+			priority++;
+		}
+	}
+
+	internal long? GetEvaluationOrder(string keyword)
+	{
+		return _keywordData.GetValueOrDefault(keyword)?.Priority;
+	}
+
+	internal IEnumerable<IKeywordHandler> GetKeywords() => _keywordData.Select(x => x.Value.Handler).Distinct();
+}

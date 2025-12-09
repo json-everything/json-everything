@@ -15,52 +15,61 @@ public class RefResolutionException : JsonSchemaException
 	/// <summary>
 	/// Gets an anchor, if one exists.
 	/// </summary>
-	/// <remarks>
-	/// If this property is null while <see cref="IsDynamic"/> is true, then the failure was with a `$recursiveRef`.
-	/// </remarks>
 	public string? Anchor { get; }
 	/// <summary>
-	/// Gets whether the anchor (if one exists) is dynamic.
+	/// Gets the type of anchor, if one exists.
 	/// </summary>
-	/// <remarks>
-	/// If this property is true while <see cref="Anchor"/> is null, then the failure was with a `$recursiveRef`.
-	/// </remarks>
-	public bool IsDynamic { get; }
-	/// <summary>
-	/// Gets a JSON Pointer, if one exists.
-	/// </summary>
-	public JsonPointer? Location { get; }
+	public AnchorType? AnchorType { get; }
 
 	/// <summary>
 	/// Creates a new instance.
 	/// </summary>
 	/// <param name="baseUri">The base URI of the reference.</param>
 	/// <param name="anchor">(optional) - The anchor. Default is null.</param>
-	/// <param name="isDynamic">(optional) - Whether the reference was dynamic.</param>
-	public RefResolutionException(Uri baseUri, string? anchor = null, bool isDynamic = false)
-		: base($"Could not resolve {Format(baseUri, anchor, isDynamic)}")
+	/// <param name="anchorType">(optional) - The type of anchor, if present.</param>
+	public RefResolutionException(Uri baseUri, string? anchor = null, AnchorType? anchorType = null)
+		: base($"Could not resolve {Format(baseUri, anchor, anchorType)}")
 	{
 		BaseUri = baseUri;
 		Anchor = anchor;
-		IsDynamic = isDynamic;
+		AnchorType = anchor is null
+			? null
+			: anchorType ?? Schema.AnchorType.Static;
 	}
 
+	private static string Format(Uri baseUri, string? anchor, AnchorType? anchorType)
+	{
+		if (anchor is null) return $"'{baseUri}'";
+
+		switch (anchorType)
+		{
+			case Schema.AnchorType.Static:
+				return $"anchor '{anchor}' in schema '{baseUri}'";
+			case Schema.AnchorType.Dynamic:
+				return $"dynamic anchor '{anchor}' in schema '{baseUri}'";
+			case Schema.AnchorType.Recursive:
+				return $"recursive anchor in schema '{baseUri}'";
+			default:
+				throw new ArgumentOutOfRangeException(nameof(anchorType), "Anchor type must be specified if anchor is present.");
+		}
+	}
+}
+
+/// <summary>
+/// Specifies the type of anchor that was used during a reference resolution operation.
+/// </summary>
+public enum AnchorType
+{
 	/// <summary>
-	/// Creates a new instance.
+	/// Indicates the anchor was produced by `$anchor` (Draft 2019-09+) or by `$id` (Drafts 6 &amp; 7).
 	/// </summary>
-	/// <param name="baseUri">The base URI of the reference.</param>
-	/// <param name="location">The JSON Pointer location.</param>
-	public RefResolutionException(Uri baseUri, JsonPointer location)
-		: base($"Could not resolve schema '{baseUri}#{location}'")
-	{
-		BaseUri = baseUri;
-		Location = location;
-	}
-
-	private static string Format(Uri baseUri, string? anchor, bool isDynamic)
-	{
-		return anchor is null
-			? (isDynamic ? $"recursive reference in '{baseUri}'" : $"'{baseUri}'")
-			: $"{(isDynamic ? "dynamic " : string.Empty)}anchor '{anchor}' in schema '{baseUri}'";
-	}
+	Static,
+	/// <summary>
+	/// Indicates the anchor was produced by `$dynamicAnchor` (Draft 2020-12+).
+	/// </summary>
+	Dynamic,
+	/// <summary>
+	/// Indicates the anchor was produced by `$recursiveAnchor` (Draft 2019-09).
+	/// </summary>
+	Recursive
 }

@@ -1,83 +1,80 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Json.Schema;
 
 /// <summary>
-/// A registry for vocabularies.
+/// Provides a registry for managing JSON Schema vocabularies, allowing registration and unregistration of custom
+/// vocabularies in addition to well-known official vocabularies.
 /// </summary>
-public static class VocabularyRegistry
+/// <remarks>The registry maintains a set of official vocabularies that cannot be modified or removed. Use the
+/// <see cref="Global"/> property to access a shared, application-wide registry instance. Getting vocabularies via
+/// local instances fall back to the global registry.</remarks>
+public class VocabularyRegistry
 {
-	private static readonly ConcurrentDictionary<Uri, Vocabulary> _vocabularies = new();
+	private readonly Dictionary<Uri, Vocabulary> _vocabs = new();
+	private Uri[] _wellKnownVocabs = null!;
 
-	static VocabularyRegistry()
+	/// <summary>
+	/// Gets the global registry of vocabularies available throughout the application.
+	/// </summary>
+	/// <remarks>Use this property to access a shared, application-wide instance of the vocabulary registry. The
+	/// global registry is intended for scenarios where a centralized vocabulary store is required. This property is
+	/// thread-safe.</remarks>
+	public static VocabularyRegistry Global { get; } = new();
+
+	/// <summary>
+	/// Registers a custom vocabulary for use within the system.
+	/// </summary>
+	/// <remarks>Registering a vocabulary allows it to be referenced and used in subsequent operations. Official
+	/// vocabularies cannot be overwritten or replaced by custom registrations.</remarks>
+	/// <param name="vocabulary">The vocabulary to register. The vocabulary's identifier must not conflict with any official vocabularies.</param>
+	/// <exception cref="ArgumentException">Thrown if the vocabulary's identifier matches an official vocabulary, preventing overwriting of well-known
+	/// vocabularies.</exception>
+	public void Register(Vocabulary vocabulary)
 	{
-		Register(Vocabularies.Core201909);
-		Register(Vocabularies.Applicator201909);
-		Register(Vocabularies.Validation201909);
-		Register(Vocabularies.Metadata201909);
-		Register(Vocabularies.Format201909);
-		Register(Vocabularies.Content201909);
+		if (_wellKnownVocabs?.Contains(vocabulary.Id) == true)
+			throw new ArgumentException("Cannot overwrite official vocabularies");
 
-		Register(Vocabularies.Core202012);
-		Register(Vocabularies.Applicator202012);
-		Register(Vocabularies.Validation202012);
-		Register(Vocabularies.Metadata202012);
-		Register(Vocabularies.Unevaluated202012);
-		Register(Vocabularies.FormatAnnotation202012);
-		Register(Vocabularies.FormatAssertion202012);
-		Register(Vocabularies.Content202012);
-
-		Register(Vocabularies.CoreNext);
-		Register(Vocabularies.ApplicatorNext);
-		Register(Vocabularies.ValidationNext);
-		Register(Vocabularies.MetadataNext);
-		Register(Vocabularies.UnevaluatedNext);
-		Register(Vocabularies.FormatAnnotationNext);
-		Register(Vocabularies.FormatAssertionNext);
-		Register(Vocabularies.ContentNext);
+		_vocabs[vocabulary.Id] = vocabulary;
 	}
 
 	/// <summary>
-	/// Registers a vocabulary.  This does not register the vocabulary's
-	/// keywords.  This must be done separately.
+	/// Removes the vocabulary identified by the specified URI from the registry.
 	/// </summary>
-	/// <param name="vocabulary"></param>
-	public static void Register(Vocabulary vocabulary)
+	/// <param name="vocabularyId">The URI that uniquely identifies the vocabulary to remove. Cannot be an official vocabulary.</param>
+	/// <exception cref="ArgumentException">Thrown if <paramref name="vocabularyId"/> refers to an official vocabulary, which cannot be removed.</exception>
+	public void Unregister(Uri vocabularyId)
 	{
-		_vocabularies[vocabulary.Id] = vocabulary;
+		if (_wellKnownVocabs?.Contains(vocabularyId) == true)
+			throw new ArgumentException("Cannot remove official vocabularies");
+
+		_vocabs.Remove(vocabularyId);
 	}
 
-	/// <summary>
-	/// Removes a vocabulary from the registry.
-	/// </summary>
-	/// <param name="vocabulary"></param>
-	public static void Unregister(Vocabulary vocabulary)
-	{
-		_vocabularies.TryRemove(vocabulary.Id, out _);
-	}
+	internal Vocabulary? GetVocab(Uri vocabUri) =>
+		_vocabs.GetValueOrDefault(vocabUri) ??
+		Global._vocabs.GetValueOrDefault(vocabUri);
 
-	/// <summary>
-	/// Indicates whether a vocabulary is known by URI ID and/or anchor.
-	/// </summary>
-	/// <param name="vocabularyId">The URI ID.</param>
-	/// <returns>
-	/// `true`, if registered in either this or the global registry;
-	/// `false` otherwise.
-	/// </returns>
-	public static bool IsKnown(Uri vocabularyId)
+	internal void RegisterDefaultVocabs()
 	{
-		return _vocabularies.ContainsKey(vocabularyId);
-	}
+		_vocabs[new Uri("https://json-schema.org/draft/2019-09/vocab/core")] = Vocabulary.Draft201909_Core;
+		_vocabs[new Uri("https://json-schema.org/draft/2019-09/vocab/applicator")] = Vocabulary.Draft201909_Applicator;
+		_vocabs[new Uri("https://json-schema.org/draft/2019-09/vocab/validation")] = Vocabulary.Draft201909_Validation;
+		_vocabs[new Uri("https://json-schema.org/draft/2019-09/vocab/meta-data")] = Vocabulary.Draft201909_MetaData;
+		_vocabs[new Uri("https://json-schema.org/draft/2019-09/vocab/format")] = Vocabulary.Draft201909_Format;
+		_vocabs[new Uri("https://json-schema.org/draft/2019-09/vocab/content")] = Vocabulary.Draft201909_Content;
+		
+		_vocabs[new Uri("https://json-schema.org/draft/2020-12/vocab/core")] = Vocabulary.Draft202012_Core;
+		_vocabs[new Uri("https://json-schema.org/draft/2020-12/vocab/applicator")] = Vocabulary.Draft202012_Applicator;
+		_vocabs[new Uri("https://json-schema.org/draft/2020-12/vocab/validation")] = Vocabulary.Draft202012_Validation;
+		_vocabs[new Uri("https://json-schema.org/draft/2020-12/vocab/meta-data")] = Vocabulary.Draft202012_MetaData;
+		_vocabs[new Uri("https://json-schema.org/draft/2020-12/vocab/format-annotation")] = Vocabulary.Draft202012_FormatAnnotation;
+		_vocabs[new Uri("https://json-schema.org/draft/2020-12/vocab/format-assertion")] = Vocabulary.Draft202012_FormatAssertion;
+		_vocabs[new Uri("https://json-schema.org/draft/2020-12/vocab/content")] = Vocabulary.Draft202012_Content;
+		_vocabs[new Uri("https://json-schema.org/draft/2020-12/vocab/unevaluated")] = Vocabulary.Draft202012_Unevaluated;
 
-	/// <summary>
-	/// Retrieves the vocabulary associated with the URI ID, if known.
-	/// </summary>
-	/// <param name="vocabularyId">The URI ID.</param>
-	/// <returns>The vocabulary, if known; otherwise null.</returns>
-	public static Vocabulary? Get(Uri vocabularyId)
-	{
-		return _vocabularies.GetValueOrDefault(vocabularyId);
+		_wellKnownVocabs = _vocabs.Keys.ToArray();
 	}
 }

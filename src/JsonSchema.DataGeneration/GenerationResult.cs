@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 
 namespace Json.Schema.DataGeneration;
@@ -28,9 +29,14 @@ public class GenerationResult
 
 	private GenerationResult(JsonNode? result, string? errorMessage, IEnumerable<GenerationResult>? inner)
 	{
-		Result = result ?? default;
+		Result = result ?? null;
 		ErrorMessage = errorMessage;
 		InnerResults = inner;
+	}
+
+	internal static GenerationResult Success(JsonElement? result)
+	{
+		return new GenerationResult(JsonNode.Parse(result!.Value.GetRawText()), null, null);
 	}
 
 	internal static GenerationResult Success(JsonNode? result)

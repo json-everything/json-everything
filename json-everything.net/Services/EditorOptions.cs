@@ -3,14 +3,21 @@ using BlazorMonaco.Editor;
 
 namespace JsonEverythingNet.Services
 {
-	public static class EditorOptions
+	public class EditorOptions
 	{
-		public static StandaloneEditorConstructionOptions Basic() =>
+		private readonly ThemeService _themeService;
+
+		public EditorOptions(ThemeService themeService)
+		{
+			_themeService = themeService;
+		}
+
+		public StandaloneEditorConstructionOptions Basic() =>
 			new()
 			{
 				AutomaticLayout = true,
 				Language = "json",
-				Theme = "vs-dark",
+				Theme = _themeService.MonacoTheme,
 				SelectOnLineNumbers = true,
 				Scrollbar = new EditorScrollbarOptions
 				{
@@ -20,7 +27,7 @@ namespace JsonEverythingNet.Services
 				TabSize = 2
 			};
 
-		public static StandaloneEditorConstructionOptions Readonly()
+		public StandaloneEditorConstructionOptions Readonly()
 		{
 			var options = Basic();
 			options.ReadOnly = true;

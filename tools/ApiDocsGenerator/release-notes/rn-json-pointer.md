@@ -4,6 +4,25 @@ title: JsonPointer.Net
 icon: fas fa-tag
 order: "09.10"
 ---
+# [6.0.0](https://github.com/json-everything/json-everything/pull/952) {#release-pointer-6.0.0}
+
+Complete overhaul of library, focusing on performance and memory efficiency.
+
+## Breaking changes
+
+- `JsonPointer` no longer implements `IReadOnlyList<string>`
+  - `.Count` replaced with `.SegmentCount`
+  - Indexers removed
+  - `.GetAncestor()` replaced with `.GetParent()`
+- `PointerCreationOptions` removed
+- `PointerSegment` replaced with `JsonPointerSegment`
+
+## Other changes
+
+- Add .Net 10.0 support.
+- Update Nuget references.
+- `RelativeJsonPointer` now implements `IEquatable<RelativeJsonPointer>`
+
 # [5.3.1](https://github.com/json-everything/json-everything/pull/864) {#release-pointer-5.3.1}
 
 [#863](https://github.com/json-everything/json-everything/issues/863) - Performance improvements for RelativeJsonPointer courtesy of [@cptjazz](https://github.com/cptjazz). 

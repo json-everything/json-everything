@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net8.0;net9.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net8.0;net9.0;net10.0</TargetFrameworks>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <NoWarn>CS1570;CS8618</NoWarn>
@@ -15,8 +15,8 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <Version>5.4.3</Version>
-    <FileVersion>5.4.3</FileVersion>
+    <Version>5.5.0</Version>
+    <FileVersion>5.5.0</FileVersion>
     <AssemblyVersion>5.0.0.0</AssemblyVersion>
     <Authors>Greg Dennis</Authors>
     <Description>JsonLogic built on the System.Text.Json namespace</Description>

@@ -20,7 +20,6 @@ internal static class TestEnvironment
 [JsonSerializable(typeof(Point))]
 [JsonSerializable(typeof(JsonSchema))]
 [JsonSerializable(typeof(EvaluationResults))]
-[JsonSerializable(typeof(PropertiesKeyword))]
 [JsonSerializable(typeof(DeserializationTests.Foo))]
 [JsonSerializable(typeof(DeserializationTests.FooWithSchema))]
 [JsonSerializable(typeof(ArrayGenerationTests.EnumTest))]

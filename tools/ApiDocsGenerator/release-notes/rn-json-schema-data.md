@@ -4,6 +4,32 @@ title: JsonSchema.Net.Data
 icon: fas fa-tag
 order: "09.02"
 ---
+# [8.0.0](https://github.com/gregsdennis/json-everything/pull/952) {#release-schemadata-8.0.0}
+
+Updated per _JsonSchema.Net_ v8.
+
+## Breaking changes
+
+- Keywords
+  - now implement `IKeywordHandler`
+  - are singletons
+  - moved to `.Keywords` namespace
+- `Vocabularies` static class renamed to `Vocabulary`
+  - `.Register()` method moved to `MetaSchemas` class
+- `IDataResourceIdentifier` and implemenations moved to `.Keywords` namespace
+- `DataKeyword.ExternalDataRegistry` replaced by `DataRegistry` class
+- `DataKeyword.Fetch` property moved to new `DataRegistry` class
+- Removed `JsonSchemaExtensions` (keyword access)
+- Removed serialization support (no longer needed)
+- Removed support for Relative JSON Pointers because `JsonElement` is not supported
+  - will add back if a method for support is found
+
+## Other changes
+
+- Added `Dialect` static class.
+- Add .Net 10.0 support.
+- Update Nuget references.
+
 # [7.0.0](https://github.com/gregsdennis/json-everything/pull/822) {#release-schemadata-7.0.0}
 
 Add .Net 9.0 support.

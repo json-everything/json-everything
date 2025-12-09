@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>JsonEverythingNet</RootNamespace>
@@ -13,12 +13,12 @@
 
   <ItemGroup>
     <PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
-    <PackageReference Include="BlazorMonaco" Version="3.2.0" />
-    <PackageReference Include="Markdig" Version="0.38.0" />
+    <PackageReference Include="BlazorMonaco" Version="3.4.0" />
+    <PackageReference Include="Markdig" Version="0.44.0" />
     <PackageReference Include="Markdig.SyntaxHighlighting" Version="1.1.7" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="9.0.0" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.11.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="10.0.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -26,7 +26,7 @@
     <ProjectReference Include="..\src\JsonLogic\JsonLogic.csproj" />
     <ProjectReference Include="..\src\JsonPatch\JsonPatch.csproj" />
     <ProjectReference Include="..\src\JsonPath\JsonPath.csproj" />
-    <ProjectReference Include="..\src\JsonSchema.DataGeneration\JsonSchema.DataGeneration.csproj" />
+    <!-- <ProjectReference Include="..\src\JsonSchema.DataGeneration\JsonSchema.DataGeneration.csproj" /> -->
     <ProjectReference Include="..\src\JsonSchema.Data\JsonSchema.Data.csproj" />
     <ProjectReference Include="..\src\JsonSchema.Generation.DataAnnotations\JsonSchema.Generation.DataAnnotations.csproj" />
     <ProjectReference Include="..\src\JsonSchema.Generation\JsonSchema.Generation.csproj" />

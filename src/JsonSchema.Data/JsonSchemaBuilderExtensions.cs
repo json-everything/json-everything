@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
-using Json.Path;
-using Json.Pointer;
+using System.Text.Json.Nodes;
 
 namespace Json.Schema.Data;
 
@@ -20,7 +17,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder Data(this JsonSchemaBuilder builder, IReadOnlyDictionary<string, string> data)
 	{
-		builder.Add(new DataKeyword(data.ToDictionary(x => x.Key, x => CreateResourceIdentifier(x.Value))));
+		builder.Add("data", new JsonObject(data.ToDictionary(x => x.Key, x => (JsonNode?)x.Value)));
 		return builder;
 	}
 
@@ -32,7 +29,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder Data(this JsonSchemaBuilder builder, params (string name, string reference)[] data)
 	{
-		builder.Add(new DataKeyword(data.ToDictionary(x => x.name, x => CreateResourceIdentifier(x.reference))));
+		builder.Add("data", new JsonObject(data.ToDictionary(x => x.name, x => (JsonNode?)x.reference)));
 		return builder;
 	}
 
@@ -44,7 +41,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder OptionalData(this JsonSchemaBuilder builder, IReadOnlyDictionary<string, string> data)
 	{
-		builder.Add(new OptionalDataKeyword(data.ToDictionary(x => x.Key, x => CreateResourceIdentifier(x.Value))));
+		builder.Add("optionalData", new JsonObject(data.ToDictionary(x => x.Key, x => (JsonNode?)x.Value)));
 		return builder;
 	}
 
@@ -56,17 +53,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder OptionalData(this JsonSchemaBuilder builder, params (string name, string reference)[] data)
 	{
-		builder.Add(new OptionalDataKeyword(data.ToDictionary(x => x.name, x => CreateResourceIdentifier(x.reference))));
+		builder.Add("optionalData", new JsonObject(data.ToDictionary(x => x.name, x => (JsonNode?)x.reference)));
 		return builder;
-	}
-
-	internal static IDataResourceIdentifier CreateResourceIdentifier(string identifier)
-	{
-		if (identifier[0] != '#' && JsonPointer.TryParse(identifier, out var jp)) return new JsonPointerIdentifier(jp);
-		if (RelativeJsonPointer.TryParse(identifier, out var rjp)) return new RelativeJsonPointerIdentifier(rjp);
-		if (JsonPath.TryParse(identifier, out var path)) return new JsonPathIdentifier(path);
-		if (Uri.TryCreate(identifier, UriKind.RelativeOrAbsolute, out var uri)) return new UriIdentifier(uri);
-
-		throw new JsonException($"Cannot identify type of resource identifier for '{identifier}'");
 	}
 }

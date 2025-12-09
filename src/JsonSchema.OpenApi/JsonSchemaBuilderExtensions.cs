@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json.Nodes;
 
 namespace Json.Schema.OpenApi;
@@ -10,7 +11,7 @@ namespace Json.Schema.OpenApi;
 public static class JsonSchemaBuilderExtensions
 {
 	/// <summary>
-	/// 
+	/// Adds a `discriminator` keyword.
 	/// </summary>
 	/// <param name="builder">The builder.</param>
 	/// <param name="propertyName">The name of the property in the payload that will hold the discriminator value.</param>
@@ -23,28 +24,42 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder Discriminator(this JsonSchemaBuilder builder,
 		string propertyName,
-		IReadOnlyDictionary<string, string>? mapping,
-		IReadOnlyDictionary<string, JsonNode?>? extensions)
+		IReadOnlyDictionary<string, string>? mapping = null,
+		IReadOnlyDictionary<string, JsonNode?>? extensions = null)
 	{
-		builder.Add(new DiscriminatorKeyword(propertyName, mapping, extensions));
+		var obj = new JsonObject
+		{
+			["propertyName"] = propertyName
+		};
+
+		if (mapping is not null)
+			obj["mapping"] = new JsonObject(mapping.ToDictionary(x => x.Key, x => (JsonNode?)x.Value));
+
+		if (extensions is not null)
+		{
+			foreach (var extension in extensions)
+				obj[extension.Key] = extension.Value;
+		}
+
+		builder.Add("discriminator", obj);
 		return builder;
 	}
 
 	/// <summary>
-	/// 
+	/// Adds an `example` keyword.
 	/// </summary>
 	/// <param name="builder">The builder.</param>
-	/// <param name="json">The example value.</param>
+	/// <param name="value">The example value.</param>
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder Example(this JsonSchemaBuilder builder,
-		JsonNode? json)
+		JsonNode? value)
 	{
-		builder.Add(new ExampleKeyword(json));
+		builder.Add("example", value);
 		return builder;
 	}
 
 	/// <summary>
-	/// 
+	/// Adds an `externalDocs` keyword.
 	/// </summary>
 	/// <param name="builder">The builder.</param>
 	/// <param name="url">The URL for the target documentation. This MUST be in the form of a URL.</param>
@@ -56,11 +71,25 @@ public static class JsonSchemaBuilderExtensions
 	/// </param>
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder ExternalDocs(this JsonSchemaBuilder builder,
-		Uri url, 
-		string? description,
-		IReadOnlyDictionary<string, JsonNode?>? extensions)
+		Uri url,
+		string? description = null,
+		IReadOnlyDictionary<string, JsonNode?>? extensions = null)
 	{
-		builder.Add(new ExternalDocsKeyword(url, description, extensions));
+		var obj = new JsonObject
+		{
+			["url"] = url.OriginalString
+		};
+
+		if (description is not null)
+			obj["description"] = description;
+
+		if (extensions is not null)
+		{
+			foreach (var extension in extensions)
+				obj[extension.Key] = extension.Value;
+		}
+
+		builder.Add("externalDocs", obj);
 		return builder;
 	}
 
@@ -87,14 +116,37 @@ public static class JsonSchemaBuilderExtensions
 	/// </param>
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder Xml(this JsonSchemaBuilder builder,
-		Uri? @namespace,
-		string? name,
-		string? prefix,
-		bool? attribute,
-		bool? wrapped,
-		IReadOnlyDictionary<string, JsonNode?>? extensions)
+		Uri? @namespace = null,
+		string? name = null,
+		string? prefix = null,
+		bool? attribute = null,
+		bool? wrapped = null,
+		IReadOnlyDictionary<string, JsonNode?>? extensions = null)
 	{
-		builder.Add(new XmlKeyword(@namespace, name, prefix, attribute, wrapped, extensions));
+		var obj = new JsonObject();
+
+		if (@namespace is not null)
+			obj["namespace"] = @namespace.OriginalString;
+
+		if (name is not null)
+			obj["name"] = name;
+
+		if (prefix is not null)
+			obj["prefix"] = prefix;
+
+		if (attribute.HasValue)
+			obj["attribute"] = attribute.Value;
+
+		if (wrapped.HasValue)
+			obj["wrapped"] = wrapped.Value;
+
+		if (extensions is not null)
+		{
+			foreach (var extension in extensions)
+				obj[extension.Key] = extension.Value;
+		}
+
+		builder.Add("xml", obj);
 		return builder;
 	}
 }

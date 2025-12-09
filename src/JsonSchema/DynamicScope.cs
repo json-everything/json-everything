@@ -20,6 +20,11 @@ public class DynamicScope : IEnumerable<Uri>, IEquatable<DynamicScope>
 	/// </summary>
 	public Uri LocalScope => _scope.Count == 0 ? null! : _scope.Peek();
 
+	/// <summary>
+	/// Gets the number of elements contained in the scope.
+	/// </summary>
+	public int Count => _scope.Count;
+
 	internal DynamicScope(Uri initialScope)
 	{
 		_scope = new Stack<Uri>();

@@ -1,4 +1,5 @@
 ﻿@page "/json-logic"
+@implements IDisposable
 @using System.Text.Json
 @using Json.Logic
 @using JsonEverythingNet.Services
@@ -10,6 +11,8 @@
 
 @inject DataManager DataManager;
 @inject IJSRuntime JsRuntime;
+@inject EditorOptions EditorOptions;
+@inject ThemeService ThemeService;
 
 <PageTitle>JSON Logic - json-everything.net</PageTitle>
 
@@ -17,7 +20,7 @@
 	<div class="sidebar">
 		<div class="sidebar-content">
 			<div class="align-items-center hstack mx-2">
-				<img src="img/json-logic.png" height="70" width="70" class="me-3" />
+				<img src="@GetImageUrl()" height="70" width="70" class="me-3" />
 				<h1 class="display-4">JSON Logic</h1>
 			</div>
 			<div class="align-items-center mx-3">
@@ -82,8 +85,8 @@
 
 	private string HelpSummary { get; set; } = HelpContent.LogicApply;
 
-	private static StandaloneEditorConstructionOptions BasicOptions(StandaloneCodeEditor _) => EditorOptions.Basic();
-	private static StandaloneEditorConstructionOptions ReadOnlyOptions(StandaloneCodeEditor _) => EditorOptions.Readonly();
+	private StandaloneEditorConstructionOptions BasicOptions(StandaloneCodeEditor _) => EditorOptions.Basic();
+	private StandaloneEditorConstructionOptions ReadOnlyOptions(StandaloneCodeEditor _) => EditorOptions.Readonly();
 
 	private async Task Apply()
 	{
@@ -147,6 +150,8 @@
 	{
 		if (firstRender)
 		{
+			ThemeService.OnThemeChanged += HandleThemeChanged;
+			
 			await JsRuntime.InvokeVoidAsync("initResizableSidebar");
 			
 			await LoadSavedLogic();
@@ -168,5 +173,22 @@
 	private async Task HandleInstanceChanged()
 	{
 		_instanceEditorLanguage = await _instanceEditor.DetectLanguage(JsRuntime);
+	}
+
+	private string GetImageUrl() =>
+		ThemeService.IsDarkMode ? "img/json-logic.png" : "img/json-logic-light.png";
+
+	private void HandleThemeChanged()
+	{
+		var theme = ThemeService.MonacoTheme;
+		_logicEditor?.UpdateOptions(new EditorUpdateOptions { Theme = theme });
+		_instanceEditor?.UpdateOptions(new EditorUpdateOptions { Theme = theme });
+		_outputEditor?.UpdateOptions(new EditorUpdateOptions { Theme = theme });
+		StateHasChanged();
+	}
+
+	public void Dispose()
+	{
+		ThemeService.OnThemeChanged -= HandleThemeChanged;
 	}
 }

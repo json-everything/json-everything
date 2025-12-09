@@ -1,41 +1,40 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Json.Schema;
 
 /// <summary>
-/// Represents a Draft 2019-09 and later vocabulary.
+/// Represents a collection of keyword handlers associated with a specific vocabulary identifier.
 /// </summary>
-public class Vocabulary
+/// <remarks>Only JSON Schema drafts 2019-09 and 2020-12 make use of vocabularies. A vocabulary defines a set of
+/// keywords and their corresponding handlers, typically used to interpret or validate structured data according
+/// to a particular specification. The vocabulary is identified by a unique URI, and its keywords determine the
+/// behaviors or constraints it supports.</remarks>
+public partial class Vocabulary
 {
 	/// <summary>
-	/// The vocabulary ID.
+	/// Gets the unique identifier for this resource as a URI.
 	/// </summary>
 	public Uri Id { get; }
+	
 	/// <summary>
-	/// The types of the keywords that are defined by the vocabulary.
+	/// Gets the collection of keyword handlers associated with the current instance.
 	/// </summary>
-	public IReadOnlyCollection<Type> Keywords { get; }
+	public IKeywordHandler[] Keywords { get; }
 
 	/// <summary>
-	/// Creates a new <see cref="Vocabulary"/>.
+	/// Initializes a new instance of the Vocabulary class with the specified identifier and keyword handlers.
 	/// </summary>
-	/// <param name="id">The vocabulary ID.</param>
-	/// <param name="keywords">The types of the keywords that are defined by the vocabulary.</param>
-	public Vocabulary(string id, params Type[] keywords)
+	/// <remarks>All provided keyword handler collections are combined into a single set for the vocabulary.</remarks>
+	/// <param name="id">The unique identifier for the vocabulary. Cannot be null.</param>
+	/// <param name="keywords">One or more collections of keyword handlers to associate with the vocabulary.</param>
+	public Vocabulary(Uri id, params IEnumerable<IKeywordHandler> keywords)
 	{
-		Id = new Uri(id, UriKind.Absolute);
-		Keywords = keywords.ToReadOnlyList();
-	}
+		Id = id;
+		Keywords = keywords.ToArray();
 
-	/// <summary>
-	/// Creates a new <see cref="Vocabulary"/>.
-	/// </summary>
-	/// <param name="id">The vocabulary ID.</param>
-	/// <param name="keywords">The types of the keywords that are defined by the vocabulary.</param>
-	public Vocabulary(string id, IEnumerable<Type> keywords)
-	{
-		Id = new Uri(id, UriKind.Absolute);
-		Keywords = keywords.ToReadOnlyList();
+		if (Keywords.Length == 0)
+			throw new ArgumentException("At least one keyword handler is required.");
 	}
 }

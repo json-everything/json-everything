@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net8.0;net9.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net8.0;net9.0;net10.0</TargetFrameworks>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <NoWarn>IDE0290</NoWarn>
@@ -15,9 +15,9 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <Version>7.0.0</Version>
-    <FileVersion>7.0.0.0</FileVersion>
-    <AssemblyVersion>7.0.0.0</AssemblyVersion>
+    <Version>8.0.0</Version>
+    <FileVersion>8.0.0.0</FileVersion>
+    <AssemblyVersion>8.0.0.0</AssemblyVersion>
     <Authors>Greg Dennis</Authors>
     <Description>Extends JsonSchema.Net to provide the "data" keyword</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -32,6 +32,10 @@
 
     <PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
   </PropertyGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="..\..\Meta-Schemas\data-2023.json" Link="Meta-Schemas\%(RecursiveDir)%(Filename)%(Extension)" />
+	</ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="PolySharp" Version="1.15.0" PrivateAssets="All" />

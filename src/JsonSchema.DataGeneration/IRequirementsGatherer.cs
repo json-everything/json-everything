@@ -2,5 +2,5 @@
 
 internal interface IRequirementsGatherer
 {
-	void AddRequirements(RequirementsContext context, JsonSchema schema, EvaluationOptions options);
+	void AddRequirements(RequirementsContext context, JsonSchemaNode schema, BuildOptions options);
 }

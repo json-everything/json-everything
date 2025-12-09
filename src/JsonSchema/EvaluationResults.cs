@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
-using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Json.More;
 using Json.Pointer;
+using Json.Schema.Keywords;
 
 namespace Json.Schema;
 
@@ -17,17 +17,12 @@ public class EvaluationResults
 {
 	private readonly Uri _currentUri;
 	private readonly HashSet<string>? _backgroundAnnotations;
-	private readonly HashSet<string>? _ignoredAnnotations;
-	private JsonPointer? _reference;
 	private Uri? _schemaLocation;
-	private List<EvaluationResults>? _details;
-	private Dictionary<string, JsonNode?>? _annotations;
-	private Dictionary<string, string>? _errors;
 
 	/// <summary>
 	/// Indicates whether the validation passed or failed.
 	/// </summary>
-	public bool IsValid { get; private set; } = true;
+	public bool IsValid { get; set; } = true;
 	/// <summary>
 	/// The schema location that generated this node.
 	/// </summary>
@@ -48,66 +43,46 @@ public class EvaluationResults
 	/// <summary>
 	/// The collection of nested results.
 	/// </summary>
-	public IReadOnlyList<EvaluationResults> Details => _details ??= [];
-
-	/// <summary>
-	/// Gets whether there are nested results.
-	/// </summary>
-	/// <remarks>
-	/// Because <see cref="Details"/> is lazily loaded, this property allows the check without
-	/// the side effect of allocating a list object.
-	/// </remarks>
-	public bool HasDetails => _details is not (null or { Count: 0 });
+	public List<EvaluationResults>? Details { get; set; }
 
 	/// <summary>
 	/// The collection of annotations from this node.
 	/// </summary>
-	public IReadOnlyDictionary<string, JsonNode?>? Annotations => _annotations;
-
-	/// <summary>
-	/// Gets whether this node has annotations.
-	/// </summary>
-	public bool HasAnnotations => Annotations is not (null or { Count: 0 });
+	public Dictionary<string, JsonElement>? Annotations { get; set; }
 
 	/// <summary>
 	/// The collection of error from this node.
 	/// </summary>
-	public IReadOnlyDictionary<string, string>? Errors => _errors;
-
-	/// <summary>
-	/// Gets whether this node has errors.
-	/// </summary>
-	public bool HasErrors => Errors is not (null or { Count: 0 });
+	public Dictionary<string, string>? Errors { get; set; }
 
 	/// <summary>
 	/// Gets the parent result.
 	/// </summary>
-	public EvaluationResults? Parent { get; private set; }
-
-	internal bool Exclude { get; private set; }
+	public EvaluationResults? Parent { get; set; }
 
 	internal OutputFormat Format { get; private set; } = OutputFormat.Hierarchical;
 
 	internal bool IncludeDroppedAnnotations { get; }
 
-	internal IReadOnlyDictionary<string, JsonNode?>? AnnotationsToSerialize =>
-		HasAnnotations
-			? _annotations!.Where(x => !(_backgroundAnnotations?.Contains(x.Key) ?? false)).ToDictionary(x => x.Key, x => x.Value)
+	internal IReadOnlyDictionary<string, JsonElement>? AnnotationsToSerialize =>
+		Annotations is not null && Annotations.Count != 0
+			? Annotations.Where(x => !(_backgroundAnnotations?.Contains(x.Key) ?? false)).ToDictionary(x => x.Key, x => x.Value)
 			: null;
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 	internal EvaluationResults(JsonPointer evaluationPath, Uri schemaLocation, JsonPointer instanceLocation, EvaluationOptions options)
 	{
 		EvaluationPath = evaluationPath;
-		_currentUri = schemaLocation;
+		_schemaLocation = schemaLocation;
 		InstanceLocation = instanceLocation;
 
 		IncludeDroppedAnnotations = options.PreserveDroppedAnnotations;
-		if (options.IgnoredAnnotations != null)
-		{
-			_ignoredAnnotations = new HashSet<string>(options.IgnoredAnnotations.Where(x => !x.ProducesDependentAnnotations()).Select(x => x.Keyword()));
-			_backgroundAnnotations = new HashSet<string>(options.IgnoredAnnotations.Where(x => x.ProducesDependentAnnotations()).Select(x => x.Keyword()));
-		}
+		//if (options.IgnoredAnnotations != null)
+		//{
+		//	_backgroundAnnotations = new HashSet<string>(options.IgnoredAnnotations.Where(x => x.ProducesDependentAnnotations()).Select(x => x.Keyword()));
+		//}
 	}
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 
 	private EvaluationResults(EvaluationResults other)
 	{
@@ -116,38 +91,34 @@ public class EvaluationResults
 		_currentUri = other._currentUri;
 		_schemaLocation = other._schemaLocation;
 		InstanceLocation = other.InstanceLocation;
-		_annotations = other._annotations?.ToDictionary(x => x.Key, x => x.Value);
-		_errors = other._errors?.ToDictionary(x => x.Key, x => x.Value);
+		Annotations = other.Annotations?.ToDictionary(x => x.Key, x => x.Value);
+		Errors = other.Errors?.ToDictionary(x => x.Key, x => x.Value);
 		IncludeDroppedAnnotations = other.IncludeDroppedAnnotations;
-		_ignoredAnnotations = other._ignoredAnnotations;
 		_backgroundAnnotations = other._backgroundAnnotations;
-	}
-
-	internal void SetSchemaReference(JsonPointer pointer)
-	{
-		_reference = pointer;
 	}
 
 	private Uri BuildSchemaLocation()
 	{
-		var localEvaluationPathStart = 0;
-		for (var i = 0; i < EvaluationPath.Count; i++)
+		var localEvaluationPathSegmentCount = EvaluationPath.SegmentCount;
+		for (var i = EvaluationPath.SegmentCount - 1; i >= 0; i--)
 		{
 			var segment = EvaluationPath[i];
-			if (segment == RefKeyword.Name ||
-			    segment == RecursiveRefKeyword.Name ||
-			    segment == DynamicRefKeyword.Name)
-				localEvaluationPathStart = i + 1;
+			if (segment == RefKeyword.Instance.Name ||
+			    segment == Keywords.Draft201909.RecursiveRefKeyword.Instance.Name ||
+			    segment == DynamicRefKeyword.Instance.Name)
+			{
+				localEvaluationPathSegmentCount = i + 1;
+				break;
+			}
 		}
 
-		if (_reference == null && _currentUri == Parent?._currentUri)
-			_reference = Parent._reference;
-		var fragment = _reference ?? JsonPointer.Empty;
-#if NETSTANDARD2_0
-		fragment = fragment.Combine(EvaluationPath.GetLocal(localEvaluationPathStart));  // 2 allocations
-#else
-		fragment = fragment.Combine(EvaluationPath[localEvaluationPathStart..]);  // 2 allocations
-#endif
+		JsonPointer fragment; // 2 allocations
+		if (localEvaluationPathSegmentCount == 0)
+			fragment = JsonPointer.Empty;
+		else if (localEvaluationPathSegmentCount == EvaluationPath.SegmentCount)
+			fragment = EvaluationPath;
+		else
+			fragment = EvaluationPath.GetLocal(localEvaluationPathSegmentCount);
 
 		return fragment == JsonPointer.Empty
 			? _currentUri
@@ -164,19 +135,19 @@ public class EvaluationResults
 
 		children.Remove(this);
 		children.Insert(0, new EvaluationResults(this) { Parent = this });
-		_annotations?.Clear();
-		_errors?.Clear();
-		if (_details == null)
-			_details = [];
+		Annotations?.Clear();
+		Errors?.Clear();
+		if (Details == null)
+			Details = [];
 		else
-			_details.Clear();
+			Details.Clear();
 		foreach (var child in children)
 		{
-			child._details?.Clear();
+			child.Details?.Clear();
 			child.Format = OutputFormat.List;
 		}
 		//_details.AddRange(children.Where(x => (x.IsValid && x.HasAnnotations) || (!x.IsValid && x.HasErrors)));
-		_details.AddRange(children);
+		Details.AddRange(children);
 		Format = OutputFormat.List;
 	}
 
@@ -190,13 +161,13 @@ public class EvaluationResults
 		{
 			var current = toProcess.Dequeue();
 			all.Add(current);
-			if (!current.HasDetails) continue;
+			if (current.Details is null || current.Details.Count == 0) continue;
 
 			foreach (var nestedResult in current.Details)
 			{
 				toProcess.Enqueue(nestedResult);
 			}
-			current._details?.Clear();
+			current.Details?.Clear();
 		}
 
 		// we still include the root because it may have annotations
@@ -209,92 +180,10 @@ public class EvaluationResults
 	/// </summary>
 	public void ToFlag()
 	{
-		_details?.Clear();
-		_annotations?.Clear();
-		_errors?.Clear();
+		Details?.Clear();
+		Annotations?.Clear();
+		Errors?.Clear();
 		Format = OutputFormat.Flag;
-	}
-
-	/// <summary>
-	/// Sets an annotation.
-	/// </summary>
-	/// <param name="keyword">The annotation key.  Typically the name of the keyword.</param>
-	/// <param name="value">The annotation value.</param>
-	public void SetAnnotation(string keyword, JsonNode? value)
-	{
-		if (_ignoredAnnotations?.Any(x => x == keyword) ?? false) return;
-
-		_annotations ??= [];
-
-		_annotations[keyword] = value;
-	}
-
-	/// <summary>
-	/// Tries to get an annotation.
-	/// </summary>
-	/// <param name="keyword">The annotation key.</param>
-	/// <param name="annotation"></param>
-	/// <returns>The annotation or null.</returns>
-	public bool TryGetAnnotation(string keyword, out JsonNode? annotation)
-	{
-		annotation = null;
-		if (!HasAnnotations) return false;
-		return Annotations!.TryGetValue(keyword, out annotation);
-	}
-
-	/// <summary>
-	/// Gets all annotations of a particular data type for the current evaluation level.
-	/// </summary>
-	/// <param name="keyword">The key under which the annotation is stored.  Typically a keyword.</param>
-	/// <returns>The set of all annotations for the current evaluation level.</returns>
-	public IEnumerable<JsonNode?> GetAllAnnotations(string keyword)
-	{
-		if (HasAnnotations && _annotations!.TryGetValue(keyword, out var annotation))
-			yield return annotation;
-
-		if (!HasDetails) yield break;
-
-		var validResults = Details.Where(x => x.IsValid && x.InstanceLocation == InstanceLocation);
-		var allAnnotations = validResults.SelectMany(x => x.GetAllAnnotations(keyword));
-		foreach (var nestedAnnotation in allAnnotations)
-		{
-			yield return nestedAnnotation;
-		}
-	}
-
-	/// <summary>
-	/// Marks the result as invalid.
-	/// </summary>
-	/// <remarks>
-	/// For better support for customization, consider using the overload that takes parameters.
-	/// </remarks>
-	public void Fail()
-	{
-		IsValid = false;
-	}
-
-	/// <summary>
-	/// Marks the result as invalid.
-	/// </summary>
-	/// <param name="keyword">The keyword that failed validation.</param>
-	/// <param name="message">An error message.</param>
-	/// <remarks>
-	/// For better support for customization, consider using the overload that takes parameters.
-	/// </remarks>
-	public void Fail(string keyword, string? message)
-	{
-		IsValid = false;
-		if (message == null) return;
-
-		_errors ??= [];
-		_errors[keyword] = message;
-	}
-
-	internal void AddNestedResult(EvaluationResults results)
-	{
-		_details ??= [];
-		_details.Add(results);
-		results.Parent = this;
 	}
 }
 
@@ -319,8 +208,6 @@ public class EvaluationResultsJsonConverter : WeaklyTypedJsonConverter<Evaluatio
 	/// <param name="options">An object that specifies serialization options to use.</param>
 	public override void Write(Utf8JsonWriter writer, EvaluationResults value, JsonSerializerOptions options)
 	{
-		if (value.Exclude) return;
-
 		writer.WriteStartObject();
 
 		writer.WriteBoolean("valid", value.IsValid);
@@ -349,12 +236,12 @@ public class EvaluationResultsJsonConverter : WeaklyTypedJsonConverter<Evaluatio
 			if (value.AnnotationsToSerialize != null)
 			{
 				writer.WritePropertyName("annotations");
-				options.WriteDictionary(writer, value.AnnotationsToSerialize!, JsonSchemaSerializerContext.Default.JsonNode);
+				options.WriteDictionary(writer, value.AnnotationsToSerialize!, JsonSchemaSerializerContext.Default.JsonElement);
 			}
 		}
 		else
 		{
-			if (value.HasErrors)
+			if (value.Errors is not null && value.Errors.Count != 0)
 			{
 				writer.WritePropertyName("errors");
 				options.WriteDictionary(writer, value.Errors!, JsonSchemaSerializerContext.Default.String);
@@ -362,248 +249,15 @@ public class EvaluationResultsJsonConverter : WeaklyTypedJsonConverter<Evaluatio
 			if (value is { IncludeDroppedAnnotations: true, AnnotationsToSerialize: not null })
 			{
 				writer.WritePropertyName("droppedAnnotations");
-				options.WriteDictionary(writer, value.AnnotationsToSerialize!, JsonSchemaSerializerContext.Default.JsonNode);
+				options.WriteDictionary(writer, value.AnnotationsToSerialize!, JsonSchemaSerializerContext.Default.JsonElement);
 			}
 		}
 
-		if (value.HasDetails)
+		if (value.Details is not null && value.Details.Count != 0)
 		{
 			writer.WritePropertyName("details");
 			options.WriteList(writer, value.Details, JsonSchemaSerializerContext.Default.EvaluationResults);
 		}
-
-		writer.WriteEndObject();
-	}
-}
-
-/// <summary>
-/// Produces output formats specified by 2019-09 and 2020-12.
-/// </summary>
-[Obsolete("This doesn't work right, and the architecture of EvaluationResults makes it difficult to fix.  Recommendation is to use the draft-next structure via EvaluationResultsJsonConverter (which is the default).")]
-public class Pre202012EvaluationResultsJsonConverter : WeaklyTypedJsonConverter<EvaluationResults>
-{
-	/// <summary>
-	/// Holder for an annotation value.
-	/// </summary>
-	private class Annotation
-	{
-		public string Owner { get; }
-		public JsonNode? Value { get; }
-		public JsonPointer Source { get; }
-	
-		public Annotation(string owner, JsonNode? value, in JsonPointer source)
-		{
-			Owner = owner;
-			Value = value;
-			Source = source;
-		}
-	}
-
-	/// <summary>Reads and converts the JSON to type <see cref="EvaluationResults"/>.</summary>
-	/// <param name="reader">The reader.</param>
-	/// <param name="typeToConvert">The type to convert.</param>
-	/// <param name="options">An object that specifies serialization options to use.</param>
-	/// <returns>The converted value.</returns>
-	public override EvaluationResults Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-	{
-		throw new NotImplementedException();
-	}
-
-	/// <summary>Writes a specified value as JSON.</summary>
-	/// <param name="writer">The writer to write to.</param>
-	/// <param name="value">The value to convert to JSON.</param>
-	/// <param name="options">An object that specifies serialization options to use.</param>
-	public override void Write(Utf8JsonWriter writer, EvaluationResults value, JsonSerializerOptions options)
-	{
-		if (value.Exclude) return;
-
-		writer.WriteStartObject();
-
-		writer.WriteBoolean("valid", value.IsValid);
-
-		if (value.Format == OutputFormat.Hierarchical || value.Parent != null)
-		{
-			writer.WritePropertyName("keywordLocation");
-			options.Write(writer, value.EvaluationPath, JsonSchemaSerializerContext.Default.JsonPointer);
-
-			writer.WritePropertyName("absoluteKeywordLocation");
-			options.Write(writer, value.SchemaLocation, JsonSchemaSerializerContext.Default.Uri);
-
-			writer.WritePropertyName("instanceLocation");
-			options.Write(writer, value.InstanceLocation, JsonSchemaSerializerContext.Default.JsonPointer);
-		}
-
-		bool skipCloseObject = false;
-		if (!value.IsValid)
-		{
-			if (value.HasErrors && value.Errors!.TryGetValue(string.Empty, out var localError))
-				writer.WriteString("error", localError);
-
-			if (value.Format == OutputFormat.Hierarchical)
-			{
-				if ((value.HasErrors && value.Errors!.Any(x => x.Key != string.Empty)) || value.Details.Any())
-				{
-					writer.WritePropertyName("errors");
-
-					writer.WriteStartArray();
-
-					foreach (var result in value.Details)
-					{
-						options.Write(writer, result, JsonSchemaSerializerContext.Default.EvaluationResults);
-					}
-
-					if (value.HasErrors)
-					{
-						foreach (var error in value.Errors!)
-						{
-							WriteError(writer, value, error.Key, error.Value, options);
-						}
-					}
-
-					writer.WriteEndArray();
-				}
-			}
-			else
-			{
-				if (value.HasDetails)
-				{
-					writer.WritePropertyName("errors");
-					writer.WriteStartArray();
-
-					foreach (var result in value.Details)
-					{
-						options.Write(writer, result, JsonSchemaSerializerContext.Default.EvaluationResults);
-					}
-					writer.WriteEndArray();
-				}
-
-				if (value.HasErrors && value.Errors!.Any(x => x.Key != string.Empty))
-				{
-					skipCloseObject = true;
-					writer.WriteEndObject();
-					foreach (var error in value.Errors!)
-					{
-						WriteError(writer, value, error.Key, error.Value, options);
-					}
-				}
-			}
-		}
-		else
-		{
-			if (value.Format == OutputFormat.Hierarchical)
-			{
-				if (value.AnnotationsToSerialize != null || value.Details.Any())
-				{
-					writer.WritePropertyName("annotations");
-					writer.WriteStartArray();
-
-					var annotations = value.AnnotationsToSerialize?.Select(x => new Annotation(x.Key, x.Value, value.EvaluationPath.Combine(x.Key))).ToArray();
-
-					// this too
-
-					foreach (var result in value.Details)
-					{
-						var annotation = annotations?.SingleOrDefault(a => a.Source.Equals(result.EvaluationPath));
-						if (annotation != null)
-						{
-							WriteAnnotation(writer, value, annotation, options);
-						}
-						else
-						{
-							options.Write(writer, result, JsonSchemaSerializerContext.Default.EvaluationResults);
-						}
-					}
-
-					if (annotations != null)
-					{
-						foreach (var annotation in annotations)
-						{
-							WriteAnnotation(writer, value, annotation, options);
-						}
-					}
-
-					writer.WriteEndArray();
-				}
-			}
-			else
-			{
-				var annotations = value.AnnotationsToSerialize?.Select(x => new Annotation(x.Key, x.Value, value.EvaluationPath.Combine(x.Key))).ToArray() ?? [];
-
-				if (value.HasDetails)
-				{
-					writer.WritePropertyName("annotations");
-					writer.WriteStartArray();
-
-					foreach (var result in value.Details)
-					{
-						var annotation = annotations.SingleOrDefault(a => a.Source.Equals(result.EvaluationPath));
-						if (annotation != null) continue;
-
-						options.Write(writer, result, JsonSchemaSerializerContext.Default.EvaluationResults);
-					}
-					writer.WriteEndArray();
-				}
-
-				if (value.HasAnnotations)
-				{
-					skipCloseObject = true;
-					writer.WriteEndObject();
-					foreach (var annotation in annotations)
-					{
-						WriteAnnotation(writer, value, annotation, options);
-					}
-				}
-			}
-		}
-
-		if (!skipCloseObject)
-			writer.WriteEndObject();
-	}
-
-	private static void WriteError(Utf8JsonWriter writer, EvaluationResults value, string keyword, string error, JsonSerializerOptions options)
-	{
-		writer.WriteStartObject();
-
-		writer.WriteBoolean("valid", value.IsValid);
-
-		writer.WritePropertyName("keywordLocation");
-		options.Write(writer, value.EvaluationPath.Combine(keyword), JsonSchemaSerializerContext.Default.JsonPointer);
-
-		writer.WritePropertyName("absoluteKeywordLocation");
-		if (value.SchemaLocation.OriginalString.Contains('#'))
-			options.Write(writer, value.SchemaLocation.OriginalString + $"/{keyword}", JsonSchemaSerializerContext.Default.String);
-		else
-			options.Write(writer, value.SchemaLocation.OriginalString + $"#/{keyword}", JsonSchemaSerializerContext.Default.String);
-
-		writer.WritePropertyName("instanceLocation");
-		options.Write(writer, value.InstanceLocation, JsonSchemaSerializerContext.Default.JsonPointer);
-
-		writer.WritePropertyName("error");
-		options.Write(writer, error, JsonSchemaSerializerContext.Default.String);
-
-		writer.WriteEndObject();
-	}
-
-	private static void WriteAnnotation(Utf8JsonWriter writer, EvaluationResults value, Annotation annotation, JsonSerializerOptions options)
-	{
-		writer.WriteStartObject();
-
-		writer.WriteBoolean("valid", value.IsValid);
-
-		writer.WritePropertyName("keywordLocation");
-		options.Write(writer, annotation.Source, JsonSchemaSerializerContext.Default.JsonPointer);
-
-		writer.WritePropertyName("absoluteKeywordLocation");
-		if (value.SchemaLocation.OriginalString.Contains('#'))
-			options.Write(writer, value.SchemaLocation.OriginalString + $"/{annotation.Owner}", JsonSchemaSerializerContext.Default.String);
-		else
-			options.Write(writer, value.SchemaLocation.OriginalString + $"#/{annotation.Owner}", JsonSchemaSerializerContext.Default.String);
-
-		writer.WritePropertyName("instanceLocation");
-		options.Write(writer, value.InstanceLocation, JsonSchemaSerializerContext.Default.JsonPointer);
-
-		writer.WritePropertyName("annotation");
-		options.Write(writer, annotation.Value, JsonSchemaSerializerContext.Default.JsonNode!);
 
 		writer.WriteEndObject();
 	}

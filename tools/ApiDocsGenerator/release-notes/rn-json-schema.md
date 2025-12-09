@@ -4,6 +4,96 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "09.01"
 ---
+# [8.0.0](https://github.com/gregsdennis/json-everything/pull/952) {#release-schema-8.0.0}
+
+Complete overhaul of library, focusing on performance, memory allcoations, usability, and extensibility.
+
+## Breaking changes
+
+- `JsonSchema`
+  - runs on `JsonElement` instead of `JsonNode`
+    - improves memory manangement
+    - ideal since schema evaluation is read-only
+    - affects mostly every type
+  - split evaluation into two phases: build and evaluation
+    - allows users to better control how schemas are reused
+    - separate build and evaluation options
+  - while still serializable, merely encodes the inner `JsonElement`
+    - no need for keywords to be serializable
+  - data access extension removed
+    - they don't make sense with the `JsonElement` source exposed (`.Root.Source`)
+  - `.Empty` removed
+  - `.Keywords` removed
+  - indexer removed
+  - `.GetKeyword<T>()` & `.TryGetKeyword<T>()` removed
+  - `.FromStream()` removed
+  - `.Root added`
+  - `.Build(JsonElement, BuildOptions)` added
+  - `.GetConstraints()` replaced with `.BuildNode(BuildContext)`
+- `IJsonSchemaKeyword` replaced with `IKeywordHandler`
+  - all keywords moved into `.Keywords` namespace
+  - keyword classes now focus on a single JSON Schema version, with older versions having their own classes
+  - keywords are singletons and stateless
+- `KeywordEvaluation`
+  - completely repurposed for new design, basically nothing the same
+- `EvaluationOptions`
+  - `.EvaluateAs` removed, replaced by `BuildOptions.Dialect`
+  - `.ValidateAgainstMetaSchema` removed
+  - `.SchemaRegistry` moved to `BuildOptions`
+  - `.OnlyKnownKeywords` & `.ProcessCustomKeywords` removed (supported through dialects)
+  - `.AllowReferencesIntoUnknownKeywords` removed (always supported)
+- `EvaluationContext`
+  - now a struct
+  - `.EvaluatingAs` removed
+    - not needed with single-spec keyword handlers
+  - `.InstanceRoot`, `.Instance`, and `.InstanceLocation` added
+  - `.EvaluationPath` added
+  - `.SchemaRegistry` added
+  - `.RefIgnoresSiblingKeywords` added
+  - `.EvaluatedKeywords` added
+- `EvaluationResults`
+  - `.HasAnnotation`, `.HasErrors`, and `.HasDetails` removed, check relevant property for null
+  - `.SetAnnotation()`, `.TryGetAnnotation()`, and `.GetAllAnotations()` removed
+  - `.Fail()` removed
+  - `Pre202012EvaluationResultsJsonConverter` for legacy serialization support removed
+- `IBaseDocument.FindSubschema()` signature updated
+- `SchemaRegistry`
+  - `.Fetch` function signature updated
+  - `.RegisterNewSpecVersion()` removed
+  - `.Initialize()` removed
+- `Vocabulary`
+  - consolidated static members from `Vocabularies`
+- `JsonSchemaBuilder`
+  - now accepts a `BuildOptions`
+  - `.Empty`, `.True`, and `.False` added
+  - implicit conversions from `bool` added
+  - all extensions for applicator keywords updated to accept `JsonSchemaBuilder` instead of `JsonSchema`
+- `ConstraintExtensions` removed (not needed)
+- `JsonNodeBaseDocument` replaced with `JsonElementBaseDocument`
+- `JsonNodeExtensions` removed
+- `MetaSchemas` class reorganized
+- `KeywordConstraint` removed
+- `SchemaConstraint` & `SchemaEvaluation` removed
+- `SpecVersion` enum removed
+- `SchemaSpecVersionAttribute` removed
+- `SchemaKeywordAttribute` removed
+- `VocabularyAttribute` removed
+- `SchemaKeywordRegistry` removed in favor of dialects concept
+- `UriExtensions` removed
+
+## Other changes
+
+- Added `Dialect` & `DialectRegistry` classes
+- Added `JsonSchemaNode` class
+  - node for graph that describes the compiled schema
+- Added `KeywordData` class
+  - describes compiled keyword information
+- Added `BuildOptions` & `BuildContext`
+  - designed for building the same schema under multiple differing condition sets, like different dialects and different registries
+- Added `DynamicScope.Count`
+- Add .Net 10.0 support.
+- Update Nuget references.
+
 # [7.4.0](https://github.com/json-everything/json-everything/pull/921) {#release-schema-7.4.0}
 
 Replaces `ValidatingJsonConverter.OutputFormat` and `.RequireFormatValidation` with a full `.Options` property.  Previous properties have been marked obsolete and redirected to new property.  Supports _JsonSchema.Net.Generation_ v5.1.0.

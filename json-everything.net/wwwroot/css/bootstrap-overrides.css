@@ -35,3 +35,24 @@ select.form-control {
 .height-fit-content {
   height: fit-content;
 }
+
+html[data-bs-theme="light"] .form-control {
+	background: white;
+	color: rgb(33, 37, 41);
+	border-color: rgba(0, 0, 0, 0.25);
+}
+
+	html[data-bs-theme="light"] .form-control:focus {
+		background: white;
+		color: rgb(33, 37, 41);
+		border-color: rgba(80, 10, 136, 0.5);
+		box-shadow: 0 0 0 0.2rem rgba(80, 10, 136, 0.15);
+	}
+
+	html[data-bs-theme="light"] select.form-control * {
+		background: white;
+	}
+
+html[data-bs-theme="light"] .table {
+	color: rgb(33, 37, 41);
+}

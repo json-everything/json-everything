@@ -9,6 +9,7 @@ internal class RefTests
 	[Test]
 	public void PointerRef()
 	{
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
 		var schema = JsonSchema.FromText(
 			"""
 			{
@@ -22,14 +23,15 @@ internal class RefTests
 			    },
 			    "minItems": 2
 			}
-			""");
+			""", buildOptions);
 
-		Run(schema);
+		Run(schema, buildOptions);
 	}
 
 	[Test]
 	public void AnchorRef()
 	{
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
 		var schema = JsonSchema.FromText(
 			"""
 			{
@@ -44,15 +46,16 @@ internal class RefTests
 			    },
 			    "minItems": 2
 			}
-			""");
+			""", buildOptions);
 
-		Run(schema);
+		Run(schema, buildOptions);
 	}
 
 	[Test]
 	public void ExternalRef()
 	{
-		var foo = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		var foo = new JsonSchemaBuilder(buildOptions)
 			.Id("https://json-everything.test/foo")
 			.Type(SchemaValueType.Integer)
 			.ExclusiveMinimum(0)
@@ -65,18 +68,16 @@ internal class RefTests
 			    "items": { "$ref": "https://json-everything.test/foo" },
 			    "minItems": 2
 			}
-			""");
+			""", buildOptions);
 
-		var options = new EvaluationOptions();
-		options.SchemaRegistry.Register(foo);
-
-		Run(schema, options);
+		Run(schema, buildOptions);
 	}
 
 	[Test]
 	public void ExternalPointerRef()
 	{
-		var foo = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		var foo = new JsonSchemaBuilder(buildOptions)
 			.Id("https://json-everything.test/foo")
 			.Defs(
 				("positiveInteger", new JsonSchemaBuilder()
@@ -93,18 +94,16 @@ internal class RefTests
 			    "items": { "$ref": "https://json-everything.test/foo#/$defs/positiveInteger" },
 			    "minItems": 2
 			}
-			""");
+			""", buildOptions);
 
-		var options = new EvaluationOptions();
-		options.SchemaRegistry.Register(foo);
-
-		Run(schema, options);
+		Run(schema, buildOptions);
 	}
 
 	[Test]
 	public void ExternalAnchorRef()
 	{
-		var foo = new JsonSchemaBuilder()
+		var buildOptions = new BuildOptions { SchemaRegistry = new() };
+		var foo = new JsonSchemaBuilder(buildOptions)
 			.Id("https://json-everything.test/foo")
 			.Defs(
 				("positiveInteger", new JsonSchemaBuilder()
@@ -122,11 +121,8 @@ internal class RefTests
 			    "items": { "$ref": "https://json-everything.test/foo#positiveInteger" },
 			    "minItems": 2
 			}
-			""");
+			""", buildOptions);
 
-		var options = new EvaluationOptions();
-		options.SchemaRegistry.Register(foo);
-
-		Run(schema, options);
+		Run(schema, buildOptions);
 	}
 }

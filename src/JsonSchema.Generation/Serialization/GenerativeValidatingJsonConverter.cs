@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using Json.Schema.Serialization;
@@ -9,12 +10,18 @@ namespace Json.Schema.Generation.Serialization;
 /// Extends <see cref="ValidatingJsonConverter"/> to also allow for
 /// schema generation using <see cref="GenerateJsonSchemaAttribute"/>.
 /// </summary>
+[RequiresDynamicCode("JSON serialization and deserialization might require types that cannot be statically analyzed and might need runtime code generation. Use System.Text.Json source generation for native AOT applications.")]
 public class GenerativeValidatingJsonConverter : ValidatingJsonConverter
 {
 	/// <summary>
+	/// Gets the build options used for the schema build step.
+	/// </summary>
+	public BuildOptions BuildOptions { get; } = new();
+
+	/// <summary>
 	/// Provides options for the generator.
 	/// </summary>
-	public SchemaGeneratorConfiguration GeneratorConfiguration { get; } = new();
+	public SchemaGeneratorConfiguration? GeneratorConfiguration { get; } = new();
 
 	/// <summary>When overridden in a derived class, determines whether the converter instance can convert the specified object type.</summary>
 	/// <param name="typeToConvert">The type of the object to check whether it can be converted by this converter instance.</param>
@@ -35,7 +42,9 @@ public class GenerativeValidatingJsonConverter : ValidatingJsonConverter
 		var generateAttribute = type.GetCustomAttributes(typeof(GenerateJsonSchemaAttribute)).SingleOrDefault();
 		if (generateAttribute is not null)
 		{
-			var schema = new JsonSchemaBuilder().FromType(type, GeneratorConfiguration);
+#pragma warning disable IL3050
+			var schema = new JsonSchemaBuilder(BuildOptions).FromType(type, GeneratorConfiguration);
+#pragma warning restore IL3050
 			return schema;
 		}
 

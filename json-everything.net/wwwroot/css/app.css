@@ -18,6 +18,11 @@ body {
 	color: rgb(216, 216, 216);
 }
 
+html[data-bs-theme="light"] body {
+	background: rgb(248, 249, 250);
+	color: rgb(33, 37, 41);
+}
+
 main {
 	display: flex;
 	flex-direction: column;
@@ -164,6 +169,11 @@ a.navbar-brand {
 	padding: 2px 6px;
 }
 
+html[data-bs-theme="light"] .new-label {
+	background-color: rgb(200, 200, 205);
+	color: rgb(33, 37, 41);
+}
+
 /*--- BUTTON ---*/
 
 .btn-primary {
@@ -253,17 +263,20 @@ a.navbar-brand {
 /*--- TOOLTIPS ---*/
 
 .tooltip-icon {
+	position: relative;
 }
 
 .tooltip-text {
 	visibility: hidden;
-	position: absolute;
-	z-index: 99;
+	position: fixed;
+	z-index: 999;
+	min-width: 200px;
 	max-width: 400px;
 	font-size: 14px;
 	background-color: #271a3b;
 	border-radius: 5px;
 	padding: 10px;
+	pointer-events: none;
 }
 
 .tooltip-text-small {
@@ -280,10 +293,29 @@ a.navbar-brand {
 }
 
 .header-tooltip {
-  top: 50px;
+  position: absolute;
+  top: 30px;
   transform: translateX(-65%);
   text-wrap: nowrap;
   max-width: none;
+  color: rgb(175, 176, 177) !important;
+}
+
+html[data-bs-theme="light"] .tooltip-text {
+	background-color: #f8f9fa;
+	color: rgb(33, 37, 41);
+	border: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+html[data-bs-theme="light"] .tooltip-text code {
+	background-color: rgba(0, 0, 0, 0.05);
+	color: rgb(33, 37, 41);
+}
+
+html[data-bs-theme="light"] .header-tooltip {
+	background-color: #271a3b;
+	color: rgb(175, 176, 177);
+	border: none;
 }
 
 /*--- DOCS ---*/
@@ -332,6 +364,11 @@ code {
 	unicode-bidi: normal;
 }
 
+html[data-bs-theme="light"] code {
+	color: #c7254e;
+	background-color: #f9f2f4;
+}
+
 blockquote {
 	padding: 9.5px;
 	margin: 0 20px 15px;
@@ -342,6 +379,10 @@ blockquote {
 	border-radius: 6px;
 	border: none;
 	unicode-bidi: normal;
+}
+
+html[data-bs-theme="light"] blockquote {
+	background-color: rgba(0, 0, 0, 0.05);
 }
 
 	blockquote > p {

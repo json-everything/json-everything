@@ -5,7 +5,6 @@ using System.Globalization;
 using System.Resources;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
-using System.Text.Json.Nodes;
 using System.Text.Json.Serialization.Metadata;
 
 namespace Json.Schema;
@@ -32,7 +31,19 @@ public static partial class ErrorMessages
     {
     }
 
-    private static string Get(CultureInfo? culture = null, [CallerMemberName] string? key = null)
+	/// <summary>
+	/// Retrieves a localized error message string for the specified key and culture.
+	/// </summary>
+	/// <remarks>If the <paramref name="key"/> parameter begins with "Get", that prefix is removed before looking up
+	/// the resource. This method is typically used within error-handling code to retrieve user-facing error messages based
+	/// on the calling member.</remarks>
+	/// <param name="culture">The culture to use when retrieving the error message. If null, the default culture or the current thread's culture
+	/// is used.</param>
+	/// <param name="key">The resource key identifying the error message to retrieve. If not specified, the caller's member name is used.</param>
+	/// <returns>A localized error message string corresponding to the specified key and culture.</returns>
+	/// <exception cref="ArgumentNullException">Thrown if <paramref name="key"/> is null.</exception>
+	/// <exception cref="KeyNotFoundException">Thrown if an error message resource with the specified key cannot be found.</exception>
+    public static string Get(CultureInfo? culture = null, [CallerMemberName] string? key = null)
     {
         if (key == null) throw new ArgumentNullException(nameof(key), "Cannot get a null-keyed resource");
 
@@ -79,6 +90,16 @@ public static partial class ErrorMessages
 	/// <param name="name">The token name (without brackets)</param>
 	/// <param name="value">The value.</param>
 	/// <returns>The detokenized string.</returns>
+	public static string ReplaceToken(this string message, string name, bool value) => 
+		ReplaceToken(message, name, value, JsonSchemaSerializerContext.Default.Boolean);
+
+	/// <summary>
+	/// Replaces tokens in the form of `[[token]]` with a specified value, serialized as JSON.
+	/// </summary>
+	/// <param name="message">The message template.</param>
+	/// <param name="name">The token name (without brackets)</param>
+	/// <param name="value">The value.</param>
+	/// <returns>The detokenized string.</returns>
 	public static string ReplaceToken(this string message, string name, int value) => 
 		ReplaceToken(message, name, value, JsonSchemaSerializerContext.Default.Int32);
 
@@ -89,9 +110,8 @@ public static partial class ErrorMessages
 	/// <param name="name">The token name (without brackets)</param>
 	/// <param name="value">The value.</param>
 	/// <returns>The detokenized string.</returns>
-	public static string ReplaceToken(this string message, string name, uint value) =>
-		ReplaceToken(message, name, value, JsonSchemaSerializerContext.Default.UInt32);
-
+	public static string ReplaceToken(this string message, string name, long value) =>
+		ReplaceToken(message, name, value, JsonSchemaSerializerContext.Default.Int64);
 
 	/// <summary>
 	/// Replaces tokens in the form of `[[token]]` with a specified value, serialized as JSON.
@@ -102,6 +122,16 @@ public static partial class ErrorMessages
 	/// <returns>The detokenized string.</returns>
 	public static string ReplaceToken(this string message, string name, decimal value) => 
 		ReplaceToken(message, name, value, JsonSchemaSerializerContext.Default.Decimal);
+
+	/// <summary>
+	/// Replaces tokens in the form of `[[token]]` with a specified value, serialized as JSON.
+	/// </summary>
+	/// <param name="message">The message template.</param>
+	/// <param name="name">The token name (without brackets)</param>
+	/// <param name="value">The value.</param>
+	/// <returns>The detokenized string.</returns>
+	public static string ReplaceToken(this string message, string name, double value) => 
+		ReplaceToken(message, name, value, JsonSchemaSerializerContext.Default.Double);
 
 	/// <summary>
 	/// Replaces tokens in the form of `[[token]]` with a specified value, serialized as JSON.
@@ -140,6 +170,6 @@ public static partial class ErrorMessages
 	/// <param name="name">The token name (without brackets)</param>
 	/// <param name="value">The value.</param>
 	/// <returns>The detokenized string.</returns>
-	public static string ReplaceToken(this string message, string name, JsonNode value) =>
-		ReplaceToken(message, name, value, JsonSchemaSerializerContext.Default.JsonNode);
+	public static string ReplaceToken(this string message, string name, JsonElement value) =>
+		ReplaceToken(message, name, value, JsonSchemaSerializerContext.Default.JsonElement);
 }
