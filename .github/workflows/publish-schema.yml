@@ -26,7 +26,7 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: 9.0.x
+          dotnet-version: 10.0.x
       - name: Install dependencies
         run: dotnet restore
       # Ideally I'd like to build once, but the pack doesn't seem to work
