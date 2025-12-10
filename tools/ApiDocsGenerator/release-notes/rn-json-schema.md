@@ -10,6 +10,8 @@ Added `FormatRegistry` to replace the `Formats` static functionality.  Marked `F
 
 Added error message to `format` keyword validation.
 
+Made `JsonSchemaBuilder.Empty`, `.True`, and `.False` read-only.
+
 # [8.0.0](https://github.com/gregsdennis/json-everything/pull/952) {#release-schema-8.0.0}
 
 Complete overhaul of library, focusing on performance, memory allcoations, usability, and extensibility.

@@ -12,6 +12,7 @@ namespace Json.Schema;
 public class JsonSchemaBuilder
 {
 	private readonly BuildOptions? _buildOptions;
+	private readonly bool _readOnly;
 	internal readonly JsonNode Keywords = new JsonObject();
 
 	/// <summary>
@@ -20,7 +21,7 @@ public class JsonSchemaBuilder
 	/// <remarks>Use this property to obtain a schema with no defined constraints or properties. This can be useful
 	/// as a starting point for building more complex schemas or when a schema is required but no validation is
 	/// needed.</remarks>
-	public static JsonSchemaBuilder Empty { get; } = new();
+	public static JsonSchemaBuilder Empty { get; } = new(new JsonObject());
 
 	/// <summary>
 	/// Gets a schema builder that creates a schema which always validates as <see langword="true"/>.
@@ -47,9 +48,10 @@ public class JsonSchemaBuilder
 		_buildOptions = buildOptions;
 	}
 
-	private JsonSchemaBuilder(bool value)
+	private JsonSchemaBuilder(JsonNode value)
 	{
 		Keywords = value;
+		_readOnly = true;
 	}
 
 	/// <summary>
@@ -59,6 +61,9 @@ public class JsonSchemaBuilder
 	/// <param name="value">The value.</param>
 	public void Add(string keyword, JsonNode? value)
 	{
+		if (_readOnly)
+			throw new InvalidOperationException("Cannot edit the static builders.");
+
 		Keywords[keyword] = value;
 	}
 
@@ -69,6 +74,9 @@ public class JsonSchemaBuilder
 	/// <param name="builder">Another builder.</param>
 	public void Add(string keyword, JsonSchemaBuilder builder)
 	{
+		if (_readOnly)
+			throw new InvalidOperationException("Cannot edit the static builders.");
+
 		Keywords[keyword] = builder.Keywords.DeepClone();
 	}
 
@@ -79,6 +87,9 @@ public class JsonSchemaBuilder
 	/// <param name="builders">Another builder.</param>
 	public void Add(string keyword, IEnumerable<JsonSchemaBuilder> builders)
 	{
+		if (_readOnly)
+			throw new InvalidOperationException("Cannot edit the static builders.");
+
 		Keywords[keyword] = new JsonArray(builders.Select(x => (JsonNode?)x.Keywords.DeepClone()).ToArray());
 	}
 
@@ -89,6 +100,9 @@ public class JsonSchemaBuilder
 	/// <param name="builders">Another builder.</param>
 	public void Add(string keyword, IEnumerable<(string, JsonSchemaBuilder)> builders)
 	{
+		if (_readOnly)
+			throw new InvalidOperationException("Cannot edit the static builders.");
+
 		Keywords[keyword] = new JsonObject(builders.ToDictionary(x => x.Item1, x => (JsonNode?)x.Item2.Keywords.DeepClone()));
 	}
 
@@ -99,6 +113,9 @@ public class JsonSchemaBuilder
 	/// <param name="builders">Another builder.</param>
 	public void Add(string keyword, IEnumerable<KeyValuePair<string, JsonSchemaBuilder>> builders)
 	{
+		if (_readOnly)
+			throw new InvalidOperationException("Cannot edit the static builders.");
+
 		Keywords[keyword] = new JsonObject(builders.ToDictionary(x => x.Key, x => (JsonNode?)x.Value.Keywords.DeepClone()));
 	}
 
