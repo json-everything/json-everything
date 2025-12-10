@@ -31,6 +31,12 @@ public class EvaluationOptions
 	public bool RequireFormatValidation { get; set; }
 
 	/// <summary>
+	/// The local format registry.  If a format is not found here, it will
+	/// automatically check the global registry as well.
+	/// </summary>
+	public FormatRegistry FormatRegistry { get; set; } = FormatRegistry.Global;
+
+	/// <summary>
 	/// If enabled, annotations that are dropped as a result of a failing
 	/// subschema will be reported in a `droppedAnnotations` property in
 	/// the output.

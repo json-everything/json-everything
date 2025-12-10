@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -12,20 +10,6 @@ namespace Json.Schema;
 /// </summary>
 public static partial class Formats
 {
-	private static readonly ConcurrentDictionary<string, Format> _registry;
-	private static readonly string[] _timeFormats =
-	{
-		"HH':'mm':'ss'.'fffffffK",
-		"HH':'mm':'ss'.'ffffffK",
-		"HH':'mm':'ss'.'fffffK",
-		"HH':'mm':'ss'.'ffffK",
-		"HH':'mm':'ss'.'fffK",
-		"HH':'mm':'ss'.'ffK",
-		"HH':'mm':'ss'.'fK",
-		"HH':'mm':'ssK",
-		"HH':'mm':'ss"
-	};
-
 #if NET7_0_OR_GREATER
 	[GeneratedRegex(@"^((?:([0-9]{4}-[0-9]{2}-[0-9]{2})([Tt_]| )([0-9]{2}:[0-9]{2}:[0-9]{2}(?:\.[0-9]+)?))([Zz]|[\+-][0-9]{2}:[0-9]{2}))$", RegexOptions.Compiled, 250)]
 	private static partial Regex DateTimeRegex();
@@ -130,51 +114,25 @@ public static partial class Formats
 	/// </summary>
 	public static readonly Format Uuid = new PredicateFormat("uuid", CheckUuid);
 
-	static Formats()
-	{
-		_registry = new ConcurrentDictionary<string, Format>(new Dictionary<string, Format>() {
-			{ Date.Key, Date },
-			{ DateTime.Key, DateTime },
-			{ Duration.Key, Duration },
-			{ Email.Key, Email },
-			{ Hostname.Key, Hostname },
-			{ IdnEmail.Key, IdnEmail },
-			{ IdnHostname.Key, IdnHostname },
-			{ Ipv4.Key, Ipv4 },
-			{ Ipv6.Key, Ipv6 },
-			{ Iri.Key, Iri },
-			{ IriReference.Key, IriReference },
-			{ JsonPointer.Key, JsonPointer },
-			{ Regex.Key, Regex },
-			{ RelativeJsonPointer.Key, RelativeJsonPointer },
-			{ Time.Key, Time },
-			{ Uri.Key, Uri },
-			{ UriReference.Key, UriReference },
-			{ UriTemplate.Key, UriTemplate },
-			{ Uuid.Key, Uuid }
-		});
-	}
-
 	/// <summary>
 	/// Gets a format by its key.
 	/// </summary>
 	/// <param name="key">The key.</param>
 	/// <returns>The specified format, if known; otherwise null.</returns>
+	[Obsolete("This just calls FormatRegistry.Global.Get().  Use that instead.")]
 	public static Format Get(string key)
 	{
-		return _registry.TryGetValue(key, out var format) ? format : CreateUnknown(key);
+		return FormatRegistry.Global.Get(key);
 	}
 
 	/// <summary>
 	/// Registers a new format.
 	/// </summary>
 	/// <param name="format">The format.</param>
+	[Obsolete("This just calls FormatRegistry.Global.Register().  Use that instead.")]
 	public static void Register(Format format)
 	{
-		if (format == null)
-			throw new ArgumentNullException(nameof(format));
-
-		_registry[format.Key] = format;
+		FormatRegistry.Global.Register(format);
 	}
 
 	/// <summary>
