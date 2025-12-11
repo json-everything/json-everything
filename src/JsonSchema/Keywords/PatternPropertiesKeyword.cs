@@ -100,10 +100,11 @@ public class PatternPropertiesKeyword : IKeywordHandler
 			var regex = regexes[pattern];
 
 			var evaluationPath = context.EvaluationPath.Combine(Name, pattern);
-			var toEvaluate = properties.Where(x => regex.IsMatch(x.Name)).ToArray();
 
-			foreach (var property in toEvaluate)
+			foreach (var property in properties)
 			{
+				if (!regex.IsMatch(property.Name)) continue;
+
 				propertyNames.Add(property.Name);
 
 				var propContext = context with

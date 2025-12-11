@@ -20,12 +20,45 @@ public class UniqueKeysKeyword : IKeywordHandler
 			if (!x.HasValue) return !y.HasValue;
 			if (!y.HasValue) return false;
 
-			return JsonElementEqualityComparer.Instance.Equals(x.Value, y.Value);
+			return x.Value.IsEquivalentTo(y.Value);
 		}
 
 		public int GetHashCode(JsonElement? obj)
 		{
-			return !obj.HasValue ? 0 : JsonElementEqualityComparer.Instance.GetHashCode(obj.Value);
+			if (!obj.HasValue) return 0;
+			
+			// For numbers, use decimal value for hash to ensure 1, 1.0, 1.00 hash the same
+			if (obj.Value.ValueKind == JsonValueKind.Number)
+				return obj.Value.GetDecimal().GetHashCode();
+			
+			return obj.Value.GetEquivalenceHashCode();
+		}
+	}
+
+	private class JsonElementListComparer : IEqualityComparer<List<JsonElement?>>
+	{
+		public bool Equals(List<JsonElement?>? x, List<JsonElement?>? y)
+		{
+			if (ReferenceEquals(x, y)) return true;
+			if (x is null || y is null) return false;
+			if (x.Count != y.Count) return false;
+
+			return x.SequenceEqual(y, MaybeJsonNodeComparer.Comparer);
+		}
+
+		public int GetHashCode(List<JsonElement?>? obj)
+		{
+			if (obj is null) return 0;
+
+			unchecked
+			{
+				int hash = 17;
+				foreach (var item in obj)
+				{
+					hash = hash * 31 + MaybeJsonNodeComparer.Comparer.GetHashCode(item!);
+				}
+				return hash;
+			}
 		}
 	}
 
@@ -91,16 +124,18 @@ public class UniqueKeysKeyword : IKeywordHandler
 			collections.Add(values);
 		}
 
+		var seen = new Dictionary<List<JsonElement?>, int>(new JsonElementListComparer());
 		var matchedIndexPairs = new List<(int, int)>();
+
 		for (int i = 0; i < collections.Count; i++)
 		{
-			for (int j = i + 1; j < collections.Count; j++)
+			if (seen.TryGetValue(collections[i], out var firstIndex))
 			{
-				var a = collections[i];
-				var b = collections[j];
-
-				if (a.SequenceEqual(b, MaybeJsonNodeComparer.Comparer))
-					matchedIndexPairs.Add((i, j));
+				matchedIndexPairs.Add((firstIndex, i));
+			}
+			else
+			{
+				seen[collections[i]] = i;
 			}
 		}
 

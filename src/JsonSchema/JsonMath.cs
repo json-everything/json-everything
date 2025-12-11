@@ -30,18 +30,24 @@ public static class JsonMath
 		var aSpan = a.GetRawText().AsSpan();
 		var bSpan = b.GetRawText().AsSpan();
 
-		var (aNeg, aDigitStart, aDigitLen, aExp) = NormalizeNumber(aSpan);
-		var (bNeg, bDigitStart, bDigitLen, bExp) = NormalizeNumber(bSpan);
+	var (aNeg, aDigitStart, aDigitLen, aExp) = NormalizeNumber(aSpan);
+	var (bNeg, bDigitStart, bDigitLen, bExp) = NormalizeNumber(bSpan);
 
-		if (aNeg != bNeg)
-			return aNeg ? -1 : 1;
+	// Handle zero values - if either number is zero (digitLen == 0), handle specially
+	if (aDigitLen == 0 && bDigitLen == 0)
+		return 0; // both are zero
+	if (aDigitLen == 0)
+		return bNeg ? 1 : -1; // a is zero, b is non-zero
+	if (bDigitLen == 0)
+		return aNeg ? -1 : 1; // b is zero, a is non-zero
 
-		int signMultiplier = aNeg ? -1 : 1;
+	if (aNeg != bNeg)
+		return aNeg ? -1 : 1;
 
-		if (aExp != bExp)
-			return aExp > bExp ? signMultiplier : -signMultiplier;
+	int signMultiplier = aNeg ? -1 : 1;
 
-		int aIndex = aDigitStart;
+	if (aExp != bExp)
+		return aExp > bExp ? signMultiplier : -signMultiplier;		int aIndex = aDigitStart;
 		int bIndex = bDigitStart;
 		int aDigitsCompared = 0;
 		int bDigitsCompared = 0;
