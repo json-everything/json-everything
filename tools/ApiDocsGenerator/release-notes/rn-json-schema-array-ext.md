@@ -4,6 +4,10 @@ title: JsonSchema.Net.ArrayExt
 icon: fas fa-tag
 order: "09.03"
 ---
+# [3.0.1](https://github.com/gregsdennis/json-everything/pull/959) {#release-schemaarrayext-3.0.1}
+
+Performance improvements for `uniqueKeys`.
+
 # [3.0.0](https://github.com/gregsdennis/json-everything/pull/822) {#release-schemaarrayext-3.0.0}
 
 Updated per _JsonSchema.Net_ v8.
