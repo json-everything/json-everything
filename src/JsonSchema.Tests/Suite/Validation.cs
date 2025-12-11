@@ -16,7 +16,7 @@ public class Validation
 	private const string _remoteSchemasPath = @"../../../../../ref-repos/JSON-Schema-Test-Suite/remotes";
 
 	private const bool _useExternal = false;
-	private const bool _runDraftNext = false;
+	private const bool _runDraftNext = true;
 	private const string _externalTestCasesPath = @"../../../../../../JSON-Schema-Test-Suite/tests";
 	private const string _externalRemoteSchemasPath = @"../../../../../../JSON-Schema-Test-Suite/remotes";
 
@@ -26,6 +26,11 @@ public class Validation
 		("hostname", "validation of A-label (punycode) host names"),
 		("idn-hostname", "validation of internationalized host names"),
 		("idn-hostname", "validation of separators in internationalized host names")
+	];
+
+	private static readonly string[] _supportedProposals =
+	[
+		//"propertyDependencies"
 	];
 
 	public static IEnumerable<TestCaseData> TestCases()
@@ -56,6 +61,14 @@ public class Validation
 		foreach (var fileName in fileNames)
 		{
 			var shortFileName = Path.GetFileNameWithoutExtension(fileName);
+
+			var filePath = fileName.Split('/', '\\');
+			var proposals = filePath.IndexOf("proposals");
+			if (proposals != -1 && proposals + 1 < filePath.Length)
+			{
+				var proposal = filePath[proposals + 1];
+				if (!_supportedProposals.Contains(proposal)) continue;
+			}
 
 			// adjust for format
 			evaluationOptions.RequireFormatValidation = fileName.Contains("format/".AdjustForPlatform());
