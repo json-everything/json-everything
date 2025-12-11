@@ -48,6 +48,8 @@ public class JsonMathTests
 	[TestCase("1.5E10", "1.5e10", 0)]
 	[TestCase("0.1", "0.2", -1)]
 	[TestCase("0.12", "0.13", -1)]
+	[TestCase("0.12", "0", 1)]
+	[TestCase("0.0", "0.6", -1)]
 	public void NumberCompare(string aJson, string bJson, int expected)
 	{
 		var a = JsonDocument.Parse(aJson).RootElement;

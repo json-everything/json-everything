@@ -13,6 +13,23 @@ namespace Json.Schema.Keywords;
 /// </remarks>
 public class UniqueItemsKeyword : IKeywordHandler
 {
+	private class JsonElementEquivalenceComparer : IEqualityComparer<JsonElement>
+	{
+		public bool Equals(JsonElement x, JsonElement y)
+		{
+			return x.IsEquivalentTo(y);
+		}
+
+		public int GetHashCode(JsonElement obj)
+		{
+			// For numbers, use decimal value for hash to ensure 1, 1.0, 1.00 hash the same
+			if (obj.ValueKind == JsonValueKind.Number)
+				return obj.GetDecimal().GetHashCode();
+			
+			return obj.GetEquivalenceHashCode();
+		}
+	}
+
 	/// <summary>
 	/// Gets the singleton instance of the <see cref="UniqueItemsKeyword"/>.
 	/// </summary>
@@ -65,21 +82,25 @@ public class UniqueItemsKeyword : IKeywordHandler
 		if (context.Instance.ValueKind != JsonValueKind.Array) return KeywordEvaluation.Ignore;
 		if (keyword.RawValue.ValueKind == JsonValueKind.False) return KeywordEvaluation.Ignore;
 
-		var valid = true;
-		var items = context.Instance.EnumerateArray().ToArray();
+		var seen = new Dictionary<JsonElement, int>(new JsonElementEquivalenceComparer());
 		List<string>? matches = null;
-		for (int i = 0; i < items.Length; i++)
+		
+		var i = 0;
+		foreach (var item in context.Instance.EnumerateArray())
 		{
-			for (int j = i + 1; j < items.Length; j++)
+			if (seen.TryGetValue(item, out var firstIndex))
 			{
-				if (items[i].IsEquivalentTo(items[j]))
-				{
-					valid = false;
-					matches ??= [];
-					matches.Add($"({i},{j})");
-				}
+				matches ??= [];
+				matches.Add($"({firstIndex},{i})");
 			}
+			else
+			{
+				seen[item] = i;
+			}
+			i++;
 		}
+
+		var valid = matches is null;
 
 		return new KeywordEvaluation
 		{

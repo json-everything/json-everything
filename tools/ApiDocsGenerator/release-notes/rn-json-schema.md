@@ -4,6 +4,12 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "09.01"
 ---
+# [8.0.1](https://github.com/gregsdennis/json-everything/pull/959) {#release-schema-8.0.2}
+
+Performance improvements for `additionalProperties`, `contains`, `dependentSchemas`, `patternProperties`, and `uniqueItems`.
+
+[#958](https://github.com/gregsdennis/json-everything/issues/958) - Bug fix in `JsonMath` for when comparing 0 with 0<x<1.
+
 # [8.0.1](https://github.com/gregsdennis/json-everything/pull/952) {#release-schema-8.0.1}
 
 Added `FormatRegistry` to replace the `Formats` static functionality.  Marked `Formats.Register()` and `Formats.Get()` obsolete and forwarded to `FormatRegistry.Global`.

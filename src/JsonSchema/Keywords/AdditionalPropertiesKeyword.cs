@@ -98,6 +98,12 @@ public class AdditionalPropertiesKeyword : IKeywordHandler
 
 		var knownProperties = (KnownProperties) keyword.Value!;
 
+		// Get evaluated properties from annotations instead of re-running regex matches
+		var evaluatedByPatterns = context.EvaluatedKeywords?
+			.SingleOrDefault(x => x.Keyword == "patternProperties")
+			.Annotation?.EnumerateArray().Select(p => p.GetString()!) ?? [];
+		var evaluatedByPatternsSet = new HashSet<string>(evaluatedByPatterns);
+
 		var subschemaEvaluations = new List<EvaluationResults>();
 		var subschema = keyword.Subschemas[0];
 
@@ -105,7 +111,7 @@ public class AdditionalPropertiesKeyword : IKeywordHandler
 		foreach (var instance in context.Instance.EnumerateObject())
 		{
 			if (knownProperties.Properties.Contains(instance.Name)) continue;
-			if (knownProperties.PatternProperties.Any(x => x.IsMatch(instance.Name))) continue;
+			if (evaluatedByPatternsSet.Contains(instance.Name)) continue;
 
 			var itemContext = context with
 			{

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using Json.Pointer;
@@ -55,6 +56,7 @@ public class DependentSchemasKeyword : IKeywordHandler
 	public virtual void BuildSubschemas(KeywordData keyword, BuildContext context)
 	{
 		var subschemas = new List<JsonSchemaNode>();
+		var propertyNames = new HashSet<string>();
 		foreach (var definition in keyword.RawValue.EnumerateObject())
 		{
 			var defContext = context with
@@ -63,9 +65,11 @@ public class DependentSchemasKeyword : IKeywordHandler
 				RelativePath = JsonPointer.Create(definition.Name)
 			};
 			subschemas.Add(JsonSchema.BuildNode(defContext));
+			propertyNames.Add(definition.Name);
 		}
 
 		keyword.Subschemas = subschemas.ToArray();
+		keyword.Value = propertyNames;
 	}
 
 	/// <summary>
@@ -78,19 +82,22 @@ public class DependentSchemasKeyword : IKeywordHandler
 	{
 		if (context.Instance.ValueKind != JsonValueKind.Object) return KeywordEvaluation.Ignore;
 
+		var propertyNames = (HashSet<string>)keyword.Value!;
 		var subschemaEvaluations = new List<EvaluationResults>();
 
-		foreach (var subschema in keyword.Subschemas)
+		foreach (var property in context.Instance.EnumerateObject())
 		{
-			var instance = subschema.RelativePath.Evaluate(context.Instance);
-			if (!instance.HasValue) continue;
+			if (!propertyNames.Contains(property.Name)) continue;
+
+			var schemaIndex = Array.FindIndex(keyword.Subschemas, s => s.RelativePath[0].ToString() == property.Name);
+			if (schemaIndex == -1) continue;
 
 			var propContext = context with
 			{
-				EvaluationPath = context.EvaluationPath.Combine(Name, subschema.RelativePath[0].ToString())
+				EvaluationPath = context.EvaluationPath.Combine(Name, property.Name)
 			};
 
-			subschemaEvaluations.Add(subschema.Evaluate(propContext));
+			subschemaEvaluations.Add(keyword.Subschemas[schemaIndex].Evaluate(propContext));
 		}
 
 		return new KeywordEvaluation

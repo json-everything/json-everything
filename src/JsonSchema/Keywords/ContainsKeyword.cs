@@ -87,6 +87,7 @@ public class ContainsKeyword : IKeywordHandler
 		var limits = (ContainsLimits)keyword.Value!;
 
 		var subschemaEvaluations = new List<EvaluationResults>();
+		var found = new List<int>();
 		var subschema = keyword.Subschemas[0];
 
 		var i = 0;
@@ -99,29 +100,27 @@ public class ContainsKeyword : IKeywordHandler
 				EvaluationPath = context.EvaluationPath.Combine(Name)
 			};
 
-			subschemaEvaluations.Add(subschema.Evaluate(itemContext));
+			var result = subschema.Evaluate(itemContext);
+			subschemaEvaluations.Add(result);
+			if (result.IsValid)
+				found.Add(i);
 			i++;
 		}
 
-		var found = subschemaEvaluations
-			.Select((x, j) => (x.IsValid, j))
-			.Where(x => x.IsValid)
-			.Select(x => x.j)
-			.ToArray();
 		var valid = true;
 		string? error = null;
-		if (limits.Min > found.Length)
+		if (limits.Min > found.Count)
 		{
 			valid = false;
 			error = ErrorMessages.GetContainsTooFew(context.Options.Culture)
-				.ReplaceToken("received", found.Length)
+				.ReplaceToken("received", found.Count)
 				.ReplaceToken("minimum", limits.Min);
 		}
-		else if (found.Length > limits.Max)
+		else if (found.Count > limits.Max)
 		{
 			valid = false;
 			error = ErrorMessages.GetContainsTooMany(context.Options.Culture)
-				.ReplaceToken("received", found.Length)
+				.ReplaceToken("received", found.Count)
 				.ReplaceToken("maximum", limits.Max.Value);
 		}
 
@@ -131,7 +130,7 @@ public class ContainsKeyword : IKeywordHandler
 			IsValid = valid,
 			Details = subschemaEvaluations.ToArray(),
 			Error = error,
-			Annotation = JsonSerializer.SerializeToElement(found, JsonSchemaSerializerContext.Default.Int32Array)
+			Annotation = JsonSerializer.SerializeToElement(found.ToArray(), JsonSchemaSerializerContext.Default.Int32Array)
 		};
 	}
 }
