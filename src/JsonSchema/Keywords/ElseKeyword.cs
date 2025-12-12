@@ -10,7 +10,7 @@ namespace Json.Schema.Keywords;
 /// This keyword is used in conjunction with `if` and `then`. If the `if` schema fails, then this schema is applied.
 /// It is ignored if there is no `if` keyword or if the `if` keyword's subschema passes validation.
 /// </remarks>
-[DependsOnAnnotationsFrom<IfKeyword>]
+[DependsOnAnnotationsFrom(typeof(IfKeyword))]
 public class ElseKeyword : IKeywordHandler
 {
 	/// <summary>
