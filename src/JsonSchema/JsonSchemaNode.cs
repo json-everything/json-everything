@@ -102,6 +102,10 @@ public class JsonSchemaNode
 
 		results.IsValid = true;
 		context.EvaluatedKeywords = [];
+		context.CanOptimize &= Keywords.All(x =>
+			x.Handler is not (UnevaluatedItemsKeyword or
+				UnevaluatedPropertiesKeyword or
+				Schema.Keywords.Draft201909.UnevaluatedItemsKeyword));
 		foreach (var keyword in Keywords.OrderBy(x => x.EvaluationOrder))
 		{
 			var evaluation = keyword.Handler.Evaluate(keyword, context);
@@ -136,19 +140,28 @@ public class JsonSchemaNode
 				break;
 		}
 
-		if (!results.IsValid && !context.Options.PreserveDroppedAnnotations)
-			results.Annotations?.Clear();
-
-		if (context.Options.AddAnnotationForUnknownKeywords)
+		if (context.CanOptimize)
 		{
-			var unknownKeywords = Keywords
-				.Where(x => x.Handler is AnnotationKeyword)
-				.Select(x => (string)x.Value!)
-				.ToArray();
-			if (unknownKeywords.Length != 0)
+			results.Annotations = null;
+			results.Details = null;
+			results.Errors = null;
+		}
+		else
+		{
+			if (!results.IsValid && !context.Options.PreserveDroppedAnnotations)
+				results.Annotations?.Clear();
+
+			if (context.Options.AddAnnotationForUnknownKeywords)
 			{
-				results.Annotations ??= [];
-				results.Annotations[_unknownKeywordsAnnotation] = JsonSerializer.SerializeToElement(unknownKeywords, JsonSchemaSerializerContext.Default.StringArray);
+				var unknownKeywords = Keywords
+					.Where(x => x.Handler is AnnotationKeyword)
+					.Select(x => (string)x.Value!)
+					.ToArray();
+				if (unknownKeywords.Length != 0)
+				{
+					results.Annotations ??= [];
+					results.Annotations[_unknownKeywordsAnnotation] = JsonSerializer.SerializeToElement(unknownKeywords, JsonSchemaSerializerContext.Default.StringArray);
+				}
 			}
 		}
 

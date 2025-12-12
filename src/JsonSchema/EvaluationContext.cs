@@ -70,4 +70,6 @@ public struct EvaluationContext
 	/// Keywords are guaranteed to be processed in the correct sequence if the <see cref="DependsOnAnnotationsFromAttribute"/>
 	/// attribute is used properly.</remarks>
 	public List<KeywordEvaluation>? EvaluatedKeywords { get; internal set; }
+
+	internal bool CanOptimize { get; set; }
 }

@@ -351,7 +351,8 @@ public class JsonSchema : IBaseDocument
 			InstanceRoot = instance,
 			Instance = instance,
 			EvaluationPath = JsonPointer.Empty,
-			Scope = new(BaseUri)
+			Scope = new(BaseUri),
+			CanOptimize = options.OutputFormat == OutputFormat.Flag
 		};
 
 		var results = Root.Evaluate(context);

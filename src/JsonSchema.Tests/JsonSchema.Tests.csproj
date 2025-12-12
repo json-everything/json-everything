@@ -16,7 +16,6 @@
 
 	<ItemGroup>
 		<Compile Remove="Suite\Output.cs" />
-		<Compile Remove="Suite\ValidationOptimized.cs" />
 
   </ItemGroup>
 

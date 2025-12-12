@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Text.Json;
 using BenchmarkDotNet.Configs;
@@ -25,16 +26,25 @@ class Program
 		//	runner.BuildOnce(1000);
 		//}
 
+		var stopwatch = new Stopwatch();
+
+		stopwatch.Start();
 		var schema = JsonSchema.FromFile(@"C:\Users\gregs\Downloads\schema_rand.json");
-		Console.WriteLine("Schema loaded");
-		Console.ReadLine();
+		stopwatch.Stop();
+		Console.WriteLine($"Schema loaded: {stopwatch.ElapsedMilliseconds}ms");
+
+		stopwatch.Reset();
+		stopwatch.Start();
 		var instance = JsonDocument.Parse(File.ReadAllText(@"C:\Users\gregs\Downloads\schema_data_rand.json")).RootElement;
-		Console.WriteLine("Instance loaded");
-		Console.ReadLine();
+		stopwatch.Stop();
+		Console.WriteLine($"Instance loaded: {stopwatch.ElapsedMilliseconds}ms");
 
+		stopwatch.Reset();
+		stopwatch.Start();
 		var result = schema.Evaluate(instance);
-
-		Console.WriteLine("Evaluation complete");
+		stopwatch.Stop();
+		Console.WriteLine($"Evaluation complete: {result.IsValid}, {stopwatch.ElapsedMilliseconds/1000.0}s");
+		
 		Console.ReadLine();
 #else
 		var summary = BenchmarkRunner.Run<SingleSchemaRunner>();
