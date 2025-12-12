@@ -1,4 +1,8 @@
-﻿using BenchmarkDotNet.Configs;
+﻿using System;
+using System.Diagnostics;
+using System.IO;
+using System.Text.Json;
+using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Running;
 using Json.Benchmarks.LogicSuite;
 using Json.Benchmarks.Pointer;
@@ -15,8 +19,11 @@ class Program
 		//config.WithOptions(ConfigOptions.DisableOptimizationsValidator);
 		//var summary = BenchmarkRunner.Run<TestSuiteRunner>(config);
 
-		var runner = new Runner();
-		runner.Parse();
+		var runner = new SingleSchemaRunner();
+		while (true)
+		{
+			runner.BuildOnce(1000);
+		}
 #else
 		var summary = BenchmarkRunner.Run<SingleSchemaRunner>();
 #endif

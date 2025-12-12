@@ -4,7 +4,13 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "09.01"
 ---
-# [8.0.1](https://github.com/gregsdennis/json-everything/pull/959) {#release-schema-8.0.2}
+# [8.0.3](https://github.com/gregsdennis/json-everything/pull/959) {#release-schema-8.0.3}
+
+Fixes for .Net Framework 4.8.1.
+
+Optimizations for Flag output format.
+
+# [8.0.2](https://github.com/gregsdennis/json-everything/pull/959) {#release-schema-8.0.2}
 
 Performance improvements for `additionalProperties`, `contains`, `dependentSchemas`, `patternProperties`, and `uniqueItems`.
 

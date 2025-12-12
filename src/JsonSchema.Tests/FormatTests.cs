@@ -109,7 +109,7 @@ public class FormatTests
 	[TestCase("true", true)]
 	public void RegexBasedFormatWorksProperly(string jsonText, bool isValid)
 	{
-		Formats.Register(new RegexBasedFormat());
+		FormatRegistry.Global.Register(new RegexBasedFormat());
 
 		var json = JsonDocument.Parse(jsonText).RootElement;
 		JsonSchema schema = new JsonSchemaBuilder()

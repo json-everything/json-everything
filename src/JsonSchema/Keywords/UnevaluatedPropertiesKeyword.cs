@@ -12,9 +12,9 @@ namespace Json.Schema.Keywords;
 /// `additionalProperties`, or other `unevaluatedProperties` keywords that are found either in the local subschema
 /// directly or in subschemas of the local schema which produce a true validation result.
 /// </remarks>
-[DependsOnAnnotationsFrom<PropertiesKeyword>]
-[DependsOnAnnotationsFrom<PatternPropertiesKeyword>]
-[DependsOnAnnotationsFrom<UnevaluatedPropertiesKeyword>]
+[DependsOnAnnotationsFrom(typeof(PropertiesKeyword))]
+[DependsOnAnnotationsFrom(typeof(PatternPropertiesKeyword))]
+[DependsOnAnnotationsFrom(typeof(UnevaluatedPropertiesKeyword))]
 public class UnevaluatedPropertiesKeyword : IKeywordHandler
 {
 	/// <summary>

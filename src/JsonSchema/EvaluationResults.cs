@@ -12,6 +12,7 @@ namespace Json.Schema;
 /// <summary>
 /// The results object for evaluations.
 /// </summary>
+[Serializable]
 [JsonConverter(typeof(EvaluationResultsJsonConverter))]
 public class EvaluationResults
 {

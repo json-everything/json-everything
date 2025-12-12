@@ -141,6 +141,8 @@ public class Validation
 					Dialect = dialect
 				};
 				var uri = new Uri(fileName.Replace(remotesPath, "http://localhost:1234").Replace('\\', '/'));
+				if (SchemaRegistry.Global.Get(uri) != null) return; // may have been loaded from other test if running all together
+			
 				var schema = JsonSchema.FromFile(fileName, buildOptions, uri);
 				SchemaRegistry.Global.Register(uri, schema); // it seems a number of remotes have `$id`s different from their file path
 			}

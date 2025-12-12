@@ -1,4 +1,6 @@
-﻿using System.Text.RegularExpressions;
+﻿#if !NET481
+
+using System.Text.RegularExpressions;
 using NUnit.Framework;
 
 namespace Json.Schema.Tests;
@@ -35,3 +37,5 @@ public class PatternTests
 		Assert.Throws<RegexParseException>(() => JsonSchema.FromText(schemaText));
 	}
 }
+
+#endif
