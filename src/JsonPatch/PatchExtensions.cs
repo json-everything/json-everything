@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Json.More;
@@ -99,18 +98,26 @@ public static class PatchExtensions
 
 	private static void PatchForObject(JsonObject original, JsonObject target, List<PatchOperation> patch, JsonPointer path)
 	{
-		var origNames = original.Select(x => x.Key).ToArray();
-		var modNames = target.Select(x => x.Key).ToArray();
-
-		patch.AddRange(origNames.Except(modNames).Select(key => PatchOperation.Remove(path.Combine(key))));
-		patch.AddRange(modNames.Except(origNames).Select(key => PatchOperation.Add(path.Combine(key), target[key])));
-
-		foreach (var key in origNames.Intersect(modNames))
+		foreach (var (key, origValue) in original)
 		{
-			var origValue = original[key];
-			var modValue = target[key];
-
-			CreatePatch(patch, origValue, modValue, path.Combine(key));
+			if (target.TryGetPropertyValue(key, out var targetValue))
+			{
+				// Original and Target keys intersect. Compare their values.
+				CreatePatch(patch, origValue, targetValue, path.Combine(key));
+			}
+			else
+			{
+				// Original key is not in Target. Remove it.
+				patch.Add(PatchOperation.Remove(path.Combine(key)));
+			}
+		}
+		foreach (var (key, targetValue) in target)
+		{
+			if (!original.ContainsKey(key))
+			{
+				// Target key is not in Original. Add it.
+				patch.Add(PatchOperation.Add(path.Combine(key), targetValue));
+			}
 		}
 	}
 
@@ -156,4 +163,15 @@ public static class PatchExtensions
 			CreatePatch(patch, origValue, modValue, path.Combine(i));
 		}
 	}
+
+#if NETSTANDARD2_0
+	/// <remarks>
+	/// https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.keyvaluepair-2.deconstruct
+	/// </remarks>
+	private static void Deconstruct(this KeyValuePair<string, JsonNode?> kvp, out string key, out JsonNode? value)
+	{
+		key = kvp.Key;
+		value = kvp.Value;
+	}
+#endif
 }
