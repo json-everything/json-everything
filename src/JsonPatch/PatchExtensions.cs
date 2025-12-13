@@ -123,44 +123,43 @@ public static class PatchExtensions
 
 	private static void PatchForArray(JsonArray original, JsonArray target, List<PatchOperation> patch, JsonPointer path)
 	{
+		// Case: arrays are equal length, or target array is larger.
 		if (target.Count >= original.Count)
 		{
 			for (int i = 0; i < target.Count; i++)
 			{
-				if (i >= original.Count)
+				if (i < original.Count)
+				{
+					CreatePatch(patch, original[i], target[i], path.Combine(i));
+				}
+				else
 				{
 					patch.Add(PatchOperation.Add(path.Combine(i), target[i]));
-					continue;
 				}
-
-				PatchForArrayIndex(i);
 			}
 		}
+
+		// Case: target array is empty and original array is non-empty.
 		else if (target.Count == 0)
 		{
 			patch.Add(PatchOperation.Replace(path, target));
 		}
+
+		// Case: original array is larger than non-empty target array.
 		else
 		{
-			int i = original.Count;
-			while (--i >= 0)
+			// Loop backwards because Remove operations cause array lengths to shrink.
+			for (int i = original.Count - 1; i >= 0; i--)
 			{
-				var ui = (uint)i;
-				if (i >= target.Count)
+				if (i < target.Count)
+				{
+					CreatePatch(patch, original[i], target[i], path.Combine(i));
+				}
+				else
 				{
 					patch.Add(PatchOperation.Remove(path.Combine(i)));
-					continue;
 				}
-				PatchForArrayIndex(i);
 			}
-		}
-
-		void PatchForArrayIndex(int i)
-		{
-			var origValue = original[i];
-			var modValue = target[i];
-
-			CreatePatch(patch, origValue, modValue, path.Combine(i));
 		}
 	}
 
