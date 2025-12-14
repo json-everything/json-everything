@@ -25,7 +25,6 @@ class Program
 		{
 			runner.JsonSchemaNetEvaluateOnly(1000);
 		}
-		KeywordTimingStats.PrintReport();
 #else
 		var summary = BenchmarkRunner.Run<SingleSchemaRunner>();
 #endif
