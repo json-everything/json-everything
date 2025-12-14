@@ -97,7 +97,16 @@ public class AnyOfKeyword : IKeywordHandler
 				EvaluationPath = context.EvaluationPath.Combine(Name, i)
 			};
 
-			subschemaEvaluations.Add(subschema.Evaluate(itemContext));
+			var local = subschema.Evaluate(itemContext);
+			subschemaEvaluations.Add(local);
+
+			if (context.CanOptimize && local.IsValid)
+				return new KeywordEvaluation
+				{
+					Keyword = Name,
+					IsValid = true
+				};
+
 			i++;
 		}
 
@@ -106,6 +115,7 @@ public class AnyOfKeyword : IKeywordHandler
 			Keyword = Name,
 			IsValid = subschemaEvaluations.Count == 0 || subschemaEvaluations.Any(x => x.IsValid),
 			Details = subschemaEvaluations.ToArray()
+			// TODO: add error message
 		};
 	}
 }

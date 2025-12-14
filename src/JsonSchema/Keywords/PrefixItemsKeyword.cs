@@ -93,7 +93,16 @@ public class PrefixItemsKeyword : IKeywordHandler
 				EvaluationPath = context.EvaluationPath.Combine(Name, i)
 			};
 
-			subschemaEvaluations.Add(subschema.Evaluate(itemContext));
+			var local = subschema.Evaluate(itemContext);
+			subschemaEvaluations.Add(local);
+
+			if (context.CanOptimize && !local.IsValid)
+				return new KeywordEvaluation
+				{
+					Keyword = Name,
+					IsValid = false
+				};
+
 			i++;
 		}
 

@@ -88,6 +88,7 @@ public class OneOfKeyword : IKeywordHandler
 		var subschemaEvaluations = new List<EvaluationResults>();
 
 		var i = 0;
+		var validCount = 0;
 		foreach (var subschema in keyword.Subschemas)
 		{
 			var itemContext = context with
@@ -95,7 +96,18 @@ public class OneOfKeyword : IKeywordHandler
 				EvaluationPath = context.EvaluationPath.Combine(Name, i)
 			};
 
-			subschemaEvaluations.Add(subschema.Evaluate(itemContext));
+			var local = subschema.Evaluate(itemContext);
+			subschemaEvaluations.Add(local);
+			if (local.IsValid)
+				validCount++;
+
+			if (context.CanOptimize && validCount > 1)
+				return new KeywordEvaluation
+				{
+					Keyword = Name,
+					IsValid = false
+				};
+
 			i++;
 		}
 
@@ -104,6 +116,7 @@ public class OneOfKeyword : IKeywordHandler
 			Keyword = Name,
 			IsValid = subschemaEvaluations.Count(x => x.IsValid) == 1,
 			Details = subschemaEvaluations.ToArray()
+			// TODO: add error message
 		};
 	}
 }

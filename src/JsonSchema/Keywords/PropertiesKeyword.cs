@@ -95,7 +95,15 @@ public class PropertiesKeyword : IKeywordHandler
 				EvaluationPath = context.EvaluationPath.Combine(Name, propertyName)
 			};
 
-			subschemaEvaluations.Add(subschema.Evaluate(propContext));
+			var local = subschema.Evaluate(propContext);
+			subschemaEvaluations.Add(local);
+
+			if (context.CanOptimize && !local.IsValid)
+				return new KeywordEvaluation
+				{
+					Keyword = Name,
+					IsValid = false
+				};
 		}
 
 		return new KeywordEvaluation

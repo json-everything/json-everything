@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text.Json;
@@ -80,11 +81,17 @@ public class JsonSchemaNode
 		var baseUri = (BaseUri == _trueBaseUri || BaseUri == _falseBaseUri)
 			? context.Scope.LocalScope
 			: BaseUri;
-#pragma warning disable CS0618 // Type or member is obsolete
-		baseUri = new Uri(baseUri, $"#{PathFromResourceRoot}");
-#pragma warning restore CS0618 // Type or member is obsolete
 
-		var results = new EvaluationResults(context.EvaluationPath, baseUri, context.InstanceLocation, context.Options);
+		context.CanOptimize &= Keywords.All(x =>
+			x.Handler is not (UnevaluatedItemsKeyword or
+				UnevaluatedPropertiesKeyword or
+				Schema.Keywords.Draft201909.UnevaluatedItemsKeyword));
+
+#pragma warning disable CS0618 // Type or member is obsolete
+		var results = context.CanOptimize
+			? new EvaluationResults()
+			: new EvaluationResults(context.EvaluationPath, new Uri(baseUri, $"#{PathFromResourceRoot}"), context.InstanceLocation, context.Options);
+#pragma warning restore CS0618 // Type or member is obsolete
 		if (Source.ValueKind == JsonValueKind.True)
 		{
 			return results;
@@ -101,52 +108,46 @@ public class JsonSchemaNode
 			context.Scope.Push(BaseUri);
 
 		results.IsValid = true;
-		context.EvaluatedKeywords = [];
-		context.CanOptimize &= Keywords.All(x =>
-			x.Handler is not (UnevaluatedItemsKeyword or
-				UnevaluatedPropertiesKeyword or
-				Schema.Keywords.Draft201909.UnevaluatedItemsKeyword));
+		context.EvaluatedKeywords = new KeywordEvaluation[Keywords.Length];
+		int i = 0;
 		foreach (var keyword in Keywords.OrderBy(x => x.EvaluationOrder))
 		{
 			var evaluation = keyword.Handler.Evaluate(keyword, context);
-			context.EvaluatedKeywords.Add(evaluation);
+			context.EvaluatedKeywords[i] = evaluation;
 
 			results.IsValid &= evaluation.IsValid || !evaluation.ContributesToValidation;
 
-			if (evaluation.Details is { Length: > 0 })
+			if (!context.CanOptimize)
 			{
-				results.Details ??= [];
-				foreach (var detail in evaluation.Details)
+				if (evaluation.Details is { Length: > 0 })
 				{
-					detail.Parent = results;
-					results.Details.Add(detail);
+					results.Details ??= [];
+					foreach (var detail in evaluation.Details)
+					{
+						detail.Parent = results;
+						results.Details.Add(detail);
+					}
+				}
+				if (evaluation.Error is not null)
+				{
+					results.Errors ??= [];
+					results.Errors[evaluation.Keyword] = evaluation.Error!;
+				}
+				if (evaluation.Annotation is not null &&
+				    (context.Options.IgnoredAnnotations == null ||
+				     !context.Options.IgnoredAnnotations.Contains(keyword.Handler.GetType())))
+				{
+					results.Annotations ??= [];
+					results.Annotations[evaluation.Keyword] = evaluation.Annotation.Value;
 				}
 			}
-			if (evaluation.Error is not null)
-			{
-				results.Errors ??= [];
-				results.Errors[evaluation.Keyword] = evaluation.Error!;
-			}
-			if (evaluation.Annotation is not null &&
-			    (context.Options.IgnoredAnnotations == null ||
-			    !context.Options.IgnoredAnnotations.Contains(keyword.Handler.GetType())))
-			{
-				results.Annotations ??= [];
-				results.Annotations[evaluation.Keyword] = evaluation.Annotation.Value;
-			}
 
-			if (keyword.Handler is RefKeyword &&
-				context.RefIgnoresSiblingKeywords)
-				break;
+			i++;
+
+			if (keyword.Handler is RefKeyword && context.RefIgnoresSiblingKeywords) break;
 		}
 
-		if (context.CanOptimize)
-		{
-			results.Annotations = null;
-			results.Details = null;
-			results.Errors = null;
-		}
-		else
+		if (!context.CanOptimize)
 		{
 			if (!results.IsValid && !context.Options.PreserveDroppedAnnotations)
 				results.Annotations?.Clear();
