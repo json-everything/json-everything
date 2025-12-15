@@ -162,15 +162,4 @@ public static class PatchExtensions
 			}
 		}
 	}
-
-#if NETSTANDARD2_0
-	/// <remarks>
-	/// https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.keyvaluepair-2.deconstruct
-	/// </remarks>
-	private static void Deconstruct(this KeyValuePair<string, JsonNode?> kvp, out string key, out JsonNode? value)
-	{
-		key = kvp.Key;
-		value = kvp.Value;
-	}
-#endif
 }
