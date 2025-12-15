@@ -626,25 +626,59 @@ namespace JsonEverythingTemp;
 
 		var references = new List<MetadataReference>();
 
-		var failedToLoadRefs = false;
+		var failedAssemblies = new List<string>();
 		// the generation functions create dynamic libraries.  we don't want those.
 		foreach(var reference in refs.Where(x => !x.IsDynamic))
 		{
 			try
 			{
-				var stream = await client.GetStreamAsync($"_framework/{reference.FullName!.Split(',')[0]}.dll");
-				references.Add(MetadataReference.CreateFromStream(stream));
-				Console.WriteLine(reference.FullName);
+				var assemblyName = reference.GetName().Name;
+				if (string.IsNullOrEmpty(assemblyName))
+					continue;
+
+				// Try to load from _framework folder
+				try
+				{
+					var httpStream = await client.GetStreamAsync($"_framework/{assemblyName}.dll");
+					
+					// HTTP streams are not seekable, but MetadataReference.CreateFromStream requires a seekable stream
+					// Copy to a MemoryStream which is seekable
+					var memoryStream = new MemoryStream();
+					await httpStream.CopyToAsync(memoryStream);
+					memoryStream.Position = 0;
+					
+					references.Add(MetadataReference.CreateFromStream(memoryStream));
+					Console.WriteLine($"Loaded: {reference.FullName}");
+				}
+				catch
+				{
+					// .NET 10 might have assemblies in different locations or formats
+					// Skip if not available
+					continue;
+				}
 			}
 			catch (Exception e)
 			{
-				Console.Error.WriteLine(e);
-				failedToLoadRefs = true;
+				var assemblyName = reference.GetName().Name ?? reference.FullName ?? "unknown";
+				Console.WriteLine($"Error loading {assemblyName}: {e.Message}");
+				failedAssemblies.Add(assemblyName);
 			}
 		}
 
-		if (failedToLoadRefs)
-			throw new DllNotFoundException("Could not load one or more .Net references. Some functions may not be available.");
+		if (failedAssemblies.Any())
+		{
+			Console.WriteLine($"Warning: Could not load {failedAssemblies.Count} .NET reference(s). Some functions may not be available.");
+			Console.WriteLine($"Failed assemblies: {string.Join(", ", failedAssemblies)}");
+		}
+
+		if (!references.Any())
+		{
+			Console.WriteLine("Warning: No assembly references were loaded. Schema generation may not work correctly.");
+		}
+		else
+		{
+			Console.WriteLine($"Successfully loaded {references.Count} assembly references.");
+		}
 
 		_references = references;
 	}
