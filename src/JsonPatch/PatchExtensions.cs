@@ -102,12 +102,10 @@ public static class PatchExtensions
 		{
 			if (target.TryGetPropertyValue(key, out var targetValue))
 			{
-				// Original and Target keys intersect. Compare their values.
 				CreatePatch(patch, origValue, targetValue, path.Combine(key));
 			}
 			else
 			{
-				// Original key is not in Target. Remove it.
 				patch.Add(PatchOperation.Remove(path.Combine(key)));
 			}
 		}
@@ -115,7 +113,6 @@ public static class PatchExtensions
 		{
 			if (!original.ContainsKey(key))
 			{
-				// Target key is not in Original. Add it.
 				patch.Add(PatchOperation.Add(path.Combine(key), targetValue));
 			}
 		}
@@ -123,7 +120,6 @@ public static class PatchExtensions
 
 	private static void PatchForArray(JsonArray original, JsonArray target, List<PatchOperation> patch, JsonPointer path)
 	{
-		// Case: arrays are equal length, or target array is larger.
 		if (target.Count >= original.Count)
 		{
 			for (int i = 0; i < target.Count; i++)
@@ -131,21 +127,15 @@ public static class PatchExtensions
 				if (i < original.Count)
 				{
 					CreatePatch(patch, original[i], target[i], path.Combine(i));
+					continue;
 				}
-				else
-				{
-					patch.Add(PatchOperation.Add(path.Combine(i), target[i]));
-				}
+				patch.Add(PatchOperation.Add(path.Combine(i), target[i]));
 			}
 		}
-
-		// Case: target array is empty and original array is non-empty.
 		else if (target.Count == 0)
 		{
 			patch.Add(PatchOperation.Replace(path, target));
 		}
-
-		// Case: original array is larger than non-empty target array.
 		else
 		{
 			// Loop backwards because Remove operations cause array lengths to shrink.
@@ -154,11 +144,9 @@ public static class PatchExtensions
 				if (i < target.Count)
 				{
 					CreatePatch(patch, original[i], target[i], path.Combine(i));
+					continue;
 				}
-				else
-				{
-					patch.Add(PatchOperation.Remove(path.Combine(i)));
-				}
+				patch.Add(PatchOperation.Remove(path.Combine(i)));
 			}
 		}
 	}
