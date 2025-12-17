@@ -1195,4 +1195,66 @@ public class GithubTests
 			)
 			.Required(nameof(Model791.Baz))
 			.Build();
+
+	[Test]
+	public void Issue965_StackOverflow()
+	{
+		var schemaJson = JsonDocument.Parse(
+			"""
+			{
+			  "$schema": "http://json-schema.org/draft-07/schema#",
+			  "$id": "https://json-everything.test/overflow",
+			  "type": "object",
+			  "properties": {
+			    "$schema": {
+			      "type": "string"
+			    },
+			    "ModelDefinitions": {
+			      "type": "object",
+			      "additionalProperties": {
+			        "$ref": "#/$defs/modelDefinition"
+			      }
+			    }
+			  },
+			  "additionalProperties": false,
+			  "$defs": {
+			    "modelDefinition": {
+			      "type": "object",
+			      "properties": {
+			        "DataType": {
+			          "enum": ["object"]
+			        }
+			      },
+			      "allOf": [
+			        {
+			          "if": {
+			            "properties": {
+			              "DataType": {
+			                "const": "object"
+			              }
+			            }
+			          },
+			          "then": {
+			            "properties": {
+			              "Properties": {
+			                "type": "object",
+			                "additionalProperties": {
+			                  "$ref": "#/$defs/modelDefinition"
+			                }
+			              }
+			            }
+			          }
+			        }
+			      ]
+			    }
+			  }
+			}
+			""").RootElement;
+
+		var buildOptions = new BuildOptions
+		{
+			SchemaRegistry = new()
+		};
+		var schema = JsonSchema.Build(schemaJson, buildOptions);
+	}
 }
