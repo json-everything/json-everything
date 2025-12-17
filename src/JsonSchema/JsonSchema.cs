@@ -346,17 +346,17 @@ public class JsonSchema : IBaseDocument
 	/// <returns>An EvaluationResults object containing the outcome of the schema validation, including any errors or annotations.</returns>
 	public EvaluationResults Evaluate(JsonElement instance, EvaluationOptions? options = null)
 	{
-		//if (!_resolved)
-		//{
-		//	var buildContext = new BuildContext(_buildOptions, BaseUri)
-		//	{
-		//		LocalSchema = Root.Source
-		//	};
-		//	_resolved = TryResolveReferences(Root, buildContext);
-		//}
+		if (!_resolved)
+		{
+			var buildContext = new BuildContext(_buildOptions, BaseUri)
+			{
+				LocalSchema = Root.Source
+			};
+			_resolved = TryResolveReferences(Root, buildContext);
+		}
 
-		//if (!_resolved)
-		//	throw new InvalidOperationException("Cannot evaluate until all references have been resolved.");
+		if (!_resolved)
+			throw new InvalidOperationException("Cannot evaluate until all references have been resolved.");
 
 		options ??= EvaluationOptions.Default;
 		var context = new EvaluationContext
