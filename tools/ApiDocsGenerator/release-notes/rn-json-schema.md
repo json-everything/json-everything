@@ -4,7 +4,7 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "09.01"
 ---
-# [8.0.4](https://github.com/gregsdennis/json-everything/pull/XXX) {#release-schema-8.0.4}
+# [8.0.4](https://github.com/gregsdennis/json-everything/pull/967) {#release-schema-8.0.4}
 
 Significant performance improvements.
 

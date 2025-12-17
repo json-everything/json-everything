@@ -4,7 +4,7 @@ title: JsonPointer.Net
 icon: fas fa-tag
 order: "09.10"
 ---
-# [6.0.1](https://github.com/json-everything/json-everything/pull/XXX) {#release-pointer-6.0.1}
+# [6.0.1](https://github.com/json-everything/json-everything/pull/967) {#release-pointer-6.0.1}
 
 [#966](https://github.com/json-everything/json-everything/issues/966) - Improved implementation for `.StartsWith()` and `.EndsWith()`.
 
