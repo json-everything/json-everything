@@ -58,6 +58,7 @@ public class JsonSchema : IBaseDocument
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 	private JsonSchema(bool value)
 	{
+		_buildOptions = BuildOptions.Default;
 		BoolValue = value;
 		Root = value ? JsonSchemaNode.True() : JsonSchemaNode.False();
 		BaseUri = Root.BaseUri;
