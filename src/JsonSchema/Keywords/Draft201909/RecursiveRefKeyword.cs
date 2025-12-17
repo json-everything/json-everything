@@ -44,17 +44,17 @@ public class RecursiveRefKeyword : RefKeyword
 		return uri;
 	}
 
-	internal override void TryResolve(KeywordData keyword, BuildContext context)
+	internal override bool TryResolve(KeywordData keyword, BuildContext context)
 	{
 		var recursiveTarget = context.Options.SchemaRegistry.GetRecursive(context.BaseUri);
 		if (recursiveTarget is not null)
 		{
 			// don't set the subschema because we may need to go deeper into the scope
 			keyword.Value = null;
-			return;
+			return false;
 		}
 
-		base.TryResolve(keyword, context);
+		return base.TryResolve(keyword, context);
 	}
 
 	/// <summary>

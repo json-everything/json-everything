@@ -88,6 +88,36 @@ public class ReferenceTests
 		var result = schema.Evaluate(instance, options);
 
 		result.AssertInvalid();
+	}
 
+	[Test]
+	public void RegistrationInWrongOrderStillResolves()
+	{
+		var buildOptions = new BuildOptions
+		{
+			SchemaRegistry = new()
+		};
+
+		var entry = new JsonSchemaBuilder(buildOptions)
+			.Id("https://json-everything.test/entry")
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("foo", new JsonSchemaBuilder().Ref("target"))
+			).Build();
+
+		_ = new JsonSchemaBuilder(buildOptions)
+			.Id("https://json-everything.test/target")
+			.Type(SchemaValueType.String)
+			.Build();
+
+		var options = new EvaluationOptions
+		{
+			OutputFormat = OutputFormat.List
+		};
+
+		var instance = JsonDocument.Parse("""{"foo": "value"}""").RootElement;
+		var result = entry.Evaluate(instance, options);
+
+		result.AssertValid();
 	}
 }

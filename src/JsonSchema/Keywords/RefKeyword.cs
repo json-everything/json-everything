@@ -59,10 +59,10 @@ public class RefKeyword : IKeywordHandler
 		keyword.Value = newUri;
 	}
 
-	internal virtual void TryResolve(KeywordData keyword, BuildContext context)
+	internal virtual bool TryResolve(KeywordData keyword, BuildContext context)
 	{
 		var newUri = (Uri?)keyword.Value;
-		if (newUri is null) return;
+		if (newUri is null) return false;
 
 		var fragment = newUri.Fragment;
 
@@ -84,7 +84,12 @@ public class RefKeyword : IKeywordHandler
 		}
 
 		if (targetSchema is not null)
+		{
 			keyword.Subschemas = [targetSchema];
+			return true;
+		}
+
+		return false;
 	}
 
 	/// <summary>

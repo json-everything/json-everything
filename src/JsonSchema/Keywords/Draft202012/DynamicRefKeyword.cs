@@ -60,7 +60,7 @@ public class DynamicRefKeyword : Json.Schema.Keywords.DynamicRefKeyword
 		reference.Uri = newUri; // need an absolute URI for .Fragment to work
 	}
 
-	internal override void TryResolve(KeywordData keyword, BuildContext context)
+	internal override bool TryResolve(KeywordData keyword, BuildContext context)
 	{
 		// This method only resolves static refs.
 		// Occurs when (any of)
@@ -78,7 +78,7 @@ public class DynamicRefKeyword : Json.Schema.Keywords.DynamicRefKeyword
 			if (dynamicAnchor is not null)
 			{
 				reference.IsDynamic = true;
-				return;
+				return true;
 			}
 		}
 
@@ -98,7 +98,12 @@ public class DynamicRefKeyword : Json.Schema.Keywords.DynamicRefKeyword
 		}
 
 		if (targetSchema is not null)
+		{
 			keyword.Subschemas = [targetSchema];
+			return true;
+		}
+
+		return false;
 	}
 
 	/// <summary>
