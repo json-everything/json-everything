@@ -333,7 +333,15 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 	/// <returns>true if the current JSON pointer starts with the specified pointer; otherwise, false.</returns>
 	public bool StartsWith(JsonPointer other)
 	{
-		return _pointer.Span.StartsWith(other._pointer.Span);
+		if (other.SegmentCount == 0) return true;
+		if (other.SegmentCount > SegmentCount) return false;
+		
+		var thisSpan = _pointer.Span;
+		var otherSpan = other._pointer.Span;
+		
+		if (!thisSpan.StartsWith(otherSpan)) return false;
+		if (thisSpan.Length == otherSpan.Length) return true;
+		return thisSpan[otherSpan.Length] == '/';
 	}
 
 	/// <summary>
@@ -343,7 +351,15 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 	/// <returns>true if the current JSON pointer ends with the specified pointer; otherwise, false.</returns>
 	public bool EndsWith(JsonPointer other)
 	{
-		return _pointer.Span.EndsWith(other._pointer.Span);
+		if (other.SegmentCount == 0) return true;
+		if (other.SegmentCount > SegmentCount) return false;
+		
+		var thisSpan = _pointer.Span;
+		var otherSpan = other._pointer.Span;
+		
+		if (!thisSpan.EndsWith(otherSpan)) return false;
+		if (thisSpan.Length == otherSpan.Length) return true;
+		return thisSpan[thisSpan.Length - otherSpan.Length - 1] == '/';
 	}
 
 	/// <summary>

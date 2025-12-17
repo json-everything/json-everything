@@ -96,7 +96,7 @@ public class AdditionalPropertiesKeyword : IKeywordHandler
 	{
 		if (context.Instance.ValueKind != JsonValueKind.Object) return KeywordEvaluation.Ignore;
 
-		var knownProperties = (KnownProperties) keyword.Value!;
+			var knownProperties = (KnownProperties) keyword.Value!;
 
 		// Get evaluated properties from annotations instead of re-running regex matches
 		var evaluatedByPatterns = context.EvaluatedKeywords?

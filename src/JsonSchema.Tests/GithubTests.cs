@@ -1249,4 +1249,72 @@ public class GithubTests
 		};
 		var schema = JsonSchema.Build(schemaJson, buildOptions);
 	}
+
+	[Test]
+	public void Issue966_AdditionalPropertiesThroughRef()
+	{
+		var schemaJson = JsonDocument.Parse(
+			"""
+			{
+			  "$id": "ID",
+			  "$schema": "https://json-schema.org/draft/2020-12/schema#",
+			  "title": "TITLE",
+			  "type": "object",
+			  "properties": {
+			    "incident": {
+			      "$ref": "#/$defs/Incident"
+			    }
+			  },
+			  "$defs": {
+			    "Incident": {
+			      "type": "object",
+			      "properties": {
+			        "incidentType": {
+			          "$ref": "#/$defs/IncidentType"
+			        }
+			      },
+			      "additionalProperties": false
+			    },
+			    "IncidentType": {
+			      "type": "object",
+			      "properties": {
+			        "incidentClassification": {
+			          "type": "array",
+			          "items": {
+			            "type": "string"
+			          }
+			        }
+			      }
+			    }
+			  }
+			}
+			""").RootElement;
+		var instance = JsonDocument.Parse(
+			"""
+			{
+			  "incident": {
+			    "incidentType": {
+			      "incidentClassification": [
+			        "something",
+			        "something-else"
+			      ]
+			    }
+			  }
+			}
+			""").RootElement;
+
+		var buildOptions = new BuildOptions
+		{
+			SchemaRegistry = new()
+		};
+		var schema = JsonSchema.Build(schemaJson, buildOptions);
+
+		var evaluationOptions = new EvaluationOptions
+		{
+			OutputFormat = OutputFormat.Hierarchical
+		};
+		var results = schema.Evaluate(instance, evaluationOptions);
+
+		results.AssertValid();
+	}
 }

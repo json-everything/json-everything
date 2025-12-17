@@ -131,4 +131,14 @@ public class JsonPointerTests
 		var result = p.ToString();
 		Assert.That(result, Is.EqualTo("/~0~0~0~0~0~0~0~0~0/~1~1~1~1~1~1~1~1~1/~0~0~0~0~0~0~0~0~0/~1~1~1~1~1~1~1~1~1"));
 	}
+
+	[TestCase("/foo/bar", "/foo", true)]
+	[TestCase("/foo/bar", "/fo", false)]
+	public void StartsWithPartialSegment(string full, string partial, bool startsWith)
+	{
+		var fullPointer = JsonPointer.Parse(full);
+		var partialPointer = JsonPointer.Parse(partial);
+
+		Assert.That(fullPointer.StartsWith(partialPointer), Is.EqualTo(startsWith));
+	}
 }
