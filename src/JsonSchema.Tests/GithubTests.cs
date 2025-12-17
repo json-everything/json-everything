@@ -1204,48 +1204,40 @@ public class GithubTests
 			{
 			  "$schema": "http://json-schema.org/draft-07/schema#",
 			  "$id": "https://json-everything.test/overflow",
-			  "type": "object",
-			  "properties": {
-			    "$schema": {
-			      "type": "string"
-			    },
-			    "ModelDefinitions": {
+			  "$ref": "#/$defs/modelDefinition",
+			  "$defs": {
+			    "modelDefinition": {
 			      "type": "object",
 			      "additionalProperties": {
 			        "$ref": "#/$defs/modelDefinition"
 			      }
 			    }
-			  },
-			  "additionalProperties": false,
-			  "$defs": {
+			  }
+			}
+			""").RootElement;
+
+		var buildOptions = new BuildOptions
+		{
+			SchemaRegistry = new()
+		};
+		var schema = JsonSchema.Build(schemaJson, buildOptions);
+	}
+
+	[Test]
+	public void Issue965_StackOverflow_Definitions()
+	{
+		var schemaJson = JsonDocument.Parse(
+			"""
+			{
+			  "$schema": "http://json-schema.org/draft-07/schema#",
+			  "$id": "https://json-everything.test/overflow",
+			  "$ref": "#/definitions/modelDefinition",
+			  "definitions": {
 			    "modelDefinition": {
 			      "type": "object",
-			      "properties": {
-			        "DataType": {
-			          "enum": ["object"]
-			        }
-			      },
-			      "allOf": [
-			        {
-			          "if": {
-			            "properties": {
-			              "DataType": {
-			                "const": "object"
-			              }
-			            }
-			          },
-			          "then": {
-			            "properties": {
-			              "Properties": {
-			                "type": "object",
-			                "additionalProperties": {
-			                  "$ref": "#/$defs/modelDefinition"
-			                }
-			              }
-			            }
-			          }
-			        }
-			      ]
+			      "additionalProperties": {
+			        "$ref": "#/definitions/modelDefinition"
+			      }
 			    }
 			  }
 			}

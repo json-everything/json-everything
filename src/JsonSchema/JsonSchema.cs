@@ -23,6 +23,7 @@ public class JsonSchema : IBaseDocument
 	private readonly BuildOptions _buildOptions;
 	private readonly bool _refIgnoresSiblingKeywords;
 	private bool _resolved;
+	private Dictionary<JsonPointer, JsonSchemaNode>? _discoveredSchemas;
 
 	/// <summary>
 	/// The `true` schema.  Passes all instances.
@@ -354,9 +355,7 @@ public class JsonSchema : IBaseDocument
 			};
 			_resolved = TryResolveReferences(Root, buildContext);
 		}
-
-		if (!_resolved)
-			throw new InvalidOperationException("Cannot evaluate until all references have been resolved.");
+		// Let the normal RefResolutionException happen through evaluation if not resolved.
 
 		options ??= EvaluationOptions.Default;
 		var context = new EvaluationContext
@@ -398,7 +397,10 @@ public class JsonSchema : IBaseDocument
 	/// matching subschema exists.</returns>
 	public JsonSchemaNode? FindSubschema(JsonPointer pointer, BuildContext context)
 	{
-		var subschema = Root;
+		var subschema = _discoveredSchemas?.GetValueOrDefault(pointer);
+		if (subschema is not null) return subschema;
+
+		subschema = Root;
 		var currentPointer = pointer;
 		while (currentPointer.SegmentCount != 0)
 		{
@@ -433,6 +435,12 @@ public class JsonSchema : IBaseDocument
 				subschema.PathFromResourceRoot = pointer;
 #pragma warning restore CS0618 // Type or member is obsolete
 			}
+		}
+
+		if (subschema is not null)
+		{
+			_discoveredSchemas ??= [];
+			_discoveredSchemas[pointer] = subschema;
 		}
 
 		return subschema;
