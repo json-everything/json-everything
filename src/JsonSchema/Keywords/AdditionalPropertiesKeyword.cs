@@ -96,7 +96,7 @@ public class AdditionalPropertiesKeyword : IKeywordHandler
 	{
 		if (context.Instance.ValueKind != JsonValueKind.Object) return KeywordEvaluation.Ignore;
 
-		var knownProperties = (KnownProperties) keyword.Value!;
+			var knownProperties = (KnownProperties) keyword.Value!;
 
 		// Get evaluated properties from annotations instead of re-running regex matches
 		var evaluatedByPatterns = context.EvaluatedKeywords?
@@ -120,7 +120,15 @@ public class AdditionalPropertiesKeyword : IKeywordHandler
 				EvaluationPath = evaluationPath
 			};
 
-			subschemaEvaluations.Add(subschema.Evaluate(itemContext));
+			var local = subschema.Evaluate(itemContext);
+			subschemaEvaluations.Add(local);
+
+			if (context.CanOptimize && !local.IsValid)
+				return new KeywordEvaluation
+				{
+					Keyword = Name,
+					IsValid = false
+				};
 		}
 
 		return new KeywordEvaluation

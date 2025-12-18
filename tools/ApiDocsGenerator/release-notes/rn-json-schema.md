@@ -4,6 +4,14 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "09.01"
 ---
+# [8.0.4](https://github.com/gregsdennis/json-everything/pull/967) {#release-schema-8.0.4}
+
+Significant performance improvements.
+
+Schema registration order no longer matters.  (Just be sure you're registering them all.)
+
+[#965](https://github.com/gregsdennis/json-everything/issues/965) - StackOverflowException when `$ref`-ing into unknown keywords that then references itself.
+
 # [8.0.3](https://github.com/gregsdennis/json-everything/pull/959) {#release-schema-8.0.3}
 
 Fixes for .Net Framework 4.8.1.

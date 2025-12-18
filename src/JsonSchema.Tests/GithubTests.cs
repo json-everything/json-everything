@@ -1195,4 +1195,126 @@ public class GithubTests
 			)
 			.Required(nameof(Model791.Baz))
 			.Build();
+
+	[Test]
+	public void Issue965_StackOverflow()
+	{
+		var schemaJson = JsonDocument.Parse(
+			"""
+			{
+			  "$schema": "http://json-schema.org/draft-07/schema#",
+			  "$id": "https://json-everything.test/overflow",
+			  "$ref": "#/$defs/modelDefinition",
+			  "$defs": {
+			    "modelDefinition": {
+			      "type": "object",
+			      "additionalProperties": {
+			        "$ref": "#/$defs/modelDefinition"
+			      }
+			    }
+			  }
+			}
+			""").RootElement;
+
+		var buildOptions = new BuildOptions
+		{
+			SchemaRegistry = new()
+		};
+		var schema = JsonSchema.Build(schemaJson, buildOptions);
+	}
+
+	[Test]
+	public void Issue965_StackOverflow_Definitions()
+	{
+		var schemaJson = JsonDocument.Parse(
+			"""
+			{
+			  "$schema": "http://json-schema.org/draft-07/schema#",
+			  "$id": "https://json-everything.test/overflow",
+			  "$ref": "#/definitions/modelDefinition",
+			  "definitions": {
+			    "modelDefinition": {
+			      "type": "object",
+			      "additionalProperties": {
+			        "$ref": "#/definitions/modelDefinition"
+			      }
+			    }
+			  }
+			}
+			""").RootElement;
+
+		var buildOptions = new BuildOptions
+		{
+			SchemaRegistry = new()
+		};
+		var schema = JsonSchema.Build(schemaJson, buildOptions);
+	}
+
+	[Test]
+	public void Issue966_AdditionalPropertiesThroughRef()
+	{
+		var schemaJson = JsonDocument.Parse(
+			"""
+			{
+			  "$id": "ID",
+			  "$schema": "https://json-schema.org/draft/2020-12/schema#",
+			  "title": "TITLE",
+			  "type": "object",
+			  "properties": {
+			    "incident": {
+			      "$ref": "#/$defs/Incident"
+			    }
+			  },
+			  "$defs": {
+			    "Incident": {
+			      "type": "object",
+			      "properties": {
+			        "incidentType": {
+			          "$ref": "#/$defs/IncidentType"
+			        }
+			      },
+			      "additionalProperties": false
+			    },
+			    "IncidentType": {
+			      "type": "object",
+			      "properties": {
+			        "incidentClassification": {
+			          "type": "array",
+			          "items": {
+			            "type": "string"
+			          }
+			        }
+			      }
+			    }
+			  }
+			}
+			""").RootElement;
+		var instance = JsonDocument.Parse(
+			"""
+			{
+			  "incident": {
+			    "incidentType": {
+			      "incidentClassification": [
+			        "something",
+			        "something-else"
+			      ]
+			    }
+			  }
+			}
+			""").RootElement;
+
+		var buildOptions = new BuildOptions
+		{
+			SchemaRegistry = new()
+		};
+		var schema = JsonSchema.Build(schemaJson, buildOptions);
+
+		var evaluationOptions = new EvaluationOptions
+		{
+			OutputFormat = OutputFormat.Hierarchical
+		};
+		var results = schema.Evaluate(instance, evaluationOptions);
+
+		results.AssertValid();
+	}
 }

@@ -97,7 +97,15 @@ public class DependentSchemasKeyword : IKeywordHandler
 				EvaluationPath = context.EvaluationPath.Combine(Name, property.Name)
 			};
 
-			subschemaEvaluations.Add(keyword.Subschemas[schemaIndex].Evaluate(propContext));
+			var local = keyword.Subschemas[schemaIndex].Evaluate(propContext);
+			subschemaEvaluations.Add(local);
+
+			if (context.CanOptimize && !local.IsValid)
+				return new KeywordEvaluation
+				{
+					Keyword = Name,
+					IsValid = false
+				};
 		}
 
 		return new KeywordEvaluation

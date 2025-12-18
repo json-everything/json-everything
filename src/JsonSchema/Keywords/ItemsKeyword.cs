@@ -87,7 +87,16 @@ public class ItemsKeyword : IKeywordHandler
 				EvaluationPath = evaluationPath.Combine(Name)
 			};
 
-			subschemaEvaluations.Add(subschema.Evaluate(itemContext));
+			var local = subschema.Evaluate(itemContext);
+			subschemaEvaluations.Add(local);
+
+			if (context.CanOptimize && !local.IsValid)
+				return new KeywordEvaluation
+				{
+					Keyword = Name,
+					IsValid = false
+				};
+
 			i++;
 		}
 

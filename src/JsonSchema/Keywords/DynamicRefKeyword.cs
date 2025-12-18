@@ -81,9 +81,10 @@ public partial class DynamicRefKeyword : IKeywordHandler
 	{
 	}
 
-	internal virtual void TryResolve(KeywordData keyword, BuildContext context)
+	internal virtual bool TryResolve(KeywordData keyword, BuildContext context)
 	{
 		// nothing to do for v1 $dynamicRef
+		return true;
 	}
 
 	/// <summary>

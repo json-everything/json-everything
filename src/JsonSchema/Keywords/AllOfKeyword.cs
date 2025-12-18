@@ -95,7 +95,16 @@ public class AllOfKeyword : IKeywordHandler
 				EvaluationPath = context.EvaluationPath.Combine(Name, i)
 			};
 
-			subschemaEvaluations.Add(subschema.Evaluate(itemContext));
+			var local = subschema.Evaluate(itemContext);
+			subschemaEvaluations.Add(local);
+
+			if (context.CanOptimize && !local.IsValid)
+				return new KeywordEvaluation
+				{
+					Keyword = Name,
+					IsValid = false
+				};
+
 			i++;
 		}
 
@@ -104,6 +113,7 @@ public class AllOfKeyword : IKeywordHandler
 			Keyword = Name,
 			IsValid = subschemaEvaluations.Count == 0 || subschemaEvaluations.All(x => x.IsValid),
 			Details = subschemaEvaluations.ToArray()
+			// TODO: add error message
 		};
 	}
 }

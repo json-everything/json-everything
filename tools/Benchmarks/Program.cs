@@ -7,6 +7,7 @@ using BenchmarkDotNet.Running;
 using Json.Benchmarks.LogicSuite;
 using Json.Benchmarks.Pointer;
 using Json.Benchmarks.SchemaSuite;
+using Json.Schema;
 
 namespace Json.Benchmarks;
 
@@ -20,9 +21,9 @@ class Program
 		//var summary = BenchmarkRunner.Run<TestSuiteRunner>(config);
 
 		var runner = new SingleSchemaRunner();
-		while (true)
+		//while (true)
 		{
-			runner.BuildOnce(1000);
+			runner.JsonSchemaNetEvaluateOnly(1000);
 		}
 #else
 		var summary = BenchmarkRunner.Run<SingleSchemaRunner>();

@@ -19,6 +19,6 @@ public static class Formats
 
 	static Formats()
 	{
-		Schema.Formats.Register(MediaRange);
+		FormatRegistry.Global.Register(MediaRange);
 	}
 }

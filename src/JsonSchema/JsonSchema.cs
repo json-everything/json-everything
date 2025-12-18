@@ -20,8 +20,10 @@ namespace Json.Schema;
 [JsonConverter(typeof(JsonSchemaJsonConverter))]
 public class JsonSchema : IBaseDocument
 {
-	private readonly SchemaRegistry _schemaRegistry;
+	private readonly BuildOptions _buildOptions;
 	private readonly bool _refIgnoresSiblingKeywords;
+	private bool _resolved;
+	private Dictionary<JsonPointer, JsonSchemaNode>? _discoveredSchemas;
 
 	/// <summary>
 	/// The `true` schema.  Passes all instances.
@@ -56,15 +58,16 @@ public class JsonSchema : IBaseDocument
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 	private JsonSchema(bool value)
 	{
+		_buildOptions = BuildOptions.Default;
 		BoolValue = value;
 		Root = value ? JsonSchemaNode.True() : JsonSchemaNode.False();
 		BaseUri = Root.BaseUri;
 	}
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 
-	private JsonSchema(JsonSchemaNode root, SchemaRegistry schemaRegistry, bool refIgnoresSiblingKeywords)
+	private JsonSchema(JsonSchemaNode root, BuildOptions buildOptions, bool refIgnoresSiblingKeywords)
 	{
-		_schemaRegistry = schemaRegistry;
+		_buildOptions = buildOptions;
 		_refIgnoresSiblingKeywords = refIgnoresSiblingKeywords;
 		Root = root;
 		BaseUri = Root.BaseUri;
@@ -131,14 +134,14 @@ public class JsonSchema : IBaseDocument
 		if (node.Source.ValueKind == JsonValueKind.True) return True;
 		if (node.Source.ValueKind == JsonValueKind.False) return False;
 
-		var schema = new JsonSchema(node, context.Options.SchemaRegistry, context.Dialect.RefIgnoresSiblingKeywords)
+		var schema = new JsonSchema(node, context.Options, context.Dialect.RefIgnoresSiblingKeywords)
 		{
 			BaseUri = node.BaseUri
 		};
 		context.Options.SchemaRegistry.Register(schema);
 		context.BaseUri = node.BaseUri;
 
-		TryResolveReferences(node, context);
+		schema._resolved = TryResolveReferences(node, context);
 		DetectCycles(node);
 
 		return schema;
@@ -235,7 +238,7 @@ public class JsonSchema : IBaseDocument
 		{
 			if (embeddedResource.BaseUri == True.BaseUri || embeddedResource.BaseUri == False.BaseUri) continue;
 
-			var schema = new JsonSchema(embeddedResource, context.Options.SchemaRegistry, context.Dialect.RefIgnoresSiblingKeywords)
+			var schema = new JsonSchema(embeddedResource, context.Options, context.Dialect.RefIgnoresSiblingKeywords)
 			{
 				BaseUri = embeddedResource.BaseUri
 			};
@@ -275,23 +278,24 @@ public class JsonSchema : IBaseDocument
 		return node;
 	}
 
-	private static void TryResolveReferences(JsonSchemaNode node, BuildContext context, HashSet<JsonSchemaNode>? checkedNodes = null)
+	private static bool TryResolveReferences(JsonSchemaNode node, BuildContext context, HashSet<JsonSchemaNode>? checkedNodes = null)
 	{
+		var resolved = true;
 		checkedNodes ??= [];
-		if (!checkedNodes.Add(node)) return;
+		if (!checkedNodes.Add(node)) return resolved;
 
 		var refKeyword = node.Keywords.SingleOrDefault(x => x.Handler is RefKeyword);
 		if (refKeyword is not null)
 		{
 			var handler = (RefKeyword)refKeyword.Handler;
-			handler.TryResolve(refKeyword, context);
+			resolved &= handler.TryResolve(refKeyword, context);
 		}
 
 		var dynamicRefKeyword = node.Keywords.SingleOrDefault(x => x.Handler is DynamicRefKeyword);
 		if (dynamicRefKeyword is not null)
 		{
 			var handler = (DynamicRefKeyword)dynamicRefKeyword.Handler;
-			handler.TryResolve(dynamicRefKeyword, context);
+			resolved &= handler.TryResolve(dynamicRefKeyword, context);
 		}
 
 		foreach (var keyword in node.Keywords)
@@ -302,9 +306,11 @@ public class JsonSchema : IBaseDocument
 				{
 					BaseUri = subNode.BaseUri
 				};
-				TryResolveReferences(subNode, subschemaContext, checkedNodes);
+				resolved &= TryResolveReferences(subNode, subschemaContext, checkedNodes);
 			}
 		}
+
+		return resolved;
 	}
 
 	private static void DetectCycles(JsonSchemaNode node, HashSet<JsonSchemaNode>? checkedNodes = null)
@@ -342,11 +348,21 @@ public class JsonSchema : IBaseDocument
 	/// <returns>An EvaluationResults object containing the outcome of the schema validation, including any errors or annotations.</returns>
 	public EvaluationResults Evaluate(JsonElement instance, EvaluationOptions? options = null)
 	{
+		if (!_resolved)
+		{
+			var buildContext = new BuildContext(_buildOptions, BaseUri)
+			{
+				LocalSchema = Root.Source
+			};
+			_resolved = TryResolveReferences(Root, buildContext);
+		}
+		// Let the normal RefResolutionException happen through evaluation if not resolved.
+
 		options ??= EvaluationOptions.Default;
 		var context = new EvaluationContext
 		{
 			Options = options,
-			SchemaRegistry = _schemaRegistry,
+			SchemaRegistry = _buildOptions.SchemaRegistry,
 			RefIgnoresSiblingKeywords = _refIgnoresSiblingKeywords,
 			InstanceRoot = instance,
 			Instance = instance,
@@ -382,7 +398,10 @@ public class JsonSchema : IBaseDocument
 	/// matching subschema exists.</returns>
 	public JsonSchemaNode? FindSubschema(JsonPointer pointer, BuildContext context)
 	{
-		var subschema = Root;
+		var subschema = _discoveredSchemas?.GetValueOrDefault(pointer);
+		if (subschema is not null) return subschema;
+
+		subschema = Root;
 		var currentPointer = pointer;
 		while (currentPointer.SegmentCount != 0)
 		{
@@ -417,6 +436,12 @@ public class JsonSchema : IBaseDocument
 				subschema.PathFromResourceRoot = pointer;
 #pragma warning restore CS0618 // Type or member is obsolete
 			}
+		}
+
+		if (subschema is not null)
+		{
+			_discoveredSchemas ??= [];
+			_discoveredSchemas[pointer] = subschema;
 		}
 
 		return subschema;

@@ -4,6 +4,12 @@ title: JsonPointer.Net
 icon: fas fa-tag
 order: "09.10"
 ---
+# [6.0.1](https://github.com/json-everything/json-everything/pull/967) {#release-pointer-6.0.1}
+
+[#966](https://github.com/json-everything/json-everything/issues/966) - Improved implementation for `.StartsWith()` and `.EndsWith()`.
+
+[#968](https://github.com/json-everything/json-everything/issues/968) - Downgrade Humanizer to 2.x for .Net 8.
+
 # [6.0.0](https://github.com/json-everything/json-everything/pull/952) {#release-pointer-6.0.0}
 
 Complete overhaul of library, focusing on performance and memory efficiency.

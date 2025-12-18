@@ -72,6 +72,13 @@ public class RequiredKeyword : IKeywordHandler
 		{
 			if (context.Instance.TryGetProperty(requiredProperty, out _)) continue;
 
+			if (context.CanOptimize)
+				return new KeywordEvaluation
+				{
+					Keyword = Name,
+					IsValid = false
+				};
+
 			missing ??= [];
 			missing.Add(requiredProperty);
 		}

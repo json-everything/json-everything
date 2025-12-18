@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using Json.Pointer;
@@ -6,42 +7,33 @@ using Json.Pointer;
 namespace Json.Schema.Keywords;
 
 /// <summary>
-/// Handles `properties`.
+/// Handles 'propertyDependencies'.
 /// </summary>
-/// <remarks>
-/// This keyword validates properties against subschemas.
-/// </remarks>
-public class PropertiesKeyword : IKeywordHandler
+public class PropertyDependenciesKeyword : IKeywordHandler
 {
-	/// <summary>
-	/// Gets the singleton instance of the <see cref="PropertiesKeyword"/>.
-	/// </summary>
-	public static PropertiesKeyword Instance { get; } = new();
-
 	/// <summary>
 	/// Gets the name of the handled keyword.
 	/// </summary>
-	public string Name => "properties";
-
-	/// <summary>
-	/// Initializes a new instance of the <see cref="PropertiesKeyword"/> class.
-	/// </summary>
-	protected PropertiesKeyword()
-	{
-	}
+	public string Name => "propertyDependencies";
 
 	/// <summary>
 	/// Validates the specified JSON element as a keyword value and optionally returns a value to be shared across the other methods.
 	/// </summary>
 	/// <param name="value">The JSON element to validate and convert. Represents the value to be checked for keyword compliance.</param>
 	/// <returns>An object that is shared with the other methods.  This object is saved to <see cref="KeywordData.Value"/>.</returns>
-	public virtual object? ValidateKeywordValue(JsonElement value)
+	public object? ValidateKeywordValue(JsonElement value)
 	{
 		if (value.ValueKind != JsonValueKind.Object)
 			throw new JsonSchemaException($"'{Name}' value must be an object, found {value.ValueKind}");
 
-		if (value.EnumerateObject().Any(x => x.Value.ValueKind is not (JsonValueKind.Object or JsonValueKind.True or JsonValueKind.False)))
-			throw new JsonSchemaException("Values must be valid schemas");
+		foreach (var property in value.EnumerateObject())
+		{
+			if (property.Value.ValueKind != JsonValueKind.Object)
+				throw new JsonSchemaException($"'{Name}' values must be objects with keys representing property values, found {value.ValueKind} under property {property.Name}");
+
+			if (property.Value.EnumerateObject().Any(x => x.Value.ValueKind is not (JsonValueKind.Object or JsonValueKind.True or JsonValueKind.False)))
+				throw new JsonSchemaException($"Values inside property values of {Name} must be valid schemas");
+		}
 
 		return null;
 	}
@@ -51,17 +43,20 @@ public class PropertiesKeyword : IKeywordHandler
 	/// </summary>
 	/// <param name="keyword">The keyword data used to determine which subschemas to build. Cannot be null.</param>
 	/// <param name="context">The context in which subschemas are constructed and registered. Cannot be null.</param>
-	public virtual void BuildSubschemas(KeywordData keyword, BuildContext context)
+	public void BuildSubschemas(KeywordData keyword, BuildContext context)
 	{
 		var subschemas = new List<JsonSchemaNode>();
 		foreach (var property in keyword.RawValue.EnumerateObject())
 		{
-			var defContext = context with
+			foreach (var value in property.Value.EnumerateObject())
 			{
-				LocalSchema = property.Value,
-				RelativePath = JsonPointer.Create(property.Name)
-			};
-			subschemas.Add(JsonSchema.BuildNode(defContext));
+				var defContext = context with
+				{
+					LocalSchema = value.Value,
+					RelativePath = JsonPointer.Create(property.Name, value.Name)
+				};
+				subschemas.Add(JsonSchema.BuildNode(defContext));
+			}
 		}
 
 		keyword.Subschemas = subschemas.ToArray();
@@ -73,45 +68,33 @@ public class PropertiesKeyword : IKeywordHandler
 	/// <param name="keyword">The keyword data to be evaluated. Cannot be null.</param>
 	/// <param name="context">The context in which the keyword evaluation is performed. Cannot be null.</param>
 	/// <returns>A KeywordEvaluation object containing the results of the evaluation.</returns>
-	public virtual KeywordEvaluation Evaluate(KeywordData keyword, EvaluationContext context)
+	public KeywordEvaluation Evaluate(KeywordData keyword, EvaluationContext context)
 	{
 		if (context.Instance.ValueKind != JsonValueKind.Object) return KeywordEvaluation.Ignore;
 
+		var propertyNames = (HashSet<string>)keyword.Value!;
 		var subschemaEvaluations = new List<EvaluationResults>();
-		var propertyNames = new HashSet<string>();
 
-		foreach (var subschema in keyword.Subschemas)
+		foreach (var property in context.Instance.EnumerateObject())
 		{
-			var instance = subschema.RelativePath.Evaluate(context.Instance);
-			if (!instance.HasValue) continue;
+			if (!propertyNames.Contains(property.Name)) continue;
 
-			var propertyName = subschema.RelativePath[0].ToString();
-			propertyNames.Add(propertyName);
+			var schemaIndex = Array.FindIndex(keyword.Subschemas, s => s.RelativePath[0].ToString() == property.Name);
+			if (schemaIndex == -1) continue;
 
 			var propContext = context with
 			{
-				InstanceLocation = context.InstanceLocation.Combine(subschema.RelativePath),
-				Instance = instance.Value,
-				EvaluationPath = context.EvaluationPath.Combine(Name, propertyName)
+				EvaluationPath = context.EvaluationPath.Combine(Name, property.Name)
 			};
 
-			var local = subschema.Evaluate(propContext);
-			subschemaEvaluations.Add(local);
-
-			if (context.CanOptimize && !local.IsValid)
-				return new KeywordEvaluation
-				{
-					Keyword = Name,
-					IsValid = false
-				};
+			subschemaEvaluations.Add(keyword.Subschemas[schemaIndex].Evaluate(propContext));
 		}
 
 		return new KeywordEvaluation
 		{
 			Keyword = Name,
 			IsValid = subschemaEvaluations.Count == 0 || subschemaEvaluations.All(x => x.IsValid),
-			Details = subschemaEvaluations.ToArray(),
-			Annotation = JsonSerializer.SerializeToElement(propertyNames, JsonSchemaSerializerContext.Default.HashSetString)
+			Details = subschemaEvaluations.ToArray()
 		};
 	}
 }
