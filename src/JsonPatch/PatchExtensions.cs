@@ -120,7 +120,11 @@ public static class PatchExtensions
 
 	private static void PatchForArray(JsonArray original, JsonArray target, List<PatchOperation> patch, JsonPointer path)
 	{
-		if (target.Count >= original.Count)
+		if (original.Count == 0 ^ target.Count == 0)
+		{
+			patch.Add(PatchOperation.Replace(path, target));
+		}
+		else if (target.Count >= original.Count)
 		{
 			for (int i = 0; i < target.Count; i++)
 			{
@@ -131,10 +135,6 @@ public static class PatchExtensions
 				}
 				patch.Add(PatchOperation.Add(path.Combine(i), target[i]));
 			}
-		}
-		else if (target.Count == 0)
-		{
-			patch.Add(PatchOperation.Replace(path, target));
 		}
 		else
 		{

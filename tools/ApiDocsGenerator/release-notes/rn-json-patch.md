@@ -4,6 +4,11 @@ title: JsonPatch.Net
 icon: fas fa-tag
 order: "09.09"
 ---
+# [4.1.0](https://github.com/gregsdennis/json-everything/pull/970) {#release-patch-4.1.0}
+
+- [#963](https://github.com/json-everything/json-everything/pull/963) - Runtime performance improvement for `PatchExtensions.CreatePatch` by [@stephenmk](https://github.com/stephenmk)
+- [#964](https://github.com/json-everything/json-everything/issues/964) - Patch size optimization for comparisons involving zero-length arrays by [@stephenmk](https://github.com/stephenmk)
+
 # [4.0.0](https://github.com/gregsdennis/json-everything/pull/952) {#release-patch-4.0.0}
 
 - Add .Net 10 support.

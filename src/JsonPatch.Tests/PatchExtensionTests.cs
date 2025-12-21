@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
@@ -295,6 +296,22 @@ public class PatchExtensionTests
 			Assert.That(final.Strings!, Is.Empty);
 			Assert.That(final.InnerObjects!, Is.Empty);
 		});
+	}
+
+	[Test]
+	public void CreatePatch_OptimalAddWholeArrayPatchSize()
+	{
+		var largeNumberArray = Enumerable.Range(start: 0, count: 100).ToArray();
+		var original = new TestModel
+		{
+			Numbers = []
+		};
+		var target = new TestModel
+		{
+			Numbers = largeNumberArray
+		};
+		var patch = original.CreatePatch(target, TestEnvironment.SerializerOptions);
+		Assert.That(patch.Operations, Has.Count.EqualTo(1));
 	}
 
 	[Test]
