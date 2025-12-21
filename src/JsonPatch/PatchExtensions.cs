@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Json.More;
@@ -99,18 +98,23 @@ public static class PatchExtensions
 
 	private static void PatchForObject(JsonObject original, JsonObject target, List<PatchOperation> patch, JsonPointer path)
 	{
-		var origNames = original.Select(x => x.Key).ToArray();
-		var modNames = target.Select(x => x.Key).ToArray();
-
-		patch.AddRange(origNames.Except(modNames).Select(key => PatchOperation.Remove(path.Combine(key))));
-		patch.AddRange(modNames.Except(origNames).Select(key => PatchOperation.Add(path.Combine(key), target[key])));
-
-		foreach (var key in origNames.Intersect(modNames))
+		foreach (var (key, origValue) in original)
 		{
-			var origValue = original[key];
-			var modValue = target[key];
-
-			CreatePatch(patch, origValue, modValue, path.Combine(key));
+			if (target.TryGetPropertyValue(key, out var targetValue))
+			{
+				CreatePatch(patch, origValue, targetValue, path.Combine(key));
+			}
+			else
+			{
+				patch.Add(PatchOperation.Remove(path.Combine(key)));
+			}
+		}
+		foreach (var (key, targetValue) in target)
+		{
+			if (!original.ContainsKey(key))
+			{
+				patch.Add(PatchOperation.Add(path.Combine(key), targetValue));
+			}
 		}
 	}
 
@@ -120,13 +124,12 @@ public static class PatchExtensions
 		{
 			for (int i = 0; i < target.Count; i++)
 			{
-				if (i >= original.Count)
+				if (i < original.Count)
 				{
-					patch.Add(PatchOperation.Add(path.Combine(i), target[i]));
+					CreatePatch(patch, original[i], target[i], path.Combine(i));
 					continue;
 				}
-
-				PatchForArrayIndex(i);
+				patch.Add(PatchOperation.Add(path.Combine(i), target[i]));
 			}
 		}
 		else if (target.Count == 0)
@@ -135,25 +138,16 @@ public static class PatchExtensions
 		}
 		else
 		{
-			int i = original.Count;
-			while (--i >= 0)
+			// Loop backwards because Remove operations cause array lengths to shrink.
+			for (int i = original.Count - 1; i >= 0; i--)
 			{
-				var ui = (uint)i;
-				if (i >= target.Count)
+				if (i < target.Count)
 				{
-					patch.Add(PatchOperation.Remove(path.Combine(i)));
+					CreatePatch(patch, original[i], target[i], path.Combine(i));
 					continue;
 				}
-				PatchForArrayIndex(i);
+				patch.Add(PatchOperation.Remove(path.Combine(i)));
 			}
-		}
-
-		void PatchForArrayIndex(int i)
-		{
-			var origValue = original[i];
-			var modValue = target[i];
-
-			CreatePatch(patch, origValue, modValue, path.Combine(i));
 		}
 	}
 }
