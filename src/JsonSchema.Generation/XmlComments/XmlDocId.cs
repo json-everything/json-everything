@@ -205,7 +205,7 @@ internal static class XmlDocId
 			fullTypeName = $"{typeNamespace}.{type.Name}{outString}";
 		}
 
-		fullTypeName = fullTypeName.Replace("&", "").TrimStart('.');
+		fullTypeName = fullTypeName.Replace("&", "");
 
 		// Multi-dimensional arrays must have 0: for each dimension. Eg. [,,] has to become [0:,0:,0:]
 		while (fullTypeName.Contains("[,"))
