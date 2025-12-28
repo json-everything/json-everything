@@ -35,7 +35,9 @@ public class ReferenceTests
 		// in previous versions, this would still validate the instance, but since adding
 		// static analysis, the ref with the # in it is checked early
 		// and since it can't resolve, it now throws.
-		Assert.Throws<RefResolutionException>(() => baseSchema.Evaluate(baseData, options));
+		var results = baseSchema.Evaluate(baseData, options);
+
+		results.AssertValid();
 	}
 
 	[Test]

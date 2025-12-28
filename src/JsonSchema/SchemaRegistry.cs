@@ -154,10 +154,19 @@ public class SchemaRegistry
 	/// </returns>
 	// For URI equality see https://docs.microsoft.com/en-us/dotnet/api/system.uri.op_equality?view=netcore-3.1
 	// tl;dr - URI equality doesn't consider fragments
-	public IBaseDocument? Get(Uri uri) => GetRegistration(uri)?.Root;
+	public IBaseDocument? Get(Uri uri)
+	{
+		if (uri is { IsAbsoluteUri: true, IsFile: true })
+			uri = new Uri(uri.OriginalString.Split('#')[0]);
+
+		return GetRegistration(uri)?.Root;
+	}
 
 	internal JsonSchemaNode? Get(Uri baseUri, string? anchor)
 	{
+		if (baseUri is { IsAbsoluteUri: true, IsFile: true })
+			baseUri = new Uri(baseUri.OriginalString.Split('#')[0]);
+
 		var registration = GetRegistration(baseUri);
 
 		if (registration?.Anchors is null) return null;

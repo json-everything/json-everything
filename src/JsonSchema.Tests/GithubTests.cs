@@ -1317,4 +1317,41 @@ public class GithubTests
 
 		results.AssertValid();
 	}
+
+	[Test]
+	public void Issue973_FetchFiles()
+	{
+		var buildOptions = new BuildOptions
+		{
+			SchemaRegistry = new()
+			{
+				Fetch = (uri, self) =>
+				{
+					if (uri.IsFile)
+					{
+						return JsonSchema.FromFile(uri.AbsolutePath, new()
+						{
+							SchemaRegistry = self,
+						});
+					}
+
+					return null;
+				}
+			}
+		};
+
+		var schemaFile = GetFile(973, "schema");
+		var instance = JsonDocument.Parse(
+			"""
+			{
+			  "propA": "a string",
+			  "propB": 42
+			}
+			""").RootElement;
+
+		var schema = JsonSchema.FromFile(schemaFile, buildOptions);
+		var results = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
+
+		results.AssertValid();
+	}
 }

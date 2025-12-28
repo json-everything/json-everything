@@ -4,6 +4,10 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "09.01"
 ---
+# [8.0.5](https://github.com/gregsdennis/json-everything/pull/974) {#release-schema-8.0.5}
+
+[#973](https://github.com/gregsdennis/json-everything/issues/973) - Unable to resolve references inside referenced files.  Thanks to [@ivi-hamiti](https://github.com/ivi-hamiti) for reporting.
+
 # [8.0.4](https://github.com/gregsdennis/json-everything/pull/967) {#release-schema-8.0.4}
 
 Significant performance improvements.
