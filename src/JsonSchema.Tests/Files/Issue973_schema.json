@@ -1,0 +1,11 @@
+{
+    "type": "object",
+    "properties": {
+        "propA": {
+            "$ref": "./Issue973_target.json#/$defs/TypeA"
+        },
+        "propB": {
+            "$ref": "./Issue973_target.json#/$defs/TypeB"
+        }
+    }
+}

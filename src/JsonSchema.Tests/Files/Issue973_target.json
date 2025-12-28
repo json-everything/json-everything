@@ -1,0 +1,6 @@
+{
+  "$defs": {
+    "TypeA": { "type": "string" },
+    "TypeB": { "type": "number" }
+  }
+}
