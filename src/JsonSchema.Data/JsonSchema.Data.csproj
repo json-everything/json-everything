@@ -15,12 +15,11 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <Version>8.0.0</Version>
-    <FileVersion>8.0.0.0</FileVersion>
+    <Version>8.0.1</Version>
+    <FileVersion>8.0.1.0</FileVersion>
     <AssemblyVersion>8.0.0.0</AssemblyVersion>
     <Authors>Greg Dennis</Authors>
     <Description>Extends JsonSchema.Net to provide the "data" keyword</Description>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIcon>json-logo-256.png</PackageIcon>
     <PackageProjectUrl>https://github.com/json-everything/json-everything</PackageProjectUrl>
@@ -29,11 +28,13 @@
     <PackageReleaseNotes>Release notes can be found at https://docs.json-everything.net/rn-json-schema-data/</PackageReleaseNotes>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
+	  <PackageLicenseFile>OSMFEULA.txt</PackageLicenseFile>
+	  <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
 
     <PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
   </PropertyGroup>
 
-	<ItemGroup>
+  <ItemGroup>
 		<EmbeddedResource Include="..\..\Meta-Schemas\data-2023.json" Link="Meta-Schemas\%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
 
@@ -47,6 +48,7 @@
     <None Include="README.md" Pack="true" PackagePath="\" />
     <None Include="..\..\LICENSE" Pack="true" PackagePath="\" />
     <None Include="..\..\Resources\json-logo-256.png" Pack="true" PackagePath="\" />
+    <None Include="..\..\OSMFEULA.txt" Pack="true" PackagePath="OSMFEULA.txt"/>
   </ItemGroup>
 
   <ItemGroup>

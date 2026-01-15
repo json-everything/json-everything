@@ -15,12 +15,11 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <Version>3.0.1</Version>
-    <FileVersion>3.0.1</FileVersion>
+    <Version>3.0.2</Version>
+    <FileVersion>3.0.2</FileVersion>
     <AssemblyVersion>3.0.0.0</AssemblyVersion>
     <Authors>Greg Dennis</Authors>
     <Description>Extends JsonSchema.Net to provide keywords to extend array validation</Description>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIcon>json-logo-256.png</PackageIcon>
     <PackageProjectUrl>https://github.com/json-everything/json-everything</PackageProjectUrl>
@@ -29,11 +28,13 @@
     <PackageReleaseNotes>Release notes can be found at https://docs.json-everything.net/rn-json-schema-array-ext/</PackageReleaseNotes>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
+	  <PackageLicenseFile>OSMFEULA.txt</PackageLicenseFile>
+	  <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
 
     <PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
   </PropertyGroup>
 
-	<ItemGroup>
+  <ItemGroup>
 		<EmbeddedResource Include="..\..\Meta-Schemas\array-ext.json" Link="Meta-Schemas\%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
 
@@ -47,6 +48,7 @@
     <None Include="README.md" Pack="true" PackagePath="\" />
     <None Include="..\..\LICENSE" Pack="true" PackagePath="\" />
     <None Include="..\..\Resources\json-logo-256.png" Pack="true" PackagePath="\" />
+    <None Include="..\..\OSMFEULA.txt" Pack="true" PackagePath="OSMFEULA.txt"/>
   </ItemGroup>
 
   <ItemGroup>

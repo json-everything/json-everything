@@ -15,12 +15,11 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <Version>4.0.0</Version>
-    <FileVersion>4.0.0</FileVersion>
+    <Version>4.0.1</Version>
+    <FileVersion>4.0.1</FileVersion>
     <AssemblyVersion>4.0.0.0</AssemblyVersion>
     <Authors>Greg Dennis</Authors>
     <Description>Extends JsonSchema.Net to support OpenAPI v3.1's JSON Schema vocabulary extension</Description>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIcon>openapi.png</PackageIcon>
     <PackageProjectUrl>https://github.com/json-everything/json-everything</PackageProjectUrl>
@@ -29,11 +28,13 @@
     <PackageReleaseNotes>Release notes can be found at https://docs.json-everything.net/rn-json-schema-openapi/</PackageReleaseNotes>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
+	  <PackageLicenseFile>OSMFEULA.txt</PackageLicenseFile>
+	  <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
 
     <PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
   </PropertyGroup>
 
-	<ItemGroup>
+  <ItemGroup>
 		<EmbeddedResource Include="..\..\Meta-Schemas\OpenAPI\**" Link="Meta-Schemas\%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
 
@@ -47,6 +48,7 @@
     <None Include="README.md" Pack="true" PackagePath="\" />
     <None Include="..\..\LICENSE" Pack="true" PackagePath="\" />
     <None Include="..\..\Resources\openapi.png" Pack="true" PackagePath="\" />
+    <None Include="..\..\OSMFEULA.txt" Pack="true" PackagePath="OSMFEULA.txt"/>
   </ItemGroup>
 
   <ItemGroup>

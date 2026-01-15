@@ -17,22 +17,23 @@
     <IncludeBuildOutput>false</IncludeBuildOutput>
 
     <PackageId>JsonSchema.Net</PackageId>
-    <JsonSchemaNetVersion>8.0.5</JsonSchemaNetVersion>
+    <JsonSchemaNetVersion>8.0.6</JsonSchemaNetVersion>
     <AssemblyVersion>8.0.0.0</AssemblyVersion>
     <FileVersion>$(JsonSchemaNetVersion)</FileVersion>
     <Version>$(JsonSchemaNetVersion)</Version>
     <Authors>Greg Dennis</Authors>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageIcon>json-logo-256.png</PackageIcon>
     <PackageProjectUrl>https://github.com/json-everything/json-everything</PackageProjectUrl>
     <RepositoryUrl>https://github.com/json-everything/json-everything</RepositoryUrl>
     <PackageReleaseNotes>Release notes can be found at https://docs.json-everything.net/rn-json-schema/</PackageReleaseNotes>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
+	  <PackageLicenseFile>OSMFEULA.txt</PackageLicenseFile>
+	  <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
 
     <PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
   </PropertyGroup>
 
-	<ItemGroup>
+  <ItemGroup>
 		<EmbeddedResource Include="..\..\Meta-Schemas\**\*.json" Link="Meta-Schemas\%(RecursiveDir)%(Filename)%(Extension)" />
 		<EmbeddedResource Remove="..\..\Meta-Schemas\OpenAPI\**" />
 		<EmbeddedResource Remove="..\..\Meta-Schemas\array-ext.json" />
@@ -62,6 +63,7 @@
     <None Include="README.md" Pack="true" PackagePath="\" />
     <None Include="..\..\LICENSE" Pack="true" PackagePath="\" />
     <None Include="..\..\Resources\json-logo-256.png" Pack="true" PackagePath="\" />
+    <None Include="..\..\OSMFEULA.txt" Pack="true" PackagePath="OSMFEULA.txt"/>
     <None Include="bin\$(Configuration)\netstandard2.0\JsonSchema.Net.dll" Pack="true" PackagePath="lib\netstandard2.0" />
     <None Include="bin\$(Configuration)\netstandard2.0\JsonSchema.Net.xml" Pack="true" PackagePath="lib\netstandard2.0" />
     <None Include="bin\$(Configuration)\netstandard2.0\JsonSchema.Net.pdb" Pack="true" PackagePath="lib\netstandard2.0" />
