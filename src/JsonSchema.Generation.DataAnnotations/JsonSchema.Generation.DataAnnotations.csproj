@@ -15,9 +15,9 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <Version>2.0.1</Version>
-    <FileVersion>2.0.1</FileVersion>
-    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <Version>3.0.0</Version>
+    <FileVersion>3.0.0</FileVersion>
+    <AssemblyVersion>3.0.0.0</AssemblyVersion>
     <Authors>Greg Dennis</Authors>
     <Description>Extends JsonSchema.Net.Generation to support the System.ComponentModel.DataAnnotations namespace</Description>
     <PackageReadmeFile>README.md</PackageReadmeFile>

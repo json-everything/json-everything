@@ -15,9 +15,9 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <Version>3.0.2</Version>
-    <FileVersion>3.0.2</FileVersion>
-    <AssemblyVersion>3.0.0.0</AssemblyVersion>
+    <Version>4.0.0</Version>
+    <FileVersion>4.0.0</FileVersion>
+    <AssemblyVersion>4.0.0.0</AssemblyVersion>
     <Authors>Greg Dennis</Authors>
     <Description>Extends JsonSchema.Net to provide keywords to extend array validation</Description>
     <PackageReadmeFile>README.md</PackageReadmeFile>

@@ -4,6 +4,12 @@ title: JsonSchema.Net.Generation
 icon: fas fa-tag
 order: "09.05"
 ---
+# [7.0.0](https://github.com/gregsdennis/json-everything/pull/982) {#release-schemagen-7.0.0}
+
+Enacted Open Source Maintenance Fee.
+
+See the [blog post](https://blog.json-everything.net/posts/expensive/) for more information.
+
 # [6.0.0](https://github.com/json-everything/json-everything/pull/952) {#release-schemagen-6.0.0}
 
 Updated per _JsonSchema.Net_ v8 (breaking changes).
