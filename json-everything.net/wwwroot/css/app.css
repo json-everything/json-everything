@@ -97,10 +97,10 @@ a,
 }
 
 .banner-container {
-	margin-top: 1.5rem;
+	margin-top: 1rem;
 	margin-left: auto;
 	margin-right: auto;
-	max-width: 50%;
+	max-width: 60%;
 	text-align: center !important;
 }
 
@@ -110,6 +110,11 @@ a,
 	border-width: 1px;
 	border-radius: 3px;
 	border-style: solid;
+}
+
+html[data-bs-theme="light"] .announcement-border {
+	background-color: #e8d4f8;
+	border-color: #6800B7;
 }
 
 #blazor-error-ui {

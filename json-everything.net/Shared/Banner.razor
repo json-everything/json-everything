@@ -1,4 +1,4 @@
-﻿<div class="banner-container; @Style">
+﻿<div class="banner-container @Style">
 	<div class="announcement-border text-center px-3 py-1 div-hcenter">
 		<div>
 			<strong>@Title</strong>
@@ -18,9 +18,15 @@
 #pragma warning restore CS8618
 
 	public const string AnnouncementTitle = "Announcement!";
-	public const string DocsMessage = "All documentation (guides, examples, release notes, and API reference) for this project has moved to<br/> " +
-	                            "<a href=\"https://docs.json-everything.net\">https://docs.json-everything.net</a>.  " +
-	                            "There's also a link in the upper right corner.";
-	public const string BowtieMessage = "View JSON Schema Test Suite results on <a href=\"https://bowtie-json-schema.github.io/bowtie/\">Bowtie</a> " +
-	                              "and compare with other JSON Schema implementations across multiple platforms!";
+
+	public const string MaintenanceFeeContent =
+		"""
+		To ensure the long-term sustainability of the project,
+		<code>json-everything</code> will soon be adopting the
+		<a href="">Open Source Maintenance Fee</a>.
+		For more information on this decision and whether the fee
+		applies to your use of the libraries, please read the
+		<a href="https://blog.json-everything.net/posts/expensive/">announcement blog post.</a>
+		""";
+
 }
