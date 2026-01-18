@@ -1,4 +1,7 @@
-﻿<nav class="mx-3 navbar">
+﻿@using JsonEverythingNet.Services
+@inject DataManager DataManager
+
+<nav class="mx-3 navbar nav-container @(isCollapsed ? "collapsed" : "")">
 	<div class="container-fluid width-auto">
 		<div class="row justify-content-center">
             <NavLink class="col mx-3 text-center btn-primary header-btn" href="json-schema">
@@ -39,4 +42,26 @@
 			</NavLink>
 		</div>
 	</div>
+	<button class="collapse-toggle-btn" @onclick="ToggleCollapse" title="@(isCollapsed ? "Expand" : "Collapse")">
+		<span class="toggle-icon">@(isCollapsed ? "▼" : "▲")</span>
+	</button>
 </nav>
+
+@code {
+	private bool isCollapsed = false;
+
+	protected override async Task OnInitializedAsync()
+	{
+		var stored = await DataManager.Get("navMenuCollapsed");
+		if (stored != null && bool.TryParse(stored, out var collapsed))
+		{
+			isCollapsed = collapsed;
+		}
+	}
+
+	private async Task ToggleCollapse()
+	{
+		isCollapsed = !isCollapsed;
+		await DataManager.Set("navMenuCollapsed", isCollapsed.ToString());
+	}
+}
