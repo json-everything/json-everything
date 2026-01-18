@@ -97,10 +97,10 @@ a,
 }
 
 .banner-container {
-	margin-top: 1rem;
+	margin-top: 1.5rem;
 	margin-left: auto;
 	margin-right: auto;
-	max-width: 60%;
+	max-width: 50%;
 	text-align: center !important;
 }
 
@@ -110,11 +110,6 @@ a,
 	border-width: 1px;
 	border-radius: 3px;
 	border-style: solid;
-}
-
-html[data-bs-theme="light"] .announcement-border {
-	background-color: #e8d4f8;
-	border-color: #6800B7;
 }
 
 #blazor-error-ui {
@@ -353,9 +348,6 @@ pre {
 	unicode-bidi: normal;
 }
 
-.editor-colors {
-}
-
 .editor-colors > div {
 	background-color: transparent !important;
 
@@ -448,5 +440,114 @@ html[data-bs-theme="light"] blockquote {
 
 .cover {
   object-fit: cover;
+}
+
+/* Nav container styling for collapse functionality */
+.nav-container {
+    position: relative;
+	padding-bottom: 1rem;
+	max-height: 400px;
+	transition: padding-bottom 0.3s ease, max-height 0.3s ease, transform 0.3s ease;
+}
+
+/* Toggle button styling */
+.collapse-toggle-btn {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%) translateY(50%);
+    width: 80px;
+    height: 10px;
+    border-radius: 4px;
+    background-color: #6800B7;
+    border: 1px solid transparent;
+    color: rgb(216, 216, 217);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+}
+
+.collapse-toggle-btn:hover {
+    color: lightgray;
+}
+
+.collapse-toggle-btn:focus {
+    outline: none;
+	box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+}
+
+.toggle-icon {
+    font-size: 6px;
+    line-height: 1;
+}
+
+.feature-description {
+	max-height: 3rem;
+	overflow: hidden;
+	transition: opacity 0.3s ease, max-height 0.3s ease, margin-top 0.3s ease, width 0.3s ease;
+}
+
+/* Collapsed state styles */
+.nav-container .header-btn {
+	min-width: 140px;
+	transition: min-width 0.3s ease, padding 0.3s ease;
+}
+
+.nav-container.collapsed {
+    padding-top: 0;
+	max-height: 140px;
+}
+
+.nav-container.collapsed .feature-description {
+    opacity: 0;
+    max-height: 0;
+    width: 0;
+}
+
+.nav-container.collapsed .header-btn {
+    height: auto;
+	min-width: 110px;
+}
+
+.nav-container.collapsed .header-btn > div > div:first-child {
+    white-space: nowrap;
+}
+
+/* Apply transform translation only on larger screens when collapsed */
+@media (min-width: 1200px) {
+	.nav-container.collapsed {
+		transform: translateY(-46px);
+		margin-bottom: -46px;
+		/* Keep translated content visible and clickable above article */
+		overflow: visible;
+		position: relative;
+		z-index: 10;
+		pointer-events: none;
+	}
+
+	.nav-container.collapsed .header-btn {
+		min-width: auto;
+		width: auto;
+	}
+
+	/* Left-align row; add fixed horizontal offset and keep above article */
+	.nav-container.collapsed .row.justify-content-center {
+		justify-content: flex-start !important;
+		transform: translateX(275px);
+		position: relative;
+		z-index: 11;
+		pointer-events: auto;
+	}
+
+	.nav-container.collapsed .collapse-toggle-btn {
+		pointer-events: auto;
+	}
+
+	.nav-container.collapsed .width-auto {
+		width: 100%;
+	}
 }
 
