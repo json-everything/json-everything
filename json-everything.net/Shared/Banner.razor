@@ -1,11 +1,18 @@
-﻿<div class="banner-container @Style">
-	<div class="announcement-border text-center px-3 py-1 div-hcenter">
-		<div>
-			<strong>@Title</strong>
-			@((MarkupString)Content)
+﻿@using JsonEverythingNet.Services
+@inject DataManager DataManager
+
+@if (!_isDismissed)
+{
+	<div class="banner-container @Style">
+		<div class="announcement-border text-center px-3 py-1 div-hcenter">
+			<div>
+				<strong>@Title</strong>
+				@((MarkupString)Content)
+			</div>
+			<a href="javascript:void(0)" class="banner-dismiss" @onclick="DismissBanner">Dismiss</a>
 		</div>
 	</div>
-</div>
+}
 
 @code {
 #pragma warning disable CS8618
@@ -16,6 +23,22 @@
 	[Parameter]
 	public string Style { get; set; } = string.Empty;
 #pragma warning restore CS8618
+
+	private bool _isDismissed;
+	private string DismissedKey => $"bannerDismissed_{ComputeStableHash(Title)}";
+
+	private static string ComputeStableHash(string input)
+	{
+		unchecked
+		{
+			int hash = 23;
+			foreach (char c in input)
+			{
+				hash = hash * 31 + c;
+			}
+			return Math.Abs(hash).ToString();
+		}
+	}
 
 	public const string AnnouncementTitle = "Announcement!";
 
@@ -29,4 +52,15 @@
 		<a href="https://blog.json-everything.net/posts/expensive/">announcement blog post.</a>
 		""";
 
+	protected override async Task OnInitializedAsync()
+	{
+		var dismissed = await DataManager.Get(DismissedKey);
+		_isDismissed = dismissed == "true";
+	}
+
+	private async Task DismissBanner()
+	{
+		await DataManager.Set(DismissedKey, "true");
+		_isDismissed = true;
+	}
 }
