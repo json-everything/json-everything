@@ -110,7 +110,24 @@ a,
 	border-width: 1px;
 	border-radius: 3px;
 	border-style: solid;
+	position: relative;
+	padding-bottom: 1.5rem;
 }
+
+.banner-dismiss {
+	position: absolute;
+	bottom: 0.25rem;
+	right: 0.5rem;
+	font-size: 0.85rem;
+	color: #bbb;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+	.banner-dismiss:hover {
+		color: #fff;
+		text-decoration: underline;
+	}
 
 #blazor-error-ui {
 	background-color: #1e1e1e;
