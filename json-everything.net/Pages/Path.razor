@@ -159,12 +159,17 @@
 	private StandaloneEditorConstructionOptions BasicOptions(StandaloneCodeEditor _) => EditorOptions.Basic();
 	private StandaloneEditorConstructionOptions ReadOnlyOptions(StandaloneCodeEditor _) => EditorOptions.Readonly();
 
+	protected override void OnInitialized()
+	{
+		ThemeService.OnThemeChanged += HandleThemeChanged;
+	}
+
 	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
 		if (firstRender)
 		{
-			ThemeService.OnThemeChanged += HandleThemeChanged;
-			
+			HandleThemeChanged();
+
 			await JsRuntime.InvokeVoidAsync("initResizableSidebar");
 			await LoadSavedPath();
 			await LoadSavedInstance();

@@ -585,6 +585,7 @@ namespace JsonEverythingTemp;
 		if (firstRender)
 		{
 			ThemeService.OnThemeChanged += HandleThemeChanged;
+			HandleThemeChanged();
 			
 			await JsRuntime.InvokeVoidAsync("initResizableSidebar");
 			
