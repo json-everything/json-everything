@@ -4,6 +4,12 @@ title: Yaml2JsonNode
 icon: fas fa-tag
 order: "09.13"
 ---
+# [3.0.0](https://github.com/gregsdennis/json-everything/pull/982) {#release-yaml-3.0.0}
+
+Enacted Open Source Maintenance Fee.
+
+See the [blog post](https://blog.json-everything.net/posts/expensive/) for more information.
+
 # [2.3.0](https://github.com/gregsdennis/json-everything/pull/952) {#release-yaml-2.3.0}
 
 - Add `JsonElement` support extensions.

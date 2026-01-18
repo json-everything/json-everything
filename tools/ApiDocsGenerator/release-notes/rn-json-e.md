@@ -4,6 +4,12 @@ title: JsonE.Net
 icon: fas fa-tag
 order: "09.12"
 ---
+# [3.0.0](https://github.com/gregsdennis/json-everything/pull/982) {#release-e-3.0.0}
+
+Enacted Open Source Maintenance Fee.
+
+See the [blog post](https://blog.json-everything.net/posts/expensive/) for more information.
+
 # [2.5.1](https://github.com/gregsdennis/json-everything/pull/934) {#release-e-2.5.1}
 
 [#931](https://github.com/json-everything/json-everything/pull/931) - Fixed bounds issue for negative indices in array expressions.  Thanks to [@einart-vm](https://github.com/einart-vm) for identifying this.

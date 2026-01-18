@@ -4,6 +4,12 @@ title: JsonSchema.Net.OpenApi
 icon: fas fa-tag
 order: "09.04"
 ---
+# [5.0.0](https://github.com/gregsdennis/json-everything/pull/982) {#release-schemaopenapi-5.0.0}
+
+Enacted Open Source Maintenance Fee.
+
+See the [blog post](https://blog.json-everything.net/posts/expensive/) for more information.
+
 # [4.0.0](https://github.com/gregsdennis/json-everything/pull/952) {#release-schemaopenapi-4.0.0}
 
 Updated per _JsonSchema.Net_ v8.
