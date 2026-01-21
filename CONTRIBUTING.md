@@ -18,11 +18,18 @@ For bugs, please submit _minimal_ reproductions that demonstrate the problem you
 
 Please be sure that an issue has been opened to allow for proper discussion before submitting a PR.  If the project maintainers decide _not_ to merge your PR, you might feel you've wasted your time, and no one wants that.
 
+When submitting a PR for a bug fix, please follow this multistep process:
+
+1. Commit at least one test demonstrating the bug.  **Push this commit and create the PR.**  This triggers a build which runs the test.  This build should fail.
+2. Apply the bug fix, commit, and push to the PR.  This triggers the build again.  At this point the tests should pass.
+
+Following this procedure creates a sequence of builds which show that there was something wrong that was later fixed.
+
 # Development
 
 ## Requirements
 
-These libraries run tests in .Net 6 and .Net 8, so you'll need those.
+These libraries run tests in .Net 8, 9, and 10, so you'll need those.
 
 All of the projects are configured to use the latest C# version.
 
