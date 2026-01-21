@@ -4,6 +4,12 @@ title: JsonSchema.Net.ArrayExt
 icon: fas fa-tag
 order: "09.03"
 ---
+# [4.0.0](https://github.com/gregsdennis/json-everything/pull/982) {#release-schemaarrayext-4.0.0}
+
+Enacted Open Source Maintenance Fee.
+
+See the [blog post](https://blog.json-everything.net/posts/expensive/) for more information.
+
 # [3.0.1](https://github.com/gregsdennis/json-everything/pull/959) {#release-schemaarrayext-3.0.1}
 
 Performance improvements for `uniqueKeys`.

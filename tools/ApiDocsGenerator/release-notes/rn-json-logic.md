@@ -4,6 +4,12 @@ title: JsonLogic
 icon: fas fa-tag
 order: "09.11"
 ---
+# [6.0.0](https://github.com/gregsdennis/json-everything/pull/982) {#release-logic-6.0.0}
+
+Enacted Open Source Maintenance Fee.
+
+See the [blog post](https://blog.json-everything.net/posts/expensive/) for more information.
+
 # [5.5.0](https://github.com/json-everything/json-everything/pull/952) {#release-logic-5.5.0}
 
 - Add .Net 10.0 support.

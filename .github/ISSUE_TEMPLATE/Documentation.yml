@@ -12,6 +12,12 @@ body:
       label: What's your idea or question?
     validations:
       required: true
+  - type: input
+    id: sponsor
+    attributes:
+      label: Are you representing an organization or employer?  If so, who?
+    validations:
+      required: false
   - type: checkboxes
     id: terms
     attributes:

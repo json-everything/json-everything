@@ -56,6 +56,12 @@ body:
       label: Is there any other information you'd like to share regarding this enhancement?
     validations:
       required: false
+  - type: input
+    id: sponsor
+    attributes:
+      label: Are you representing an organization or employer?  If so, who?
+    validations:
+      required: false
   - type: checkboxes
     id: terms
     attributes:

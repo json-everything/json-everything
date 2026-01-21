@@ -21,6 +21,14 @@ Resolves ___     <!-- Use if these changes completely resolve the issue -->
 Relates to ___   <!-- Use if these changes relate to but do not resolve the issue -->
 Depends on ___   <!-- Use if these changes require other changes to be merged first -->
 
+### Organization
+
+<!-- 
+Are you submitting this change on behalf of an organization?  If so, who?
+-->
+- [ ] Organization: ___
+- [ ] Independent
+
 ### Checks
 
 - [ ] I have read and understand the [Code of Conduct](https://github.com/json-everything/json-everything/blob/master/CODE_OF_CONDUCT.md) and [Contribution Guidelines](https://github.com/json-everything/json-everything/blob/master/CONTRIBUTING.md).

@@ -4,6 +4,12 @@ title: JsonPath.Net
 icon: fas fa-tag
 order: "09.08"
 ---
+# [3.0.0](https://github.com/gregsdennis/json-everything/pull/982) {#release-path-3.0.0}
+
+Enacted Open Source Maintenance Fee.
+
+See the [blog post](https://blog.json-everything.net/posts/expensive/) for more information.
+
 # [2.2.0](https://github.com/gregsdennis/json-everything/pull/952) {#release-path-2.2.0}
 
 - Add .Net 10.0 support.
