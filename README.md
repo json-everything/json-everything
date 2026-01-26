@@ -161,6 +161,7 @@ Error message translations for _JsonSchema.Net_ available in:
 - Italian `it`
 - Norwegian `nb-NO`
 - Polish `pl-PL`
+- Portuguese `pt`
 - Russian `ru`
 - Spanish `es`
 - Swedish `sv-SE`
