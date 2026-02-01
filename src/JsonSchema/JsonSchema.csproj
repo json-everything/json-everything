@@ -63,7 +63,7 @@
     <None Include="README.md" Pack="true" PackagePath="\" />
     <None Include="..\..\LICENSE" Pack="true" PackagePath="\" />
     <None Include="..\..\Resources\json-logo-256.png" Pack="true" PackagePath="\" />
-    <None Include="..\..\OSMFEULA.txt" Pack="true" PackagePath="OSMFEULA.txt"/>
+    <None Include="..\..\OSMFEULA.txt" Pack="true" PackagePath="\"/>
     <None Include="bin\$(Configuration)\netstandard2.0\JsonSchema.Net.dll" Pack="true" PackagePath="lib\netstandard2.0" />
     <None Include="bin\$(Configuration)\netstandard2.0\JsonSchema.Net.xml" Pack="true" PackagePath="lib\netstandard2.0" />
     <None Include="bin\$(Configuration)\netstandard2.0\JsonSchema.Net.pdb" Pack="true" PackagePath="lib\netstandard2.0" />
@@ -84,6 +84,7 @@
     <None Include="Localization\README.$(ResourceLanguage).md" Pack="true" PackagePath="\README.md" />
     <None Include="..\..\LICENSE" Pack="true" PackagePath="\" />
     <None Include="..\..\Resources\json-logo-256.png" Pack="true" PackagePath="\" />
+    <None Include="..\..\OSMFEULA.txt" Pack="true" PackagePath="\"/>
     <None Include="bin\$(Configuration)\netstandard2.0\$(ResourceLanguage)\JsonSchema.Net.resources.dll" Pack="true" PackagePath="lib\netstandard2.0\$(ResourceLanguage)" />
     <None Include="bin\$(Configuration)\net8.0\$(ResourceLanguage)\JsonSchema.Net.resources.dll" Pack="true" PackagePath="lib\net8.0\$(ResourceLanguage)" />
     <None Include="bin\$(Configuration)\net9.0\$(ResourceLanguage)\JsonSchema.Net.resources.dll" Pack="true" PackagePath="lib\net9.0\$(ResourceLanguage)" />
