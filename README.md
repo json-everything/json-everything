@@ -5,6 +5,13 @@
 >
 > For more information on who must pay the fee and other frequently asked questions, please see the [Open Source Maintenance Fee](https://opensourcemaintenancefee.org/consumers/) organisation page.
 
+> [!IMPORTANT]
+> To ensure the long-term sustainability of this project, I will be introducing a monthly maintenance fee, required to be paid by all organizations or users of any library from this project who generate revenue. You can pay the fee via [GitHub Sponsors](https://github.com/sponsors/gregsdennis).
+>
+> The maintenance fee will be effective starting 1 Feb 2026. To enact this, an EULA on binary releases has be added to the repo and Nuget packages that requires payment of the maintenance fee.
+>
+> For more information on who must pay the fee and other frequently asked questions, please see the [Open Source Maintenance Fee](https://opensourcemaintenancefee.org/consumers/) organisation page.
+
 <div align="right">
   <details>
     <summary >🌐 Language</summary>
