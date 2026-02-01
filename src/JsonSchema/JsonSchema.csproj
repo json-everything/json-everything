@@ -91,47 +91,47 @@
 
   <PropertyGroup Condition="'$(ResourceLanguage)' == 'de'">
     <Description>JsonSchema.Net Locale German (de)</Description>
-    <Version>1.0.1</Version>
+    <Version>2.0.0</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(ResourceLanguage)' == 'es'">
     <Description>JsonSchema.Net Locale Spanish (es)</Description>
-    <Version>2.0.2</Version>
+    <Version>3.0.0</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(ResourceLanguage)' == 'it'">
     <Description>JsonSchema.Net Locale Italian (it)</Description>
-    <Version>1.0.2</Version>
+    <Version>2.0.0</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(ResourceLanguage)' == 'ko'">
     <Description>JsonSchema.Net Locale Korean (ko)</Description>
-    <Version>1.0.2</Version>
+    <Version>2.0.0</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(ResourceLanguage)' == 'nb-NO'">
     <Description>JsonSchema.Net Locale Norwegian (nb-NO)</Description>
-    <Version>2.0.2</Version>
+    <Version>3.0.0</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(ResourceLanguage)' == 'pl-PL'">
     <Description>JsonSchema.Net Locale Polish (pl-PL)</Description>
-    <Version>1.0.3</Version>
+    <Version>2.0.0</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(ResourceLanguage)' == 'ru'">
     <Description>JsonSchema.Net Locale Russian (ru)</Description>
-    <Version>1.0.2</Version>
+    <Version>2.0.0</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(ResourceLanguage)' == 'sv-SE'">
     <Description>JsonSchema.Net Locale Swedish (sv-SE)</Description>
-    <Version>2.0.2</Version>
+    <Version>3.0.0</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(ResourceLanguage)' == 'tr-TR'">
     <Description>JsonSchema.Net Locale Turkish (tr-TR)</Description>
-    <Version>2.0.2</Version>
+    <Version>3.0.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
