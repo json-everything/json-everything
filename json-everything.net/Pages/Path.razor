@@ -7,7 +7,6 @@
 @using System.Text.Encodings.Web
 @using System.Text.Json.Nodes
 @using BlazorMonaco.Editor
-@using Microsoft.AspNetCore.Components
 
 @inject DataManager DataManager;
 @inject IJSRuntime JsRuntime;
@@ -16,7 +15,7 @@
 
 <PageTitle>JSON Path - json-everything.net</PageTitle>
 
-<Banner Title="@Banner.AnnouncementTitle" Content="@Banner.MaintenanceFeeContent"></Banner>
+<Banner Title="@IndexContent.AnnouncementTitle" Content="@IndexContent.MaintenanceFeeContent"></Banner>
 
 <div class="schema-container">
 	<div class="sidebar">

@@ -22,4 +22,16 @@ public static class IndexContent
 	public const string JsonETagline =
 		"Perform complex templating and manipulation of JSON and YAML data " +
 		"using a simple command structure.";
+
+	public const string AnnouncementTitle = "Announcement!";
+
+	public const string MaintenanceFeeContent =
+		"""
+		To ensure the long-term sustainability of the project,
+		<code>json-everything</code> has adopted the
+		<a href="">Open Source Maintenance Fee</a>.
+		For more information on this decision and whether the fee
+		applies to your use of the libraries, please read the
+		<a href="https://blog.json-everything.net/posts/expensive/">announcement blog post.</a>
+		""";
 }
