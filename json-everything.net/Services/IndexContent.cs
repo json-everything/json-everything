@@ -29,7 +29,7 @@ public static class IndexContent
 		"""
 		To ensure the long-term sustainability of the project,
 		<code>json-everything</code> has adopted the
-		<a href="">Open Source Maintenance Fee</a>.
+		<a href="https://opensourcemaintenancefee.org/">Open Source Maintenance Fee</a>.
 		For more information on this decision and whether the fee
 		applies to your use of the libraries, please read the
 		<a href="https://blog.json-everything.net/posts/expensive/">announcement blog post.</a>
