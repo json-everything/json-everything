@@ -15,11 +15,10 @@ public static class JsonSchemaBuilderExtensions
 	/// <param name="builder">The schema builder.</param>
 	/// <param name="configuration">The generator configuration.</param>
 	/// <returns>The schema builder (for fluent syntax support).</returns>
-	[RequiresDynamicCode("This method uses reflection to query types and is not suited for AOT scenarios.")]
-	public static JsonSchemaBuilder FromType<T>(this JsonSchemaBuilder builder, SchemaGeneratorConfiguration? configuration = null)
-	{
-		return FromType(builder, typeof(T), configuration);
-	}
+	public static JsonSchemaBuilder FromType<T>(
+		this JsonSchemaBuilder builder,
+		SchemaGeneratorConfiguration? configuration = null) =>
+		FromType(builder, typeof(T), configuration);
 
 	/// <summary>
 	/// Generates a schema from a CLR type.
@@ -28,8 +27,14 @@ public static class JsonSchemaBuilderExtensions
 	/// <param name="type">The type to generate.</param>
 	/// <param name="configuration">The generator configuration.</param>
 	/// <returns>The schema builder (for fluent syntax support).</returns>
-	[RequiresDynamicCode("This method uses reflection to query types and is not suited for AOT scenarios.")]
-	public static JsonSchemaBuilder FromType(this JsonSchemaBuilder builder, Type type, SchemaGeneratorConfiguration? configuration = null)
+	public static JsonSchemaBuilder FromType(
+		this JsonSchemaBuilder builder,
+		[DynamicallyAccessedMembers(
+			DynamicallyAccessedMemberTypes.NonPublicFields | DynamicallyAccessedMemberTypes.PublicFields |
+			DynamicallyAccessedMemberTypes.NonPublicProperties | DynamicallyAccessedMemberTypes.PublicProperties |
+			DynamicallyAccessedMemberTypes.Interfaces)]
+		Type type,
+		SchemaGeneratorConfiguration? configuration = null)
 	{
 		SchemaGeneratorConfiguration.Current = configuration ?? new SchemaGeneratorConfiguration();
 

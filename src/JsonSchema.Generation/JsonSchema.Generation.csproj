@@ -4,7 +4,7 @@
     <TargetFrameworks>netstandard2.0;net8.0;net9.0;net10.0</TargetFrameworks>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
-    <NoWarn>IDE0290</NoWarn>
+    <NoWarn>IDE0290,IL2062,IL2067,IL2072,IL2075,IL2087</NoWarn>
     <IsAotCompatible Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net7.0'))">true</IsAotCompatible>
     <RootNamespace>Json.Schema.Generation</RootNamespace>
     <AssemblyName>JsonSchema.Net.Generation</AssemblyName>
