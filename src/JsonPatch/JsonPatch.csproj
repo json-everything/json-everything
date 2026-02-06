@@ -15,12 +15,11 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageId>JsonPatch.Net</PackageId>
-    <Version>4.0.1</Version>
-    <FileVersion>4.0.1</FileVersion>
-    <AssemblyVersion>4.0.0.0</AssemblyVersion>
+    <Version>5.0.0</Version>
+    <FileVersion>5.0.0</FileVersion>
+    <AssemblyVersion>5.0.0.0</AssemblyVersion>
     <Authors>Greg Dennis</Authors>
     <Description>JSON Patch built on the System.Text.Json namespace</Description>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIcon>json-logo-256.png</PackageIcon>
     <PackageProjectUrl>https://github.com/json-everything/json-everything</PackageProjectUrl>
@@ -29,6 +28,8 @@
     <PackageReleaseNotes>Release notes can be found at https://docs.json-everything.net/rn-json-patch/</PackageReleaseNotes>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
+	  <PackageLicenseFile>OSMFEULA.txt</PackageLicenseFile>
+	  <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
 
     <PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
   </PropertyGroup>
@@ -43,9 +44,10 @@
     <None Include="README.md" Pack="true" PackagePath="\" />
     <None Include="..\..\LICENSE" Pack="true" PackagePath="\" />
     <None Include="..\..\Resources\json-logo-256.png" Pack="true" PackagePath="\" />
+    <None Include="..\..\OSMFEULA.txt" Pack="true" PackagePath="OSMFEULA.txt"/>
   </ItemGroup>
 
-  <ItemGroup>
+	<ItemGroup>
     <ProjectReference Include="..\JsonPointer\JsonPointer.csproj" />
   </ItemGroup>
 

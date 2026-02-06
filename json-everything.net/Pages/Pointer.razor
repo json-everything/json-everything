@@ -6,7 +6,6 @@
 @using EditorOptions = JsonEverythingNet.Services.EditorOptions
 @using System.Text.Encodings.Web
 @using BlazorMonaco.Editor
-@using Microsoft.AspNetCore.Components
 
 @inject DataManager DataManager;
 @inject IJSRuntime JsRuntime;
@@ -15,7 +14,7 @@
 
 <PageTitle>JSON Pointer - json-everything.net</PageTitle>
 
-<Banner Title="@Banner.AnnouncementTitle" Content="@Banner.MaintenanceFeeContent"></Banner>
+<Banner Title="@IndexContent.AnnouncementTitle" Content="@IndexContent.MaintenanceFeeContent"></Banner>
 
 <div class="schema-container">
 	<div class="sidebar">

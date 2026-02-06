@@ -61,13 +61,7 @@ body:
   - type: textarea
     id: description
     attributes:
-      label: A clear and concise description of the bug.
-    validations:
-      required: true
-  - type: textarea
-    id: expectation
-    attributes:
-      label: What did you expect?
+      label: A clear and concise description of the bug.  Include what you're experiencing and how that compares with what you expect.
     validations:
       required: true
   - type: textarea
@@ -80,6 +74,12 @@ body:
     id: other-info
     attributes:
       label: Is there any other information you'd like to share regarding this bug?
+    validations:
+      required: false
+  - type: input
+    id: sponsor
+    attributes:
+      label: Are you representing an organization or employer?  If so, who?
     validations:
       required: false
   - type: checkboxes

@@ -4,6 +4,12 @@ title: JsonPatch.Net
 icon: fas fa-tag
 order: "09.09"
 ---
+# [5.0.0](https://github.com/gregsdennis/json-everything/pull/982) {#release-patch-5.0.0}
+
+Enacted Open Source Maintenance Fee.
+
+See the [blog post](https://blog.json-everything.net/posts/expensive/) for more information.
+
 # [4.0.1](https://github.com/gregsdennis/json-everything/pull/970) {#release-patch-4.0.1}
 
 - [#963](https://github.com/json-everything/json-everything/pull/963) - Runtime performance improvement for `PatchExtensions.CreatePatch` by [@stephenmk](https://github.com/stephenmk)
