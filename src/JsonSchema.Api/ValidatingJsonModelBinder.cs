@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -12,11 +11,36 @@ using Microsoft.Extensions.Options;
 
 namespace Json.Schema.Api;
 
+/// <summary>
+/// Provides a model binder that deserializes JSON request data and performs validation, adding any validation errors to
+/// the model state.
+/// </summary>
+/// <remarks>The ValidatingJsonModelBinder is designed for use in ASP.NET Core applications to bind and validate
+/// models from JSON request bodies or value providers. When binding from the request body, it uses the configured
+/// JsonSerializerOptions and supports validation that can add detailed errors to the model state. If validation fails,
+/// the model binding result is set to failed, and errors are available in ModelState for use by validation filters or
+/// error handlers. This binder is typically used to enable custom or advanced validation scenarios during model
+/// binding.</remarks>
 public class ValidatingJsonModelBinder : IModelBinder
 {
-    public async Task BindModelAsync(ModelBindingContext bindingContext)
+	/// <summary>Attempts to bind a model.</summary>
+	/// <param name="bindingContext">The <see cref="T:Microsoft.AspNetCore.Mvc.ModelBinding.ModelBindingContext" />.</param>
+	/// <returns>
+	/// <para>
+	/// A <see cref="T:System.Threading.Tasks.Task" /> which will complete when the model binding process completes.
+	/// </para>
+	/// <para>
+	/// If model binding was successful, the <see cref="P:Microsoft.AspNetCore.Mvc.ModelBinding.ModelBindingContext.Result" /> should have
+	/// <see cref="P:Microsoft.AspNetCore.Mvc.ModelBinding.ModelBindingResult.IsModelSet" /> set to <c>true</c>.
+	/// </para>
+	/// <para>
+	/// A model binder that completes successfully should set <see cref="P:Microsoft.AspNetCore.Mvc.ModelBinding.ModelBindingContext.Result" /> to
+	/// a value returned from <see cref="M:Microsoft.AspNetCore.Mvc.ModelBinding.ModelBindingResult.Success(System.Object)" />.
+	/// </para>
+	/// </returns>
+	public async Task BindModelAsync(ModelBindingContext bindingContext)
     {
-        if (bindingContext == null) throw new ArgumentNullException(nameof(bindingContext));
+		ArgumentNullException.ThrowIfNull(bindingContext);
 
         // For body binding, we need to read the request body
         if (bindingContext.BindingSource == BindingSource.Body)
@@ -40,7 +64,7 @@ public class ValidatingJsonModelBinder : IModelBinder
                     jsonException.Data["validation"] is EvaluationResults { IsValid: false } validationResults)
                 {
                     var errors = ExtractValidationErrors(validationResults);
-                    if (errors.Any())
+                    if (errors.Count != 0)
                     {
                         foreach (var error in errors)
                         {

@@ -4,9 +4,24 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Json.Schema.Api;
 
+/// <summary>
+/// An ASP.NET Core filter that validates incoming JSON request bodies against a JSON Schema and returns detailed
+/// validation errors in the response if validation fails.
+/// </summary>
+/// <remarks>This filter inspects the model state for JSON Schema validation errors during both action and result
+/// execution. If validation errors are present and correspond to JSON Pointer paths, the filter short-circuits the
+/// request pipeline and returns a 400 Bad Request response with a standardized problem details payload. The filter is
+/// intended to be used in scenarios where JSON Schema validation is required for API endpoints that accept JSON input. 
+/// The filter implements both IActionFilter and IAlwaysRunResultFilter to ensure that validation errors are handled
+/// regardless of whether model binding partially or totally fails. It does not modify the response if no relevant
+/// validation errors are found.</remarks>
 public class JsonSchemaValidationFilter : IActionFilter, IAlwaysRunResultFilter
 {
-    public void OnActionExecuting(ActionExecutingContext context)
+	/// <summary>
+	/// Called before the action executes, after model binding is complete.
+	/// </summary>
+	/// <param name="context">The <see cref="T:Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext" />.</param>
+	public void OnActionExecuting(ActionExecutingContext context)
     {
         // this method is required for partial binding success
         var check = HandleJsonSchemaErrors(context);
@@ -14,12 +29,18 @@ public class JsonSchemaValidationFilter : IActionFilter, IAlwaysRunResultFilter
 	        context.Result = check;
     }
 
-    public void OnActionExecuted(ActionExecutedContext context)
+	/// <summary>
+	/// Called after the action executes, before the action result.
+	/// </summary>
+	/// <param name="context">The <see cref="T:Microsoft.AspNetCore.Mvc.Filters.ActionExecutedContext" />.</param>
+	public void OnActionExecuted(ActionExecutedContext context)
     {
         // no-op
     }
 
-    public void OnResultExecuting(ResultExecutingContext context)
+	/// <summary>Called before the action result executes.</summary>
+	/// <param name="context">The <see cref="T:Microsoft.AspNetCore.Mvc.Filters.ResultExecutingContext" />.</param>
+	public void OnResultExecuting(ResultExecutingContext context)
     {
         // this method is required for total binding failure
         var check = HandleJsonSchemaErrors(context);
@@ -27,7 +48,7 @@ public class JsonSchemaValidationFilter : IActionFilter, IAlwaysRunResultFilter
 	        context.Result = check;
     }
 
-    private static IActionResult? HandleJsonSchemaErrors(FilterContext context)
+    private static BadRequestObjectResult? HandleJsonSchemaErrors(ActionContext context)
     {
         if (context.ModelState.IsValid)
         {
@@ -68,6 +89,8 @@ public class JsonSchemaValidationFilter : IActionFilter, IAlwaysRunResultFilter
 
     }
 
+    /// <summary>Called after the action result executes.</summary>
+    /// <param name="context">The <see cref="T:Microsoft.AspNetCore.Mvc.Filters.ResultExecutedContext" />.</param>
     public void OnResultExecuted(ResultExecutedContext context)
     {
         // no-op

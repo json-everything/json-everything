@@ -76,7 +76,6 @@ public class SchemaGeneratorConfiguration
 	/// </summary>
 	public ITypeNameGenerator? TypeNameGenerator { get; set; }
 
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 	/// <summary>
 	/// Creates a new <see cref="SchemaGeneratorConfiguration"/>.
 	/// </summary>
@@ -84,7 +83,6 @@ public class SchemaGeneratorConfiguration
 	{
 		XmlReader = new DocXmlReader(assembly => _xmlCommentsFiles.TryGetValue(assembly.FullName!, out var path) ? path : null);
 	}
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
 	/// <summary>
 	/// Registers an assembly's XML comment file.
