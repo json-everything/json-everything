@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Text.Json;
 using Json.Schema.Generation;
 using Json.Schema.Generation.Serialization;
@@ -27,12 +29,16 @@ public static class Extensions
 	/// <param name="configure">An optional delegate to configure the generative JSON schema validation converter. If null, default settings are
 	/// used.</param>
 	/// <returns>The same <see cref="IMvcBuilder"/> instance so that additional configuration calls can be chained.</returns>
+	[RequiresUnreferencedCode("Calls System.Text.Json.JsonSerializer.Serialize(Utf8JsonWriter, Object, Type, JsonSerializerOptions)")]
+	[RequiresDynamicCode("Calls System.Text.Json.JsonSerializer.Serialize(Utf8JsonWriter, Object, Type, JsonSerializerOptions)")]
 	public static IMvcBuilder AddJsonSchemaValidation(this IMvcBuilder builder, Action<GenerativeValidatingJsonConverter>? configure = null)
 	{
 		builder.Services.Configure<MvcOptions>(options =>
 		{
-			options.Filters.Add<JsonSchemaValidationFilter>();
-			options.ModelBinderProviders.Insert(0, new ValidatingJsonModelBinderProvider());
+			if (!options.Filters.Any(x => x is JsonSchemaValidationFilter))
+				options.Filters.Add<JsonSchemaValidationFilter>();
+			if (!options.ModelBinderProviders.Any(x => x is ValidatingJsonModelBinderProvider))
+				options.ModelBinderProviders.Insert(0, new ValidatingJsonModelBinderProvider());
 		});
 
 		builder.AddJsonOptions(opt =>
@@ -43,9 +49,12 @@ public static class Extensions
 		return builder;
 	}
 
+	[RequiresUnreferencedCode("Calls System.Text.Json.JsonSerializer.Serialize(Utf8JsonWriter, Object, Type, JsonSerializerOptions)")]
+	[RequiresDynamicCode("Calls System.Text.Json.JsonSerializer.Serialize(Utf8JsonWriter, Object, Type, JsonSerializerOptions)")]
 	private static JsonSerializerOptions AddJsonSchemaValidation(this JsonSerializerOptions options, Action<GenerativeValidatingJsonConverter>? configure = null)
 	{
-		var converter = new GenerativeValidatingJsonConverter();
+		var converter = options.Converters.FirstOrDefault(x => x is GenerativeValidatingJsonConverter) as GenerativeValidatingJsonConverter ??
+		                new GenerativeValidatingJsonConverter();
 
 		if (configure is null)
 		{
@@ -58,7 +67,8 @@ public static class Extensions
 			configure(converter);
 		}
 
-		options.Converters.Add(converter);
+		if (!options.Converters.Contains(converter))
+			options.Converters.Add(converter);
 
 		return options;
 	}
