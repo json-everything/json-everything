@@ -1,19 +1,22 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Reflection;
 
 namespace Json.Schema.Generation;
 
-internal class MemberInfoMetadataTokenComparer<T> : Comparer<MemberInfo>
+internal class MemberInfoMetadataTokenComparer : Comparer<MemberInfo>
 {
+	private static ConcurrentDictionary<Type, MemberInfoMetadataTokenComparer> Cache { get; } = new();
 	private readonly Type[] _typeOrder;
 
-	public static MemberInfoMetadataTokenComparer<T> Instance { get; } = new();
+	public Type Type { get; }
 
-	private MemberInfoMetadataTokenComparer()
+	private MemberInfoMetadataTokenComparer(Type type)
 	{
+		Type = type;
+
 		var typeStack = new Stack<Type>();
-		var type = typeof(T);
 
 		do
 		{
@@ -24,6 +27,9 @@ internal class MemberInfoMetadataTokenComparer<T> : Comparer<MemberInfo>
 
 		_typeOrder = [.. typeStack];
 	}
+
+	public static MemberInfoMetadataTokenComparer Get(Type type) =>
+		Cache.GetOrAdd(type, new MemberInfoMetadataTokenComparer(type));
 
 	public override int Compare(MemberInfo? x, MemberInfo? y)
 	{

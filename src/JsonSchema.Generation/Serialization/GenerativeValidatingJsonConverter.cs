@@ -29,7 +29,7 @@ public class GenerativeValidatingJsonConverter : ValidatingJsonConverter
 	/// <see langword="true" /> if the instance can convert the specified object type; otherwise, <see langword="false" />.</returns>
 	public override bool CanConvert(Type typeToConvert)
 	{
-		var canConvert = typeToConvert.GetCustomAttributes(typeof(GenerateJsonSchemaAttribute)).SingleOrDefault() != null;
+		var canConvert = typeToConvert.GetCustomAttributes<GenerateJsonSchemaAttribute>().SingleOrDefault() != null;
 
 		return canConvert || base.CanConvert(typeToConvert);
 	}
@@ -39,12 +39,10 @@ public class GenerativeValidatingJsonConverter : ValidatingJsonConverter
 	/// </summary>
 	protected override JsonSchema GetSchema(Type type)
 	{
-		var generateAttribute = type.GetCustomAttributes(typeof(GenerateJsonSchemaAttribute)).SingleOrDefault();
+		var generateAttribute = type.GetCustomAttributes<GenerateJsonSchemaAttribute>().SingleOrDefault();
 		if (generateAttribute is not null)
 		{
-#pragma warning disable IL3050
 			var schema = new JsonSchemaBuilder(BuildOptions).FromType(type, GeneratorConfiguration);
-#pragma warning restore IL3050
 			return schema;
 		}
 
