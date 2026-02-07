@@ -21,7 +21,7 @@ public class GenerativeValidatingJsonConverter : ValidatingJsonConverter
 	/// <summary>
 	/// Provides options for the generator.
 	/// </summary>
-	public SchemaGeneratorConfiguration? GeneratorConfiguration { get; } = new();
+	public SchemaGeneratorConfiguration GeneratorConfiguration { get; } = new();
 
 	/// <summary>When overridden in a derived class, determines whether the converter instance can convert the specified object type.</summary>
 	/// <param name="typeToConvert">The type of the object to check whether it can be converted by this converter instance.</param>

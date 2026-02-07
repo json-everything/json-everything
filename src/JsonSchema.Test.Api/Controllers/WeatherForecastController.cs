@@ -1,8 +1,5 @@
-using System.Collections.Concurrent;
-using Json.Schema.Serialization;
+using Json.Schema.Generation.Serialization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.OpenApi;
-using Microsoft.OpenApi;
 
 namespace Json.Schema.Tests.Api.Controllers;
 
@@ -33,39 +30,4 @@ public class WeatherForecastController : ControllerBase
 			})
 			.ToArray();
 	}
-
-	[HttpPost("channel")]
-	public IActionResult CreateChannel(CreateChannelRequest request)
-	{
-		return Ok(request);
-	}
 }
-
-[JsonSchema(typeof(SchemaRegistry), nameof(SchemaRegistry.CreateChannelRequest))]
-public record CreateChannelRequest(string Name, bool Enabled);
-
-public class SchemaRegistry
-{
-	public static readonly JsonSchema CreateChannelRequest =
-		JsonSchema.FromFile("Schemas/create-channel-request.json");
-}
-
-public class MyRequestSchemaTransformer : IOpenApiSchemaTransformer
-{
-	public Task TransformAsync(OpenApiSchema schema, OpenApiSchemaTransformerContext context, CancellationToken cancellationToken)
-	{
-		if (context.JsonTypeInfo.Type == typeof(CreateChannelRequest))
-		{
-			schema.Type = JsonSchemaType.Object;
-			schema.Properties ??= new ConcurrentDictionary<string, IOpenApiSchema>();
-			schema.Properties.Add("name", new OpenApiSchema { Type = JsonSchemaType.String });
-			schema.Properties.Add("enabled", new OpenApiSchema { Type = JsonSchemaType.Boolean });
-			schema.Required ??= new HashSet<string>();
-			schema.Required.Add("name");
-			schema.Required.Add("enabled");
-		}
-		return Task.CompletedTask;
-	}
-}
-
-// Register the schema transformer
