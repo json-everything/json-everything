@@ -16,10 +16,7 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 		return true;
 	}
 
-	[RequiresDynamicCode("JSON serialization and deserialization might require types that cannot be statically analyzed and might need runtime code generation. Use System.Text.Json source generation for native AOT applications.")]
-#pragma warning disable IL3051 // 'RequiresDynamicCodeAttribute' annotations must match across all interface implementations or overrides.
 	public void AddConstraints(SchemaGenerationContextBase context)
-#pragma warning restore IL3051 // 'RequiresDynamicCodeAttribute' annotations must match across all interface implementations or overrides.
 	{
 		if (context is not TypeGenerationContext typeContext) return;
 
@@ -188,7 +185,6 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 			context.Intents.Add(new UnevaluatedPropertiesIntent());
 	}
 
-	[RequiresDynamicCode("JSON serialization and deserialization might require types that cannot be statically analyzed and might need runtime code generation. Use System.Text.Json source generation for native AOT applications.")]
 	private static IEnumerable<(IConditionalAttribute Attribute, MemberInfo Member)> ExpandEnumConditions(IConditionalAttribute condition, IEnumerable<MemberInfo> members)
 	{
 		var member = members.FirstOrDefault(x => x.Name == condition.PropertyName);
@@ -206,13 +202,18 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 			case IfEnumAttribute when !memberType.IsEnum:
 				yield break;
 			case IfEnumAttribute ifEnumAttribute:
-				var values = Enum.GetValues(memberType);
+				var fields = memberType.GetFields(BindingFlags.Public | BindingFlags.Static);
+				var values = fields.Select(f => f.GetRawConstantValue()); 
+				//var values = Enum.GetValues(memberType);
 				foreach (var value in values)
 				{
 					if (ifEnumAttribute.UseNumbers)
-						yield return (new IfAttribute(ifEnumAttribute.PropertyName, (int)value, value), member);
+						yield return (new IfAttribute(ifEnumAttribute.PropertyName, (int)value!, value), member);
 					else
-						yield return (new IfAttribute(ifEnumAttribute.PropertyName, value.ToString(), value), member);
+					{
+						var enumValue = Enum.ToObject(memberType, (int)value!);
+						yield return (new IfAttribute(ifEnumAttribute.PropertyName, enumValue!.ToString(), enumValue), member);
+					}
 				}
 
 				yield break;

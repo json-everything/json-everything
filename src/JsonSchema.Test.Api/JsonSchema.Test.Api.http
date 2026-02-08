@@ -1,6 +1,11 @@
 @JsonSchema.Test.Api_HostAddress = http://localhost:5042
 
-GET {{JsonSchema.Test.Api_HostAddress}}/weatherforecast/
+POST {{JsonSchema.Test.Api_HostAddress}}/channel
+Content-Type: application/json
 Accept: application/json
+{
+  "na me": "jeff",
+  "enabled": true
+}
 
 ###

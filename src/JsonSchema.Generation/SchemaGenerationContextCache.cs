@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Json.Schema.Generation.Intents;
 
@@ -28,10 +29,13 @@ public static class SchemaGenerationContextCache
 	/// <remarks>
 	/// Use this in your generator if it needs to create keywords with subschemas.
 	/// </remarks>
-	public static TypeGenerationContext Get(Type type)
-	{
-		return Get(type, false);
-	}
+	public static TypeGenerationContext Get(
+		[DynamicallyAccessedMembers(
+			DynamicallyAccessedMemberTypes.NonPublicFields | DynamicallyAccessedMemberTypes.PublicFields |
+			DynamicallyAccessedMemberTypes.NonPublicProperties | DynamicallyAccessedMemberTypes.PublicProperties |
+			DynamicallyAccessedMemberTypes.Interfaces)]
+		Type type) =>
+		Get(type, false);
 
 	internal static TypeGenerationContext GetRoot(Type type)
 	{

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using Json.Schema.Generation.Intents;
@@ -14,8 +13,6 @@ namespace Json.Schema.Generation;
 [DebuggerDisplay("{DebuggerDisplay}")]
 public class TypeGenerationContext : SchemaGenerationContextBase
 {
-	private IComparer<MemberInfo>? _memberInfoComparer;
-
 	/// <summary>
 	/// The type.
 	/// </summary>
@@ -28,9 +25,7 @@ public class TypeGenerationContext : SchemaGenerationContextBase
 
 	internal string DefinitionName { get; }
 
-#pragma warning disable IL3050
-	internal IComparer<MemberInfo> DeclarationOrderComparer => _memberInfoComparer ??= GetComparer(Type);
-#pragma warning restore IL3050
+	internal IComparer<MemberInfo> DeclarationOrderComparer => field ??= MemberInfoMetadataTokenComparer.Get(Type);
 
 	internal TypeGenerationContext(Type type)
 	{
@@ -77,14 +72,4 @@ public class TypeGenerationContext : SchemaGenerationContextBase
 	}
 
 	internal bool IsSimpleRef() => Intents is [RefIntent { IsExternalRef: true }];
-
-	[RequiresDynamicCode("JSON serialization and deserialization might require types that cannot be statically analyzed and might need runtime code generation. Use System.Text.Json source generation for native AOT applications.")]
-	private static IComparer<MemberInfo> GetComparer(Type type)
-	{
-		var comparerType = typeof(MemberInfoMetadataTokenComparer<>).MakeGenericType(type);
-		var property = comparerType.GetProperty("Instance", BindingFlags.Static | BindingFlags.Public);
-		var comparer = property!.GetValue(null);
-
-		return (IComparer<MemberInfo>)comparer!;
-	}
 }
