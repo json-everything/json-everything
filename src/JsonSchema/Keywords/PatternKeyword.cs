@@ -36,7 +36,7 @@ public class PatternKeyword : IKeywordHandler
 	public virtual object? ValidateKeywordValue(JsonElement value)
 	{
 		if (value.ValueKind is not JsonValueKind.String)
-			throw new JsonSchemaException($"'{Name}' value must be a number, found {value.ValueKind}");
+			throw new JsonSchemaException($"'{Name}' value must be a string, found {value.ValueKind}");
 
 		var regex = new Regex(value.GetString()!, RegexOptions.ECMAScript | RegexOptions.Compiled);
 
