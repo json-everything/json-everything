@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
 using Json.More;
 using Json.Schema.Generation.Intents;
 using NUnit.Framework;
@@ -652,4 +653,47 @@ public class ClientTests
 		AssertEqual(expected, schema);
 	}
 #endif
+
+	[Test]
+	public void Issue977_MultipleUsesOfNullableEnum()
+	{
+		var config = new SchemaGeneratorConfiguration
+		{
+			PropertyNameResolver = PropertyNameResolvers.CamelCase
+		};
+
+		// report is this throws
+		var schema = new JsonSchemaBuilder()
+			.FromType<Issue977_RootType>(config)
+			.Build();
+
+		Console.WriteLine(JsonSerializer.Serialize(schema, TestEnvironment.SerializerOptions));
+	}
+
+	public record Issue977_RootType
+	{
+		// Branch A: direct reference
+		public Issue977_ConfigTypeA? ConfigA { get; init; }
+
+		// Branch B: indirect reference via collection
+		public Issue977_ConfigTypeB? ConfigB { get; init; }
+	}
+
+	public record Issue977_ConfigTypeA
+	{
+		// Nullable enum
+		public Issue977_SampleEnum? Mode { get; init; }
+	}
+
+	public record Issue977_ConfigTypeB
+	{
+		// Same type as ConfigTypeA, but inside an array
+		public Issue977_ConfigTypeA[] Items { get; init; } = [];
+	}
+
+	public enum Issue977_SampleEnum
+	{
+		First = 0,
+		Second = 1
+	}
 }

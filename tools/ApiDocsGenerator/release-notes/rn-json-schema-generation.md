@@ -4,6 +4,10 @@ title: JsonSchema.Net.Generation
 icon: fas fa-tag
 order: "09.05"
 ---
+# [7.1.2](https://github.com/gregsdennis/json-everything/pull/1010) {#release-schemagen-7.1.2}
+
+[#1008](https://github.com/gregsdennis/json-everything/issues/1008) - Updates warning suppression to `[GlobalSuppressMessage]` to support post-compilation publish operations.
+
 # [7.1.1](https://github.com/gregsdennis/json-everything/pull/1009) {#release-schemagen-7.1.1}
 
 [#1008](https://github.com/gregsdennis/json-everything/issues/1008) - Adds a warning suppression pragma to source-generated code since that can't be edited to suppress it.  Thanks to [@ThomasNieto](https://github.com/ThomasNieto) for flagging this.

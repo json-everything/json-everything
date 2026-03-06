@@ -72,7 +72,7 @@ internal class JsonArrayTupleConverter<T> : JsonConverter<ValueTuple<T>>
 	public override void Write(Utf8JsonWriter writer, ValueTuple<T> value, JsonSerializerOptions options)
 	{
 		writer.WriteStartArray();
-		JsonSerializer.Serialize(writer, value.Item1, typeof(T), options);
+		JsonSerializer.Serialize(writer, value.Item1, options);
 		writer.WriteEndArray();
 	}
 }
@@ -97,8 +97,8 @@ internal class JsonArrayTupleConverter<T1, T2> : JsonConverter<(T1, T2)>
 	public override void Write(Utf8JsonWriter writer, (T1, T2) value, JsonSerializerOptions options)
 	{
 		writer.WriteStartArray();
-		JsonSerializer.Serialize(writer, value.Item1, typeof(T1), options);
-		JsonSerializer.Serialize(writer, value.Item2, typeof(T2), options);
+		JsonSerializer.Serialize(writer, value.Item1, options);
+		JsonSerializer.Serialize(writer, value.Item2, options);
 		writer.WriteEndArray();
 	}
 }
@@ -123,9 +123,9 @@ internal class JsonArrayTupleConverter<T1, T2, T3> : JsonConverter<(T1, T2, T3)>
 	public override void Write(Utf8JsonWriter writer, (T1, T2, T3) value, JsonSerializerOptions options)
 	{
 		writer.WriteStartArray();
-		JsonSerializer.Serialize(writer, value.Item1, typeof(T1), options);
-		JsonSerializer.Serialize(writer, value.Item2, typeof(T2), options);
-		JsonSerializer.Serialize(writer, value.Item3, typeof(T3), options);
+		JsonSerializer.Serialize(writer, value.Item1, options);
+		JsonSerializer.Serialize(writer, value.Item2, options);
+		JsonSerializer.Serialize(writer, value.Item3, options);
 		writer.WriteEndArray();
 	}
 }
@@ -150,10 +150,10 @@ internal class JsonArrayTupleConverter<T1, T2, T3, T4> : JsonConverter<(T1, T2, 
 	public override void Write(Utf8JsonWriter writer, (T1, T2, T3, T4) value, JsonSerializerOptions options)
 	{
 		writer.WriteStartArray();
-		JsonSerializer.Serialize(writer, value.Item1, typeof(T1), options);
-		JsonSerializer.Serialize(writer, value.Item2, typeof(T2), options);
-		JsonSerializer.Serialize(writer, value.Item3, typeof(T3), options);
-		JsonSerializer.Serialize(writer, value.Item4, typeof(T4), options);
+		JsonSerializer.Serialize(writer, value.Item1, options);
+		JsonSerializer.Serialize(writer, value.Item2, options);
+		JsonSerializer.Serialize(writer, value.Item3, options);
+		JsonSerializer.Serialize(writer, value.Item4, options);
 		writer.WriteEndArray();
 	}
 }
@@ -178,11 +178,11 @@ internal class JsonArrayTupleConverter<T1, T2, T3, T4, T5> : JsonConverter<(T1, 
 	public override void Write(Utf8JsonWriter writer, (T1, T2, T3, T4, T5) value, JsonSerializerOptions options)
 	{
 		writer.WriteStartArray();
-		JsonSerializer.Serialize(writer, value.Item1, typeof(T1), options);
-		JsonSerializer.Serialize(writer, value.Item2, typeof(T2), options);
-		JsonSerializer.Serialize(writer, value.Item3, typeof(T3), options);
-		JsonSerializer.Serialize(writer, value.Item4, typeof(T4), options);
-		JsonSerializer.Serialize(writer, value.Item5, typeof(T5), options);
+		JsonSerializer.Serialize(writer, value.Item1, options);
+		JsonSerializer.Serialize(writer, value.Item2, options);
+		JsonSerializer.Serialize(writer, value.Item3, options);
+		JsonSerializer.Serialize(writer, value.Item4, options);
+		JsonSerializer.Serialize(writer, value.Item5, options);
 		writer.WriteEndArray();
 	}
 }
@@ -207,12 +207,12 @@ internal class JsonArrayTupleConverter<T1, T2, T3, T4, T5, T6> : JsonConverter<(
 	public override void Write(Utf8JsonWriter writer, (T1, T2, T3, T4, T5, T6) value, JsonSerializerOptions options)
 	{
 		writer.WriteStartArray();
-		JsonSerializer.Serialize(writer, value.Item1, typeof(T1), options);
-		JsonSerializer.Serialize(writer, value.Item2, typeof(T2), options);
-		JsonSerializer.Serialize(writer, value.Item3, typeof(T3), options);
-		JsonSerializer.Serialize(writer, value.Item4, typeof(T4), options);
-		JsonSerializer.Serialize(writer, value.Item5, typeof(T5), options);
-		JsonSerializer.Serialize(writer, value.Item6, typeof(T6), options);
+		JsonSerializer.Serialize(writer, value.Item1, options);
+		JsonSerializer.Serialize(writer, value.Item2, options);
+		JsonSerializer.Serialize(writer, value.Item3, options);
+		JsonSerializer.Serialize(writer, value.Item4, options);
+		JsonSerializer.Serialize(writer, value.Item5, options);
+		JsonSerializer.Serialize(writer, value.Item6, options);
 		writer.WriteEndArray();
 	}
 }
@@ -237,13 +237,13 @@ internal class JsonArrayTupleConverter<T1, T2, T3, T4, T5, T6, T7> : JsonConvert
 	public override void Write(Utf8JsonWriter writer, (T1, T2, T3, T4, T5, T6, T7) value, JsonSerializerOptions options)
 	{
 		writer.WriteStartArray();
-		JsonSerializer.Serialize(writer, value.Item1, typeof(T1), options);
-		JsonSerializer.Serialize(writer, value.Item2, typeof(T2), options);
-		JsonSerializer.Serialize(writer, value.Item3, typeof(T3), options);
-		JsonSerializer.Serialize(writer, value.Item4, typeof(T4), options);
-		JsonSerializer.Serialize(writer, value.Item5, typeof(T5), options);
-		JsonSerializer.Serialize(writer, value.Item6, typeof(T6), options);
-		JsonSerializer.Serialize(writer, value.Item7, typeof(T7), options);
+		JsonSerializer.Serialize(writer, value.Item1, options);
+		JsonSerializer.Serialize(writer, value.Item2, options);
+		JsonSerializer.Serialize(writer, value.Item3, options);
+		JsonSerializer.Serialize(writer, value.Item4, options);
+		JsonSerializer.Serialize(writer, value.Item5, options);
+		JsonSerializer.Serialize(writer, value.Item6, options);
+		JsonSerializer.Serialize(writer, value.Item7, options);
 		writer.WriteEndArray();
 	}
 }
