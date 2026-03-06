@@ -10,4 +10,8 @@ internal static class HelperExtensions
 
 	public static string Require(IEnumerable<string> patterns) => string.Concat(patterns.Select(RequireOne));
 	public static string Forbid(IEnumerable<string> patterns) => string.Concat(patterns.Select(ForbidOne));
+
+	public static KeywordData? GetKeyword<T>(this JsonSchemaNode schema)
+		where T : IKeywordHandler =>
+		schema.Keywords.FirstOrDefault(x => x.Handler.GetType() == typeof(T));
 }
