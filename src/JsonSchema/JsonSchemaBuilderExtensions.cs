@@ -354,7 +354,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder Enum(this JsonSchemaBuilder builder, IEnumerable<JsonNode?> elements)
 	{
-		builder.Add("enum", new JsonArray(elements.ToArray()));
+		builder.Add("enum", new JsonArray(elements.Select(x => x?.DeepClone()).ToArray()));
 		return builder;
 	}
 
@@ -366,7 +366,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder Enum(this JsonSchemaBuilder builder, params JsonNode?[] elements)
 	{
-		builder.Add("enum", new JsonArray(elements));
+		builder.Add("enum", new JsonArray(elements.Select(x => x?.DeepClone()).ToArray()));
 		return builder;
 	}
 
@@ -393,7 +393,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder Examples(this JsonSchemaBuilder builder, IEnumerable<JsonNode?> elements)
 	{
-		builder.Add("examples", new JsonArray(elements.ToArray()));
+		builder.Add("examples", new JsonArray(elements.Select(x => x?.DeepClone()).ToArray()));
 		return builder;
 	}
 
@@ -405,7 +405,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder Examples(this JsonSchemaBuilder builder, params JsonNode?[] elements)
 	{
-		builder.Add("examples", new JsonArray(elements));
+		builder.Add("examples", new JsonArray(elements.Select(x => x?.DeepClone()).ToArray()));
 		return builder;
 	}
 

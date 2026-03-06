@@ -42,6 +42,10 @@ internal static class TestEnvironment
 [JsonSerializable(typeof(TestModels.ConditionalWithMaximum))]
 [JsonSerializable(typeof(TestModels.EnumSwitch))]
 [JsonSerializable(typeof(TestModels.ConditionalValidation))]
+[JsonSerializable(typeof(ClientTests.Issue977_RootType))]
+[JsonSerializable(typeof(ClientTests.Issue977_ConfigTypeA))]
+[JsonSerializable(typeof(ClientTests.Issue977_ConfigTypeB))]
+[JsonSerializable(typeof(ClientTests.Issue977_SampleEnum))]
 #if NET9_0_OR_GREATER
 [JsonSerializable(typeof(ClientTests.Issue890_Status))]
 #endif

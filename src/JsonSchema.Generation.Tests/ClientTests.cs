@@ -662,18 +662,15 @@ public class ClientTests
 			PropertyNameResolver = PropertyNameResolvers.CamelCase
 		};
 
-		var jsonOptions = new JsonSerializerOptions { WriteIndented = true };
-		jsonOptions.TypeInfoResolver = new DefaultJsonTypeInfoResolver();
-		jsonOptions.Converters.Add(new JsonSchemaJsonConverter());
-
+		// report is this throws
 		var schema = new JsonSchemaBuilder()
 			.FromType<Issue977_RootType>(config)
 			.Build();
 
-		Console.WriteLine(JsonSerializer.Serialize(schema, jsonOptions));
+		Console.WriteLine(JsonSerializer.Serialize(schema, TestEnvironment.SerializerOptions));
 	}
 
-	record Issue977_RootType
+	public record Issue977_RootType
 	{
 		// Branch A: direct reference
 		public Issue977_ConfigTypeA? ConfigA { get; init; }
@@ -682,19 +679,19 @@ public class ClientTests
 		public Issue977_ConfigTypeB? ConfigB { get; init; }
 	}
 
-	record Issue977_ConfigTypeA
+	public record Issue977_ConfigTypeA
 	{
 		// Nullable enum
 		public Issue977_SampleEnum? Mode { get; init; }
 	}
 
-	record Issue977_ConfigTypeB
+	public record Issue977_ConfigTypeB
 	{
 		// Same type as ConfigTypeA, but inside an array
 		public Issue977_ConfigTypeA[] Items { get; init; } = [];
 	}
 
-	enum Issue977_SampleEnum
+	public enum Issue977_SampleEnum
 	{
 		First = 0,
 		Second = 1
