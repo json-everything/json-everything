@@ -1,10 +1,98 @@
 {
-  "openapi": "3.0.1",
+  "openapi": "3.1.1",
   "info": {
     "title": "JsonSchema.Api.Tests | v1",
     "version": "1.0.0"
   },
   "paths": {
+    "/minimal/test/simple": {
+      "post": {
+        "tags": [
+          "JsonSchema.Api.Tests"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SimpleModel"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/minimal/test/strict": {
+      "post": {
+        "tags": [
+          "JsonSchema.Api.Tests"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StrictModel"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/minimal/test/multiword": {
+      "post": {
+        "tags": [
+          "JsonSchema.Api.Tests"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MultiWordModel"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/minimal/test/unvalidated": {
+      "post": {
+        "tags": [
+          "JsonSchema.Api.Tests"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UnvalidatedModel"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/test/simple": {
       "post": {
         "tags": [
@@ -136,52 +224,9 @@
   },
   "components": {
     "schemas": {
-      "MultiWordModel": {
-        "required": [
-          "firstName",
-          "lastName"
-        ],
-        "type": "object",
-        "properties": {
-          "firstName": {
-            "type": "string"
-          },
-          "lastName": {
-            "type": "string"
-          }
-        }
-      },
-      "SimpleModel": {
-        "required": [
-          "name",
-          "age"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "age": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
-      "StrictModel": {
-        "required": [
-          "title",
-          "active"
-        ],
-        "type": "object",
-        "properties": {
-          "title": {
-            "type": "string"
-          },
-          "active": {
-            "type": "boolean"
-          }
-        }
-      },
+      "MultiWordModel": { },
+      "SimpleModel": { },
+      "StrictModel": { },
       "UnvalidatedModel": {
         "required": [
           "description"
@@ -196,6 +241,9 @@
     }
   },
   "tags": [
+    {
+      "name": "JsonSchema.Api.Tests"
+    },
     {
       "name": "Test"
     }
