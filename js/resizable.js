@@ -23,9 +23,22 @@ window.initResizableSidebar = function () {
         rightEditor.style.flex = `0 0 ${rightWidth}px`;
     }
 
+    function isNoOutputMode() {
+        const editorGrid = document.querySelector('.editor-grid');
+        return editorGrid && editorGrid.classList.contains('no-output-mode');
+    }
+
     // Helper to set editor heights by ratio
     function setEditorHeightsByRatio(ratio) {
-        if (!topEditorsRow || !bottomEditorCell || !horizontalHandle) return;
+        if (!topEditorsRow) return;
+
+        if (isNoOutputMode()) {
+            topEditorsRow.style.flex = '1 1 0';
+            if (bottomEditorCell) bottomEditorCell.style.flex = '';
+            return;
+        }
+
+        if (!bottomEditorCell || !horizontalHandle) return;
         const parent = topEditorsRow.parentElement;
         if (!parent) return;
         const totalHeight = parent.clientHeight - horizontalHandle.offsetHeight;
@@ -118,6 +131,7 @@ window.initResizableSidebar = function () {
     let totalStartHeight;
 
     function startHorizResize(e) {
+        if (isNoOutputMode()) return;
         isHorizResizing = true;
         horizStartY = e.pageY;
         topStartHeight = topEditorsRow.getBoundingClientRect().height;

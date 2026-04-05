@@ -117,9 +117,34 @@
 
 .resize-handle.horizontal:hover::after {
     background-color: #0d6efd;
-} 
+}
+
+.top-editors-row.full-height {
+    flex: 1;
+}
+
+.editor-grid.no-output-mode .resize-handle.horizontal,
+.editor-grid.no-output-mode .output-cell {
+    display: none;
+}
+
+.editor-grid.no-output-mode .top-editors-row {
+    flex: 1 1 0 !important;
+}
 
 .path-input-row {
     margin-top: 1rem;
+    margin-left: 1px;
     margin-right: 1rem;
+}
+
+.path-input-field.valid.modified,
+.path-input-field.invalid {
+    outline: none;
+}
+
+.path-input-field,
+.path-input-field:focus {
+    border-color: #dee2e6;
+    box-shadow: none;
 }
