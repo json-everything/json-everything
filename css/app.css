@@ -444,19 +444,46 @@ html[data-bs-theme="light"] blockquote {
 }
 
 .bubble-Medium {
+  height: 70px;
+  width: 70px;
+  border-radius: 35px;
+}
+
+.bubble-Large {
   height: 100px;
   width: 100px;
   border-radius: 50px;
 }
 
-.bubble-Large {
-  height: 200px;
-  width: 200px;
-  border-radius: 100px;
-}
-
 .cover {
   object-fit: cover;
+}
+
+.sponsor-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(128, 128, 128, 0.7); /* Gray overlay */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 50%;
+}
+
+.sponsor-bubble:hover .sponsor-overlay {
+  opacity: 1;
+}
+
+.sponsor-username {
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  text-align: center;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 /* Nav container styling for collapse functionality */

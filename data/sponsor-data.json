@@ -1,2 +1,82 @@
 [
+  {
+    "username": "xqrzd",
+    "avatarUrl": "https://avatars.githubusercontent.com/u/4950876?v=4",
+    "websiteUrl": null,
+    "bubbleSize": "Small",
+    "x": -219,
+    "y": 57
+  },
+  {
+    "username": "ChilliCream",
+    "avatarUrl": "https://avatars.githubusercontent.com/u/16239022?v=4",
+    "websiteUrl": "https://chillicream.com",
+    "bubbleSize": "Small",
+    "x": 169,
+    "y": 47
+  },
+  {
+    "username": "Draegerwerk",
+    "avatarUrl": "https://avatars.githubusercontent.com/u/35218092?v=4",
+    "websiteUrl": "https://www.draeger.com",
+    "bubbleSize": "Large",
+    "x": -159,
+    "y": 0
+  },
+  {
+    "username": "Verivox",
+    "avatarUrl": "https://avatars.githubusercontent.com/u/45417132?v=4",
+    "websiteUrl": "https://www.verivox.de",
+    "bubbleSize": "Large",
+    "x": -49,
+    "y": 0
+  },
+  {
+    "username": "Kapil-Samadhiya",
+    "avatarUrl": "https://avatars.githubusercontent.com/u/45943035?u=b3a0591d4ee42165f15d2d0068603546f0040ab1\u0026v=4",
+    "websiteUrl": null,
+    "bubbleSize": "Large",
+    "x": 62,
+    "y": 0
+  },
+  {
+    "username": "sct-software",
+    "avatarUrl": "https://avatars.githubusercontent.com/u/47152560?v=4",
+    "websiteUrl": "https://sctsoftware.com",
+    "bubbleSize": "Large",
+    "x": 3,
+    "y": 97
+  },
+  {
+    "username": "NatVanG",
+    "avatarUrl": "https://avatars.githubusercontent.com/u/107113953?u=7025ad5892be56334f8b5c5d16e06c5d51a4139c\u0026v=4",
+    "websiteUrl": null,
+    "bubbleSize": "Small",
+    "x": -25,
+    "y": 189
+  },
+  {
+    "username": "respondwell",
+    "avatarUrl": "https://avatars.githubusercontent.com/u/146014542?v=4",
+    "websiteUrl": null,
+    "bubbleSize": "Medium",
+    "x": 120,
+    "y": 99
+  },
+  {
+    "username": "Playments",
+    "avatarUrl": "https://avatars.githubusercontent.com/u/174962760?v=4",
+    "websiteUrl": null,
+    "bubbleSize": "Medium",
+    "x": -186,
+    "y": 102
+  },
+  {
+    "username": "galileo-group",
+    "avatarUrl": "https://avatars.githubusercontent.com/u/259073729?u=184322cf5471662e343639200276f2cba63c32d4\u0026v=4",
+    "websiteUrl": "https://www.galileo-group.de",
+    "bubbleSize": "Large",
+    "x": -106,
+    "y": 98
+  }
 ]
