@@ -417,8 +417,9 @@ html[data-bs-theme="light"] blockquote {
 /*--- SPONSOR CLOUD ---*/
 
 .bubble-field {
-  width: 60%;
-  height: 40%;
+	width: min(720px, 90vw);
+	min-height: 120px;
+	margin: 0 auto;
   position: relative;
 }
 
