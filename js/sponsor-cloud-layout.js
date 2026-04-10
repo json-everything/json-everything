@@ -13,13 +13,12 @@ window.sponsorCloudLayout = (() => {
     const positions = bubbles.map((el) => {
       const left = parseFloat(el.style.left || "0");
       const top = parseFloat(el.style.top || "0");
-      const elWidth = el.offsetWidth;
-      const elHeight = el.offsetHeight;
+      const diameter = el.offsetWidth;
 
       minX = Math.min(minX, left);
       minY = Math.min(minY, top);
-      maxX = Math.max(maxX, left + elWidth);
-      maxY = Math.max(maxY, top + elHeight);
+      maxX = Math.max(maxX, left + diameter);
+      maxY = Math.max(maxY, top + diameter);
 
       return { el, left, top };
     });
@@ -38,7 +37,7 @@ window.sponsorCloudLayout = (() => {
     field.style.height = `${totalHeight}px`;
   }
 
-  function layout(fieldId) {
+  function doLayout(fieldId) {
     const field = document.getElementById(fieldId);
     if (!field) return;
 
@@ -109,6 +108,10 @@ window.sponsorCloudLayout = (() => {
       observer.observe(field);
       observers.set(fieldId, observer);
     }
+  }
+
+  function layout(fieldId) {
+    requestAnimationFrame(() => doLayout(fieldId));
   }
 
   return { layout };
