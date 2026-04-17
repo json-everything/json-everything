@@ -100,7 +100,7 @@
 	private async Task ApplyTheme()
 	{
 		await JSRuntime.InvokeVoidAsync("eval", _isDarkMode 
-			? "document.documentElement.removeAttribute('data-bs-theme')" 
-			: "document.documentElement.setAttribute('data-bs-theme', 'light')");
+			? "document.documentElement.removeAttribute('data-bs-theme'); document.documentElement.style.colorScheme='dark'" 
+			: "document.documentElement.setAttribute('data-bs-theme', 'light'); document.documentElement.style.colorScheme='light'");
 	}
 }
