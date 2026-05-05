@@ -14,21 +14,27 @@ agrees to be bound by the terms of this Agreement.
 Project agrees to provide User with the Binary Release in exchange for the Fees
 outlined in Section 2, subject to the terms of this Agreement. The Fee
 applies only to Users that use the Software as part of revenue-generating
-activities and have an annual gross revenue greater than or equal to
-US$10,000. Users whose annual gross revenue is less than US$10,000 are exempt
-from this Fee. In addition, Users who pay separate support and/or maintenance
-fees to the maintainers of the Software are exempt from the Fee outlined in
-this Agreement. This distinction ensures that duplicate fees are not imposed,
-promoting fairness and consistency while respecting alternative support
-arrangements.
+activities. The Fee amount owed is determined by the User's organization
+size, as set forth in Section 2. Users who pay separate support and/or
+maintenance fees to the maintainers of the Software are exempt from the Fee
+outlined in this Agreement. This distinction ensures that duplicate fees are
+not imposed, promoting fairness and consistency while respecting alternative
+support arrangements.
 
 2. Monthly Fee and Payment Terms
 
-Revenue-generating Users required to pay the Fee shall follow the payment
-terms set forth by the Project. Failure to comply with these terms may result
-in suspending access to the Binary Release. However, this does not restrict
-the User from obtaining or redistributing binaries from other sources or
-self-compiling them.
+Revenue-generating Users required to pay the Fee shall pay the following
+monthly amount based on the size of the User's organization:
+
+  - Small Organization (fewer than 20 employees): US$10 per month
+  - Medium Organization (20 to 100 employees): US$25 per month
+  - Large Organization (more than 100 employees): US$50 per month
+
+Payment shall be made via GitHub Sponsors at
+https://github.com/sponsors/gregsdennis. Failure to comply with these terms
+may result in suspending access to the Binary Release. However, this does
+not restrict the User from obtaining or redistributing binaries from other
+sources or self-compiling them.
 
 3. Nature of the Fee
 
