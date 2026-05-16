@@ -8,6 +8,8 @@ order: "09.01"
 
 [#1033](https://github.com/gregsdennis/json-everything/pull/1033) - Fixes the builder extension for `dependentSchemas`.  Thanks to [@BennieCopeland](https://github.com/BennieCopeland) for reporting.
 
+[#1035](https://github.com/gregsdennis/json-everything/pull/1033) - [@LLDevLab](https://github.com/LLDevLab) found a minor memory leak when using `JsonSchema.FromText()`.
+
 # [9.2.0](https://github.com/gregsdennis/json-everything/pull/1031) {#release-schema-9.2.0}
 
 - Update `ValidatingJsonConverter` to properly handle dictionary keys.
