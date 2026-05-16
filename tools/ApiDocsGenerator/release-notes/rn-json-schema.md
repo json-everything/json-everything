@@ -4,6 +4,10 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "09.01"
 ---
+# [9.2.1](https://github.com/gregsdennis/json-everything/pull/1039) {#release-schema-9.2.1}
+
+[#1033](https://github.com/gregsdennis/json-everything/pull/1033) - Fixes the builder extension for `dependentSchemas`.  Thanks to [@BennieCopeland](https://github.com/BennieCopeland) for reporting.
+
 # [9.2.0](https://github.com/gregsdennis/json-everything/pull/1031) {#release-schema-9.2.0}
 
 - Update `ValidatingJsonConverter` to properly handle dictionary keys.

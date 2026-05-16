@@ -4,6 +4,12 @@ title: JsonLogic
 icon: fas fa-tag
 order: "09.11"
 ---
+# [6.1.0](https://github.com/gregsdennis/json-everything/pull/1039) {#release-logic-6.1.0}
+
+[#1036](https://github.com/gregsdennis/json-everything/issues/1036) - Nulls in condition for `if` rule throwing exception.  Thanks to [@toddbaert]https://github.com/toddbaert) for reporting this issue.
+
+[#1007](https://github.com/gregsdennis/json-everything/issues/1007) - Improved logging options for `log` rule through new `ILogicLogger` interface.
+
 # [6.0.2](https://github.com/gregsdennis/json-everything/pull/1027) {#release-logic-6.0.2}
 
 [#1019](https://github.com/gregsdennis/json-everything/issues/1019) - Fix array->string coercion for loose-equals.  Thanks to [@dkorunda-tp]https://github.com/dkorunda-tp) for reporting this issue.
