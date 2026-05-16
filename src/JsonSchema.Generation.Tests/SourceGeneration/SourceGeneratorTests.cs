@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using static Json.Schema.Generation.Tests.AssertionExtensions;
@@ -456,7 +457,12 @@ public class SourceGeneratorTests
 		  "$id": "global::Json.Schema.Generation.Tests.SourceGeneration.TestModels.ModelWithOptionalWrapper",
 		  "type": "object",
 		  "properties": {
-		    "Age": { "type": "integer" }
+		    "Age": { 
+		      "anyOf":[
+		        {"type":"integer"},
+		        {"type":"null"}
+		      ]
+		    }
 		  }
 		}
 		""";
@@ -475,7 +481,12 @@ public class SourceGeneratorTests
 		  "$id": "global::Json.Schema.Generation.Tests.SourceGeneration.TestModels.ModelWithOptionalObjectWrapper",
 		  "type": "object",
 		  "properties": {
-		    "Person": { "$ref": "global::Json.Schema.Generation.Tests.SourceGeneration.TestModels.SimplePerson" }
+		    "Person": {
+		      "anyOf":[
+		        {"$ref":"global::Json.Schema.Generation.Tests.SourceGeneration.TestModels.SimplePerson"},
+		        {"type":"null"}
+		      ]
+		    }
 		  }
 		}
 		""";
@@ -486,17 +497,175 @@ public class SourceGeneratorTests
 	}
 
 	[Test]
+	public void ModelWithOptionalCollections_ContinuesWithGenerated()
+	{
+		var expectedJson = """
+		{
+		  "$schema": "https://json-schema.org/draft/2020-12/schema",
+		  "$id": "global::Json.Schema.Generation.Tests.SourceGeneration.TestModels.ModelWithOptionalCollections",
+		  "type": "object",
+		  "properties": {
+		    "ValueA": {
+		      "anyOf":[
+		        {"$ref":"global::System.Collections.Generic.IEnumerable<int>"},
+		        {"type":"null"}
+		      ]
+		    },
+		    "ValueB": {
+		      "anyOf":[
+		        {"$ref":"global::System.Collections.Generic.IEnumerable<int>"},
+		        {"type":"null"}
+		      ]
+		    }
+		  }
+		}
+		""";
+		var expected = JsonSchema.FromText(expectedJson, new BuildOptions { SchemaRegistry = new SchemaRegistry() });
+		var actual = GeneratedJsonSchemas.TestModels_ModelWithOptionalCollections;
+		var enumerableParameter = GeneratedJsonSchemas.IEnumerableOfInt32;
+		var arrayParameter = GeneratedJsonSchemas.Int32Array;
+
+		AssertEqual(expected, actual);
+	}
+
+	[Test]
+	public void ModelWithOptionalDictionary_ContinuesWithGenerated()
+	{
+		var expectedJson = """
+		{
+		  "$schema": "https://json-schema.org/draft/2020-12/schema",
+		  "$id": "global::Json.Schema.Generation.Tests.SourceGeneration.TestModels.ModelWithOptionalDictionary",
+		  "type": "object",
+		  "properties": {
+		    "Data": {
+		      "anyOf":[
+		        {"$ref":"global::System.Collections.Generic.Dictionary<string, int>"},
+		        {"type":"null"}
+		      ]
+		    }
+		  }
+		}
+		""";
+		var expected = JsonSchema.FromText(expectedJson, new BuildOptions { SchemaRegistry = new SchemaRegistry() });
+		var actual = GeneratedJsonSchemas.TestModels_ModelWithOptionalDictionary;
+		var dictionaryParameter = GeneratedJsonSchemas.DictionaryOfStringAndInt32;
+
+		AssertEqual(expected, actual);
+	}
+
+	[Test]
+	public void ModelWithOptionalAdditionalCollections_ContinuesWithGenerated()
+	{
+		var expectedJson = """
+		{
+		  "$schema": "https://json-schema.org/draft/2020-12/schema",
+		  "$id": "global::Json.Schema.Generation.Tests.SourceGeneration.TestModels.ModelWithOptionalAdditionalCollections",
+		  "type": "object",
+		  "properties": {
+		    "ValueA": {
+		      "anyOf":[
+		        {"$ref":"global::System.Collections.Generic.IEnumerable<int>"},
+		        {"type":"null"}
+		      ]
+		    },
+		    "ValueB": {
+		      "anyOf":[
+		        {"$ref":"global::System.Collections.Generic.IEnumerable<int>"},
+		        {"type":"null"}
+		      ]
+		    },
+		    "ValueC": {
+		      "anyOf":[
+		        {"$ref":"global::System.Collections.Generic.IEnumerable<int>"},
+		        {"type":"null"}
+		      ]
+		    }
+		  }
+		}
+		""";
+		var expected = JsonSchema.FromText(expectedJson, new BuildOptions { SchemaRegistry = new SchemaRegistry() });
+		var actual = GeneratedJsonSchemas.TestModels_ModelWithOptionalAdditionalCollections;
+		var hashSetParameter = GeneratedJsonSchemas.HashSetOfInt32;
+		var queueParameter = GeneratedJsonSchemas.QueueOfInt32;
+		var readOnlyCollectionParameter = GeneratedJsonSchemas.IReadOnlyCollectionOfInt32;
+
+		AssertEqual(expected, actual);
+	}
+
+	[Test]
+	public void ModelWithOptionalUngeneratedType_ContinuesWithGenerated()
+	{
+		var expectedJson = """
+		{
+		  "$schema": "https://json-schema.org/draft/2020-12/schema",
+		  "$id": "global::Json.Schema.Generation.Tests.SourceGeneration.TestModels.ModelWithOptionalUngeneratedType",
+		  "type": "object",
+		  "properties": {
+		    "Ungenerated": {
+		      "anyOf":[
+		        {"$ref":"global::Json.Schema.Generation.Tests.SourceGeneration.TestModels.UngeneratedType"},
+		        {"type":"null"}
+		      ]
+		    }
+		  }
+		}
+		""";
+		var expected = JsonSchema.FromText(expectedJson, new BuildOptions { SchemaRegistry = new SchemaRegistry() });
+		var actual = GeneratedJsonSchemas.TestModels_ModelWithOptionalUngeneratedType;
+		var parameter = GeneratedJsonSchemas.TestModels_UngeneratedType;
+
+		AssertEqual(expected, actual);
+	}
+
+	[Test]
 	public void BuildForType_UsesSchemaHandlerForOpenGenericType()
 	{
 		var expectedJson = """
 		{
-		  "type": "string"
+		  "anyOf":[
+		    {"type":"string"},
+		    {"type":"null"}
+		  ]
 		}
 		""";
 		var expected = JsonSchema.FromText(expectedJson, new BuildOptions { SchemaRegistry = new SchemaRegistry() });
 		var actual = new JsonSchemaBuilder()
 			.BuildForType(typeof(TestModels.Optional<string>))
 			.Build();
+
+		AssertEqual(expected, actual);
+	}
+
+	[Test]
+	public void BuildForType_Array_UsesGeneratedSchema()
+	{
+		var expectedJson = """
+		{
+		  "$ref": "global::System.Collections.Generic.IEnumerable<int>"
+		}
+		""";
+		var expected = JsonSchema.FromText(expectedJson, new BuildOptions { SchemaRegistry = new SchemaRegistry() });
+		var actual = new JsonSchemaBuilder()
+			.BuildForType(typeof(int[]))
+			.Build();
+		var parameter = GeneratedJsonSchemas.IEnumerableOfInt32;
+
+		AssertEqual(expected, actual);
+	}
+
+	[Test]
+	public void BuildForType_Dictionary_UsesGeneratedSchema()
+	{
+		var expectedJson = """
+		{
+		  "$ref": "global::System.Collections.Generic.Dictionary<string, int>"
+		}
+		""";
+		var expected = JsonSchema.FromText(expectedJson, new BuildOptions { SchemaRegistry = new SchemaRegistry() });
+		var actual = new JsonSchemaBuilder()
+			.BuildForType(typeof(Dictionary<string, int>))
+			.Build();
+		var parameter = GeneratedJsonSchemas.DictionaryOfStringAndInt32;
 
 		AssertEqual(expected, actual);
 	}
@@ -604,7 +773,10 @@ public class SourceGeneratorTests
 		{
 		  "$schema": "https://json-schema.org/draft/2020-12/schema",
 		  "$id": "global::Json.Schema.Generation.Tests.SourceGeneration.TestModels.Optional<int>",
-		  "type": "integer"
+		  "anyOf":[
+		    {"type":"integer"},
+		    {"type":"null"}
+		  ]
 		}
 		""";
 		var expected = JsonSchema.FromText(expectedJson, new BuildOptions { SchemaRegistry = new SchemaRegistry() });

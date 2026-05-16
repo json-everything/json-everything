@@ -52,16 +52,14 @@ internal static class CodeEmitterHelpers
 
 	public static bool IsCollectionType(ITypeSymbol typeSymbol)
 	{
-		if (typeSymbol is not INamedTypeSymbol { IsGenericType: true } namedType) return false;
+		if (typeSymbol is not INamedTypeSymbol namedType) return false;
+		if (namedType.SpecialType == SpecialType.System_String) return false;
+		if (IsDictionaryType(namedType)) return false;
 
-		var typeString = namedType.ConstructedFrom.ToDisplayString();
-		return typeString is
-			"System.Collections.Generic.List<T>" or
-			"System.Collections.Generic.IList<T>" or
-			"System.Collections.Generic.ICollection<T>" or
-			"System.Collections.Generic.IEnumerable<T>" or
-			"System.Collections.Generic.IReadOnlyList<T>" or
-			"System.Collections.Generic.IReadOnlyCollection<T>";
+		if (TryGetEnumerableElementType(namedType, out _))
+			return true;
+
+		return false;
 	}
 
 	public static bool IsDictionaryType(ITypeSymbol typeSymbol)
@@ -112,29 +110,55 @@ internal static class CodeEmitterHelpers
 
 	public static ITypeSymbol? GetElementType(ITypeSymbol typeSymbol)
 	{
+		var fullyQualifiedTypeName = typeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+		if (fullyQualifiedTypeName == "global::System.Text.Json.Nodes.JsonArray")
+			return null;
+
 		switch (typeSymbol)
 		{
 			case IArrayTypeSymbol arrayType:
 				return arrayType.ElementType;
-			case INamedTypeSymbol { IsGenericType: true } namedType:
+			case INamedTypeSymbol namedType:
 			{
-				var typeString = namedType.ConstructedFrom.ToDisplayString();
-				if (typeString is
-				    "System.Collections.Generic.List<T>" or
-				    "System.Collections.Generic.IList<T>" or
-				    "System.Collections.Generic.ICollection<T>" or
-				    "System.Collections.Generic.IEnumerable<T>" or
-				    "System.Collections.Generic.IReadOnlyList<T>" or
-				    "System.Collections.Generic.IReadOnlyCollection<T>")
-				{
-					return namedType.TypeArguments[0];
-				}
+				if (namedType.SpecialType == SpecialType.System_String) break;
+				if (IsDictionaryType(namedType)) break;
+
+				if (TryGetEnumerableElementType(namedType, out var elementType))
+					return elementType;
 
 				break;
 			}
 		}
 
 		return null;
+	}
+
+	private static bool TryGetEnumerableElementType(INamedTypeSymbol typeSymbol, out ITypeSymbol? elementType)
+	{
+		elementType = null;
+
+		if (typeSymbol is { IsGenericType: true } && IsGenericIEnumerable(typeSymbol.ConstructedFrom))
+		{
+			elementType = typeSymbol.TypeArguments[0];
+			return true;
+		}
+
+		foreach (var iface in typeSymbol.AllInterfaces)
+		{
+			if (!iface.IsGenericType) continue;
+			if (!IsGenericIEnumerable(iface.ConstructedFrom)) continue;
+
+			elementType = iface.TypeArguments[0];
+			return true;
+		}
+
+		return false;
+	}
+
+	private static bool IsGenericIEnumerable(INamedTypeSymbol typeSymbol)
+	{
+		return typeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat).Replace(" ", string.Empty)
+			== "global::System.Collections.Generic.IEnumerable<T>";
 	}
 
 	public static bool ShouldIncludeEnumMember(IFieldSymbol field)

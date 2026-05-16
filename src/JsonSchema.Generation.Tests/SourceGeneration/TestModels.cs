@@ -357,6 +357,38 @@ public static class TestModels
 	}
 
 	[GenerateJsonSchema]
+	public class ModelWithOptionalCollections
+	{
+		public Optional<IEnumerable<int>> ValueA { get; set; } = new();
+		public Optional<int[]> ValueB { get; set; } = new();
+	}
+
+	[GenerateJsonSchema]
+	public class ModelWithOptionalUngeneratedType
+	{
+		public Optional<UngeneratedType> Ungenerated { get; set; } = new();
+	}
+
+	[GenerateJsonSchema]
+	public class ModelWithOptionalDictionary
+	{
+		public Optional<Dictionary<string, int>> Data { get; set; } = new();
+	}
+
+	[GenerateJsonSchema]
+	public class ModelWithOptionalAdditionalCollections
+	{
+		public Optional<HashSet<int>> ValueA { get; set; } = new();
+		public Optional<Queue<int>> ValueB { get; set; } = new();
+		public Optional<IReadOnlyCollection<int>> ValueC { get; set; } = new();
+	}
+
+	public class UngeneratedType
+	{
+		public string Foo { get; set; } = null!;
+	}
+
+	[GenerateJsonSchema]
 	public class ModelWithBuiltInJsonTypes
 	{
 		public JsonDocument Document { get; set; } = null!;

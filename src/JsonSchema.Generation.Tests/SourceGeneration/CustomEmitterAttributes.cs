@@ -38,15 +38,18 @@ public class CustomFormatAttribute : Attribute, IAttributeHandler<CustomFormatAt
 [SchemaHandler(typeof(TestModels.Optional<>))]
 public static class OptionalSchemaHandler
 {
-	public static JsonSchemaBuilder Apply(JsonSchemaBuilder builder, Type type)
+	public static JsonSchemaBuilder Apply(this JsonSchemaBuilder builder, Type type)
 	{
-		if (!type.IsGenericType) return builder;
-		if (type.IsGenericTypeDefinition) return builder;
+		var innerType = type.GetGenericArguments()[0];
+		if (innerType.IsGenericType && innerType.GetGenericTypeDefinition() == typeof(Nullable<>))
+			return builder.BuildForType(innerType);
 
-		var genericArguments = type.GetGenericArguments();
-		if (genericArguments.Length != 1) return builder;
+		builder.AnyOf(
+			new JsonSchemaBuilder().BuildForType(innerType),
+			new JsonSchemaBuilder().Type(SchemaValueType.Null)
+		);
 
-		return builder.BuildForType(genericArguments[0]);
+		return builder;
 	}
 }
 

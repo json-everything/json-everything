@@ -6,7 +6,7 @@ namespace Json.Schema.Generation.SourceGeneration;
 
 internal sealed class TypeInfo
 {
-	public required INamedTypeSymbol TypeSymbol { get; init; }
+	public required ITypeSymbol TypeSymbol { get; init; }
 	public required string FullyQualifiedName { get; init; }
 	public required string SchemaPropertyName { get; init; }
 	public string? ResolvedPropertyName { get; set; }
