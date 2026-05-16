@@ -102,7 +102,8 @@ public class JsonSchema : IBaseDocument
 	/// <exception cref="JsonException">Could not deserialize a portion of the schema.</exception>
 	public static JsonSchema FromText([StringSyntax(StringSyntaxAttribute.Json)] string jsonText, BuildOptions? buildOptions = null, Uri? baseUri = null, JsonDocumentOptions? jsonOptions = null)
 	{
-		var element = JsonDocument.Parse(jsonText, jsonOptions ?? default).RootElement;
+		using var doc = JsonDocument.Parse(jsonText, jsonOptions ?? default);
+		var element = doc.RootElement.Clone();
 		return Build(element, buildOptions, baseUri);
 	}
 
@@ -209,7 +210,7 @@ public class JsonSchema : IBaseDocument
 			var data = new KeywordData(context)
 			{
 				EvaluationOrder = context.Dialect.GetEvaluationOrder(keyword) ?? 0,
-				RawValue = value.Clone(),
+				RawValue = value,
 				Handler = handler,
 				Value = handler is AnnotationKeyword
 					? keyword

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
@@ -79,10 +80,9 @@ public class IfRule : Rule, IRule
 
 					currentTrueResult = Components[elseIndex++];
 				}
-				break;
-		}
 
-		throw new NotImplementedException("Something went wrong. This shouldn't happen.");
+				return Components[elseIndex].Apply(data, contextData);
+		}
 	}
 
 	JsonNode? IRule.Apply(JsonNode? args, EvaluationContext context)
@@ -123,10 +123,8 @@ public class IfRule : Rule, IRule
 
 					currentTrueResult = array[elseIndex++];
 				}
-				break;
+				return JsonLogic.Apply(array[elseIndex], context);
 		}
-
-		throw new NotImplementedException("Something went wrong. This shouldn't happen.");
 	}
 }
 

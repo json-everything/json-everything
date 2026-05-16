@@ -272,7 +272,9 @@ internal static class SchemaCodeEmitter
 			EmitSchemaProperty(sb, type, typeIds, schemaHandlers);
 		}
 
-		EmitBuildForTypeMethod(sb, orderedTypes, schemaHandlers, foreignTypeEntries);
+		var shapeAliases = GetShapeAliases(orderedTypes);
+
+		EmitBuildForTypeMethod(sb, orderedTypes, schemaHandlers, foreignTypeEntries, shapeAliases);
 
 		EmitRegisterSchemasMethod(sb, orderedTypes);
 
@@ -294,7 +296,7 @@ internal static class SchemaCodeEmitter
 		return id;
 	}
 
-	private static void EmitBuildForTypeMethod(StringBuilder sb, List<TypeInfo> types, List<SchemaHandlerInfo> schemaHandlers, IReadOnlyList<(string TypeName, string SchemaId)> foreignTypeEntries)
+	private static void EmitBuildForTypeMethod(StringBuilder sb, List<TypeInfo> types, List<SchemaHandlerInfo> schemaHandlers, IReadOnlyList<(string TypeName, string SchemaId)> foreignTypeEntries, IReadOnlyList<(string TypeName, string SchemaId)> shapeAliases)
 	{
 		sb.AppendLine("\tpublic static JsonSchemaBuilder BuildForType(this JsonSchemaBuilder builder, Type type)");
 		sb.AppendLine("\t{");
@@ -334,6 +336,9 @@ internal static class SchemaCodeEmitter
 		sb.AppendLine("\t\treturn unwrapped switch");
 		sb.AppendLine("\t\t{");
 
+		foreach (var (typeName, schemaId) in shapeAliases)
+			sb.AppendLine($"\t\t\tvar t when t == typeof({typeName}) => builder.Ref(\"{schemaId}\"),");
+
 		foreach (var type in types)
 		{
 			var typeName = type.FullyQualifiedName;
@@ -358,6 +363,99 @@ internal static class SchemaCodeEmitter
 		sb.AppendLine("\t\t};");
 		sb.AppendLine("\t}");
 		sb.AppendLine();
+	}
+
+	private static List<(string TypeName, string SchemaId)> GetShapeAliases(List<TypeInfo> types)
+	{
+		var result = new List<(string TypeName, string SchemaId)>();
+
+		var arrayGroups = types
+			.Where(t => t.Kind == TypeKind.Array)
+			.Where(t => !string.IsNullOrEmpty(GetArrayShapeKey(t.TypeSymbol)))
+			.GroupBy(t => GetArrayShapeKey(t.TypeSymbol));
+
+		foreach (var group in arrayGroups)
+		{
+			var groupTypes = group.ToList();
+			if (groupTypes.Count <= 1) continue;
+
+			var canonical = groupTypes
+				.FirstOrDefault(t => IsPreferredCollectionShape(t.TypeSymbol))
+				?? groupTypes.OrderBy(t => t.FullyQualifiedName, StringComparer.Ordinal).First();
+
+			var canonicalId = GetSchemaId(canonical);
+
+			foreach (var type in groupTypes)
+			{
+				if (ReferenceEquals(type, canonical)) continue;
+				result.Add((type.FullyQualifiedName, canonicalId));
+			}
+		}
+
+		var dictionaryGroups = types
+			.Where(t => t.Kind == TypeKind.Dictionary)
+			.Where(t => !string.IsNullOrEmpty(GetDictionaryShapeKey(t.TypeSymbol)))
+			.GroupBy(t => GetDictionaryShapeKey(t.TypeSymbol));
+
+		foreach (var group in dictionaryGroups)
+		{
+			var groupTypes = group.ToList();
+			if (groupTypes.Count <= 1) continue;
+
+			var canonical = groupTypes
+				.FirstOrDefault(t => IsPreferredDictionaryShape(t.TypeSymbol))
+				?? groupTypes.OrderBy(t => t.FullyQualifiedName, StringComparer.Ordinal).First();
+
+			var canonicalId = GetSchemaId(canonical);
+
+			foreach (var type in groupTypes)
+			{
+				if (ReferenceEquals(type, canonical)) continue;
+				result.Add((type.FullyQualifiedName, canonicalId));
+			}
+		}
+
+		return result;
+	}
+
+	private static string GetArrayShapeKey(ITypeSymbol typeSymbol)
+	{
+		var elementType = CodeEmitterHelpers.GetElementType(typeSymbol);
+		if (elementType == null) return string.Empty;
+
+		var unwrappedElement = CodeEmitterHelpers.UnwrapNullable(elementType);
+		return unwrappedElement.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+	}
+
+	private static string GetDictionaryShapeKey(ITypeSymbol typeSymbol)
+	{
+		var keyType = CodeEmitterHelpers.GetDictionaryKeyType(typeSymbol);
+		var valueType = CodeEmitterHelpers.GetDictionaryValueType(typeSymbol);
+		if (keyType == null || valueType == null) return string.Empty;
+
+		var unwrappedKey = CodeEmitterHelpers.UnwrapNullable(keyType).ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+		var unwrappedValue = CodeEmitterHelpers.UnwrapNullable(valueType).ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+
+		return $"{unwrappedKey}|{unwrappedValue}";
+	}
+
+	private static bool IsPreferredCollectionShape(ITypeSymbol typeSymbol)
+	{
+		if (typeSymbol is not INamedTypeSymbol namedType || !namedType.IsGenericType) return false;
+
+		var typeString = namedType.ConstructedFrom.ToDisplayString();
+		return typeString == "System.Collections.Generic.IEnumerable<T>";
+	}
+
+	private static bool IsPreferredDictionaryShape(ITypeSymbol typeSymbol)
+	{
+		if (typeSymbol is not INamedTypeSymbol namedType || !namedType.IsGenericType) return false;
+
+		var typeString = namedType.ConstructedFrom
+			.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)
+			.Replace(" ", string.Empty);
+
+		return typeString == "global::System.Collections.Generic.IDictionary<TKey,TValue>";
 	}
 
 	private static void EmitRegisterSchemasMethod(StringBuilder sb, List<TypeInfo> types)
@@ -432,9 +530,8 @@ internal static class SchemaCodeEmitter
 	private static TypeInfo? FindTypeBySymbol(List<TypeInfo> types, ITypeSymbol symbol)
 	{
 		var unwrapped = CodeEmitterHelpers.UnwrapNullable(symbol);
-		if (unwrapped is not INamedTypeSymbol named) return null;
 
-		return types.FirstOrDefault(t => SymbolEqualityComparer.Default.Equals(t.TypeSymbol, named));
+		return types.FirstOrDefault(t => SymbolEqualityComparer.Default.Equals(t.TypeSymbol, unwrapped));
 	}
 
 	private static string GetPropertyName(TypeInfo type) => type.ResolvedPropertyName ?? type.SchemaPropertyName;

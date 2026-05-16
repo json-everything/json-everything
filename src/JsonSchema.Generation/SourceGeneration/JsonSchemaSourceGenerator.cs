@@ -116,6 +116,14 @@ public class JsonSchemaSourceGenerator : IIncrementalGenerator
 		{
 			if (analyzedTypes.Any(t => SymbolEqualityComparer.Default.Equals(t.TypeSymbol, typeSymbol))) continue;
 
+			if (typeSymbol is IArrayTypeSymbol arrayTypeSymbol)
+			{
+				if (allTypeInfos.Any(t => SymbolEqualityComparer.Default.Equals(t.TypeSymbol, arrayTypeSymbol))) continue;
+
+				allTypeInfos.Add(AnalyzeArrayType(arrayTypeSymbol, options.DefaultPropertyNaming, options.DefaultPropertyOrder));
+				continue;
+			}
+
 			if (typeSymbol is INamedTypeSymbol namedTypeSymbol)
 			{
 				var naming = options.DefaultPropertyNaming;
@@ -228,6 +236,8 @@ public class JsonSchemaSourceGenerator : IIncrementalGenerator
 
 		if (typeKind == TypeKind.Array)
 		{
+			allTypes.Add(unwrapped);
+
 			var elementType = CodeEmitterHelpers.GetElementType(unwrapped);
 			if (elementType != null)
 				CollectTypeRecursive(compilation, elementType, allTypes, selfGeneratingAssemblies, generatedSchemaMembersByAssembly, foreignTypes, reportDiagnostic, discoveredTypeOptions, naming, order);
@@ -236,6 +246,8 @@ public class JsonSchemaSourceGenerator : IIncrementalGenerator
 
 		if (typeKind == TypeKind.Dictionary)
 		{
+			allTypes.Add(unwrapped);
+
 			var keyType = CodeEmitterHelpers.GetDictionaryKeyType(unwrapped);
 			if (keyType != null)
 				CollectTypeRecursive(compilation, keyType, allTypes, selfGeneratingAssemblies, generatedSchemaMembersByAssembly, foreignTypes, reportDiagnostic, discoveredTypeOptions, naming, order);
@@ -288,6 +300,21 @@ public class JsonSchemaSourceGenerator : IIncrementalGenerator
 		if (discoveredTypeOptions.ContainsKey(typeSymbol)) return;
 
 		discoveredTypeOptions[typeSymbol] = (naming, order);
+	}
+
+	private static TypeInfo AnalyzeArrayType(IArrayTypeSymbol typeSymbol, NamingConvention propertyNaming, PropertyOrder propertyOrder)
+	{
+		return new TypeInfo
+		{
+			TypeSymbol = typeSymbol,
+			FullyQualifiedName = typeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
+			SchemaPropertyName = GetSchemaPropertyName(typeSymbol),
+			PropertyNaming = propertyNaming,
+			PropertyOrder = propertyOrder,
+			StrictConditionals = false,
+			Kind = TypeKind.Array,
+			IsNullable = false
+		};
 	}
 
 	private static HashSet<IAssemblySymbol> FindSelfGeneratingAssemblies(Compilation compilation)
@@ -381,6 +408,11 @@ public class JsonSchemaSourceGenerator : IIncrementalGenerator
 		return typeSymbol.ContainingType != null
 			? $"{GetSchemaPropertyName(typeSymbol.ContainingType)}_{currentName}"
 			: currentName;
+	}
+
+	private static string GetSchemaPropertyName(IArrayTypeSymbol typeSymbol)
+	{
+		return $"{GetTypeArgumentPropertyName(typeSymbol.ElementType)}Array";
 	}
 
 	private static string GetTypeArgumentPropertyName(ITypeSymbol typeSymbol)

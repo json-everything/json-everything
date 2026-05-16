@@ -119,30 +119,15 @@ internal static class TypeAnalyzer
 
 		if (unwrappedType.TypeKind == Microsoft.CodeAnalysis.TypeKind.Enum) return TypeKind.Enum;
 		if (unwrappedType is IArrayTypeSymbol) return TypeKind.Array;
-		if (unwrappedType is INamedTypeSymbol namedType && IsCollectionType(namedType)) return TypeKind.Array;
+		if (CodeEmitterHelpers.IsCollectionType(unwrappedType)) return TypeKind.Array;
 		if (CodeEmitterHelpers.IsDictionaryType(unwrappedType)) return TypeKind.Dictionary;
 
 		return TypeKind.Object;
 	}
 
-	private static bool IsCollectionType(INamedTypeSymbol typeSymbol)
-	{
-		if (!typeSymbol.IsGenericType)
-			return false;
-
-		var typeString = typeSymbol.ConstructedFrom.ToDisplayString();
-		return typeString is
-			"System.Collections.Generic.List<T>" or
-			"System.Collections.Generic.IList<T>" or
-			"System.Collections.Generic.ICollection<T>" or
-			"System.Collections.Generic.IEnumerable<T>" or
-			"System.Collections.Generic.IReadOnlyList<T>" or
-			"System.Collections.Generic.IReadOnlyCollection<T>";
-	}
-
 	private static void AnalyzeObjectType(Compilation compilation, TypeInfo typeInfo, Action<Diagnostic> reportDiagnostic)
 	{
-		var typeSymbol = typeInfo.TypeSymbol;
+		var typeSymbol = (INamedTypeSymbol)typeInfo.TypeSymbol;
 		var encounteredSchemaNames = new HashSet<string>(StringComparer.Ordinal);
 
 		var members = typeSymbol.GetMembers()

@@ -22,6 +22,14 @@ public class IfTests
 	}
 
 	[Test]
+	public void IfNullReturnsFalseResult()
+	{
+		var rule = JsonLogic.If(null!, 1, 2);
+
+		JsonAssert.AreEquivalent(2, rule.Apply());
+	}
+
+	[Test]
 	public void IfStandardReturnsSecondTrueResult()
 	{
 		var rule = JsonLogic.If(false, 1, true, 2, 3);
