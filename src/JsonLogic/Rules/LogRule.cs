@@ -13,6 +13,17 @@ namespace Json.Logic.Rules;
 [JsonConverter(typeof(LogRuleJsonConverter))]
 public class LogRule : Rule, IRule
 {
+	/// <summary>
+	/// Gets or sets the logger used for logic operations.
+	/// </summary>
+	/// <remarks>If not explicitly set, the property returns a default console logger. Assigning a custom logger
+	/// allows integration with different logging frameworks or custom logging behavior.</remarks>
+	public static ILogicLogger Logger
+	{
+		get => field ?? LogicLoggers.ConsoleLogger;
+		set;
+	}
+
 	internal Rule Log { get; }
 
 	internal LogRule(Rule log)
@@ -37,7 +48,7 @@ public class LogRule : Rule, IRule
 	{
 		var log = Log.Apply(data, contextData);
 
-		Console.WriteLine(log);
+		Logger.WriteLine(log);
 
 		return log;
 	}
@@ -46,7 +57,7 @@ public class LogRule : Rule, IRule
 	{
 		var log = JsonLogic.Apply(args, context);
 
-		Console.WriteLine(log);
+		Logger.WriteLine(log);
 
 		return log;
 	}
@@ -58,7 +69,7 @@ internal class LogRuleJsonConverter : WeaklyTypedJsonConverter<LogRule>
 	{
 		var parameters = reader.TokenType == JsonTokenType.StartArray
 			? options.ReadArray(ref reader, JsonLogicSerializerContext.Default.Rule)
-			: new[] { options.Read(ref reader, JsonLogicSerializerContext.Default.Rule)! };
+			: [options.Read(ref reader, JsonLogicSerializerContext.Default.Rule)!];
 
 		return new LogRule(parameters!.Length == 0
 			? new LiteralRule("")
