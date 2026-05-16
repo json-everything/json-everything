@@ -449,12 +449,15 @@ public static class TestModels
 		public int? ForcedNonNullable { get; set; }
 	}
 
+#pragma warning disable JSGEN003
 	[GenerateJsonSchema(PropertyNaming = NamingConvention.CamelCase)]
 	public class ModelWithDuplicateSchemaPropertyNames
 	{
 		public int Foo { get; set; }
+		// ReSharper disable once InconsistentNaming
 		public int foo { get; set; }
 	}
+#pragma warning restore JSGEN003
 
 	[GenerateJsonSchema(StrictConditionals = true)]
 	[If(nameof(IsActive), true, 0)]

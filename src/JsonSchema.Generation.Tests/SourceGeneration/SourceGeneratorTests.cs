@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using static Json.Schema.Generation.Tests.AssertionExtensions;
+// ReSharper disable UnusedVariable
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
 namespace Json.Schema.Generation.Tests.SourceGeneration;
