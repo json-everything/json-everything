@@ -258,7 +258,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder DependentSchemas(this JsonSchemaBuilder builder, IReadOnlyDictionary<string, JsonSchemaBuilder> deps)
 	{
-		builder.Add("dependentRequired", deps);
+		builder.Add("dependentSchemas", deps);
 		return builder;
 	}
 
@@ -270,7 +270,7 @@ public static class JsonSchemaBuilderExtensions
 	/// <returns>The builder.</returns>
 	public static JsonSchemaBuilder DependentSchemas(this JsonSchemaBuilder builder, params (string name, JsonSchemaBuilder schema)[] deps)
 	{
-		builder.Add("dependentRequired", deps);
+		builder.Add("dependentSchemas", deps);
 		return builder;
 	}
 
