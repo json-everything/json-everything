@@ -91,9 +91,8 @@ public class JsonSchemaSourceGenerator : IIncrementalGenerator
 
 		var selfGeneratingAssemblies = FindSelfGeneratingAssemblies(compilation);
 		var generatedSchemaMembersByAssembly = new Dictionary<string, HashSet<string>>(StringComparer.Ordinal);
-		var foreignTypes = new HashSet<ITypeSymbol>(SymbolEqualityComparer.Default);
 		var analyzedTypes = new List<TypeInfo>();
-		var allEncounteredTypes = new HashSet<ITypeSymbol>(SymbolEqualityComparer.Default);
+		var gatheredTypes = new HashSet<ITypeSymbol>(SymbolEqualityComparer.Default);
 		var discoveredTypeOptions = new Dictionary<ITypeSymbol, (NamingConvention Naming, PropertyOrder Order)>(SymbolEqualityComparer.Default);
 		foreach (var type in validTypes)
 		{
@@ -102,17 +101,22 @@ public class JsonSchemaSourceGenerator : IIncrementalGenerator
 			{
 				analyzedTypes.Add(typeInfo);
 				RegisterTypeOptions(discoveredTypeOptions, typeInfo.TypeSymbol, typeInfo.PropertyNaming, typeInfo.PropertyOrder);
-				CollectAllTypes(compilation, typeInfo, allEncounteredTypes, selfGeneratingAssemblies, generatedSchemaMembersByAssembly, foreignTypes, context.ReportDiagnostic, discoveredTypeOptions, typeInfo.PropertyNaming, typeInfo.PropertyOrder);
+				GatherCandidateTypes(compilation, typeInfo, gatheredTypes, context.ReportDiagnostic, discoveredTypeOptions, typeInfo.PropertyNaming, typeInfo.PropertyOrder);
 			}
 		}
 
 		if (analyzedTypes.Count == 0) return;
 
+		var foreignSchemaIdsByType = ResolveForeignCoverage(compilation, gatheredTypes, selfGeneratingAssemblies, generatedSchemaMembersByAssembly);
+		var localTypes = new HashSet<ITypeSymbol>(gatheredTypes, SymbolEqualityComparer.Default);
+		foreach (var foreignType in foreignSchemaIdsByType.Keys)
+			localTypes.Remove(foreignType);
+
 		var schemaHandlers = DiscoverSchemaHandlers(compilation);
 
 		// Analyze all encountered types that aren't already analyzed
 		var allTypeInfos = new List<TypeInfo>(analyzedTypes);
-		foreach (var typeSymbol in allEncounteredTypes)
+		foreach (var typeSymbol in localTypes)
 		{
 			if (analyzedTypes.Any(t => SymbolEqualityComparer.Default.Equals(t.TypeSymbol, typeSymbol))) continue;
 
@@ -143,8 +147,10 @@ public class JsonSchemaSourceGenerator : IIncrementalGenerator
 		ResolvePropertyNameConflicts(allTypeInfos, options.RootNamespace);
 
 		var foreignTypeEntries = new List<(string TypeName, string SchemaId)>();
-		foreach (var ft in foreignTypes)
-			foreignTypeEntries.Add((ft.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat), GetForeignSchemaId(ft)));
+		foreach (var kvp in foreignSchemaIdsByType)
+		{
+			foreignTypeEntries.Add((kvp.Key.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat), kvp.Value));
+		}
 
 		var targetNamespace = options.RootNamespace;
 		var classDeclaration = DetectGeneratedJsonSchemasClass(compilation, targetNamespace, context.ReportDiagnostic);
@@ -203,17 +209,17 @@ public class JsonSchemaSourceGenerator : IIncrementalGenerator
 			CollectSchemaHandlers(nested, results, systemType);
 	}
 
-	private static void CollectAllTypes(Compilation compilation, TypeInfo typeInfo, HashSet<ITypeSymbol> allTypes, HashSet<IAssemblySymbol> selfGeneratingAssemblies, Dictionary<string, HashSet<string>> generatedSchemaMembersByAssembly, HashSet<ITypeSymbol> foreignTypes, Action<Diagnostic> reportDiagnostic, Dictionary<ITypeSymbol, (NamingConvention Naming, PropertyOrder Order)> discoveredTypeOptions, NamingConvention naming, PropertyOrder order)
+	private static void GatherCandidateTypes(Compilation compilation, TypeInfo typeInfo, HashSet<ITypeSymbol> allTypes, Action<Diagnostic> reportDiagnostic, Dictionary<ITypeSymbol, (NamingConvention Naming, PropertyOrder Order)> discoveredTypeOptions, NamingConvention naming, PropertyOrder order)
 	{
-		CollectTypeRecursive(compilation, typeInfo.TypeSymbol, allTypes, selfGeneratingAssemblies, generatedSchemaMembersByAssembly, foreignTypes, reportDiagnostic, discoveredTypeOptions, naming, order);
+		CollectTypeRecursive(compilation, typeInfo.TypeSymbol, allTypes, reportDiagnostic, discoveredTypeOptions, naming, order);
 
 		foreach (var prop in typeInfo.Properties)
 		{
-			CollectTypeRecursive(compilation, prop.Type, allTypes, selfGeneratingAssemblies, generatedSchemaMembersByAssembly, foreignTypes, reportDiagnostic, discoveredTypeOptions, naming, order);
+			CollectTypeRecursive(compilation, prop.Type, allTypes, reportDiagnostic, discoveredTypeOptions, naming, order);
 		}
 	}
 
-	private static void CollectTypeRecursive(Compilation compilation, ITypeSymbol typeSymbol, HashSet<ITypeSymbol> allTypes, HashSet<IAssemblySymbol> selfGeneratingAssemblies, Dictionary<string, HashSet<string>> generatedSchemaMembersByAssembly, HashSet<ITypeSymbol> foreignTypes, Action<Diagnostic> reportDiagnostic, Dictionary<ITypeSymbol, (NamingConvention Naming, PropertyOrder Order)> discoveredTypeOptions, NamingConvention naming, PropertyOrder order)
+	private static void CollectTypeRecursive(Compilation compilation, ITypeSymbol typeSymbol, HashSet<ITypeSymbol> allTypes, Action<Diagnostic> reportDiagnostic, Dictionary<ITypeSymbol, (NamingConvention Naming, PropertyOrder Order)> discoveredTypeOptions, NamingConvention naming, PropertyOrder order)
 	{
 		var unwrapped = CodeEmitterHelpers.UnwrapNullable(typeSymbol);
 		if (IsBuiltInJsonDomType(unwrapped)) return;
@@ -227,9 +233,7 @@ public class JsonSchemaSourceGenerator : IIncrementalGenerator
 
 		if (typeKind == TypeKind.Enum && unwrapped is INamedTypeSymbol enumType)
 		{
-			if (IsTypeCoveredBySelfGeneratingAssemblies(enumType, selfGeneratingAssemblies, generatedSchemaMembersByAssembly))
-				foreignTypes.Add(enumType);
-			else if (allTypes.Add(enumType))
+			if (allTypes.Add(enumType))
 				RegisterTypeOptions(discoveredTypeOptions, enumType, naming, order);
 			return;
 		}
@@ -240,7 +244,7 @@ public class JsonSchemaSourceGenerator : IIncrementalGenerator
 
 			var elementType = CodeEmitterHelpers.GetElementType(unwrapped);
 			if (elementType != null)
-				CollectTypeRecursive(compilation, elementType, allTypes, selfGeneratingAssemblies, generatedSchemaMembersByAssembly, foreignTypes, reportDiagnostic, discoveredTypeOptions, naming, order);
+				CollectTypeRecursive(compilation, elementType, allTypes, reportDiagnostic, discoveredTypeOptions, naming, order);
 			return;
 		}
 
@@ -250,22 +254,16 @@ public class JsonSchemaSourceGenerator : IIncrementalGenerator
 
 			var keyType = CodeEmitterHelpers.GetDictionaryKeyType(unwrapped);
 			if (keyType != null)
-				CollectTypeRecursive(compilation, keyType, allTypes, selfGeneratingAssemblies, generatedSchemaMembersByAssembly, foreignTypes, reportDiagnostic, discoveredTypeOptions, naming, order);
+				CollectTypeRecursive(compilation, keyType, allTypes, reportDiagnostic, discoveredTypeOptions, naming, order);
 
 			var valueType = CodeEmitterHelpers.GetDictionaryValueType(unwrapped);
 			if (valueType != null)
-				CollectTypeRecursive(compilation, valueType, allTypes, selfGeneratingAssemblies, generatedSchemaMembersByAssembly, foreignTypes, reportDiagnostic, discoveredTypeOptions, naming, order);
+				CollectTypeRecursive(compilation, valueType, allTypes, reportDiagnostic, discoveredTypeOptions, naming, order);
 			return;
 		}
 
 		if (typeKind == TypeKind.Object && unwrapped is INamedTypeSymbol namedType)
 		{
-			if (IsTypeCoveredBySelfGeneratingAssemblies(namedType, selfGeneratingAssemblies, generatedSchemaMembersByAssembly))
-			{
-				foreignTypes.Add(namedType);
-				return;
-			}
-
 			RegisterTypeOptions(discoveredTypeOptions, namedType, naming, order);
 
 			if (allTypes.Add(namedType))
@@ -276,11 +274,24 @@ public class JsonSchemaSourceGenerator : IIncrementalGenerator
 				{
 					foreach (var prop in tempTypeInfo.Properties)
 					{
-						CollectTypeRecursive(compilation, prop.Type, allTypes, selfGeneratingAssemblies, generatedSchemaMembersByAssembly, foreignTypes, reportDiagnostic, discoveredTypeOptions, naming, order);
+						CollectTypeRecursive(compilation, prop.Type, allTypes, reportDiagnostic, discoveredTypeOptions, naming, order);
 					}
 				}
 			}
 		}
+	}
+
+	private static Dictionary<ITypeSymbol, string> ResolveForeignCoverage(Compilation compilation, HashSet<ITypeSymbol> gatheredTypes, HashSet<IAssemblySymbol> selfGeneratingAssemblies, Dictionary<string, HashSet<string>> generatedSchemaMembersByAssembly)
+	{
+		var result = new Dictionary<ITypeSymbol, string>(SymbolEqualityComparer.Default);
+
+		foreach (var typeSymbol in gatheredTypes)
+		{
+			if (TryGetCoveredSchemaId(typeSymbol, compilation, selfGeneratingAssemblies, generatedSchemaMembersByAssembly, out var schemaId))
+				result[typeSymbol] = schemaId;
+		}
+
+		return result;
 	}
 
 	private static bool IsBuiltInJsonDomType(ITypeSymbol typeSymbol)
@@ -331,20 +342,123 @@ public class JsonSchemaSourceGenerator : IIncrementalGenerator
 		return result;
 	}
 
-	private static bool IsTypeCoveredBySelfGeneratingAssemblies(INamedTypeSymbol typeSymbol, HashSet<IAssemblySymbol> selfGeneratingAssemblies, Dictionary<string, HashSet<string>> generatedSchemaMembersByAssembly)
+	private static bool TryGetCoveredSchemaId(ITypeSymbol typeSymbol, Compilation compilation, HashSet<IAssemblySymbol> selfGeneratingAssemblies, Dictionary<string, HashSet<string>> generatedSchemaMembersByAssembly, out string schemaId)
 	{
-		var propertyName = GetSchemaPropertyName(typeSymbol);
+		schemaId = string.Empty;
+		var coverageCandidates = GetCoverageCandidates(compilation, typeSymbol);
+		if (coverageCandidates.Count == 0)
+			return false;
+
 		foreach (var assembly in selfGeneratingAssemblies)
 		{
-			var isDeclaringAssembly = SymbolEqualityComparer.Default.Equals(assembly, typeSymbol.ContainingAssembly);
-			if (!isDeclaringAssembly && !ReferencesAssembly(assembly, typeSymbol.ContainingAssembly)) continue;
-
 			var memberNames = GetGeneratedSchemaMemberNames(assembly, generatedSchemaMembersByAssembly);
-			if (memberNames.Contains(propertyName))
+			foreach (var candidate in coverageCandidates)
+			{
+				var isDeclaringAssembly = SymbolEqualityComparer.Default.Equals(assembly, candidate.DeclaringAssembly);
+				if (!isDeclaringAssembly && candidate.DeclaringAssembly != null && !ReferencesAssembly(assembly, candidate.DeclaringAssembly))
+					continue;
+
+				if (!memberNames.Contains(candidate.MemberName)) continue;
+
+				schemaId = candidate.SchemaId;
 				return true;
+			}
 		}
 
 		return false;
+	}
+
+	private static List<(string MemberName, string SchemaId, IAssemblySymbol? DeclaringAssembly)> GetCoverageCandidates(Compilation compilation, ITypeSymbol typeSymbol)
+	{
+		var result = new List<(string MemberName, string SchemaId, IAssemblySymbol? DeclaringAssembly)>();
+		var seenMemberNames = new HashSet<string>(StringComparer.Ordinal);
+
+		void AddCandidate(ITypeSymbol candidate)
+		{
+			if (!TryGetCoverageCandidate(candidate, out var entry)) return;
+			if (!seenMemberNames.Add(entry.MemberName)) return;
+
+			result.Add(entry);
+		}
+
+		var unwrapped = CodeEmitterHelpers.UnwrapNullable(typeSymbol);
+		AddCandidate(unwrapped);
+
+		if (unwrapped is IArrayTypeSymbol arrayType)
+		{
+			var elementType = CodeEmitterHelpers.GetElementType(arrayType);
+			if (elementType == null) return result;
+
+			var canonicalEnumerable = TryConstructGenericType(compilation, "System.Collections.Generic.IEnumerable`1", [elementType]);
+			if (canonicalEnumerable != null)
+				AddCandidate(canonicalEnumerable);
+
+			return result;
+		}
+
+		if (unwrapped is not INamedTypeSymbol namedType)
+			return result;
+
+		if (CodeEmitterHelpers.IsCollectionType(namedType))
+		{
+			var elementType = CodeEmitterHelpers.GetElementType(namedType);
+			if (elementType != null)
+			{
+				var canonicalEnumerable = TryConstructGenericType(compilation, "System.Collections.Generic.IEnumerable`1", [elementType]);
+				if (canonicalEnumerable != null)
+					AddCandidate(canonicalEnumerable);
+
+				AddCandidate(compilation.CreateArrayTypeSymbol(elementType));
+			}
+		}
+
+		if (CodeEmitterHelpers.IsDictionaryType(namedType))
+		{
+			var keyType = CodeEmitterHelpers.GetDictionaryKeyType(namedType);
+			var valueType = CodeEmitterHelpers.GetDictionaryValueType(namedType);
+			if (keyType != null && valueType != null)
+			{
+				var canonicalInterface = TryConstructGenericType(compilation, "System.Collections.Generic.IDictionary`2", [keyType, valueType]);
+				if (canonicalInterface != null)
+					AddCandidate(canonicalInterface);
+
+				var concreteDictionary = TryConstructGenericType(compilation, "System.Collections.Generic.Dictionary`2", [keyType, valueType]);
+				if (concreteDictionary != null)
+					AddCandidate(concreteDictionary);
+			}
+		}
+
+		return result;
+	}
+
+	private static bool TryGetCoverageCandidate(ITypeSymbol typeSymbol, out (string MemberName, string SchemaId, IAssemblySymbol? DeclaringAssembly) result)
+	{
+		if (typeSymbol is INamedTypeSymbol namedType)
+		{
+			result = (GetSchemaPropertyName(namedType), GetForeignSchemaId(namedType), namedType.ContainingAssembly);
+			return true;
+		}
+
+		if (typeSymbol is IArrayTypeSymbol arrayType)
+		{
+			result = (
+				GetSchemaPropertyName(arrayType),
+				SchemaCodeEmitter.ToUrn(arrayType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)),
+				arrayType.ContainingAssembly
+			);
+			return true;
+		}
+
+		result = default;
+		return false;
+	}
+
+	private static INamedTypeSymbol? TryConstructGenericType(Compilation compilation, string metadataName, IReadOnlyList<ITypeSymbol> arguments)
+	{
+		if (compilation.GetTypeByMetadataName(metadataName) is not INamedTypeSymbol genericType)
+			return null;
+
+		return genericType.Construct(arguments.ToArray());
 	}
 
 	private static bool ReferencesAssembly(IAssemblySymbol sourceAssembly, IAssemblySymbol targetAssembly)
@@ -493,7 +607,7 @@ public class JsonSchemaSourceGenerator : IIncrementalGenerator
 		if (idAttr != null && idAttr.ConstructorArguments.Length > 0 &&
 		    idAttr.ConstructorArguments[0].Value is string idStr)
 			return idStr;
-		return typeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+		return SchemaCodeEmitter.ToUrn(typeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat));
 	}
 
 	private static ClassDeclarationInfo DetectGeneratedJsonSchemasClass(
