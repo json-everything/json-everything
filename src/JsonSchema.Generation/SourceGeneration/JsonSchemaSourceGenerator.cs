@@ -443,7 +443,7 @@ public class JsonSchemaSourceGenerator : IIncrementalGenerator
 		{
 			result = (
 				GetSchemaPropertyName(arrayType),
-				arrayType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
+				SchemaCodeEmitter.ToUrn(arrayType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)),
 				arrayType.ContainingAssembly
 			);
 			return true;
@@ -607,7 +607,7 @@ public class JsonSchemaSourceGenerator : IIncrementalGenerator
 		if (idAttr != null && idAttr.ConstructorArguments.Length > 0 &&
 		    idAttr.ConstructorArguments[0].Value is string idStr)
 			return idStr;
-		return typeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+		return SchemaCodeEmitter.ToUrn(typeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat));
 	}
 
 	private static ClassDeclarationInfo DetectGeneratedJsonSchemasClass(

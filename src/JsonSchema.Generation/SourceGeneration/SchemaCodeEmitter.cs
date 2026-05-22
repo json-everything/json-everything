@@ -267,16 +267,21 @@ internal static class SchemaCodeEmitter
 		foreach (var (typeName, schemaId) in foreignTypeEntries)
 			typeIds[typeName] = schemaId;
 
+		var shapeAliases = GetShapeAliases(orderedTypes);
+		// Map non-canonical FQN -> canonical property name for aliased shapes
+		var aliasPropertyMap = shapeAliases.ToDictionary(a => a.TypeName, a => a.CanonicalPropertyName);
+
 		foreach (var type in orderedTypes)
 		{
-			EmitSchemaProperty(sb, type, typeIds, schemaHandlers);
+			if (aliasPropertyMap.TryGetValue(type.FullyQualifiedName, out var canonicalProp))
+				EmitAliasProperty(sb, type, canonicalProp);
+			else
+				EmitSchemaProperty(sb, type, typeIds, schemaHandlers);
 		}
 
-		var shapeAliases = GetShapeAliases(orderedTypes);
+		EmitBuildForTypeMethod(sb, orderedTypes, schemaHandlers, foreignTypeEntries, shapeAliases.Select(a => (a.TypeName, a.SchemaId)).ToList());
 
-		EmitBuildForTypeMethod(sb, orderedTypes, schemaHandlers, foreignTypeEntries, shapeAliases);
-
-		EmitRegisterSchemasMethod(sb, orderedTypes);
+		EmitRegisterSchemasMethod(sb, orderedTypes, aliasPropertyMap);
 
 		sb.AppendLine("}");
 		sb.AppendLine();
@@ -288,12 +293,74 @@ internal static class SchemaCodeEmitter
 
 	private static string GetSchemaId(TypeInfo type)
 	{
-		var id = type.FullyQualifiedName;
 		var idAttr = type.TypeAttributes.FirstOrDefault(a => a.AttributeName == "IdAttribute");
 		if (idAttr != null && idAttr.Parameters.TryGetValue("arg0", out var idValue) && idValue is string idStr)
-			id = idStr;
+			return idStr;
 
-		return id;
+		return ToUrn(type.FullyQualifiedName);
+	}
+
+	internal static string ToUrn(string typeName)
+	{
+		// Remove global:: prefix if present
+		if (typeName.StartsWith("global::"))
+			typeName = typeName.Substring(8);
+
+		// Canonical collection shapes share IDs.
+		if (typeName.StartsWith("System.Collections.Generic.IEnumerable<") ||
+			typeName.StartsWith("System.Collections.Generic.IReadOnlyCollection<") ||
+			typeName.StartsWith("System.Collections.Generic.ICollection<") ||
+			typeName.StartsWith("System.Collections.Generic.HashSet<") ||
+			typeName.StartsWith("System.Collections.Generic.Queue<") ||
+			typeName.StartsWith("System.Collections.Generic.Stack<") ||
+			typeName.EndsWith("[]"))
+		{
+			string elementType;
+			if (typeName.EndsWith("[]"))
+			{
+				elementType = typeName.Substring(0, typeName.Length - 2);
+			}
+			else
+			{
+				var start = typeName.IndexOf('<') + 1;
+				var len = typeName.LastIndexOf('>') - start;
+				elementType = typeName.Substring(start, len);
+			}
+
+			var elementUrn = ToUrn(elementType).Replace("urn:jsonschema:", "");
+			return $"urn:jsonschema:array-{elementUrn}";
+		}
+
+		// Canonical dictionary shapes share IDs.
+		if (typeName.StartsWith("System.Collections.Generic.Dictionary<") ||
+			typeName.StartsWith("System.Collections.Generic.IDictionary<") ||
+			typeName.StartsWith("System.Collections.Generic.IReadOnlyDictionary<"))
+		{
+			var start = typeName.IndexOf('<') + 1;
+			var len = typeName.LastIndexOf('>') - start;
+			var args = typeName.Substring(start, len).Split(',');
+			var keyUrn = ToUrn(args[0].Trim()).Replace("urn:jsonschema:", "");
+			var valueUrn = ToUrn(args[1].Trim()).Replace("urn:jsonschema:", "");
+			return $"urn:jsonschema:object-{keyUrn}-{valueUrn}";
+		}
+
+		// Fallback: replace problematic chars for URN
+		var sb = new StringBuilder("urn:jsonschema:");
+		foreach (var ch in typeName)
+		{
+			if (char.IsLetterOrDigit(ch)) sb.Append(ch);
+			else if (ch == '.') sb.Append('.');
+			else if (ch == '<') sb.Append('-');
+			else if (ch == '>') continue;
+			else if (ch == ',') sb.Append('-');
+			else if (ch == '`') sb.Append('G');
+			else if (ch == '[') sb.Append("-Arr");
+			else if (ch == ']') continue;
+			else if (ch == ' ') continue;
+			else if (ch == ':') sb.Append(':');
+			else sb.Append('-');
+		}
+		return sb.ToString();
 	}
 
 	private static void EmitBuildForTypeMethod(StringBuilder sb, List<TypeInfo> types, List<SchemaHandlerInfo> schemaHandlers, IReadOnlyList<(string TypeName, string SchemaId)> foreignTypeEntries, IReadOnlyList<(string TypeName, string SchemaId)> shapeAliases)
@@ -365,9 +432,9 @@ internal static class SchemaCodeEmitter
 		sb.AppendLine();
 	}
 
-	private static List<(string TypeName, string SchemaId)> GetShapeAliases(List<TypeInfo> types)
+	private static List<(string TypeName, string SchemaId, string CanonicalPropertyName)> GetShapeAliases(List<TypeInfo> types)
 	{
-		var result = new List<(string TypeName, string SchemaId)>();
+		var result = new List<(string TypeName, string SchemaId, string CanonicalPropertyName)>();
 
 		var arrayGroups = types
 			.Where(t => t.Kind == TypeKind.Array)
@@ -384,11 +451,12 @@ internal static class SchemaCodeEmitter
 				?? groupTypes.OrderBy(t => t.FullyQualifiedName, StringComparer.Ordinal).First();
 
 			var canonicalId = GetSchemaId(canonical);
+			var canonicalPropName = GetPropertyName(canonical);
 
 			foreach (var type in groupTypes)
 			{
 				if (ReferenceEquals(type, canonical)) continue;
-				result.Add((type.FullyQualifiedName, canonicalId));
+				result.Add((type.FullyQualifiedName, canonicalId, canonicalPropName));
 			}
 		}
 
@@ -407,11 +475,12 @@ internal static class SchemaCodeEmitter
 				?? groupTypes.OrderBy(t => t.FullyQualifiedName, StringComparer.Ordinal).First();
 
 			var canonicalId = GetSchemaId(canonical);
+			var canonicalPropName = GetPropertyName(canonical);
 
 			foreach (var type in groupTypes)
 			{
 				if (ReferenceEquals(type, canonical)) continue;
-				result.Add((type.FullyQualifiedName, canonicalId));
+				result.Add((type.FullyQualifiedName, canonicalId, canonicalPropName));
 			}
 		}
 
@@ -458,7 +527,16 @@ internal static class SchemaCodeEmitter
 		return typeString == "global::System.Collections.Generic.IDictionary<TKey,TValue>";
 	}
 
-	private static void EmitRegisterSchemasMethod(StringBuilder sb, List<TypeInfo> types)
+	private static void EmitAliasProperty(StringBuilder sb, TypeInfo type, string canonicalPropertyName)
+	{
+		sb.AppendLine("\t/// <summary>");
+		sb.AppendLine($"\t/// Alias for <see cref=\"{canonicalPropertyName}\"/>, same collection shape.");
+		sb.AppendLine("\t/// </summary>");
+		sb.AppendLine($"\tpublic static readonly JsonSchema {GetPropertyName(type)} = {canonicalPropertyName};");
+		sb.AppendLine();
+	}
+
+	private static void EmitRegisterSchemasMethod(StringBuilder sb, List<TypeInfo> types, Dictionary<string, string> aliasPropertyMap)
 	{
 		sb.AppendLine();
 		sb.AppendLine("\t/// <summary>");
@@ -469,6 +547,8 @@ internal static class SchemaCodeEmitter
 
 		foreach (var type in types)
 		{
+			// Skip non-canonical shapes — they share a schema with the canonical type
+			if (aliasPropertyMap.ContainsKey(type.FullyQualifiedName)) continue;
 			sb.AppendLine($"\t\tregistry.Register({GetPropertyName(type)});");
 		}
 
@@ -570,11 +650,15 @@ internal static class SchemaCodeEmitter
 		sb.AppendLine();
 		sb.Append($"{indentStr}.Schema(\"https://json-schema.org/draft/2020-12/schema\")");
 
-		var id = type.FullyQualifiedName;
 		var idAttr = type.TypeAttributes.FirstOrDefault(a => a.AttributeName == "IdAttribute");
+		string id;
 		if (idAttr != null && idAttr.Parameters.TryGetValue("arg0", out var idValue) && idValue is string idStr)
 		{
 			id = idStr;
+		}
+		else
+		{
+			id = ToUrn(type.FullyQualifiedName);
 		}
 		sb.AppendLine();
 		sb.Append($"{indentStr}.Id(\"{id}\")");
