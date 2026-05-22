@@ -12,7 +12,7 @@ public class DataAnnotationsSourceGeneratorTests
 		var expectedJson = """
 		{
 		  "$schema": "https://json-schema.org/draft/2020-12/schema",
-		  "$id": "global::Json.Schema.Generation.DataAnnotations.Tests.SourceGeneration.DataAnnotationsTestModels.PersonWithMaxLength",
+		  "$id": "urn:jsonschema:Json.Schema.Generation.DataAnnotations.Tests.SourceGeneration.DataAnnotationsTestModels.PersonWithMaxLength",
 		  "type": "object",
 		  "properties": {
 		    "Name": {
@@ -35,7 +35,7 @@ public class DataAnnotationsSourceGeneratorTests
 		var expectedJson = """
 		{
 		  "$schema": "https://json-schema.org/draft/2020-12/schema",
-		  "$id": "global::Json.Schema.Generation.DataAnnotations.Tests.SourceGeneration.DataAnnotationsTestModels.PersonWithMinLength",
+		  "$id": "urn:jsonschema:Json.Schema.Generation.DataAnnotations.Tests.SourceGeneration.DataAnnotationsTestModels.PersonWithMinLength",
 		  "type": "object",
 		  "properties": {
 		    "Name": {
@@ -58,7 +58,7 @@ public class DataAnnotationsSourceGeneratorTests
 		var expectedJson = """
 		{
 		  "$schema": "https://json-schema.org/draft/2020-12/schema",
-		  "$id": "global::Json.Schema.Generation.DataAnnotations.Tests.SourceGeneration.DataAnnotationsTestModels.PersonWithStringLength",
+		  "$id": "urn:jsonschema:Json.Schema.Generation.DataAnnotations.Tests.SourceGeneration.DataAnnotationsTestModels.PersonWithStringLength",
 		  "type": "object",
 		  "properties": {
 		    "Name": {
@@ -82,7 +82,7 @@ public class DataAnnotationsSourceGeneratorTests
 		var expectedJson = """
 		{
 		  "$schema": "https://json-schema.org/draft/2020-12/schema",
-		  "$id": "global::Json.Schema.Generation.DataAnnotations.Tests.SourceGeneration.DataAnnotationsTestModels.PersonWithRange",
+		  "$id": "urn:jsonschema:Json.Schema.Generation.DataAnnotations.Tests.SourceGeneration.DataAnnotationsTestModels.PersonWithRange",
 		  "type": "object",
 		  "properties": {
 		    "Name": { "type": "string" },
@@ -106,7 +106,7 @@ public class DataAnnotationsSourceGeneratorTests
 		var expectedJson = """
 		{
 		  "$schema": "https://json-schema.org/draft/2020-12/schema",
-		  "$id": "global::Json.Schema.Generation.DataAnnotations.Tests.SourceGeneration.DataAnnotationsTestModels.PersonWithRegex",
+		  "$id": "urn:jsonschema:Json.Schema.Generation.DataAnnotations.Tests.SourceGeneration.DataAnnotationsTestModels.PersonWithRegex",
 		  "type": "object",
 		  "properties": {
 		    "SSN": {
@@ -128,7 +128,7 @@ public class DataAnnotationsSourceGeneratorTests
 		var expectedJson = """
 		{
 		  "$schema": "https://json-schema.org/draft/2020-12/schema",
-		  "$id": "global::Json.Schema.Generation.DataAnnotations.Tests.SourceGeneration.DataAnnotationsTestModels.PersonWithEmail",
+		  "$id": "urn:jsonschema:Json.Schema.Generation.DataAnnotations.Tests.SourceGeneration.DataAnnotationsTestModels.PersonWithEmail",
 		  "type": "object",
 		  "properties": {
 		    "Email": {
@@ -150,7 +150,7 @@ public class DataAnnotationsSourceGeneratorTests
 		var expectedJson = """
 		{
 		  "$schema": "https://json-schema.org/draft/2020-12/schema",
-		  "$id": "global::Json.Schema.Generation.DataAnnotations.Tests.SourceGeneration.DataAnnotationsTestModels.PersonWithUrl",
+		  "$id": "urn:jsonschema:Json.Schema.Generation.DataAnnotations.Tests.SourceGeneration.DataAnnotationsTestModels.PersonWithUrl",
 		  "type": "object",
 		  "properties": {
 		    "Website": {
@@ -173,7 +173,7 @@ public class DataAnnotationsSourceGeneratorTests
 		var expectedJson = """
 		{
 		  "$schema": "https://json-schema.org/draft/2020-12/schema",
-		  "$id": "global::Json.Schema.Generation.DataAnnotations.Tests.SourceGeneration.DataAnnotationsTestModels.PersonWithLength",
+		  "$id": "urn:jsonschema:Json.Schema.Generation.DataAnnotations.Tests.SourceGeneration.DataAnnotationsTestModels.PersonWithLength",
 		  "type": "object",
 		  "properties": {
 		    "Name": {
@@ -196,7 +196,7 @@ public class DataAnnotationsSourceGeneratorTests
 		var expectedJson = """
 		{
 		  "$schema": "https://json-schema.org/draft/2020-12/schema",
-		  "$id": "global::Json.Schema.Generation.DataAnnotations.Tests.SourceGeneration.DataAnnotationsTestModels.PersonWithBase64",
+		  "$id": "urn:jsonschema:Json.Schema.Generation.DataAnnotations.Tests.SourceGeneration.DataAnnotationsTestModels.PersonWithBase64",
 		  "type": "object",
 		  "properties": {
 		    "Image": {
@@ -219,7 +219,7 @@ public class DataAnnotationsSourceGeneratorTests
 		var expectedJson = """
 		{
 		  "$schema": "https://json-schema.org/draft/2020-12/schema",
-		  "$id": "global::Json.Schema.Generation.DataAnnotations.Tests.SourceGeneration.DataAnnotationsTestModels.PersonWithMultipleConstraints",
+		  "$id": "urn:jsonschema:Json.Schema.Generation.DataAnnotations.Tests.SourceGeneration.DataAnnotationsTestModels.PersonWithMultipleConstraints",
 		  "type": "object",
 		  "properties": {
 		    "Name": {
