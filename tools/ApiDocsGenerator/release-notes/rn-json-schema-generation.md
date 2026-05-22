@@ -4,6 +4,10 @@ title: JsonSchema.Net.Generation
 icon: fas fa-tag
 order: "09.05"
 ---
+# [7.3.8](https://github.com/gregsdennis/json-everything/pull/1040) {#release-schemagen-7.3.8}
+
+Fixes an issue with generation of schemas for collection types across multiple assemblies.
+
 # [7.3.7](https://github.com/gregsdennis/json-everything/pull/1039) {#release-schemagen-7.3.7}
 
 [#1038](https://github.com/gregsdennis/json-everything/issues/1038) - Source generation support improvements for collection types.
