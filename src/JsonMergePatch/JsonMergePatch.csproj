@@ -1,0 +1,49 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <IsRoslynComponent>true</IsRoslynComponent>
+    <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+    <RootNamespace>Json.MergePatch</RootNamespace>
+    <AssemblyName>JsonMergePatch.Net</AssemblyName>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>../../json-everything.snk</AssemblyOriginatorKeyFile>
+
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PackageId>JsonMergePatch.Net</PackageId>
+    <Version>1.0.0</Version>
+    <FileVersion>1.0.0</FileVersion>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <Authors>Greg Dennis</Authors>
+    <Description>JSON Merge Patch built on the System.Text.Json namespace</Description>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIcon>json-logo-256.png</PackageIcon>
+    <PackageProjectUrl>https://github.com/json-everything/json-everything</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/json-everything/json-everything</RepositoryUrl>
+    <PackageTags>json-merge-patch jsonpatch json</PackageTags>
+    <PackageReleaseNotes>Release notes can be found at https://docs.json-everything.net/rn-json-merge-patch/</PackageReleaseNotes>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <PackageLicenseFile>OSMFEULA.txt</PackageLicenseFile>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- DotNext is a transitive dependency for consumers; do not reference directly in analyzer/generator -->
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.8.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.201" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+	  <None Include="..\..\tools\ApiDocsGenerator\release-notes\rn-json-patch.md" Link="release-notes.md" />
+	  <None Include="README.md" Pack="true" PackagePath="\" />
+    <None Include="..\..\Resources\json-logo-256.png" Pack="true" PackagePath="\" />
+    <None Include="..\..\OSMFEULA.txt" Pack="true" PackagePath="OSMFEULA.txt" />
+  </ItemGroup>
+
+</Project>
