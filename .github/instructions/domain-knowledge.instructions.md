@@ -16,7 +16,8 @@ This repository provides JSON-focused libraries built around `System.Text.Json`.
 
 - Changes can affect many downstream consumers across multiple packages.
 - Favor predictable behavior and stable defaults.
-- Breaking changes require strong justification.
+- Breaking changes require strong justification.  Prefer usage of `[Obsolete]` attributes over breaking changes.
+- `[Obsolete]` attributed functionality will be removed when implementing the next major release.
 
 ## Specifications And Compatibility
 

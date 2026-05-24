@@ -23,7 +23,7 @@ public class MergePatchTests
 		var forecast = new WeatherForecast { Temperature = 20, Summary = "Sunny" };
 
 		var patch = """{ "temperature": 30 }""";
-		var dto = JsonSerializer.Deserialize<WeatherForecast.UpdateDto>(patch, _options)!;
+		var dto = JsonSerializer.Deserialize<WeatherForecast.PatchModel>(patch, _options)!;
 		dto.ApplyTo(forecast);
 
 		Assert.That(forecast.Temperature, Is.EqualTo(30));
@@ -36,7 +36,7 @@ public class MergePatchTests
 		var forecast = new WeatherForecast { Temperature = 20, Summary = "Sunny" };
 
 		var patch = """{ "summary": null }""";
-		var dto = JsonSerializer.Deserialize<WeatherForecast.UpdateDto>(patch, _options)!;
+		var dto = JsonSerializer.Deserialize<WeatherForecast.PatchModel>(patch, _options)!;
 		dto.ApplyTo(forecast);
 
 		Assert.That(forecast.Summary, Is.Null);
@@ -49,7 +49,7 @@ public class MergePatchTests
 		var forecast = new WeatherForecast { Temperature = 20, Summary = "Sunny" };
 
 		var patch = """{ "temperature": 25 }""";
-		var dto = JsonSerializer.Deserialize<WeatherForecast.UpdateDto>(patch, _options)!;
+		var dto = JsonSerializer.Deserialize<WeatherForecast.PatchModel>(patch, _options)!;
 		dto.ApplyTo(forecast);
 
 		Assert.That(forecast.Summary, Is.EqualTo("Sunny"));
@@ -65,7 +65,7 @@ public class MergePatchTests
 		};
 
 		var patch = """{ "location": null }""";
-		var dto = JsonSerializer.Deserialize<WeatherForecast.UpdateDto>(patch, _options)!;
+		var dto = JsonSerializer.Deserialize<WeatherForecast.PatchModel>(patch, _options)!;
 		dto.ApplyTo(forecast);
 
 		Assert.That(forecast.Location, Is.Null);
@@ -81,7 +81,7 @@ public class MergePatchTests
 		};
 
 		var patch = """{ "location": { "city": "Paris" } }""";
-		var dto = JsonSerializer.Deserialize<WeatherForecast.UpdateDto>(patch, _options)!;
+		var dto = JsonSerializer.Deserialize<WeatherForecast.PatchModel>(patch, _options)!;
 		dto.ApplyTo(forecast);
 
 		Assert.That(forecast.Location!.City, Is.EqualTo("Paris"));
@@ -94,7 +94,7 @@ public class MergePatchTests
 		var forecast = new WeatherForecast { Temperature = 20, Location = null };
 
 		var patch = """{ "location": { "city": "Rome" } }""";
-		var dto = JsonSerializer.Deserialize<WeatherForecast.UpdateDto>(patch, _options)!;
+		var dto = JsonSerializer.Deserialize<WeatherForecast.PatchModel>(patch, _options)!;
 		dto.ApplyTo(forecast);
 
 		Assert.That(forecast.Location, Is.Not.Null);
@@ -107,7 +107,7 @@ public class MergePatchTests
 		var location = new Location { City = "Berlin", PostalCode = "10115" };
 
 		var patch = """{ "zip": "12345" }""";
-		var dto = JsonSerializer.Deserialize<Location.UpdateDto>(patch, _options)!;
+		var dto = JsonSerializer.Deserialize<Location.LocationPatch>(patch, _options)!;
 		dto.ApplyTo(location);
 
 		Assert.That(location.PostalCode, Is.EqualTo("12345"));
@@ -120,7 +120,7 @@ public class MergePatchTests
 		var forecast = new WeatherForecast { Temperature = 20 };
 
 		var patch = """{ "unknownField": "value", "temperature": 99 }""";
-		var dto = JsonSerializer.Deserialize<WeatherForecast.UpdateDto>(patch, _options)!;
+		var dto = JsonSerializer.Deserialize<WeatherForecast.PatchModel>(patch, _options)!;
 		dto.ApplyTo(forecast);
 
 		Assert.That(forecast.Temperature, Is.EqualTo(99));
@@ -135,7 +135,7 @@ public class MergePatchTests
 		};
 
 		var patch = """{ "intArray": [7, 8] }""";
-		var dto = JsonSerializer.Deserialize<CollectionContainer.UpdateDto>(patch, _options)!;
+		var dto = JsonSerializer.Deserialize<CollectionContainer.PatchModel>(patch, _options)!;
 		dto.ApplyTo(model);
 
 		Assert.That(model.IntArray, Is.EqualTo([7, 8]));
@@ -150,7 +150,7 @@ public class MergePatchTests
 		};
 
 		var patch = """{ "intList": [10, 20] }""";
-		var dto = JsonSerializer.Deserialize<CollectionContainer.UpdateDto>(patch, _options)!;
+		var dto = JsonSerializer.Deserialize<CollectionContainer.PatchModel>(patch, _options)!;
 		dto.ApplyTo(model);
 
 		Assert.That(model.IntList, Is.EqualTo([10, 20]));
@@ -165,7 +165,7 @@ public class MergePatchTests
 		};
 
 		var patch = """{ "tags": null }""";
-		var dto = JsonSerializer.Deserialize<CollectionContainer.UpdateDto>(patch, _options)!;
+		var dto = JsonSerializer.Deserialize<CollectionContainer.PatchModel>(patch, _options)!;
 		dto.ApplyTo(model);
 
 		Assert.That(model.Tags, Is.Null);
@@ -180,7 +180,7 @@ public class MergePatchTests
 		};
 
 		var patch = "{}";
-		var dto = JsonSerializer.Deserialize<CollectionContainer.UpdateDto>(patch, _options)!;
+		var dto = JsonSerializer.Deserialize<CollectionContainer.PatchModel>(patch, _options)!;
 		dto.ApplyTo(model);
 
 		Assert.That(model.IntList, Is.EqualTo([3, 4, 5]));
@@ -206,11 +206,42 @@ public class MergePatchTests
 			  ]
 			}
 			""";
-		var dto = JsonSerializer.Deserialize<CollectionContainer.UpdateDto>(patch, _options)!;
+		var dto = JsonSerializer.Deserialize<CollectionContainer.PatchModel>(patch, _options)!;
 		dto.ApplyTo(model);
 
 		Assert.That(model.Locations, Has.Count.EqualTo(1));
 		Assert.That(model.Locations![0].City, Is.EqualTo("Paris"));
 		Assert.That(model.Locations[0].PostalCode, Is.EqualTo("75000"));
+	}
+
+	[Test]
+	public void PatchType_IsNested_ForAutomaticAndPartial()
+	{
+		var patch = """{ "value": 42 }""";
+		var dto = JsonSerializer.Deserialize<AutoNestingModel.PatchModel>(patch, _options)!;
+		var model = new AutoNestingModel { Value = 0 };
+		dto.ApplyTo(model);
+		Assert.That(model.Value, Is.EqualTo(42));
+	}
+
+	[Test]
+	public void PatchType_IsNested_ForSubclassMode()
+	{
+		var patch = """{ "value": 99 }""";
+		var dto = JsonSerializer.Deserialize<SubclassNestingModel.PatchModel>(patch, _options)!;
+		var model = new SubclassNestingModel { Value = 0 };
+		dto.ApplyTo(model);
+		Assert.That(model.Value, Is.EqualTo(99));
+	}
+
+	[Test]
+	public void PatchType_IsInNamespace_ForSameNamespaceMode()
+	{
+		var patch = """{ "value": 123 }""";
+		// Patch type is not nested, but in namespace
+		var dto = JsonSerializer.Deserialize<NamespaceNestingModelPatchModel>(patch, _options)!;
+		var model = new NamespaceNestingModel { Value = 0 };
+		dto.ApplyTo(model);
+		Assert.That(model.Value, Is.EqualTo(123));
 	}
 }

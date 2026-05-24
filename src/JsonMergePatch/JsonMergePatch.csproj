@@ -40,6 +40,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <AdditionalFiles Include="AnalyzerReleases.Shipped.md" />
+    <AdditionalFiles Include="AnalyzerReleases.Unshipped.md" />
+  </ItemGroup>
+
+  <ItemGroup>
 	  <None Include="..\..\tools\ApiDocsGenerator\release-notes\rn-json-patch.md" Link="release-notes.md" />
 	  <None Include="README.md" Pack="true" PackagePath="\" />
     <None Include="..\..\Resources\json-logo-256.png" Pack="true" PackagePath="\" />
