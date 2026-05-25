@@ -273,10 +273,14 @@ internal static class SchemaCodeEmitter
 
 		foreach (var type in orderedTypes)
 		{
+			if (!aliasPropertyMap.ContainsKey(type.FullyQualifiedName))
+				EmitSchemaProperty(sb, type, typeIds, schemaHandlers);
+		}
+
+		foreach (var type in orderedTypes)
+		{
 			if (aliasPropertyMap.TryGetValue(type.FullyQualifiedName, out var canonicalProp))
 				EmitAliasProperty(sb, type, canonicalProp);
-			else
-				EmitSchemaProperty(sb, type, typeIds, schemaHandlers);
 		}
 
 		EmitBuildForTypeMethod(sb, orderedTypes, schemaHandlers, foreignTypeEntries, shapeAliases.Select(a => (a.TypeName, a.SchemaId)).ToList());
