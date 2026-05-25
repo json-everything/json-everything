@@ -4,51 +4,51 @@ title: JsonE.Net
 icon: fas fa-tag
 order: "09.12"
 ---
-# [3.0.1](https://github.com/gregsdennis/json-everything/pull/1013) {#release-e-3.0.1}
+# [3.0.1](https://github.com/json-everything/json-everything/pull/1013) {#release-e-3.0.1}
 
 Updated nuget packages & EULA.
 
-# [3.0.0](https://github.com/gregsdennis/json-everything/pull/982) {#release-e-3.0.0}
+# [3.0.0](https://github.com/json-everything/json-everything/pull/982) {#release-e-3.0.0}
 
 Enacted Open Source Maintenance Fee.
 
 See the [blog post](https://blog.json-everything.net/posts/expensive/) for more information.
 
-# [2.5.1](https://github.com/gregsdennis/json-everything/pull/934) {#release-e-2.5.1}
+# [2.5.1](https://github.com/json-everything/json-everything/pull/934) {#release-e-2.5.1}
 
 [#931](https://github.com/json-everything/json-everything/pull/931) - Fixed bounds issue for negative indices in array expressions.  Thanks to [@einart-vm](https://github.com/einart-vm) for identifying this.
 
-# [2.5.0](https://github.com/gregsdennis/json-everything/pull/848) {#release-e-2.5.0}
+# [2.5.0](https://github.com/json-everything/json-everything/pull/848) {#release-e-2.5.0}
 
 [#843](https://github.com/json-everything/json-everything/pull/843) - Performance improvements courtesy of [@cptjazz](https://github.com/cptjazz).
 
-# [2.4.0](https://github.com/gregsdennis/json-everything/pull/822) {#release-e-2.4.0}
+# [2.4.0](https://github.com/json-everything/json-everything/pull/822) {#release-e-2.4.0}
 
 Add .Net 9.0 support.
 
 (v2.3.0 skipped for some reason)
 
-# [2.2.0](https://github.com/gregsdennis/json-everything/pull/805) {#release-e-2.2.0}
+# [2.2.0](https://github.com/json-everything/json-everything/pull/805) {#release-e-2.2.0}
 
 Adds the newly introduced `$reduce` operator and `range()` functions.
 
-# [2.1.2](https://github.com/gregsdennis/json-everything/commits/6a426380c5597312945d4e743d44c3f530f7f18e) {#release-e-2.1.2}
+# [2.1.2](https://github.com/json-everything/json-everything/commits/6a426380c5597312945d4e743d44c3f530f7f18e) {#release-e-2.1.2}
 
 `InterpreterException` now derives from `JsonEException` like all of the other exceptions.
 
-# [2.1.1](https://github.com/gregsdennis/json-everything/pull/714) {#release-e-2.1.1}
+# [2.1.1](https://github.com/json-everything/json-everything/pull/714) {#release-e-2.1.1}
 
-[#713](https://github.com/gregsdennis/json-everything/issues/713) - Fixes an issue where branches of `$if` and `$switch` would be evaluated whether they were needed or not.  Thanks to [@mi25iw](https://github.com/mi25iw) for finding and fixing this.
+[#713](https://github.com/json-everything/json-everything/issues/713) - Fixes an issue where branches of `$if` and `$switch` would be evaluated whether they were needed or not.  Thanks to [@mi25iw](https://github.com/mi25iw) for finding and fixing this.
 
-# [2.1.0.x](https://github.com/gregsdennis/json-everything/pull/712) {#release-e-2.1.0.x}
+# [2.1.0.x](https://github.com/json-everything/json-everything/pull/712) {#release-e-2.1.0.x}
 
-[#711](https://github.com/gregsdennis/json-everything/issues/711) - Nuget package meta-data updates; no functional changes from previous version.
+[#711](https://github.com/json-everything/json-everything/issues/711) - Nuget package meta-data updates; no functional changes from previous version.
 
-# [2.1.0](https://github.com/gregsdennis/json-everything/pull/681) {#release-e-2.1.0}
+# [2.1.0](https://github.com/json-everything/json-everything/pull/681) {#release-e-2.1.0}
 
 [Json-e #526](https://github.com/json-e/json-e/pull/526) - Added `$find` operator.
 
-# [2.0.0](https://github.com/gregsdennis/json-everything/pull/619) {#release-e-2.0.0}
+# [2.0.0](https://github.com/json-everything/json-everything/pull/619) {#release-e-2.0.0}
 
 Updated for multi-framework support with .Net Standard 2.0 and .Net 8 with Native AOT support, including updating _System.Text.Json_ from v6 to v8.
 
@@ -60,7 +60,7 @@ Dropping support for .Net Standard 3.1 - May still be used, but exact behavior c
 
 `JsonNodeExtensions.Clone()` to handle nodes that contain functions, which are not handled properly by `JsonNode.DeepCopy()`.
 
-# [1.0.2](https://github.com/gregsdennis/json-everything/pull/621) {#release-e-1.0.2}
+# [1.0.2](https://github.com/json-everything/json-everything/pull/621) {#release-e-1.0.2}
 
 Updated string indexing to look at text elements instead of chars to better support surrogate pairs.
 
@@ -68,10 +68,10 @@ Updated string indexing to look at text elements instead of chars to better supp
 
 `$let` operator now errors if `in` is not provided.
 
-# [1.0.1](https://github.com/gregsdennis/json-everything/pull/569) {#release-e-1.0.1}
+# [1.0.1](https://github.com/json-everything/json-everything/pull/569) {#release-e-1.0.1}
 
 Improved error messaging so that it's closer in alignment with other implementations.
 
-# [1.0.0](https://github.com/gregsdennis/json-everything/pull/566) {#release-e-1.0.0}
+# [1.0.0](https://github.com/json-everything/json-everything/pull/566) {#release-e-1.0.0}
 
 Initial release.

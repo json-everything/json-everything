@@ -4,67 +4,67 @@ title: JsonPatch.Net
 icon: fas fa-tag
 order: "09.09"
 ---
-# [5.0.2](https://github.com/gregsdennis/json-everything/pull/1013) {#release-patch-5.0.2}
+# [5.0.2](https://github.com/json-everything/json-everything/pull/1013) {#release-patch-5.0.2}
 
 Updated nuget packages & EULA.
 
-# [5.0.1](https://github.com/gregsdennis/json-everything/pull/1005) {#release-patch-5.0.1}
+# [5.0.1](https://github.com/json-everything/json-everything/pull/1005) {#release-patch-5.0.1}
 
 [#1004](https://github.com/json-everything/json-everything/issues/1004) - Adding values to leaf locations should return error.  Thanks to [@mcrumley](https://github.com/cptjazz) for reporting.
 
-# [5.0.0](https://github.com/gregsdennis/json-everything/pull/982) {#release-patch-5.0.0}
+# [5.0.0](https://github.com/json-everything/json-everything/pull/982) {#release-patch-5.0.0}
 
 Enacted Open Source Maintenance Fee.
 
 See the [blog post](https://blog.json-everything.net/posts/expensive/) for more information.
 
-# [4.0.1](https://github.com/gregsdennis/json-everything/pull/970) {#release-patch-4.0.1}
+# [4.0.1](https://github.com/json-everything/json-everything/pull/970) {#release-patch-4.0.1}
 
 - [#963](https://github.com/json-everything/json-everything/pull/963) - Runtime performance improvement for `PatchExtensions.CreatePatch` by [@stephenmk](https://github.com/stephenmk)
 - [#964](https://github.com/json-everything/json-everything/issues/964) - Patch size optimization for comparisons involving zero-length arrays by [@stephenmk](https://github.com/stephenmk)
 
-# [4.0.0](https://github.com/gregsdennis/json-everything/pull/952) {#release-patch-4.0.0}
+# [4.0.0](https://github.com/json-everything/json-everything/pull/952) {#release-patch-4.0.0}
 
 - Add .Net 10 support.
 - Update Nuget references.
 - Update to _JsonPointer.Net_ v6.  No API surface changes.
 
-# [3.3.0](https://github.com/gregsdennis/json-everything/pull/848) {#release-patch-3.3.0}
+# [3.3.0](https://github.com/json-everything/json-everything/pull/848) {#release-patch-3.3.0}
 
 [#843](https://github.com/json-everything/json-everything/pull/843) - Performance improvements courtesy of [@cptjazz](https://github.com/cptjazz).
 
-# [3.2.3](https://github.com/gregsdennis/json-everything/pull/829) {#release-patch-3.2.3}
+# [3.2.3](https://github.com/json-everything/json-everything/pull/829) {#release-patch-3.2.3}
 
-- [#825](https://github.com/gregsdennis/json-everything/issues/825) - Remove and replace not working when `path` pointer ends with `-`.  (Cannot access end of array.)
+- [#825](https://github.com/json-everything/json-everything/issues/825) - Remove and replace not working when `path` pointer ends with `-`.  (Cannot access end of array.)
 
-# [3.2.2](https://github.com/gregsdennis/json-everything/pull/828) {#release-patch-3.2.2}
+# [3.2.2](https://github.com/json-everything/json-everything/pull/828) {#release-patch-3.2.2}
 
-- [#825](https://github.com/gregsdennis/json-everything/issues/825) - Copy not working when `to` pointer ends with `-`.  (Cannot copy to end of array.)
+- [#825](https://github.com/json-everything/json-everything/issues/825) - Copy not working when `to` pointer ends with `-`.  (Cannot copy to end of array.)
 
-# [3.2.1](https://github.com/gregsdennis/json-everything/pull/827) {#release-patch-3.2.1}
+# [3.2.1](https://github.com/json-everything/json-everything/pull/827) {#release-patch-3.2.1}
 
-- [#825](https://github.com/gregsdennis/json-everything/issues/825) - Move not working when `to` pointer ends with `-`.  (Cannot move to end of array.)
-- [#826](https://github.com/gregsdennis/json-everything/issues/826) - Copy should insert values, not overwrite them.
+- [#825](https://github.com/json-everything/json-everything/issues/825) - Move not working when `to` pointer ends with `-`.  (Cannot move to end of array.)
+- [#826](https://github.com/json-everything/json-everything/issues/826) - Copy should insert values, not overwrite them.
 
 Thanks to [@vimateck](https://github.com/vimateck) for reporting and identifying the sources for these issues.
 
-# [3.2.0](https://github.com/gregsdennis/json-everything/pull/822) {#release-patch-3.2.0}
+# [3.2.0](https://github.com/json-everything/json-everything/pull/822) {#release-patch-3.2.0}
 
 Add .Net 9.0 support.
 
-# [3.1.1](https://github.com/gregsdennis/json-everything/pull/759) {#release-patch-3.1.1}
+# [3.1.1](https://github.com/json-everything/json-everything/pull/759) {#release-patch-3.1.1}
 
 Update to use _JsonPointer.Net_ v5.0.2.
 
-# [3.1.0](https://github.com/gregsdennis/json-everything/pull/719) {#release-patch-3.1.0}
+# [3.1.0](https://github.com/json-everything/json-everything/pull/719) {#release-patch-3.1.0}
 
 Updated to use _JsonPointer.Net_ v5.0.0, which contains breaking changes ([release notes](/rn-json-pointer/#release-pointer-5.0.0)).
 
-# [3.0.0.x](https://github.com/gregsdennis/json-everything/pull/712) {#release-patch-3.0.0.x}
+# [3.0.0.x](https://github.com/json-everything/json-everything/pull/712) {#release-patch-3.0.0.x}
 
-[#711](https://github.com/gregsdennis/json-everything/issues/711) - Nuget package meta-data updates; no functional changes from previous version.
+[#711](https://github.com/json-everything/json-everything/issues/711) - Nuget package meta-data updates; no functional changes from previous version.
 
-# [3.0.0](https://github.com/gregsdennis/json-everything/pull/619) {#release-patch-3.0.0}
+# [3.0.0](https://github.com/json-everything/json-everything/pull/619) {#release-patch-3.0.0}
 
 Updated for multi-framework support with .Net Standard 2.0 and .Net 8 with Native AOT support, including updating _System.Text.Json_ from v6 to v8.
 
@@ -82,37 +82,37 @@ Dropping support for .Net Standard 3.1 - May still be used, but exact behavior c
 
 `PatchExtensions.Apply()` and `.Create()`, including all overloads, have been marked as AOT-incompatible since they use unsupported reflection.
 
-# [2.1.0](https://github.com/gregsdennis/json-everything/pull/472) {#release-patch-2.1.0}
+# [2.1.0](https://github.com/json-everything/json-everything/pull/472) {#release-patch-2.1.0}
 
-[#471](https://github.com/gregsdennis/json-everything/issues/397) - Make patch json converter public to support .Net source generation.  Thanks to [@pwelter34](https://github.com/pwelter34) for highlighting this use case.
+[#471](https://github.com/json-everything/json-everything/issues/397) - Make patch json converter public to support .Net source generation.  Thanks to [@pwelter34](https://github.com/pwelter34) for highlighting this use case.
 
-# [2.0.6](https://github.com/gregsdennis/json-everything/pull/400) {#release-patch-2.0.6}
+# [2.0.6](https://github.com/json-everything/json-everything/pull/400) {#release-patch-2.0.6}
 
-[#397](https://github.com/gregsdennis/json-everything/issues/397) - Fixed an issue where `replace` needs to check that the target location exists before proceeding with the `add` portion of its operation.
+[#397](https://github.com/json-everything/json-everything/issues/397) - Fixed an issue where `replace` needs to check that the target location exists before proceeding with the `add` portion of its operation.
 
-# [2.0.5](https://github.com/gregsdennis/json-everything/pull/394) {#release-patch-2.0.5}
+# [2.0.5](https://github.com/json-everything/json-everything/pull/394) {#release-patch-2.0.5}
 
-[#393](https://github.com/gregsdennis/json-everything/issues/393) - Fixed an `InvalidOperationException` from some of the operations.
+[#393](https://github.com/json-everything/json-everything/issues/393) - Fixed an `InvalidOperationException` from some of the operations.
 
-# [2.0.4](https://github.com/gregsdennis/json-everything/pull/323) {#release-patch-2.0.4}
+# [2.0.4](https://github.com/json-everything/json-everything/pull/323) {#release-patch-2.0.4}
 
-[#322](https://github.com/gregsdennis/json-everything/pull/322) - [@z4kn4fein](https://github.com/z4kn4fein) discovered and fixed an issue in the `move` operation logic.
+[#322](https://github.com/json-everything/json-everything/pull/322) - [@z4kn4fein](https://github.com/z4kn4fein) discovered and fixed an issue in the `move` operation logic.
 
-# [2.0.3](https://github.com/gregsdennis/json-everything/pull/317) {#release-patch-2.0.3}
+# [2.0.3](https://github.com/json-everything/json-everything/pull/317) {#release-patch-2.0.3}
 
-[#315](https://github.com/gregsdennis/json-everything/pull/315) - [@z4kn4fein](https://github.com/z4kn4fein) noticed that the serializer options weren't actually being passed into the `.Apply()` call.
+[#315](https://github.com/json-everything/json-everything/pull/315) - [@z4kn4fein](https://github.com/z4kn4fein) noticed that the serializer options weren't actually being passed into the `.Apply()` call.
 
 # 2.0.2 (no PR) {#release-patch-2.0.2}
 
-[#291](https://github.com/gregsdennis/json-everything/pull/291) - Improved patch generation for arrays.
+[#291](https://github.com/json-everything/json-everything/pull/291) - Improved patch generation for arrays.
 
 # 2.0.1 (no PR) {#release-patch-2.0.1}
 
-[#288](https://github.com/gregsdennis/json-everything/issues/288) - Just bumping version to pick up the latest Json.More.Net by default.  This package pull Json.More.Net transitively via JsonPointer.Net which wasn't updated with the move to `JsonNode`.
+[#288](https://github.com/json-everything/json-everything/issues/288) - Just bumping version to pick up the latest Json.More.Net by default.  This package pull Json.More.Net transitively via JsonPointer.Net which wasn't updated with the move to `JsonNode`.
 
-# [2.0.0](https://github.com/gregsdennis/json-everything/pull/280) {#release-patch-2.0.0}
+# [2.0.0](https://github.com/json-everything/json-everything/pull/280) {#release-patch-2.0.0}
 
-[#243](https://github.com/gregsdennis/json-everything/pull/243) - Updated System.Text.Json to version 6.
+[#243](https://github.com/json-everything/json-everything/pull/243) - Updated System.Text.Json to version 6.
 
 Updated all functionality to use `JsonNode` instead of `JsonElement`.
 
@@ -131,43 +131,43 @@ _`JsonElement` -> `JsonNode` type exchange changes not listed._
 
 - `.Apply<T>()` extension method now takes optional serializer options
 
-# [1.1.2](https://github.com/gregsdennis/json-everything/pull/196) {#release-patch-1.1.2}
+# [1.1.2](https://github.com/json-everything/json-everything/pull/196) {#release-patch-1.1.2}
 
-[#192](https://github.com/gregsdennis/json-everything/pull/192) - [@LordXaosa](https://github.com/LordXaosa) found some issues with patch generation.
+[#192](https://github.com/json-everything/json-everything/pull/192) - [@LordXaosa](https://github.com/LordXaosa) found some issues with patch generation.
 
-# [1.1.1](https://github.com/gregsdennis/json-everything/pull/179) {#release-patch-1.1.1}
+# [1.1.1](https://github.com/json-everything/json-everything/pull/179) {#release-patch-1.1.1}
 
 Updated JsonPointer.Net to v2.0.0.  Please see [release notes](./json-pointer.md) for that library as it contains breaking changes.
 
-# [1.1.0](https://github.com/gregsdennis/json-everything/pull/163) {#release-patch-1.1.0}
+# [1.1.0](https://github.com/json-everything/json-everything/pull/163) {#release-patch-1.1.0}
 
-[#160](https://github.com/gregsdennis/json-everything/pull/160) - Added JSON Patch creation via comparison of objects or JSON data.  Credit for implementation to [@LordXaosa](https://github.com/LordXaosa).
+[#160](https://github.com/json-everything/json-everything/pull/160) - Added JSON Patch creation via comparison of objects or JSON data.  Credit for implementation to [@LordXaosa](https://github.com/LordXaosa).
 
 Added `JsonElementProxy` overloads for `PatchOperation.Add()`, `PatchOperation.Replace()`, and `PatchOperation.Test()`.
 
-# [1.0.6](https://github.com/gregsdennis/json-everything/pull/147) {#release-patch-1.0.6}
+# [1.0.6](https://github.com/json-everything/json-everything/pull/147) {#release-patch-1.0.6}
 
-[#132](https://github.com/gregsdennis/json-everything/pull/132) (Fixed on [#133](https://github.com/gregsdennis/json-everything/pull/133)) - Fixed some memory management issues around `JsonDocument` and `JsonElement`.  Thanks to [@ddunkin](https://github.com/ddunkin) for finding and fixing these.
+[#132](https://github.com/json-everything/json-everything/pull/132) (Fixed on [#133](https://github.com/json-everything/json-everything/pull/133)) - Fixed some memory management issues around `JsonDocument` and `JsonElement`.  Thanks to [@ddunkin](https://github.com/ddunkin) for finding and fixing these.
 
-[#146](https://github.com/gregsdennis/json-everything/issues/146) - Fixed an issue during operation construction that appeared when attempting to use JSON Patch in an MVC controller.
+[#146](https://github.com/json-everything/json-everything/issues/146) - Fixed an issue during operation construction that appeared when attempting to use JSON Patch in an MVC controller.
 
-# [1.0.5](https://github.com/gregsdennis/json-everything/pull/75) {#release-patch-1.0.5}
+# [1.0.5](https://github.com/json-everything/json-everything/pull/75) {#release-patch-1.0.5}
 
 Added support for nullable reference types.
 
-# [1.0.4](https://github.com/gregsdennis/json-everything/pull/61) {#release-patch-1.0.4}
+# [1.0.4](https://github.com/json-everything/json-everything/pull/61) {#release-patch-1.0.4}
 
 Signed the DLL for strong name compatibility.
 
-# [1.0.3](https://github.com/gregsdennis/json-everything/commit/4b6c5900f4bfb45119a3dc5c3ce60b7d7a2e8c9e) {#release-patch-1.0.3}
+# [1.0.3](https://github.com/json-everything/json-everything/commit/4b6c5900f4bfb45119a3dc5c3ce60b7d7a2e8c9e) {#release-patch-1.0.3}
 
 Bump for publish.  No functional change.
 
-# [1.0.2](https://github.com/gregsdennis/json-everything/pull/45) {#release-patch-1.0.2}
+# [1.0.2](https://github.com/json-everything/json-everything/pull/45) {#release-patch-1.0.2}
 
 Added debug symbols to package.  No functional change.
 
-# [1.0.1](https://github.com/gregsdennis/json-everything/pull/26) {#release-patch-1.0.1}
+# [1.0.1](https://github.com/json-everything/json-everything/pull/26) {#release-patch-1.0.1}
 
 Implemented patch equality.
 

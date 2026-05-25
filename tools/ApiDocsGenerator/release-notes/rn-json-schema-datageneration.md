@@ -4,13 +4,13 @@ title: JsonSchema.Net.DataGeneration
 icon: fas fa-tag
 order: "09.07"
 ---
-# [3.1.0](https://github.com/gregsdennis/json-everything/pull/1015) {#release-schemadatagen-3.1.0}
+# [3.1.0](https://github.com/json-everything/json-everything/pull/1015) {#release-schemadatagen-3.1.0}
 
-- [#892](https://github.com/gregsdennis/json-everything/issues/892) - Support recursive references.  Thanks to [@Frassle](https://github.com/Frassle) for the suggestion.
+- [#892](https://github.com/json-everything/json-everything/issues/892) - Support recursive references.  Thanks to [@Frassle](https://github.com/Frassle) for the suggestion.
 - Support `$dynamicRef`
 - Removes the `BuildOptions` parameter from the `.GenerateData()` method since it's not used
 
-# [3.1.0](https://github.com/gregsdennis/json-everything/pull/1015) {#release-schemadatagen-3.1.0}
+# [3.1.0](https://github.com/json-everything/json-everything/pull/1015) {#release-schemadatagen-3.1.0}
 
 - Replaced Fare with internal regex value generation to significantly improve regex support
 - Improved conditional support
@@ -18,11 +18,11 @@ order: "09.07"
 - Increased test coverage to find and fix bugs
 - Added generation error reporting
 
-# [3.0.1](https://github.com/gregsdennis/json-everything/pull/1013) {#release-schemadatagen-3.0.1}
+# [3.0.1](https://github.com/json-everything/json-everything/pull/1013) {#release-schemadatagen-3.0.1}
 
 Updated nuget packages & EULA.
 
-# [3.0.0](https://github.com/gregsdennis/json-everything/pull/1012) {#release-schemadatagen-3.0.0}
+# [3.0.0](https://github.com/json-everything/json-everything/pull/1012) {#release-schemadatagen-3.0.0}
 
 Updates for JsonSchema.Net v9 compability.
 
@@ -30,31 +30,31 @@ Enacted Open Source Maintenance Fee.
 
 See the [blog post](https://blog.json-everything.net/posts/expensive/) for more information.
 
-# [2.3.1](https://github.com/gregsdennis/json-everything/pull/934) {#release-schemadatagen-2.3.1}
+# [2.3.1](https://github.com/json-everything/json-everything/pull/934) {#release-schemadatagen-2.3.1}
 
-[#892](https://github.com/gregsdennis/json-everything/issues/892) - Removed unnecessary `Console.WriteLine()`.  Thanks to [@ruanmed](https://github.com/ruanmed) for reporting.
+[#892](https://github.com/json-everything/json-everything/issues/892) - Removed unnecessary `Console.WriteLine()`.  Thanks to [@ruanmed](https://github.com/ruanmed) for reporting.
 
-# [2.3.0](https://github.com/gregsdennis/json-everything/pull/822) {#release-schemadatagen-2.3.0}
+# [2.3.0](https://github.com/json-everything/json-everything/pull/822) {#release-schemadatagen-2.3.0}
 
 Add .Net 9.0 support.
 
-# [2.2.0](https://github.com/gregsdennis/json-everything/pull/719) {#release-schemadatagen-2.2.0}
+# [2.2.0](https://github.com/json-everything/json-everything/pull/719) {#release-schemadatagen-2.2.0}
 
 Updated to use _JsonSchema.Net_ v7.0.0, which contains breaking changes ([release notes](/rn-json-schema/#release-schema-7.0.0)).
 
-# [2.1.0.x](https://github.com/gregsdennis/json-everything/pull/712) {#release-schemadatagen-2.1.0.x}
+# [2.1.0.x](https://github.com/json-everything/json-everything/pull/712) {#release-schemadatagen-2.1.0.x}
 
-[#711](https://github.com/gregsdennis/json-everything/issues/711) - Nuget package meta-data updates; no functional changes from previous version.
+[#711](https://github.com/json-everything/json-everything/issues/711) - Nuget package meta-data updates; no functional changes from previous version.
 
-# [2.1.0](https://github.com/gregsdennis/json-everything/pull/665) {#release-schemadatagen-2.0.1}
+# [2.1.0](https://github.com/json-everything/json-everything/pull/665) {#release-schemadatagen-2.0.1}
 
-[#617](https://github.com/gregsdennis/json-everything/issues/617) - Added support for `exclusiveMin`, `exclusiveMax`, and `$ref`.  (Note: `$ref` support does not include infinite recursion checking.)
+[#617](https://github.com/json-everything/json-everything/issues/617) - Added support for `exclusiveMin`, `exclusiveMax`, and `$ref`.  (Note: `$ref` support does not include infinite recursion checking.)
 
-# [2.0.1](https://github.com/gregsdennis/json-everything/pull/658) {#release-schemadatagen-2.0.1}
+# [2.0.1](https://github.com/json-everything/json-everything/pull/658) {#release-schemadatagen-2.0.1}
 
-[#646](https://github.com/gregsdennis/json-everything/issues/646) & [#647](https://github.com/gregsdennis/json-everything/issues/647) - Improved handling of `not`, `oneOf`, and `unevaluatedProperties`.
+[#646](https://github.com/json-everything/json-everything/issues/646) & [#647](https://github.com/json-everything/json-everything/issues/647) - Improved handling of `not`, `oneOf`, and `unevaluatedProperties`.
 
-# [2.0.0](https://github.com/gregsdennis/json-everything/pull/619) {#release-schemadatagen-2.0.0}
+# [2.0.0](https://github.com/json-everything/json-everything/pull/619) {#release-schemadatagen-2.0.0}
 
 Updated for multi-framework support with .Net Standard 2.0 and .Net 8 with Native AOT support, including updating _System.Text.Json_ from v6 to v8.
 
@@ -62,9 +62,9 @@ Updated for multi-framework support with .Net Standard 2.0 and .Net 8 with Nativ
 
 Dropping support for .Net Standard 3.1 - May still be used, but exact behavior cannot be guaranteed. 
 
-# [1.2.0](https://github.com/gregsdennis/json-everything/pull/582) {#release-schemadatagen-1.2.0}
+# [1.2.0](https://github.com/json-everything/json-everything/pull/582) {#release-schemadatagen-1.2.0}
 
-[#580](https://github.com/gregsdennis/json-everything/issues/580) - Add support for `pattern` by incorporating [FARE library](https://github.com/moodmosaic/Fare).
+[#580](https://github.com/json-everything/json-everything/issues/580) - Add support for `pattern` by incorporating [FARE library](https://github.com/moodmosaic/Fare).
 
 Only simple subschemas with a single, simple `pattern` is supported.
 
@@ -78,33 +78,33 @@ Updated JsonSchema.Net reference to v4.0.0.
 
 # 1.0.4 (no PR) {#release-schemadatagen-1.0.4}
 
-[#405](https://github.com/gregsdennis/json-everything/issues/405) - v1.0.3 referenced beta version of JsonSchema.Net.  This update reverts that dependency to JsonSchema v3.3.2.
+[#405](https://github.com/json-everything/json-everything/issues/405) - v1.0.3 referenced beta version of JsonSchema.Net.  This update reverts that dependency to JsonSchema v3.3.2.
 
-# [1.0.3](https://github.com/gregsdennis/json-everything/pull/386) {#release-schemadatagen-1.0.3}
+# [1.0.3](https://github.com/json-everything/json-everything/pull/386) {#release-schemadatagen-1.0.3}
 
-[#384](https://github.com/gregsdennis/json-everything/issues/384) - Schemas with embedded `enum`s were re-using nodes instead of copying them, causing an `InvalidOperationException`.  Thanks to [@leonardo-gooten](https://github.com/leonardo-gooten) for reporting this.
+[#384](https://github.com/json-everything/json-everything/issues/384) - Schemas with embedded `enum`s were re-using nodes instead of copying them, causing an `InvalidOperationException`.  Thanks to [@leonardo-gooten](https://github.com/leonardo-gooten) for reporting this.
 
-# [1.0.2](https://github.com/gregsdennis/json-everything/pull/380) {#release-schemadatagen-1.0.2}
+# [1.0.2](https://github.com/json-everything/json-everything/pull/380) {#release-schemadatagen-1.0.2}
 
-[#374](https://github.com/gregsdennis/json-everything/issues/374) - Generated property counts were not bounded properly, causing an exception to be thrown from the randomizer.
+[#374](https://github.com/json-everything/json-everything/issues/374) - Generated property counts were not bounded properly, causing an exception to be thrown from the randomizer.
 
 # 1.0.1 (no PR) {#release-schemadatagen-1.0.1}
 
-[#288](https://github.com/gregsdennis/json-everything/issues/288) - Just bumping version to pick up the latest Json.More.Net by default.  This package pull Json.More.Net transitively via JsonPointer.Net which wasn't updated with the move to `JsonNode`.
+[#288](https://github.com/json-everything/json-everything/issues/288) - Just bumping version to pick up the latest Json.More.Net by default.  This package pull Json.More.Net transitively via JsonPointer.Net which wasn't updated with the move to `JsonNode`.
 
-# [1.0.0](https://github.com/gregsdennis/json-everything/pull/280) {#release-schemadatagen-1.0.0}
+# [1.0.0](https://github.com/json-everything/json-everything/pull/280) {#release-schemadatagen-1.0.0}
 
 Updated all functionality to use `JsonNode` instead of `JsonElement` in line with JsonSchema.Net v3.
 
 Also... OFFICIAL RELEASE!!!  I feel confident enough in this library to release it under a real version!  Thought, the JSON Schema team still advises that this sort of functionality should be used as a development tool, not in production scenarios.
 
-# [0.1.3](https://github.com/gregsdennis/json-everything/pull/262) {#release-schemadatagen-0.1.3}
+# [0.1.3](https://github.com/json-everything/json-everything/pull/262) {#release-schemadatagen-0.1.3}
 
 Improved handling of conditionals and inferred types.
 
-# [0.1.2](https://github.com/gregsdennis/json-everything/pull/259) {#release-schemadatagen-0.1.2}
+# [0.1.2](https://github.com/json-everything/json-everything/pull/259) {#release-schemadatagen-0.1.2}
 
-[#243](https://github.com/gregsdennis/json-everything/pull/243) - Updated System.Text.Json to version 6.
+[#243](https://github.com/json-everything/json-everything/pull/243) - Updated System.Text.Json to version 6.
 
 Better support for const, specifically when it appears in a conditional (`if`/`then`/`else`) or under a `not`.
 
@@ -112,7 +112,7 @@ Better support for const, specifically when it appears in a conditional (`if`/`t
 
 Fixed a bug around property generation.
 
-# [0.1.0](https://github.com/gregsdennis/json-everything/pull/218) {#release-schemadatagen-0.1.0}
+# [0.1.0](https://github.com/json-everything/json-everything/pull/218) {#release-schemadatagen-0.1.0}
 
 Initial release.
 
