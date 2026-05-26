@@ -13,6 +13,7 @@ namespace Json.MergePatch;
 public sealed class MergePatchGenerator : IIncrementalGenerator
 {
 	private const string _attributeFullName = "Json.MergePatch.GenerateMergePatchUpdateAttribute";
+	private const string _patchIgnoreAttributeFullName = "Json.MergePatch.PatchIgnoreAttribute";
 	private const string _nestingModeFullName = "Json.MergePatch.NestingMode";
 	private const string _defaultPatchTypeName = "PatchModel";
 
@@ -38,6 +39,13 @@ public sealed class MergePatchGenerator : IIncrementalGenerator
 		public string Name { get; set; } = "PatchModel";
 		public NestingMode Nesting { get; set; } = NestingMode.Automatic;
 	}
+
+	/// <summary>
+	/// Excludes a property from generated merge patch models.
+	/// Useful for fields like identifiers that should be part of the route, not request payload.
+	/// </summary>
+	[global::System.AttributeUsage(global::System.AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
+	public sealed class PatchIgnoreAttribute : global::System.Attribute;
 	""";
 
 	public void Initialize(IncrementalGeneratorInitializationContext context)
@@ -96,8 +104,9 @@ public sealed class MergePatchGenerator : IIncrementalGenerator
 			if (prop.IsStatic) continue;
 			if (prop.IsIndexer) continue;
 			if (prop.GetMethod is null || prop.SetMethod is null) continue;
+			if (IsPatchIgnored(prop)) continue;
 
-			var jsonName = GetJsonPropertyName(prop);
+			var jsonName = TryGetJsonPropertyName(prop);
 			var model = GetPropertyModel(prop, jsonName);
 			properties.Add(model);
 		}
@@ -105,7 +114,18 @@ public sealed class MergePatchGenerator : IIncrementalGenerator
 		return new ClassModel(ns, className, fullName, patchTypeName, emittedPatchTypeName, generateAsNested, properties.ToImmutableArray());
 	}
 
-	private static string GetJsonPropertyName(IPropertySymbol prop)
+	private static bool IsPatchIgnored(IPropertySymbol prop)
+	{
+		foreach (var attr in prop.GetAttributes())
+		{
+			if (attr.AttributeClass?.ToDisplayString() == _patchIgnoreAttributeFullName)
+				return true;
+		}
+
+		return false;
+	}
+
+	private static string? TryGetJsonPropertyName(IPropertySymbol prop)
 	{
 		foreach (var attr in prop.GetAttributes())
 		{
@@ -115,7 +135,7 @@ public sealed class MergePatchGenerator : IIncrementalGenerator
 				return name;
 		}
 
-		return prop.Name;
+		return null;
 	}
 
 	private static string GetPatchTypeName(ITypeSymbol type)
@@ -167,7 +187,7 @@ public sealed class MergePatchGenerator : IIncrementalGenerator
 		return NestingMode.Automatic;
 	}
 
-	private static PropertyModel GetPropertyModel(IPropertySymbol prop, string jsonName)
+	private static PropertyModel GetPropertyModel(IPropertySymbol prop, string? jsonName)
 	{
 		var type = prop.Type;
 
@@ -278,7 +298,7 @@ public sealed class MergePatchGenerator : IIncrementalGenerator
 		// Properties
 		foreach (var prop in model.Properties)
 		{
-			if (prop.JsonName != prop.CSharpName)
+			if (prop.JsonName is not null)
 				sb.AppendLine(model.GenerateAsNested
 					? $"\t\t[global::System.Text.Json.Serialization.JsonPropertyName(\"{EscapeString(prop.JsonName)}\")]"
 					: $"\t[global::System.Text.Json.Serialization.JsonPropertyName(\"{EscapeString(prop.JsonName)}\")]");

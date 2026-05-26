@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using DotNext.Text.Json;
 using NUnit.Framework;
 
@@ -112,6 +113,36 @@ public class MergePatchTests
 
 		Assert.That(location.PostalCode, Is.EqualTo("12345"));
 		Assert.That(location.City, Is.EqualTo("Berlin"));
+	}
+
+	[Test]
+	public void GeneratedPatchProperty_KeepsSourceName_AndCopiesJsonPropertyNameAttribute()
+	{
+		var postalCodeProperty = typeof(Location.LocationPatch).GetProperty("PostalCode");
+		var zipProperty = typeof(Location.LocationPatch).GetProperty("zip");
+
+		Assert.That(postalCodeProperty, Is.Not.Null);
+		Assert.That(zipProperty, Is.Null);
+
+		var jsonPropertyNameAttribute = postalCodeProperty!.GetCustomAttributes(typeof(JsonPropertyNameAttribute), false);
+		Assert.That(jsonPropertyNameAttribute.Length, Is.EqualTo(1));
+		Assert.That(((JsonPropertyNameAttribute)jsonPropertyNameAttribute[0]).Name, Is.EqualTo("zip"));
+	}
+
+	[Test]
+	public void ApplyTo_IgnoresPatchIgnoredProperty()
+	{
+		var forecast = new WeatherForecast { Temperature = 20, InternalNote = "keep" };
+
+		var patch = """{ "internalNote": "replace", "temperature": 25 }""";
+		var dto = JsonSerializer.Deserialize<WeatherForecast.PatchModel>(patch, _options)!;
+		dto.ApplyTo(forecast);
+
+		Assert.That(forecast.Temperature, Is.EqualTo(25));
+		Assert.That(forecast.InternalNote, Is.EqualTo("keep"));
+
+		var internalNotePatchProperty = typeof(WeatherForecast.PatchModel).GetProperty("InternalNote");
+		Assert.That(internalNotePatchProperty, Is.Null);
 	}
 
 	[Test]

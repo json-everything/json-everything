@@ -34,6 +34,8 @@ public partial class WeatherForecast
 	public int Temperature { get; set; }
 	public string? Summary { get; set; }
 	public Location? Location { get; set; }
+	[PatchIgnore]
+	public string? InternalNote { get; set; }
 }
 
 [GenerateMergePatchUpdate(Name = "LocationPatch")]

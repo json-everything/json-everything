@@ -3,7 +3,7 @@ namespace Json.MergePatch;
 internal sealed class PropertyModel
 {
 	public string CSharpName { get; }
-	public string JsonName { get; }
+	public string? JsonName { get; }
 	public string InnerTypeName { get; }
 	public bool IsPatchModel { get; }
 	public bool IsNullable { get; }
@@ -11,7 +11,7 @@ internal sealed class PropertyModel
 
 	public PropertyModel(
 		string cSharpName,
-		string jsonName,
+		string? jsonName,
 		string innerTypeName,
 		bool isPatchModel,
 		bool isNullable,
