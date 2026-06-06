@@ -335,8 +335,6 @@ public class JsonSchema : IBaseDocument
 		var foundRefs = new HashSet<JsonSchemaNode> { node };
 
 		var refKeyword = node.Keywords.SingleOrDefault(x => x.Handler is RefKeyword);
-		if (refKeyword is null) return;
-
 		while (refKeyword is not null)
 		{
 			var nextNode = refKeyword.Subschemas.FirstOrDefault();
@@ -382,7 +380,8 @@ public class JsonSchema : IBaseDocument
 			Instance = instance,
 			EvaluationPath = JsonPointer.Empty,
 			Scope = new(BaseUri),
-			CanOptimize = options.OutputFormat == OutputFormat.Flag
+			CanOptimize = options.OutputFormat == OutputFormat.Flag,
+			EvaluatedNodes = new()
 		};
 
 		var results = Root.Evaluate(context);

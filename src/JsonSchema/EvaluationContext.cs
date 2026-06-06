@@ -84,4 +84,6 @@ public struct EvaluationContext
 	/// Gets a value indicating whether the current configuration allows optimization.
 	/// </summary>
 	public bool CanOptimize { get; internal set; }
+
+	internal Stack<(JsonSchemaNode, JsonPointer)> EvaluatedNodes { get; init; }
 }

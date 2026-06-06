@@ -599,7 +599,7 @@ public class GithubTests
 			    "properties": {
 			        "id": {
 			            "type": "integer"
-			        },        
+			        },
 			        "interval1": {
 			            "$ref": "#/components/schemas/interval"
 			        }
@@ -1353,5 +1353,19 @@ public class GithubTests
 		var results = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
 
 		results.AssertValid();
+	}
+
+	[Test]
+	public void Issue1042_NestedRecursion()
+	{
+		var buildOptions = new BuildOptions
+		{
+			SchemaRegistry = new()
+		};
+
+		var schema = new JsonSchemaBuilder(buildOptions).AllOf(new JsonSchemaBuilder().Ref("#"));
+		var instance = JsonDocument.Parse("{}");
+
+		Assert.Throws<JsonSchemaException>(() => schema.Evaluate(instance.RootElement));
 	}
 }

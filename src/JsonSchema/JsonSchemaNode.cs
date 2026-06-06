@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text.Json;
@@ -78,7 +77,7 @@ public class JsonSchemaNode
 	/// annotations, and details. The results reflect the evaluation of all applicable keywords in the schema.</returns>
 	public EvaluationResults Evaluate(EvaluationContext context)
 	{
-		var baseUri = (BaseUri == _trueBaseUri || BaseUri == _falseBaseUri)
+		var baseUri = BaseUri == _trueBaseUri || BaseUri == _falseBaseUri
 			? context.Scope.LocalScope
 			: BaseUri;
 
@@ -102,6 +101,11 @@ public class JsonSchemaNode
 			results.Errors = new() { [""] = ErrorMessages.FalseSchema };
 			return results;
 		}
+
+		var evaluationRegistration = (this, context.InstanceLocation);
+		if (context.EvaluatedNodes.Any(x => x == evaluationRegistration))
+			throw new JsonSchemaException($"Cycle detected at evaluation path '{context.EvaluationPath}' and instance location '{context.InstanceLocation}'");
+		context.EvaluatedNodes.Push(evaluationRegistration);
 
 		var newScope = !Equals(BaseUri, context.Scope.LocalScope);
 		if (newScope)
@@ -168,6 +172,8 @@ public class JsonSchemaNode
 
 		if (newScope)
 			context.Scope.Pop();
+
+		context.EvaluatedNodes.Pop();
 
 		return results;
 	}
