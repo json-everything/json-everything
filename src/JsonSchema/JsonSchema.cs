@@ -199,6 +199,32 @@ public class JsonSchema : IBaseDocument
 		var onlyHandleRef = context.LocalSchema.TryGetProperty("$ref", out _) &&
 		                    context.Dialect.RefIgnoresSiblingKeywords;
 
+		// JSON object key order is not significant: a `$id` keyword sets this resource's base
+		// URI for the whole object, regardless of where it appears among its sibling keywords.
+		// Establish it before any subschemas are built. Previously a `$id` that appeared after
+		// subschema-producing keywords (for example when a schema is serialized in canonical /
+		// alphabetical key order, which sorts `$defs` before `$id`) left those subschemas built
+		// against the parent/placeholder base URI; they were then mis-detected as embedded
+		// resources below and collided on registration ("Overwriting registered schemas is not
+		// permitted.").
+		if (!onlyHandleRef)
+		{
+			var scanDialect = context.Dialect;
+			foreach (var property in context.LocalSchema.EnumerateObject())
+			{
+				var scanHandler = scanDialect.GetHandler(property.Name);
+				if (scanHandler is SchemaKeyword)
+					scanDialect = context.Options.DialectRegistry.Get((Uri)scanHandler.ValidateKeywordValue(property.Value)!, context.Options.SchemaRegistry, context.Options.VocabularyRegistry, scanDialect);
+				else if (scanHandler is IdKeyword)
+				{
+#pragma warning disable CS0618 // Type or member is obsolete
+					context.PathFromResourceRoot = JsonPointer.Empty;
+#pragma warning restore CS0618 // Type or member is obsolete
+					context.BaseUri = context.BaseUri.Resolve((Uri)scanHandler.ValidateKeywordValue(property.Value)!);
+				}
+			}
+		}
+
 		var keywordData = new List<KeywordData>();
 		foreach (var property in context.LocalSchema.EnumerateObject())
 		{
@@ -222,13 +248,11 @@ public class JsonSchema : IBaseDocument
 				var uri = (Uri)data.Value!;
 				context.Dialect = context.Options.DialectRegistry.Get(uri, context.Options.SchemaRegistry, context.Options.VocabularyRegistry, context.Dialect);
 			}
-			else if (handler is IdKeyword && !onlyHandleRef)
-			{
-#pragma warning disable CS0618 // Type or member is obsolete
-				context.PathFromResourceRoot = JsonPointer.Empty;
-				context.BaseUri = context.BaseUri.Resolve((Uri)data.Value!);
-			}
+			// `$id` base-URI resolution is performed in the pre-pass above, before any
+			// subschemas are built, so it does not depend on the position of `$id` relative
+			// to its sibling subschema keywords.
 
+#pragma warning disable CS0618 // Type or member is obsolete
 			var keywordContext = context with
 			{
 				PathFromResourceRoot = context.PathFromResourceRoot.Combine(context.RelativePath).Combine(keyword)
@@ -238,8 +262,8 @@ public class JsonSchema : IBaseDocument
 			foreach (var subschema in data.Subschemas)
 			{
 				subschema.PathFromResourceRoot = keywordContext.PathFromResourceRoot.Combine(subschema.RelativePath);
-#pragma warning restore CS0618 // Type or member is obsolete
 			}
+#pragma warning restore CS0618 // Type or member is obsolete
 
 			keywordData.Add(data);
 		}
