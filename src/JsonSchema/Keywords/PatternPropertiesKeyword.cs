@@ -51,7 +51,7 @@ public class PatternPropertiesKeyword : IKeywordHandler
 			if (x.Value.ValueKind is not (JsonValueKind.Object or JsonValueKind.True or JsonValueKind.False))
 				throw new JsonSchemaException("Values must be valid schemas");
 
-			regexes.Add(x.Name, new Regex(x.Name, RegexOptions.ECMAScript | RegexOptions.Compiled));
+			regexes.Add(x.Name, RegexOrPattern.CreateRegex(x.Name, true));
 		}
 
 		return regexes;

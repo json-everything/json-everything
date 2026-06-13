@@ -69,8 +69,8 @@ public readonly struct Duration
 	public static bool TryParse(string source, out Duration duration)
 	{
 		duration = default;
-		source = source.Trim();
 		if (string.IsNullOrWhiteSpace(source)) return false;
+		if (source != source.Trim()) return false;
 
 		// ReSharper disable once InlineOutVariableDeclaration
 		uint year = 0, month = 0, week, day = 0, hour = 0, minute = 0, second = 0;
@@ -79,9 +79,12 @@ public readonly struct Duration
 		var gotDaily = TryGetComponent(source, ref index, out week, 'W');
 		if (!gotDaily)
 		{
-			gotDaily = TryGetComponent(source, ref index, out year, 'Y') |
-					   TryGetComponent(source, ref index, out month, 'M') |
-					   TryGetComponent(source, ref index, out day, 'D');
+			var gotYear = TryGetComponent(source, ref index, out year, 'Y');
+			var gotMonth = TryGetComponent(source, ref index, out month, 'M');
+			var gotDay = TryGetComponent(source, ref index, out day, 'D');
+
+			gotDaily = gotYear || gotMonth || gotDay;
+			if (!gotMonth && gotYear && gotDay) return false;
 		}
 
 		if (!Require(source, ref index, 'T'))
@@ -91,11 +94,14 @@ public readonly struct Duration
 		}
 		else
 		{
-			var gotTime = TryGetComponent(source, ref index, out hour, 'H') |
-						  TryGetComponent(source, ref index, out minute, 'M') |
-						  TryGetComponent(source, ref index, out second, 'S');
+			var gotHour = TryGetComponent(source, ref index, out hour, 'H');
+			var gotMinute = TryGetComponent(source, ref index, out minute, 'M');
+			var gotSecond = TryGetComponent(source, ref index, out second, 'S');
+			var gotTime = gotHour || gotMinute || gotSecond;
 
 			if (!gotTime) return false;
+			if (!gotMinute && gotHour && gotSecond) return false;
+			if (index != source.Length) return false;
 		}
 
 		duration = new Duration(year, month, week, day, hour, minute, second);
