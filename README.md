@@ -86,7 +86,7 @@ Otherwise, it's open to consideration for this project.
 
 There are actually multiple boxes.  Each piece of functionality has been broken out into its own library, so you can pick and choose the one(s) that you need.
 
-All libraries are built to .Net Standard 2.0 and .Net 8.
+All libraries are built to .Net Standard 2.0 and .Net 8, 9, and 10.
 
 <table>
 <tbody>
