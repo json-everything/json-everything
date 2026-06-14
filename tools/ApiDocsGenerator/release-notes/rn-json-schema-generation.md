@@ -4,6 +4,10 @@ title: JsonSchema.Net.Generation
 icon: fas fa-tag
 order: "09.05"
 ---
+# [7.3.10](https://github.com/json-everything/json-everything/pull/1046) {#release-schemagen-7.3.10}
+
+Source-generated schema registration has been updated to better handle aliased collection shapes by avoiding duplicate schema registrations and duplicate converter registrations for equivalent shapes.
+
 # [7.3.9](https://github.com/json-everything/json-everything/commit/ec355ac9b) {#release-schemagen-7.3.9}
 
 Fixes a static field initialization ordering bug in source-generated code where collection-type alias fields could be emitted before the canonical schema field they reference, causing a null value at runtime.

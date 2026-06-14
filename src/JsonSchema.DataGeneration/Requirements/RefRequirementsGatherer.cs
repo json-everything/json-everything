@@ -46,7 +46,7 @@ internal class RefRequirementsGatherer : IRequirementsGatherer
 		var rawReference = dynamicRefKeyword.RawValue.GetString();
 		if (string.IsNullOrWhiteSpace(rawReference)) return false;
 
-		if (rawReference[0] == '#')
+		if (rawReference![0] == '#')
 		{
 			if (rawReference.Length < 2 || rawReference[1] == '/') return false;
 

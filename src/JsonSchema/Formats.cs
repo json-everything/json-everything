@@ -145,21 +145,37 @@ public static partial class Formats
 		return new UnknownFormat(name);
 	}
 
+	private static bool IsHexChar(char ch)
+	{
+		return ('0' <= ch && ch <= '9') ||
+		       ('A' <= ch && ch <= 'F') ||
+		       ('a' <= ch && ch <= 'f');
+	}
+
+	private static bool HasValidPercentEncodedPairs(string value)
+	{
+		for (int i = 0; i < value.Length; i++)
+		{
+			if (value[i] != '%') continue;
+
+			if (i + 2 >= value.Length) return false;
+			if (!IsHexChar(value[i + 1]) || !IsHexChar(value[i + 2])) return false;
+		}
+
+		return true;
+	}
+
 	private static bool CheckAbsoluteIri(JsonElement node)
 	{
 		if (node.GetSchemaValueType() != SchemaValueType.String) return true;
 
 		var value = node.GetString()!;
 
-		// Reject invalid characters per RFC3987 (IRI)
-		// Must not contain unescaped: space, <, >, {, }, |, \, ^, `, "
 		foreach (var ch in value)
 		{
-			if (ch == ' ' || ch == '<' || ch == '>' || ch == '{' || ch == '}' || 
-			    ch == '|' || ch == '\\' || ch == '^' || ch == '`' || ch == '"')
-				return false;
+			if (!IsValidForIri(ch)) return false;
 		}
-		
+
 		if (!System.Uri.TryCreate(value, UriKind.Absolute, out var uri))
 			return false;
 
@@ -172,15 +188,12 @@ public static partial class Formats
 		if (node.GetSchemaValueType() != SchemaValueType.String) return true;
 
 		var value = node.GetString()!;
+		if (!HasValidPercentEncodedPairs(value)) return false;
 
-		// Reject invalid characters per RFC3986 (URI)
-		// Must not contain unescaped: space, <, >, {, }, |, \, ^, `, "
 		foreach (var ch in value)
 		{
-			if (ch == ' ' || ch == '<' || ch == '>' || ch == '{' || ch == '}' || 
-			    ch == '|' || ch == '\\' || ch == '^' || ch == '`' || ch == '"')
-				return false;
-			
+			if (!IsValidForIri(ch)) return false;
+
 			// URI must be ASCII-only (non-ASCII must be percent-encoded)
 			if (ch > 127) return false;
 		}
@@ -211,13 +224,9 @@ public static partial class Formats
 
 		var value = node.GetString()!;
 
-		// Reject invalid characters per RFC3987 (IRI)
-		// Must not contain: backslash, space, <, >, {, }, |, ^, `, "
 		foreach (var ch in value)
 		{
-			if (ch == '\\' || ch == ' ' || ch == '<' || ch == '>' || ch == '{' || 
-			    ch == '}' || ch == '|' || ch == '^' || ch == '`' || ch == '"')
-				return false;
+			if (!IsValidForIri(ch)) return false;
 		}
 
 		return System.Uri.TryCreate(value, UriKind.RelativeOrAbsolute, out _);
@@ -228,20 +237,24 @@ public static partial class Formats
 		if (node.GetSchemaValueType() != SchemaValueType.String) return true;
 
 		var value = node.GetString()!;
+		if (!HasValidPercentEncodedPairs(value)) return false;
 
-		// Reject invalid characters per RFC3986
-		// Must not contain: backslash, space, <, >, {, }, |, ^, `, "
 		foreach (var ch in value)
 		{
-			if (ch == '\\' || ch == ' ' || ch == '<' || ch == '>' || ch == '{' || 
-			    ch == '}' || ch == '|' || ch == '^' || ch == '`' || ch == '"')
-				return false;
-			
+			if (!IsValidForIri(ch)) return false;
+
 			// URI-reference must be ASCII-only (non-ASCII must be percent-encoded)
 			if (ch > 127) return false;
 		}
 
 		return System.Uri.TryCreate(value, UriKind.RelativeOrAbsolute, out _);
+	}
+
+	// Reject invalid characters per RFC3987 (IRI)
+	// Must not contain: backslash, space, <, >, {, }, |, ^, `, "
+	private static bool IsValidForIri(char ch)
+	{
+		return ch is not ('\\' or ' ' or '<' or '>' or '{' or '}' or '|' or '^' or '`' or '"');
 	}
 
 	private static bool CheckUriTemplate(JsonElement node)
@@ -255,10 +268,8 @@ public static partial class Formats
 		int depth = 0;
 		bool inExpression = false;
 
-		for (int i = 0; i < value.Length; i++)
+		foreach (var ch in value)
 		{
-			var ch = value[i];
-
 			if (ch == '{')
 			{
 				if (inExpression) return false; // nested braces not allowed
@@ -348,7 +359,7 @@ public static partial class Formats
 			// Validate IP address domain-literal if present
 			if (isDomainLiteral)
 			{
-				var domain = email.Substring(atIndex + 1);
+				var domain = email[(atIndex + 1)..];
 				if (!domain.StartsWith("[") || !domain.EndsWith("]"))
 					return false;
 
@@ -357,7 +368,7 @@ public static partial class Formats
 				if (addrContent.StartsWith("IPv6:", StringComparison.OrdinalIgnoreCase))
 				{
 					// IPv6 literal
-					var addr = addrContent.Substring(5);
+					var addr = addrContent[5..];
 					if (!System.Net.IPAddress.TryParse(addr, out var ip)) return false;
 					if (ip.AddressFamily != System.Net.Sockets.AddressFamily.InterNetworkV6) return false;
 				}
@@ -401,21 +412,21 @@ public static partial class Formats
 		var atIndex = email.LastIndexOf('@');
 		if (atIndex <= 0 || atIndex == email.Length - 1) return false;
 
-		var local = email.Substring(0, atIndex);
-		var domain = email.Substring(atIndex + 1);
+		var local = email[..atIndex];
+		var domain = email[(atIndex + 1)..];
 
 		// Local-part: allow Unicode or quoted strings, basic validation only
 		if (local.Length == 0) return false;
 		if (local[0] == '"')
 		{
 			// Must end with quote
-			if (local[local.Length - 1] != '"') return false;
+			if (local[^1] != '"') return false;
 		}
 		else
 		{
 			// Unquoted: disallow leading/trailing dots and consecutive dots
-			if (local[0] == '.' || local[local.Length - 1] == '.') return false;
-			if (local.IndexOf("..") >= 0) return false;
+			if (local[0] == '.' || local[^1] == '.') return false;
+			if (local.Contains("..")) return false;
 		}
 
 		// Domain: normalize and validate using CheckIdnHostName
@@ -429,7 +440,7 @@ public static partial class Formats
 			
 			if (addrContent.StartsWith("IPv6:", StringComparison.OrdinalIgnoreCase))
 			{
-				var addr = addrContent.Substring(5);
+				var addr = addrContent[5..];
 				if (!System.Net.IPAddress.TryParse(addr, out var ip)) return false;
 				if (ip.AddressFamily != System.Net.Sockets.AddressFamily.InterNetworkV6) return false;
 			}
@@ -455,7 +466,65 @@ public static partial class Formats
 
 	private static bool CheckDate(JsonElement node)
 	{
-		return CheckDateFormat(node, "yyyy-MM-dd");
+		if (node.GetSchemaValueType() != SchemaValueType.String) return true;
+
+		var dateString = node.GetString()!;
+		return TryParseRfc3339FullDate(dateString);
+	}
+
+	private static bool IsAsciiDigits(string s)
+	{
+		foreach (var ch in s)
+		{
+			if (ch < '0' || ch > '9') return false;
+		}
+		return true;
+	}
+
+	private static bool IsLeapYearProlepticGregorian(int year)
+	{
+		return year % 4 == 0 && (year % 100 != 0 || year % 400 == 0);
+	}
+
+	private static int GetDaysInMonthProlepticGregorian(int year, int month)
+	{
+		return month switch
+		{
+			1 => 31,
+			2 => IsLeapYearProlepticGregorian(year) ? 29 : 28,
+			3 => 31,
+			4 => 30,
+			5 => 31,
+			6 => 30,
+			7 => 31,
+			8 => 31,
+			9 => 30,
+			10 => 31,
+			11 => 30,
+			12 => 31,
+			_ => 0
+		};
+	}
+
+	private static bool TryParseRfc3339FullDate(string datePart)
+	{
+		if (datePart.Length != 10) return false;
+		if (datePart[4] != '-' || datePart[7] != '-') return false;
+
+		var yearPart = datePart[..4];
+		var monthPart = datePart.Substring(5, 2);
+		var dayPart = datePart.Substring(8, 2);
+
+		if (!IsAsciiDigits(yearPart) || !IsAsciiDigits(monthPart) || !IsAsciiDigits(dayPart)) return false;
+		if (!int.TryParse(yearPart, NumberStyles.None, CultureInfo.InvariantCulture, out var year)) return false;
+		if (!int.TryParse(monthPart, NumberStyles.None, CultureInfo.InvariantCulture, out var month)) return false;
+		if (!int.TryParse(dayPart, NumberStyles.None, CultureInfo.InvariantCulture, out var day)) return false;
+
+		if (month < 1 || month > 12) return false;
+		var daysInMonth = GetDaysInMonthProlepticGregorian(year, month);
+		if (day < 1 || day > daysInMonth) return false;
+
+		return true;
 	}
 
 	private static bool CheckTime(JsonElement node)
@@ -475,8 +544,8 @@ public static partial class Formats
 
 		if (timeString.EndsWith("Z", StringComparison.OrdinalIgnoreCase))
 		{
-			timePart = timeString.Substring(0, timeString.Length - 1);
-			offsetPart = timeString.Substring(timeString.Length - 1);
+			timePart = timeString[..^1];
+			offsetPart = timeString[^1..];
 		}
 		else
 		{
@@ -485,18 +554,8 @@ public static partial class Formats
 			var offsetIndex = Math.Max(lastPlus, lastMinus);
 			if (offsetIndex <= 0) return false;
 
-			timePart = timeString.Substring(0, offsetIndex);
-			offsetPart = timeString.Substring(offsetIndex);
-		}
-
-		// Enforce ASCII digits only
-		static bool IsAsciiDigits(string s)
-		{
-			foreach (var ch in s)
-			{
-				if (ch < '0' || ch > '9') return false;
-			}
-			return true;
+			timePart = timeString[..offsetIndex];
+			offsetPart = timeString[offsetIndex..];
 		}
 
 		// Parse time HH:MM:SS[.fraction]
@@ -602,7 +661,8 @@ public static partial class Formats
 	{
 		if (node.GetSchemaValueType() != SchemaValueType.String) return true;
 
-		var dateString = node.GetString()!.ToUpperInvariant();
+		var dateString = node.GetString()!;
+		dateString = dateString.ToUpperInvariant();
 		if (formats.Length != 0)
 		{
 			var canParseExact = System.DateTime.TryParseExact(dateString, formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out _);
@@ -626,25 +686,7 @@ public static partial class Formats
 		var timePart = match.Groups[4].Value; // HH:MM:SS[.fraction]
 		var offsetPart = match.Groups[5].Value; // Z or ±HH:MM
 
-		// Enforce ASCII digits only within numeric segments
-		static bool IsAsciiDigits(string s)
-		{
-			foreach (var ch in s)
-			{
-				if (ch < '0' || ch > '9') return false;
-			}
-			return true;
-		}
-
-		var ymd = datePart.Split('-');
-		if (ymd.Length != 3) return false;
-		if (!IsAsciiDigits(ymd[0]) || !IsAsciiDigits(ymd[1]) || !IsAsciiDigits(ymd[2])) return false;
-		if (!int.TryParse(ymd[0], NumberStyles.None, CultureInfo.InvariantCulture, out var year)) return false;
-		if (!int.TryParse(ymd[1], NumberStyles.None, CultureInfo.InvariantCulture, out var month)) return false;
-		if (!int.TryParse(ymd[2], NumberStyles.None, CultureInfo.InvariantCulture, out var day)) return false;
-		if (month < 1 || month > 12) return false;
-		var daysInMonth = System.DateTime.DaysInMonth(year, month);
-		if (day < 1 || day > daysInMonth) return false;
+		if (!TryParseRfc3339FullDate(datePart)) return false;
 
 		var fracSplit = timePart.Split('.');
 		var hms = fracSplit[0].Split(':');
@@ -682,7 +724,7 @@ public static partial class Formats
 			// ±HH:MM
 			var sign = offsetPart[0];
 			if (sign != '+' && sign != '-') return false;
-			var off = offsetPart.Substring(1).Split(':');
+			var off = offsetPart[1..].Split(':');
 			if (off.Length != 2) return false;
 			if (!IsAsciiDigits(off[0]) || !IsAsciiDigits(off[1])) return false;
 			if (!int.TryParse(off[0], NumberStyles.None, CultureInfo.InvariantCulture, out var offHour)) return false;
@@ -741,7 +783,7 @@ public static partial class Formats
 		if (string.IsNullOrEmpty(value) || value.Length > 255 || value.IndexOf('_') >= 0) return false;
 
 		// Leading or trailing dot
-		if (value[0] == '.' || value[value.Length - 1] == '.') return false;
+		if (value[0] == '.' || value[^1] == '.') return false;
 
 		// Check basic pattern
 		if (!HostnameRegex().IsMatch(value)) return false;
@@ -779,7 +821,7 @@ public static partial class Formats
 			return false;
 
 		// Leading or trailing dot
-		if (value[0] == '.' || value[value.Length - 1] == '.') return false;
+		if (value[0] == '.' || value[^1] == '.') return false;
 
 		// Split into labels and validate each
 		var labels = value.Split('.');
@@ -791,7 +833,7 @@ public static partial class Formats
 			if (label.Length > 63) return false;
 
 			// Cannot start or end with hyphen
-			if (label[0] == '-' || label[label.Length - 1] == '-') return false;
+			if (label[0] == '-' || label[^1] == '-') return false;
 
 			// Cannot have -- in positions 3-4 (index 2-3)
 			if (label.Length >= 4 && label[2] == '-' && label[3] == '-')
@@ -806,9 +848,9 @@ public static partial class Formats
 				var category = char.GetUnicodeCategory(firstChar);
 				
 				// Cannot start with combining marks
-				if (category == System.Globalization.UnicodeCategory.SpacingCombiningMark ||
-				    category == System.Globalization.UnicodeCategory.NonSpacingMark ||
-				    category == System.Globalization.UnicodeCategory.EnclosingMark)
+				if (category == UnicodeCategory.SpacingCombiningMark ||
+				    category == UnicodeCategory.NonSpacingMark ||
+				    category == UnicodeCategory.EnclosingMark)
 				{
 					return false;
 				}
@@ -971,15 +1013,6 @@ public static partial class Formats
 		return actualType == UriHostNameType.IPv6;
 	}
 
-	private static bool CheckHostName(JsonElement node, UriHostNameType type)
-	{
-		if (node.GetSchemaValueType() != SchemaValueType.String) return true;
-
-		var actualType = System.Uri.CheckHostName(node.GetString()!);
-
-		return actualType == type;
-	}
-
 	private static bool CheckDuration(JsonElement node)
 	{
 		if (node.GetSchemaValueType() != SchemaValueType.String) return true;
@@ -1021,7 +1054,7 @@ public static partial class Formats
 
 		try
 		{
-			_ = new Regex(pattern, RegexOptions.ECMAScript);
+			_ = RegexOrPattern.CreateRegex(pattern, false);
 			return true;
 		}
 		catch

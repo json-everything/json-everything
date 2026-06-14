@@ -524,7 +524,6 @@ public class SourceGeneratorTests
 		var expected = JsonSchema.FromText(expectedJson, new BuildOptions { SchemaRegistry = new SchemaRegistry() });
 		var actual = GeneratedJsonSchemas.TestModels_ModelWithOptionalCollections;
 		var enumerableParameter = GeneratedJsonSchemas.IEnumerableOfInt32;
-		var arrayParameter = GeneratedJsonSchemas.Int32Array;
 
 		AssertEqual(expected, actual);
 	}
@@ -586,9 +585,6 @@ public class SourceGeneratorTests
 		""";
 		var expected = JsonSchema.FromText(expectedJson, new BuildOptions { SchemaRegistry = new SchemaRegistry() });
 		var actual = GeneratedJsonSchemas.TestModels_ModelWithOptionalAdditionalCollections;
-		var hashSetParameter = GeneratedJsonSchemas.HashSetOfInt32;
-		var queueParameter = GeneratedJsonSchemas.QueueOfInt32;
-		var readOnlyCollectionParameter = GeneratedJsonSchemas.IReadOnlyCollectionOfInt32;
 
 		AssertEqual(expected, actual);
 	}

@@ -4,6 +4,14 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "09.01"
 ---
+# [9.2.2](https://github.com/json-everything/json-everything/pull/1046) {#release-schema-9.2.2}
+
+[#1042](https://github.com/json-everything/json-everything/issues/1042) - Fixes a cycle-detection gap where self-referential schemas nested under keywords like `not` could bypass build-time checks and cause a `StackOverflowException` during evaluation. These now fail with a `JsonSchemaException` instead. Thanks to [@pawlos](https://github.com/pawlos) for reporting.
+
+[#1044](https://github.com/json-everything/json-everything/issues/1044) - Fixes schema build behavior when `$id` appears after subschema-producing keywords (such as `$defs` or `properties`), preventing incorrect schema registration collisions for valid schemas serialized in canonical/alphabetical key order. Thanks to [@dbchandra23](https://github.com/dbchandra23) for reporting.
+
+Also includes targeted format and parsing updates, including improvements to URI/IRI, `date`, `duration`, and regex handling.
+
 # [9.2.1](https://github.com/json-everything/json-everything/pull/1039) {#release-schema-9.2.1}
 
 [#1033](https://github.com/json-everything/json-everything/pull/1033) - Fixes the builder extension for `dependentSchemas`.  Thanks to [@BennieCopeland](https://github.com/BennieCopeland) for reporting.

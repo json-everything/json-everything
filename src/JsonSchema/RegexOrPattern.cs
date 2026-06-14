@@ -5,26 +5,60 @@ namespace Json.Schema;
 
 internal readonly struct RegexOrPattern : IEquatable<RegexOrPattern>
 {
+	private static readonly TimeSpan _timeout = TimeSpan.FromSeconds(5);
+
 	private readonly string _pattern;
 	private readonly Regex? _regex;
 
-	public RegexOrPattern(string pattern)
+	private static string NormalizePattern(string pattern)
 	{
-		_pattern = pattern.Replace("{Letter}", "{L}").Replace("{digit}", "{Nd}") ?? throw new ArgumentNullException(nameof(pattern));
-
-		_ = Regex.IsMatch("", _pattern); // Validates the pattern and also caches it.
+		return pattern.Replace("{Letter}", "{L}").Replace("{digit}", "{Nd}");
 	}
 
-	public RegexOrPattern(Regex regex)
+	private RegexOrPattern(string pattern)
+	{
+		_pattern = NormalizePattern(pattern ?? throw new ArgumentNullException(nameof(pattern)));
+		_ = CreateRegex(_pattern, false);
+	}
+
+	private RegexOrPattern(Regex regex)
 	{
 		_pattern = regex?.ToString() ?? throw new ArgumentNullException(nameof(regex));
 		_regex = regex;
 	}
 
-	public bool IsMatch(string str) => _regex?.IsMatch(str) ??
-	                                   Regex.IsMatch(str, _pattern, RegexOptions.Compiled | RegexOptions.ECMAScript, TimeSpan.FromSeconds(5));
+	private static bool RequiresUnicodeMode(string pattern)
+	{
+		for (int i = 0; i < pattern.Length - 1; i++)
+		{
+			if (pattern[i] != '\\') continue;
 
-	public Regex ToRegex() => _regex ?? new Regex(_pattern, RegexOptions.ECMAScript, TimeSpan.FromSeconds(5));
+			var next = pattern[i + 1];
+			if ((next == 'p' || next == 'P') && i + 2 < pattern.Length && pattern[i + 2] == '{') return true;
+			if (next == 'u' && i + 2 < pattern.Length && pattern[i + 2] == '{') return true;
+
+			i++;
+		}
+
+		return false;
+	}
+
+	private static RegexOptions GetOptions(string pattern, bool compiled)
+	{
+		var options = RequiresUnicodeMode(pattern) ? RegexOptions.None : RegexOptions.ECMAScript;
+		if (compiled) options |= RegexOptions.Compiled;
+		return options;
+	}
+
+	internal static Regex CreateRegex(string pattern, bool compiled)
+	{
+		var normalizedPattern = NormalizePattern(pattern);
+		var options = GetOptions(normalizedPattern, compiled);
+		return new Regex(normalizedPattern, options, _timeout);
+	}
+
+	public bool IsMatch(string str) => _regex?.IsMatch(str) ??
+	                                   Regex.IsMatch(str, _pattern, GetOptions(_pattern, true), _timeout);
 
 	public static implicit operator string(RegexOrPattern regexOrPattern)
 	{

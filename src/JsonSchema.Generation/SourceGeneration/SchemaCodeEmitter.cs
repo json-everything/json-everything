@@ -268,29 +268,22 @@ internal static class SchemaCodeEmitter
 			typeIds[typeName] = schemaId;
 
 		var shapeAliases = GetShapeAliases(orderedTypes);
-		// Map non-canonical FQN -> canonical property name for aliased shapes
-		var aliasPropertyMap = shapeAliases.ToDictionary(a => a.TypeName, a => a.CanonicalPropertyName);
+		var aliasTypes = new HashSet<string>(shapeAliases.Select(a => a.TypeName), StringComparer.Ordinal);
 
 		foreach (var type in orderedTypes)
 		{
-			if (!aliasPropertyMap.ContainsKey(type.FullyQualifiedName))
+			if (!aliasTypes.Contains(type.FullyQualifiedName))
 				EmitSchemaProperty(sb, type, typeIds, schemaHandlers);
 		}
 
-		foreach (var type in orderedTypes)
-		{
-			if (aliasPropertyMap.TryGetValue(type.FullyQualifiedName, out var canonicalProp))
-				EmitAliasProperty(sb, type, canonicalProp);
-		}
+		EmitBuildForTypeMethod(sb, orderedTypes, schemaHandlers, foreignTypeEntries, shapeAliases);
 
-		EmitBuildForTypeMethod(sb, orderedTypes, schemaHandlers, foreignTypeEntries, shapeAliases.Select(a => (a.TypeName, a.SchemaId)).ToList());
-
-		EmitRegisterSchemasMethod(sb, orderedTypes, aliasPropertyMap);
+		EmitRegisterSchemasMethod(sb, orderedTypes, aliasTypes);
 
 		sb.AppendLine("}");
 		sb.AppendLine();
 		
-		EmitRegistrationClass(sb, types);
+		EmitRegistrationClass(sb, orderedTypes, aliasTypes);
 
 		return sb.ToString();
 	}
@@ -407,11 +400,17 @@ internal static class SchemaCodeEmitter
 		sb.AppendLine("\t\treturn unwrapped switch");
 		sb.AppendLine("\t\t{");
 
+		var aliasTypeNames = new HashSet<string>(
+			shapeAliases.Select(a => a.TypeName),
+			StringComparer.Ordinal);
+
 		foreach (var (typeName, schemaId) in shapeAliases)
 			sb.AppendLine($"\t\t\tvar t when t == typeof({typeName}) => builder.Ref(\"{schemaId}\"),");
 
 		foreach (var type in types)
 		{
+			if (aliasTypeNames.Contains(type.FullyQualifiedName)) continue;
+
 			var typeName = type.FullyQualifiedName;
 			var schemaId = GetSchemaId(type);
 			sb.AppendLine($"\t\t\tvar t when t == typeof({typeName}) => builder.Ref(\"{schemaId}\"),");
@@ -436,9 +435,9 @@ internal static class SchemaCodeEmitter
 		sb.AppendLine();
 	}
 
-	private static List<(string TypeName, string SchemaId, string CanonicalPropertyName)> GetShapeAliases(List<TypeInfo> types)
+	private static List<(string TypeName, string SchemaId)> GetShapeAliases(List<TypeInfo> types)
 	{
-		var result = new List<(string TypeName, string SchemaId, string CanonicalPropertyName)>();
+		var result = new List<(string TypeName, string SchemaId)>();
 
 		var arrayGroups = types
 			.Where(t => t.Kind == TypeKind.Array)
@@ -455,12 +454,10 @@ internal static class SchemaCodeEmitter
 				?? groupTypes.OrderBy(t => t.FullyQualifiedName, StringComparer.Ordinal).First();
 
 			var canonicalId = GetSchemaId(canonical);
-			var canonicalPropName = GetPropertyName(canonical);
-
 			foreach (var type in groupTypes)
 			{
 				if (ReferenceEquals(type, canonical)) continue;
-				result.Add((type.FullyQualifiedName, canonicalId, canonicalPropName));
+				result.Add((type.FullyQualifiedName, canonicalId));
 			}
 		}
 
@@ -479,12 +476,10 @@ internal static class SchemaCodeEmitter
 				?? groupTypes.OrderBy(t => t.FullyQualifiedName, StringComparer.Ordinal).First();
 
 			var canonicalId = GetSchemaId(canonical);
-			var canonicalPropName = GetPropertyName(canonical);
-
 			foreach (var type in groupTypes)
 			{
 				if (ReferenceEquals(type, canonical)) continue;
-				result.Add((type.FullyQualifiedName, canonicalId, canonicalPropName));
+				result.Add((type.FullyQualifiedName, canonicalId));
 			}
 		}
 
@@ -531,16 +526,7 @@ internal static class SchemaCodeEmitter
 		return typeString == "global::System.Collections.Generic.IDictionary<TKey,TValue>";
 	}
 
-	private static void EmitAliasProperty(StringBuilder sb, TypeInfo type, string canonicalPropertyName)
-	{
-		sb.AppendLine("\t/// <summary>");
-		sb.AppendLine($"\t/// Alias for <see cref=\"{canonicalPropertyName}\"/>, same collection shape.");
-		sb.AppendLine("\t/// </summary>");
-		sb.AppendLine($"\tpublic static readonly JsonSchema {GetPropertyName(type)} = {canonicalPropertyName};");
-		sb.AppendLine();
-	}
-
-	private static void EmitRegisterSchemasMethod(StringBuilder sb, List<TypeInfo> types, Dictionary<string, string> aliasPropertyMap)
+	private static void EmitRegisterSchemasMethod(StringBuilder sb, List<TypeInfo> types, HashSet<string> aliasTypes)
 	{
 		sb.AppendLine();
 		sb.AppendLine("\t/// <summary>");
@@ -549,10 +535,16 @@ internal static class SchemaCodeEmitter
 		sb.AppendLine("\tpublic static void RegisterSchemas(Json.Schema.SchemaRegistry registry)");
 		sb.AppendLine("\t{");
 
+		var registeredSchemaIds = new HashSet<string>(StringComparer.Ordinal);
+
 		foreach (var type in types)
 		{
 			// Skip non-canonical shapes — they share a schema with the canonical type
-			if (aliasPropertyMap.ContainsKey(type.FullyQualifiedName)) continue;
+			if (aliasTypes.Contains(type.FullyQualifiedName)) continue;
+
+			var schemaId = GetSchemaId(type);
+			if (!registeredSchemaIds.Add(schemaId)) continue;
+
 			sb.AppendLine($"\t\tregistry.Register({GetPropertyName(type)});");
 		}
 
@@ -1002,7 +994,7 @@ internal static class SchemaCodeEmitter
 			"global::System.Text.Json.Nodes.JsonArray";
 	}
 
-	private static void EmitRegistrationClass(StringBuilder sb, List<TypeInfo> types)
+	private static void EmitRegistrationClass(StringBuilder sb, List<TypeInfo> types, HashSet<string> aliasTypes)
 	{
 		sb.AppendLine("/// <summary>");
 		sb.AppendLine("/// Registers generated schemas with the ValidatingJsonConverter for AOT scenarios.");
@@ -1014,8 +1006,15 @@ internal static class SchemaCodeEmitter
 		sb.AppendLine("\tinternal static void RegisterSchemas()");
 		sb.AppendLine("\t{");
 
+		var registeredSchemaIds = new HashSet<string>(StringComparer.Ordinal);
+
 		foreach (var type in types)
 		{
+			if (aliasTypes.Contains(type.FullyQualifiedName)) continue;
+
+			var schemaId = GetSchemaId(type);
+			if (!registeredSchemaIds.Add(schemaId)) continue;
+
 			sb.AppendLine($"\t\tValidatingJsonConverter.RegisterConverter(");
 			sb.AppendLine($"\t\t\ttypeof({type.FullyQualifiedName}),");
 			sb.AppendLine($"\t\t\tnew ValidatingJsonConverter<{type.FullyQualifiedName}>(");

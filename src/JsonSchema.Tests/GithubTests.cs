@@ -329,8 +329,8 @@ public class GithubTests
 		var schema1 = JsonSchema.FromText(schema1Str, buildOptions);
 		var schema2 = JsonSchema.FromText(schema2Str, buildOptions);
 		var json = JsonDocument.Parse(jsonStr).RootElement;
-		var uri1 = new Uri("https://json-everything.net/schema1.json");
-		var uri2 = new Uri("https://json-everything.net/schema2.json");
+		var uri1 = new Uri("https://json-everything.lib/schema1.json");
+		var uri2 = new Uri("https://json-everything.lib/schema2.json");
 		var map = new Dictionary<Uri, JsonSchema>
 		{
 			{ uri1, schema1 },
@@ -599,7 +599,7 @@ public class GithubTests
 			    "properties": {
 			        "id": {
 			            "type": "integer"
-			        },        
+			        },
 			        "interval1": {
 			            "$ref": "#/components/schemas/interval"
 			        }
@@ -1353,5 +1353,98 @@ public class GithubTests
 		var results = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.Hierarchical });
 
 		results.AssertValid();
+	}
+
+	[Test]
+	public void Issue1042_NestedRecursion()
+	{
+		var buildOptions = new BuildOptions
+		{
+			SchemaRegistry = new()
+		};
+
+		var schema = new JsonSchemaBuilder(buildOptions).AllOf(new JsonSchemaBuilder().Ref("#"));
+		var instance = JsonDocument.Parse("{}");
+
+		Assert.Throws<JsonSchemaException>(() => schema.Evaluate(instance.RootElement));
+	}
+
+	[Test]
+	public void Issue1044_DefsBeforeId()
+	{
+		const string schemaText =
+			"""
+			{
+			  "$defs": { "a": { "type": "string" }, "b": { "type": "integer" } },
+			  "$id": "https://example.com/id-after-defs.json",
+			  "$schema": "https://json-schema.org/draft/2020-12/schema",
+			  "type": "object",
+			  "properties": { "x": { "$ref": "#/$defs/a" }, "y": { "$ref": "#/$defs/b" } }
+			}
+			""";
+
+		var options = new BuildOptions { SchemaRegistry = new SchemaRegistry() };
+		var schema = JsonSchema.FromText(schemaText, options);
+
+		// The internal `#/$defs/...` refs resolve against the base URI that `$id` establishes;
+		// if that base were wrong (the pre-fix placeholder) they would not resolve correctly.
+		var valid = schema.Evaluate(JsonDocument.Parse(@"{ ""x"": ""hello"", ""y"": 5 }").RootElement);
+		Assert.That(valid.IsValid, Is.True);
+
+		var invalid = schema.Evaluate(JsonDocument.Parse(@"{ ""x"": 5, ""y"": ""nope"" }").RootElement);
+		Assert.That(invalid.IsValid, Is.False);
+	}
+
+	[Test]
+	public void Issue1044_PropertiesBeforeId()
+	{
+		// No `$defs` and no `$ref`: two subschemas under `properties` built before a late
+		// `$id` are by themselves enough to trigger the registration collision.
+		const string schemaText = 
+			"""
+			{
+			  "properties": { "a": { "type": "string" }, "b": { "type": "number" } },
+			  "$id": "https://example.com/props-before-id.json",
+			  "type": "object"
+			}
+			""";
+
+		var options = new BuildOptions { SchemaRegistry = new SchemaRegistry() };
+		Assert.DoesNotThrow(() => JsonSchema.FromText(schemaText, options));
+	}
+
+	[Test]
+	public void Issue1044_IdPosition()
+	{
+		// `$id` before vs after the subschema keywords must build and evaluate equivalently.
+		const string idFirst =
+			"""
+			{
+			  "$id": "https://example.com/order-a.json",
+			  "$defs": { "s": { "type": "string" } },
+			  "type": "object",
+			  "properties": { "x": { "$ref": "#/$defs/s" } }
+			}
+			""";
+		const string idLast =
+			"""
+			{
+			  "$defs": { "s": { "type": "string" } },
+			  "properties": { "x": { "$ref": "#/$defs/s" } },
+			  "type": "object",
+			  "$id": "https://example.com/order-b.json"
+			}
+			""";
+
+		var a = JsonSchema.FromText(idFirst, new BuildOptions { SchemaRegistry = new SchemaRegistry() });
+		var b = JsonSchema.FromText(idLast, new BuildOptions { SchemaRegistry = new SchemaRegistry() });
+
+		var good = JsonDocument.Parse(@"{ ""x"": ""ok"" }").RootElement;
+		Assert.That(a.Evaluate(good).IsValid, Is.True);
+		Assert.That(b.Evaluate(good).IsValid, Is.True);
+
+		var bad = JsonDocument.Parse(@"{ ""x"": 1 }").RootElement;
+		Assert.That(a.Evaluate(bad).IsValid, Is.False);
+		Assert.That(b.Evaluate(bad).IsValid, Is.False);
 	}
 }

@@ -38,7 +38,7 @@ public class PatternKeyword : IKeywordHandler
 		if (value.ValueKind is not JsonValueKind.String)
 			throw new JsonSchemaException($"'{Name}' value must be a string, found {value.ValueKind}");
 
-		var regex = new Regex(value.GetString()!, RegexOptions.ECMAScript | RegexOptions.Compiled);
+		var regex = RegexOrPattern.CreateRegex(value.GetString()!, true);
 
 		return regex;
 	}
