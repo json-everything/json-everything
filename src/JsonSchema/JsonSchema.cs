@@ -136,12 +136,13 @@ public class JsonSchema : IBaseDocument
 	private static JsonSchema BuildImpl(JsonElement root, BuildOptions? options, Uri? baseUri, bool register)
 	{
 		options ??= BuildOptions.Default;
+
 		var context = new BuildContext(options, baseUri ?? GenerateBaseUri(), register)
 		{
 			LocalSchema = root
 		};
 
-		var node = BuildNode(context);
+		var node = BuildNode(context, true);
 
 		if (node.Source.ValueKind == JsonValueKind.True) return True;
 		if (node.Source.ValueKind == JsonValueKind.False) return False;
@@ -177,7 +178,9 @@ public class JsonSchema : IBaseDocument
 	/// <returns>A JsonSchemaNode representing the parsed schema, including its keywords and any registered anchors or embedded
 	/// resources.</returns>
 	/// <exception cref="ArgumentException">Thrown if the local schema is not a boolean or an object.</exception>
-	public static JsonSchemaNode BuildNode(BuildContext context)
+	public static JsonSchemaNode BuildNode(BuildContext context) => BuildNode(context, false);
+
+	private static JsonSchemaNode BuildNode(BuildContext context, bool isRoot)
 	{
 		if (context.LocalSchema.ValueKind == JsonValueKind.True)
 		{
@@ -196,11 +199,23 @@ public class JsonSchema : IBaseDocument
 		if (context.LocalSchema.ValueKind != JsonValueKind.Object)
 			throw new ArgumentException($"Schemas may only booleans or objects.  Received {context.LocalSchema.ValueKind}");
 
-		var onlyHandleRef = context.LocalSchema.TryGetProperty("$ref", out _) &&
-		                    context.Dialect.RefIgnoresSiblingKeywords;
+		if (context.LocalSchema.TryGetProperty("$schema", out var dialect))
+		{
+			if (!Uri.TryCreate(dialect.GetString(), UriKind.Absolute, out var uri))
+				throw new JsonSchemaException("$schema value MUST be an absolute IRI");
+
+			context.Dialect = context.Options.DialectRegistry.Get(uri, context.Options.SchemaRegistry, context.Options.VocabularyRegistry, context.Dialect);
+		}
+
+		var allowBaseUriChange = context.LocalSchema.TryGetProperty("$ref", out _) &&
+		                         context.Dialect.RefIgnoresSiblingKeywords &&
+		                         !isRoot;
 
 		var keywordData = new List<KeywordData>();
-		foreach (var property in context.LocalSchema.EnumerateObject())
+		var orderedKeywords = context.LocalSchema
+			.EnumerateObject()
+			.OrderBy(x => context.Dialect.GetEvaluationOrder(x.Name));
+		foreach (var property in orderedKeywords)
 		{
 			var keyword = property.Name;
 			var value = property.Value;
@@ -216,13 +231,8 @@ public class JsonSchema : IBaseDocument
 					? keyword
 					: handler.ValidateKeywordValue(value)
 			};
-			if (handler is SchemaKeyword)
-			{
-				// can't set the dialect from within the keyword because context is a struct
-				var uri = (Uri)data.Value!;
-				context.Dialect = context.Options.DialectRegistry.Get(uri, context.Options.SchemaRegistry, context.Options.VocabularyRegistry, context.Dialect);
-			}
-			else if (handler is IdKeyword && !onlyHandleRef)
+			if (handler is SchemaKeyword) { /* no-op */ }
+			else if (handler is IdKeyword && !allowBaseUriChange)
 			{
 #pragma warning disable CS0618 // Type or member is obsolete
 				context.PathFromResourceRoot = JsonPointer.Empty;
