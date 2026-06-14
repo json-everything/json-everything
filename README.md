@@ -1,10 +1,3 @@
-> [!IMPORTANT]
-> To ensure the long-term sustainability of this project, a monthly maintenance fee has been introduced.  This fee is required to be paid by all organizations or users of any library from this project who generate revenue. You can pay the fee via [GitHub Sponsors](https://github.com/sponsors/gregsdennis).
->
-> To enact this, an EULA on binary releases has be added to the repo and Nuget packages that requires payment of the maintenance fee.
->
-> For more information on who must pay the fee and other frequently asked questions, please see the [Open Source Maintenance Fee](https://opensourcemaintenancefee.org/consumers/) organisation page.
-
 <div align="right">
   <details>
     <summary >🌐 Language</summary>
@@ -76,6 +69,7 @@ Otherwise, it's open to consideration for this project.
 <th width="276">Discuss</th>
 <th width="276">Ask</th>
 <th width="276">Built with</th>
+<th width="276">Supported by</th>
 </tr>
 </thead>
 <tbody>
@@ -83,6 +77,7 @@ Otherwise, it's open to consideration for this project.
 <td align="center"><a href="https://join.slack.com/t/json-everything/shared_invite/zt-3cfmgde04-o09VBqj6YfpudxTuI3aRhA"><img src="Resources/Slack.png" alt="Slack" title="Slack" height="50"></a></td>
 <td align="center"><a href="https://stackoverflow.com/questions/tagged/json-everything"><img src="Resources/stackoverflow.png" alt="StackOverflow" title="StackOverflow" height="50"></a></td>
 <td align="center"><a href="http://www.jetbrains.com/resharper"><img src="Resources/Resharper.svg" alt="Made with Jetbrains Resharper" title="Made with Jetbrains Resharper" height="50"></a></td>
+<td align="center"><a href="https://opensourcemaintenancefee.org/"><img src="Resources/osmf-logo.svg" alt="Supported by Open Source Maintenance Fee" title="Supported by Open Source Maintenance Fee" height="50"></a></td>
 </tr>
 </tbody>
 </table>
@@ -215,10 +210,14 @@ If you maintain or know of another project that extends _System.Text.Json_ to do
 
 Please see the [Code of Conduct](./CODE_OF_CONDUCT.md) and the [CONTRIBUTING](./CONTRIBUTING.md) file for more information.
 
-## Sponsorship
+## Project Funding & Sponsorship
 
-If you found these libraries helpful and would like to promote continued development, please consider [sponsoring the maintainers](https://github.com/sponsors/gregsdennis).
+Also ensure the long-term sustainability of this project, some users of the compiled libraries will be required to pay a monthly maintenance fee as specified by the package license.  This fee is required to be paid by all organizations or users of any library from this project who generate revenue. You can pay the fee via [GitHub Sponsors](https://github.com/sponsors/gregsdennis).
+
+To enact this, an EULA on binary releases is included in Nuget packages published from this project.
+
+For more information on who must pay the fee and other frequently asked questions, please see the [Open Source Maintenance Fee](https://opensourcemaintenancefee.org/consumers/) organisation page.
 
 ## .NET Foundation
 
-This project is supported by the [.NET Foundation](https://dotnetfoundation.org).
+This project is a [.NET Foundation](https://dotnetfoundation.org) member.
