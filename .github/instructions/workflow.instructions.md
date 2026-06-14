@@ -21,6 +21,7 @@ Each step in this section MUST be executed as an explicit tool call. A step MUST
    - `tests.instructions.md` when editing tests or changing behavior.
    - `apis.instructions.md` when editing `src/JsonSchema.Api/` or its tests.
    - `domain-knowledge.instructions.md` when implementing behavior tied to JSON specifications or package intent.
+   - `release-notes.instructions.md` when editing files in `tools/ApiDocsGenerator/release-notes/`.
    - `instructions.instructions.md` when editing `.instructions.md` files.
 4. For C# style and formatting, treat `.editorconfig` and `json-everything.sln.DotSettings` in the repo root as authoritative.
 5. Prefer minimal, targeted changes. Do not refactor unrelated code.
