@@ -1,4 +1,4 @@
-﻿@page "/json-schema"
+@page "/json-schema"
 @implements IDisposable
 @using Json.Schema.DataGeneration
 @using Json.Schema
@@ -10,7 +10,7 @@
 @using Microsoft.CodeAnalysis
 @using Microsoft.CodeAnalysis.CSharp
 @using System.Reflection
-@using System.Globalization
+@using System.Reflection.Metadata
 @using BlazorMonaco.Editor
 @using Json.Schema.ArrayExt.Keywords
 @using Json.Schema.Data.Keywords
@@ -199,6 +199,8 @@
 		LibraryVersion.GetFor<ISchemaRefiner>(),
 		LibraryVersion.GetFor<Bound>()
     ];
+
+	private Compilation _baseCompilation;
 
     private readonly List<Dialect> _dialects =
     [
@@ -632,9 +634,7 @@ namespace JsonEverythingTemp;
 			var syntaxTree = CSharpSyntaxTree.ParseText(fullSource);
 			var assemblyPath = System.IO.Path.ChangeExtension(System.IO.Path.GetTempFileName(), "dll");
 
-			var compilation = CSharpCompilation.Create(System.IO.Path.GetFileName(assemblyPath))
-				.WithOptions(new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary))
-				.AddReferences(_references)
+			var compilation = _baseCompilation
 				.AddSyntaxTrees(syntaxTree);
 
 			using var dllStream = new MemoryStream();
@@ -768,7 +768,9 @@ namespace JsonEverythingTemp;
 			_editorsInitialized = true;
 			Operation = _operation;
 
-			await LoadAssemblyReferences();
+			_baseCompilation = CSharpCompilation.Create("json-everything.TestAssembly",
+				options: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary),
+				references: LoadAssemblyReferences());
 
 			_schemaEditorLanguage = await _schemaEditor.DetectLanguage(JsRuntime);
 			_instanceEditorLanguage = await _instanceEditor.DetectLanguage(JsRuntime);
@@ -785,74 +787,25 @@ namespace JsonEverythingTemp;
 		await base.OnAfterRenderAsync(firstRender);
 	}
 
-	private async Task LoadAssemblyReferences()
+	private IEnumerable<MetadataReference> LoadAssemblyReferences() =>
+		AppDomain.CurrentDomain.GetAssemblies()
+			.Where(x => !x.IsDynamic)
+			.Select(CreateReferenceFromRawMetadata)
+			.Where(x => x != null)!;
+
+	private MetadataReference? CreateReferenceFromRawMetadata(Assembly asm)
 	{
-		var domain = AppDomain.CurrentDomain;
-		var refs = domain.GetAssemblies();
-		var client = new HttpClient 
+		unsafe
 		{
-			BaseAddress = new Uri(NavigationManager.BaseUri)
-		};
-
-		var references = new List<MetadataReference>();
-
-		var failedAssemblies = new List<string>();
-		// the generation functions create dynamic libraries.  we don't want those.
-		foreach(var reference in refs.Where(x => !x.IsDynamic))
-		{
-			try
+			if (!asm.TryGetRawMetadata(out byte* metadataPtr, out int metadataLength))
 			{
-				var assemblyName = reference.GetName().Name;
-				if (string.IsNullOrEmpty(assemblyName))
-					continue;
-
-				// Try to load from _framework folder
-				try
-				{
-					var httpStream = await client.GetStreamAsync($"_framework/{assemblyName}.dll");
-					
-					// HTTP streams are not seekable, but MetadataReference.CreateFromStream requires a seekable stream
-					// Copy to a MemoryStream which is seekable
-					var memoryStream = new MemoryStream();
-					await httpStream.CopyToAsync(memoryStream);
-					memoryStream.Position = 0;
-					
-					references.Add(MetadataReference.CreateFromStream(memoryStream));
-					Console.WriteLine($"Loaded: {reference.FullName}");
-				}
-				catch
-				{
-					// .NET 10 might have assemblies in different locations or formats
-					// Skip if not available
-					continue;
-				}
+				return null;
 			}
-			catch (Exception e)
-			{
-				var assemblyName = reference.GetName().Name ?? reference.FullName ?? "unknown";
-				Console.WriteLine($"Error loading {assemblyName}: {e.Message}");
-				failedAssemblies.Add(assemblyName);
-			}
-		}
 
-		if (failedAssemblies.Any())
-		{
-			Console.WriteLine($"Warning: Could not load {failedAssemblies.Count} .NET reference(s). Some functions may not be available.");
-			Console.WriteLine($"Failed assemblies: {string.Join(", ", failedAssemblies)}");
-		}
+			var metadata = ModuleMetadata.CreateFromMetadata((IntPtr)metadataPtr, metadataLength, () => GC.KeepAlive(asm));
 
-		if (!references.Any())
-		{
-			Console.WriteLine("Warning: No assembly references were loaded. Schema generation may not work correctly.");
+			return AssemblyMetadata.Create(metadata).GetReference(display: asm.GetName().Name!);
 		}
-		else
-		{
-			Console.WriteLine($"Successfully loaded {references.Count} assembly references.");
-		}
-
-		_references = references;
-
-		// Removed: PreloadAllCultureAssemblies is no longer needed
 	}
 
 	private void HandleThemeChanged()
