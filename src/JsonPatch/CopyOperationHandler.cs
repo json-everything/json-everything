@@ -16,13 +16,13 @@ internal class CopyOperationHandler : IPatchOperationHandler
 		if (!operation.From.EvaluateAndGetParent(context.Source, out _) ||
 			!operation.From.TryEvaluate(context.Source, out var data))
 		{
-			context.Message = $"Source path `{operation.Path}` could not be reached.";
+			context.Message = $"Source path `{operation.From}` could not be reached.";
 			return;
 		}
 
 		if (!operation.Path.EvaluateAndGetParent(context.Source, out var target))
 		{
-			context.Message = $"Target path `{operation.From}` could not be reached.";
+			context.Message = $"Target path `{operation.Path}` could not be reached.";
 			return;
 		}
 
@@ -53,6 +53,6 @@ internal class CopyOperationHandler : IPatchOperationHandler
 			return;
 		}
 
-		context.Message = $"Target path `{operation.From}` could not be reached.";
+		context.Message = $"Target path `{operation.Path}` could not be reached.";
 	}
 }
