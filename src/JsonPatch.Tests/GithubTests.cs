@@ -347,4 +347,18 @@ public class GithubTests
 		Assert.That(patchResult.IsSuccess, Is.False);
 		Assert.That(patchResult.Error, Is.EqualTo("Target path `/a/b` could not be reached."));
 	}
+
+	[TestCase("copy", "/missing", "/target", "Source path `/missing` could not be reached.")]
+	[TestCase("copy", "/foo", "/missing/target", "Target path `/missing/target` could not be reached.")]
+	[TestCase("move", "/missing", "/target", "Source path `/missing` could not be reached.")]
+	[TestCase("move", "/foo", "/missing/target", "Target path `/missing/target` could not be reached.")]
+	public void Issue862_CopyAndMoveErrorsNameTheUnreachablePath(string op, string from, string path, string expected)
+	{
+		var patchStr = "[{ \"op\": \"" + op + "\", \"from\": \"" + from + "\", \"path\": \"" + path + "\" }]";
+		var patch = JsonSerializer.Deserialize<JsonPatch>(patchStr, TestEnvironment.SerializerOptions)!;
+
+		var actual = patch.Apply(JsonNode.Parse("{\"foo\":\"bar\"}"));
+
+		Assert.That(actual.Error, Is.EqualTo(expected));
+	}
 }
