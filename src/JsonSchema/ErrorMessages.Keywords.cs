@@ -16,6 +16,66 @@ public static partial class ErrorMessages
 	}
 
 	/// <summary>
+	/// Gets or sets the error message for <see cref="AdditionalPropertiesKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[failed]] - the properties that did not match the schema
+	/// </remarks>
+	public static string? AdditionalProperties { get; set; }
+
+	/// <summary>
+	/// Gets the error message for <see cref="AdditionalPropertiesKeyword"/> for a specific culture.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[failed]] - the properties that did not match the schema
+	/// </remarks>
+	public static string GetAdditionalProperties(CultureInfo? culture)
+	{
+		return AdditionalProperties ?? Get(culture);
+	}
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="AllOfKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[failed]] - the indexes of the subschemas that failed
+	/// </remarks>
+	public static string? AllOf { get; set; }
+
+	/// <summary>
+	/// Gets the error message for <see cref="AllOfKeyword"/> for a specific culture.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[failed]] - the indexes of the subschemas that failed
+	/// </remarks>
+	public static string GetAllOf(CultureInfo? culture)
+	{
+		return AllOf ?? Get(culture);
+	}
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="AnyOfKeyword"/>.
+	/// </summary>
+	/// <remarks>No tokens are supported.</remarks>
+	public static string? AnyOf { get; set; }
+
+	/// <summary>
+	/// Gets the error message for <see cref="AnyOfKeyword"/> for a specific culture.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>No tokens are supported.</remarks>
+	public static string GetAnyOf(CultureInfo? culture)
+	{
+		return AnyOf ?? Get(culture);
+	}
+
+	/// <summary>
 	/// Gets or sets the error message for <see cref="ConstKeyword"/>.
 	/// </summary>
 	/// <remarks>
@@ -127,6 +187,22 @@ public static partial class ErrorMessages
 	public static string GetDependentSchemas(CultureInfo? culture)
 	{
 		return DependentSchemas ?? Get(culture);
+	}
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="ElseKeyword"/>.
+	/// </summary>
+	/// <remarks>No tokens are supported.</remarks>
+	public static string? Else { get; set; }
+
+	/// <summary>
+	/// Gets the error message for <see cref="ElseKeyword"/> for a specific culture.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>No tokens are supported.</remarks>
+	public static string GetElse(CultureInfo? culture)
+	{
+		return Else ?? Get(culture);
 	}
 
 	/// <summary>
@@ -276,6 +352,28 @@ public static partial class ErrorMessages
 	public static string GetFormatWithDetail(CultureInfo? culture)
 	{
 		return FormatWithDetail ?? Get(culture);
+	}
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="ItemsKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[failed]] - the indexes of the items that did not match the schema
+	/// </remarks>
+	public static string? Items { get; set; }
+
+	/// <summary>
+	/// Gets the error message for <see cref="ItemsKeyword"/> for a specific culture.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[failed]] - the indexes of the items that did not match the schema
+	/// </remarks>
+	public static string GetItems(CultureInfo? culture)
+	{
+		return Items ?? Get(culture);
 	}
 
 	/// <summary>
@@ -495,6 +593,22 @@ public static partial class ErrorMessages
 	}
 
 	/// <summary>
+	/// Gets or sets the error message for <see cref="NotKeyword"/>.
+	/// </summary>
+	/// <remarks>No tokens are supported.</remarks>
+	public static string? Not { get; set; }
+
+	/// <summary>
+	/// Gets the error message for <see cref="NotKeyword"/> for a specific culture.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>No tokens are supported.</remarks>
+	public static string GetNot(CultureInfo? culture)
+	{
+		return Not ?? Get(culture);
+	}
+
+	/// <summary>
 	/// Gets or sets the error message for <see cref="OneOfKeyword"/>.
 	/// </summary>
 	/// <remarks>
@@ -536,6 +650,110 @@ public static partial class ErrorMessages
 	public static string GetPattern(CultureInfo? culture)
 	{
 		return Pattern ?? Get(culture);
+	}
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="PatternPropertiesKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[failed]] - the properties that did not match their pattern-based schemas
+	/// </remarks>
+	public static string? PatternProperties { get; set; }
+
+	/// <summary>
+	/// Gets the error message for <see cref="PatternPropertiesKeyword"/> for a specific culture.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[failed]] - the properties that did not match their pattern-based schemas
+	/// </remarks>
+	public static string GetPatternProperties(CultureInfo? culture)
+	{
+		return PatternProperties ?? Get(culture);
+	}
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="PrefixItemsKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[failed]] - the indexes of the prefix items that did not match the schema
+	/// </remarks>
+	public static string? PrefixItems { get; set; }
+
+	/// <summary>
+	/// Gets the error message for <see cref="PrefixItemsKeyword"/> for a specific culture.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[failed]] - the indexes of the prefix items that did not match the schema
+	/// </remarks>
+	public static string GetPrefixItems(CultureInfo? culture)
+	{
+		return PrefixItems ?? Get(culture);
+	}
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="PropertiesKeyword"/>.
+	/// </summary>
+	/// <remarks>No tokens are supported.</remarks>
+	public static string? Properties { get; set; }
+
+	/// <summary>
+	/// Gets the error message for <see cref="PropertiesKeyword"/> for a specific culture.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>No tokens are supported.</remarks>
+	public static string GetProperties(CultureInfo? culture)
+	{
+		return Properties ?? Get(culture);
+	}
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="PropertyDependenciesKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[failed]] - the properties that failed their dependencies
+	/// </remarks>
+	public static string? PropertyDependencies { get; set; }
+
+	/// <summary>
+	/// Gets the error message for <see cref="PropertyDependenciesKeyword"/> for a specific culture.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[failed]] - the properties that failed their dependencies
+	/// </remarks>
+	public static string GetPropertyDependencies(CultureInfo? culture)
+	{
+		return PropertyDependencies ?? Get(culture);
+	}
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="PropertyNamesKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[failed]] - the property names that did not match the schema
+	/// </remarks>
+	public static string? PropertyNames { get; set; }
+
+	/// <summary>
+	/// Gets the error message for <see cref="PropertyNamesKeyword"/> for a specific culture.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[failed]] - the property names that did not match the schema
+	/// </remarks>
+	public static string GetPropertyNames(CultureInfo? culture)
+	{
+		return PropertyNames ?? Get(culture);
 	}
 
 	/// <summary>
@@ -628,5 +846,65 @@ public static partial class ErrorMessages
 	public static string GetUniqueItems(CultureInfo? culture)
 	{
 		return UniqueItems ?? Get(culture);
+	}
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="ThenKeyword"/>.
+	/// </summary>
+	/// <remarks>No tokens are supported.</remarks>
+	public static string? Then { get; set; }
+
+	/// <summary>
+	/// Gets the error message for <see cref="ThenKeyword"/> for a specific culture.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>No tokens are supported.</remarks>
+	public static string GetThen(CultureInfo? culture)
+	{
+		return Then ?? Get(culture);
+	}
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="UnevaluatedItemsKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[failed]] - the indexes of the items that did not match the schema
+	/// </remarks>
+	public static string? UnevaluatedItems { get; set; }
+
+	/// <summary>
+	/// Gets the error message for <see cref="UnevaluatedItemsKeyword"/> for a specific culture.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[failed]] - the indexes of the items that did not match the schema
+	/// </remarks>
+	public static string GetUnevaluatedItems(CultureInfo? culture)
+	{
+		return UnevaluatedItems ?? Get(culture);
+	}
+
+	/// <summary>
+	/// Gets or sets the error message for <see cref="UnevaluatedPropertiesKeyword"/>.
+	/// </summary>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[failed]] - the properties that did not match the schema
+	/// </remarks>
+	public static string? UnevaluatedProperties { get; set; }
+
+	/// <summary>
+	/// Gets the error message for <see cref="UnevaluatedPropertiesKeyword"/> for a specific culture.
+	/// </summary>
+	/// <param name="culture">The culture to retrieve.</param>
+	/// <remarks>
+	///	Available tokens are:
+	///   - [[failed]] - the properties that did not match the schema
+	/// </remarks>
+	public static string GetUnevaluatedProperties(CultureInfo? culture)
+	{
+		return UnevaluatedProperties ?? Get(culture);
 	}
 }

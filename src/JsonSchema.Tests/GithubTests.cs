@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Json.Schema.Serialization;
 using NUnit.Framework;
 using TestHelpers;
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
 namespace Json.Schema.Tests;
@@ -1446,5 +1447,42 @@ public class GithubTests
 		var bad = JsonDocument.Parse(@"{ ""x"": 1 }").RootElement;
 		Assert.That(a.Evaluate(bad).IsValid, Is.False);
 		Assert.That(b.Evaluate(bad).IsValid, Is.False);
+	}
+
+	[Test]
+	public void Issue1050_ConstKeywordMissingErrorMessage()
+	{
+		var options = new BuildOptions
+		{
+			SchemaRegistry = new()
+		};
+		var schema = new JsonSchemaBuilder()
+			.Schema(MetaSchemas.Draft202012Id)
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("value", new JsonSchemaBuilder()
+					.Type(SchemaValueType.Number)
+					.Not(new JsonSchemaBuilder()
+						.Const(0)
+					)
+				)
+			)
+			.Build(options);
+		var instance = JsonDocument.Parse(
+			"""
+			{
+			  "value": 0
+			}
+			""").RootElement;
+
+		var evalOptions = new EvaluationOptions
+		{
+			OutputFormat = OutputFormat.Hierarchical
+		};
+		var result = schema.Evaluate(instance, evalOptions);
+
+		result.AssertInvalid();
+		Assert.Null(result.Details[0].Details[0].Errors);
+		Assert.NotNull(result.Details[0].Errors["not"]);
 	}
 }

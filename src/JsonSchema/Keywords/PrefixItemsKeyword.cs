@@ -106,12 +106,21 @@ public class PrefixItemsKeyword : IKeywordHandler
 			i++;
 		}
 
+		var isValid = subschemaEvaluations.Count == 0 || subschemaEvaluations.All(x => x.IsValid);
 		return new KeywordEvaluation
 		{
 			Keyword = Name,
-			IsValid = subschemaEvaluations.Count == 0 || subschemaEvaluations.All(x => x.IsValid),
+			IsValid = isValid,
 			Details = subschemaEvaluations.ToArray(),
-			Annotation = (subschemaEvaluations.Count - 1).AsJsonElement()
+			Annotation = (subschemaEvaluations.Count - 1).AsJsonElement(),
+			Error = isValid
+				? null
+				: ErrorMessages.GetPrefixItems(context.Options.Culture)
+					.ReplaceToken("failed", subschemaEvaluations
+						.Select((r, idx) => (r, idx))
+						.Where(x => !x.r.IsValid)
+						.Select(x => x.idx)
+						.ToArray(), JsonSchemaSerializerContext.Default.Int32Array)
 		};
 	}
 }

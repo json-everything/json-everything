@@ -83,6 +83,7 @@ public class UnevaluatedPropertiesKeyword : IKeywordHandler
 			};
 
 		var subschemaEvaluations = new List<EvaluationResults>();
+		var failedProperties = new HashSet<string>();
 		var subschema = keyword.Subschemas[0];
 
 		var evaluationPath = context.EvaluationPath.Combine(Name);
@@ -97,15 +98,22 @@ public class UnevaluatedPropertiesKeyword : IKeywordHandler
 				EvaluationPath = evaluationPath
 			};
 
-			subschemaEvaluations.Add(subschema.Evaluate(itemContext));
+			var local = subschema.Evaluate(itemContext);
+			subschemaEvaluations.Add(local);
+			if (!local.IsValid) failedProperties.Add(instance.Name);
 		}
 
+		var isValid = subschemaEvaluations.Count == 0 || subschemaEvaluations.All(x => x.IsValid);
 		return new KeywordEvaluation
 		{
 			Keyword = Name,
-			IsValid = subschemaEvaluations.Count == 0 || subschemaEvaluations.All(x => x.IsValid),
+			IsValid = isValid,
 			Details = subschemaEvaluations.ToArray(),
-			Annotation = JsonElementExtensions.True
+			Annotation = JsonElementExtensions.True,
+			Error = isValid
+				? null
+				: ErrorMessages.GetUnevaluatedProperties(context.Options.Culture)
+					.ReplaceToken("failed", failedProperties, JsonSchemaSerializerContext.Default.HashSetString)
 		};
 	}
 

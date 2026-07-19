@@ -84,6 +84,7 @@ public class DependentSchemasKeyword : IKeywordHandler
 
 		var propertyNames = (HashSet<string>)keyword.Value!;
 		var subschemaEvaluations = new List<EvaluationResults>();
+		var failedProperties = new HashSet<string>();
 
 		foreach (var property in context.Instance.EnumerateObject())
 		{
@@ -99,6 +100,7 @@ public class DependentSchemasKeyword : IKeywordHandler
 
 			var local = keyword.Subschemas[schemaIndex].Evaluate(propContext);
 			subschemaEvaluations.Add(local);
+			if (!local.IsValid) failedProperties.Add(property.Name);
 
 			if (context.CanOptimize && !local.IsValid)
 				return new KeywordEvaluation
@@ -108,11 +110,16 @@ public class DependentSchemasKeyword : IKeywordHandler
 				};
 		}
 
+		var isValid = subschemaEvaluations.Count == 0 || subschemaEvaluations.All(x => x.IsValid);
 		return new KeywordEvaluation
 		{
 			Keyword = Name,
-			IsValid = subschemaEvaluations.Count == 0 || subschemaEvaluations.All(x => x.IsValid),
-			Details = subschemaEvaluations.ToArray()
+			IsValid = isValid,
+			Details = subschemaEvaluations.ToArray(),
+			Error = isValid
+				? null
+				: ErrorMessages.GetDependentSchemas(context.Options.Culture)
+					.ReplaceToken("value", failedProperties, JsonSchemaSerializerContext.Default.HashSetString)
 		};
 	}
 }

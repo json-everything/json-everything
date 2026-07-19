@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -91,6 +90,7 @@ public class PatternPropertiesKeyword : IKeywordHandler
 		var regexes = (Dictionary<string, Regex>)keyword.Value!;
 		var subschemaEvaluations = new List<EvaluationResults>();
 		var propertyNames = new HashSet<string>();
+		var failedProperties = new HashSet<string>();
 
 		var properties = context.Instance.EnumerateObject().ToArray();
 
@@ -116,6 +116,7 @@ public class PatternPropertiesKeyword : IKeywordHandler
 
 				var local = subschema.Evaluate(propContext);
 				subschemaEvaluations.Add(local);
+				if (!local.IsValid) failedProperties.Add(property.Name);
 
 				if (context.CanOptimize && !local.IsValid)
 					return new KeywordEvaluation
@@ -126,12 +127,17 @@ public class PatternPropertiesKeyword : IKeywordHandler
 			}
 		}
 
+		var isValid = subschemaEvaluations.Count == 0 || subschemaEvaluations.All(x => x.IsValid);
 		return new KeywordEvaluation
 		{
 			Keyword = Name,
-			IsValid = subschemaEvaluations.Count == 0 || subschemaEvaluations.All(x => x.IsValid),
+			IsValid = isValid,
 			Details = subschemaEvaluations.ToArray(),
-			Annotation = JsonSerializer.SerializeToElement(propertyNames, JsonSchemaSerializerContext.Default.HashSetString)
+			Annotation = JsonSerializer.SerializeToElement(propertyNames, JsonSchemaSerializerContext.Default.HashSetString),
+			Error = isValid
+				? null
+				: ErrorMessages.GetPatternProperties(context.Options.Culture)
+					.ReplaceToken("failed", failedProperties, JsonSchemaSerializerContext.Default.HashSetString)
 		};
 	}
 }

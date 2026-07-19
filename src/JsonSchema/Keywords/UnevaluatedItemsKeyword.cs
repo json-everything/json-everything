@@ -81,6 +81,7 @@ public class UnevaluatedItemsKeyword : IKeywordHandler
 			};
 
 		var subschemaEvaluations = new List<EvaluationResults>();
+		var failedIndexes = new List<int>();
 		var subschema = keyword.Subschemas[0];
 
 		var i = lastIndex + 1;
@@ -95,17 +96,24 @@ public class UnevaluatedItemsKeyword : IKeywordHandler
 					EvaluationPath = context.EvaluationPath.Combine(Name)
 				};
 
-				subschemaEvaluations.Add(subschema.Evaluate(itemContext));
+				var local = subschema.Evaluate(itemContext);
+				subschemaEvaluations.Add(local);
+				if (!local.IsValid) failedIndexes.Add(i);
 			}
 			i++;
 		}
 
+		var isValid = subschemaEvaluations.Count == 0 || subschemaEvaluations.All(x => x.IsValid);
 		return new KeywordEvaluation
 		{
 			Keyword = Name,
-			IsValid = subschemaEvaluations.Count == 0 || subschemaEvaluations.All(x => x.IsValid),
+			IsValid = isValid,
 			Details = subschemaEvaluations.ToArray(),
-			Annotation = JsonElementExtensions.True
+			Annotation = JsonElementExtensions.True,
+			Error = isValid
+				? null
+				: ErrorMessages.GetUnevaluatedItems(context.Options.Culture)
+					.ReplaceToken("failed", failedIndexes.ToArray(), JsonSchemaSerializerContext.Default.Int32Array)
 		};
 	}
 

@@ -111,12 +111,17 @@ public class OneOfKeyword : IKeywordHandler
 			i++;
 		}
 
+		var matchCount = subschemaEvaluations.Count(x => x.IsValid);
+		var isValid = matchCount == 1;
 		return new KeywordEvaluation
 		{
 			Keyword = Name,
-			IsValid = subschemaEvaluations.Count(x => x.IsValid) == 1,
-			Details = subschemaEvaluations.ToArray()
-			// TODO: add error message
+			IsValid = isValid,
+			Details = subschemaEvaluations.ToArray(),
+			Error = isValid
+				? null
+				: ErrorMessages.GetOneOf(context.Options.Culture)
+					.ReplaceToken("count", matchCount)
 		};
 	}
 }

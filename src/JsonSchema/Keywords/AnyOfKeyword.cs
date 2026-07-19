@@ -110,12 +110,15 @@ public class AnyOfKeyword : IKeywordHandler
 			i++;
 		}
 
+		var isValid = subschemaEvaluations.Count == 0 || subschemaEvaluations.Any(x => x.IsValid);
 		return new KeywordEvaluation
 		{
 			Keyword = Name,
-			IsValid = subschemaEvaluations.Count == 0 || subschemaEvaluations.Any(x => x.IsValid),
-			Details = subschemaEvaluations.ToArray()
-			// TODO: add error message
+			IsValid = isValid,
+			Details = subschemaEvaluations.ToArray(),
+			Error = isValid
+				? null
+				: ErrorMessages.GetAnyOf(context.Options.Culture)
 		};
 	}
 }

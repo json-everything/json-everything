@@ -105,6 +105,7 @@ public class AdditionalPropertiesKeyword : IKeywordHandler
 		var evaluatedByPatternsSet = new HashSet<string>(evaluatedByPatterns);
 
 		var subschemaEvaluations = new List<EvaluationResults>();
+		var failedProperties = new HashSet<string>();
 		var subschema = keyword.Subschemas[0];
 
 		var evaluationPath = context.EvaluationPath.Combine(Name);
@@ -122,6 +123,7 @@ public class AdditionalPropertiesKeyword : IKeywordHandler
 
 			var local = subschema.Evaluate(itemContext);
 			subschemaEvaluations.Add(local);
+			if (!local.IsValid) failedProperties.Add(instance.Name);
 
 			if (context.CanOptimize && !local.IsValid)
 				return new KeywordEvaluation
@@ -131,12 +133,17 @@ public class AdditionalPropertiesKeyword : IKeywordHandler
 				};
 		}
 
+		var isValid = subschemaEvaluations.Count == 0 || subschemaEvaluations.All(x => x.IsValid);
 		return new KeywordEvaluation
 		{
 			Keyword = Name,
-			IsValid = subschemaEvaluations.Count == 0 || subschemaEvaluations.All(x => x.IsValid),
+			IsValid = isValid,
 			Details = subschemaEvaluations.ToArray(),
-			Annotation = JsonElementExtensions.True
+			Annotation = JsonElementExtensions.True,
+			Error = isValid
+				? null
+				: ErrorMessages.GetAdditionalProperties(context.Options.Culture)
+					.ReplaceToken("failed", failedProperties, JsonSchemaSerializerContext.Default.HashSetString)
 		};
 	}
 }
