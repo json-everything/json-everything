@@ -76,7 +76,7 @@ public static class HelpContent
 
 	public const string SchemaOutputFormat = 
 		"""
-		The output format is described in the JSON Schema specification.  By default, JsonSchema.Net
+		The output format is described in the JSON Schema specification.  JsonSchema.Net
 		uses the formats described by the next version of the specification.  More information can be
 		found in [this blog post](https://json-schema.org/blog/posts/fixing-json-schema-output).
 
@@ -86,8 +86,7 @@ public static class HelpContent
 		- List - All validation results are organized into a top-level list.
 		- Hierarchical - Validation results are organized into a hierarchy that mimics the schema structure.
 
-		If you prefer, you can choose the equivalent 2020-12 output formats using the **Output Structure**
-		option below.  See the [evaluation results](https://docs.json-everything.net/schema/basics/#schema-results)
+		See the [evaluation results](https://docs.json-everything.net/schema/basics/#schema-results)
 		section of the docs for more information on what the library offers.
 		""";
 
