@@ -4,6 +4,10 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "09.01"
 ---
+# [9.3.0](https://github.com/json-everything/json-everything/pull/1046) {#release-schema-9.3.0}
+
+[#1050](https://github.com/json-everything/json-everything/issues/1050) - Adds error messages for all validation keywords. Thanks to [@pawlos](https://github.com/pawlos) for reporting.
+
 # [9.2.2](https://github.com/json-everything/json-everything/pull/1046) {#release-schema-9.2.2}
 
 [#1042](https://github.com/json-everything/json-everything/issues/1042) - Fixes a cycle-detection gap where self-referential schemas nested under keywords like `not` could bypass build-time checks and cause a `StackOverflowException` during evaluation. These now fail with a `JsonSchemaException` instead. Thanks to [@pawlos](https://github.com/pawlos) for reporting.
