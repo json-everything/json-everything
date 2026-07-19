@@ -112,8 +112,15 @@ public class AllOfKeyword : IKeywordHandler
 		{
 			Keyword = Name,
 			IsValid = subschemaEvaluations.Count == 0 || subschemaEvaluations.All(x => x.IsValid),
-			Details = subschemaEvaluations.ToArray()
-			// TODO: add error message
+			Details = subschemaEvaluations.ToArray(),
+			Error = subschemaEvaluations.Count != 0 && subschemaEvaluations.Any(x => !x.IsValid)
+				? ErrorMessages.GetAllOf(context.Options.Culture)
+					.ReplaceToken("failed", subschemaEvaluations
+						.Select((r, idx) => (r, idx))
+						.Where(x => !x.r.IsValid)
+						.Select(x => x.idx)
+						.ToArray(), JsonSchemaSerializerContext.Default.Int32Array)
+				: null
 		};
 	}
 }

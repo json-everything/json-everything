@@ -82,7 +82,10 @@ public class ElseKeyword : IKeywordHandler
 		{
 			Keyword = Name,
 			IsValid = result.IsValid,
-			Details = [result]
+			Details = [result],
+			Error = result.IsValid
+				? null
+				: ErrorMessages.GetElse(context.Options.Culture)
 		};
 	}
 }

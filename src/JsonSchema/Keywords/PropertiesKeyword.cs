@@ -106,12 +106,16 @@ public class PropertiesKeyword : IKeywordHandler
 				};
 		}
 
+		var isValid = subschemaEvaluations.Count == 0 || subschemaEvaluations.All(x => x.IsValid);
 		return new KeywordEvaluation
 		{
 			Keyword = Name,
-			IsValid = subschemaEvaluations.Count == 0 || subschemaEvaluations.All(x => x.IsValid),
+			IsValid = isValid,
 			Details = subschemaEvaluations.ToArray(),
-			Annotation = JsonSerializer.SerializeToElement(propertyNames, JsonSchemaSerializerContext.Default.HashSetString)
+			Annotation = JsonSerializer.SerializeToElement(propertyNames, JsonSchemaSerializerContext.Default.HashSetString),
+			Error = isValid
+				? null
+				: ErrorMessages.GetProperties(context.Options.Culture)
 		};
 	}
 }

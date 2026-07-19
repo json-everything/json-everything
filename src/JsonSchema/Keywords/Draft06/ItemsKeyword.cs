@@ -147,12 +147,20 @@ public class ItemsKeyword : IKeywordHandler
 			annotation = (i - 1).AsJsonElement();
 		}
 
+		var isValid = subschemaEvaluations.Count == 0 || subschemaEvaluations.All(x => x.IsValid);
 		return new KeywordEvaluation
 		{
 			Keyword = Name,
-			IsValid = subschemaEvaluations.Count == 0 || subschemaEvaluations.All(x => x.IsValid),
+			IsValid = isValid,
 			Details = subschemaEvaluations.ToArray(),
-			Annotation = annotation
+			Annotation = annotation,
+			Error = isValid
+				? null
+				: ErrorMessages.GetItems(context.Options.Culture)
+					.ReplaceToken("failed", subschemaEvaluations.Select((r, i) => (r, i))
+						.Where(x => !x.r.IsValid)
+						.Select(x => x.i)
+						.ToArray(), JsonSchemaSerializerContext.Default.Int32Array)
 		};
 	}
 }

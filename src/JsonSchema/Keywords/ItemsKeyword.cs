@@ -100,12 +100,21 @@ public class ItemsKeyword : IKeywordHandler
 			i++;
 		}
 
+		var isValid = subschemaEvaluations.Count == 0 || subschemaEvaluations.All(x => x.IsValid);
 		return new KeywordEvaluation
 		{
 			Keyword = Name,
-			IsValid = subschemaEvaluations.Count == 0 || subschemaEvaluations.All(x => x.IsValid),
+			IsValid = isValid,
 			Details = subschemaEvaluations.ToArray(),
-			Annotation = JsonElementExtensions.True
+			Annotation = JsonElementExtensions.True,
+			Error = isValid
+				? null
+				: ErrorMessages.GetItems(context.Options.Culture)
+					.ReplaceToken("failed", subschemaEvaluations
+						.Select((r, idx) => (r, idx))
+						.Where(x => !x.r.IsValid)
+						.Select(x => prefixItemsCount + x.idx)
+						.ToArray(), JsonSchemaSerializerContext.Default.Int32Array)
 		};
 	}
 }

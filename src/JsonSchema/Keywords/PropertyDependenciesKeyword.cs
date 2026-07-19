@@ -74,6 +74,7 @@ public class PropertyDependenciesKeyword : IKeywordHandler
 
 		var propertyNames = (HashSet<string>)keyword.Value!;
 		var subschemaEvaluations = new List<EvaluationResults>();
+		var failedProperties = new HashSet<string>();
 
 		foreach (var property in context.Instance.EnumerateObject())
 		{
@@ -87,14 +88,21 @@ public class PropertyDependenciesKeyword : IKeywordHandler
 				EvaluationPath = context.EvaluationPath.Combine(Name, property.Name)
 			};
 
-			subschemaEvaluations.Add(keyword.Subschemas[schemaIndex].Evaluate(propContext));
+			var local = keyword.Subschemas[schemaIndex].Evaluate(propContext);
+			subschemaEvaluations.Add(local);
+			if (!local.IsValid) failedProperties.Add(property.Name);
 		}
 
+		var isValid = subschemaEvaluations.Count == 0 || subschemaEvaluations.All(x => x.IsValid);
 		return new KeywordEvaluation
 		{
 			Keyword = Name,
-			IsValid = subschemaEvaluations.Count == 0 || subschemaEvaluations.All(x => x.IsValid),
-			Details = subschemaEvaluations.ToArray()
+			IsValid = isValid,
+			Details = subschemaEvaluations.ToArray(),
+			Error = isValid
+				? null
+				: ErrorMessages.GetPropertyDependencies(context.Options.Culture)
+					.ReplaceToken("failed", failedProperties, JsonSchemaSerializerContext.Default.HashSetString)
 		};
 	}
 }

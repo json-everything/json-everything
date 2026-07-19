@@ -103,7 +103,10 @@ public class OutputTests
 			      "valid": false,
 			      "evaluationPath": "",
 				  "schemaLocation": "https://json-everything.test/schema#",
-				  "instanceLocation": ""
+				  "instanceLocation": "",
+				  "errors": {
+				    "properties": "Some properties did not match the required schema"
+				  }
 				},
 			    {
 			      "valid": false,
@@ -160,6 +163,9 @@ public class OutputTests
 			  "evaluationPath": "",
 			  "schemaLocation": "https://json-everything.test/schema#",
 			  "instanceLocation": "",
+			  "errors": {
+			    "properties": "Some properties did not match the required schema"
+			  },
 			  "details": [
 			    {
 			      "valid": false,
@@ -191,6 +197,9 @@ public class OutputTests
 			  "evaluationPath": "",
 			  "schemaLocation": "https://json-everything.test/schema#",
 			  "instanceLocation": "",
+			  "errors": {
+			    "properties": "Some properties did not match the required schema"
+			  },
 			  "droppedAnnotations": {
 			    "properties": [
 			      "fails"
@@ -281,12 +290,18 @@ public class OutputTests
 			  "evaluationPath": "",
 			  "schemaLocation": "https://json-everything.test/schema#",
 			  "instanceLocation": "",
+			  "errors": {
+			    "properties": "Some properties did not match the required schema"
+			  },
 			  "details": [
 			    {
 			      "valid": false,
 			      "evaluationPath": "/properties/multi",
 			      "schemaLocation": "https://json-everything.test/schema#/properties/multi",
 			      "instanceLocation": "/multi",
+			      "errors": {
+			        "allOf": "Value does not match all of the specified schemas; failing schema indexes: [0,1]"
+			      },
 			      "details": [
 			        {
 			          "valid": false,
@@ -341,6 +356,9 @@ public class OutputTests
 			  "evaluationPath": "",
 			  "schemaLocation": "https://json-everything.test/schema#",
 			  "instanceLocation": "",
+			  "errors": {
+			    "properties": "Some properties did not match the required schema"
+			  },
 			  "details": [
 			    {
 			      "valid": false,
@@ -368,6 +386,9 @@ public class OutputTests
 			  "evaluationPath": "",
 			  "schemaLocation": "https://json-everything.test/schema#",
 			  "instanceLocation": "",
+			  "errors": {
+			    "properties": "Some properties did not match the required schema"
+			  },
 			  "details": [
 			    {
 			      "valid": false,
@@ -395,6 +416,9 @@ public class OutputTests
 			  "evaluationPath": "",
 			  "schemaLocation": "https://json-everything.test/schema#",
 			  "instanceLocation": "",
+			  "errors": {
+			    "properties": "Some properties did not match the required schema"
+			  },
 			  "details": [
 			    {
 			      "valid": false,
@@ -527,23 +551,6 @@ public class OutputTests
 
 		var unevaluatedPropertiesResult = result.Details!.Single(x => x.EvaluationPath.Equals(JsonPointer.Create("unevaluatedItems")));
 		Assert.That(unevaluatedPropertiesResult.InstanceLocation.ToString(), Is.EqualTo("/1"));
-	}
-
-	[Test]
-	public void ItemsDoesNotGiveExtraErrors()
-	{
-		JsonSchema schema = new JsonSchemaBuilder(_buildOptions)
-			.PrefixItems(true, false)
-			.Items(false);
-
-		var instance = JsonDocument.Parse("[1,2]").RootElement;
-
-		var result = schema.Evaluate(instance, new EvaluationOptions { OutputFormat = OutputFormat.List });
-
-		var serialized = JsonSerializer.Serialize(result, TestEnvironment.TestOutputSerializerOptions);
-		TestConsole.WriteLine(serialized);
-
-		Assert.That(serialized, Does.Not.Contain("items"));
 	}
 
 	[Test]

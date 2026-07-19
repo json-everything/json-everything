@@ -70,6 +70,7 @@ public class PropertyNamesKeyword : IKeywordHandler
 		if (context.Instance.ValueKind != JsonValueKind.Object) return KeywordEvaluation.Ignore;
 
 		var subschemaEvaluations = new List<EvaluationResults>();
+		var failedNames = new HashSet<string>();
 		var subschema = keyword.Subschemas[0];
 
 		var evaluationPath = context.EvaluationPath.Combine(Name);
@@ -84,6 +85,7 @@ public class PropertyNamesKeyword : IKeywordHandler
 
 			var local = subschema.Evaluate(itemContext);
 			subschemaEvaluations.Add(local);
+			if (!local.IsValid) failedNames.Add(instance.Name);
 
 			if (context.CanOptimize && !local.IsValid)
 				return new KeywordEvaluation
@@ -93,12 +95,16 @@ public class PropertyNamesKeyword : IKeywordHandler
 				};
 		}
 
+		var isValid = subschemaEvaluations.Count == 0 || subschemaEvaluations.All(x => x.IsValid);
 		return new KeywordEvaluation
 		{
 			Keyword = Name,
-			IsValid = subschemaEvaluations.Count == 0 || subschemaEvaluations.All(x => x.IsValid),
-			Details = subschemaEvaluations.ToArray()
+			IsValid = isValid,
+			Details = subschemaEvaluations.ToArray(),
+			Error = isValid
+				? null
+				: ErrorMessages.GetPropertyNames(context.Options.Culture)
+					.ReplaceToken("failed", failedNames, JsonSchemaSerializerContext.Default.HashSetString)
 		};
-
 	}
 }
