@@ -214,39 +214,86 @@ window.initResizableSidebar = function () {
 
 // Tooltip positioning
 document.addEventListener('DOMContentLoaded', function() {
-    document.addEventListener('mouseover', function(e) {
-        const tooltipIcon = e.target.closest('.tooltip-icon');
-        if (!tooltipIcon) return;
-        
-        const tooltip = tooltipIcon.querySelector('.tooltip-text');
-        if (!tooltip) return;
-        
-        // Skip dynamic positioning for header tooltips - they use CSS positioning
-        if (tooltip.classList.contains('header-tooltip')) return;
-        
+    const hideDelays = new WeakMap();
+
+    function positionTooltip(tooltipIcon, tooltip) {
         const rect = tooltipIcon.getBoundingClientRect();
-        const tooltipRect = tooltip.getBoundingClientRect();
-        
-        // Position to the right of the icon
+
         let left = rect.right + 10;
         let top = rect.top;
-        
-        // Check if tooltip goes off the right edge
-        if (left + tooltipRect.width > window.innerWidth) {
-            left = rect.left - tooltipRect.width - 10; // Position to the left instead
+
+        // Use max-width from CSS (400px) as a conservative estimate for edge detection
+        const estimatedWidth = 400;
+        const estimatedHeight = tooltip.offsetHeight || 100;
+
+        if (left + estimatedWidth > window.innerWidth) {
+            left = rect.left - estimatedWidth - 10;
         }
-        
-        // Check if tooltip goes off the bottom edge
-        if (top + tooltipRect.height > window.innerHeight) {
-            top = window.innerHeight - tooltipRect.height - 10;
+        if (top + estimatedHeight > window.innerHeight) {
+            top = window.innerHeight - estimatedHeight - 10;
         }
-        
-        // Check if tooltip goes off the top edge
         if (top < 0) {
             top = 10;
         }
-        
+
         tooltip.style.left = left + 'px';
         tooltip.style.top = top + 'px';
-    });
+    }
+
+    function showTooltip(tooltipIcon) {
+        const tooltip = tooltipIcon.querySelector('.tooltip-text');
+        if (!tooltip || tooltip.classList.contains('header-tooltip')) return;
+
+        const existing = hideDelays.get(tooltipIcon);
+        if (existing) {
+            clearTimeout(existing);
+            hideDelays.delete(tooltipIcon);
+        }
+
+        positionTooltip(tooltipIcon, tooltip);
+        tooltipIcon.classList.add('tooltip-active');
+    }
+
+    function scheduleHide(tooltipIcon) {
+        const timer = setTimeout(function() {
+            tooltipIcon.classList.remove('tooltip-active');
+            hideDelays.delete(tooltipIcon);
+        }, 150);
+        hideDelays.set(tooltipIcon, timer);
+    }
+
+    document.addEventListener('mouseenter', function(e) {
+        if (!(e.target instanceof Element)) return;
+        const tooltipIcon = e.target.closest('.tooltip-icon');
+        if (tooltipIcon) {
+            showTooltip(tooltipIcon);
+            return;
+        }
+        // Entering the tooltip itself — cancel pending hide
+        const tooltipText = e.target.closest('.tooltip-text');
+        if (tooltipText) {
+            const icon = tooltipText.closest('.tooltip-icon');
+            if (icon) {
+                const existing = hideDelays.get(icon);
+                if (existing) {
+                    clearTimeout(existing);
+                    hideDelays.delete(icon);
+                }
+            }
+        }
+    }, true);
+
+    document.addEventListener('mouseleave', function(e) {
+        if (!(e.target instanceof Element)) return;
+        const tooltipIcon = e.target.closest('.tooltip-icon');
+        if (tooltipIcon && e.target === tooltipIcon) {
+            scheduleHide(tooltipIcon);
+            return;
+        }
+        const tooltipText = e.target.closest('.tooltip-text');
+        if (tooltipText) {
+            const icon = tooltipText.closest('.tooltip-icon');
+            if (icon) scheduleHide(icon);
+        }
+    }, true);
 }); 

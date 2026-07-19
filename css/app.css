@@ -294,7 +294,6 @@ html[data-bs-theme="light"] .new-label {
 	background-color: #271a3b;
 	border-radius: 5px;
 	padding: 10px;
-	pointer-events: none;
 }
 
 .tooltip-text-small {
@@ -306,7 +305,8 @@ html[data-bs-theme="light"] .new-label {
 	margin-bottom: auto;
 }
 
-.tooltip-icon:hover .tooltip-text {
+.tooltip-icon:hover .tooltip-text,
+.tooltip-icon.tooltip-active .tooltip-text {
 	visibility: visible;
 }
 
