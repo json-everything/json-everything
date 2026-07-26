@@ -201,4 +201,46 @@
   <data name="Error_UnknownVocabularies" xml:space="preserve">
     <value>Валидатор не может определить запрашиваемый справочник: [[vocabs]]</value>
   </data>
+  <data name="Error_AdditionalProperties" xml:space="preserve">
+    <value>Некоторые дополнительные свойства не соответствуют требуемой схеме: [[failed]]</value>
+  </data>
+  <data name="Error_AllOf" xml:space="preserve">
+    <value>Значение не соответствует всем указанным схемам; индексы неудачных схем: [[failed]]</value>
+  </data>
+  <data name="Error_AnyOf" xml:space="preserve">
+    <value>Значение не соответствует ни одной из указанных схем</value>
+  </data>
+  <data name="Error_Else" xml:space="preserve">
+    <value>Подсхема if не прошла проверку, но подсхема else прошла</value>
+  </data>
+  <data name="Error_Items" xml:space="preserve">
+    <value>Некоторые элементы не соответствуют требуемой схеме; неудачные индексы: [[failed]]</value>
+  </data>
+  <data name="Error_Not" xml:space="preserve">
+    <value>Подсхема прошла проверку, но ожидалось, что она не пройдет</value>
+  </data>
+  <data name="Error_PatternProperties" xml:space="preserve">
+    <value>Некоторые свойства не соответствуют своим схемам на основе шаблонов: [[failed]]</value>
+  </data>
+  <data name="Error_PrefixItems" xml:space="preserve">
+    <value>Некоторые элементы префикса не соответствуют требуемой схеме; неудачные индексы: [[failed]]</value>
+  </data>
+  <data name="Error_Properties" xml:space="preserve">
+    <value>Некоторые свойства не соответствуют требуемой схеме: [[failed]]</value>
+  </data>
+  <data name="Error_PropertyDependencies" xml:space="preserve">
+    <value>Некоторые свойства не прошли проверку зависимостей свойств: [[failed]]</value>
+  </data>
+  <data name="Error_PropertyNames" xml:space="preserve">
+    <value>Некоторые имена свойств не соответствуют требуемой схеме: [[failed]]</value>
+  </data>
+  <data name="Error_Then" xml:space="preserve">
+    <value>Условие if прошло проверку, но схема then не прошла</value>
+  </data>
+  <data name="Error_UnevaluatedItems" xml:space="preserve">
+    <value>Некоторые непроверенные элементы не соответствуют требуемой схеме; неудачные индексы: [[failed]]</value>
+  </data>
+  <data name="Error_UnevaluatedProperties" xml:space="preserve">
+    <value>Некоторые непроверенные свойства не соответствуют требуемой схеме: [[failed]]</value>
+  </data>
 </root>

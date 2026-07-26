@@ -201,4 +201,46 @@
   <data name="Error_UnknownVocabularies" xml:space="preserve">
     <value>Doğrulayıcı şu gerekli kelimeler hakkında bilgi sahibi değil: [[vocabs]]</value>
   </data>
+  <data name="Error_AdditionalProperties" xml:space="preserve">
+    <value>Bazı ek özellikler gerekli şemayla eşleşmedi: [[failed]]</value>
+  </data>
+  <data name="Error_AllOf" xml:space="preserve">
+    <value>Değer, belirtilen tüm şemalarla eşleşmiyor; başarısız şema dizinleri: [[failed]]</value>
+  </data>
+  <data name="Error_AnyOf" xml:space="preserve">
+    <value>Değer, belirtilen şemaların hiçbiriyle eşleşmiyor</value>
+  </data>
+  <data name="Error_Else" xml:space="preserve">
+    <value>if alt şeması başarısız oldu, ancak else alt şeması başarılı oldu</value>
+  </data>
+  <data name="Error_Items" xml:space="preserve">
+    <value>Bazı öğeler gerekli şemayla eşleşmiyor; başarısız dizinler: [[failed]]</value>
+  </data>
+  <data name="Error_Not" xml:space="preserve">
+    <value>Alt şema değerlendirmeyi geçti ancak başarısız olması bekleniyordu</value>
+  </data>
+  <data name="Error_PatternProperties" xml:space="preserve">
+    <value>Bazı özellikler, desen tabanlı şemalarıyla eşleşmedi: [[failed]]</value>
+  </data>
+  <data name="Error_PrefixItems" xml:space="preserve">
+    <value>Bazı önek öğeleri gerekli şemayla eşleşmiyor; başarısız dizinler: [[failed]]</value>
+  </data>
+  <data name="Error_Properties" xml:space="preserve">
+    <value>Bazı özellikler gerekli şemayla eşleşmedi: [[failed]]</value>
+  </data>
+  <data name="Error_PropertyDependencies" xml:space="preserve">
+    <value>Bazı özellikler, özellik bağımlılıklarında başarısız oldu: [[failed]]</value>
+  </data>
+  <data name="Error_PropertyNames" xml:space="preserve">
+    <value>Bazı özellik adları gerekli şemayla eşleşmedi: [[failed]]</value>
+  </data>
+  <data name="Error_Then" xml:space="preserve">
+    <value>if koşulu geçti, ancak then şeması geçmedi</value>
+  </data>
+  <data name="Error_UnevaluatedItems" xml:space="preserve">
+    <value>Bazı değerlendirilmemiş öğeler gerekli şemayla eşleşmiyor; başarısız dizinler: [[failed]]</value>
+  </data>
+  <data name="Error_UnevaluatedProperties" xml:space="preserve">
+    <value>Bazı değerlendirilmemiş özellikler gerekli şemayla eşleşmiyor: [[failed]]</value>
+  </data>
 </root>

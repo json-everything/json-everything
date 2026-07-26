@@ -201,4 +201,46 @@
   <data name="Error_UnknownVocabularies" xml:space="preserve">
     <value>유효성 검사기는 다음 필수 어휘를 모릅니다: [[vocabs]]</value>
   </data>
+  <data name="Error_AdditionalProperties" xml:space="preserve">
+    <value>일부 추가 속성이 필수 스키마와 일치하지 않습니다: [[failed]]</value>
+  </data>
+  <data name="Error_AllOf" xml:space="preserve">
+    <value>값이 지정된 모든 스키마와 일치하지 않습니다; 실패한 스키마 인덱스: [[failed]]</value>
+  </data>
+  <data name="Error_AnyOf" xml:space="preserve">
+    <value>값이 지정된 스키마 중 어느 것과도 일치하지 않습니다</value>
+  </data>
+  <data name="Error_Else" xml:space="preserve">
+    <value>if 하위 스키마가 실패했지만 else 하위 스키마가 통과했습니다</value>
+  </data>
+  <data name="Error_Items" xml:space="preserve">
+    <value>일부 항목이 필수 스키마와 일치하지 않습니다; 실패한 인덱스: [[failed]]</value>
+  </data>
+  <data name="Error_Not" xml:space="preserve">
+    <value>하위 스키마가 평가를 통과했지만 실패할 것으로 예상되었습니다</value>
+  </data>
+  <data name="Error_PatternProperties" xml:space="preserve">
+    <value>일부 속성이 패턴 기반 스키마와 일치하지 않습니다: [[failed]]</value>
+  </data>
+  <data name="Error_PrefixItems" xml:space="preserve">
+    <value>일부 접두사 항목이 필수 스키마와 일치하지 않습니다; 실패한 인덱스: [[failed]]</value>
+  </data>
+  <data name="Error_Properties" xml:space="preserve">
+    <value>일부 속성이 필수 스키마와 일치하지 않습니다: [[failed]]</value>
+  </data>
+  <data name="Error_PropertyDependencies" xml:space="preserve">
+    <value>일부 속성이 속성 종속성에 실패했습니다: [[failed]]</value>
+  </data>
+  <data name="Error_PropertyNames" xml:space="preserve">
+    <value>일부 속성 이름이 필수 스키마와 일치하지 않습니다: [[failed]]</value>
+  </data>
+  <data name="Error_Then" xml:space="preserve">
+    <value>if 조건이 통과했지만 then 스키마가 통과하지 못했습니다</value>
+  </data>
+  <data name="Error_UnevaluatedItems" xml:space="preserve">
+    <value>일부 평가되지 않은 항목이 필수 스키마와 일치하지 않습니다; 실패한 인덱스: [[failed]]</value>
+  </data>
+  <data name="Error_UnevaluatedProperties" xml:space="preserve">
+    <value>일부 평가되지 않은 속성이 필수 스키마와 일치하지 않습니다: [[failed]]</value>
+  </data>
 </root>

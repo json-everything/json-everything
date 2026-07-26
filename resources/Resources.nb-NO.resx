@@ -201,4 +201,46 @@
   <data name="Error_UnknownVocabularies" xml:space="preserve">
     <value>Valideringen kjenner ikke til nødvendige vokabular: [[vocabs]]</value>
   </data>
+  <data name="Error_AdditionalProperties" xml:space="preserve">
+    <value>Noen tilleggsattributter samsvarer ikke med det påkrevde skjema: [[failed]]</value>
+  </data>
+  <data name="Error_AllOf" xml:space="preserve">
+    <value>Verdi samsvarer ikke med alle spesifiserte skjemaer; indekser for mislykkede skjemaer: [[failed]]</value>
+  </data>
+  <data name="Error_AnyOf" xml:space="preserve">
+    <value>Verdi samsvarer ikke med noen av de spesifiserte skjemaene</value>
+  </data>
+  <data name="Error_Else" xml:space="preserve">
+    <value>if-delskjemaet mislyktes, men else-delskjemaet besto</value>
+  </data>
+  <data name="Error_Items" xml:space="preserve">
+    <value>Noen elementer samsvarer ikke med det påkrevde skjema; mislykkede indekser: [[failed]]</value>
+  </data>
+  <data name="Error_Not" xml:space="preserve">
+    <value>Delskjemaet besto evalueringen, men forventet å mislykkes</value>
+  </data>
+  <data name="Error_PatternProperties" xml:space="preserve">
+    <value>Noen attributter samsvarer ikke med sine mønsterbaserte skjemaer: [[failed]]</value>
+  </data>
+  <data name="Error_PrefixItems" xml:space="preserve">
+    <value>Noen prefikselementer samsvarer ikke med det påkrevde skjema; mislykkede indekser: [[failed]]</value>
+  </data>
+  <data name="Error_Properties" xml:space="preserve">
+    <value>Noen attributter samsvarer ikke med det påkrevde skjema: [[failed]]</value>
+  </data>
+  <data name="Error_PropertyDependencies" xml:space="preserve">
+    <value>Noen attributter mislyktes i sine egenskapsavhengigheter: [[failed]]</value>
+  </data>
+  <data name="Error_PropertyNames" xml:space="preserve">
+    <value>Noen attributtnavn samsvarer ikke med det påkrevde skjema: [[failed]]</value>
+  </data>
+  <data name="Error_Then" xml:space="preserve">
+    <value>if-betingelsen besto, men then-skjemaet gjorde det ikke</value>
+  </data>
+  <data name="Error_UnevaluatedItems" xml:space="preserve">
+    <value>Noen ubehandlede elementer samsvarer ikke med det påkrevde skjema; mislykkede indekser: [[failed]]</value>
+  </data>
+  <data name="Error_UnevaluatedProperties" xml:space="preserve">
+    <value>Noen ubehandlede attributter samsvarer ikke med det påkrevde skjema: [[failed]]</value>
+  </data>
 </root>

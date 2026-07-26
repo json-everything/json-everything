@@ -201,4 +201,46 @@
   <data name="Error_UnknownVocabularies" xml:space="preserve">
     <value>Valideringen känner inte till dessa vokabulär: [[vocabs]]</value>
   </data>
+  <data name="Error_AdditionalProperties" xml:space="preserve">
+    <value>Vissa ytterligare egenskaper matchade inte det obligatoriska schemat: [[failed]]</value>
+  </data>
+  <data name="Error_AllOf" xml:space="preserve">
+    <value>Värdet matchar inte alla angivna scheman; misslyckade schemaindex: [[failed]]</value>
+  </data>
+  <data name="Error_AnyOf" xml:space="preserve">
+    <value>Värdet matchar inte något av de angivna scheman</value>
+  </data>
+  <data name="Error_Else" xml:space="preserve">
+    <value>if-delschemat misslyckades, men else-delschemat klarade sig</value>
+  </data>
+  <data name="Error_Items" xml:space="preserve">
+    <value>Vissa objekt matchar inte det obligatoriska schemat; misslyckade index: [[failed]]</value>
+  </data>
+  <data name="Error_Not" xml:space="preserve">
+    <value>Delschemat klarade utvärderingen men förväntades misslyckas</value>
+  </data>
+  <data name="Error_PatternProperties" xml:space="preserve">
+    <value>Vissa egenskaper matchade inte sina mönsterbaserade scheman: [[failed]]</value>
+  </data>
+  <data name="Error_PrefixItems" xml:space="preserve">
+    <value>Vissa prefixobjekt matchar inte det obligatoriska schemat; misslyckade index: [[failed]]</value>
+  </data>
+  <data name="Error_Properties" xml:space="preserve">
+    <value>Vissa egenskaper matchade inte det obligatoriska schemat: [[failed]]</value>
+  </data>
+  <data name="Error_PropertyDependencies" xml:space="preserve">
+    <value>Vissa egenskaper misslyckades i sina egenskapsberoenden: [[failed]]</value>
+  </data>
+  <data name="Error_PropertyNames" xml:space="preserve">
+    <value>Vissa egenskapsnamn matchade inte det obligatoriska schemat: [[failed]]</value>
+  </data>
+  <data name="Error_Then" xml:space="preserve">
+    <value>if-villkoret klarade sig, men then-schemat gjorde det inte</value>
+  </data>
+  <data name="Error_UnevaluatedItems" xml:space="preserve">
+    <value>Vissa outvärdererade objekt matchar inte det obligatoriska schemat; misslyckade index: [[failed]]</value>
+  </data>
+  <data name="Error_UnevaluatedProperties" xml:space="preserve">
+    <value>Vissa outvärdererade egenskaper matchar inte det obligatoriska schemat: [[failed]]</value>
+  </data>
 </root>

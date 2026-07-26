@@ -201,4 +201,46 @@
   <data name="Error_UnknownVocabularies" xml:space="preserve">
     <value>O validador não reconhece os seguintes vocabulários obrigatórios: [[vocabs]]</value>
   </data>
+  <data name="Error_AdditionalProperties" xml:space="preserve">
+    <value>Algumas propriedades adicionais não correspondem ao esquema requerido: [[failed]]</value>
+  </data>
+  <data name="Error_AllOf" xml:space="preserve">
+    <value>O valor não corresponde a todos os esquemas especificados; índices de esquemas falhados: [[failed]]</value>
+  </data>
+  <data name="Error_AnyOf" xml:space="preserve">
+    <value>O valor não corresponde a nenhum dos esquemas especificados</value>
+  </data>
+  <data name="Error_Else" xml:space="preserve">
+    <value>O subesquema if falhou, mas o subesquema else passou</value>
+  </data>
+  <data name="Error_Items" xml:space="preserve">
+    <value>Alguns itens não correspondem ao esquema requerido; índices falhados: [[failed]]</value>
+  </data>
+  <data name="Error_Not" xml:space="preserve">
+    <value>O subesquema passou a avaliação mas era esperado que falhasse</value>
+  </data>
+  <data name="Error_PatternProperties" xml:space="preserve">
+    <value>Algumas propriedades não correspondem aos seus esquemas baseados em padrões: [[failed]]</value>
+  </data>
+  <data name="Error_PrefixItems" xml:space="preserve">
+    <value>Alguns itens de prefixo não correspondem ao esquema requerido; índices falhados: [[failed]]</value>
+  </data>
+  <data name="Error_Properties" xml:space="preserve">
+    <value>Algumas propriedades não correspondem ao esquema requerido: [[failed]]</value>
+  </data>
+  <data name="Error_PropertyDependencies" xml:space="preserve">
+    <value>Algumas propriedades falharam nas suas dependências de propriedade: [[failed]]</value>
+  </data>
+  <data name="Error_PropertyNames" xml:space="preserve">
+    <value>Alguns nomes de propriedade não correspondem ao esquema requerido: [[failed]]</value>
+  </data>
+  <data name="Error_Then" xml:space="preserve">
+    <value>A condição if passou, mas o esquema then não</value>
+  </data>
+  <data name="Error_UnevaluatedItems" xml:space="preserve">
+    <value>Alguns itens não avaliados não correspondem ao esquema requerido; índices falhados: [[failed]]</value>
+  </data>
+  <data name="Error_UnevaluatedProperties" xml:space="preserve">
+    <value>Algumas propriedades não avaliadas não correspondem ao esquema requerido: [[failed]]</value>
+  </data>
 </root>

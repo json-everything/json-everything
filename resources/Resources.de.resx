@@ -201,4 +201,46 @@
     <data name="Error_UnknownVocabularies" xml:space="preserve">
       <value>Validator weiß nichts über folgende, notwendige Vokabulare: [[vocabs]]</value>
     </data>
+    <data name="Error_AdditionalProperties" xml:space="preserve">
+      <value>Einige zusätzliche Felder entsprechen nicht dem erforderlichen Schema: [[failed]]</value>
+    </data>
+    <data name="Error_AllOf" xml:space="preserve">
+      <value>Wert passt nicht zu allen angegebenen Schemas; fehlgeschlagene Schema-Indizes: [[failed]]</value>
+    </data>
+    <data name="Error_AnyOf" xml:space="preserve">
+      <value>Wert passt zu keinem der angegebenen Schemas</value>
+    </data>
+    <data name="Error_Else" xml:space="preserve">
+      <value>Das if-Unterschema ist fehlgeschlagen, aber das else-Unterschema hat bestanden</value>
+    </data>
+    <data name="Error_Items" xml:space="preserve">
+      <value>Einige Elemente entsprechen nicht dem erforderlichen Schema; fehlgeschlagene Indizes: [[failed]]</value>
+    </data>
+    <data name="Error_Not" xml:space="preserve">
+      <value>Das Unterschema hat die Auswertung bestanden, wurde aber erwartet zu scheitern</value>
+    </data>
+    <data name="Error_PatternProperties" xml:space="preserve">
+      <value>Einige Felder entsprechen nicht ihren musterbasierten Schemas: [[failed]]</value>
+    </data>
+    <data name="Error_PrefixItems" xml:space="preserve">
+      <value>Einige Präfix-Elemente entsprechen nicht dem erforderlichen Schema; fehlgeschlagene Indizes: [[failed]]</value>
+    </data>
+    <data name="Error_Properties" xml:space="preserve">
+      <value>Einige Felder entsprechen nicht dem erforderlichen Schema: [[failed]]</value>
+    </data>
+    <data name="Error_PropertyDependencies" xml:space="preserve">
+      <value>Einige Felder haben ihre Eigenschaftsabhängigkeiten nicht erfüllt: [[failed]]</value>
+    </data>
+    <data name="Error_PropertyNames" xml:space="preserve">
+      <value>Einige Feldnamen entsprechen nicht dem erforderlichen Schema: [[failed]]</value>
+    </data>
+    <data name="Error_Then" xml:space="preserve">
+      <value>Die if-Bedingung hat bestanden, aber das then-Schema nicht</value>
+    </data>
+    <data name="Error_UnevaluatedItems" xml:space="preserve">
+      <value>Einige nicht ausgewertete Elemente entsprechen nicht dem erforderlichen Schema; fehlgeschlagene Indizes: [[failed]]</value>
+    </data>
+    <data name="Error_UnevaluatedProperties" xml:space="preserve">
+      <value>Einige nicht ausgewertete Felder entsprechen nicht dem erforderlichen Schema: [[failed]]</value>
+    </data>
 </root>

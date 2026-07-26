@@ -201,4 +201,46 @@
   <data name="Error_UnknownVocabularies" xml:space="preserve">
     <value>Walidator nie ma informacji o wymaganych słownikach: [[vocabs]]</value>
   </data>
+  <data name="Error_AdditionalProperties" xml:space="preserve">
+    <value>Niektóre dodatkowe właściwości nie pasują do wymaganego schematu: [[failed]]</value>
+  </data>
+  <data name="Error_AllOf" xml:space="preserve">
+    <value>Wartość nie pasuje do wszystkich określonych schematów; indeksy nieudanych schematów: [[failed]]</value>
+  </data>
+  <data name="Error_AnyOf" xml:space="preserve">
+    <value>Wartość nie pasuje do żadnego z określonych schematów</value>
+  </data>
+  <data name="Error_Else" xml:space="preserve">
+    <value>Podschema if nie powiodło się, ale podschema else przeszło</value>
+  </data>
+  <data name="Error_Items" xml:space="preserve">
+    <value>Niektóre elementy nie pasują do wymaganego schematu; nieudane indeksy: [[failed]]</value>
+  </data>
+  <data name="Error_Not" xml:space="preserve">
+    <value>Podschema przeszło ewaluację, ale oczekiwano, że nie powiedzie się</value>
+  </data>
+  <data name="Error_PatternProperties" xml:space="preserve">
+    <value>Niektóre właściwości nie pasują do swoich schematów opartych na wzorcach: [[failed]]</value>
+  </data>
+  <data name="Error_PrefixItems" xml:space="preserve">
+    <value>Niektóre elementy prefiksu nie pasują do wymaganego schematu; nieudane indeksy: [[failed]]</value>
+  </data>
+  <data name="Error_Properties" xml:space="preserve">
+    <value>Niektóre właściwości nie pasują do wymaganego schematu: [[failed]]</value>
+  </data>
+  <data name="Error_PropertyDependencies" xml:space="preserve">
+    <value>Niektóre właściwości nie spełniły swoich zależności właściwości: [[failed]]</value>
+  </data>
+  <data name="Error_PropertyNames" xml:space="preserve">
+    <value>Niektóre nazwy właściwości nie pasują do wymaganego schematu: [[failed]]</value>
+  </data>
+  <data name="Error_Then" xml:space="preserve">
+    <value>Warunek if przeszedł, ale schemat then nie</value>
+  </data>
+  <data name="Error_UnevaluatedItems" xml:space="preserve">
+    <value>Niektóre nieocenione elementy nie pasują do wymaganego schematu; nieudane indeksy: [[failed]]</value>
+  </data>
+  <data name="Error_UnevaluatedProperties" xml:space="preserve">
+    <value>Niektóre nieocenione właściwości nie pasują do wymaganego schematu: [[failed]]</value>
+  </data>
 </root>

@@ -201,4 +201,46 @@
   <data name="Error_UnknownVocabularies" xml:space="preserve">
     <value>Il validatore non è a conoscenza dei seguenti vocabolari richiesti: [[vocabs]]</value>
   </data>
+  <data name="Error_AdditionalProperties" xml:space="preserve">
+    <value>Alcune proprietà aggiuntive non corrispondono allo schema richiesto: [[failed]]</value>
+  </data>
+  <data name="Error_AllOf" xml:space="preserve">
+    <value>Il valore non corrisponde a tutti gli schemi specificati; indici degli schemi falliti: [[failed]]</value>
+  </data>
+  <data name="Error_AnyOf" xml:space="preserve">
+    <value>Il valore non corrisponde a nessuno degli schemi specificati</value>
+  </data>
+  <data name="Error_Else" xml:space="preserve">
+    <value>Il sottoschema if ha fallito, ma il sottoschema else ha avuto successo</value>
+  </data>
+  <data name="Error_Items" xml:space="preserve">
+    <value>Alcuni elementi non corrispondono allo schema richiesto; indici falliti: [[failed]]</value>
+  </data>
+  <data name="Error_Not" xml:space="preserve">
+    <value>Il sottoschema ha superato la valutazione ma si aspettava che fallisse</value>
+  </data>
+  <data name="Error_PatternProperties" xml:space="preserve">
+    <value>Alcune proprietà non corrispondono ai loro schemi basati su pattern: [[failed]]</value>
+  </data>
+  <data name="Error_PrefixItems" xml:space="preserve">
+    <value>Alcuni elementi di prefisso non corrispondono allo schema richiesto; indici falliti: [[failed]]</value>
+  </data>
+  <data name="Error_Properties" xml:space="preserve">
+    <value>Alcune proprietà non corrispondono allo schema richiesto: [[failed]]</value>
+  </data>
+  <data name="Error_PropertyDependencies" xml:space="preserve">
+    <value>Alcune proprietà hanno fallito nelle loro dipendenze di proprietà: [[failed]]</value>
+  </data>
+  <data name="Error_PropertyNames" xml:space="preserve">
+    <value>Alcuni nomi di proprietà non corrispondono allo schema richiesto: [[failed]]</value>
+  </data>
+  <data name="Error_Then" xml:space="preserve">
+    <value>La condizione if ha avuto successo, ma lo schema then no</value>
+  </data>
+  <data name="Error_UnevaluatedItems" xml:space="preserve">
+    <value>Alcuni elementi non valutati non corrispondono allo schema richiesto; indici falliti: [[failed]]</value>
+  </data>
+  <data name="Error_UnevaluatedProperties" xml:space="preserve">
+    <value>Alcune proprietà non valutate non corrispondono allo schema richiesto: [[failed]]</value>
+  </data>
 </root>

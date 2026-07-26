@@ -211,7 +211,7 @@
     <value>Some prefix items do not match the required schema; failing indexes: [[failed]]</value>
   </data>
   <data name="Error_Properties" xml:space="preserve">
-    <value>Some properties did not match the required schema</value>
+    <value>Some properties did not match the required schema: [[failed]]</value>
   </data>
   <data name="Error_PropertyDependencies" xml:space="preserve">
     <value>Some properties failed their property dependencies: [[failed]]</value>
