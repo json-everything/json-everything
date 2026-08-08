@@ -1,14 +1,14 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>JsonEverythingNet</RootNamespace>
-	  <NoWarn>NU1701</NoWarn>
-	  <PublishTrimmed>false</PublishTrimmed>
-    <WasmEnableWebcil>false</WasmEnableWebcil>
+    <NoWarn>NU1701</NoWarn>
+    <PublishTrimmed>false</PublishTrimmed>
     <WasmFingerprintAssets>false</WasmFingerprintAssets>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
