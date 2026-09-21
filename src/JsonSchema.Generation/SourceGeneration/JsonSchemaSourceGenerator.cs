@@ -21,7 +21,7 @@ public class JsonSchemaSourceGenerator : IIncrementalGenerator
 {
 	private const string _generateJsonSchemaAttributeName = "Json.Schema.Generation.Serialization.GenerateJsonSchemaAttribute";
 	private const string _schemaHandlerAttributeName = "Json.Schema.Generation.SchemaHandlerAttribute";
-	private const string _idAttributeName = "Json.Schema.Generation.Serialization.IdAttribute";
+	private const string _idAttributeName = "Json.Schema.Generation.IdAttribute";
 
 	/// <summary>
 	/// Initializes the incremental generator.

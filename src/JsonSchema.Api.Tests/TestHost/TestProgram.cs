@@ -1,5 +1,6 @@
 using System;
 using Json.Schema.Api;
+using Json.Schema.Api.OpenApi;
 using Json.Schema.Api.Tests.TestHost;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -14,6 +15,11 @@ var builder = WebApplication.CreateBuilder(new WebApplicationOptions
 builder.Services.AddControllers();
 
 builder.Services.AddJsonSchemaValidation();
+
+builder.Services.AddOpenApi(doc =>
+{
+	doc.Info.Description = "Test host for OpenAPI generation.";
+});
 
 var app = builder.Build();
 

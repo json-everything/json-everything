@@ -47,6 +47,23 @@
 
   <ItemGroup>
 	<ProjectReference Include="..\JsonSchema.Generation\JsonSchema.Generation.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="true" IncludeAssets="all" PrivateAssets="none" />
+	<ProjectReference Include="..\JsonSchema.OpenApi\JsonSchema.OpenApi.csproj" />
+	<ProjectReference Include="..\Yaml2JsonNode\Yaml2JsonNode.csproj" />
+	<ProjectReference Include="..\JsonSchema.Api.Analyzer\JsonSchema.Api.Analyzer.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="none" />
+  </ItemGroup>
+
+  <!--
+    The analyzer is not packable on its own; its output ships inside this package, along
+    with the assemblies it loads at compile time.  These copies exist only for the compiler
+    to load from the analyzer directory; consumers get their runtime copies transitively
+    through this package's ordinary references.
+  -->
+  <ItemGroup>
+	<None Include="..\JsonSchema.Api.Analyzer\bin\$(Configuration)\netstandard2.0\JsonSchema.Net.Api.Analyzer.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+	<None Include="..\JsonSchema.Generation\bin\$(Configuration)\netstandard2.0\JsonSchema.Net.Generation.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+	<None Include="..\JsonSchema\bin\$(Configuration)\netstandard2.0\JsonSchema.Net.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+	<None Include="..\JsonPointer\bin\$(Configuration)\netstandard2.0\JsonPointer.Net.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+	<None Include="..\Json.More\bin\$(Configuration)\netstandard2.0\Json.More.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
   </ItemGroup>
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">

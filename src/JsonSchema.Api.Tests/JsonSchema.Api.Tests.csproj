@@ -12,6 +12,18 @@
 		<GenerateProgramFile>false</GenerateProgramFile>
 	</PropertyGroup>
 
+	<PropertyGroup>
+		<!--
+			The test host's models are generated at compile time, so their property naming
+			comes from here rather than from the runtime converter configuration.
+		-->
+		<JsonSchemaDefaultPropertyNaming>CamelCase</JsonSchemaDefaultPropertyNaming>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<CompilerVisibleProperty Include="JsonSchemaDefaultPropertyNaming" />
+	</ItemGroup>
+
 	<ItemGroup>
 		<PackageReference Include="NUnit" Version="4.5.1" />
 		<PackageReference Include="NUnit3TestAdapter" Version="6.1.0" />
@@ -33,6 +45,15 @@
 	<ItemGroup>
 		<ProjectReference Include="..\JsonSchema.Api\JsonSchema.Api.csproj" />
 		<ProjectReference Include="..\TestHelpers\TestHelpers.csproj" />
+		<ProjectReference Include="..\JsonSchema.Api.Analyzer\JsonSchema.Api.Analyzer.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+		<!--
+			In a package, the analyzer's dependencies ship next to it in analyzers/dotnet/cs.
+			Referencing by project means supplying them here so the compiler can load them.
+		-->
+		<Analyzer Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\JsonSchema.Generation\bin\$(Configuration)\net10.0\JsonSchema.Net.Generation.dll'))" />
+		<Analyzer Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\JsonSchema\bin\$(Configuration)\netstandard2.0\JsonSchema.Net.dll'))" />
+		<Analyzer Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\JsonPointer\bin\$(Configuration)\netstandard2.0\JsonPointer.Net.dll'))" />
+		<Analyzer Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\Json.More\bin\$(Configuration)\netstandard2.0\Json.More.dll'))" />
 	</ItemGroup>
 
 </Project>
