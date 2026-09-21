@@ -97,9 +97,11 @@ public class SchemaRegistry
 		if (registration != null)
 		{
 			registration.Anchors ??= [];
-			registration.Anchors.Add(anchor, node);
+			if (!registration.Anchors.TryAdd(anchor, node))
+				throw new JsonSchemaException($"Anchor '{anchor}' has already been registered for schema '{uri}'");
 			registration.DynamicAnchors ??= [];
-			registration.DynamicAnchors.Add(anchor, node);
+			if (!registration.DynamicAnchors.TryAdd(anchor, node))
+				throw new JsonSchemaException($"Dynamic anchor '{anchor}' has already been registered for schema '{uri}'");
 			return;
 		}
 

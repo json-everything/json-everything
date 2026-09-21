@@ -56,7 +56,6 @@ public partial class Dialect
 		PatternPropertiesKeyword.Instance,
 		PrefixItemsKeyword.Instance,
 		PropertiesKeyword.Instance,
-		// PropertyDependenciesKeyword.Instance,  // TODO: is proposal
 		PropertyNamesKeyword.Instance,
 		ReadOnlyKeyword.Instance,
 		RefKeyword.Instance,

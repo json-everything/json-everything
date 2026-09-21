@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
@@ -283,6 +285,235 @@ public static class JsonElementExtensions
 	{
 		enumerator.MoveNext();
 		return enumerator.Current.Deserialize<T>(options);
+	}
+
+	/// <summary>
+	/// Defines a contract for analyzing a byte array to produce a value.
+	/// </summary>
+	/// <typeparam name="T">The return type</typeparam>
+	/// <param name="data">The byte array</param>
+	/// <returns>The analysis result</returns>
+	public delegate T ByteAnalyzer<out T>(ReadOnlySpan<byte> data);
+
+	/// <summary>
+	/// Provides a means to analyze the raw data of a <see cref="JsonElement"/>.
+	/// </summary>
+	/// <typeparam name="T">The output type of the analysis</typeparam>
+	/// <param name="element">The <see cref="JsonElement"/></param>
+	/// <param name="analyze">The function that performs the analysis</param>
+	/// <returns>The analysis result</returns>
+	public static T AnalyzeRawBytes<T>(this JsonElement element, ByteAnalyzer<T> analyze)
+	{
+		ReadOnlySpan<byte> span;
+#if NET9_0_OR_GREATER
+		span = JsonMarshal.GetRawUtf8Value(element);
+#else
+		using var buffer = new PooledBufferWriter();
+		using (var writer = new Utf8JsonWriter(buffer))
+		{
+			element.WriteTo(writer);
+		}
+		span = buffer.WrittenSpan;
+#endif
+		return analyze(span);
+	}
+
+#if !NET9_0_OR_GREATER
+	private class PooledBufferWriter : IBufferWriter<byte>, IDisposable
+	{
+		private byte[] _buffer;
+		private int _index;
+
+		public PooledBufferWriter(int initialCapacity = 256)
+		{
+			_buffer = ArrayPool<byte>.Shared.Rent(initialCapacity);
+		}
+
+		public ReadOnlySpan<byte> WrittenSpan => _buffer.AsSpan(0, _index);
+
+		public void Advance(int count) => _index += count;
+
+		public Memory<byte> GetMemory(int sizeHint = 0)
+		{
+			CheckAndResizeBuffer(sizeHint);
+			return _buffer.AsMemory(_index);
+		}
+
+		public Span<byte> GetSpan(int sizeHint = 0)
+		{
+			CheckAndResizeBuffer(sizeHint);
+			return _buffer.AsSpan(_index);
+		}
+
+		private void CheckAndResizeBuffer(int sizeHint)
+		{
+			var needed = _index + (sizeHint > 0 ? sizeHint : 1);
+			if (needed <= _buffer.Length) return;
+
+			var newSize = Math.Max(_buffer.Length * 2, needed);
+			var newBuffer = ArrayPool<byte>.Shared.Rent(newSize);
+			Buffer.BlockCopy(_buffer, 0, newBuffer, 0, _index);
+			ArrayPool<byte>.Shared.Return(_buffer);
+			_buffer = newBuffer;
+		}
+
+		public void Dispose()
+		{
+			if (_buffer == null!) return;
+
+			ArrayPool<byte>.Shared.Return(_buffer);
+			_buffer = null!;
+		}
+	}
+#endif
+
+	/// <summary>
+	/// Compares the string value of a <see cref="JsonElement"/> against a target string 
+	/// by indexing and decoding the raw JSON bytes on the fly, ensuring zero heap allocations.
+	/// </summary>
+	public static bool EqualsString(this JsonElement element, string target)
+	{
+		if (element.ValueKind != JsonValueKind.String) return false;
+
+		return element.AnalyzeRawBytes(rawJsonSpan =>
+		{
+			if (rawJsonSpan.Length < 2 || rawJsonSpan[0] != (byte)'"' || rawJsonSpan[^1] != (byte)'"')
+				return false;
+
+			var innerJsonSpan = rawJsonSpan.Slice(1, rawJsonSpan.Length - 2);
+
+			return CompareJsonBytesToUtf16String(innerJsonSpan, target);
+		});
+	}
+
+	private static bool CompareJsonBytesToUtf16String(ReadOnlySpan<byte> jsonBytes, string target)
+	{
+		var byteIdx = 0;
+		var targetIdx = 0;
+
+		while (byteIdx < jsonBytes.Length)
+		{
+			if (targetIdx >= target.Length) return false;
+
+			var b1 = jsonBytes[byteIdx++];
+
+			int scalar;
+
+			switch (b1)
+			{
+				case (byte)'\\' when byteIdx >= jsonBytes.Length:
+					return false;
+				case (byte)'\\':
+				{
+					var escapeToken = jsonBytes[byteIdx++];
+
+					switch (escapeToken)
+					{
+						case (byte)'"': scalar = '"'; break;
+						case (byte)'\\': scalar = '\\'; break;
+						case (byte)'/': scalar = '/'; break;
+						case (byte)'b': scalar = '\b'; break;
+						case (byte)'f': scalar = '\f'; break;
+						case (byte)'n': scalar = '\n'; break;
+						case (byte)'r': scalar = '\r'; break;
+						case (byte)'t': scalar = '\t'; break;
+						case (byte)'u':
+							if (byteIdx + 4 > jsonBytes.Length) return false;
+							if (!TryParseHex4(jsonBytes.Slice(byteIdx, 4), out scalar)) return false;
+							byteIdx += 4;
+
+							if (scalar is >= 0xD800 and <= 0xDBFF)
+							{
+								if (byteIdx + 6 > jsonBytes.Length ||
+								    jsonBytes[byteIdx] != (byte)'\\' ||
+								    jsonBytes[byteIdx + 1] != (byte)'u')
+								{
+									return false;
+								}
+								if (!TryParseHex4(jsonBytes.Slice(byteIdx + 2, 4), out var lowSurrogate)) return false;
+								byteIdx += 6;
+
+								if (targetIdx + 1 >= target.Length ||
+								    target[targetIdx++] != (char)scalar ||
+								    target[targetIdx++] != (char)lowSurrogate)
+								{
+									return false;
+								}
+								continue;
+							}
+							break;
+						default:
+							return false;
+					}
+
+					break;
+				}
+				case <= 0x7F:
+					scalar = b1;
+					break;
+				default:
+				{
+					if ((b1 & 0xE0) == 0xC0)
+					{
+						if (byteIdx >= jsonBytes.Length) return false;
+
+						var b2 = jsonBytes[byteIdx++];
+						scalar = ((b1 & 0x1F) << 6) | (b2 & 0x3F);
+					}
+					else if ((b1 & 0xF0) == 0xE0)
+					{
+						if (byteIdx + 1 >= jsonBytes.Length) return false;
+
+						var b2 = jsonBytes[byteIdx++];
+						var b3 = jsonBytes[byteIdx++];
+						scalar = ((b1 & 0x0F) << 12) | ((b2 & 0x3F) << 6) | (b3 & 0x3F);
+					}
+					else if ((b1 & 0xF8) == 0xF0)
+					{
+						if (byteIdx + 2 >= jsonBytes.Length) return false;
+
+						var b2 = jsonBytes[byteIdx++];
+						var b3 = jsonBytes[byteIdx++];
+						var b4 = jsonBytes[byteIdx++];
+
+						scalar = ((b1 & 0x07) << 18) | ((b2 & 0x3F) << 12) | ((b3 & 0x3F) << 6) | (b4 & 0x3F);
+
+						scalar -= 0x10000;
+						var highChar = (char)((scalar >> 10) + 0xD800);
+						var lowChar = (char)((scalar & 0x3FF) + 0xDC00);
+
+						if (targetIdx + 1 >= target.Length || target[targetIdx++] != highChar || target[targetIdx++] != lowChar)
+							return false;
+						continue;
+					}
+					else
+						return false;
+
+					break;
+				}
+			}
+
+			if (target[targetIdx++] != (char)scalar) return false;
+		}
+
+		return targetIdx == target.Length;
+	}
+
+	private static bool TryParseHex4(ReadOnlySpan<byte> bytes, out int value)
+	{
+		value = 0;
+		for (int i = 0; i < 4; i++)
+		{
+			var b = bytes[i];
+			int v;
+			if (b >= '0' && b <= '9') v = b - '0';
+			else if (b >= 'a' && b <= 'f') v = b - 'a' + 10;
+			else if (b >= 'A' && b <= 'F') v = b - 'A' + 10;
+			else return false;
+
+			value = (value << 4) | v;
+		}
+		return true;
 	}
 }
 

@@ -76,8 +76,9 @@ public readonly struct Duration
 		uint year = 0, month = 0, week, day = 0, hour = 0, minute = 0, second = 0;
 		var index = 0;
 		if (!Require(source, ref index, 'P')) return false;
-		var gotDaily = TryGetComponent(source, ref index, out week, 'W');
-		if (!gotDaily)
+		var gotWeek = TryGetComponent(source, ref index, out week, 'W');
+		var gotDaily = false;
+		if (!gotWeek)
 		{
 			var gotYear = TryGetComponent(source, ref index, out year, 'Y');
 			var gotMonth = TryGetComponent(source, ref index, out month, 'M');
@@ -89,11 +90,13 @@ public readonly struct Duration
 
 		if (!Require(source, ref index, 'T'))
 		{
-			if (!gotDaily) return false;
+			if (!gotDaily && !gotWeek) return false;
 			if (index != source.Length) return false;
 		}
 		else
 		{
+			if (gotWeek) return false;
+
 			var gotHour = TryGetComponent(source, ref index, out hour, 'H');
 			var gotMinute = TryGetComponent(source, ref index, out minute, 'M');
 			var gotSecond = TryGetComponent(source, ref index, out second, 'S');

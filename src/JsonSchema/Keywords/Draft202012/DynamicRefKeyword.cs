@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using Json.Pointer;
 
 namespace Json.Schema.Keywords.Draft202012;
@@ -11,13 +12,24 @@ namespace Json.Schema.Keywords.Draft202012;
 /// <remarks>
 /// This keyword is used to create a dynamic reference to a schema.
 /// </remarks>
-public class DynamicRefKeyword : Json.Schema.Keywords.DynamicRefKeyword
+public partial class DynamicRefKeyword : Json.Schema.Keywords.DynamicRefKeyword
 {
 	private class DynamicRefInfo
 	{
 		public required Uri Uri { get; set; }
 		public bool IsDynamic { get; set; }
 	}
+
+	/// <summary>
+	/// Defines the anchor pattern.
+	/// </summary>
+#if NET7_0_OR_GREATER
+	public override Regex AnchorPattern { get; } = GetAnchorPatternRegex();
+	[GeneratedRegex("^#[A-Za-z_][-A-Za-z0-9._]*$", RegexOptions.Compiled)]
+	private static partial Regex GetAnchorPatternRegex();
+#else
+	public override Regex AnchorPattern { get; } = new("^#[A-Za-z_][-A-Za-z0-9._]*$", RegexOptions.Compiled);
+#endif
 
 	/// <summary>
 	/// Gets the singleton instance of the <see cref="DynamicRefKeyword"/>.

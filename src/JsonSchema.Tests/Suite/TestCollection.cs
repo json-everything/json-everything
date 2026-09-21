@@ -10,5 +10,7 @@ public class TestCollection
 	public JsonElement Schema { get; set; }
 	// ReSharper disable once CollectionNeverUpdated.Global
 	public List<TestCase> Tests { get; set; }
+	public string? Compatibility { get; set; }
+	public Dictionary<string, JsonElement>? ExternalSchemas { get; set; }
 	public bool IsOptional { get; set; }
 }

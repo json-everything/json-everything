@@ -24,27 +24,16 @@ public partial class DynamicRefKeyword : IKeywordHandler
 	/// </summary>
 	public string Name => "$dynamicRef";
 
-#if NET7_0_OR_GREATER
 	/// <summary>
-	/// Gets the regular expression for validating the anchor value.
+	/// Defines the anchor pattern.
 	/// </summary>
+#if NET7_0_OR_GREATER
 	public virtual Regex AnchorPattern { get; } = GetAnchorPatternRegex();
-	[GeneratedRegex("^#[A-Za-z_][-A-Za-z0-9._]*$", RegexOptions.Compiled)]
+	[GeneratedRegex("^[A-Za-z_][-A-Za-z0-9._]*$", RegexOptions.Compiled)]
 	private static partial Regex GetAnchorPatternRegex();
 #else
-	/// <summary>
-	/// Gets the regular expression for validating the anchor value.
-	/// </summary>
-	public virtual Regex AnchorPattern { get; } = new("^#[A-Za-z_][-A-Za-z0-9._]*$", RegexOptions.Compiled);
+	public virtual Regex AnchorPattern { get; } = new("^[A-Za-z_][-A-Za-z0-9._]*$", RegexOptions.Compiled);
 #endif
-	// TODO: this is the correct version - uncomment before publishing
-//#if NET7_0_OR_GREATER
-//	public virtual Regex AnchorPattern { get; } = GetAnchorPatternRegex();
-//	[GeneratedRegex("^[A-Za-z_][-A-Za-z0-9._]*$", RegexOptions.Compiled)]
-//	private static partial Regex GetAnchorPatternRegex();
-//#else
-//	public virtual Regex AnchorPattern { get; } = new("^[A-Za-z_][-A-Za-z0-9._]*$", RegexOptions.Compiled);
-//#endif
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="DynamicRefKeyword"/> class.
@@ -67,7 +56,7 @@ public partial class DynamicRefKeyword : IKeywordHandler
 		if (!AnchorPattern.IsMatch(anchor))
 			throw new JsonSchemaException($"'{Name}' value must match '{AnchorPattern}'");
 
-		return anchor[1..];
+		return anchor;
 		// TODO: this is the correct version - uncomment after updating to latest test suite
 		//return anchor;
 	}

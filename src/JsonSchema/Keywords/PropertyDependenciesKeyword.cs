@@ -12,9 +12,18 @@ namespace Json.Schema.Keywords;
 public class PropertyDependenciesKeyword : IKeywordHandler
 {
 	/// <summary>
+	/// Gets the singleton instance of the <see cref="MaxLengthKeyword"/>.
+	/// </summary>
+	public static PropertyDependenciesKeyword Instance { get; } = new();
+
+	/// <summary>
 	/// Gets the name of the handled keyword.
 	/// </summary>
 	public string Name => "propertyDependencies";
+
+	private PropertyDependenciesKeyword()
+	{
+	}
 
 	/// <summary>
 	/// Validates the specified JSON element as a keyword value and optionally returns a value to be shared across the other methods.
@@ -46,8 +55,10 @@ public class PropertyDependenciesKeyword : IKeywordHandler
 	public void BuildSubschemas(KeywordData keyword, BuildContext context)
 	{
 		var subschemas = new List<JsonSchemaNode>();
+		var propertyNames = new HashSet<string>();
 		foreach (var property in keyword.RawValue.EnumerateObject())
 		{
+			propertyNames.Add(property.Name);
 			foreach (var value in property.Value.EnumerateObject())
 			{
 				var defContext = context with
@@ -60,6 +71,7 @@ public class PropertyDependenciesKeyword : IKeywordHandler
 		}
 
 		keyword.Subschemas = subschemas.ToArray();
+		keyword.Value = propertyNames;
 	}
 
 	/// <summary>
@@ -80,7 +92,9 @@ public class PropertyDependenciesKeyword : IKeywordHandler
 		{
 			if (!propertyNames.Contains(property.Name)) continue;
 
-			var schemaIndex = Array.FindIndex(keyword.Subschemas, s => s.RelativePath[0].ToString() == property.Name);
+			var schemaIndex = Array.FindIndex(keyword.Subschemas, s => s.RelativePath[0].ToString() == property.Name &&
+																	   property.Value.ValueKind == JsonValueKind.String &&
+																	   s.RelativePath[1].ToString() == property.Value.GetString());
 			if (schemaIndex == -1) continue;
 
 			var propContext = context with

@@ -5,6 +5,7 @@ using Json.Schema.Tests.Suite;
 
 namespace Json.Schema.Tests;
 
+[JsonSerializable(typeof(TestSuiteFile))]
 [JsonSerializable(typeof(TestCollection))]
 [JsonSerializable(typeof(List<TestCollection>))]
 [JsonSerializable(typeof(System.Drawing.Point))]

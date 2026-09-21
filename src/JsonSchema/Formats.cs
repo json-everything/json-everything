@@ -20,7 +20,6 @@ public static partial class Formats
 	private static Regex DateTimeRegex() => _dateTimeRegex;
 #endif
 
-
 	/// <summary>
 	/// Defines the `date` format.
 	/// </summary>
@@ -38,7 +37,6 @@ public static partial class Formats
 	/// </summary>
 	public static readonly Format Email = new PredicateFormat("email", CheckEmail);
 
-
 #if NET7_0_OR_GREATER
 	[GeneratedRegex(@"^[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?)*$", RegexOptions.Compiled, 250)]
 	private static partial Regex HostnameRegex();
@@ -47,7 +45,6 @@ public static partial class Formats
 
 	private static Regex HostnameRegex() => _hostnameRegex;
 #endif
-
 
 	/// <summary>
 	/// Defines the `hostname` format.
@@ -663,7 +660,8 @@ public static partial class Formats
 	{
 		if (node.GetSchemaValueType() != SchemaValueType.String) return true;
 
-		return Guid.TryParseExact(node.GetString()!, "D", out _);
+		var guidString = node.GetString();
+		return Guid.TryParseExact(guidString!, "D", out _);
 	}
 
 	private static bool CheckDate(JsonElement node)
