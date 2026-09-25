@@ -45,6 +45,13 @@
 		<None Include="..\..\OSMFEULA.txt" Pack="true" PackagePath="OSMFEULA.txt" />
 	</ItemGroup>
 
+	<!-- The documentation page's templates, assembled at request time. -->
+	<ItemGroup>
+		<EmbeddedResource Include="OpenApi\Page\page.html" />
+		<EmbeddedResource Include="OpenApi\Page\console.css" />
+		<EmbeddedResource Include="OpenApi\Page\console.js" />
+	</ItemGroup>
+
   <ItemGroup>
 	<ProjectReference Include="..\JsonSchema.Generation\JsonSchema.Generation.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="true" IncludeAssets="all" PrivateAssets="none" />
 	<ProjectReference Include="..\JsonSchema.OpenApi\JsonSchema.OpenApi.csproj" />

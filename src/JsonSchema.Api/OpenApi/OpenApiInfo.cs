@@ -14,7 +14,7 @@ public class OpenApiInfo : IRefTargetContainer
 	/// <summary>
 	/// Gets the title.
 	/// </summary>
-	public string Title { get; }
+	public string Title { get; set; }
 	/// <summary>
 	/// Gets or sets the summary.
 	/// </summary>
@@ -38,7 +38,7 @@ public class OpenApiInfo : IRefTargetContainer
 	/// <summary>
 	/// Gets or sets the API version.
 	/// </summary>
-	public string Version { get; }
+	public string Version { get; set; }
 	/// <summary>
 	/// Gets or set extension data.
 	/// </summary>

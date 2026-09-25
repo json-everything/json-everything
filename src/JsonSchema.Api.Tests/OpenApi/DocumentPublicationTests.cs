@@ -61,24 +61,21 @@ public class DocumentPublicationTests
 	}
 
 	[Test]
-	public async Task ExtensionlessRouteHonorsAcceptHeader()
+	public async Task ShortYamlExtensionIsServed()
 	{
-		using var request = new HttpRequestMessage(HttpMethod.Get, "/openapi");
-		request.Headers.Add("Accept", "application/yaml");
-
-		var response = await _client.SendAsync(request);
+		var response = await _client.GetAsync("/openapi.yml");
 
 		Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
 		Assert.That(response.Content.Headers.ContentType?.MediaType, Is.EqualTo("application/yaml"));
 	}
 
 	[Test]
-	public async Task ExtensionlessRouteDefaultsToJson()
+	public async Task TheDocumentPathAloneIsNotADocumentRoute()
 	{
+		// Extensions come from the configured formats, so the bare path names no format.
 		var response = await _client.GetAsync("/openapi");
 
-		Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
-		Assert.That(response.Content.Headers.ContentType?.MediaType, Is.EqualTo("application/json"));
+		Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
 	}
 
 	[Test]

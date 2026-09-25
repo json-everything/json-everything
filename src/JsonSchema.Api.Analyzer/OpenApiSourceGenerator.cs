@@ -117,9 +117,11 @@ public class OpenApiSourceGenerator : IIncrementalGenerator
 				types.Add(typeInfo);
 		}
 
-		if (types.Count == 0 && endpoints.Count == 0) return;
+		var referencedFragments = ReferencedFragments.Find(compilation);
 
-		var source = FragmentEmitter.Emit(types, endpoints, rootNamespace);
+		if (types.Count == 0 && endpoints.Count == 0 && referencedFragments.Count == 0) return;
+
+		var source = FragmentEmitter.Emit(types, endpoints, rootNamespace, referencedFragments);
 
 		context.AddSource($"{FragmentClassName}.g.cs", source);
 	}

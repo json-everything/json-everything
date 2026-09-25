@@ -15,30 +15,25 @@ internal static class OpenApiDocumentBuilder
 	private const string _validationErrorType = "https://json-everything.net/errors/validation";
 
 	/// <summary>
-	/// Collects every fragment reachable from the entry assembly.
+	/// Collects every registered fragment.
 	/// </summary>
-	public static IReadOnlyList<OpenApiFragment> CollectFragments()
-	{
-		var fragments = new List<OpenApiFragment>();
-
-		foreach (var assembly in GetCandidateAssemblies())
-		{
-			var fragment = GetFragment(assembly);
-			if (fragment is not null)
-				fragments.Add(fragment);
-		}
-
-		return fragments;
-	}
+	public static IReadOnlyList<OpenApiFragment> CollectFragments() =>
+		OpenApiFragmentRegistry.GetFragments();
 
 	/// <summary>
 	/// Builds a document from the given fragments.
 	/// </summary>
-	public static OpenApiDocument Build(IReadOnlyList<OpenApiFragment> fragments, OpenApiOptions options)
+	/// <remarks>
+	/// The title and version are seeded from the entry assembly; edit
+	/// <see cref="OpenApiDocument.Info"/> to change them.
+	/// </remarks>
+	public static OpenApiDocument Build(IReadOnlyList<OpenApiFragment> fragments)
 	{
-		var title = options.Title ?? Assembly.GetEntryAssembly()?.GetName().Name ?? "API";
+		var name = Assembly.GetEntryAssembly()?.GetName();
+		var title = name?.Name ?? "API";
+		var version = name?.Version?.ToString(3) ?? "1.0.0";
 
-		var document = new OpenApiDocument(options.OpenApiVersion, new OpenApiInfo(title, options.Version));
+		var document = new OpenApiDocument("3.1.1", new OpenApiInfo(title, version));
 
 		var componentNames = new Dictionary<Type, string>();
 		var schemas = new Dictionary<string, JsonSchema>();
@@ -226,67 +221,5 @@ internal static class OpenApiDocumentBuilder
 		_ => ParameterLocation.Query
 	};
 
-	private static IEnumerable<Assembly> GetCandidateAssemblies()
-	{
-		var seen = new HashSet<string>(StringComparer.Ordinal);
-		var entry = Assembly.GetEntryAssembly();
 
-		foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
-		{
-			if (assembly.IsDynamic) continue;
-			if (!seen.Add(assembly.FullName ?? assembly.GetName().Name ?? string.Empty)) continue;
-
-			yield return assembly;
-		}
-
-		if (entry is null) yield break;
-
-		// Referenced assemblies are not loaded until something in them is touched, so a
-		// fragment in a class library the host has not yet used would otherwise be missed.
-		foreach (var reference in entry.GetReferencedAssemblies())
-		{
-			if (!seen.Add(reference.FullName)) continue;
-
-			Assembly loaded;
-			try
-			{
-				loaded = Assembly.Load(reference);
-			}
-			catch (Exception)
-			{
-				continue;
-			}
-
-			yield return loaded;
-		}
-	}
-
-	private static OpenApiFragment? GetFragment(Assembly assembly)
-	{
-		Type[] types;
-		try
-		{
-			types = assembly.GetTypes();
-		}
-		catch (ReflectionTypeLoadException exception)
-		{
-			types = exception.Types.Where(x => x is not null).ToArray()!;
-		}
-		catch (Exception)
-		{
-			return null;
-		}
-
-		foreach (var type in types)
-		{
-			if (type.Name != _fragmentTypeName) continue;
-
-			var field = type.GetField("Fragment", BindingFlags.Public | BindingFlags.Static);
-
-			if (field?.GetValue(null) is OpenApiFragment fragment)
-				return fragment;
-		}
-
-		return null;
-	}
 }

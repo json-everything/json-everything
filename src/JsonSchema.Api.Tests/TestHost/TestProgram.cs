@@ -16,9 +16,10 @@ builder.Services.AddControllers();
 
 builder.Services.AddJsonSchemaValidation();
 
-builder.Services.AddOpenApi(doc =>
+builder.Services.AddOpenApi(c =>
 {
-	doc.Info.Description = "Test host for OpenAPI generation.";
+	c.Document.Info.Description = "Test host for OpenAPI generation.";
+	c.Document.Info.Version = "2.4.0";
 });
 
 var app = builder.Build();

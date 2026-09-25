@@ -2,12 +2,16 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text.Json;
+using System.Text.Json.Nodes;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Yaml2JsonNode;
+using YamlDotNet.RepresentationModel;
+using Json.Schema.Api;
 
 namespace Json.Schema.Api.OpenApi;
 
@@ -17,41 +21,40 @@ namespace Json.Schema.Api.OpenApi;
 public static class OpenApiServiceCollectionExtensions
 {
 	/// <summary>
-	/// Builds an OpenAPI description of the application's API surface and publishes it.
+	/// Describes the application's API surface in OpenAPI, and publishes the description.
 	/// </summary>
 	/// <param name="services">The service collection.</param>
 	/// <param name="configure">
-	/// An optional delegate that edits the description before it is published.  Use this to
-	/// supply anything the analyzer cannot infer — contact details, servers, security
-	/// schemes, descriptions.
+	/// An optional delegate that configures the description and how it is published.
 	/// </param>
-	/// <param name="configureOptions">An optional delegate that configures publication.</param>
 	/// <returns>The same <see cref="IServiceCollection"/>, so calls can be chained.</returns>
 	/// <remarks>
-	/// The description is assembled from the fragments emitted into each assembly that
-	/// references this package, so controllers declared in a class library are included
-	/// without that library knowing about the host.
+	/// The description is assembled from the fragments each assembly registers as it loads,
+	/// so controllers declared in a class library are included without that library knowing
+	/// about the host.
 	/// </remarks>
-	[RequiresUnreferencedCode("Reflects over loaded assemblies to collect generated OpenAPI fragments.")]
+	/// <example>
+	/// <code>
+	/// builder.Services.AddOpenApi(c =>
+	/// {
+	///     c.Document.Info.Description = "The pet store API.";
+	///     c.DocumentPath = "/openapi";
+	///     c.InteractivePath = "/openapi/reference";
+	/// });
+	/// </code>
+	/// </example>
 	public static IServiceCollection AddOpenApi(
 		this IServiceCollection services,
-		Action<OpenApiDocument>? configure = null,
-		Action<OpenApiOptions>? configureOptions = null)
+		Action<OpenApiOptions>? configure = null)
 	{
-		var options = new OpenApiOptions();
-		configureOptions?.Invoke(options);
+		var document = OpenApiDocumentBuilder.Build(OpenApiDocumentBuilder.CollectFragments());
+		var options = new OpenApiOptions(document);
+
+		configure?.Invoke(options);
+		options.Validate();
 
 		services.TryAddSingleton(options);
-
-		services.TryAddSingleton(_ =>
-		{
-			var fragments = OpenApiDocumentBuilder.CollectFragments();
-			var document = OpenApiDocumentBuilder.Build(fragments, options);
-
-			configure?.Invoke(document);
-
-			return document;
-		});
+		services.TryAddSingleton(options.Document);
 
 		services.TryAddEnumerable(
 			ServiceDescriptor.Singleton<IStartupFilter, OpenApiStartupFilter>());
@@ -61,7 +64,7 @@ public static class OpenApiServiceCollectionExtensions
 }
 
 /// <summary>
-/// Publishes the OpenAPI description once the application has been built.
+/// Publishes the description, and the reference page, once the application has been built.
 /// </summary>
 internal class OpenApiStartupFilter : IStartupFilter
 {
@@ -75,17 +78,19 @@ internal class OpenApiStartupFilter : IStartupFilter
 	public Action<IApplicationBuilder> Configure(Action<IApplicationBuilder> next) =>
 		builder =>
 		{
-			var document = builder.ApplicationServices.GetRequiredService<OpenApiDocument>();
+			WriteFiles();
 
-			WriteFiles(document);
+			var page = _options.InteractivePath is null
+				? null
+				: OpenApiPageRenderer.Render(_options);
 
-			if (_options.Publish)
-				builder.Use(async (context, proceed) => await Serve(context, proceed, document));
+			if (_options.DocumentPath is not null || page is not null)
+				builder.Use((context, proceed) => Serve(context, proceed, page));
 
 			next(builder);
 		};
 
-	private void WriteFiles(OpenApiDocument document)
+	private void WriteFiles()
 	{
 		foreach (var path in _options.OutputPaths)
 		{
@@ -93,70 +98,83 @@ internal class OpenApiStartupFilter : IStartupFilter
 			if (!string.IsNullOrEmpty(directory))
 				Directory.CreateDirectory(directory);
 
-			File.WriteAllText(path, Render(document, IsYamlPath(path)));
+			File.WriteAllText(path, Render(IsYaml(Path.GetExtension(path))));
 		}
 	}
 
-	private async System.Threading.Tasks.Task Serve(HttpContext context, Func<System.Threading.Tasks.Task> proceed, OpenApiDocument document)
+	private async Task Serve(HttpContext context, Func<Task> proceed, string? page)
 	{
-		var path = context.Request.Path.Value ?? string.Empty;
-
-		if (!TryMatchRoute(path, out var yaml))
+		if (!HttpMethods.IsGet(context.Request.Method))
 		{
 			await proceed();
 			return;
 		}
 
-		// With no extension, the caller's `Accept` header decides.
-		yaml ??= PrefersYaml(context.Request.Headers.Accept.ToString());
+		var path = context.Request.Path.Value ?? string.Empty;
 
-		context.Response.ContentType = yaml.Value
+		if (page is not null &&
+			string.Equals(path, _options.InteractivePath, StringComparison.OrdinalIgnoreCase))
+		{
+			context.Response.ContentType = "text/html; charset=utf-8";
+			await context.Response.WriteAsync(page);
+			return;
+		}
+
+		if (!TryMatchDocument(path, out var yaml))
+		{
+			await proceed();
+			return;
+		}
+
+		context.Response.ContentType = yaml
 			? "application/yaml; charset=utf-8"
 			: "application/json; charset=utf-8";
 
-		await context.Response.WriteAsync(Render(document, yaml.Value));
+		await context.Response.WriteAsync(Render(yaml));
 	}
 
-	private bool TryMatchRoute(string path, out bool? yaml)
+	private bool TryMatchDocument(string path, out bool yaml)
 	{
-		yaml = null;
+		yaml = false;
 
-		if (path.Equals(_options.Route, StringComparison.OrdinalIgnoreCase)) return true;
+		if (_options.DocumentPath is null) return false;
+		if (!path.StartsWith(_options.DocumentPath, StringComparison.OrdinalIgnoreCase)) return false;
 
-		if (!path.StartsWith(_options.Route, StringComparison.OrdinalIgnoreCase)) return false;
+		var extension = path.Substring(_options.DocumentPath.Length).ToLowerInvariant();
 
-		var extension = path.Substring(_options.Route.Length);
+		if (extension == ".json")
+			return _options.DocumentFormats.HasFlag(OpenApiFormats.Json);
 
-		switch (extension.ToLowerInvariant())
+		if (IsYaml(extension))
 		{
-			case ".json":
-				yaml = false;
-				return true;
-			case ".yaml":
-			case ".yml":
-				yaml = true;
-				return true;
-			default:
-				return false;
+			yaml = true;
+			return _options.DocumentFormats.HasFlag(OpenApiFormats.Yaml);
 		}
+
+		return false;
 	}
 
-	private static bool PrefersYaml(string accept) =>
-		accept.Contains("yaml", StringComparison.OrdinalIgnoreCase);
+	private static bool IsYaml(string extension) => extension is ".yaml" or ".yml";
 
-	private static bool IsYamlPath(string path)
+	[UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode",
+		Justification = "The description is serialized through a serializer context; the YAML writer is handed an already-materialized node.")]
+	[UnconditionalSuppressMessage("AOT", "IL3050:RequiresDynamicCode",
+		Justification = "The description is serialized through a serializer context; the YAML writer is handed an already-materialized node.")]
+	private string Render(bool yaml)
 	{
-		var extension = Path.GetExtension(path).ToLowerInvariant();
+		var json = JsonSerializer.Serialize(_options.Document, _indented.OpenApiDocument);
 
-		return extension is ".yaml" or ".yml";
+		if (!yaml) return json;
+
+		// Converting the node and writing that avoids the generic serializer, which is not
+		// trim-safe; the JSON above already went through the serializer context.
+		YamlNode node = JsonNode.Parse(json)!.ToYamlNode();
+
+		// Naming the second parameter selects the `YamlNode` overload; the generic one
+		// takes `JsonSerializerOptions` there, so the call would otherwise be ambiguous.
+		return YamlSerializer.Serialize(node, configure: null);
 	}
 
-	private static string Render(OpenApiDocument document, bool yaml)
-	{
-		var options = new JsonSerializerOptions { WriteIndented = true };
-
-		return yaml
-			? YamlSerializer.Serialize(document, options)
-			: JsonSerializer.Serialize(document, options);
-	}
+	private static readonly ApiSerializerContext _indented =
+		new(new JsonSerializerOptions { WriteIndented = true });
 }
