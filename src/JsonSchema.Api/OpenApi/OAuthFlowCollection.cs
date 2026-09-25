@@ -11,7 +11,6 @@ namespace Json.Schema.Api.OpenApi;
 [JsonConverter(typeof(OAuthFlowCollectionJsonConverter))]
 public class OAuthFlowCollection : IRefTargetContainer
 {
-
 	/// <summary>
 	/// Gets or sets the implicit flow.
 	/// </summary>
@@ -60,7 +59,7 @@ public class OAuthFlowCollection : IRefTargetContainer
 		}
 
 		return target != null
-			? target.Resolve(keys.Slice(keysConsumed))
+			? target.Resolve(keys[keysConsumed..])
 			: ExtensionData?.Resolve(keys);
 	}
 }

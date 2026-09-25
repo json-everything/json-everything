@@ -42,7 +42,7 @@ public static class OpenApiFragmentRegistry
 	{
 		lock (_lock)
 		{
-			return _fragments.AsReadOnly();
+			return _fragments.ToArray();
 		}
 	}
 }

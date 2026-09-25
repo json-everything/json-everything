@@ -42,7 +42,7 @@ public class DocumentPublicationTests
 
 		TestConsole.WriteLine(document.AsJsonString(new() { WriteIndented = true }));
 
-		Assert.That(document["openapi"]!.GetValue<string>(), Is.EqualTo("3.1.1"));
+		Assert.That(document!["openapi"]!.GetValue<string>(), Is.EqualTo("3.1.1"));
 	}
 
 	[Test]

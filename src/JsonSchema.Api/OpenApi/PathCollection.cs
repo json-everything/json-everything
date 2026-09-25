@@ -26,7 +26,7 @@ public class PathCollection : Dictionary<PathTemplate, PathItem>, IRefTargetCont
 	{
 		if (keys.Length == 0) return null;
 
-		return this.GetFromMap(keys[0])?.Resolve(keys.Slice(1)) ??
+		return this.GetFromMap(keys[0])?.Resolve(keys[1..]) ??
 		       ExtensionData?.Resolve(keys);
 	}
 

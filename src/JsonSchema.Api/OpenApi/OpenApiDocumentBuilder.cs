@@ -11,8 +11,8 @@ namespace Json.Schema.Api.OpenApi;
 /// </summary>
 internal static class OpenApiDocumentBuilder
 {
-	private const string _fragmentTypeName = "GeneratedOpenApiFragment";
 	private const string _validationErrorType = "https://json-everything.net/errors/validation";
+	private const string _validationProblemComponent = "ValidationProblemDetails";
 
 	/// <summary>
 	/// Collects every registered fragment.
@@ -51,15 +51,26 @@ internal static class OpenApiDocumentBuilder
 			}
 		}
 
-		if (schemas.Count != 0)
-			document.Components = new ComponentCollection { Schemas = schemas };
+		// Resolved before the operations are built, so the name the responses reference and
+		// the key the schema is filed under cannot disagree.  A consumer type already holding
+		// the name keeps it, and the shared schema takes a suffixed one.
+		var validationProblemName = ClaimName(schemas, _validationProblemComponent);
 
 		var paths = new PathCollection();
+		var validationProblemUsed = false;
 
 		foreach (var operation in fragments.SelectMany(x => x.Operations).OrderBy(x => x.Route))
 		{
-			AddOperation(paths, operation, componentNames);
+			AddOperation(paths, operation, componentNames, validationProblemName, ref validationProblemUsed);
 		}
+
+		// Added only when an endpoint references it, so an API with nothing validated carries
+		// no unreferenced component.
+		if (validationProblemUsed)
+			schemas[validationProblemName] = BuildValidationProblemSchema();
+
+		if (schemas.Count != 0)
+			document.Components = new ComponentCollection { Schemas = schemas };
 
 		if (paths.Count != 0)
 			document.Paths = paths;
@@ -70,7 +81,9 @@ internal static class OpenApiDocumentBuilder
 	private static void AddOperation(
 		PathCollection paths,
 		OpenApiFragmentOperation source,
-		IReadOnlyDictionary<Type, string> componentNames)
+		IReadOnlyDictionary<Type, string> componentNames,
+		string validationProblemName,
+		ref bool validationProblemUsed)
 	{
 		PathTemplate template = source.Route;
 
@@ -85,7 +98,7 @@ internal static class OpenApiDocumentBuilder
 			OperationId = source.OperationId,
 			Parameters = BuildParameters(source, componentNames),
 			RequestBody = BuildRequestBody(source, componentNames),
-			Responses = BuildResponses(source, componentNames)
+			Responses = BuildResponses(source, componentNames, validationProblemName, ref validationProblemUsed)
 		};
 
 		switch (source.Method)
@@ -134,7 +147,9 @@ internal static class OpenApiDocumentBuilder
 
 	private static ResponseCollection BuildResponses(
 		OpenApiFragmentOperation source,
-		IReadOnlyDictionary<Type, string> componentNames)
+		IReadOnlyDictionary<Type, string> componentNames,
+		string validationProblemName,
+		ref bool validationProblemUsed)
 	{
 		var responses = new ResponseCollection();
 
@@ -157,30 +172,45 @@ internal static class OpenApiDocumentBuilder
 		// The validation middleware answers a malformed body with problem details before
 		// the handler runs, so the response exists whether or not the handler declares it.
 		if (source.RequestBodyIsValidated && !responses.ContainsKey(HttpStatusCode.BadRequest))
-			responses[HttpStatusCode.BadRequest] = BuildValidationErrorResponse();
+		{
+			responses[HttpStatusCode.BadRequest] = BuildValidationErrorResponse(validationProblemName);
+			validationProblemUsed = true;
+		}
 
 		return responses;
 	}
 
-	private static Response BuildValidationErrorResponse() =>
+	private static Response BuildValidationErrorResponse(string validationProblemName) =>
 		new("The request body did not satisfy its schema.")
 		{
 			Content = new Dictionary<string, MediaType>
 			{
-				["application/problem+json"] = new()
-				{
-					Schema = new JsonSchemaBuilder()
-						.Type(SchemaValueType.Object)
-						.Properties(
-							("type", new JsonSchemaBuilder().Type(SchemaValueType.String).Const(_validationErrorType)),
-							("title", new JsonSchemaBuilder().Type(SchemaValueType.String)),
-							("status", new JsonSchemaBuilder().Type(SchemaValueType.Integer)),
-							("detail", new JsonSchemaBuilder().Type(SchemaValueType.String)),
-							("errors", new JsonSchemaBuilder().Type(SchemaValueType.Object))
-						)
-				}
+				["application/problem+json"] = new() { Schema = Ref.To.Schema(validationProblemName) }
 			}
 		};
+
+	// The middleware always answers with this shape, so every validated endpoint shares one
+	// component rather than repeating the schema inline.
+	private static JsonSchema BuildValidationProblemSchema() =>
+		new JsonSchemaBuilder()
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("type", new JsonSchemaBuilder().Type(SchemaValueType.String).Const(_validationErrorType)),
+				("title", new JsonSchemaBuilder().Type(SchemaValueType.String)),
+				("status", new JsonSchemaBuilder().Type(SchemaValueType.Integer)),
+				("detail", new JsonSchemaBuilder().Type(SchemaValueType.String)),
+				("errors", new JsonSchemaBuilder().Type(SchemaValueType.Object))
+			);
+
+	private static string ClaimName(IReadOnlyDictionary<string, JsonSchema> schemas, string preferred)
+	{
+		if (!schemas.ContainsKey(preferred)) return preferred;
+
+		var index = 2;
+		while (schemas.ContainsKey($"{preferred}{index}")) index++;
+
+		return $"{preferred}{index}";
+	}
 
 	private static JsonSchema? SchemaFor(Type? type, IReadOnlyDictionary<Type, string> componentNames)
 	{
@@ -220,6 +250,4 @@ internal static class OpenApiDocumentBuilder
 		"cookie" => ParameterLocation.Cookie,
 		_ => ParameterLocation.Query
 	};
-
-
 }

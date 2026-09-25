@@ -23,9 +23,6 @@ public class Callback : Dictionary<CallbackKeyExpression, PathItem>, IRefTargetC
 	/// </summary>
 	public UnknownData? UnknownData { get; set; }
 
-
-
-
 	object? IRefTargetContainer.Resolve(ReadOnlySpan<string> keys)
 	{
 		if (keys.Length == 0) return null;

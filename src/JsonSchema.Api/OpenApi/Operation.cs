@@ -105,7 +105,7 @@ public class Operation : IRefTargetContainer
 		}
 
 		return target != null
-			? target.Resolve(keys.Slice(keysConsumed))
+			? target.Resolve(keys[keysConsumed..])
 			: ExtensionData?.Resolve(keys);
 	}
 

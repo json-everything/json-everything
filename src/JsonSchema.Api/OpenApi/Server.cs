@@ -48,7 +48,7 @@ public class Server : IRefTargetContainer
 		if (keys[0] == "variables")
 		{
 			if (keys.Length == 1) return null;
-			return Variables.GetFromMap(keys[1])?.Resolve(keys.Slice(2));
+			return Variables.GetFromMap(keys[1])?.Resolve(keys[2..]);
 		}
 
 		return ExtensionData?.Resolve(keys);

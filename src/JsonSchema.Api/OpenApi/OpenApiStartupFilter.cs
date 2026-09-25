@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Yaml2JsonNode;
-using YamlDotNet.RepresentationModel;
 
 namespace Json.Schema.Api.OpenApi;
 
@@ -92,7 +91,7 @@ internal class OpenApiStartupFilter : IStartupFilter
 		if (_options.DocumentPath is null) return false;
 		if (!path.StartsWith(_options.DocumentPath, StringComparison.OrdinalIgnoreCase)) return false;
 
-		var extension = path.Substring(_options.DocumentPath.Length).ToLowerInvariant();
+		var extension = path[_options.DocumentPath.Length..].ToLowerInvariant();
 
 		if (extension == ".json")
 			return _options.DocumentFormats.HasFlag(OpenApiFormats.Json);
@@ -116,7 +115,7 @@ internal class OpenApiStartupFilter : IStartupFilter
 		if (!yaml) return json;
 
 		var node = JsonNode.Parse(json)!.ToYamlNode();
-		return YamlSerializer.Serialize(node, configure: null);
+		return YamlSerializer.Serialize(node, null);
 	}
 
 	private static readonly ApiSerializerContext _indented =

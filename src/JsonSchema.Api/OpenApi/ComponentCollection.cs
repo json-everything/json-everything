@@ -12,7 +12,6 @@ namespace Json.Schema.Api.OpenApi;
 [JsonConverter(typeof(ComponentCollectionJsonConverter))]
 public class ComponentCollection : IRefTargetContainer
 {
-
 	/// <summary>
 	/// Gets or sets the schema components.
 	/// </summary>

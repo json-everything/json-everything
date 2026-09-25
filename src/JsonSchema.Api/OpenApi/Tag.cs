@@ -48,7 +48,7 @@ public class Tag : IRefTargetContainer
 		if (keys[0] == "externalDocs")
 		{
 			if (keys.Length == 1) return ExternalDocs;
-			return ExternalDocs?.Resolve(keys.Slice(1));
+			return ExternalDocs?.Resolve(keys[1..]);
 		}
 
 		return ExtensionData?.Resolve(keys);

@@ -121,19 +121,19 @@ public class RuntimeExpression : IEquatable<string>, IEquatable<RuntimeExpressio
 			case "query":
 				expr.SourceType = RuntimeExpressionSourceType.Query;
 				source.Expect(ref i, ".");
-				expr.Name = source.Substring(i);
+				expr.Name = source[i..];
 				break;
 			case "path":
 				expr.SourceType = RuntimeExpressionSourceType.Path;
 				source.Expect(ref i, ".");
-				expr.Name = source.Substring(i);
+				expr.Name = source[i..];
 				break;
 			case "body":
 				expr.SourceType = RuntimeExpressionSourceType.Body;
 				source.Expect(ref i, "#");
 				if (i < source.Length)
 				{
-					if (Json.Pointer.JsonPointer.TryParse(source.Substring(i), out var jp))
+					if (Json.Pointer.JsonPointer.TryParse(source[i..], out var jp))
 						expr.JsonPointer = jp;
 					else
 						throw new JsonException("Text after `#` must be a valid JSON Pointer");
