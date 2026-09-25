@@ -38,7 +38,7 @@
 	  <PackageReference Include="Microsoft.Bcl.Memory" Version="10.0.5" /> <!-- Just here until IndexRange updates its dependency -->
     <PackageReference Include="PolySharp" Version="1.15.0" PrivateAssets="all" />
     <PackageReference Include="IndexRange" Version="1.1.0" PrivateAssests="All" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.201" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.401" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>
