@@ -15,6 +15,7 @@ namespace Json.Schema.Api.OpenApi;
 public static class OpenApiFragmentRegistry
 {
 	private static readonly List<OpenApiFragment> _fragments = [];
+	// ReSharper disable once ChangeFieldTypeToSystemThreadingLock
 	private static readonly object _lock = new();
 
 	/// <summary>
@@ -41,7 +42,7 @@ public static class OpenApiFragmentRegistry
 	{
 		lock (_lock)
 		{
-			return _fragments.ToArray();
+			return _fragments.AsReadOnly();
 		}
 	}
 }

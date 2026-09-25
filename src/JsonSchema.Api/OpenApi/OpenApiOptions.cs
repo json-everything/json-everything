@@ -4,26 +4,6 @@ using System.Collections.Generic;
 namespace Json.Schema.Api.OpenApi;
 
 /// <summary>
-/// The formats a description can be served in.
-/// </summary>
-[Flags]
-public enum OpenApiFormats
-{
-	/// <summary>
-	/// No format; the description is not served.
-	/// </summary>
-	None = 0,
-	/// <summary>
-	/// Served as JSON, at the document path with a `.json` extension.
-	/// </summary>
-	Json = 1,
-	/// <summary>
-	/// Served as YAML, at the document path with a `.yaml` or `.yml` extension.
-	/// </summary>
-	Yaml = 2
-}
-
-/// <summary>
 /// Configures the OpenAPI description and how it is published.
 /// </summary>
 /// <remarks>
@@ -44,8 +24,8 @@ public class OpenApiOptions
 	public OpenApiDocument Document { get; }
 
 	/// <summary>
-	/// Gets or sets the path the description is served from, without an extension.  The
-	/// extensions come from <see cref="DocumentFormats"/>.  Defaults to `/openapi`.
+	/// Gets or sets the path where the description is served.  Expressed without an extension.
+	/// The extensions are specified <see cref="DocumentFormats"/>.  Defaults to `/openapi`.
 	/// </summary>
 	/// <remarks>
 	/// Set to null to build the description without serving it.
@@ -80,10 +60,29 @@ public class OpenApiOptions
 	public string? StylesheetUrl { get; set; }
 
 	/// <summary>
-	/// Gets the paths the description is written to at startup.  The format of each file
-	/// follows its extension.
+	/// Gets or sets the file path the description is written to at startup.  Expressed
+	/// without an extension, as <see cref="DocumentPath"/> is; one file is written per
+	/// format in <see cref="DocumentFormats"/>.
 	/// </summary>
-	public IList<string> OutputPaths { get; } = [];
+	/// <remarks>
+	/// Writing the description to disk lets it be committed, diffed, or handed to
+	/// client-generation tooling.  Leave unset to write nothing.
+	/// </remarks>
+	public string? FileOutputPath { get; set; }
+
+	/// <summary>
+	/// Gets or sets whether request validation is registered alongside the description.
+	/// Defaults to true.
+	/// </summary>
+	/// <remarks>
+	/// The description states that a validated endpoint answers malformed input with
+	/// `application/problem+json`, so registering validation here keeps the description
+	/// honest without the consumer having to remember a second call.  Registration is
+	/// idempotent, so calling <c>AddJsonSchemaValidation</c> explicitly still works, and the
+	/// configuration passed there wins.  Set to false to describe an API whose validation is
+	/// registered elsewhere, or not at all.
+	/// </remarks>
+	public bool AddValidation { get; set; } = true;
 
 	internal OpenApiOptions(OpenApiDocument document)
 	{

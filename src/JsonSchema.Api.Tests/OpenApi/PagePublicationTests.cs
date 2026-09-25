@@ -60,7 +60,7 @@ public class PagePublicationTests
 	{
 		var body = await _client.GetStringAsync("/openapi/reference");
 
-		Assert.That(body, Does.Contain("<title>testhost</title>"));
+		Assert.That(body, Does.Contain("<title>Test Host API</title>"));
 	}
 
 	[Test]

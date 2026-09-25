@@ -18,6 +18,7 @@ builder.Services.AddJsonSchemaValidation();
 
 builder.Services.AddOpenApi(c =>
 {
+	c.Document.Info.Title = "Test Host API";
 	c.Document.Info.Description = "Test host for OpenAPI generation.";
 	c.Document.Info.Version = "2.4.0";
 });
