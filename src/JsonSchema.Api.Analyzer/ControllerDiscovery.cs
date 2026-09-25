@@ -102,7 +102,7 @@ internal static class ControllerDiscovery
 	{
 		foreach (var parameter in method.Parameters)
 		{
-			var binding = GetBindingSource(parameter);
+			var binding = GetBindingSource(parameter, endpoint.Route);
 
 			if (binding == "body")
 			{
@@ -123,7 +123,7 @@ internal static class ControllerDiscovery
 		}
 	}
 
-	private static string GetBindingSource(IParameterSymbol parameter)
+	private static string GetBindingSource(IParameterSymbol parameter, string route)
 	{
 		foreach (var attribute in parameter.GetAttributes())
 		{
@@ -137,9 +137,11 @@ internal static class ControllerDiscovery
 			}
 		}
 
-		// `[ApiController]` infers a body binding for complex types and a query binding
-		// for everything else.
-		return EndpointDiscoveryHelpers.LooksLikeBody(parameter.Type) ? "body" : "query";
+		// `[ApiController]` infers a body binding for complex types, and binds the rest from
+		// the route where a segment names them, falling back to the query string.
+		if (EndpointDiscoveryHelpers.LooksLikeBody(parameter.Type)) return "body";
+
+		return EndpointDiscoveryHelpers.RouteBinds(route, parameter.Name) ? "path" : "query";
 	}
 
 	private static void AddResponses(EndpointInfo endpoint, IMethodSymbol method)

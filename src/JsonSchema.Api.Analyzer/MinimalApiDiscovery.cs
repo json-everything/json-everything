@@ -149,11 +149,15 @@ internal static class MinimalApiDiscovery
 				continue;
 			}
 
+			// A route segment binds the parameter regardless of whether it is optional in the
+			// signature, so this decides both the location and whether it is required.
+			var fromRoute = EndpointDiscoveryHelpers.RouteBinds(endpoint.Route, parameter.Name);
+
 			endpoint.Parameters.Add(new EndpointParameterInfo
 			{
 				Name = parameter.Name,
-				Location = endpoint.Route.Contains($"{{{parameter.Name}}}") ? "path" : "query",
-				Required = !parameter.IsOptional,
+				Location = fromRoute ? "path" : "query",
+				Required = fromRoute || !parameter.IsOptional,
 				TypeName = parameter.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)
 			});
 		}

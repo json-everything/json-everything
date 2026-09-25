@@ -33,6 +33,48 @@ internal static class EndpointDiscoveryHelpers
 	}
 
 	/// <summary>
+	/// Indicates whether a route template contains a segment that binds the named parameter.
+	/// </summary>
+	/// <remarks>
+	/// A segment carries more than the name — `{id:int}` constrains it, `{id?}` makes it
+	/// optional, and `{*rest}` catches the remainder — so the name has to be read out of the
+	/// segment rather than matched against it whole.
+	/// </remarks>
+	public static bool RouteBinds(string route, string parameterName)
+	{
+		var start = 0;
+
+		while ((start = route.IndexOf('{', start)) >= 0)
+		{
+			var end = route.IndexOf('}', start);
+			if (end < 0) break;
+
+			if (SegmentName(route.Substring(start + 1, end - start - 1)) == parameterName)
+				return true;
+
+			start = end + 1;
+		}
+
+		return false;
+	}
+
+	private static string SegmentName(string segment)
+	{
+		// `{*rest}` and `{**rest}` catch the remainder of the path.
+		segment = segment.TrimStart('*');
+
+		// A constraint follows the name, and may itself be parameterized: `{id:min(1)}`.
+		var colon = segment.IndexOf(':');
+		if (colon >= 0) segment = segment.Substring(0, colon);
+
+		// `{id=5}` supplies a default.
+		var equals = segment.IndexOf('=');
+		if (equals >= 0) segment = segment.Substring(0, equals);
+
+		return segment.TrimEnd('?');
+	}
+
+	/// <summary>
 	/// Indicates whether a type is an ASP.NET service rather than request data.
 	/// </summary>
 	public static bool IsFrameworkService(ITypeSymbol type)
