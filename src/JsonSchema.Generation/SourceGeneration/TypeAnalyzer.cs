@@ -387,8 +387,11 @@ internal static class TypeAnalyzer
 						break;
 				}
 
-				// Add all validation attributes to the list (except RequiredAttribute which is handled separately)
-				if (attr.AttributeName != "RequiredAttribute" && SchemaCodeEmitter.ShouldEmitBuiltInAttribute(attr))
+				// Add all validation attributes to the list (except RequiredAttribute which is handled separately).
+				// Custom attributes carry their own emitter, so they qualify alongside the built-ins; the
+				// non-conditional path admits both, and a condition group must not narrow that.
+				if (attr.AttributeName != "RequiredAttribute" &&
+				    (attr.IsCustomEmitter || SchemaCodeEmitter.ShouldEmitBuiltInAttribute(attr)))
 					conditionalAttributes.Add(attr);
 
 				var newConsequence = new PropertyConditionalConsequence

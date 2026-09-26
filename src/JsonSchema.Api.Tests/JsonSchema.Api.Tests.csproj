@@ -7,10 +7,24 @@
 		<IsPackable>false</IsPackable>
 
 		<RootNamespace>Json.Schema.Api.Tests</RootNamespace>
-		<NoWarn>IDE0290</NoWarn>
+		<NoWarn>IDE0290;CS1591</NoWarn>
 		<Nullable>enable</Nullable>
 		<GenerateProgramFile>false</GenerateProgramFile>
+		<!-- The generator reads documentation comments into the description, which needs them parsed. -->
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 	</PropertyGroup>
+
+	<PropertyGroup>
+		<!--
+			The test host's models are generated at compile time, so their property naming
+			comes from here rather than from the runtime converter configuration.
+		-->
+		<JsonSchemaDefaultPropertyNaming>CamelCase</JsonSchemaDefaultPropertyNaming>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<CompilerVisibleProperty Include="JsonSchemaDefaultPropertyNaming" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="NUnit" Version="4.5.1" />
@@ -33,6 +47,15 @@
 	<ItemGroup>
 		<ProjectReference Include="..\JsonSchema.Api\JsonSchema.Api.csproj" />
 		<ProjectReference Include="..\TestHelpers\TestHelpers.csproj" />
+		<ProjectReference Include="..\JsonSchema.Api.Analyzer\JsonSchema.Api.Analyzer.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+		<!--
+			In a package, the analyzer's dependencies ship next to it in analyzers/dotnet/cs.
+			Referencing by project means supplying them here so the compiler can load them.
+		-->
+		<Analyzer Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\JsonSchema.Generation\bin\$(Configuration)\net10.0\JsonSchema.Net.Generation.dll'))" />
+		<Analyzer Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\JsonSchema\bin\$(Configuration)\netstandard2.0\JsonSchema.Net.dll'))" />
+		<Analyzer Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\JsonPointer\bin\$(Configuration)\netstandard2.0\JsonPointer.Net.dll'))" />
+		<Analyzer Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\Json.More\bin\$(Configuration)\netstandard2.0\Json.More.dll'))" />
 	</ItemGroup>
 
 </Project>

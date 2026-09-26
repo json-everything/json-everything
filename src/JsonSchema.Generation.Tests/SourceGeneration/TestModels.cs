@@ -635,4 +635,22 @@ public static class TestModels
 		[Required]
 		public ExplicitSchemaType Company { get; set; } = new();
 	}
+
+	/// <summary>
+	/// Carries a custom attribute inside a condition group, alongside a built-in one in the
+	/// same group as a control.
+	/// </summary>
+	[GenerateJsonSchema]
+	[If(nameof(Toggle), true, "g")]
+	public class CustomAttributeInConditionGroup
+	{
+		[Required]
+		public bool Toggle { get; set; }
+
+		[CustomFormat("uuid", ConditionGroup = "g")]
+		public string? Id { get; set; }
+
+		[MinLength(3, ConditionGroup = "g")]
+		public string? Name { get; set; }
+	}
 }

@@ -27,35 +27,15 @@ public class ConfigurationTests
 		Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
 	}
 
+	/// <remarks>
+	/// The test host's models are generated at compile time, so their property naming comes
+	/// from the `JsonSchemaDefaultPropertyNaming` build property.  A runtime
+	/// <see cref="SchemaGeneratorConfiguration.PropertyNameResolver"/> does not apply to
+	/// them: the generated schema is registered by a module initializer and returned from
+	/// the converter cache before runtime generation is ever consulted.
+	/// </remarks>
 	[Test]
-	public async Task CustomConfiguration_SnakeCase_AcceptsSnakeCaseKeys()
-	{
-		await using var factory = new WebApplicationFactory<Program>()
-			.WithWebHostBuilder(builder =>
-			{
-				builder.ConfigureServices(services =>
-				{
-					services.AddControllers();
-					services.AddJsonSchemaValidation(converter =>
-						{
-							converter.GeneratorConfiguration.PropertyNameResolver = PropertyNameResolvers.SnakeCase;
-							converter.EvaluationOptions.OutputFormat = OutputFormat.List;
-							converter.EvaluationOptions.RequireFormatValidation = false;
-						});
-				});
-			});
-		using var client = factory.CreateClient();
-
-		var json = """{"name": "Test", "age": 30}""";
-		var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-		var response = await client.PostAsync("/api/test/simple", content);
-
-		Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
-	}
-
-	[Test]
-	public async Task CustomConfiguration_SnakeCase_RejectsCamelCaseKeys()
+	public async Task RuntimeNamingConfiguration_DoesNotOverrideGeneratedSchema()
 	{
 		await using var factory = new WebApplicationFactory<Program>()
 			.WithWebHostBuilder(builder =>
@@ -69,6 +49,28 @@ public class ConfigurationTests
 		using var client = factory.CreateClient();
 
 		var json = """{"firstName": "John", "lastName": "Doe"}""";
+		var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+		var response = await client.PostAsync("/api/test/multiword", content);
+
+		Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+	}
+
+	[Test]
+	public async Task RuntimeNamingConfiguration_DoesNotMakeSnakeCaseKeysValid()
+	{
+		await using var factory = new WebApplicationFactory<Program>()
+			.WithWebHostBuilder(builder =>
+			{
+				builder.ConfigureServices(services =>
+				{
+					services.AddControllers();
+					services.AddJsonSchemaValidation(converter => { converter.GeneratorConfiguration.PropertyNameResolver = PropertyNameResolvers.SnakeCase; });
+				});
+			});
+		using var client = factory.CreateClient();
+
+		var json = """{"first_name": "John", "last_name": "Doe"}""";
 		var content = new StringContent(json, Encoding.UTF8, "application/json");
 
 		var response = await client.PostAsync("/api/test/multiword", content);

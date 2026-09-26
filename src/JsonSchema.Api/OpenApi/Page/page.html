@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<title>{{title}}</title>
+	<style>
+{{styles}}
+	</style>
+{{head}}
+</head>
+<body>
+
+<header class="oa-bar">
+	<div class="oa-bar-inner">
+		<div class="oa-title">
+			<span class="oa-title-name" id="oa-doc-title">{{title}}</span>
+			<span class="oa-title-version" id="oa-doc-version"></span>
+		</div>
+		<div class="oa-controls">
+			<select class="oa-select" id="oa-doc-select" aria-label="Description"></select>
+			<select class="oa-select" id="oa-server" aria-label="Server"></select>
+			<button class="oa-button" id="oa-auth-jump" type="button">Auth <span class="oa-auth-state" id="oa-auth-state" data-set="false">off</span></button>
+			<button class="oa-button" id="oa-theme" type="button">Theme</button>
+		</div>
+	</div>
+</header>
+
+<div class="oa-shell">
+	<nav class="oa-nav" id="oa-nav" aria-label="Operations"></nav>
+	<div class="oa-resize oa-resize-nav" data-pane="nav" title="Drag to resize; double-click to reset"></div>
+	<main class="oa-docs" id="oa-docs"></main>
+	<div class="oa-resize oa-resize-rail" data-pane="rail" title="Drag to resize; double-click to reset"></div>
+	<aside class="oa-rail" id="oa-rail" aria-label="Request console"></aside>
+</div>
+
+<script type="application/json" id="oa-config">{{config}}</script>
+<script>
+{{script}}
+</script>
+
+</body>
+</html>

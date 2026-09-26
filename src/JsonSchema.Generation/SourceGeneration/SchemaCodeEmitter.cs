@@ -299,51 +299,24 @@ internal static class SchemaCodeEmitter
 
 	internal static string ToUrn(string typeName)
 	{
-		// Remove global:: prefix if present
-		if (typeName.StartsWith("global::"))
-			typeName = typeName.Substring(8);
+		return $"urn:jsonschema:{ToUrnTail(typeName)}";
+	}
 
-		// Canonical collection shapes share IDs.
-		if (typeName.StartsWith("System.Collections.Generic.IEnumerable<") ||
-			typeName.StartsWith("System.Collections.Generic.IReadOnlyCollection<") ||
-			typeName.StartsWith("System.Collections.Generic.ICollection<") ||
-			typeName.StartsWith("System.Collections.Generic.HashSet<") ||
-			typeName.StartsWith("System.Collections.Generic.Queue<") ||
-			typeName.StartsWith("System.Collections.Generic.Stack<") ||
-			typeName.EndsWith("[]"))
+	private static string ToUrnTail(string typeName)
+	{
+		var shape = TypeShape.Of(typeName);
+
+		switch (shape.Kind)
 		{
-			string elementType;
-			if (typeName.EndsWith("[]"))
-			{
-				elementType = typeName.Substring(0, typeName.Length - 2);
-			}
-			else
-			{
-				var start = typeName.IndexOf('<') + 1;
-				var len = typeName.LastIndexOf('>') - start;
-				elementType = typeName.Substring(start, len);
-			}
-
-			var elementUrn = ToUrn(elementType).Replace("urn:jsonschema:", "");
-			return $"urn:jsonschema:array-{elementUrn}";
-		}
-
-		// Canonical dictionary shapes share IDs.
-		if (typeName.StartsWith("System.Collections.Generic.Dictionary<") ||
-			typeName.StartsWith("System.Collections.Generic.IDictionary<") ||
-			typeName.StartsWith("System.Collections.Generic.IReadOnlyDictionary<"))
-		{
-			var start = typeName.IndexOf('<') + 1;
-			var len = typeName.LastIndexOf('>') - start;
-			var args = typeName.Substring(start, len).Split(',');
-			var keyUrn = ToUrn(args[0].Trim()).Replace("urn:jsonschema:", "");
-			var valueUrn = ToUrn(args[1].Trim()).Replace("urn:jsonschema:", "");
-			return $"urn:jsonschema:object-{keyUrn}-{valueUrn}";
+			case TypeShapeKind.Array:
+				return $"array-{ToUrnTail(shape.First!)}";
+			case TypeShapeKind.Dictionary:
+				return $"object-{ToUrnTail(shape.First!)}-{ToUrnTail(shape.Second!)}";
 		}
 
 		// Fallback: replace problematic chars for URN
-		var sb = new StringBuilder("urn:jsonschema:");
-		foreach (var ch in typeName)
+		var sb = new StringBuilder();
+		foreach (var ch in shape.Name)
 		{
 			if (char.IsLetterOrDigit(ch)) sb.Append(ch);
 			else if (ch == '.') sb.Append('.');
@@ -839,7 +812,7 @@ internal static class SchemaCodeEmitter
 		sb.AppendLine("}");
 	}
 
-	private static void EmitCustomAttributeCall(StringBuilder sb, AttributeInfo attr)
+	internal static void EmitCustomAttributeCall(StringBuilder sb, AttributeInfo attr)
 	{
 		var lastDot = attr.AttributeFullName!.LastIndexOf('.');
 		var attrName = lastDot >= 0 ? attr.AttributeFullName[(lastDot + 1)..] : attr.AttributeFullName;
