@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Json.Schema.Generation.SourceGeneration;
 
 namespace Json.Schema.Api.OpenApi;
 
@@ -41,6 +42,16 @@ public sealed class OpenApiFragment
 	/// </summary>
 	public IReadOnlyDictionary<Type, string> ComponentNames { get; set; } =
 		new Dictionary<Type, string>();
+
+	/// <summary>
+	/// Gets or sets how the assembly's generated schemas describe enumerations by default,
+	/// from its <c>JsonSchemaDefaultEnumFormat</c> build property.
+	/// </summary>
+	/// <remarks>
+	/// Validation registers the serializer converter this calls for, so the schemas and the
+	/// serializer agree on what an enum value looks like.
+	/// </remarks>
+	public EnumFormat EnumFormat { get; set; } = EnumFormat.Names;
 }
 
 /// <summary>

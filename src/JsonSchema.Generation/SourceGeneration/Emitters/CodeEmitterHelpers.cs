@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 
@@ -159,6 +160,45 @@ internal static class CodeEmitterHelpers
 	{
 		return typeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat).Replace(" ", string.Empty)
 			== "global::System.Collections.Generic.IEnumerable<T>";
+	}
+
+	/// <summary>
+	/// Reads the enum format implied by a `[JsonConverter]` on the enum type, if any.
+	/// </summary>
+	/// <remarks>
+	/// System.Text.Json's `JsonStringEnumConverter` writes names and reads names or
+	/// integers; Json.More's `EnumStringConverter&lt;T&gt;` reads names only.  A converter the
+	/// generator does not recognize says nothing about the format.
+	/// </remarks>
+	public static EnumFormat? DetectEnumFormat(ITypeSymbol enumType) =>
+		DetectEnumFormat(enumType.GetAttributes());
+
+	/// <summary>
+	/// Reads the enum format implied by a `[JsonConverter]` among the given attributes, if any.
+	/// </summary>
+	/// <remarks>
+	/// Used for the attributes on a property as well as on an enum type: a converter on a
+	/// property governs only that property, so its schema is inlined with this format.
+	/// </remarks>
+	public static EnumFormat? DetectEnumFormat(IEnumerable<AttributeData> attributes)
+	{
+		foreach (var attribute in attributes)
+		{
+			if (attribute.AttributeClass?.ToDisplayString() != "System.Text.Json.Serialization.JsonConverterAttribute") continue;
+			if (attribute.ConstructorArguments.Length == 0) continue;
+			if (attribute.ConstructorArguments[0].Value is not INamedTypeSymbol converter) continue;
+
+			switch (converter.OriginalDefinition.ToDisplayString())
+			{
+				case "System.Text.Json.Serialization.JsonStringEnumConverter":
+				case "System.Text.Json.Serialization.JsonStringEnumConverter<TEnum>":
+					return EnumFormat.NamesAndValues;
+				case "Json.More.EnumStringConverter<T>":
+					return EnumFormat.Names;
+			}
+		}
+
+		return null;
 	}
 
 	public static bool ShouldIncludeEnumMember(IFieldSymbol field)

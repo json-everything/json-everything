@@ -4,6 +4,7 @@ using Json.Schema.Api.OpenApi;
 using Json.Schema.Api.Tests.TestHost;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(new WebApplicationOptions
@@ -13,6 +14,7 @@ var builder = WebApplication.CreateBuilder(new WebApplicationOptions
 });
 
 builder.Services.AddControllers();
+builder.Services.AddSingleton<IEchoService, EchoService>();
 
 builder.Services.AddOpenApi(c =>
 {
@@ -74,5 +76,18 @@ minimal.MapGet("/declared", () => Results.Ok(new MultiWordModel("first", "last")
 var nested = minimal.MapGroup("/nested");
 nested.MapPost("/simple", (SimpleModel model) => Results.Ok(model));
 nested.MapGet("/{id:int}", (int id) => Results.Ok(new SimpleModel($"nested-{id}", id)));
+
+// Fluent calls chained onto the group must not hide its prefix.
+var chained = app.MapGroup("/minimal/chained").WithTags("Chained");
+chained.MapGet("/{id:int}", (int id) => Results.Ok(new SimpleModel($"chained-{id}", id)));
+
+// An injected service after the body must not displace it, and a service on a GET must not
+// become a body.
+minimal.MapPost("/injected", ([FromBody] SimpleModel model, IEchoService echo) => Results.Ok(echo.Echo(model)));
+minimal.MapGet("/injected/{id:int}", (int id, IEchoService echo) => Results.Ok(echo.Echo(new SimpleModel($"item-{id}", id))));
+
+// Nullable query parameters are optional and still carry a schema.
+minimal.MapGet("/filter", (Category? category, Guid? customerId, int page = 1) =>
+	Results.Ok(new SimpleModel($"{category}-{customerId}", page)));
 
 app.Run();

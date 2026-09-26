@@ -1,7 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Text;
 using Json.Schema.Generation.Serialization;
 using Json.Schema.Generation.SourceGeneration;
 using Microsoft.CodeAnalysis;
@@ -33,11 +33,17 @@ public class OpenApiSourceGenerator : IIncrementalGenerator
 	/// <param name="context">The initialization context.</param>
 	public void Initialize(IncrementalGeneratorInitializationContext context)
 	{
-		var rootNamespace = context.AnalyzerConfigOptionsProvider
+		var buildOptions = context.AnalyzerConfigOptionsProvider
 			.Select(static (provider, _) =>
 			{
-				provider.GlobalOptions.TryGetValue("build_property.RootNamespace", out var value);
-				return value ?? string.Empty;
+				provider.GlobalOptions.TryGetValue("build_property.RootNamespace", out var rootNamespace);
+				provider.GlobalOptions.TryGetValue("build_property.JsonSchemaDefaultEnumFormat", out var enumFormatRaw);
+
+				var enumFormat = Enum.TryParse<EnumFormat>(enumFormatRaw, ignoreCase: true, out var parsed)
+					? parsed
+					: EnumFormat.Names;
+
+				return (RootNamespace: rootNamespace ?? string.Empty, EnumFormat: enumFormat);
 			});
 
 		var schemaTypes = context.SyntaxProvider
@@ -67,7 +73,7 @@ public class OpenApiSourceGenerator : IIncrementalGenerator
 			.Combine(schemaTypes)
 			.Combine(controllers)
 			.Combine(minimalApis)
-			.Combine(rootNamespace);
+			.Combine(buildOptions);
 
 		context.RegisterSourceOutput(source, static (spc, values) =>
 			Execute(
@@ -75,7 +81,8 @@ public class OpenApiSourceGenerator : IIncrementalGenerator
 				values.Left.Left.Left.Right,
 				values.Left.Left.Right,
 				values.Left.Right,
-				values.Right,
+				values.Right.RootNamespace,
+				values.Right.EnumFormat,
 				spc));
 	}
 
@@ -85,6 +92,7 @@ public class OpenApiSourceGenerator : IIncrementalGenerator
 		ImmutableArray<INamedTypeSymbol?> controllerSymbols,
 		ImmutableArray<EndpointInfo?> minimalApiEndpoints,
 		string rootNamespace,
+		EnumFormat enumFormat,
 		SourceProductionContext context)
 	{
 		var endpoints = new List<EndpointInfo>();
@@ -111,7 +119,9 @@ public class OpenApiSourceGenerator : IIncrementalGenerator
 				symbol,
 				symbol.GetAttributes().FirstOrDefault(x => x.AttributeClass?.Name == "GenerateJsonSchemaAttribute"),
 				context.ReportDiagnostic,
-				NamingConvention.CamelCase);
+				NamingConvention.CamelCase,
+				Json.Schema.Generation.PropertyOrder.AsDeclared,
+				enumFormat);
 
 			if (typeInfo is not null)
 				types.Add(typeInfo);
@@ -121,7 +131,7 @@ public class OpenApiSourceGenerator : IIncrementalGenerator
 
 		if (types.Count == 0 && endpoints.Count == 0 && referencedFragments.Count == 0) return;
 
-		var source = FragmentEmitter.Emit(types, endpoints, rootNamespace, referencedFragments);
+		var source = FragmentEmitter.Emit(types, endpoints, rootNamespace, referencedFragments, enumFormat);
 
 		context.AddSource($"{FragmentClassName}.g.cs", source);
 	}

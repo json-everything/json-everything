@@ -2,8 +2,11 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Serialization;
+using Json.Schema.Api.OpenApi;
 using Json.Schema.Generation;
 using Json.Schema.Generation.Serialization;
+using Json.Schema.Generation.SourceGeneration;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
@@ -118,6 +121,23 @@ public static class Extensions
 
 		if (!options.Converters.Contains(converter))
 			options.Converters.Add(converter);
+
+		// The serializer has to accept what the generated schemas describe.  The format comes
+		// from each assembly's `JsonSchemaDefaultEnumFormat` build property, carried in its
+		// fragment.  Appended, so a converter the application registered first, or a
+		// `[JsonConverter]` on the enum itself, wins.
+		if (!options.Converters.Any(x => x is JsonStringEnumConverter))
+		{
+			switch (EnumFormatResolver.Resolve(OpenApiFragmentRegistry.GetFragments()))
+			{
+				case EnumFormat.Names:
+					options.Converters.Add(new JsonStringEnumConverter(allowIntegerValues: false));
+					break;
+				case EnumFormat.NamesAndValues:
+					options.Converters.Add(new JsonStringEnumConverter());
+					break;
+			}
+		}
 
 		return options;
 	}

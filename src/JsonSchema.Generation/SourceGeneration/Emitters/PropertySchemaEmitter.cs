@@ -16,8 +16,9 @@ internal static class PropertySchemaEmitter
 		                             .ToList();
 
 		SchemaCodeEmitter.EmitSchemaForType(sb, property.Type, property.IsNullable, indent, context, 
-		                                     itemAttributes.Count > 0 ? itemAttributes : null, 
-		                                     property.Attributes);
+		                                     itemAttributes.Count > 0 ? itemAttributes : null,
+		                                     property.Attributes,
+		                                     property.ConverterEnumFormat);
 		
 		var attributesToEmit = typeAttributes.Where(a => a.AttributeName != "JsonNumberHandlingAttribute").ToList();
 		SchemaCodeEmitter.EmitAttributes(sb, attributesToEmit, indent);

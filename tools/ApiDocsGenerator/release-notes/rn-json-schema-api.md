@@ -4,6 +4,15 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "09.055"
 ---
+# [1.2.1](https://github.com/json-everything/json-everything/pull/1061) {#release-schemaapi-1.2.1}
+
+- Fixed a generator packing issue.
+- Route prefixes from `MapGroup` are now kept when fluent calls such as `.WithTags()` are chained onto the group.
+- Minimal-API handler parameters honor `[FromBody]`, `[FromRoute]`, `[FromQuery]`, `[FromHeader]`, and `[FromServices]`.  Injected services, including interfaces and abstract types, are no longer described as request bodies or parameters.
+- Nullable query and header parameters are described as optional.
+- Enum parameters are described inline.
+- Validation registers the enum converter matching the project's `JsonSchemaDefaultEnumFormat` (see _JsonSchema.Net.Generation_ 7.4.0) when no enum converter is present, so the serializer accepts what the generated schemas describe.
+
 # [1.2.0](https://github.com/json-everything/json-everything/pull/1060) {#release-schemaapi-1.2.0}
 
 Added OpenAPI 3.1 support via `.AddOpenApi()`.

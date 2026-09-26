@@ -5,6 +5,7 @@ using System.Net;
 using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using Json.Schema.Generation.SourceGeneration;
 
 namespace Json.Schema.Api.OpenApi;
 
@@ -47,6 +48,7 @@ internal static class OpenApiDocumentBuilder
 
 		var componentNames = new Dictionary<Type, string>();
 		var schemas = new Dictionary<string, JsonSchema>();
+		var enumFormat = EnumFormatResolver.Resolve(fragments);
 
 		foreach (var fragment in fragments)
 		{
@@ -71,7 +73,7 @@ internal static class OpenApiDocumentBuilder
 
 		foreach (var operation in fragments.SelectMany(x => x.Operations).OrderBy(x => x.Route))
 		{
-			AddOperation(paths, operation, componentNames, validationProblemName, ref validationProblemUsed);
+			AddOperation(paths, operation, componentNames, enumFormat, validationProblemName, ref validationProblemUsed);
 		}
 
 		// A description carries only the components its own operations reach, so splitting
@@ -96,6 +98,7 @@ internal static class OpenApiDocumentBuilder
 		PathCollection paths,
 		OpenApiFragmentOperation source,
 		IReadOnlyDictionary<Type, string> componentNames,
+		EnumFormat enumFormat,
 		string validationProblemName,
 		ref bool validationProblemUsed)
 	{
@@ -113,9 +116,9 @@ internal static class OpenApiDocumentBuilder
 			Summary = source.Summary,
 			Description = source.Description,
 			Tags = source.Tags.Count == 0 ? null : source.Tags,
-			Parameters = BuildParameters(source, componentNames),
-			RequestBody = BuildRequestBody(source, componentNames),
-			Responses = BuildResponses(source, componentNames, validationProblemName, ref validationProblemUsed)
+			Parameters = BuildParameters(source, componentNames, enumFormat),
+			RequestBody = BuildRequestBody(source, componentNames, enumFormat),
+			Responses = BuildResponses(source, componentNames, enumFormat, validationProblemName, ref validationProblemUsed)
 		};
 
 		switch (source.Method)
@@ -133,7 +136,8 @@ internal static class OpenApiDocumentBuilder
 
 	private static IReadOnlyList<Parameter>? BuildParameters(
 		OpenApiFragmentOperation source,
-		IReadOnlyDictionary<Type, string> componentNames)
+		IReadOnlyDictionary<Type, string> componentNames,
+		EnumFormat enumFormat)
 	{
 		if (source.Parameters.Count == 0) return null;
 
@@ -143,20 +147,21 @@ internal static class OpenApiDocumentBuilder
 			{
 				Description = x.Description,
 				Required = x.Required,
-				Schema = SchemaFor(x.Type, componentNames)
+				Schema = SchemaFor(x.Type, componentNames, enumFormat)
 			})
 		];
 	}
 
 	private static RequestBody? BuildRequestBody(
 		OpenApiFragmentOperation source,
-		IReadOnlyDictionary<Type, string> componentNames)
+		IReadOnlyDictionary<Type, string> componentNames,
+		EnumFormat enumFormat)
 	{
 		if (source.RequestBodyType is null) return null;
 
 		return new RequestBody(new Dictionary<string, MediaType>
 		{
-			["application/json"] = new() { Schema = SchemaFor(source.RequestBodyType, componentNames) }
+			["application/json"] = new() { Schema = SchemaFor(source.RequestBodyType, componentNames, enumFormat) }
 		})
 		{
 			Description = source.RequestBodyDescription,
@@ -167,6 +172,7 @@ internal static class OpenApiDocumentBuilder
 	private static ResponseCollection BuildResponses(
 		OpenApiFragmentOperation source,
 		IReadOnlyDictionary<Type, string> componentNames,
+		EnumFormat enumFormat,
 		string validationProblemName,
 		ref bool validationProblemUsed)
 	{
@@ -176,7 +182,7 @@ internal static class OpenApiDocumentBuilder
 		{
 			var built = new Response(response.Description);
 
-			var schema = SchemaFor(response.Type, componentNames);
+			var schema = SchemaFor(response.Type, componentNames, enumFormat);
 			if (schema is not null)
 			{
 				built.Content = new Dictionary<string, MediaType>
@@ -327,16 +333,16 @@ internal static class OpenApiDocumentBuilder
 		return $"{preferred}{index}";
 	}
 
-	private static JsonSchema? SchemaFor(Type? type, IReadOnlyDictionary<Type, string> componentNames)
+	private static JsonSchema? SchemaFor(Type? type, IReadOnlyDictionary<Type, string> componentNames, EnumFormat enumFormat)
 	{
 		if (type is null) return null;
 
 		return componentNames.TryGetValue(type, out var componentName)
 			? Ref.To.Schema(componentName)
-			: PrimitiveSchemaFor(type);
+			: PrimitiveSchemaFor(type, enumFormat);
 	}
 
-	private static JsonSchema? PrimitiveSchemaFor(Type type)
+	private static JsonSchema? PrimitiveSchemaFor(Type type, EnumFormat enumFormat)
 	{
 		var unwrapped = Nullable.GetUnderlyingType(type) ?? type;
 
@@ -354,6 +360,18 @@ internal static class OpenApiDocumentBuilder
 
 		if (unwrapped == typeof(double) || unwrapped == typeof(float) || unwrapped == typeof(decimal))
 			return new JsonSchemaBuilder().Type(SchemaValueType.Number);
+
+		if (unwrapped.IsEnum)
+		{
+			return enumFormat switch
+			{
+				EnumFormat.Values => new JsonSchemaBuilder().Type(SchemaValueType.Integer),
+				EnumFormat.NamesAndValues => new JsonSchemaBuilder().AnyOf(
+					new JsonSchemaBuilder().Enum(Enum.GetNames(unwrapped)),
+					new JsonSchemaBuilder().Type(SchemaValueType.Integer)),
+				_ => new JsonSchemaBuilder().Enum(Enum.GetNames(unwrapped))
+			};
+		}
 
 		return null;
 	}

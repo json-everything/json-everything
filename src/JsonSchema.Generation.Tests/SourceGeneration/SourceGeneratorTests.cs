@@ -1482,6 +1482,83 @@ public class SourceGeneratorTests
 	}
 
 	[Test]
+	public void EnumWithoutConverter_UsesProjectDefault_Names()
+	{
+		var expectedJson = """
+		{
+		  "$schema": "https://json-schema.org/draft/2020-12/schema",
+		  "$id": "urn:jsonschema:Json.Schema.Generation.Tests.SourceGeneration.TestModels.Status",
+		  "enum": ["Active", "Inactive", "Pending"]
+		}
+		""";
+		var expected = JsonSchema.FromText(expectedJson, new BuildOptions { SchemaRegistry = new SchemaRegistry() });
+		var actual = GeneratedJsonSchemas.TestModels_Status;
+
+		AssertEqual(expected, actual);
+	}
+
+	[Test]
+	public void EnumWithJsonMoreConverter_DescribesEnumByNames()
+	{
+		var expectedJson = """
+		{
+		  "$schema": "https://json-schema.org/draft/2020-12/schema",
+		  "$id": "urn:jsonschema:Json.Schema.Generation.Tests.SourceGeneration.TestModels.NamedStatus",
+		  "enum": ["Active", "Inactive"]
+		}
+		""";
+		var expected = JsonSchema.FromText(expectedJson, new BuildOptions { SchemaRegistry = new SchemaRegistry() });
+		var actual = GeneratedJsonSchemas.TestModels_NamedStatus;
+
+		AssertEqual(expected, actual);
+	}
+
+	[Test]
+	public void EnumConverterOnProperty_InlinesThatPropertyOnly()
+	{
+		var expectedJson = """
+		{
+		  "$schema": "https://json-schema.org/draft/2020-12/schema",
+		  "$id": "urn:jsonschema:Json.Schema.Generation.Tests.SourceGeneration.TestModels.ModelWithPropertyEnumConverter",
+		  "type": "object",
+		  "properties": {
+		    "Flexible": {
+		      "anyOf": [
+		        { "enum": ["Active", "Inactive", "Pending"] },
+		        { "type": "integer" }
+		      ]
+		    },
+		    "Named": { "enum": ["Active", "Inactive", "Pending", null] },
+		    "Shared": { "$ref": "urn:jsonschema:Json.Schema.Generation.Tests.SourceGeneration.TestModels.Status" }
+		  }
+		}
+		""";
+		var expected = JsonSchema.FromText(expectedJson, new BuildOptions { SchemaRegistry = new SchemaRegistry() });
+		var actual = GeneratedJsonSchemas.TestModels_ModelWithPropertyEnumConverter;
+
+		AssertEqual(expected, actual);
+	}
+
+	[Test]
+	public void EnumWithStjConverter_DescribesEnumAsNamesOrInteger()
+	{
+		var expectedJson = """
+		{
+		  "$schema": "https://json-schema.org/draft/2020-12/schema",
+		  "$id": "urn:jsonschema:Json.Schema.Generation.Tests.SourceGeneration.TestModels.FlexibleStatus",
+		  "anyOf": [
+		    { "enum": ["Active", "Inactive"] },
+		    { "type": "integer" }
+		  ]
+		}
+		""";
+		var expected = JsonSchema.FromText(expectedJson, new BuildOptions { SchemaRegistry = new SchemaRegistry() });
+		var actual = GeneratedJsonSchemas.TestModels_FlexibleStatus;
+
+		AssertEqual(expected, actual);
+	}
+
+	[Test]
 	public void Issue1059_CustomAttributeInConditionGroup()
 	{
 		var expectedJson = """

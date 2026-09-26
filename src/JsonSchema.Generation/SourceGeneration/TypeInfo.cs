@@ -13,6 +13,7 @@ internal sealed class TypeInfo
 	public required NamingConvention PropertyNaming { get; init; }
 	public required PropertyOrder PropertyOrder { get; init; }
 	public required bool StrictConditionals { get; init; }
+	public EnumFormat EnumFormat { get; init; } = EnumFormat.Names;
 	public required TypeKind Kind { get; init; }
 	public required bool IsNullable { get; init; }
 	public List<PropertyInfo> Properties { get; init; } = new();
@@ -34,6 +35,11 @@ internal sealed class PropertyInfo
 	public required bool IsNullable { get; init; }
 	public required bool IsReadOnly { get; init; }
 	public required bool IsWriteOnly { get; init; }
+	/// <summary>
+	/// The enum format implied by a `[JsonConverter]` on the property itself, which
+	/// overrides the enum type's shared schema for this property only.
+	/// </summary>
+	public EnumFormat? ConverterEnumFormat { get; init; }
 	public List<AttributeInfo> Attributes { get; init; } = new();
 	public string? XmlDocSummary { get; init; }
 	public List<object> ConditionGroups { get; init; } = new();

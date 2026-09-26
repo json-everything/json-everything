@@ -26,3 +26,15 @@ public record MultiWordModel(
 
 public record UnvalidatedModel(
 	string Description);
+
+public enum Category
+{
+	Books,
+	Toys
+}
+
+[GenerateJsonSchema]
+public record EnumModel(
+	[property: Required]
+	string Name,
+	Category Category);

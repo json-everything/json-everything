@@ -82,6 +82,48 @@ public static class TestModels
 		public ContentStyle[]? Styles { get; set; }
 	}
 
+	// System.Text.Json's converter reads names or integers, so the schema accepts either.
+	[JsonConverter(typeof(JsonStringEnumConverter))]
+	public enum FlexibleStatus
+	{
+		Active,
+		Inactive
+	}
+
+	[GenerateJsonSchema]
+	public class ModelWithFlexibleEnum
+	{
+		public FlexibleStatus Status { get; set; }
+	}
+
+	// Json.More's converter reads names only.
+	[JsonConverter(typeof(Json.More.EnumStringConverter<NamedStatus>))]
+	public enum NamedStatus
+	{
+		Active,
+		Inactive
+	}
+
+	[GenerateJsonSchema]
+	public class ModelWithNamedEnum
+	{
+		public NamedStatus Status { get; set; }
+	}
+
+	// A converter on the property governs that property only, so its schema is inlined
+	// rather than referencing the enum's shared schema.
+	[GenerateJsonSchema]
+	public class ModelWithPropertyEnumConverter
+	{
+		[JsonConverter(typeof(JsonStringEnumConverter))]
+		public Status Flexible { get; set; }
+
+		[JsonConverter(typeof(Json.More.EnumStringConverter<Status>))]
+		public Status? Named { get; set; }
+
+		public Status Shared { get; set; }
+	}
+
 	[GenerateJsonSchema]
 	public class PersonWithDescription
 	{

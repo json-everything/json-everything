@@ -4,6 +4,16 @@ title: JsonSchema.Net.Generation
 icon: fas fa-tag
 order: "09.05"
 ---
+# [7.4.0](https://github.com/json-everything/json-everything/pull/1061) {#release-schemagen-7.4.0}
+
+Source generation now describes enumerations according to their serialization.
+
+- An enum type carrying `[JsonConverter]` is described to match: System.Text.Json's `JsonStringEnumConverter` yields an `anyOf` of the member names or an integer, and Json.More's `EnumStringConverter<T>` yields the member names.
+- A `[JsonConverter]` on a property applies to that property alone, so its schema is inlined in that format while other uses of the enum keep the shared `$ref`.
+- Enums without a converter follow the new `JsonSchemaDefaultEnumFormat` build property: `Names` (the default), `Values` for an integer, or `NamesAndValues` for either.
+
+Runtime generation is unchanged and continues to describe enumerations by name.
+
 # [7.3.12](https://github.com/json-everything/json-everything/pull/1060) {#release-schemagen-7.3.12}
 
 [#1059](https://github.com/json-everything/json-everything/issues/1059) - Source generation drops a custom attribute's constraint when the attribute carries a `ConditionGroup`, leaving an empty `then` where runtime generation produces the constraint.  Thanks to [@xavier-hunt](https://github.com/xavier-hunt) for reporting.

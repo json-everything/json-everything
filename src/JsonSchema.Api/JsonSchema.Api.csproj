@@ -15,8 +15,8 @@
 	  <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 	  <IncludeSymbols>true</IncludeSymbols>
 	  <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-	  <Version>1.2.0</Version>
-	  <FileVersion>1.2.0</FileVersion>
+	  <Version>1.2.1</Version>
+	  <FileVersion>1.2.1</FileVersion>
 	  <AssemblyVersion>1.0.0.0</AssemblyVersion>
 	  <Authors>Greg Dennis</Authors>
 	  <Description>Extends JsonSchema.Net to provide API-centric functionality like automatic request validation</Description>
@@ -60,17 +60,15 @@
   </ItemGroup>
 
   <!--
-    The analyzer is not packable on its own; its output ships inside this package, along
-    with the assemblies it loads at compile time.  These copies exist only for the compiler
-    to load from the analyzer directory; consumers get their runtime copies transitively
-    through this package's ordinary references.
+    The analyzer is not packable on its own; its output ships inside this package.  Only the
+    analyzer assembly is packed here.  Its dependencies already reach the consumer's analyzer
+    list through the JsonSchema.Net.Generation package (that reference includes analyzer
+    assets), and the compiler resolves an analyzer's dependencies from every registered
+    analyzer path.  Packing a second copy of the generator here made Roslyn load and run it
+    twice, emitting every generated schema twice.
   -->
   <ItemGroup>
 	<None Include="..\JsonSchema.Api.Analyzer\bin\$(Configuration)\netstandard2.0\JsonSchema.Net.Api.Analyzer.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-	<None Include="..\JsonSchema.Generation\bin\$(Configuration)\netstandard2.0\JsonSchema.Net.Generation.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-	<None Include="..\JsonSchema\bin\$(Configuration)\netstandard2.0\JsonSchema.Net.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-	<None Include="..\JsonPointer\bin\$(Configuration)\netstandard2.0\JsonPointer.Net.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-	<None Include="..\Json.More\bin\$(Configuration)\netstandard2.0\Json.More.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
   </ItemGroup>
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">

@@ -42,10 +42,6 @@ function deref(schema) {
 	return node || schema;
 }
 
-function schemaName(schema) {
-	return schema && schema.$ref ? schema.$ref.split('/').pop() : null;
-}
-
 function typeLabel(schema) {
 	if (!schema) return 'any';
 
@@ -90,12 +86,12 @@ function exampleFor(schema, depth) {
 
 /* ---------- schema rendering ---------- */
 
-function renderSchema(schema, mediaType) {
+function renderSchema(schema, label, mediaType) {
 	const resolved = deref(schema);
 	const box = el('div', 'oa-schema');
 
 	const header = el('div', 'oa-schema-header');
-	header.append(el('span', null, schemaName(schema) || typeLabel(resolved)));
+	header.append(el('span', null, label));
 	if (mediaType) header.append(el('span', 'oa-schema-media', mediaType));
 	box.append(header);
 
@@ -304,7 +300,7 @@ function renderOperation(operation) {
 	if (body) {
 		const block = el('div', 'oa-section');
 		block.append(el('div', 'oa-section-heading', 'Request body'));
-		block.append(renderSchema(body, 'application/json'));
+		block.append(renderSchema(body, 'Request schema', 'application/json'));
 		section.append(block);
 	}
 
@@ -326,7 +322,7 @@ function renderOperation(operation) {
 			const mediaType = Object.keys(content)[0];
 			if (mediaType && content[mediaType].schema) {
 				const body = el('div', 'oa-response-body');
-				body.append(renderSchema(content[mediaType].schema, mediaType));
+				body.append(renderSchema(content[mediaType].schema, 'Response schema', mediaType));
 				card.append(body);
 			}
 
@@ -580,8 +576,6 @@ function buildRail() {
 	if (auth) rail.append(auth);
 }
 
-// The request schema is what the server validates against, so it is shown in full rather
-// than only summarized as a property list in the documentation column.
 function buildSchemaPanel(operation) {
 	const schema = bodySchema(operation);
 	if (!schema) return null;
@@ -589,10 +583,7 @@ function buildSchemaPanel(operation) {
 	const panel = el('div', 'oa-panel');
 
 	const header = el('div', 'oa-panel-header');
-	const title = el('h3', 'oa-panel-title', 'Request schema');
-	const name = schemaName(schema);
-	if (name) title.append(' ', el('span', 'oa-schema-media', name));
-	header.append(title);
+	header.append(el('h3', 'oa-panel-title', 'Request schema'));
 
 	const copy = el('button', 'oa-copy', 'Copy');
 	copy.type = 'button';

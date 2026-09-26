@@ -94,6 +94,14 @@ internal static class MinimalApiDiscovery
 				continue;
 			}
 
+			// Fluent metadata on the group: `app.MapGroup("/x").WithTags("x")`
+			if (current is InvocationExpressionSyntax { Expression: MemberAccessExpressionSyntax fluent } fluentInvocation &&
+				ReturnsRouteGroup(fluentInvocation, semanticModel))
+			{
+				current = fluent.Expression;
+				continue;
+			}
+
 			// Captured into a local: trace back to the initializer.
 			if (current is IdentifierNameSyntax identifier)
 			{
@@ -109,6 +117,10 @@ internal static class MinimalApiDiscovery
 
 		return string.Concat(prefixes);
 	}
+
+	private static bool ReturnsRouteGroup(InvocationExpressionSyntax invocation, SemanticModel semanticModel) =>
+		semanticModel.GetSymbolInfo(invocation).Symbol is IMethodSymbol { ReturnType: var returnType } &&
+		returnType.ToDisplayString() == "Microsoft.AspNetCore.Routing.RouteGroupBuilder";
 
 	private static ExpressionSyntax? GetLocalInitializer(IdentifierNameSyntax identifier, SemanticModel semanticModel)
 	{
@@ -139,10 +151,16 @@ internal static class MinimalApiDiscovery
 
 		foreach (var parameter in parameters)
 		{
-			if (EndpointDiscoveryHelpers.IsFrameworkService(parameter.Type)) continue;
+			var binding = EndpointDiscoveryHelpers.GetBindingSource(parameter, endpoint.Route);
 
-			if (EndpointDiscoveryHelpers.LooksLikeBody(parameter.Type))
+			if (binding == "services") continue;
+
+			if (binding == "body")
 			{
+				// A request has one body.  A second complex parameter is a service the
+				// inference could not tell apart from a body, so the first one stands.
+				if (endpoint.RequestBodyTypeName is not null) continue;
+
 				endpoint.RequestBodyTypeName = parameter.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
 				endpoint.RequestBodyParameterName = parameter.Name;
 				endpoint.RequestBodyIsValidated = parameter.Type.GetAttributes()
@@ -151,14 +169,12 @@ internal static class MinimalApiDiscovery
 			}
 
 			// A route segment binds the parameter regardless of whether it is optional in the
-			// signature, so this decides both the location and whether it is required.
-			var fromRoute = EndpointDiscoveryHelpers.RouteBinds(endpoint.Route, parameter.Name);
-
+			// signature, so the location decides whether it is required.
 			endpoint.Parameters.Add(new EndpointParameterInfo
 			{
 				Name = parameter.Name,
-				Location = fromRoute ? "path" : "query",
-				Required = fromRoute || !parameter.IsOptional,
+				Location = binding,
+				Required = binding == "path" || EndpointDiscoveryHelpers.IsRequired(parameter),
 				TypeName = parameter.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)
 			});
 		}

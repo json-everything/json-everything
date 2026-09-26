@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Json.Schema.Generation.SourceGeneration;
 using TypeInfo = Json.Schema.Generation.SourceGeneration.TypeInfo;
 
 namespace Json.Schema.Api.Analyzer;
@@ -17,12 +18,15 @@ internal static class FragmentEmitter
 	/// <param name="types">The types with schemas.</param>
 	/// <param name="endpoints">The discovered operations.</param>
 	/// <param name="rootNamespace">The assembly's root namespace.</param>
+	/// <param name="referencedFragments">The fragment classes of referenced assemblies.</param>
+	/// <param name="enumFormat">The assembly's default enum format.</param>
 	/// <returns>The generated source.</returns>
 	public static string Emit(
 		IReadOnlyList<TypeInfo> types,
 		IReadOnlyList<EndpointInfo> endpoints,
 		string rootNamespace,
-		IReadOnlyList<string> referencedFragments)
+		IReadOnlyList<string> referencedFragments,
+		EnumFormat enumFormat)
 	{
 		var componentIds = ComponentSchemaEmitter.BuildComponentIds(types);
 
@@ -66,7 +70,7 @@ internal static class FragmentEmitter
 				.Where(x => name is null ? x.DocumentNames.Count == 0 : x.DocumentNames.Contains(name))
 				.ToArray();
 
-			EmitFragment(sb, types, selected, name, FragmentFieldName(name));
+			EmitFragment(sb, types, selected, name, FragmentFieldName(name), enumFormat);
 		}
 
 		EmitRegistration(sb, referencedFragments, names);
@@ -152,7 +156,8 @@ internal static class FragmentEmitter
 		IReadOnlyList<TypeInfo> types,
 		IReadOnlyList<EndpointInfo> endpoints,
 		string? name,
-		string fieldName)
+		string fieldName,
+		EnumFormat enumFormat)
 	{
 		sb.AppendLine();
 		sb.AppendLine("\t/// <summary>");
@@ -167,6 +172,8 @@ internal static class FragmentEmitter
 
 		if (name is not null)
 			sb.AppendLine($"\t\tName = \"{Escape(name)}\",");
+
+		sb.AppendLine($"\t\tEnumFormat = global::Json.Schema.Generation.Serialization.EnumFormat.{enumFormat},");
 
 		EmitSchemaMap(sb, types);
 		EmitComponentNameMap(sb, types);

@@ -24,6 +24,7 @@
 
 	<ItemGroup>
 		<CompilerVisibleProperty Include="JsonSchemaDefaultPropertyNaming" />
+		<CompilerVisibleProperty Include="JsonSchemaDefaultEnumFormat" />
 	</ItemGroup>
 
 	<ItemGroup>

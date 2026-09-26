@@ -12,25 +12,70 @@ namespace Json.Schema.Api.Analyzer;
 internal static class EndpointDiscoveryHelpers
 {
 	/// <summary>
+	/// Indicates whether a parameter type is a simple value, bound from the route, query
+	/// string, or a header rather than the body.
+	/// </summary>
+	public static bool IsSimpleType(ITypeSymbol type)
+	{
+		var unwrapped = UnwrapNullable(type);
+
+		if (unwrapped.SpecialType != SpecialType.None) return true;
+		if (unwrapped.TypeKind == TypeKind.Enum) return true;
+
+		return unwrapped.ToDisplayString() is
+			"System.Guid" or "System.DateTime" or "System.DateTimeOffset" or
+			"System.TimeSpan" or "System.Uri" or "System.DateOnly" or "System.TimeOnly";
+	}
+
+	/// <summary>
 	/// Indicates whether a parameter type would be bound from the request body.
 	/// </summary>
 	/// <remarks>
-	/// Mirrors ASP.NET's inference: simple types and well-known framework types bind from
-	/// the route or query string; everything else binds from the body.
+	/// Mirrors ASP.NET's inference: simple types bind from the route or query string, and
+	/// a complex type binds from the body unless it is a service.  A body is deserialized,
+	/// which needs a concrete type, so an interface, abstract class, or delegate in a handler
+	/// signature is a service resolved from the container.
 	/// </remarks>
 	public static bool LooksLikeBody(ITypeSymbol type)
 	{
 		var unwrapped = UnwrapNullable(type);
 
-		if (unwrapped.SpecialType != SpecialType.None) return false;
-		if (unwrapped.TypeKind == TypeKind.Enum) return false;
+		if (IsSimpleType(unwrapped)) return false;
+		if (unwrapped.TypeKind is TypeKind.Interface or TypeKind.Delegate || unwrapped.IsAbstract) return false;
 
-		return unwrapped.ToDisplayString() switch
+		return !IsFrameworkService(unwrapped);
+	}
+
+	/// <summary>
+	/// Determines where a handler parameter binds from: `body`, `path`, `query`, `header`,
+	/// or `services` for parameters that are not request data.
+	/// </summary>
+	/// <remarks>
+	/// An explicit binding attribute wins.  Otherwise this mirrors ASP.NET's inference: a
+	/// complex type binds from the body, and a simple type binds from the route where a
+	/// segment names it, falling back to the query string.
+	/// </remarks>
+	public static string GetBindingSource(IParameterSymbol parameter, string route)
+	{
+		foreach (var attribute in parameter.GetAttributes())
 		{
-			"System.Guid" or "System.DateTime" or "System.DateTimeOffset" or
-			"System.TimeSpan" or "System.Uri" or "System.DateOnly" or "System.TimeOnly" => false,
-			_ => !IsFrameworkService(unwrapped)
-		};
+			switch (attribute.AttributeClass?.Name)
+			{
+				case "FromBodyAttribute": return "body";
+				case "FromRouteAttribute": return "path";
+				case "FromQueryAttribute": return "query";
+				case "FromHeaderAttribute": return "header";
+				case "FromServicesAttribute":
+				case "FromKeyedServicesAttribute":
+				case "AsParametersAttribute":
+					return "services";
+			}
+		}
+
+		if (IsSimpleType(parameter.Type))
+			return RouteBinds(route, parameter.Name) ? "path" : "query";
+
+		return LooksLikeBody(parameter.Type) ? "body" : "services";
 	}
 
 	/// <summary>
@@ -110,6 +155,22 @@ internal static class EndpointDiscoveryHelpers
 
 		return segment.TrimEnd('?');
 	}
+
+	/// <summary>
+	/// Indicates whether a non-route parameter must be supplied.
+	/// </summary>
+	/// <remarks>
+	/// A parameter is optional when it has a default value or when its type admits null:
+	/// `Nullable&lt;T&gt;`, or a reference type annotated with `?`.  `IsOptional` alone only
+	/// covers the default value, which described `Guid? id` as required.
+	/// </remarks>
+	public static bool IsRequired(IParameterSymbol parameter) =>
+		!parameter.IsOptional && !IsNullable(parameter.Type);
+
+	private static bool IsNullable(ITypeSymbol type) =>
+		type.NullableAnnotation == NullableAnnotation.Annotated ||
+		(type is INamedTypeSymbol { IsGenericType: true } named &&
+		 named.ConstructedFrom.SpecialType == SpecialType.System_Nullable_T);
 
 	/// <summary>
 	/// Indicates whether a type is an ASP.NET service rather than request data.

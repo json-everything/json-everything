@@ -35,6 +35,7 @@ public class JsonSchemaSourceGenerator : IIncrementalGenerator
 				provider.GlobalOptions.TryGetValue("build_property.RootNamespace", out var rootNamespace);
 				provider.GlobalOptions.TryGetValue("build_property.JsonSchemaDefaultPropertyNaming", out var namingRaw);
 				provider.GlobalOptions.TryGetValue("build_property.JsonSchemaDefaultPropertyOrder", out var orderRaw);
+				provider.GlobalOptions.TryGetValue("build_property.JsonSchemaDefaultEnumFormat", out var enumFormatRaw);
 
 				var defaultNaming = Enum.TryParse<NamingConvention>(namingRaw, ignoreCase: true, out var parsedNaming)
 					? parsedNaming
@@ -42,13 +43,17 @@ public class JsonSchemaSourceGenerator : IIncrementalGenerator
 				var defaultOrder = Enum.TryParse<PropertyOrder>(orderRaw, ignoreCase: true, out var parsedOrder)
 					? parsedOrder
 					: PropertyOrder.AsDeclared;
+				var defaultEnumFormat = Enum.TryParse<EnumFormat>(enumFormatRaw, ignoreCase: true, out var parsedEnumFormat)
+					? parsedEnumFormat
+					: EnumFormat.Names;
 
 				return new GenerationOptions
 				{
 					IsDisabled = disabled?.Equals("true", StringComparison.OrdinalIgnoreCase) == true,
 					RootNamespace = rootNamespace ?? string.Empty,
 					DefaultPropertyNaming = defaultNaming,
-					DefaultPropertyOrder = defaultOrder
+					DefaultPropertyOrder = defaultOrder,
+					DefaultEnumFormat = defaultEnumFormat
 				};
 			});
 
@@ -93,15 +98,15 @@ public class JsonSchemaSourceGenerator : IIncrementalGenerator
 		var generatedSchemaMembersByAssembly = new Dictionary<string, HashSet<string>>(StringComparer.Ordinal);
 		var analyzedTypes = new List<TypeInfo>();
 		var gatheredTypes = new HashSet<ITypeSymbol>(SymbolEqualityComparer.Default);
-		var discoveredTypeOptions = new Dictionary<ITypeSymbol, (NamingConvention Naming, PropertyOrder Order)>(SymbolEqualityComparer.Default);
+		var discoveredTypeOptions = new Dictionary<ITypeSymbol, (NamingConvention Naming, PropertyOrder Order, EnumFormat EnumFormat)>(SymbolEqualityComparer.Default);
 		foreach (var type in validTypes)
 		{
-			var typeInfo = TypeAnalyzer.Analyze(compilation, type.TypeSymbol, type.AttributeData, context.ReportDiagnostic, options.DefaultPropertyNaming, options.DefaultPropertyOrder);
+			var typeInfo = TypeAnalyzer.Analyze(compilation, type.TypeSymbol, type.AttributeData, context.ReportDiagnostic, options.DefaultPropertyNaming, options.DefaultPropertyOrder, options.DefaultEnumFormat);
 			if (typeInfo != null) 
 			{
 				analyzedTypes.Add(typeInfo);
-				RegisterTypeOptions(discoveredTypeOptions, typeInfo.TypeSymbol, typeInfo.PropertyNaming, typeInfo.PropertyOrder);
-				GatherCandidateTypes(compilation, typeInfo, gatheredTypes, context.ReportDiagnostic, discoveredTypeOptions, typeInfo.PropertyNaming, typeInfo.PropertyOrder);
+				RegisterTypeOptions(discoveredTypeOptions, typeInfo.TypeSymbol, typeInfo.PropertyNaming, typeInfo.PropertyOrder, typeInfo.EnumFormat);
+				GatherCandidateTypes(compilation, typeInfo, gatheredTypes, context.ReportDiagnostic, discoveredTypeOptions, typeInfo.PropertyNaming, typeInfo.PropertyOrder, typeInfo.EnumFormat);
 			}
 		}
 
@@ -124,7 +129,7 @@ public class JsonSchemaSourceGenerator : IIncrementalGenerator
 			{
 				if (allTypeInfos.Any(t => SymbolEqualityComparer.Default.Equals(t.TypeSymbol, arrayTypeSymbol))) continue;
 
-				allTypeInfos.Add(AnalyzeArrayType(arrayTypeSymbol, options.DefaultPropertyNaming, options.DefaultPropertyOrder));
+				allTypeInfos.Add(AnalyzeArrayType(arrayTypeSymbol, options.DefaultPropertyNaming, options.DefaultPropertyOrder, options.DefaultEnumFormat));
 				continue;
 			}
 
@@ -132,13 +137,15 @@ public class JsonSchemaSourceGenerator : IIncrementalGenerator
 			{
 				var naming = options.DefaultPropertyNaming;
 				var order = options.DefaultPropertyOrder;
+				var enumFormat = options.DefaultEnumFormat;
 				if (discoveredTypeOptions.TryGetValue(namedTypeSymbol, out var discovered))
 				{
 					naming = discovered.Naming;
 					order = discovered.Order;
+					enumFormat = discovered.EnumFormat;
 				}
 
-				var typeInfo = TypeAnalyzer.Analyze(compilation, namedTypeSymbol, null, context.ReportDiagnostic, naming, order);
+				var typeInfo = TypeAnalyzer.Analyze(compilation, namedTypeSymbol, null, context.ReportDiagnostic, naming, order, enumFormat);
 				if (typeInfo != null)
 					allTypeInfos.Add(typeInfo);
 			}
@@ -209,17 +216,17 @@ public class JsonSchemaSourceGenerator : IIncrementalGenerator
 			CollectSchemaHandlers(nested, results, systemType);
 	}
 
-	private static void GatherCandidateTypes(Compilation compilation, TypeInfo typeInfo, HashSet<ITypeSymbol> allTypes, Action<Diagnostic> reportDiagnostic, Dictionary<ITypeSymbol, (NamingConvention Naming, PropertyOrder Order)> discoveredTypeOptions, NamingConvention naming, PropertyOrder order)
+	private static void GatherCandidateTypes(Compilation compilation, TypeInfo typeInfo, HashSet<ITypeSymbol> allTypes, Action<Diagnostic> reportDiagnostic, Dictionary<ITypeSymbol, (NamingConvention Naming, PropertyOrder Order, EnumFormat EnumFormat)> discoveredTypeOptions, NamingConvention naming, PropertyOrder order, EnumFormat enumFormat)
 	{
-		CollectTypeRecursive(compilation, typeInfo.TypeSymbol, allTypes, reportDiagnostic, discoveredTypeOptions, naming, order);
+		CollectTypeRecursive(compilation, typeInfo.TypeSymbol, allTypes, reportDiagnostic, discoveredTypeOptions, naming, order, enumFormat);
 
 		foreach (var prop in typeInfo.Properties)
 		{
-			CollectTypeRecursive(compilation, prop.Type, allTypes, reportDiagnostic, discoveredTypeOptions, naming, order);
+			CollectTypeRecursive(compilation, prop.Type, allTypes, reportDiagnostic, discoveredTypeOptions, naming, order, enumFormat);
 		}
 	}
 
-	private static void CollectTypeRecursive(Compilation compilation, ITypeSymbol typeSymbol, HashSet<ITypeSymbol> allTypes, Action<Diagnostic> reportDiagnostic, Dictionary<ITypeSymbol, (NamingConvention Naming, PropertyOrder Order)> discoveredTypeOptions, NamingConvention naming, PropertyOrder order)
+	private static void CollectTypeRecursive(Compilation compilation, ITypeSymbol typeSymbol, HashSet<ITypeSymbol> allTypes, Action<Diagnostic> reportDiagnostic, Dictionary<ITypeSymbol, (NamingConvention Naming, PropertyOrder Order, EnumFormat EnumFormat)> discoveredTypeOptions, NamingConvention naming, PropertyOrder order, EnumFormat enumFormat)
 	{
 		var unwrapped = CodeEmitterHelpers.UnwrapNullable(typeSymbol);
 		if (IsBuiltInJsonDomType(unwrapped)) return;
@@ -234,7 +241,7 @@ public class JsonSchemaSourceGenerator : IIncrementalGenerator
 		if (typeKind == TypeKind.Enum && unwrapped is INamedTypeSymbol enumType)
 		{
 			if (allTypes.Add(enumType))
-				RegisterTypeOptions(discoveredTypeOptions, enumType, naming, order);
+				RegisterTypeOptions(discoveredTypeOptions, enumType, naming, order, enumFormat);
 			return;
 		}
 
@@ -244,7 +251,7 @@ public class JsonSchemaSourceGenerator : IIncrementalGenerator
 
 			var elementType = CodeEmitterHelpers.GetElementType(unwrapped);
 			if (elementType != null)
-				CollectTypeRecursive(compilation, elementType, allTypes, reportDiagnostic, discoveredTypeOptions, naming, order);
+				CollectTypeRecursive(compilation, elementType, allTypes, reportDiagnostic, discoveredTypeOptions, naming, order, enumFormat);
 			return;
 		}
 
@@ -254,27 +261,27 @@ public class JsonSchemaSourceGenerator : IIncrementalGenerator
 
 			var keyType = CodeEmitterHelpers.GetDictionaryKeyType(unwrapped);
 			if (keyType != null)
-				CollectTypeRecursive(compilation, keyType, allTypes, reportDiagnostic, discoveredTypeOptions, naming, order);
+				CollectTypeRecursive(compilation, keyType, allTypes, reportDiagnostic, discoveredTypeOptions, naming, order, enumFormat);
 
 			var valueType = CodeEmitterHelpers.GetDictionaryValueType(unwrapped);
 			if (valueType != null)
-				CollectTypeRecursive(compilation, valueType, allTypes, reportDiagnostic, discoveredTypeOptions, naming, order);
+				CollectTypeRecursive(compilation, valueType, allTypes, reportDiagnostic, discoveredTypeOptions, naming, order, enumFormat);
 			return;
 		}
 
 		if (typeKind == TypeKind.Object && unwrapped is INamedTypeSymbol namedType)
 		{
-			RegisterTypeOptions(discoveredTypeOptions, namedType, naming, order);
+			RegisterTypeOptions(discoveredTypeOptions, namedType, naming, order, enumFormat);
 
 			if (allTypes.Add(namedType))
 			{
 				// Analyze the type to collect its properties' types
-				var tempTypeInfo = TypeAnalyzer.Analyze(compilation, namedType, null, reportDiagnostic, naming, order);
+				var tempTypeInfo = TypeAnalyzer.Analyze(compilation, namedType, null, reportDiagnostic, naming, order, enumFormat);
 				if (tempTypeInfo != null && tempTypeInfo.ExplicitSchemaExpression == null)
 				{
 					foreach (var prop in tempTypeInfo.Properties)
 					{
-						CollectTypeRecursive(compilation, prop.Type, allTypes, reportDiagnostic, discoveredTypeOptions, naming, order);
+						CollectTypeRecursive(compilation, prop.Type, allTypes, reportDiagnostic, discoveredTypeOptions, naming, order, enumFormat);
 					}
 				}
 			}
@@ -306,14 +313,14 @@ public class JsonSchemaSourceGenerator : IIncrementalGenerator
 			"global::System.Text.Json.Nodes.JsonArray";
 	}
 
-	private static void RegisterTypeOptions(Dictionary<ITypeSymbol, (NamingConvention Naming, PropertyOrder Order)> discoveredTypeOptions, ITypeSymbol typeSymbol, NamingConvention naming, PropertyOrder order)
+	private static void RegisterTypeOptions(Dictionary<ITypeSymbol, (NamingConvention Naming, PropertyOrder Order, EnumFormat EnumFormat)> discoveredTypeOptions, ITypeSymbol typeSymbol, NamingConvention naming, PropertyOrder order, EnumFormat enumFormat)
 	{
 		if (discoveredTypeOptions.ContainsKey(typeSymbol)) return;
 
-		discoveredTypeOptions[typeSymbol] = (naming, order);
+		discoveredTypeOptions[typeSymbol] = (naming, order, enumFormat);
 	}
 
-	private static TypeInfo AnalyzeArrayType(IArrayTypeSymbol typeSymbol, NamingConvention propertyNaming, PropertyOrder propertyOrder)
+	private static TypeInfo AnalyzeArrayType(IArrayTypeSymbol typeSymbol, NamingConvention propertyNaming, PropertyOrder propertyOrder, EnumFormat enumFormat)
 	{
 		return new TypeInfo
 		{
@@ -323,6 +330,7 @@ public class JsonSchemaSourceGenerator : IIncrementalGenerator
 			PropertyNaming = propertyNaming,
 			PropertyOrder = propertyOrder,
 			StrictConditionals = false,
+			EnumFormat = enumFormat,
 			Kind = TypeKind.Array,
 			IsNullable = false
 		};
@@ -749,5 +757,6 @@ public class JsonSchemaSourceGenerator : IIncrementalGenerator
 		public required string RootNamespace { get; init; }
 		public required NamingConvention DefaultPropertyNaming { get; init; }
 		public required PropertyOrder DefaultPropertyOrder { get; init; }
+		public required EnumFormat DefaultEnumFormat { get; init; }
 	}
 }

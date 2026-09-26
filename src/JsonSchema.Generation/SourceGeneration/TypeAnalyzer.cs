@@ -10,7 +10,7 @@ namespace Json.Schema.Generation.SourceGeneration;
 
 internal static class TypeAnalyzer
 {
-	public static TypeInfo? Analyze(Compilation compilation, INamedTypeSymbol typeSymbol, AttributeData? attributeData, Action<Diagnostic> reportDiagnostic, NamingConvention defaultPropertyNaming = NamingConvention.AsDeclared, PropertyOrder defaultPropertyOrder = PropertyOrder.AsDeclared)
+	public static TypeInfo? Analyze(Compilation compilation, INamedTypeSymbol typeSymbol, AttributeData? attributeData, Action<Diagnostic> reportDiagnostic, NamingConvention defaultPropertyNaming = NamingConvention.AsDeclared, PropertyOrder defaultPropertyOrder = PropertyOrder.AsDeclared, EnumFormat defaultEnumFormat = EnumFormat.Names)
 	{
 		if (typeSymbol is { IsGenericType: true, IsUnboundGenericType: false })
 		{
@@ -52,6 +52,9 @@ internal static class TypeAnalyzer
 		}
 
 		var typeKind = DetermineTypeKind(typeSymbol);
+		var enumFormat = typeKind == TypeKind.Enum
+			? CodeEmitterHelpers.DetectEnumFormat(typeSymbol) ?? defaultEnumFormat
+			: defaultEnumFormat;
 		var isNullable = IsNullableType(typeSymbol);
 
 		var typeInfo = new TypeInfo
@@ -62,6 +65,7 @@ internal static class TypeAnalyzer
 			PropertyNaming = propertyNaming,
 			PropertyOrder = propertyOrder,
 			StrictConditionals = strictConditionals,
+			EnumFormat = enumFormat,
 			Kind = typeKind,
 			IsNullable = isNullable,
 			XmlDocSummary = GetXmlDocSummary(typeSymbol)
@@ -266,6 +270,7 @@ internal static class TypeAnalyzer
 				IsNullable = isNullable,
 				IsReadOnly = isReadOnly,
 				IsWriteOnly = isWriteOnly,
+				ConverterEnumFormat = CodeEmitterHelpers.DetectEnumFormat(memberAttributes),
 				XmlDocSummary = GetXmlDocSummary(member)
 			};
 

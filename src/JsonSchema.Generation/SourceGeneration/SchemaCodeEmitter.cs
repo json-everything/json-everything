@@ -10,7 +10,7 @@ namespace Json.Schema.Generation.SourceGeneration;
 
 internal static class SchemaCodeEmitter
 {
-	public static void EmitSchemaForType(StringBuilder sb, ITypeSymbol typeSymbol, bool isNullable, string indent, SchemaEmissionContext? context = null, List<AttributeInfo>? itemAttributes = null, List<AttributeInfo>? propertyAttributes = null)
+	public static void EmitSchemaForType(StringBuilder sb, ITypeSymbol typeSymbol, bool isNullable, string indent, SchemaEmissionContext? context = null, List<AttributeInfo>? itemAttributes = null, List<AttributeInfo>? propertyAttributes = null, EnumFormat? enumFormatOverride = null)
 	{
 		var unwrapped = CodeEmitterHelpers.UnwrapNullable(typeSymbol);
 		var typeKind = DetermineTypeKind(unwrapped);
@@ -94,7 +94,7 @@ internal static class SchemaCodeEmitter
 			return;
 		}
 
-		if (typeKind == TypeKind.Enum && context != null)
+		if (typeKind == TypeKind.Enum && context != null && enumFormatOverride is null)
 		{
 			if (context.RootType != null && SymbolEqualityComparer.Default.Equals(unwrapped, CodeEmitterHelpers.UnwrapNullable(context.RootType)))
 				return;
@@ -131,6 +131,9 @@ internal static class SchemaCodeEmitter
 				PropertyNaming = NamingConvention.AsDeclared,
 				PropertyOrder = PropertyOrder.AsDeclared,
 				StrictConditionals = false,
+				EnumFormat = typeKind == TypeKind.Enum
+					? enumFormatOverride ?? CodeEmitterHelpers.DetectEnumFormat(unwrapped) ?? EnumFormat.Names
+					: EnumFormat.Names,
 				Kind = typeKind,
 				IsNullable = isNullable,
 				ItemAttributes = itemAttributes,
@@ -139,7 +142,7 @@ internal static class SchemaCodeEmitter
 
 			if (typeKind == TypeKind.Enum)
 			{
-				foreach (var member in namedTypeSymbol.GetMembers())
+				foreach (var member in unwrapped.GetMembers())
 				{
 					if (member is IFieldSymbol { IsConst: true, HasConstantValue: true } field)
 					{

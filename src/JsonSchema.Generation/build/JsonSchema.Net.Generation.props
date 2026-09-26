@@ -3,5 +3,6 @@
     <CompilerVisibleProperty Include="DisableJsonSchemaSourceGeneration" />
     <CompilerVisibleProperty Include="JsonSchemaDefaultPropertyNaming" />
     <CompilerVisibleProperty Include="JsonSchemaDefaultPropertyOrder" />
+    <CompilerVisibleProperty Include="JsonSchemaDefaultEnumFormat" />
   </ItemGroup>
 </Project>

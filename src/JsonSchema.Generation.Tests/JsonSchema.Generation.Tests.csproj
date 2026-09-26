@@ -33,6 +33,7 @@
 	<ItemGroup>
 		<CompilerVisibleProperty Include="JsonSchemaDefaultPropertyNaming" />
 		<CompilerVisibleProperty Include="JsonSchemaDefaultPropertyOrder" />
+		<CompilerVisibleProperty Include="JsonSchemaDefaultEnumFormat" />
 	</ItemGroup>
 
 </Project>
