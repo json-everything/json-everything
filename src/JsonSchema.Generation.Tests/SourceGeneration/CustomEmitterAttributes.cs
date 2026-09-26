@@ -7,8 +7,12 @@ namespace Json.Schema.Generation.Tests.SourceGeneration;
 /// Users can create attributes like this that implement IAttributeHandler
 /// and provide their own schema builder logic via a static Apply method.
 /// </summary>
+/// <remarks>
+/// Derives from <see cref="ConditionalAttribute"/> so it can carry a `ConditionGroup`, which
+/// is how a custom attribute participates in a conditional.
+/// </remarks>
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Class)]
-public class CustomFormatAttribute : Attribute, IAttributeHandler<CustomFormatAttribute>
+public class CustomFormatAttribute : ConditionalAttribute, IAttributeHandler<CustomFormatAttribute>
 {
 	public string FormatName { get; }
 

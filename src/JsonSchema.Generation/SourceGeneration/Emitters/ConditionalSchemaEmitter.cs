@@ -146,17 +146,9 @@ internal static class ConditionalSchemaEmitter
 					if (fullProp != null)
 					{
 						PropertySchemaEmitter.EmitPropertySchema(sb, fullProp, indent + "\t\t", context);
-						
-						foreach (var attr in prop.ConditionalAttributes)
-						{
-							if (SchemaCodeEmitter.ShouldEmitBuiltInAttribute(attr))
-							{
-								sb.AppendLine();
-								sb.Append($"{indent}\t\t\t");
-								SchemaCodeEmitter.EmitAttributeConstraint(sb, attr);
-							}
-						}
-						
+
+						EmitConditionalAttributes(sb, prop.ConditionalAttributes, $"{indent}\t\t\t");
+
 						if (prop.IsConditionallyReadOnly)
 						{
 							sb.AppendLine();
@@ -171,30 +163,15 @@ internal static class ConditionalSchemaEmitter
 					else
 					{
 						sb.Append("new JsonSchemaBuilder()");
-						foreach (var attr in prop.ConditionalAttributes)
-						{
-							if (SchemaCodeEmitter.ShouldEmitBuiltInAttribute(attr))
-							{
-								sb.AppendLine();
-								sb.Append($"{indent}\t\t\t");
-								SchemaCodeEmitter.EmitAttributeConstraint(sb, attr);
-							}
-						}
+
+						EmitConditionalAttributes(sb, prop.ConditionalAttributes, $"{indent}\t\t\t");
 					}
 				}
 				else
 				{
 					sb.Append("new JsonSchemaBuilder()");
 
-					foreach (var attr in prop.ConditionalAttributes)
-					{
-						if (SchemaCodeEmitter.ShouldEmitBuiltInAttribute(attr))
-						{
-							sb.AppendLine();
-							sb.Append($"{indent}\t\t\t");
-							SchemaCodeEmitter.EmitAttributeConstraint(sb, attr);
-						}
-					}
+					EmitConditionalAttributes(sb, prop.ConditionalAttributes, $"{indent}\t\t\t");
 
 					if (prop.IsConditionallyReadOnly)
 					{
@@ -239,5 +216,36 @@ internal static class ConditionalSchemaEmitter
 
 		sb.AppendLine();
 		sb.Append($"{indent})");
+	}
+
+	/// <summary>
+	/// Emits the constraints a condition group applies to one property.
+	/// </summary>
+	/// <remarks>
+	/// A custom attribute carries its own emitter, so it is emitted as a call to that rather
+	/// than through the built-in constraint switch — the same split the unconditional path
+	/// makes.  Filtering to built-ins here dropped custom attributes from the consequence.
+	/// </remarks>
+	private static void EmitConditionalAttributes(
+		StringBuilder sb,
+		List<AttributeInfo> attributes,
+		string indent)
+	{
+		foreach (var attr in attributes)
+		{
+			if (attr is { IsCustomEmitter: true, AttributeFullName: not null })
+			{
+				sb.AppendLine();
+				sb.Append(indent);
+				SchemaCodeEmitter.EmitCustomAttributeCall(sb, attr);
+				continue;
+			}
+
+			if (!SchemaCodeEmitter.ShouldEmitBuiltInAttribute(attr)) continue;
+
+			sb.AppendLine();
+			sb.Append(indent);
+			SchemaCodeEmitter.EmitAttributeConstraint(sb, attr);
+		}
 	}
 }

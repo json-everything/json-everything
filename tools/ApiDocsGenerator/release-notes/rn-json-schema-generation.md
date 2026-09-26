@@ -6,6 +6,8 @@ order: "09.05"
 ---
 # [7.3.12](https://github.com/json-everything/json-everything/pull/1060) {#release-schemagen-7.3.12}
 
+[#1059](https://github.com/json-everything/json-everything/issues/1059) - Source generation drops a custom attribute's constraint when the attribute carries a `ConditionGroup`, leaving an empty `then` where runtime generation produces the constraint.  Thanks to [@xavier-hunt](https://github.com/xavier-hunt) for reporting.
+
 Fixes `[Id]` being ignored by source generation when the attribute is applied to a type in a referenced assembly.
 
 # [7.3.11](https://github.com/json-everything/json-everything/pull/1057) {#release-schemagen-7.3.11}

@@ -812,7 +812,7 @@ internal static class SchemaCodeEmitter
 		sb.AppendLine("}");
 	}
 
-	private static void EmitCustomAttributeCall(StringBuilder sb, AttributeInfo attr)
+	internal static void EmitCustomAttributeCall(StringBuilder sb, AttributeInfo attr)
 	{
 		var lastDot = attr.AttributeFullName!.LastIndexOf('.');
 		var attrName = lastDot >= 0 ? attr.AttributeFullName[(lastDot + 1)..] : attr.AttributeFullName;
