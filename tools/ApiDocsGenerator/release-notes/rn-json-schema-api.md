@@ -4,6 +4,10 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "09.055"
 ---
+# [1.2.2](https://github.com/json-everything/json-everything/pull/1061) {#release-schemaapi-1.2.2}
+
+Fixed analyzer `EnumFormat` output.
+
 # [1.2.1](https://github.com/json-everything/json-everything/pull/1061) {#release-schemaapi-1.2.1}
 
 - Fixed a generator packing issue.
