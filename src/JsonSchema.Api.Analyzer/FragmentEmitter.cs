@@ -173,7 +173,7 @@ internal static class FragmentEmitter
 		if (name is not null)
 			sb.AppendLine($"\t\tName = \"{Escape(name)}\",");
 
-		sb.AppendLine($"\t\tEnumFormat = global::Json.Schema.Generation.Serialization.EnumFormat.{enumFormat},");
+		sb.AppendLine($"\t\tEnumFormat = global::Json.Schema.Generation.SourceGeneration.EnumFormat.{enumFormat},");
 
 		EmitSchemaMap(sb, types);
 		EmitComponentNameMap(sb, types);
