@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace Json.Schema.Api.OpenApi;
 
@@ -13,12 +15,20 @@ internal static class OpenApiDocumentBuilder
 {
 	private const string _validationErrorType = "https://json-everything.net/errors/validation";
 	private const string _validationProblemComponent = "ValidationProblemDetails";
+	private const string _componentSchemaPointer = "#/components/schemas/";
 
 	/// <summary>
-	/// Collects every registered fragment.
+	/// Collects the registered fragments contributing to a description.
 	/// </summary>
-	public static IReadOnlyList<OpenApiFragment> CollectFragments() =>
-		OpenApiFragmentRegistry.GetFragments();
+	/// <param name="documentName">
+	/// The description's name, or null for the default description.
+	/// </param>
+	/// <remarks>
+	/// Each assembly emits one fragment per description it contributes to, so this is a
+	/// matter of selecting the fragments carrying the name rather than filtering operations.
+	/// </remarks>
+	public static IReadOnlyList<OpenApiFragment> CollectFragments(string? documentName = null) =>
+		[.. OpenApiFragmentRegistry.GetFragments().Where(x => x.Name == documentName)];
 
 	/// <summary>
 	/// Builds a document from the given fragments.
@@ -64,6 +74,10 @@ internal static class OpenApiDocumentBuilder
 			AddOperation(paths, operation, componentNames, validationProblemName, ref validationProblemUsed);
 		}
 
+		// A description carries only the components its own operations reach, so splitting
+		// the API does not give every description every schema.
+		Prune(schemas, fragments, componentNames);
+
 		// Added only when an endpoint references it, so an API with nothing validated carries
 		// no unreferenced component.
 		if (validationProblemUsed)
@@ -96,6 +110,9 @@ internal static class OpenApiDocumentBuilder
 		var operation = new Operation
 		{
 			OperationId = source.OperationId,
+			Summary = source.Summary,
+			Description = source.Description,
+			Tags = source.Tags.Count == 0 ? null : source.Tags,
 			Parameters = BuildParameters(source, componentNames),
 			RequestBody = BuildRequestBody(source, componentNames),
 			Responses = BuildResponses(source, componentNames, validationProblemName, ref validationProblemUsed)
@@ -124,6 +141,7 @@ internal static class OpenApiDocumentBuilder
 		[
 			.. source.Parameters.Select(x => new Parameter(x.Name, ParseLocation(x.Location))
 			{
+				Description = x.Description,
 				Required = x.Required,
 				Schema = SchemaFor(x.Type, componentNames)
 			})
@@ -141,6 +159,7 @@ internal static class OpenApiDocumentBuilder
 			["application/json"] = new() { Schema = SchemaFor(source.RequestBodyType, componentNames) }
 		})
 		{
+			Description = source.RequestBodyDescription,
 			Required = true
 		};
 	}
@@ -201,6 +220,102 @@ internal static class OpenApiDocumentBuilder
 				("detail", new JsonSchemaBuilder().Type(SchemaValueType.String)),
 				("errors", new JsonSchemaBuilder().Type(SchemaValueType.Object))
 			);
+
+	/// <summary>
+	/// Removes the component schemas the given operations do not reach.
+	/// </summary>
+	/// <remarks>
+	/// A schema can reference another, so this follows `$ref`s outward from the types the
+	/// operations name rather than keeping only those types.
+	/// </remarks>
+	private static void Prune(
+		Dictionary<string, JsonSchema> schemas,
+		IReadOnlyList<OpenApiFragment> fragments,
+		IReadOnlyDictionary<Type, string> componentNames)
+	{
+		var reachable = new HashSet<string>();
+		var pending = new Queue<string>();
+
+		foreach (var type in fragments.SelectMany(x => x.Operations).SelectMany(ReferencedTypes))
+		{
+			if (type is null) continue;
+			if (!componentNames.TryGetValue(type, out var name)) continue;
+			if (reachable.Add(name)) pending.Enqueue(name);
+		}
+
+		while (pending.Count != 0)
+		{
+			var name = pending.Dequeue();
+			if (!schemas.TryGetValue(name, out var schema)) continue;
+
+			foreach (var referenced in ComponentRefs(schema))
+			{
+				if (reachable.Add(referenced)) pending.Enqueue(referenced);
+			}
+		}
+
+		foreach (var name in schemas.Keys.Where(x => !reachable.Contains(x)).ToArray())
+		{
+			schemas.Remove(name);
+		}
+	}
+
+	private static IEnumerable<Type?> ReferencedTypes(OpenApiFragmentOperation operation)
+	{
+		yield return operation.RequestBodyType;
+
+		foreach (var parameter in operation.Parameters)
+		{
+			yield return parameter.Type;
+		}
+
+		foreach (var response in operation.Responses)
+		{
+			yield return response.Type;
+		}
+	}
+
+	private static IEnumerable<string> ComponentRefs(JsonSchema schema)
+	{
+		var node = JsonSerializer.SerializeToNode(schema, ApiSerializerContext.Default.JsonSchema);
+
+		return node is null ? [] : ComponentRefs(node);
+	}
+
+	private static IEnumerable<string> ComponentRefs(JsonNode? node)
+	{
+		switch (node)
+		{
+			case JsonObject obj:
+				foreach (var kvp in obj)
+				{
+					if (kvp.Key == "$ref" &&
+						kvp.Value is JsonValue value &&
+						value.TryGetValue<string>(out var reference) &&
+						reference.StartsWith(_componentSchemaPointer, StringComparison.Ordinal))
+					{
+						yield return reference[_componentSchemaPointer.Length..];
+						continue;
+					}
+
+					foreach (var nested in ComponentRefs(kvp.Value))
+					{
+						yield return nested;
+					}
+				}
+				break;
+
+			case JsonArray array:
+				foreach (var item in array)
+				{
+					foreach (var nested in ComponentRefs(item))
+					{
+						yield return nested;
+					}
+				}
+				break;
+		}
+	}
 
 	private static string ClaimName(IReadOnlyDictionary<string, JsonSchema> schemas, string preferred)
 	{

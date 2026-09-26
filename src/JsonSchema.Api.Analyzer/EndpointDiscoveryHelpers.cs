@@ -1,3 +1,4 @@
+using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
@@ -56,6 +57,42 @@ internal static class EndpointDiscoveryHelpers
 		}
 
 		return false;
+	}
+
+	/// <summary>
+	/// Reduces a route template's segments to bare parameter names.
+	/// </summary>
+	/// <remarks>
+	/// Constraints, defaults, and catch-all markers are ASP.NET routing syntax; an OpenAPI
+	/// path template carries only the name, so `/users/{id:int}` is described as
+	/// `/users/{id}`.
+	/// </remarks>
+	public static string NormalizeRoute(string route)
+	{
+		if (route.IndexOf('{') < 0) return route;
+
+		var sb = new StringBuilder();
+		var index = 0;
+
+		while (index < route.Length)
+		{
+			var start = route.IndexOf('{', index);
+			if (start < 0) break;
+
+			var end = route.IndexOf('}', start);
+			if (end < 0) break;
+
+			sb.Append(route, index, start - index);
+			sb.Append('{');
+			sb.Append(SegmentName(route.Substring(start + 1, end - start - 1)));
+			sb.Append('}');
+
+			index = end + 1;
+		}
+
+		sb.Append(route, index, route.Length - index);
+
+		return sb.ToString();
 	}
 
 	private static string SegmentName(string segment)

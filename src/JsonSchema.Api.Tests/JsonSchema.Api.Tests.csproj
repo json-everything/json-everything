@@ -7,9 +7,11 @@
 		<IsPackable>false</IsPackable>
 
 		<RootNamespace>Json.Schema.Api.Tests</RootNamespace>
-		<NoWarn>IDE0290</NoWarn>
+		<NoWarn>IDE0290;CS1591</NoWarn>
 		<Nullable>enable</Nullable>
 		<GenerateProgramFile>false</GenerateProgramFile>
+		<!-- The generator reads documentation comments into the description, which needs them parsed. -->
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 	</PropertyGroup>
 
 	<PropertyGroup>

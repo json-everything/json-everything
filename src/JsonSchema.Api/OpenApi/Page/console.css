@@ -36,7 +36,7 @@
 
 		--oa-radius: 4px;
 		--oa-nav-width: 240px;
-		--oa-rail-width: 370px;
+		--oa-rail-width: 592px;
 		--oa-bar-height: 53px;
 	}
 
@@ -202,10 +202,31 @@
 
 	.oa-shell {
 		display: grid;
-		grid-template-columns: var(--oa-nav-width) minmax(0, 1fr) var(--oa-rail-width);
+		grid-template-columns: var(--oa-nav-width) 6px minmax(0, 1fr) 6px var(--oa-rail-width);
 		align-items: start;
-		max-width: 1480px;
-		margin: 0 auto;
+	}
+
+	/* resize handles */
+
+	.oa-resize {
+		position: sticky;
+		top: calc(env(safe-area-inset-top, 0px) + var(--oa-bar-height));
+		height: calc(100vh - var(--oa-bar-height));
+		cursor: col-resize;
+		touch-action: none;
+	}
+
+	.oa-resize:hover,
+	.oa-resize[data-active="true"] {
+		background: var(--oa-accent-soft);
+	}
+
+	.oa-resize-nav {
+		margin-left: -1px;
+	}
+
+	.oa-resize-rail {
+		margin-right: -1px;
 	}
 
 	/* navigation */
@@ -213,6 +234,7 @@
 	.oa-nav {
 		position: sticky;
 		top: calc(env(safe-area-inset-top, 0px) + var(--oa-bar-height));
+		min-height: calc(100vh - var(--oa-bar-height));
 		max-height: calc(100vh - var(--oa-bar-height));
 		overflow-y: auto;
 		padding: 18px 10px 40px 20px;
@@ -294,20 +316,6 @@
 		max-width: 64ch;
 	}
 
-	.oa-callout {
-		margin-top: 14px;
-		padding: 10px 13px;
-		background: var(--oa-sunken);
-		border-left: 2px solid var(--oa-accent);
-		font-size: 13px;
-		color: var(--oa-text-soft);
-		max-width: 64ch;
-	}
-
-	.oa-callout code {
-		font-size: 12px;
-	}
-
 	.oa-operation {
 		padding: 26px 0;
 		border-bottom: 1px solid var(--oa-rule);
@@ -320,6 +328,27 @@
 		gap: 9px;
 		flex-wrap: wrap;
 		margin-bottom: 5px;
+		cursor: pointer;
+	}
+
+	.oa-operation-header:hover .oa-path {
+		color: var(--oa-accent);
+	}
+
+	.oa-operation[aria-current="true"] .oa-path {
+		color: var(--oa-accent);
+	}
+
+	.oa-rail-operation {
+		display: flex;
+		align-items: center;
+		gap: 9px;
+		flex-wrap: wrap;
+		margin-bottom: 12px;
+	}
+
+	.oa-rail-operation .oa-operation-id {
+		flex-basis: 100%;
 	}
 
 	.oa-method {
@@ -574,6 +603,7 @@
 	.oa-rail {
 		position: sticky;
 		top: calc(env(safe-area-inset-top, 0px) + var(--oa-bar-height));
+		min-height: calc(100vh - var(--oa-bar-height));
 		max-height: calc(100vh - var(--oa-bar-height));
 		overflow-y: auto;
 		padding: 18px 20px 60px 14px;
@@ -769,12 +799,17 @@
 
 	@media (max-width: 1140px) {
 		.oa-shell {
-			grid-template-columns: var(--oa-nav-width) minmax(0, 1fr);
+			grid-template-columns: var(--oa-nav-width) 6px minmax(0, 1fr);
+		}
+
+		.oa-resize-rail {
+			display: none;
 		}
 
 		.oa-rail {
 			grid-column: 1 / -1;
 			position: static;
+			min-height: 0;
 			max-height: none;
 			border-left: 0;
 			border-top: 1px solid var(--oa-rule);
@@ -787,8 +822,13 @@
 			grid-template-columns: minmax(0, 1fr);
 		}
 
+		.oa-resize {
+			display: none;
+		}
+
 		.oa-nav {
 			position: static;
+			min-height: 0;
 			max-height: none;
 			border-right: 0;
 			border-bottom: 1px solid var(--oa-rule);

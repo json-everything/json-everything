@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -46,16 +47,39 @@ internal static class FragmentEmitter
 		sb.AppendLine($"public static class {OpenApiSourceGenerator.FragmentClassName}");
 		sb.AppendLine("{");
 
+		// One fragment per description the assembly contributes to, so assembling a
+		// description is a matter of collecting the fragments carrying its name rather than
+		// filtering every operation in the application.  An endpoint named by several
+		// descriptions appears in each; the schema fields below are shared, so only the map
+		// entries repeat.
+		var names = endpoints
+			.SelectMany(x => x.DocumentNames.Count == 0 ? [null] : x.DocumentNames.Cast<string?>())
+			.Distinct()
+			.OrderBy(x => x, StringComparer.Ordinal)
+			.ToArray();
+
 		EmitSchemas(sb, types, componentIds);
-		EmitFragment(sb, types, endpoints);
-		EmitRegistration(sb, referencedFragments);
+
+		foreach (var name in names)
+		{
+			var selected = endpoints
+				.Where(x => name is null ? x.DocumentNames.Count == 0 : x.DocumentNames.Contains(name))
+				.ToArray();
+
+			EmitFragment(sb, types, selected, name, FragmentFieldName(name));
+		}
+
+		EmitRegistration(sb, referencedFragments, names);
 
 		sb.AppendLine("}");
 
 		return sb.ToString();
 	}
 
-	private static void EmitRegistration(StringBuilder sb, IReadOnlyList<string> referencedFragments)
+	private static void EmitRegistration(
+		StringBuilder sb,
+		IReadOnlyList<string> referencedFragments,
+		IReadOnlyList<string?> names)
 	{
 		sb.AppendLine();
 		sb.AppendLine("\t/// <summary>");
@@ -68,7 +92,10 @@ internal static class FragmentEmitter
 		sb.AppendLine("\t[ModuleInitializer]");
 		sb.AppendLine("\tinternal static void Initialize()");
 		sb.AppendLine("\t{");
-		sb.AppendLine("\t\tOpenApiFragmentRegistry.Add(Fragment);");
+		foreach (var name in names)
+		{
+			sb.AppendLine($"\t\tOpenApiFragmentRegistry.Add({FragmentFieldName(name)});");
+		}
 
 		if (referencedFragments.Count != 0)
 		{
@@ -99,13 +126,47 @@ internal static class FragmentEmitter
 		}
 	}
 
-	private static void EmitFragment(StringBuilder sb, IReadOnlyList<TypeInfo> types, IReadOnlyList<EndpointInfo> endpoints)
+	/// <summary>
+	/// The field name holding the fragment for a description.
+	/// </summary>
+	private static string FragmentFieldName(string? name) =>
+		name is null ? "Fragment" : $"Fragment_{Sanitize(name)}";
+
+	/// <summary>
+	/// Reduces a description name to an identifier, since it reaches the source as one.
+	/// </summary>
+	private static string Sanitize(string name)
 	{
+		var sb = new StringBuilder();
+
+		foreach (var c in name)
+		{
+			sb.Append(char.IsLetterOrDigit(c) ? c : '_');
+		}
+
+		return sb.ToString();
+	}
+
+	private static void EmitFragment(
+		StringBuilder sb,
+		IReadOnlyList<TypeInfo> types,
+		IReadOnlyList<EndpointInfo> endpoints,
+		string? name,
+		string fieldName)
+	{
+		sb.AppendLine();
 		sb.AppendLine("\t/// <summary>");
-		sb.AppendLine("\t/// Gets this assembly's fragment.");
+
+		sb.AppendLine(name is null
+			? "\t/// Gets this assembly's contribution to the default description."
+			: $"\t/// Gets this assembly's contribution to the `{name}` description.");
+
 		sb.AppendLine("\t/// </summary>");
-		sb.AppendLine("\tpublic static readonly OpenApiFragment Fragment = new()");
+		sb.AppendLine($"\tpublic static readonly OpenApiFragment {fieldName} = new()");
 		sb.AppendLine("\t{");
+
+		if (name is not null)
+			sb.AppendLine($"\t\tName = \"{Escape(name)}\",");
 
 		EmitSchemaMap(sb, types);
 		EmitComponentNameMap(sb, types);
@@ -151,16 +212,33 @@ internal static class FragmentEmitter
 		{
 			sb.AppendLine("\t\t\tnew OpenApiFragmentOperation");
 			sb.AppendLine("\t\t\t{");
-			sb.AppendLine($"\t\t\t\tRoute = \"{Escape(endpoint.Route)}\",");
+			// Normalized here rather than at discovery, since binding parameters needs the
+			// constraints the template carries.
+			var route = EndpointDiscoveryHelpers.NormalizeRoute(endpoint.Route);
+
+			sb.AppendLine($"\t\t\t\tRoute = \"{Escape(route)}\",");
 			sb.AppendLine($"\t\t\t\tMethod = \"{endpoint.Method}\",");
+
 
 			if (endpoint.OperationId is not null)
 				sb.AppendLine($"\t\t\t\tOperationId = \"{Escape(endpoint.OperationId)}\",");
+
+			if (endpoint.Summary is not null)
+				sb.AppendLine($"\t\t\t\tSummary = \"{Escape(endpoint.Summary)}\",");
+
+			if (endpoint.Description is not null)
+				sb.AppendLine($"\t\t\t\tDescription = \"{Escape(endpoint.Description)}\",");
+
+			if (endpoint.Tags.Count != 0)
+				sb.AppendLine($"\t\t\t\tTags = [{string.Join(", ", endpoint.Tags.Select(x => $"\"{Escape(x)}\""))}],");
 
 			if (endpoint.RequestBodyTypeName is not null)
 			{
 				sb.AppendLine($"\t\t\t\tRequestBodyType = typeof({endpoint.RequestBodyTypeName}),");
 				sb.AppendLine($"\t\t\t\tRequestBodyIsValidated = {(endpoint.RequestBodyIsValidated ? "true" : "false")},");
+
+				if (endpoint.RequestBodyDescription is not null)
+					sb.AppendLine($"\t\t\t\tRequestBodyDescription = \"{Escape(endpoint.RequestBodyDescription)}\",");
 			}
 
 			EmitParameters(sb, endpoint);
@@ -188,6 +266,9 @@ internal static class FragmentEmitter
 
 			if (parameter.TypeName is not null)
 				sb.Append($", Type = typeof({parameter.TypeName})");
+
+			if (parameter.Description is not null)
+				sb.Append($", Description = \"{Escape(parameter.Description)}\"");
 
 			sb.AppendLine(" },");
 		}
@@ -218,5 +299,5 @@ internal static class FragmentEmitter
 	}
 
 	private static string Escape(string value) =>
-		value.Replace("\\", "\\\\").Replace("\"", "\\\"");
+		value.Replace("\\", "\\\\").Replace("\"", "\\\"").Replace("\r", string.Empty).Replace("\n", "\\n");
 }

@@ -1,11 +1,13 @@
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Json.Schema.Api.Tests.TestHost;
 
 /// <summary>
 /// Exercises the discovery shapes <see cref="TestController"/> does not: the verbs other than
-/// POST, route and query parameters, async handlers, and declared response types.
+/// POST, route and query parameters, async handlers, declared response types, and the
+/// metadata read from documentation comments and ASP.NET's own attributes.
 /// </summary>
 /// <remarks>
 /// The route uses the `[controller]` token, so the generator has to perform the same
@@ -13,20 +15,44 @@ namespace Json.Schema.Api.Tests.TestHost;
 /// </remarks>
 [ApiController]
 [Route("api/[controller]")]
+[Tags("Coverage")]
 public class CoverageController : ControllerBase
 {
+	/// <summary>
+	/// Fetches one item.
+	/// </summary>
+	/// <remarks>
+	/// The summary and this remark reach the operation; the <c>param</c>, <c>returns</c>,
+	/// and <c>response</c> elements reach the parameter and the responses.
+	/// </remarks>
+	/// <param name="id">The item's identifier.</param>
+	/// <returns>The item.</returns>
+	/// <response code="404">No item has that identifier.</response>
 	[HttpGet("{id:int}")]
 	public IActionResult GetById(int id)
 	{
 		return Ok(new SimpleModel($"item-{id}", id));
 	}
 
+	/// <summary>
+	/// This summary loses to the attribute.
+	/// </summary>
+	/// <param name="term">Text the name must contain.</param>
+	/// <param name="limit">The most items to return.</param>
 	[HttpGet("search")]
+	[EndpointSummary("Searches items by name.")]
+	[EndpointDescription("Attributes win over the documentation comment.")]
+	[Tags("Search")]
 	public IActionResult Search([FromQuery] string term, [FromQuery] int? limit)
 	{
 		return Ok(new SimpleModel(term, limit ?? 0));
 	}
 
+	/// <summary>
+	/// Replaces an item.
+	/// </summary>
+	/// <param name="id">The item's identifier.</param>
+	/// <param name="model">The item's new state.</param>
 	[HttpPut("{id:int}")]
 	public IActionResult Replace(int id, [FromBody] StrictModel model)
 	{

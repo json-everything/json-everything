@@ -21,6 +21,16 @@ builder.Services.AddOpenApi(c =>
 	c.Document.Info.Version = "2.4.0";
 });
 
+builder.Services.AddOpenApi("admin", c =>
+{
+	c.Document.Info.Title = "Admin API";
+});
+
+builder.Services.AddOpenApi("partner", c =>
+{
+	c.Document.Info.Title = "Partner API";
+});
+
 var app = builder.Build();
 
 app.MapControllers();
@@ -34,7 +44,10 @@ minimal.MapPost("/unvalidated", (UnvalidatedModel model) => Results.Ok(model));
 // The verbs other than POST, and parameters that come from the route and the query rather
 // than the body.
 minimal.MapGet("/{id:int}", (int id) => Results.Ok(new SimpleModel($"item-{id}", id)));
-minimal.MapGet("/search", (string term, int? limit) => Results.Ok(new SimpleModel(term, limit ?? 0)));
+minimal.MapGet("/search", (string term, int? limit) => Results.Ok(new SimpleModel(term, limit ?? 0)))
+	.WithSummary("Searches items by name.")
+	.WithDescription("Fluent metadata reaches the operation.")
+	.WithTags("Minimal", "Search");
 minimal.MapPut("/{id:int}", (int id, StrictModel model) => Results.Ok(model));
 minimal.MapPatch("/{id:int}", (int id, SimpleModel model) => Results.Ok(model));
 minimal.MapDelete("/{id:int}", (int id) => Results.NoContent());

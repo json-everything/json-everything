@@ -144,6 +144,7 @@ internal static class MinimalApiDiscovery
 			if (EndpointDiscoveryHelpers.LooksLikeBody(parameter.Type))
 			{
 				endpoint.RequestBodyTypeName = parameter.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+				endpoint.RequestBodyParameterName = parameter.Name;
 				endpoint.RequestBodyIsValidated = parameter.Type.GetAttributes()
 					.Any(x => x.AttributeClass?.Name == "GenerateJsonSchemaAttribute");
 				continue;
@@ -168,11 +169,39 @@ internal static class MinimalApiDiscovery
 			TypeName = GetHandlerPayloadType(handler, semanticModel),
 			Description = "Success"
 		});
+
+		// A method group is a declaration, so it can carry attributes and a documentation
+		// comment; a lambda can carry neither.
+		if (GetHandlerMethod(handler, semanticModel) is { } methodGroup)
+		{
+			EndpointMetadata.ApplyAttributes(endpoint, methodGroup);
+			EndpointMetadata.ApplyDocComment(endpoint, DocComment.Read(methodGroup));
+		}
+	}
+
+	/// <summary>
+	/// Resolves the method a method-group handler names.
+	/// </summary>
+	/// <remarks>
+	/// A method group has no single symbol until it is converted to a delegate, so
+	/// `GetSymbolInfo` reports it as unresolved and leaves the overloads in
+	/// <see cref="SymbolInfo.CandidateSymbols"/>.  An endpoint handler is one method in
+	/// practice, so the sole candidate is taken when there is exactly one.
+	/// </remarks>
+	private static IMethodSymbol? GetHandlerMethod(ExpressionSyntax handler, SemanticModel semanticModel)
+	{
+		var info = semanticModel.GetSymbolInfo(handler);
+
+		if (info.Symbol is IMethodSymbol resolved) return resolved;
+
+		return info.CandidateSymbols.Length == 1
+			? info.CandidateSymbols[0] as IMethodSymbol
+			: null;
 	}
 
 	private static IReadOnlyList<IParameterSymbol> GetHandlerParameters(ExpressionSyntax handler, SemanticModel semanticModel)
 	{
-		if (semanticModel.GetSymbolInfo(handler).Symbol is IMethodSymbol methodGroup)
+		if (GetHandlerMethod(handler, semanticModel) is { } methodGroup)
 			return methodGroup.Parameters;
 
 		if (handler is not AnonymousFunctionExpressionSyntax lambda) return [];
@@ -184,7 +213,7 @@ internal static class MinimalApiDiscovery
 
 	private static string? GetHandlerPayloadType(ExpressionSyntax handler, SemanticModel semanticModel)
 	{
-		if (semanticModel.GetSymbolInfo(handler).Symbol is IMethodSymbol methodGroup)
+		if (GetHandlerMethod(handler, semanticModel) is { } methodGroup)
 		{
 			var declared = EndpointDiscoveryHelpers.GetReturnPayloadType(methodGroup);
 			if (declared is not null) return declared;
@@ -227,9 +256,55 @@ internal static class MinimalApiDiscovery
 				case "Produces":
 					ReadProduces(endpoint, access, outer, semanticModel);
 					break;
+				case "WithSummary":
+					if (ConstantString(outer, 0, semanticModel) is { } summary)
+						endpoint.Summary = summary;
+					break;
+				case "WithDescription":
+					if (ConstantString(outer, 0, semanticModel) is { } description)
+						endpoint.Description = description;
+					break;
+				case "WithTags":
+					EndpointMetadata.AddTags(endpoint, ConstantStrings(outer, semanticModel));
+					break;
 			}
 
 			current = outer;
+		}
+	}
+
+	private static string? ConstantString(InvocationExpressionSyntax invocation, int index, SemanticModel semanticModel)
+	{
+		if (invocation.ArgumentList.Arguments.Count <= index) return null;
+
+		return semanticModel.GetConstantValue(invocation.ArgumentList.Arguments[index].Expression).Value as string;
+	}
+
+	/// <summary>
+	/// Reads the constant strings passed to a `params string[]` parameter, whether expanded
+	/// (`WithTags("a", "b")`) or passed as an array (`WithTags(["a", "b"])`).
+	/// </summary>
+	private static IEnumerable<string> ConstantStrings(InvocationExpressionSyntax invocation, SemanticModel semanticModel)
+	{
+		foreach (var argument in invocation.ArgumentList.Arguments)
+		{
+			var expression = argument.Expression;
+
+			IEnumerable<ExpressionSyntax> elements = expression switch
+			{
+				CollectionExpressionSyntax collection => collection.Elements
+					.OfType<ExpressionElementSyntax>()
+					.Select(x => x.Expression),
+				ArrayCreationExpressionSyntax { Initializer: { } initializer } => initializer.Expressions,
+				ImplicitArrayCreationExpressionSyntax implicitArray => implicitArray.Initializer.Expressions,
+				_ => [expression]
+			};
+
+			foreach (var element in elements)
+			{
+				if (semanticModel.GetConstantValue(element).Value is string value && !string.IsNullOrWhiteSpace(value))
+					yield return value;
+			}
 		}
 	}
 

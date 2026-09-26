@@ -15,6 +15,17 @@ namespace Json.Schema.Api.OpenApi;
 public sealed class OpenApiFragment
 {
 	/// <summary>
+	/// Gets or sets the name of the description this fragment contributes to, or null for
+	/// the default description.
+	/// </summary>
+	/// <remarks>
+	/// An assembly emits one fragment per description it contributes to, so assembling a
+	/// description means collecting the fragments carrying its name.  An endpoint placed in
+	/// several descriptions appears in each fragment.
+	/// </remarks>
+	public string? Name { get; set; }
+
+	/// <summary>
 	/// Gets or sets the operations declared by this assembly.
 	/// </summary>
 	public IReadOnlyList<OpenApiFragmentOperation> Operations { get; set; } = [];
@@ -53,9 +64,29 @@ public sealed class OpenApiFragmentOperation
 	public string? OperationId { get; set; }
 
 	/// <summary>
+	/// Gets or sets the summary.
+	/// </summary>
+	public string? Summary { get; set; }
+
+	/// <summary>
+	/// Gets or sets the description.
+	/// </summary>
+	public string? Description { get; set; }
+
+	/// <summary>
+	/// Gets or sets the tags.
+	/// </summary>
+	public IReadOnlyList<string> Tags { get; set; } = [];
+
+	/// <summary>
 	/// Gets or sets the request body type, when the operation has one.
 	/// </summary>
 	public Type? RequestBodyType { get; set; }
+
+	/// <summary>
+	/// Gets or sets the request body description.
+	/// </summary>
+	public string? RequestBodyDescription { get; set; }
 
 	/// <summary>
 	/// Gets or sets whether the request body is validated, and therefore whether the
@@ -98,6 +129,11 @@ public sealed class OpenApiFragmentParameter
 	/// Gets or sets the parameter type.
 	/// </summary>
 	public Type? Type { get; set; }
+
+	/// <summary>
+	/// Gets or sets the description.
+	/// </summary>
+	public string? Description { get; set; }
 }
 
 /// <summary>

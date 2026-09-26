@@ -8,6 +8,12 @@ namespace Json.Schema.Api.Tests.TestHost;
 /// </summary>
 public static class MinimalHandlers
 {
+	/// <summary>
+	/// Echoes the model.
+	/// </summary>
+	/// <param name="model">The model to echo.</param>
+	/// <returns>The same model.</returns>
+	[Tags("MethodGroup")]
 	public static IResult Handle(SimpleModel model)
 	{
 		return Results.Ok(model);

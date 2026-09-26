@@ -28,20 +28,50 @@ internal static class ControllerDiscovery
 	public static IEnumerable<EndpointInfo> Discover(INamedTypeSymbol type)
 	{
 		var prefix = GetRoutePrefix(type);
+		var documentNames = GetDocumentNames(type);
 
 		foreach (var method in type.GetMembers().OfType<IMethodSymbol>())
 		{
 			if (method.MethodKind != MethodKind.Ordinary) continue;
 			if (method.DeclaredAccessibility != Accessibility.Public) continue;
 
-			foreach (var endpoint in DiscoverActions(type, method, prefix))
+			foreach (var endpoint in DiscoverActions(type, method, prefix, documentNames))
 			{
 				yield return endpoint;
 			}
 		}
 	}
 
-	private static IEnumerable<EndpointInfo> DiscoverActions(INamedTypeSymbol type, IMethodSymbol method, string prefix)
+	/// <summary>
+	/// Reads the descriptions a controller is placed in by `[OpenApiDocument]`.
+	/// </summary>
+	/// <remarks>
+	/// An empty result means the default description, which is where a controller without
+	/// the attribute belongs.
+	/// </remarks>
+	private static IReadOnlyList<string> GetDocumentNames(INamedTypeSymbol type)
+	{
+		foreach (var attribute in type.GetAttributes())
+		{
+			if (attribute.AttributeClass?.Name != "OpenApiDocumentAttribute") continue;
+			if (attribute.ConstructorArguments.Length == 0) continue;
+
+			// The single `params string[]` parameter arrives as one array argument.
+			return attribute.ConstructorArguments[0].Values
+				.Select(x => x.Value as string)
+				.Where(x => !string.IsNullOrWhiteSpace(x))
+				.Select(x => x!)
+				.ToArray();
+		}
+
+		return [];
+	}
+
+	private static IEnumerable<EndpointInfo> DiscoverActions(
+		INamedTypeSymbol type,
+		IMethodSymbol method,
+		string prefix,
+		IReadOnlyList<string> documentNames)
 	{
 		foreach (var attribute in method.GetAttributes())
 		{
@@ -52,15 +82,23 @@ internal static class ControllerDiscovery
 				? attribute.ConstructorArguments[0].Value as string
 				: null;
 
+			// Qualified by the controller, since OpenAPI requires operation IDs to be unique
+			// across the description and action names repeat across controllers.
 			var endpoint = new EndpointInfo
 			{
 				Route = CombineRoute(prefix, template, type, method),
 				Method = httpMethod,
-				OperationId = method.Name
+				OperationId = $"{StripControllerSuffix(type.Name)}_{method.Name}"
 			};
+
+			endpoint.DocumentNames.AddRange(documentNames);
 
 			AddParameters(endpoint, method);
 			AddResponses(endpoint, method);
+
+			EndpointMetadata.ApplyAttributes(endpoint, type);
+			EndpointMetadata.ApplyAttributes(endpoint, method);
+			EndpointMetadata.ApplyDocComment(endpoint, DocComment.Read(method));
 
 			yield return endpoint;
 		}
@@ -107,6 +145,7 @@ internal static class ControllerDiscovery
 			if (binding == "body")
 			{
 				endpoint.RequestBodyTypeName = parameter.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+				endpoint.RequestBodyParameterName = parameter.Name;
 				endpoint.RequestBodyIsValidated = HasGeneratedSchema(parameter.Type);
 				continue;
 			}

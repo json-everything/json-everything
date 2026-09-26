@@ -17,6 +17,10 @@ const state = {
 
 const inputs = new Map();
 
+// Console panels are built once per operation and kept, so the values a reader has typed
+// and the response they received survive the rail following the scroll position.
+const consolePanels = new Map();
+
 function el(tag, className, text) {
 	const node = document.createElement(tag);
 	if (className) node.className = className;
@@ -210,9 +214,20 @@ function buildNavigation() {
 }
 
 function markCurrent() {
-	for (const link of document.querySelectorAll('.oa-nav-link')) {
-		link.setAttribute('aria-current', String(link.dataset.operation === state.operation));
+	for (const node of document.querySelectorAll('.oa-nav-link, .oa-operation')) {
+		node.setAttribute('aria-current', String(node.dataset.operation === state.operation));
 	}
+}
+
+function renderPath(operation) {
+	const path = el('span', 'oa-path');
+	for (const piece of operation.path.split(/(\{[^}]+\})/)) {
+		if (!piece) continue;
+		path.append(piece.startsWith('{')
+			? el('span', 'oa-path-parameter', piece)
+			: document.createTextNode(piece));
+	}
+	return path;
 }
 
 /* ---------- documentation ---------- */
@@ -224,16 +239,6 @@ function buildDocumentation() {
 	const intro = el('div', 'oa-intro');
 	intro.append(el('h1', 'oa-intro-title', doc.info.title));
 	if (doc.info.description) intro.append(el('p', 'oa-intro-text', doc.info.description));
-
-	const callout = el('div', 'oa-callout');
-	callout.append(document.createTextNode('Bodies are described with complete JSON Schema. Constraints such as '));
-	callout.append(el('code', null, 'const'));
-	callout.append(document.createTextNode(', '));
-	callout.append(el('code', null, 'required'));
-	callout.append(document.createTextNode(' and '));
-	callout.append(el('code', null, 'additionalProperties'));
-	callout.append(document.createTextNode(' are enforced by the server, not only documented here.'));
-	intro.append(callout);
 
 	docs.append(intro);
 
@@ -247,17 +252,13 @@ function renderOperation(operation) {
 	section.id = operation.id;
 	section.dataset.operation = operation.id;
 
+	// Selection is deliberate: the reader picks an operation here or in the navigation, and
+	// the console keeps showing it however far they scroll.
 	const header = el('div', 'oa-operation-header');
+	header.title = 'Open in the request console';
+	header.addEventListener('click', () => selectOperation(operation.id, false));
 	header.append(el('span', 'oa-method oa-method-' + operation.method, operation.method.toUpperCase()));
-
-	const path = el('span', 'oa-path');
-	for (const piece of operation.path.split(/(\{[^}]+\})/)) {
-		if (!piece) continue;
-		path.append(piece.startsWith('{')
-			? el('span', 'oa-path-parameter', piece)
-			: document.createTextNode(piece));
-	}
-	header.append(path);
+	header.append(renderPath(operation));
 	section.append(header);
 
 	const meta = el('div', 'oa-operation-meta');
@@ -555,11 +556,73 @@ function buildRail() {
 	const operation = operations.find(o => o.id === state.operation);
 	if (!operation) return;
 
+	const heading = el('div', 'oa-rail-operation');
+	heading.append(el('span', 'oa-method oa-method-' + operation.method, operation.method.toUpperCase()));
+	heading.append(renderPath(operation));
+	if (operation.definition.operationId) {
+		heading.append(el('span', 'oa-operation-id', operation.definition.operationId));
+	}
+	rail.append(heading);
+
 	rail.append(buildCodePanel(operation));
-	rail.append(buildConsolePanel(operation));
+
+	let consolePanel = consolePanels.get(operation.id);
+	if (!consolePanel) {
+		consolePanel = buildConsolePanel(operation);
+		consolePanels.set(operation.id, consolePanel);
+	}
+	rail.append(consolePanel);
+
+	const schema = buildSchemaPanel(operation);
+	if (schema) rail.append(schema);
 
 	const auth = buildAuthPanel();
 	if (auth) rail.append(auth);
+}
+
+// The request schema is what the server validates against, so it is shown in full rather
+// than only summarized as a property list in the documentation column.
+function buildSchemaPanel(operation) {
+	const schema = bodySchema(operation);
+	if (!schema) return null;
+
+	const panel = el('div', 'oa-panel');
+
+	const header = el('div', 'oa-panel-header');
+	const title = el('h3', 'oa-panel-title', 'Request schema');
+	const name = schemaName(schema);
+	if (name) title.append(' ', el('span', 'oa-schema-media', name));
+	header.append(title);
+
+	const copy = el('button', 'oa-copy', 'Copy');
+	copy.type = 'button';
+	header.append(copy);
+	panel.append(header);
+
+	const code = el('pre', 'oa-code');
+	code.textContent = JSON.stringify(deref(schema), null, 2);
+	panel.append(code);
+
+	attachCopy(copy, code);
+
+	return panel;
+}
+
+function attachCopy(button, code) {
+	button.addEventListener('click', async () => {
+		try {
+			await navigator.clipboard.writeText(code.textContent);
+			button.textContent = 'Copied';
+		} catch {
+			const range = document.createRange();
+			range.selectNodeContents(code);
+			const selection = window.getSelection();
+			selection.removeAllRanges();
+			selection.addRange(range);
+			button.textContent = 'Selected';
+		}
+		setTimeout(() => { button.textContent = 'Copy'; }, 1400);
+	});
 }
 
 function buildCodePanel(operation) {
@@ -590,20 +653,7 @@ function buildCodePanel(operation) {
 	code.textContent = codeSample(operation, state.language);
 	panel.append(code);
 
-	copy.addEventListener('click', async () => {
-		try {
-			await navigator.clipboard.writeText(code.textContent);
-			copy.textContent = 'Copied';
-		} catch {
-			const range = document.createRange();
-			range.selectNodeContents(code);
-			const selection = window.getSelection();
-			selection.removeAllRanges();
-			selection.addRange(range);
-			copy.textContent = 'Selected';
-		}
-		setTimeout(() => { copy.textContent = 'Copy'; }, 1400);
-	});
+	attachCopy(copy, code);
 
 	return panel;
 }
@@ -817,19 +867,6 @@ function buildServers() {
 	});
 }
 
-function watchScroll() {
-	const observer = new IntersectionObserver(entries => {
-		for (const entry of entries) {
-			if (!entry.isIntersecting) continue;
-			const id = entry.target.dataset.operation;
-			if (id && id !== state.operation) selectOperation(id, false);
-			break;
-		}
-	}, { rootMargin: '-70px 0px -65% 0px', threshold: 0 });
-
-	for (const section of document.querySelectorAll('.oa-operation')) observer.observe(section);
-}
-
 /* ---------- theme ---------- */
 
 const THEME_KEY = 'oa-theme';
@@ -867,6 +904,94 @@ function toggleTheme() {
 	storeTheme(next);
 }
 
+/* ---------- pane widths ---------- */
+
+const PANE_LIMITS = {
+	nav: { min: 160, max: 520 },
+	rail: { min: 300, max: 1000 }
+};
+
+function widthKey(pane) {
+	return 'oa-' + pane + '-width';
+}
+
+function setPaneWidth(pane, width) {
+	const limits = PANE_LIMITS[pane];
+	const clamped = Math.round(Math.min(limits.max, Math.max(limits.min, width)));
+	document.documentElement.style.setProperty('--' + widthKey(pane), clamped + 'px');
+	return clamped;
+}
+
+function resetPaneWidth(pane) {
+	document.documentElement.style.removeProperty('--' + widthKey(pane));
+	try {
+		localStorage.removeItem(widthKey(pane));
+	} catch {
+		// Nothing stored, or storage unavailable; the default applies either way.
+	}
+}
+
+function applyStoredWidths() {
+	for (const pane of Object.keys(PANE_LIMITS)) {
+		let stored = null;
+		try {
+			stored = localStorage.getItem(widthKey(pane));
+		} catch {
+			// Storage can be unavailable; the default width then applies.
+		}
+
+		const width = Number.parseInt(stored, 10);
+		if (Number.isFinite(width)) setPaneWidth(pane, width);
+	}
+}
+
+function setupResizers() {
+	for (const handle of document.querySelectorAll('.oa-resize')) {
+		const pane = handle.dataset.pane;
+		const target = document.getElementById('oa-' + pane);
+
+		handle.addEventListener('dblclick', () => resetPaneWidth(pane));
+
+		handle.addEventListener('pointerdown', event => {
+			if (event.button !== 0) return;
+			event.preventDefault();
+
+			const startX = event.clientX;
+			const startWidth = target.getBoundingClientRect().width;
+			let width = startWidth;
+
+			handle.setPointerCapture(event.pointerId);
+			handle.dataset.active = 'true';
+			document.body.style.cursor = 'col-resize';
+			document.body.style.userSelect = 'none';
+
+			const move = e => {
+				const delta = e.clientX - startX;
+				width = setPaneWidth(pane, pane === 'nav' ? startWidth + delta : startWidth - delta);
+			};
+
+			const finish = () => {
+				handle.removeEventListener('pointermove', move);
+				handle.removeEventListener('pointerup', finish);
+				handle.removeEventListener('pointercancel', finish);
+				delete handle.dataset.active;
+				document.body.style.cursor = '';
+				document.body.style.userSelect = '';
+
+				try {
+					localStorage.setItem(widthKey(pane), String(width));
+				} catch {
+					// Storage can be unavailable or full; the width then lasts for this page only.
+				}
+			};
+
+			handle.addEventListener('pointermove', move);
+			handle.addEventListener('pointerup', finish);
+			handle.addEventListener('pointercancel', finish);
+		});
+	}
+}
+
 /* ---------- start ---------- */
 
 function reportFailure(message) {
@@ -881,6 +1006,8 @@ function reportFailure(message) {
 
 async function start() {
 	applyStoredTheme();
+	applyStoredWidths();
+	setupResizers();
 
 	document.getElementById('oa-theme').addEventListener('click', toggleTheme);
 
@@ -889,23 +1016,30 @@ async function start() {
 		if (panel) panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
 	});
 
+	buildDocumentSelector();
+
+	await load(config.documents[0].url);
+}
+
+/** Fetches a description and rebuilds the page around it. */
+async function load(url) {
 	let response;
 	try {
-		response = await fetch(config.documentUrl, { headers: { Accept: 'application/json' } });
+		response = await fetch(url, { headers: { Accept: 'application/json' } });
 	} catch (error) {
-		reportFailure('Could not reach ' + config.documentUrl + '. ' + error.message);
+		reportFailure('Could not reach ' + url + '. ' + error.message);
 		return;
 	}
 
 	if (!response.ok) {
-		reportFailure('Requesting ' + config.documentUrl + ' returned ' + response.status + '.');
+		reportFailure('Requesting ' + url + ' returned ' + response.status + '.');
 		return;
 	}
 
 	try {
 		doc = await response.json();
 	} catch (error) {
-		reportFailure(config.documentUrl + ' did not return valid JSON. ' + error.message);
+		reportFailure(url + ' did not return valid JSON. ' + error.message);
 		return;
 	}
 
@@ -922,7 +1056,35 @@ async function start() {
 	markCurrent();
 	buildRail();
 	updateAuthState();
-	watchScroll();
+}
+
+/**
+ * Fills the description selector, which is hidden when there is only one to
+ * choose from.
+ */
+function buildDocumentSelector() {
+	const selector = document.getElementById('oa-doc-select');
+	if (!selector) return;
+
+	if (config.documents.length < 2) {
+		selector.hidden = true;
+		return;
+	}
+
+	selector.innerHTML = '';
+
+	for (const entry of config.documents) {
+		const option = document.createElement('option');
+		option.value = entry.url;
+		option.textContent = entry.name;
+		selector.appendChild(option);
+	}
+
+	selector.addEventListener('change', () => {
+		// The rail and auth state belong to the description being left.
+		state.operation = null;
+		load(selector.value);
+	});
 }
 
 start();

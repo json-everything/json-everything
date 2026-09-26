@@ -26,6 +26,11 @@ internal sealed class EndpointParameterInfo
 	/// Gets or sets the fully-qualified type name, when one could be determined.
 	/// </summary>
 	public string? TypeName { get; set; }
+
+	/// <summary>
+	/// Gets or sets the description.
+	/// </summary>
+	public string? Description { get; set; }
 }
 
 /// <summary>
@@ -66,14 +71,46 @@ internal sealed class EndpointInfo
 	public string Method { get; set; } = "get";
 
 	/// <summary>
+	/// Gets the names of the descriptions the operation appears in.  Empty means the default
+	/// description.
+	/// </summary>
+	public List<string> DocumentNames { get; } = [];
+
+	/// <summary>
 	/// Gets or sets the operation ID, when one could be determined.
 	/// </summary>
 	public string? OperationId { get; set; }
 
 	/// <summary>
+	/// Gets or sets the summary.
+	/// </summary>
+	public string? Summary { get; set; }
+
+	/// <summary>
+	/// Gets or sets the description.
+	/// </summary>
+	public string? Description { get; set; }
+
+	/// <summary>
+	/// Gets the tags.
+	/// </summary>
+	public List<string> Tags { get; } = [];
+
+	/// <summary>
 	/// Gets or sets the fully-qualified request body type name, when the operation has one.
 	/// </summary>
 	public string? RequestBodyTypeName { get; set; }
+
+	/// <summary>
+	/// Gets or sets the name of the parameter the request body binds to, so that its
+	/// documentation comment can be found.
+	/// </summary>
+	public string? RequestBodyParameterName { get; set; }
+
+	/// <summary>
+	/// Gets or sets the request body description.
+	/// </summary>
+	public string? RequestBodyDescription { get; set; }
 
 	/// <summary>
 	/// Gets or sets whether the request body type is validated, and therefore whether the

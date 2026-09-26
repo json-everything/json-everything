@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text.Json;
@@ -16,44 +18,71 @@ namespace Json.Schema.Api.OpenApi;
 /// </summary>
 internal class OpenApiStartupFilter : IStartupFilter
 {
-	private readonly OpenApiOptions _options;
+	private readonly IReadOnlyList<OpenApiOptions> _descriptions;
 
-	public OpenApiStartupFilter(OpenApiOptions options)
+	public OpenApiStartupFilter(IEnumerable<OpenApiOptions> descriptions)
 	{
-		_options = options;
+		_descriptions = [.. descriptions];
 	}
 
 	public Action<IApplicationBuilder> Configure(Action<IApplicationBuilder> next) =>
 		builder =>
 		{
-			WriteFiles();
+			// One page covers every published description, so it is rendered once from the
+			// description that declares it rather than per description.
+			var host = _descriptions.FirstOrDefault(x => x.InteractivePath is not null);
 
-			var page = _options.InteractivePath is null
+			var page = host is null
 				? null
-				: OpenApiPageRenderer.Render(_options);
+				: OpenApiPageRenderer.Render(host, [.. _descriptions.Where(x => x.DocumentPath is not null)]);
 
-			if (_options.DocumentPath is not null || page is not null)
-				builder.Use((context, proceed) => Serve(context, proceed, page));
+			foreach (var options in _descriptions)
+			{
+				WriteFiles(options);
+
+				if (options.DocumentPath is null) continue;
+
+				// Captured per description, so each registration serves its own.
+				var current = options;
+				builder.Use((HttpContext context, Func<Task> proceed) => Serve(current, context, proceed));
+			}
+
+			if (host is not null)
+				builder.Use((HttpContext context, Func<Task> proceed) => ServePage(host, context, proceed, page!));
 
 			next(builder);
 		};
 
-	private void WriteFiles()
+	private static void WriteFiles(OpenApiOptions options)
 	{
-		if (_options.FileOutputPath is null) return;
+		if (options.FileOutputPath is null) return;
 
-		var directory = Path.GetDirectoryName(Path.GetFullPath(_options.FileOutputPath));
+		var directory = Path.GetDirectoryName(Path.GetFullPath(options.FileOutputPath));
 		if (!string.IsNullOrEmpty(directory))
 			Directory.CreateDirectory(directory);
 
-		if (_options.DocumentFormats.HasFlag(OpenApiFormats.Json))
-			File.WriteAllText(_options.FileOutputPath + ".json", Render(false));
+		if (options.DocumentFormats.HasFlag(OpenApiFormats.Json))
+			File.WriteAllText(options.FileOutputPath + ".json", Render(options, false));
 
-		if (_options.DocumentFormats.HasFlag(OpenApiFormats.Yaml))
-			File.WriteAllText(_options.FileOutputPath + ".yaml", Render(true));
+		if (options.DocumentFormats.HasFlag(OpenApiFormats.Yaml))
+			File.WriteAllText(options.FileOutputPath + ".yaml", Render(options, true));
 	}
 
-	private async Task Serve(HttpContext context, Func<Task> proceed, string? page)
+	private static async Task ServePage(OpenApiOptions options, HttpContext context, Func<Task> proceed, string page)
+	{
+		if (!HttpMethods.IsGet(context.Request.Method) ||
+			!string.Equals(context.Request.Path.Value, options.InteractivePath, StringComparison.OrdinalIgnoreCase))
+		{
+			await proceed();
+			return;
+		}
+
+		context.Response.ContentType = "text/html; charset=utf-8";
+
+		await context.Response.WriteAsync(page);
+	}
+
+	private static async Task Serve(OpenApiOptions options, HttpContext context, Func<Task> proceed)
 	{
 		if (!HttpMethods.IsGet(context.Request.Method))
 		{
@@ -63,15 +92,7 @@ internal class OpenApiStartupFilter : IStartupFilter
 
 		var path = context.Request.Path.Value ?? string.Empty;
 
-		if (page is not null &&
-		    string.Equals(path, _options.InteractivePath, StringComparison.OrdinalIgnoreCase))
-		{
-			context.Response.ContentType = "text/html; charset=utf-8";
-			await context.Response.WriteAsync(page);
-			return;
-		}
-
-		if (!TryMatchDocument(path, out var yaml))
+		if (!TryMatchDocument(options, path, out var yaml))
 		{
 			await proceed();
 			return;
@@ -81,25 +102,25 @@ internal class OpenApiStartupFilter : IStartupFilter
 			? "application/yaml; charset=utf-8"
 			: "application/json; charset=utf-8";
 
-		await context.Response.WriteAsync(Render(yaml));
+		await context.Response.WriteAsync(Render(options, yaml));
 	}
 
-	private bool TryMatchDocument(string path, out bool yaml)
+	private static bool TryMatchDocument(OpenApiOptions options, string path, out bool yaml)
 	{
 		yaml = false;
 
-		if (_options.DocumentPath is null) return false;
-		if (!path.StartsWith(_options.DocumentPath, StringComparison.OrdinalIgnoreCase)) return false;
+		if (options.DocumentPath is null) return false;
+		if (!path.StartsWith(options.DocumentPath, StringComparison.OrdinalIgnoreCase)) return false;
 
-		var extension = path[_options.DocumentPath.Length..].ToLowerInvariant();
+		var extension = path[options.DocumentPath.Length..].ToLowerInvariant();
 
 		if (extension == ".json")
-			return _options.DocumentFormats.HasFlag(OpenApiFormats.Json);
+			return options.DocumentFormats.HasFlag(OpenApiFormats.Json);
 
 		if (IsYaml(extension))
 		{
 			yaml = true;
-			return _options.DocumentFormats.HasFlag(OpenApiFormats.Yaml);
+			return options.DocumentFormats.HasFlag(OpenApiFormats.Yaml);
 		}
 
 		return false;
@@ -109,9 +130,9 @@ internal class OpenApiStartupFilter : IStartupFilter
 
 	[UnconditionalSuppressMessage("Trimming", "IL2026:RequiresUnreferencedCode", Justification = "The description is serialized through a serializer context; the YAML writer is handed an already-materialized node.")]
 	[UnconditionalSuppressMessage("AOT", "IL3050:RequiresDynamicCode", Justification = "The description is serialized through a serializer context; the YAML writer is handed an already-materialized node.")]
-	private string Render(bool yaml)
+	private static string Render(OpenApiOptions options, bool yaml)
 	{
-		var json = JsonSerializer.Serialize(_options.Document, _indented.OpenApiDocument);
+		var json = JsonSerializer.Serialize(options.Document, _indented.OpenApiDocument);
 		if (!yaml) return json;
 
 		var node = JsonNode.Parse(json)!.ToYamlNode();

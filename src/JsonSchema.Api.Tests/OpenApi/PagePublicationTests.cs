@@ -52,7 +52,33 @@ public class PagePublicationTests
 	{
 		var body = await _client.GetStringAsync("/openapi/reference");
 
-		Assert.That(body, Does.Contain("\"documentUrl\":\"/openapi.json\""));
+		Assert.That(body, Does.Contain("\"url\":\"/openapi.json\""));
+	}
+
+	[Test]
+	public async Task PageListsEveryDocument()
+	{
+		var body = await _client.GetStringAsync("/openapi/reference");
+
+		Assert.That(body, Does.Contain("\"url\":\"/openapi/admin.json\""), "admin");
+		Assert.That(body, Does.Contain("\"url\":\"/openapi/partner.json\""), "partner");
+	}
+
+	[Test]
+	public async Task PageLabelsDocumentsByTitle()
+	{
+		var body = await _client.GetStringAsync("/openapi/reference");
+
+		Assert.That(body, Does.Contain("\"name\":\"Admin API\""), "admin");
+		Assert.That(body, Does.Contain("\"name\":\"Partner API\""), "partner");
+	}
+
+	[Test]
+	public async Task ANamedDocumentDoesNotServeItsOwnPage()
+	{
+		var response = await _client.GetAsync("/openapi/admin/reference");
+
+		Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
 	}
 
 	[Test]

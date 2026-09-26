@@ -14,6 +14,15 @@ namespace Json.Schema.Api.OpenApi;
 public class OpenApiOptions
 {
 	/// <summary>
+	/// Gets the name of this description, or null for the default one.
+	/// </summary>
+	/// <remarks>
+	/// Controllers carrying <see cref="OpenApiDocumentAttribute"/> appear in the descriptions
+	/// they name; everything else appears in the default description.
+	/// </remarks>
+	public string? Name { get; }
+
+	/// <summary>
 	/// Gets the description, assembled from the API surface.
 	/// </summary>
 	/// <remarks>
@@ -41,9 +50,16 @@ public class OpenApiOptions
 	/// `/openapi/reference`.
 	/// </summary>
 	/// <remarks>
+	/// <para>
+	/// One page covers every description, choosing between them with a selector, so this is
+	/// configured on the <c>AddOpenApi</c> call that takes no name.  Setting it on a named
+	/// description throws.
+	/// </para>
+	/// <para>
 	/// The page reads the description over HTTP, so <see cref="DocumentPath"/> must have a
 	/// value and <see cref="DocumentFormats"/> must include
 	/// <see cref="OpenApiFormats.Json"/>.  Set to null to serve no page.
+	/// </para>
 	/// </remarks>
 	public string? InteractivePath { get; set; } = "/openapi/reference";
 
@@ -83,14 +99,31 @@ public class OpenApiOptions
 	/// </remarks>
 	public bool AddValidation { get; set; } = true;
 
-	internal OpenApiOptions(OpenApiDocument document)
+	internal OpenApiOptions(OpenApiDocument document, string? name = null)
 	{
 		Document = document;
+		Name = name;
+
+		if (name is null) return;
+
+		// A named description would otherwise share the default's path, so every one after
+		// the first would be unreachable.
+		DocumentPath = $"/openapi/{name}";
+
+		// One page covers every description, through a selector, so a named description
+		// does not carry one of its own.
+		InteractivePath = null;
 	}
 
 	internal void Validate()
 	{
 		if (InteractivePath is null) return;
+
+		if (Name is not null)
+			throw new InvalidOperationException(
+				$"`{nameof(InteractivePath)}` was set on the `{Name}` description. " +
+				"One page covers every description through a selector, so it is configured " +
+				"on the `AddOpenApi` call that takes no name.");
 
 		if (DocumentPath is null)
 			throw new InvalidOperationException(
