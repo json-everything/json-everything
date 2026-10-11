@@ -311,7 +311,7 @@ public class SchemaRegistry
 						if (resolvedDocument is JsonSchema resolved)
 						{
 							toCheck.Enqueue(resolved);
-							defs[reference.ToString()] ??= resolved.Root.Source.AsNode();
+							defs[resolved.BaseUri.ToString()] ??= resolved.Root.Source.AsNode();
 						}
 						else throw new RefResolutionException(reference);
 					}

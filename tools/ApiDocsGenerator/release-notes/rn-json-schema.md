@@ -4,6 +4,10 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "09.01"
 ---
+# [9.4.1](https://github.com/json-everything/json-everything/pull/1062) {#release-schema-9.4.1}
+
+[#1061](https://github.com/json-everything/json-everything/issues/1061) - Fixes `CreateBundle()` embedding the same document more than once. Thanks to [@wasabii](https://github.com/wasabii) for the fix.
+
 # [9.4.0](https://github.com/json-everything/json-everything/pull/1053) {#release-schema-9.4.0}
 
 [#1052](https://github.com/json-everything/json-everything/issues/1052) - Adds an evaluation option to allow exclusion of error messages from applicators. Thanks to [@ladeak](https://github.com/ladeak) for reporting.
