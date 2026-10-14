@@ -1,5 +1,9 @@
 ﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
+html {
+	color-scheme: light dark;
+}
+
 html,
 body,
 #app,
