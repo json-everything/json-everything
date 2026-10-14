@@ -67,4 +67,10 @@ public class EnumIntent : ISchemaKeywordIntent
 	{
 		_values?.Add(value);
 	}
+
+	/// <summary>
+	/// The values defined by the enumeration, if this intent was created from
+	/// values rather than names; otherwise <see langword="null" />.
+	/// </summary>
+	internal List<JsonNode?>? Values => _values;
 }
