@@ -25,7 +25,12 @@ internal static class GeneralExtensions
 		if (enumIntent is not null)
 		{
 			var index = newList.IndexOf(enumIntent);
-			var newIntent = new EnumIntent([..enumIntent.Names, (JsonNode?)null]);
+			// EnumIntents can be built from either names (e.g. EnumGenerator) or values
+			// (e.g. the DataAnnotations AllowedValues/DeniedValues handlers).  Append the
+			// null to whichever collection the intent actually uses.
+			var newIntent = enumIntent.Values is { } values
+				? new EnumIntent([..values, (JsonNode?)null])
+				: new EnumIntent([..enumIntent.Names, (JsonNode?)null]);
 			newList[index] = newIntent;
 		}
 

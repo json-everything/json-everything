@@ -4,6 +4,10 @@ title: JsonSchema.Net.Generation
 icon: fas fa-tag
 order: "09.05"
 ---
+# [7.4.1](https://github.com/json-everything/json-everything/pull/1063) {#release-schemagen-7.4.1}
+
+[#951](https://github.com/json-everything/json-everything/issues/951) - Generating a schema for a nullable property whose enumeration intent was built from values rather than member names no longer throws a `NullReferenceException`.  Thanks to [@justinperficient](https://github.com/justinperficient) for reporting.
+
 # [7.4.0](https://github.com/json-everything/json-everything/pull/1061) {#release-schemagen-7.4.0}
 
 Source generation now describes enumerations according to their serialization.
