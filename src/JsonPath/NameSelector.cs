@@ -77,6 +77,7 @@ public class NameSelector : ISelector, IHaveShorthand
 				'\f' => "\\f",
 				'\r' => "\\r",
 				'\\' => @"\\",
+				< ' ' => $"\\u{(int)c:x4}",
 				_ => c
 			});
 		}
