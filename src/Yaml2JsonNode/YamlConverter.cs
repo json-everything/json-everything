@@ -14,6 +14,8 @@ namespace Yaml2JsonNode;
 /// </summary>
 public static class YamlConverter
 {
+	private static readonly TagName _stringTag = new("tag:yaml.org,2002:str");
+
 	/// <summary>
 	/// Converts all of the documents in a YAML stream to <see cref="JsonNode"/>s.
 	/// </summary>
@@ -144,6 +146,10 @@ public static class YamlConverter
 
 	private static JsonValue? ToJsonValue(this YamlScalarNode yaml)
 	{
+		// see https://yaml.org/type/str.html; the non-specific "!" tag also makes a scalar a string
+		if (yaml.Tag == _stringTag || yaml.Tag.IsNonSpecific)
+			return JsonValue.Create(yaml.Value)!;
+
 		return yaml.Style switch
 		{
 			ScalarStyle.Plain => decimal.TryParse(yaml.Value, NumberStyles.Any, CultureInfo.InvariantCulture, out var d)
