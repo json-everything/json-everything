@@ -4,6 +4,10 @@ title: JsonPointer.Net
 icon: fas fa-tag
 order: "09.10"
 ---
+# [7.0.4](https://github.com/json-everything/json-everything/pull/1069) {#release-pointer-7.0.4}
+
+[#1068](https://github.com/json-everything/json-everything/issues/1068) - `TryEvaluate()` on a `JsonNode` now evaluates the segments that follow a `-` segment, as `Evaluate()` on a `JsonElement` does, and returns `false` instead of throwing when the array is empty.  Thanks to [@wleeaf](https://github.com/wleeaf) for the fix.
+
 # [7.0.3](https://github.com/json-everything/json-everything/pull/1057) {#release-pointer-7.0.3}
 
 [#1055](https://github.com/json-everything/json-everything/issues/1055) - Pointer segments should be decoded as part of `.ToString()`.  Thanks to [awalterschulze](https://github.com/awalterschulze) for reporting.
