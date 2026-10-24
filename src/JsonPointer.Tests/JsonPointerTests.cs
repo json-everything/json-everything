@@ -106,6 +106,24 @@ public class JsonPointerTests
 		});
 	}
 
+	[TestCase("/b/-/c", "2")]
+	[TestCase("/b/-/d", null)]
+	[TestCase("/e/-", null)]
+	public void LastItemInArrayIsFollowedByTheRestOfThePointer_WithNodes(string pointerText, string? expected)
+	{
+		var target = JsonNode.Parse("{\"b\":[{\"c\":1},{\"c\":2}],\"e\":[]}")!;
+
+		var pointer = JsonPointer.Parse(pointerText);
+
+		var success = pointer.TryEvaluate(target, out var actual);
+
+		Assert.Multiple(() =>
+		{
+			Assert.That(success, Is.EqualTo(expected != null));
+			Assert.That(actual?.ToJsonString(), Is.EqualTo(expected));
+		});
+	}
+
 	[Test]
 	public void ImplicitCastTest()
 	{
