@@ -4,6 +4,10 @@ title: JsonPath.Net
 icon: fas fa-tag
 order: "09.08"
 ---
+# [3.0.3](https://github.com/json-everything/json-everything/pull/1065) {#release-path-3.0.3}
+
+[#1064](https://github.com/json-everything/json-everything/issues/1064) - Normalized paths now escape control characters other than `\b`, `\t`, `\n`, `\f` and `\r` as `\u00XX`.  Thanks to [@wleeaf](https://github.com/wleeaf) for the fix.
+
 # [3.0.2](https://github.com/json-everything/json-everything/pull/1013) {#release-path-3.0.2}
 
 Updated nuget packages & EULA.
