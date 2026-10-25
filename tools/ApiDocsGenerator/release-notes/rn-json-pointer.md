@@ -6,7 +6,7 @@ order: "09.10"
 ---
 # [7.0.4](https://github.com/json-everything/json-everything/pull/1069) {#release-pointer-7.0.4}
 
-[#1068](https://github.com/json-everything/json-everything/issues/1068) - `TryEvaluate()` on a `JsonNode` now returns `false` when a `-` array index is followed by more segments or the array is empty, instead of ignoring the rest of the pointer or throwing.  Thanks to [@wleeaf](https://github.com/wleeaf) for the fix.
+[#1068](https://github.com/json-everything/json-everything/issues/1068) - `Evaluate()` and `TryEvaluate()` now fail when a `-` array index is followed by more segments, since `-` refers to a nonexistent element.  `TryEvaluate()` on a `JsonNode` also returns `false` instead of throwing when the array is empty.  Thanks to [@wleeaf](https://github.com/wleeaf) for the fix.
 
 # [7.0.3](https://github.com/json-everything/json-everything/pull/1057) {#release-pointer-7.0.3}
 

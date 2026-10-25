@@ -109,6 +109,20 @@ public class JsonPointerTests
 	[TestCase("/b/-/c")]
 	[TestCase("/b/-/d")]
 	[TestCase("/e/-")]
+	public void DashFollowedBySegmentsOrOnEmptyArrayFails(string pointerText)
+	{
+		using var target = JsonDocument.Parse("{\"b\":[{\"c\":1},{\"c\":2}],\"e\":[]}");
+
+		var pointer = JsonPointer.Parse(pointerText);
+
+		var actual = pointer.Evaluate(target.RootElement);
+
+		Assert.That(actual, Is.Null);
+	}
+
+	[TestCase("/b/-/c")]
+	[TestCase("/b/-/d")]
+	[TestCase("/e/-")]
 	public void DashFollowedBySegmentsOrOnEmptyArrayFails_WithNodes(string pointerText)
 	{
 		var target = JsonNode.Parse("{\"b\":[{\"c\":1},{\"c\":2}],\"e\":[]}")!;
@@ -117,11 +131,20 @@ public class JsonPointerTests
 
 		var success = pointer.TryEvaluate(target, out var actual);
 
-		Assert.Multiple(() =>
-		{
-			Assert.That(success, Is.False);
-			Assert.That(actual, Is.Null);
-		});
+		Assert.That(success, Is.False);
+		Assert.That(actual, Is.Null);
+	}
+
+	[Test]
+	public void DashIsAnOrdinaryObjectKey()
+	{
+		using var target = JsonDocument.Parse("{\"b\":{\"b1\":1,\"-\":{\"c\":2}},\"e\":[]}");
+
+		var pointer = JsonPointer.Parse("/b/-/c");
+
+		var actual = pointer.Evaluate(target.RootElement);
+
+		Assert.That(actual?.GetInt32(), Is.EqualTo(2));
 	}
 
 	[Test]
@@ -133,11 +156,8 @@ public class JsonPointerTests
 
 		var success = pointer.TryEvaluate(target, out var actual);
 
-		Assert.Multiple(() =>
-		{
-			Assert.That(success, Is.True);
-			Assert.That(actual?.ToJsonString(), Is.EqualTo("2"));
-		});
+		Assert.That(success, Is.True);
+		Assert.That(actual?.ToJsonString(), Is.EqualTo("2"));
 	}
 
 	[Test]
