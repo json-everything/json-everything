@@ -132,4 +132,18 @@ rawValTrim: |-
 
 		JsonAssert.AreEquivalent(expected, actual);
 	}
+
+	[TestCase("a: !!str 123", "123")]
+	[TestCase("a: !!str true", "true")]
+	[TestCase("a: !!str null", "null")]
+	[TestCase("a: !!str", "")]
+	[TestCase("a: ! 123", "123")]
+	public void StringTagKeepsScalarAString(string yamlText, string expected)
+	{
+		var expectedJson = new JsonObject { ["a"] = expected };
+
+		var actual = YamlSerializer.Parse(yamlText).Single().ToJsonNode();
+
+		JsonAssert.AreEquivalent(expectedJson, actual);
+	}
 }
