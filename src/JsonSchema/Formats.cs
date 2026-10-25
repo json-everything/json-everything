@@ -1022,20 +1022,24 @@ public static partial class Formats
 
 		// Split into labels and validate each
 		var labels = value.Split('.');
-		foreach (var label in labels)
+		var hasALabel = false;
+		for (var i = 0; i < labels.Length; i++)
 		{
+			var label = labels[i];
+
 			// Each label max 63 chars
 			if (label.Length > 63) return false;
 
-			// Cannot have -- in positions 3-4 (index 2-3)
-			// Exception: xn-- is allowed as punycode prefix (positions 1-2, not 3-4)
-			if (label.Length >= 4 && label[2] == '-' && label[3] == '-')
-			{
-				return false;
-			}
+			// RFC 5891 section 4.2.3.1: -- in positions 3-4 (index 2-3) is reserved for A-labels
+			if (label.Length < 4 || label[2] != '-' || label[3] != '-') continue;
+			if (!label.StartsWith("xn--", StringComparison.OrdinalIgnoreCase)) return false;
+
+			if (!TryGetULabel(label, out var uLabel) || !IsValidULabel(uLabel)) return false;
+			labels[i] = uLabel;
+			hasALabel = true;
 		}
 
-		return true;
+		return !hasALabel || SatisfiesBidiRule(labels);
 	}
 
 	private static bool CheckIdnHostName(JsonElement node)
@@ -1047,27 +1051,125 @@ public static partial class Formats
 
 	private static bool IsValidIdnHostName(string value)
 	{
-		// Empty, too long, or contains underscore
-		if (string.IsNullOrEmpty(value) || value.Length > 255 || value.IndexOf('_') >= 0) return false;
+		// Empty or contains underscore
+		if (string.IsNullOrEmpty(value) || value.IndexOf('_') >= 0) return false;
 
-		// Reject Unicode dot separators (fullwidth, halfwidth ideographic)
-		// U+FF0E fullwidth full stop, U+FF61 halfwidth ideographic full stop, U+3002 ideographic full stop
-		if (value.IndexOf('\uFF0E') >= 0 || value.IndexOf('\uFF61') >= 0 || value.IndexOf('\u3002') >= 0)
-			return false;
+		// RFC 3490 section 3.1 (and UTS 46): ideographic, fullwidth, and halfwidth ideographic full stops separate labels
+		value = value.Replace('\u3002', '.').Replace('\uFF0E', '.').Replace('\uFF61', '.');
 
 		// Leading or trailing dot
 		if (value[0] == '.' || value[^1] == '.') return false;
 
 		// Split into labels and validate each
 		var labels = value.Split('.');
+		var asciiLength = labels.Length - 1;
 		for (var i = 0; i < labels.Length; i++)
 		{
 			if (!TryGetULabel(labels[i], out var uLabel)) return false;
 			if (!IsValidULabel(uLabel)) return false;
+
+			// RFC 5890 section 2.3.2.1: length limits apply to the A-label form
+			var aLabelLength = GetALabelLength(uLabel);
+			if (aLabelLength > 63) return false;
+			asciiLength += aLabelLength;
+
 			labels[i] = uLabel;
 		}
 
+		// RFC 1034 section 3.1: 255 octets on the wire leaves 253 characters in text form
+		if (asciiLength > 253) return false;
+
 		return SatisfiesBidiRule(labels);
+	}
+
+	private static int GetALabelLength(string uLabel)
+	{
+		var mapped = uLabel.Normalize(NormalizationForm.FormKC).ToLowerInvariant();
+		foreach (var ch in mapped)
+		{
+			if (ch >= '\x80') return 4 + GetPunycodeLength(mapped);
+		}
+
+		return mapped.Length;
+	}
+
+	// RFC 3492 section 6.3, counting the output rather than producing it
+	private static int GetPunycodeLength(string input)
+	{
+		const int punycodeBase = 36, tMin = 1, tMax = 26;
+
+		var codePoints = new int[input.Length];
+		var count = 0;
+		for (var i = 0; i < input.Length; i++)
+		{
+			if (char.IsHighSurrogate(input[i]) && i + 1 < input.Length && char.IsLowSurrogate(input[i + 1]))
+			{
+				codePoints[count++] = char.ConvertToUtf32(input[i], input[i + 1]);
+				i++;
+			}
+			else codePoints[count++] = input[i];
+		}
+
+		var basicCount = 0;
+		for (var i = 0; i < count; i++)
+		{
+			if (codePoints[i] < 0x80) basicCount++;
+		}
+
+		var length = basicCount > 0 ? basicCount + 1 : 0;
+		long n = 0x80, delta = 0;
+		var bias = 72;
+		var handled = basicCount;
+		while (handled < count)
+		{
+			var m = long.MaxValue;
+			for (var i = 0; i < count; i++)
+			{
+				if (codePoints[i] >= n && codePoints[i] < m) m = codePoints[i];
+			}
+
+			delta += (m - n) * (handled + 1);
+			n = m;
+			for (var i = 0; i < count; i++)
+			{
+				if (codePoints[i] < n) delta++;
+				if (codePoints[i] != n) continue;
+
+				var q = delta;
+				for (var k = punycodeBase; ; k += punycodeBase)
+				{
+					var t = k <= bias ? tMin : k >= bias + tMax ? tMax : k - bias;
+					if (q < t) break;
+					length++;
+					q = (q - t) / (punycodeBase - t);
+				}
+				length++;
+
+				bias = AdaptPunycodeBias(delta, handled + 1, handled == basicCount);
+				delta = 0;
+				handled++;
+			}
+
+			delta++;
+			n++;
+		}
+
+		return length;
+	}
+
+	private static int AdaptPunycodeBias(long delta, int pointCount, bool isFirst)
+	{
+		delta = isFirst ? delta / 700 : delta / 2;
+		delta += delta / pointCount;
+
+		var k = 0;
+		while (delta > 35 * 26 / 2)
+		{
+			delta /= 35;
+			k += 36;
+		}
+
+		return (int)(k + 36 * delta / (delta + 38));
 	}
 
 	// RFC 5891 sections 5.3-5.4: a label that carries the ACE prefix once mapped (UTS 46) is an A-label.
@@ -1177,8 +1279,9 @@ public static partial class Formats
 				var hasRequiredScript = false;
 				foreach (var c in label)
 				{
-					// Hiragana: U+3040-U+309F, Katakana: U+30A0-U+30FF, Han: U+4E00-U+9FFF
-					if ((c >= '\u3040' && c <= '\u309F') || 
+					// Hiragana: U+3040-U+309F, Katakana: U+30A0-U+30FF (aside from U+30FB itself), Han: U+4E00-U+9FFF
+					if (c == '\u30FB') continue;
+					if ((c >= '\u3040' && c <= '\u309F') ||
 					    (c >= '\u30A0' && c <= '\u30FF') || 
 					    (c >= '\u4E00' && c <= '\u9FFF'))
 					{
@@ -1216,10 +1319,51 @@ public static partial class Formats
 					return false;
 				}
 			}
+
+			// U+200C ZERO WIDTH NON-JOINER: must be preceded by Virama or sit between joining letters
+			if (ch == '‌')
+			{
+				if (i > 0 && IsVirama(label[i - 1])) continue;
+				if (!HasJoiningNeighbors(label, i)) return false;
+			}
 		}
 
 		return true;
 	}
+
+	// RFC 5892 appendix A.1: (Joining_Type:{L,D})(Joining_Type:T)* ZWNJ (Joining_Type:T)*(Joining_Type:{R,D})
+	private static bool HasJoiningNeighbors(string label, int index)
+	{
+		var before = index - 1;
+		while (before >= 0 && GetJoiningType(label[before]) == 'T') before--;
+		if (before < 0 || GetJoiningType(label[before]) is not ('L' or 'D')) return false;
+
+		var after = index + 1;
+		while (after < label.Length && GetJoiningType(label[after]) == 'T') after++;
+		return after < label.Length && GetJoiningType(label[after]) is 'R' or 'D';
+	}
+
+	// An approximation of the Unicode Joining_Type property for the Arabic, Syriac, NKo, and Mongolian scripts
+	private static char GetJoiningType(char ch)
+	{
+		if (ch is '‌' or '‍' or 'ء' or 'ٴ') return 'U';
+		if (char.GetUnicodeCategory(ch) is UnicodeCategory.NonSpacingMark or UnicodeCategory.EnclosingMark or UnicodeCategory.Format) return 'T';
+		if (!char.IsLetter(ch)) return 'U';
+		if (IsRightJoining(ch)) return 'R';
+		if (ch is (>= 'ؠ' and <= 'ۿ') or (>= 'ܐ' and <= 'ݿ') or (>= 'ߊ' and <= 'ߪ') or
+		    (>= 'ࡠ' and <= 'ࣉ') or (>= 'ᠠ' and <= 'ᡸ'))
+			return 'D';
+
+		return 'U';
+	}
+
+	private static bool IsRightJoining(char ch) =>
+		ch is (>= 'آ' and <= 'إ') or 'ا' or 'ة' or (>= 'د' and <= 'ز') or 'و' or
+			(>= 'ٱ' and <= 'ٳ') or (>= 'ٵ' and <= 'ٷ') or (>= 'ڈ' and <= 'ڙ') or
+			'ۀ' or (>= 'ۃ' and <= 'ۋ') or 'ۍ' or 'ۏ' or 'ے' or 'ۓ' or 'ە' or
+			'ۮ' or 'ۯ' or (>= 'ݙ' and <= 'ݛ') or 'ݫ' or 'ݬ' or 'ݱ' or 'ݳ' or
+			'ݴ' or 'ݸ' or 'ݹ' or 'ܐ' or (>= 'ܕ' and <= 'ܙ') or 'ܞ' or 'ܨ' or
+			'ܪ' or 'ܬ' or 'ܯ' or 'ݍ';
 
 	private static bool IsVirama(char ch)
 	{
@@ -1237,10 +1381,11 @@ public static partial class Formats
 		       ch == '\u0DCA';   // Sinhala
 	}
 
-	// RFC 5892: punctuation, symbols, spaces, and controls are DISALLOWED, aside from a few PVALID/CONTEXTO exceptions
+	// RFC 5892: punctuation, symbols, spaces, and controls are DISALLOWED, and section 2.6 lists exceptions both ways
 	private static bool IsDisallowedIdnCategory(char ch)
 	{
 		if (ch is '\u00B7' or '\u0375' or '\u05F3' or '\u05F4' or '\u06FD' or '\u06FE' or '\u0F0B' or '\u3007' or '\u30FB') return false;
+		if (ch is '\u0640' or '\u07FA' or '\u302E' or '\u302F' or (>= '\u3031' and <= '\u3035') or '\u303B') return true;
 
 		return char.GetUnicodeCategory(ch) switch
 		{
