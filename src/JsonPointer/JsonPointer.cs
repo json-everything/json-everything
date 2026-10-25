@@ -520,7 +520,8 @@ public readonly struct JsonPointer : IEquatable<JsonPointer>
 					if (segment[0] == '0') return false;
 					if (segment is ['-'])
 					{
-						if (array.Count == 0) return false;
+						// `-` refers to the element after the last one, so nothing can follow it
+						if (array.Count == 0 || end < span.Length) return false;
 						current = array[array.Count - 1];
 						break;
 					}
