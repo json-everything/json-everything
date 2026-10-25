@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Globalization;
+using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+// ReSharper disable CommentTypo
+// ReSharper disable IdentifierTypo
 
 namespace Json.Schema;
 
@@ -11,15 +14,23 @@ namespace Json.Schema;
 public static partial class Formats
 {
 #if NET7_0_OR_GREATER
-	[GeneratedRegex(@"^((?:([0-9]{4}-[0-9]{2}-[0-9]{2})([Tt_]| )([0-9]{2}:[0-9]{2}:[0-9]{2}(?:\.[0-9]+)?))([Zz]|[\+-][0-9]{2}:[0-9]{2}))$", RegexOptions.Compiled, 250)]
+	[GeneratedRegex(@"^((?:([0-9]{4}-[0-9]{2}-[0-9]{2})([Tt_]| )([0-9]{2}:[0-9]{2}:[0-9]{2}(?:\.[0-9]+)?))([Zz]|[\+-][0-9]{2}:[0-9]{2}))\z", RegexOptions.Compiled, 250)]
 	private static partial Regex DateTimeRegex();
+
+	// RFC 9557 section 4.1: suffix = [time-zone] *suffix-tag
+	[GeneratedRegex(@"^(?:\[!?(?:(?!\.{1,2}[/\]])[A-Za-z._][A-Za-z0-9._+\-]{0,13}(?:/(?!\.{1,2}[/\]])[A-Za-z._][A-Za-z0-9._+\-]{0,13})*|[+\-](?:[01][0-9]|2[0-3]):[0-5][0-9])\])?(?:\[!?[a-z_][a-z0-9_\-]*=[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*\])*\z", RegexOptions.Compiled, 250)]
+	private static partial Regex DateTimeSuffixRegex();
 #else
 // from https://regex101.com/r/qH0sU7/1, adjusted to enforce ASCII digits only
-	private static readonly Regex _dateTimeRegex = new(@"^((?:([0-9]{4}-[0-9]{2}-[0-9]{2})([Tt_]| )([0-9]{2}:[0-9]{2}:[0-9]{2}(?:\.[0-9]+)?))([Zz]|[\+-][0-9]{2}:[0-9]{2}))$", RegexOptions.Compiled, TimeSpan.FromMilliseconds(250));
+	private static readonly Regex _dateTimeRegex = new(@"^((?:([0-9]{4}-[0-9]{2}-[0-9]{2})([Tt_]| )([0-9]{2}:[0-9]{2}:[0-9]{2}(?:\.[0-9]+)?))([Zz]|[\+-][0-9]{2}:[0-9]{2}))\z", RegexOptions.Compiled, TimeSpan.FromMilliseconds(250));
 
 	private static Regex DateTimeRegex() => _dateTimeRegex;
-#endif
 
+	// RFC 9557 section 4.1: suffix = [time-zone] *suffix-tag
+	private static readonly Regex _dateTimeSuffixRegex = new(@"^(?:\[!?(?:(?!\.{1,2}[/\]])[A-Za-z._][A-Za-z0-9._+\-]{0,13}(?:/(?!\.{1,2}[/\]])[A-Za-z._][A-Za-z0-9._+\-]{0,13})*|[+\-](?:[01][0-9]|2[0-3]):[0-5][0-9])\])?(?:\[!?[a-z_][a-z0-9_\-]*=[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*\])*\z", RegexOptions.Compiled, TimeSpan.FromMilliseconds(250));
+
+	private static Regex DateTimeSuffixRegex() => _dateTimeSuffixRegex;
+#endif
 
 	/// <summary>
 	/// Defines the `date` format.
@@ -38,16 +49,14 @@ public static partial class Formats
 	/// </summary>
 	public static readonly Format Email = new PredicateFormat("email", CheckEmail);
 
-
 #if NET7_0_OR_GREATER
-	[GeneratedRegex(@"^[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?)*$", RegexOptions.Compiled, 250)]
+	[GeneratedRegex(@"^[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?)*\z", RegexOptions.Compiled, 250)]
 	private static partial Regex HostnameRegex();
 #else
-	private static readonly Regex _hostnameRegex = new(@"^[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?)*$", RegexOptions.Compiled, TimeSpan.FromMilliseconds(250));
+	private static readonly Regex _hostnameRegex = new(@"^[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?)*\z", RegexOptions.Compiled, TimeSpan.FromMilliseconds(250));
 
 	private static Regex HostnameRegex() => _hostnameRegex;
 #endif
-
 
 	/// <summary>
 	/// Defines the `hostname` format.
@@ -104,10 +113,6 @@ public static partial class Formats
 	/// <summary>
 	/// Defines the `uri-template` format.
 	/// </summary>
-	/// <remarks>
-	/// This is currently the same check as `uri`.  The infrastructure to check URI templates
-	/// [does not yet exist in .Net Standard/Core](https://github.com/dotnet/runtime/issues/41587).
-	/// </remarks>
 	public static readonly Format UriTemplate = new PredicateFormat("uri-template", CheckUriTemplate);
 	/// <summary>
 	/// Defines the `uuid` format.
@@ -150,7 +155,7 @@ public static partial class Formats
 		if (node.GetSchemaValueType() != SchemaValueType.String) return true;
 		var value = node.GetString()!;
 		int i = 0;
-		return TryParseUriOrIriRfc(value, ref i, isIri: true) && i == value.Length;
+		return TryParseUriOrIriRfc(value, ref i, true) && i == value.Length;
 	}
 
 	private static bool CheckAbsoluteUri(JsonElement node)
@@ -158,19 +163,19 @@ public static partial class Formats
 		if (node.GetSchemaValueType() != SchemaValueType.String) return true;
 		var value = node.GetString()!;
 		int i = 0;
-		return TryParseUriOrIriRfc(value, ref i, isIri: false) && i == value.Length;
+		return TryParseUriOrIriRfc(value, ref i, false) && i == value.Length;
 	}
 
 	private static bool CheckIriReference(JsonElement node)
 	{
 		if (node.GetSchemaValueType() != SchemaValueType.String) return true;
-		return TryParseUriOrIriReferenceRfc(node.GetString()!, isIri: true);
+		return TryParseUriOrIriReferenceRfc(node.GetString()!, true);
 	}
 
 	private static bool CheckUri(JsonElement node)
 	{
 		if (node.GetSchemaValueType() != SchemaValueType.String) return true;
-		return TryParseUriOrIriReferenceRfc(node.GetString()!, isIri: false);
+		return TryParseUriOrIriReferenceRfc(node.GetString()!, false);
 	}
 
 	// RFC 3986/3987 character classification helpers
@@ -197,20 +202,20 @@ public static partial class Formats
 		if (i >= s.Length || s[i] != ':') return false;
 		i++;
 		if (!TryParseHierPartRfc(s, ref i, isIri)) return false;
-		if (i < s.Length && s[i] == '?') { i++; ConsumeQueryOrFragmentRfc(s, ref i, isIri, isQuery: true); }
-		if (i < s.Length && s[i] == '#') { i++; ConsumeQueryOrFragmentRfc(s, ref i, isIri, isQuery: false); }
+		if (i < s.Length && s[i] == '?') { i++; ConsumeQueryOrFragmentRfc(s, ref i, isIri, true); }
+		if (i < s.Length && s[i] == '#') { i++; ConsumeQueryOrFragmentRfc(s, ref i, isIri, false); }
 		return true;
 	}
 
 	// URI-reference / IRI-reference = URI / relative-ref
 	private static bool TryParseUriOrIriReferenceRfc(string s, bool isIri)
 	{
-		int i = 0;
+		var i = 0;
 		if (TryParseUriOrIriRfc(s, ref i, isIri) && i == s.Length) return true;
 		i = 0;
 		if (!TryParseRelativePartRfc(s, ref i, isIri)) return false;
-		if (i < s.Length && s[i] == '?') { i++; ConsumeQueryOrFragmentRfc(s, ref i, isIri, isQuery: true); }
-		if (i < s.Length && s[i] == '#') { i++; ConsumeQueryOrFragmentRfc(s, ref i, isIri, isQuery: false); }
+		if (i < s.Length && s[i] == '?') { i++; ConsumeQueryOrFragmentRfc(s, ref i, isIri, true); }
+		if (i < s.Length && s[i] == '#') { i++; ConsumeQueryOrFragmentRfc(s, ref i, isIri, false); }
 		return i == s.Length;
 	}
 
@@ -253,25 +258,25 @@ public static partial class Formats
 	// authority = [ userinfo "@" ] host [ ":" port ]
 	private static bool TryParseAuthorityRfc(string s, ref int i, bool isIri)
 	{
-		int authorityStart = i;
+		var authorityStart = i;
 		while (i < s.Length && s[i] != '/' && s[i] != '?' && s[i] != '#') i++;
-		int authorityEnd = i;
+		var authorityEnd = i;
 
 		// Locate the first "@" to split userinfo from host
-		int atPos = -1;
-		for (int j = authorityStart; j < authorityEnd; j++)
+		var atPos = -1;
+		for (var j = authorityStart; j < authorityEnd; j++)
 		{
 			if (s[j] == '@') { atPos = j; break; }
 		}
 
-		int hostStart = authorityStart;
+		var hostStart = authorityStart;
 		if (atPos >= 0)
 		{
 			// Validate userinfo: *( unreserved / pct-encoded / sub-delims / ":" )
-			int k = authorityStart;
+			var k = authorityStart;
 			while (k < atPos)
 			{
-				char c = s[k];
+				var c = s[k];
 				if (IsUnreservedChar(c) || IsSubDelimChar(c) || c == ':') { k++; continue; }
 				if (c == '%')
 				{
@@ -286,16 +291,16 @@ public static partial class Formats
 		}
 
 		// Find port separator; IP-literals "[...]" may contain ":" internally
-		int portColon = -1;
+		var portColon = -1;
 		if (hostStart < authorityEnd && s[hostStart] == '[')
 		{
-			int closeBracket = -1;
-			for (int j = hostStart + 1; j < authorityEnd; j++)
+			var closeBracket = -1;
+			for (var j = hostStart + 1; j < authorityEnd; j++)
 			{
 				if (s[j] == ']') { closeBracket = j; break; }
 			}
 			if (closeBracket < 0) return false;
-			int afterBracket = closeBracket + 1;
+			var afterBracket = closeBracket + 1;
 			if (afterBracket < authorityEnd)
 			{
 				if (s[afterBracket] == ':') portColon = afterBracket;
@@ -304,19 +309,19 @@ public static partial class Formats
 		}
 		else
 		{
-			for (int j = hostStart; j < authorityEnd; j++)
+			for (var j = hostStart; j < authorityEnd; j++)
 			{
 				if (s[j] == ':') { portColon = j; break; }
 			}
 		}
 
-		int hostEnd = portColon >= 0 ? portColon : authorityEnd;
+		var hostEnd = portColon >= 0 ? portColon : authorityEnd;
 		if (!TryParseHostRfc(s, hostStart, hostEnd, isIri)) return false;
 
 		// port = *DIGIT
 		if (portColon >= 0)
 		{
-			for (int j = portColon + 1; j < authorityEnd; j++)
+			for (var j = portColon + 1; j < authorityEnd; j++)
 			{
 				if (!IsDigitChar(s[j])) return false;
 			}
@@ -337,14 +342,13 @@ public static partial class Formats
 			var inner = s.Substring(start + 1, end - start - 2);
 			if (inner.Length == 0) return false;
 			if (inner[0] == 'v' || inner[0] == 'V') return TryParseIPvFutureRfc(inner);
-			return System.Net.IPAddress.TryParse(inner, out var addr) &&
-			       addr.AddressFamily == System.Net.Sockets.AddressFamily.InterNetworkV6;
+			return IsValidIpv6(inner);
 		}
 
 		// reg-name = *( unreserved / pct-encoded / sub-delims )
-		for (int i = start; i < end;)
+		for (var i = start; i < end;)
 		{
-			char c = s[i];
+			var c = s[i];
 			if (IsUnreservedChar(c) || IsSubDelimChar(c)) { i++; continue; }
 			if (c == '%')
 			{
@@ -361,7 +365,7 @@ public static partial class Formats
 	// IPvFuture = "v" 1*HEXDIG "." 1*( unreserved / sub-delims / ":" )
 	private static bool TryParseIPvFutureRfc(string s)
 	{
-		int i = 1; // s[0] is 'v'/'V'
+		var i = 1; // s[0] is 'v'/'V'
 		if (i >= s.Length || !IsHexDigitChar(s[i])) return false;
 		while (i < s.Length && IsHexDigitChar(s[i])) i++;
 		if (i >= s.Length || s[i] != '.') return false;
@@ -369,7 +373,7 @@ public static partial class Formats
 		if (i >= s.Length) return false;
 		while (i < s.Length)
 		{
-			char c = s[i];
+			var c = s[i];
 			if (IsUnreservedChar(c) || IsSubDelimChar(c) || c == ':') { i++; continue; }
 			return false;
 		}
@@ -382,7 +386,7 @@ public static partial class Formats
 		while (i < s.Length && s[i] == '/')
 		{
 			i++;
-			ConsumeSegmentRfc(s, ref i, isIri);
+			ConsumeSegmentRfc(s, ref i, isIri, true);
 		}
 		return true;
 	}
@@ -393,10 +397,10 @@ public static partial class Formats
 		i++; // consume leading '/'
 		if (i < s.Length && s[i] != '/' && s[i] != '?' && s[i] != '#')
 		{
-			int before = i;
-			ConsumeSegmentRfc(s, ref i, isIri);
+			var before = i;
+			ConsumeSegmentRfc(s, ref i, isIri, true);
 			if (i == before) return false; // segment-nz needs at least one pchar
-			TryParsePathAbemptyRfc(s, ref i, isIri);
+			_ = TryParsePathAbemptyRfc(s, ref i, isIri);
 		}
 		return true;
 	}
@@ -405,10 +409,10 @@ public static partial class Formats
 	private static bool TryParsePathRootlessOrEmptyRfc(string s, ref int i, bool isIri)
 	{
 		if (i >= s.Length || s[i] == '?' || s[i] == '#') return true;
-		int before = i;
-		ConsumeSegmentRfc(s, ref i, isIri);
+		var before = i;
+		ConsumeSegmentRfc(s, ref i, isIri, true);
 		if (i == before) return false;
-		TryParsePathAbemptyRfc(s, ref i, isIri);
+		_ = TryParsePathAbemptyRfc(s, ref i, isIri);
 		return true;
 	}
 
@@ -417,19 +421,19 @@ public static partial class Formats
 	private static bool TryParsePathNoschemeOrEmptyRfc(string s, ref int i, bool isIri)
 	{
 		if (i >= s.Length || s[i] == '?' || s[i] == '#') return true;
-		int before = i;
-		ConsumeSegmentRfc(s, ref i, isIri, allowColon: false);
+		var before = i;
+		ConsumeSegmentRfc(s, ref i, isIri, false);
 		if (i == before) return false;
-		TryParsePathAbemptyRfc(s, ref i, isIri);
+		_ = TryParsePathAbemptyRfc(s, ref i, isIri);
 		return true;
 	}
 
 	// segment = *pchar;  pchar = unreserved / pct-encoded / sub-delims / ":" / "@"
-	private static void ConsumeSegmentRfc(string s, ref int i, bool isIri, bool allowColon = true)
+	private static void ConsumeSegmentRfc(string s, ref int i, bool isIri, bool allowColon)
 	{
 		while (i < s.Length)
 		{
-			char c = s[i];
+			var c = s[i];
 			if (IsUnreservedChar(c) || IsSubDelimChar(c) || c == '@') { i++; continue; }
 			if (allowColon && c == ':') { i++; continue; }
 			if (c == '%')
@@ -449,12 +453,12 @@ public static partial class Formats
 	{
 		while (i < s.Length)
 		{
-			char c = s[i];
+			var c = s[i];
 			if (c == '/' || c == '?') { i++; continue; }
 			if (isQuery && isIri && IsIprivateBmp(c)) { i++; continue; }
 			if (isQuery && isIri && char.IsHighSurrogate(c) && i + 1 < s.Length && char.IsLowSurrogate(s[i + 1])) { i += 2; continue; }
-			int prev = i;
-			ConsumeSegmentRfc(s, ref i, isIri);
+			var prev = i;
+			ConsumeSegmentRfc(s, ref i, isIri, true);
 			if (i == prev) break;
 		}
 	}
@@ -465,29 +469,93 @@ public static partial class Formats
 
 		var value = node.GetString()!;
 
-		// Basic RFC 6570 URI Template validation
-		// Check that all { have matching } and vice versa
-		int depth = 0;
-		bool inExpression = false;
-
-		foreach (var ch in value)
+		// URI-Template = *( literals / expression )
+		var i = 0;
+		while (i < value.Length)
 		{
-			if (ch == '{')
+			var c = value[i];
+			if (c == '{')
 			{
-				if (inExpression) return false; // nested braces not allowed
-				inExpression = true;
-				depth++;
+				if (!TryParseUriTemplateExpression(value, ref i)) return false;
+				continue;
 			}
-			else if (ch == '}')
+			if (c == '%')
 			{
-				if (!inExpression) return false; // closing without opening
-				inExpression = false;
-				depth--;
+				if (i + 2 < value.Length && IsHexDigitChar(value[i + 1]) && IsHexDigitChar(value[i + 2])) { i += 3; continue; }
+				return false;
 			}
+			if (IsUriTemplateLiteralChar(c)) { i++; continue; }
+			if (char.IsHighSurrogate(c) && i + 1 < value.Length && char.IsLowSurrogate(value[i + 1])) { i += 2; continue; }
+			return false;
 		}
 
-		// All braces must be closed
-		return depth == 0;
+		return true;
+	}
+
+	// literals = any Unicode character except: CTL, SP, DQUOTE, "%" (aside from pct-encoded), "<", ">", "\", "^", "`", "{", "|", "}"
+	private static bool IsUriTemplateLiteralChar(char c)
+	{
+		if (c >= '\x80') return IsUcscharBmp(c) || IsIprivateBmp(c);
+		if (c <= '\x20' || c == '\x7F') return false;
+		return c is not ('"' or '%' or '<' or '>' or '\\' or '^' or '`' or '{' or '|' or '}');
+	}
+
+	// expression = "{" [ operator ] variable-list "}"
+	private static bool TryParseUriTemplateExpression(string s, ref int i)
+	{
+		i++; // consume '{'
+		if (i < s.Length && s[i] is '+' or '#' or '.' or '/' or ';' or '?' or '&' or '=' or ',' or '!' or '@' or '|') i++;
+
+		// variable-list = varspec *( "," varspec )
+		while (true)
+		{
+			if (!TryParseUriTemplateVarname(s, ref i)) return false;
+
+			// modifier-level4 = prefix / explode
+			if (i < s.Length && s[i] == ':')
+			{
+				i++;
+				// max-length = %x31-39 0*3DIGIT
+				if (i >= s.Length || s[i] < '1' || s[i] > '9') return false;
+				var start = i;
+				i++;
+				while (i < s.Length && IsDigitChar(s[i]) && i - start < 4) i++;
+			}
+			else if (i < s.Length && s[i] == '*') i++;
+
+			if (i >= s.Length) return false;
+			if (s[i] == ',') { i++; continue; }
+			if (s[i] != '}') return false;
+			i++;
+			return true;
+		}
+	}
+
+	// varname = varchar *( ["."] varchar )
+	private static bool TryParseUriTemplateVarname(string s, ref int i)
+	{
+		if (!TryParseUriTemplateVarchar(s, ref i)) return false;
+		while (i < s.Length)
+		{
+			if (s[i] == '.')
+			{
+				i++;
+				if (!TryParseUriTemplateVarchar(s, ref i)) return false;
+				continue;
+			}
+			if (!TryParseUriTemplateVarchar(s, ref i)) break;
+		}
+		return true;
+	}
+
+	// varchar = ALPHA / DIGIT / "_" / pct-encoded
+	private static bool TryParseUriTemplateVarchar(string s, ref int i)
+	{
+		if (i >= s.Length) return false;
+		var c = s[i];
+		if (IsAlphaChar(c) || IsDigitChar(c) || c == '_') { i++; return true; }
+		if (c == '%' && i + 2 < s.Length && IsHexDigitChar(s[i + 1]) && IsHexDigitChar(s[i + 2])) { i += 3; return true; }
+		return false;
 	}
 
 	private static bool CheckJsonPointer(JsonElement node)
@@ -505,102 +573,94 @@ public static partial class Formats
 		return Pointer.RelativeJsonPointer.TryParse(node.GetString()!, out _);
 	}
 
-#if NET7_0_OR_GREATER
-	[GeneratedRegex(@"(@)(.+)$", RegexOptions.Compiled, 250)]
-	private static partial Regex NormalizeDomainRegex();
-
-	[GeneratedRegex(@"^(?("")("".+?(?<!\\)""@)|([-!#$%&'*+/=?^`{}|~A-Za-z0-9_]+(\.((?!\.)[-!#$%&'*+/=?^`{}|~A-Za-z0-9_]+))*@))(\[([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}|(?i:IPv6:)[0-9A-Fa-f:.]+)\]|([A-Za-z0-9]([A-Za-z0-9\-]{0,61}[A-Za-z0-9])?\.)+[A-Za-z]{2,63})$", RegexOptions.Compiled, 250)]
-	private static partial Regex EmailFormatRegex();
-#else
-	private static readonly Regex _normalizeDomainRegex = new(@"(@)(.+)$", RegexOptions.Compiled, TimeSpan.FromMilliseconds(250));
-
-	private static Regex NormalizeDomainRegex() => _normalizeDomainRegex;
-
-	private static readonly Regex _emailFormatRegex =
-		new(@"^(?("")("".+?(?<!\\)""@)|([-!#$%&'*+/=?^`{}|~A-Za-z0-9_]+(\.((?!\.)[-!#$%&'*+/=?^`{}|~A-Za-z0-9_]+))*@))(\[([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}|(?i:IPv6:)[0-9A-Fa-f:.]+)\]|([A-Za-z0-9]([A-Za-z0-9\-]{0,61}[A-Za-z0-9])?\.)+[A-Za-z]{2,63})$",
-			RegexOptions.Compiled | RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(250));
-
-	private static Regex EmailFormatRegex() => _emailFormatRegex;
-#endif
-
-
-	// source: https://docs.microsoft.com/en-us/dotnet/standard/base-types/how-to-verify-that-strings-are-in-valid-email-format
+	// RFC 5321 section 4.1.2: Mailbox = Local-part "@" ( Domain / address-literal )
 	private static bool CheckEmail(JsonElement node)
 	{
 		if (node.GetSchemaValueType() != SchemaValueType.String) return true;
 
 		var email = node.GetString()!;
 
-		if (string.IsNullOrWhiteSpace(email)) return false;
-
-		// Skip IDN normalization for domain-literals
-		var atIndex = email.LastIndexOf('@');
-		var isDomainLiteral = atIndex >= 0 && atIndex + 1 < email.Length && email[atIndex + 1] == '[';
-
-		if (!isDomainLiteral)
+		var i = 0;
+		if (i < email.Length && email[i] == '"')
 		{
-			try
-			{
-				// Normalize the domain
-				email = NormalizeDomainRegex().Replace(email, DomainMapper);
-			}
-			catch (RegexMatchTimeoutException)
-			{
-				return false;
-			}
-			catch (ArgumentException)
-			{
-				return false;
-			}
+			if (!TryParseSmtpQuotedString(email, ref i)) return false;
 		}
+		else if (!TryParseSmtpDotString(email, ref i)) return false;
 
-		try
+		if (i >= email.Length || email[i] != '@') return false;
+		i++;
+
+		var domain = email[i..];
+		if (domain.Length > 0 && domain[0] == '[') return IsValidAddressLiteral(domain);
+		return IsValidSmtpDomain(domain);
+	}
+
+	// Quoted-string = DQUOTE *QcontentSMTP DQUOTE
+	private static bool TryParseSmtpQuotedString(string s, ref int i)
+	{
+		i++; // consume opening quote
+		while (i < s.Length)
 		{
-			if (!EmailFormatRegex().IsMatch(email)) return false;
-
-			// Validate IP address domain-literal if present
-			if (isDomainLiteral)
+			var c = s[i];
+			if (c == '"') { i++; return true; }
+			if (c == '\\')
 			{
-				var domain = email[(atIndex + 1)..];
-				if (!domain.StartsWith("[") || !domain.EndsWith("]"))
-					return false;
-
-				var addrContent = domain.Substring(1, domain.Length - 2);
-				
-				if (addrContent.StartsWith("IPv6:", StringComparison.OrdinalIgnoreCase))
-				{
-					// IPv6 literal
-					var addr = addrContent[5..];
-					if (!System.Net.IPAddress.TryParse(addr, out var ip)) return false;
-					if (ip.AddressFamily != System.Net.Sockets.AddressFamily.InterNetworkV6) return false;
-				}
-				else
-				{
-					// IPv4 literal
-					if (!System.Net.IPAddress.TryParse(addrContent, out var ip)) return false;
-					if (ip.AddressFamily != System.Net.Sockets.AddressFamily.InterNetwork) return false;
-				}
+				// quoted-pairSMTP = %d92 %d32-126
+				if (i + 1 >= s.Length || s[i + 1] < '\x20' || s[i + 1] > '\x7E') return false;
+				i += 2;
+				continue;
 			}
-
-			return true;
+			// qtextSMTP = %d32-33 / %d35-91 / %d93-126
+			if (c < '\x20' || c > '\x7E') return false;
+			i++;
 		}
-		catch (RegexMatchTimeoutException)
+		return false;
+	}
+
+	// Dot-string = Atom *("." Atom)
+	private static bool TryParseSmtpDotString(string s, ref int i)
+	{
+		while (true)
 		{
-			return false;
+			var start = i;
+			while (i < s.Length && IsAtextChar(s[i])) i++;
+			if (i == start) return false;
+			if (i >= s.Length || s[i] != '.') return true;
+			i++;
 		}
 	}
 
-	// source: part of above
-	// Examines the domain part of the email and normalizes it.
-	private static string DomainMapper(Match match)
+	// atext = ALPHA / DIGIT / "!" / "#" / "$" / "%" / "&" / "'" / "*" / "+" / "-" / "/" / "=" / "?" / "^" / "_" / "`" / "{" / "|" / "}" / "~"
+	private static bool IsAtextChar(char c) =>
+		IsAlphaChar(c) || IsDigitChar(c) ||
+		c is '!' or '#' or '$' or '%' or '&' or '\'' or '*' or '+' or '-' or '/' or '=' or '?' or '^' or '_' or '`' or '{' or '|' or '}' or '~';
+
+	// Domain = sub-domain *("." sub-domain);  sub-domain = Let-dig [Ldh-str]
+	private static bool IsValidSmtpDomain(string domain)
 	{
-		// Use IdnMapping class to convert Unicode domain names.
-		var idn = new IdnMapping();
+		if (domain.Length == 0) return false;
 
-		// Pull out and process domain name (throws ArgumentException on invalid)
-		var domainName = idn.GetAscii(match.Groups[2].Value);
+		foreach (var label in domain.Split('.'))
+		{
+			if (label.Length == 0 || label.Length > 63) return false;
+			if (label[0] == '-' || label[^1] == '-') return false;
+			foreach (var c in label)
+			{
+				if (!IsAlphaChar(c) && !IsDigitChar(c) && c != '-') return false;
+			}
+		}
 
-		return match.Groups[1].Value + domainName;
+		return true;
+	}
+
+	// address-literal = "[" ( IPv4-address-literal / IPv6-address-literal ) "]"
+	private static bool IsValidAddressLiteral(string domain)
+	{
+		if (domain.Length < 2 || domain[0] != '[' || domain[^1] != ']') return false;
+
+		var content = domain.Substring(1, domain.Length - 2);
+		if (content.StartsWith("IPv6:", StringComparison.OrdinalIgnoreCase)) return IsValidIpv6(content[5..]);
+		return IsValidIpv4(content);
 	}
 
 	private static bool CheckIdnEmail(JsonElement node)
@@ -634,36 +694,18 @@ public static partial class Formats
 		// Domain: normalize and validate using CheckIdnHostName
 		if (domain.Length == 0) return false;
 		
-		// Handle domain literals (IPv4/IPv6)
-		if (domain[0] == '[')
-		{
-			if (!domain.EndsWith("]")) return false;
-			var addrContent = domain.Substring(1, domain.Length - 2);
-			
-			if (addrContent.StartsWith("IPv6:", StringComparison.OrdinalIgnoreCase))
-			{
-				var addr = addrContent[5..];
-				if (!System.Net.IPAddress.TryParse(addr, out var ip)) return false;
-				if (ip.AddressFamily != System.Net.Sockets.AddressFamily.InterNetworkV6) return false;
-			}
-			else
-			{
-				if (!System.Net.IPAddress.TryParse(addrContent, out var ip)) return false;
-				if (ip.AddressFamily != System.Net.Sockets.AddressFamily.InterNetwork) return false;
-			}
-			return true;
-		}
+		if (domain[0] == '[') return IsValidAddressLiteral(domain);
 
-		// Use idn-hostname validation for domain
-		var testNode = JsonDocument.Parse($"\"{domain}\"").RootElement;
-		return CheckIdnHostName(testNode);
+		return IsValidIdnHostName(domain);
 	}
 
 	private static bool CheckUuid(JsonElement node)
 	{
 		if (node.GetSchemaValueType() != SchemaValueType.String) return true;
 
-		return Guid.TryParseExact(node.GetString()!, "D", out _);
+		var value = node.GetString()!;
+		// Guid parsing trims surrounding whitespace
+		return value.Length == 36 && Guid.TryParseExact(value, "D", out _);
 	}
 
 	private static bool CheckDate(JsonElement node)
@@ -729,12 +771,16 @@ public static partial class Formats
 		return true;
 	}
 
+	// Without a date, a leap second can't be known to exist, so one isn't allowed.
 	private static bool CheckTime(JsonElement node)
 	{
 		if (node.GetSchemaValueType() != SchemaValueType.String) return true;
 
-		var timeString = node.GetString()!;
+		return CheckTimeString(node.GetString()!, false);
+	}
 
+	internal static bool CheckTimeString(string timeString, bool allowLeapSecond)
+	{
 		// Must contain offset (Z or +/-HH:MM)
 		if (!timeString.EndsWith("Z", StringComparison.OrdinalIgnoreCase) && 
 		    timeString.IndexOf('+') < 0 && timeString.IndexOf('-') < 0)
@@ -777,6 +823,7 @@ public static partial class Formats
 		if (minute < 0 || minute > 59) return false;
 
 		var isLeapSecond = second == 60;
+		if (isLeapSecond && !allowLeapSecond) return false;
 		if (!isLeapSecond)
 		{
 			if (second < 0 || second > 59) return false;
@@ -800,7 +847,7 @@ public static partial class Formats
 			var sign = offsetPart[0];
 			if (sign != '+' && sign != '-') return false;
 			
-			var off = offsetPart.Substring(1).Split(':');
+			var off = offsetPart[1..].Split(':');
 			if (off.Length != 2) return false;
 			
 			// Each offset component must be exactly 2 digits
@@ -849,37 +896,20 @@ public static partial class Formats
 		return true;
 	}
 
+	// RFC 9557 section 4.1: date-time-ext = date-time suffix
 	private static bool CheckDateTime(JsonElement node)
 	{
-		if (!CheckDateFormat(node))
-		{
-			return CheckDateTimePrecisionFormat(node);
-		}
-
-		return true;
-	}
-
-	private static bool CheckDateFormat(JsonElement node, params string[] formats)
-	{
 		if (node.GetSchemaValueType() != SchemaValueType.String) return true;
 
-		var dateString = node.GetString()!;
-		dateString = dateString.ToUpperInvariant();
-		if (formats.Length != 0)
-		{
-			var canParseExact = System.DateTime.TryParseExact(dateString, formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out _);
-			if (canParseExact) return true;
-		}
+		var value = node.GetString()!;
+		var suffixStart = value.IndexOf('[');
+		if (suffixStart < 0) return CheckDateTimeString(value);
 
-		return false;
+		return CheckDateTimeString(value[..suffixStart]) && DateTimeSuffixRegex().IsMatch(value[suffixStart..]);
 	}
 
-	private static bool CheckDateTimePrecisionFormat(JsonElement node)
+	internal static bool CheckDateTimeString(string dateString)
 	{
-		if (node.GetSchemaValueType() != SchemaValueType.String) return true;
-
-		var dateString = node.GetString()!;
-
 		var match = DateTimeRegex().Match(dateString);
 		if (!match.Success) return false;
 
@@ -1012,8 +1042,11 @@ public static partial class Formats
 	{
 		if (node.GetSchemaValueType() != SchemaValueType.String) return true;
 
-		var value = node.GetString()!;
+		return IsValidIdnHostName(node.GetString()!);
+	}
 
+	private static bool IsValidIdnHostName(string value)
+	{
 		// Empty, too long, or contains underscore
 		if (string.IsNullOrEmpty(value) || value.Length > 255 || value.IndexOf('_') >= 0) return false;
 
@@ -1027,121 +1060,160 @@ public static partial class Formats
 
 		// Split into labels and validate each
 		var labels = value.Split('.');
-		foreach (var label in labels)
+		for (var i = 0; i < labels.Length; i++)
 		{
-			if (label.Length == 0) return false;
+			if (!TryGetULabel(labels[i], out var uLabel)) return false;
+			if (!IsValidULabel(uLabel)) return false;
+			labels[i] = uLabel;
+		}
+
+		return SatisfiesBidiRule(labels);
+	}
+
+	// RFC 5891 sections 5.3-5.4: a label that carries the ACE prefix once mapped (UTS 46) is an A-label.
+	// It must decode as Punycode, and the decoded U-label must encode back to the same (lowercased) A-label.
+	private static bool TryGetULabel(string label, out string uLabel)
+	{
+		uLabel = label;
+		try
+		{
+			var mapped = label.Normalize(NormalizationForm.FormKC).ToLowerInvariant();
+			if (!mapped.StartsWith("xn--", StringComparison.Ordinal)) return true;
+			if (mapped.Length > 63) return false;
+
+			var idn = new IdnMapping { UseStd3AsciiRules = true };
+			uLabel = idn.GetUnicode(mapped);
+			return string.Equals(idn.GetAscii(uLabel), mapped, StringComparison.Ordinal);
+		}
+		catch (ArgumentException)
+		{
+			return false;
+		}
+	}
+
+	private static bool IsValidULabel(string label)
+	{
+		if (label.Length == 0) return false;
+
+		// Each label max 63 chars
+		if (label.Length > 63) return false;
+
+		// Cannot start or end with hyphen
+		if (label[0] == '-' || label[^1] == '-') return false;
+
+		// Cannot have -- in positions 3-4 (index 2-3)
+		if (label.Length >= 4 && label[2] == '-' && label[3] == '-')
+		{
+			return false;
+		}
+
+		// The only ASCII allowed is letters, digits, and hyphen; non-ASCII must be letters, marks, or digits
+		foreach (var ch in label)
+		{
+			if (ch < '\x80')
+			{
+				if (!IsAlphaChar(ch) && !IsDigitChar(ch) && ch != '-') return false;
+			}
+			else if (IsDisallowedIdnCategory(ch)) return false;
+		}
+
+		// Check for disallowed starting characters (combining marks)
+		if (label.Length > 0)
+		{
+			var firstChar = label[0];
+			var category = char.GetUnicodeCategory(firstChar);
 			
-			// Each label max 63 chars
-			if (label.Length > 63) return false;
-
-			// Cannot start or end with hyphen
-			if (label[0] == '-' || label[^1] == '-') return false;
-
-			// Cannot have -- in positions 3-4 (index 2-3)
-			if (label.Length >= 4 && label[2] == '-' && label[3] == '-')
+			// Cannot start with combining marks
+			if (category == UnicodeCategory.SpacingCombiningMark ||
+			    category == UnicodeCategory.NonSpacingMark ||
+			    category == UnicodeCategory.EnclosingMark)
 			{
 				return false;
 			}
+		}
 
-			// Check for disallowed starting characters (combining marks)
-			if (label.Length > 0)
+		// IDNA2008 contextual rules for specific characters
+		for (var i = 0; i < label.Length; i++)
+		{
+			var ch = label[i];
+			
+			// U+00B7 MIDDLE DOT: must be surrounded by 'l' (U+006C)
+			if (ch == '\u00B7')
 			{
-				var firstChar = label[0];
-				var category = char.GetUnicodeCategory(firstChar);
-				
-				// Cannot start with combining marks
-				if (category == UnicodeCategory.SpacingCombiningMark ||
-				    category == UnicodeCategory.NonSpacingMark ||
-				    category == UnicodeCategory.EnclosingMark)
+				if (i == 0 || i == label.Length - 1) return false;
+				if (label[i - 1] != 'l' || label[i + 1] != 'l') return false;
+			}
+			
+			// U+0375 Greek KERAIA: must be followed by Greek letter
+			if (ch == '\u0375')
+			{
+				if (i == label.Length - 1) return false;
+				var next = label[i + 1];
+				// Check if next char is Greek (U+0370-U+03FF range)
+				if (next < '\u0370' || next > '\u03FF') return false;
+			}
+			
+			// U+05F3 Hebrew GERESH: must be preceded by Hebrew letter
+			if (ch == '\u05F3')
+			{
+				if (i == 0) return false;
+				var prev = label[i - 1];
+				// Check if prev char is Hebrew (U+0590-U+05FF range)
+				if (prev < '\u0590' || prev > '\u05FF') return false;
+			}
+			
+			// U+05F4 Hebrew GERSHAYIM: must be preceded by Hebrew letter
+			if (ch == '\u05F4')
+			{
+				if (i == 0) return false;
+				var prev = label[i - 1];
+				// Check if prev char is Hebrew (U+0590-U+05FF range)
+				if (prev < '\u0590' || prev > '\u05FF') return false;
+			}
+			
+			// U+30FB KATAKANA MIDDLE DOT: must have Hiragana, Katakana, or Han in the label
+			if (ch == '\u30FB')
+			{
+				var hasRequiredScript = false;
+				foreach (var c in label)
 				{
-					return false;
+					// Hiragana: U+3040-U+309F, Katakana: U+30A0-U+30FF, Han: U+4E00-U+9FFF
+					if ((c >= '\u3040' && c <= '\u309F') || 
+					    (c >= '\u30A0' && c <= '\u30FF') || 
+					    (c >= '\u4E00' && c <= '\u9FFF'))
+					{
+						hasRequiredScript = true;
+						break;
+					}
+				}
+				if (!hasRequiredScript) return false;
+			}
+			
+			// U+0660-U+0669 Arabic-Indic digits cannot mix with U+06F0-U+06F9 Extended Arabic-Indic
+			if (ch >= '\u0660' && ch <= '\u0669')
+			{
+				foreach (var c in label)
+				{
+					if (c >= '\u06F0' && c <= '\u06F9') return false;
 				}
 			}
-
-			// IDNA2008 contextual rules for specific characters
-			for (int i = 0; i < label.Length; i++)
+			if (ch >= '\u06F0' && ch <= '\u06F9')
 			{
-				var ch = label[i];
-				
-				// U+00B7 MIDDLE DOT: must be surrounded by 'l' (U+006C)
-				if (ch == '\u00B7')
+				foreach (var c in label)
 				{
-					if (i == 0 || i == label.Length - 1) return false;
-					if (label[i - 1] != 'l' || label[i + 1] != 'l') return false;
+					if (c >= '\u0660' && c <= '\u0669') return false;
 				}
-				
-				// U+0375 Greek KERAIA: must be followed by Greek letter
-				if (ch == '\u0375')
+			}
+			
+			// U+200D ZERO WIDTH JOINER: must be preceded by Virama
+			if (ch == '\u200D')
+			{
+				if (i == 0) return false;
+				var prev = label[i - 1];
+				// Virama combining class is 9
+				if (char.GetUnicodeCategory(prev) != UnicodeCategory.NonSpacingMark || !IsVirama(prev))
 				{
-					if (i == label.Length - 1) return false;
-					var next = label[i + 1];
-					// Check if next char is Greek (U+0370-U+03FF range)
-					if (next < '\u0370' || next > '\u03FF') return false;
-				}
-				
-				// U+05F3 Hebrew GERESH: must be preceded by Hebrew letter
-				if (ch == '\u05F3')
-				{
-					if (i == 0) return false;
-					var prev = label[i - 1];
-					// Check if prev char is Hebrew (U+0590-U+05FF range)
-					if (prev < '\u0590' || prev > '\u05FF') return false;
-				}
-				
-				// U+05F4 Hebrew GERSHAYIM: must be preceded by Hebrew letter
-				if (ch == '\u05F4')
-				{
-					if (i == 0) return false;
-					var prev = label[i - 1];
-					// Check if prev char is Hebrew (U+0590-U+05FF range)
-					if (prev < '\u0590' || prev > '\u05FF') return false;
-				}
-				
-				// U+30FB KATAKANA MIDDLE DOT: must have Hiragana, Katakana, or Han in the label
-				if (ch == '\u30FB')
-				{
-					bool hasRequiredScript = false;
-					foreach (var c in label)
-					{
-						// Hiragana: U+3040-U+309F, Katakana: U+30A0-U+30FF, Han: U+4E00-U+9FFF
-						if ((c >= '\u3040' && c <= '\u309F') || 
-						    (c >= '\u30A0' && c <= '\u30FF') || 
-						    (c >= '\u4E00' && c <= '\u9FFF'))
-						{
-							hasRequiredScript = true;
-							break;
-						}
-					}
-					if (!hasRequiredScript) return false;
-				}
-				
-				// U+0660-U+0669 Arabic-Indic digits cannot mix with U+06F0-U+06F9 Extended Arabic-Indic
-				if (ch >= '\u0660' && ch <= '\u0669')
-				{
-					foreach (var c in label)
-					{
-						if (c >= '\u06F0' && c <= '\u06F9') return false;
-					}
-				}
-				if (ch >= '\u06F0' && ch <= '\u06F9')
-				{
-					foreach (var c in label)
-					{
-						if (c >= '\u0660' && c <= '\u0669') return false;
-					}
-				}
-				
-				// U+200D ZERO WIDTH JOINER: must be preceded by Virama
-				if (ch == '\u200D')
-				{
-					if (i == 0) return false;
-					var prev = label[i - 1];
-					// Virama combining class is 9
-					if (char.GetUnicodeCategory(prev) != System.Globalization.UnicodeCategory.NonSpacingMark ||
-					    !IsVirama(prev))
-					{
-						return false;
-					}
+					return false;
 				}
 			}
 		}
@@ -1165,12 +1237,102 @@ public static partial class Formats
 		       ch == '\u0DCA';   // Sinhala
 	}
 
+	// RFC 5892: punctuation, symbols, spaces, and controls are DISALLOWED, aside from a few PVALID/CONTEXTO exceptions
+	private static bool IsDisallowedIdnCategory(char ch)
+	{
+		if (ch is '\u00B7' or '\u0375' or '\u05F3' or '\u05F4' or '\u06FD' or '\u06FE' or '\u0F0B' or '\u3007' or '\u30FB') return false;
+
+		return char.GetUnicodeCategory(ch) switch
+		{
+			UnicodeCategory.ConnectorPunctuation or
+			UnicodeCategory.DashPunctuation or
+			UnicodeCategory.OpenPunctuation or
+			UnicodeCategory.ClosePunctuation or
+			UnicodeCategory.InitialQuotePunctuation or
+			UnicodeCategory.FinalQuotePunctuation or
+			UnicodeCategory.OtherPunctuation or
+			UnicodeCategory.MathSymbol or
+			UnicodeCategory.CurrencySymbol or
+			UnicodeCategory.ModifierSymbol or
+			UnicodeCategory.OtherSymbol or
+			UnicodeCategory.SpaceSeparator or
+			UnicodeCategory.LineSeparator or
+			UnicodeCategory.ParagraphSeparator or
+			UnicodeCategory.Control or
+			UnicodeCategory.PrivateUse => true,
+			_ => false
+		};
+	}
+
+	// RFC 5893 section 2, using BMP code point ranges as an approximation of the Bidi_Class property
+	private static bool SatisfiesBidiRule(string[] labels)
+	{
+		var isBidiDomain = false;
+		foreach (var label in labels)
+		{
+			foreach (var ch in label)
+			{
+				if (!IsRtlLetter(ch) && !IsArabicNumber(ch)) continue;
+				isBidiDomain = true;
+				break;
+			}
+		}
+		if (!isBidiDomain) return true;
+
+		foreach (var label in labels)
+		{
+			// Rule 1: the first character must be L, R, or AL
+			var isRtl = IsRtlLetter(label[0]);
+			if (!isRtl && !IsLtrLetter(label[0])) return false;
+
+			var hasEuropeanNumber = false;
+			var hasArabicNumber = false;
+			foreach (var ch in label)
+			{
+				// Rule 2: no L in an RTL label; rule 5: no R, AL, or AN in an LTR label
+				if (isRtl ? IsLtrLetter(ch) : IsRtlLetter(ch) || IsArabicNumber(ch)) return false;
+				if (IsEuropeanNumber(ch)) hasEuropeanNumber = true;
+				if (IsArabicNumber(ch)) hasArabicNumber = true;
+			}
+
+			// Rule 4: an RTL label can't mix EN and AN
+			if (isRtl && hasEuropeanNumber && hasArabicNumber) return false;
+
+			// Rules 3 and 6: the last character, ignoring trailing NSMs
+			var end = label.Length - 1;
+			while (end > 0 && char.GetUnicodeCategory(label[end]) is UnicodeCategory.NonSpacingMark or UnicodeCategory.EnclosingMark) end--;
+			var last = label[end];
+			if (isRtl
+				    ? !IsRtlLetter(last) && !IsEuropeanNumber(last) && !IsArabicNumber(last)
+				    : !IsLtrLetter(last) && !IsEuropeanNumber(last))
+				return false;
+		}
+
+		return true;
+	}
+
+	// Hebrew, Arabic, Syriac, Thaana, NKo, Samaritan, Mandaic, and the RTL presentation forms
+	private static bool IsRtlLetter(char ch) =>
+		char.IsLetter(ch) &&
+		((ch >= '\u0590' && ch <= '\u08FF') || (ch >= '\uFB1D' && ch <= '\uFDFF') || (ch >= '\uFE70' && ch <= '\uFEFF'));
+
+	private static bool IsLtrLetter(char ch) => char.IsLetter(ch) && !IsRtlLetter(ch);
+
+	private static bool IsArabicNumber(char ch) =>
+		(ch >= '\u0600' && ch <= '\u0605') || (ch >= '\u0660' && ch <= '\u0669') || ch == '\u066B' || ch == '\u066C' || ch == '\u06DD';
+
+	private static bool IsEuropeanNumber(char ch) =>
+		(ch >= '0' && ch <= '9') || (ch >= '\u06F0' && ch <= '\u06F9') || (ch >= '\uFF10' && ch <= '\uFF19');
+
 	private static bool CheckIpv4(JsonElement node)
 	{
 		if (node.GetSchemaValueType() != SchemaValueType.String) return true;
 
-		var value = node.GetString()!;
+		return IsValidIpv4(node.GetString()!);
+	}
 
+	private static bool IsValidIpv4(string value)
+	{
 		// Must be exactly 4 decimal octets separated by dots
 		var parts = value.Split('.');
 		if (parts.Length != 4) return false;
@@ -1205,14 +1367,49 @@ public static partial class Formats
 	{
 		if (node.GetSchemaValueType() != SchemaValueType.String) return true;
 
-		var value = node.GetString()!;
+		return IsValidIpv6(node.GetString()!);
+	}
 
-		// Reject zone ID (%) and netmask (/)
-		if (value.IndexOf('%') >= 0 || value.IndexOf('/') >= 0) return false;
+	// RFC 4291 section 2.2 (as given by the IPv6address rule in RFC 3986 section 3.2.2)
+	private static bool IsValidIpv6(string value)
+	{
+		var compression = value.IndexOf("::", StringComparison.Ordinal);
+		if (compression < 0)
+			return TryCountIpv6Groups(value, true, out var count) && count == 8;
 
-		var actualType = System.Uri.CheckHostName(value);
+		if (value.IndexOf("::", compression + 1, StringComparison.Ordinal) >= 0) return false;
 
-		return actualType == UriHostNameType.IPv6;
+		return TryCountIpv6Groups(value[..compression], false, out var headCount) &&
+		       TryCountIpv6Groups(value[(compression + 2)..], true, out var tailCount) &&
+		       headCount + tailCount <= 7;
+	}
+
+	// h16 = 1*4HEXDIG;  ls32 = ( h16 ":" h16 ) / IPv4address
+	private static bool TryCountIpv6Groups(string value, bool allowTrailingIpv4, out int count)
+	{
+		count = 0;
+		if (value.Length == 0) return true;
+
+		var groups = value.Split(':');
+		for (var i = 0; i < groups.Length; i++)
+		{
+			var group = groups[i];
+			if (allowTrailingIpv4 && i == groups.Length - 1 && group.IndexOf('.') >= 0)
+			{
+				if (!IsValidIpv4(group)) return false;
+				count += 2;
+				continue;
+			}
+
+			if (group.Length is 0 or > 4) return false;
+			foreach (var ch in group)
+			{
+				if (!IsHexDigitChar(ch)) return false;
+			}
+			count++;
+		}
+
+		return true;
 	}
 
 	private static bool CheckDuration(JsonElement node)
@@ -1232,7 +1429,7 @@ public static partial class Formats
 		// ECMA-262 valid escapes: b, f, n, r, t, v, 0 (null), x (hex), u (unicode),
 		// c (control), and special regex chars like ., *, +, ?, [, ], {, }, (, ), |, ^, $, \, /
 		// .NET-specific (invalid in ECMA-262): a (alert), e (escape), A, G, z, Z (anchors)
-		for (int i = 0; i < pattern.Length - 1; i++)
+		for (var i = 0; i < pattern.Length - 1; i++)
 		{
 			if (pattern[i] == '\\')
 			{
@@ -1254,14 +1451,89 @@ public static partial class Formats
 			}
 		}
 
+		if (!TryTranslateEcmaPattern(pattern, out var translated)) return false;
+
 		try
 		{
-			_ = RegexOrPattern.CreateRegex(pattern, false);
+			_ = RegexOrPattern.CreateRegex(translated, false);
 			return true;
 		}
 		catch
 		{
 			return false;
 		}
+	}
+
+	// Rejects group syntax that .NET accepts but ECMA-262 doesn't, and rewrites the ECMA-262 empty classes
+	// `[]` and `[^]`, which .NET can't parse, into equivalents it can.
+	private static bool TryTranslateEcmaPattern(string pattern, out string translated)
+	{
+		var builder = new StringBuilder(pattern.Length);
+		var inClass = false;
+		for (var i = 0; i < pattern.Length; i++)
+		{
+			var c = pattern[i];
+			if (c == '\\')
+			{
+				builder.Append(c);
+				if (i + 1 < pattern.Length) builder.Append(pattern[++i]);
+				continue;
+			}
+
+			if (inClass)
+			{
+				if (c == ']') inClass = false;
+				builder.Append(c);
+				continue;
+			}
+
+			if (c == '[')
+			{
+				if (i + 1 < pattern.Length && pattern[i + 1] == ']')
+				{
+					builder.Append("(?!)");
+					i++;
+					continue;
+				}
+				if (i + 2 < pattern.Length && pattern[i + 1] == '^' && pattern[i + 2] == ']')
+				{
+					builder.Append(@"[\s\S]");
+					i += 2;
+					continue;
+				}
+				inClass = true;
+			}
+			else if (c == '(' && i + 1 < pattern.Length && pattern[i + 1] == '?' && !IsEcmaGroupPrefix(pattern, i + 2))
+			{
+				translated = string.Empty;
+				return false;
+			}
+
+			builder.Append(c);
+		}
+
+		translated = builder.ToString();
+		return true;
+	}
+
+	// After "(?", ECMA-262 allows ":", "=", "!", "<=", "<!", "<name>", and modifiers such as "i:" or "i-ms:".
+	private static bool IsEcmaGroupPrefix(string pattern, int i)
+	{
+		if (i >= pattern.Length) return false;
+		if (pattern[i] is ':' or '=' or '!' or '<') return true;
+
+		var start = i;
+		while (i < pattern.Length && pattern[i] is 'i' or 'm' or 's') i++;
+		var hasAdded = i > start;
+		if (i < pattern.Length && pattern[i] == '-')
+		{
+			i++;
+			start = i;
+			while (i < pattern.Length && pattern[i] is 'i' or 'm' or 's') i++;
+			if (i == start) return false;
+		}
+		else if (!hasAdded) return false;
+
+		return i < pattern.Length && pattern[i] == ':';
 	}
 }
