@@ -71,7 +71,8 @@ public partial class Dialect
 		WriteOnlyKeyword.Instance
 	)
 	{
-		Id = MetaSchemas.V1_2026Id
+		Id = MetaSchemas.V1_2026Id,
+		FormatRegistry = FormatRegistry.V1
 	};
 
 	/// <summary>
@@ -80,5 +81,5 @@ public partial class Dialect
 	/// <remarks>Use this property to evaluate schemas that conform to the v1-compatible specifications.
 	/// The dialect includes all standard v1 keywords and disallows unknown keywords. Sibling keywords are
 	/// processed when resolving references using the "$ref" keyword.</remarks>
-	public static Dialect V1 { get; } = V1_2026;
+	public static Dialect V1 => V1_2026;
 }

@@ -4,6 +4,56 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "09.01"
 ---
+# [9.5.0](https://github.com/json-everything/json-everything/pull/1062) {#release-schema-9.5.0}
+
+**Updated formats in accordance with updates to JSON Schema Test Suite.**
+
+- `date-time`
+- `duration`
+- `email`
+- `hostname`
+- `idn-hostname`
+- `ipv6`
+- `iri`
+- `iri-reference`
+- `regex`
+- `time`
+- `uri-reference`
+- `uri-template`
+- `uuid`
+
+**Format registrion moved**
+
+`EvaluationOptions.FormatRegistry` has been marked obsolete in favor of a new `FormatRegistry` property on the `Dialect` class.  Additionally, each declared dialect now includes only those formats which the specification explicitly defines for that release.  This should not change default validation since draft-era specifications require that `format` only produces annotations by default.
+
+```c#
+var schema = JsonSchema.Build(schemaJson);
+
+var formatRegistry = new FormatRegistry();
+formatRegistry.Register(new RegexFormat("customFormat", "..."));
+var evalOptions = new EvaluationOptions
+{
+    FormatRegistry = formatRegistry
+}
+var results = schema.Evaluate(instanceJson, evalOptions);
+```
+
+becomes
+
+```c#
+var formatRegistry = new FormatRegistry();
+formatRegistry.Register(new RegexFormat("customFormat", "..."));
+var buildOptions = new BuildOptions
+{
+    FormatRegistry = formatRegistry
+}
+var schema = JsonSchema.Build(schemaJson, buildOptions);
+
+var results = schema.Evaluate(instanceJson);
+```
+
+The former will still work for this major version, but it will be removed in the next.
+
 # [9.4.1](https://github.com/json-everything/json-everything/pull/1062) {#release-schema-9.4.1}
 
 [#1061](https://github.com/json-everything/json-everything/issues/1061) - Fixes `CreateBundle()` embedding the same document more than once. Thanks to [@wasabii](https://github.com/wasabii) for the fix.

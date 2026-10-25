@@ -71,6 +71,7 @@ public partial class Dialect
 	)
 	{
 		Id = MetaSchemas.Draft202012Id,
-		AllowUnknownKeywords = true
+		AllowUnknownKeywords = true,
+		FormatRegistry = FormatRegistry.Draft202012
 	};
 }

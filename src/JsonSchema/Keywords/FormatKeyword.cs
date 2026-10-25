@@ -59,7 +59,7 @@ public class FormatKeyword : IKeywordHandler
 	public virtual KeywordEvaluation Evaluate(KeywordData keyword, EvaluationContext context)
 	{
 		var formatName = keyword.RawValue.GetString()!;
-		var format = context.Options.FormatRegistry.Get(formatName);
+		var format = context.FormatRegistry.Get(formatName);
 
 		var valid = format.Validate(context.Instance, out var error);
 		if (!valid)

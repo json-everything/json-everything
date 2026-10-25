@@ -67,6 +67,11 @@ public struct EvaluationContext
 	public SchemaRegistry SchemaRegistry { get; internal init; }
 
 	/// <summary>
+	/// Gets the format registry.
+	/// </summary>
+	public FormatRegistry FormatRegistry { get; internal init; }
+
+	/// <summary>
 	/// Gets a value indicating whether reference resolution ignores sibling keywords during processing.
 	/// </summary>
 	public bool RefIgnoresSiblingKeywords { get; internal init; }

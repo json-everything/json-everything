@@ -66,6 +66,12 @@ public partial class Dialect
 	public Uri? Id { get; init; }
 
 	/// <summary>
+	/// The local format registry.  If a format is not found here, it will
+	/// automatically check the global registry as well.
+	/// </summary>
+	public FormatRegistry? FormatRegistry { get; init; }
+
+	/// <summary>
 	/// Initializes a new instance of the Dialect class using the specified collection of keyword handlers.
 	/// </summary>
 	/// <remarks>The provided keyword handlers are used to configure the dialect's keyword metadata and dependency

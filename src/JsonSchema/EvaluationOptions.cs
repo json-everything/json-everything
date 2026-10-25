@@ -34,6 +34,7 @@ public class EvaluationOptions
 	/// The local format registry.  If a format is not found here, it will
 	/// automatically check the global registry as well.
 	/// </summary>
+	[Obsolete("Format registry has been moved to Dialect.")]
 	public FormatRegistry FormatRegistry { get; set; } = FormatRegistry.Global;
 
 	/// <summary>

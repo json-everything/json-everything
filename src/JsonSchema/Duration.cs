@@ -77,6 +77,8 @@ public readonly struct Duration
 		var index = 0;
 		if (!Require(source, ref index, 'P')) return false;
 		var gotDaily = TryGetComponent(source, ref index, out week, 'W');
+		// dur-week can't be combined with other components, including a time
+		if (gotDaily && index != source.Length) return false;
 		if (!gotDaily)
 		{
 			var gotYear = TryGetComponent(source, ref index, out year, 'Y');

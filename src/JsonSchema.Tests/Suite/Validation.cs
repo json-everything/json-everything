@@ -21,44 +21,7 @@ public class Validation
 	private const string _externalRemoteSchemasPath = @"../../../../../../JSON-Schema-Test-Suite/remotes";
 
 	// Tests to explicitly ignore: [fileName, collectionDescription, testCaseDescription ("*" for all)]
-	private static readonly HashSet<(string, string, string)> _ignoredTests =
-	[
-		("idn-email", "validation of an internationalized e-mail addresses", "a local part with a lone UTF-16 surrogate is invalid"),
-		("hostname", "validation of A-label (punycode) host names", "a valid host name (example.test in Hangul)"),
-		("hostname", "validation of A-label (punycode) host names", "Arabic-Indic digits not mixed with Extended Arabic-Indic digits"),
-		("hostname", "validation of A-label (punycode) host names", "Exceptions that are PVALID, left-to-right chars"),
-		("hostname", "validation of A-label (punycode) host names", "Exceptions that are PVALID, right-to-left chars"),
-		("hostname", "validation of A-label (punycode) host names", "Extended Arabic-Indic digits not mixed with Arabic-Indic digits"),
-		("hostname", "validation of A-label (punycode) host names", "Greek KERAIA followed by Greek"),
-		("hostname", "validation of A-label (punycode) host names", "Hebrew GERESH preceded by Hebrew"),
-		("hostname", "validation of A-label (punycode) host names", "Hebrew GERSHAYIM preceded by Hebrew"),
-		("hostname", "validation of A-label (punycode) host names", "KATAKANA MIDDLE DOT with Han"),
-		("hostname", "validation of A-label (punycode) host names", "KATAKANA MIDDLE DOT with Hiragana"),
-		("hostname", "validation of A-label (punycode) host names", "KATAKANA MIDDLE DOT with Katakana"),
-		("hostname", "validation of A-label (punycode) host names", "MIDDLE DOT with surrounding 'l's"),
-		("hostname", "validation of A-label (punycode) host names", "ZERO WIDTH JOINER preceded by Virama"),
-		("hostname", "validation of A-label (punycode) host names", "ZERO WIDTH NON-JOINER not preceded by Virama but matches regexp"),
-		("hostname", "validation of A-label (punycode) host names", "ZERO WIDTH NON-JOINER preceded by Virama"),
-		("idn-hostname", "validation of internationalized host names", "a name longer than 253 characters is invalid"),
-		("idn-hostname", "validation of internationalized host names", "a U-label whose A-label form is longer than 63 octets is invalid"),
-		("idn-hostname", "validation of internationalized host names", "Bidi domain name with a digit-first label is invalid"),
-		("idn-hostname", "validation of internationalized host names", "contains illegal char U+302E Hangul single dot tone mark"),
-		("idn-hostname", "validation of internationalized host names", "Exceptions that are DISALLOWED, left-to-right chars"),
-		("idn-hostname", "validation of internationalized host names", "Exceptions that are DISALLOWED, right-to-left chars"),
-		("idn-hostname", "validation of internationalized host names", "KATAKANA MIDDLE DOT with no Hiragana, Katakana, or Han"),
-		("idn-hostname", "validation of internationalized host names", "KATAKANA MIDDLE DOT with no other characters"),
-		("idn-hostname", "validation of internationalized host names", "label starting with a digit before a right-to-left letter is invalid"),
-		("idn-hostname", "validation of internationalized host names", "left-to-right label containing a right-to-left letter is invalid"),
-		("idn-hostname", "validation of internationalized host names", "right-to-left label mixing both digit types is invalid"),
-		("idn-hostname", "validation of internationalized host names", "valid Chinese Punycode"),
-		("idn-hostname", "validation of internationalized host names", "zero width non-joiner must pass at every occurrence"),
-		("idn-hostname", "validation of separators in internationalized host names", "fullwidth full stop as label separator"),
-		("idn-hostname", "validation of separators in internationalized host names", "halfwidth ideographic full stop as label separator"),
-		("idn-hostname", "validation of separators in internationalized host names", "ideographic full stop as label separator"),
-		("idn-hostname", "validation of separators in internationalized host names", "label too long if separator ignored (fullwidth full stop)"),
-		("idn-hostname", "validation of separators in internationalized host names", "label too long if separator ignored (halfwidth ideographic full stop)"),
-		("idn-hostname", "validation of separators in internationalized host names", "label too long if separator ignored (ideographic full stop)"),
-	];
+	private static readonly HashSet<(string, string, string)> _ignoredTests = [];
 
 	private static readonly string[] _supportedProposals =
 	[

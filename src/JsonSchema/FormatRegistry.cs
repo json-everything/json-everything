@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Json.Schema;
 
@@ -12,7 +13,7 @@ namespace Json.Schema;
 /// threads.</remarks>
 public class FormatRegistry
 {
-	private readonly ConcurrentDictionary<string, Format> _formats = new();
+	private readonly ConcurrentDictionary<string, Format> _formats;
 
 	/// <summary>
 	/// Gets the global registry of formats available throughout the application.
@@ -20,29 +21,129 @@ public class FormatRegistry
 	/// <remarks>Use this property to access a shared, application-wide instance of the format registry. The
 	/// global registry is intended for scenarios where a centralized format store is required. This property is
 	/// thread-safe.</remarks>
-	public static FormatRegistry Global { get; } = new();
+	public static FormatRegistry Global => V1;
 
-	static FormatRegistry()
+	/// <summary>
+	/// Gets the formats defined by the Draft 6 dialect.
+	/// </summary>
+	public static FormatRegistry Draft06 { get; } = new(
+		Keywords.Draft06.Formats.DateTime,
+		Formats.Email,
+		Formats.Hostname,
+		Formats.Ipv4,
+		Formats.Ipv6,
+		Formats.RelativeJsonPointer,
+		Formats.Uri,
+		Formats.UriReference,
+		Formats.UriTemplate,
+		Formats.JsonPointer
+	);
+
+	/// <summary>
+	/// Gets the formats defined by the Draft 7 dialect.
+	/// </summary>
+	public static FormatRegistry Draft07 { get; } = new(
+		Keywords.Draft06.Formats.DateTime,
+		Formats.Date,
+		Keywords.Draft07.Formats.Time,
+		Formats.Email,
+		Formats.IdnEmail,
+		Formats.Hostname,
+		Formats.IdnHostname,
+		Formats.Ipv4,
+		Formats.Ipv6,
+		Formats.Uri,
+		Formats.UriReference,
+		Formats.Iri,
+		Formats.IriReference,
+		Formats.UriTemplate,
+		Formats.JsonPointer,
+		Formats.RelativeJsonPointer,
+		Formats.Regex
+	);
+
+	/// <summary>
+	/// Gets the formats defined by the Draft 2019-09 dialect.
+	/// </summary>
+	public static FormatRegistry Draft201909 { get; } = new(
+		Keywords.Draft06.Formats.DateTime,
+		Formats.Date,
+		Keywords.Draft07.Formats.Time,
+		Formats.Duration,
+		Formats.Email,
+		Formats.IdnEmail,
+		Formats.Hostname,
+		Formats.IdnHostname,
+		Formats.Ipv4,
+		Formats.Ipv6,
+		Formats.Uri,
+		Formats.UriReference,
+		Formats.Iri,
+		Formats.IriReference,
+		Formats.Uuid,
+		Formats.UriTemplate,
+		Formats.JsonPointer,
+		Formats.RelativeJsonPointer,
+		Formats.Regex
+	);
+
+	/// <summary>
+	/// Gets the formats defined by the Draft 2020-12 dialect.
+	/// </summary>
+	public static FormatRegistry Draft202012 { get; } = new(
+		Keywords.Draft06.Formats.DateTime,
+		Formats.Date,
+		Keywords.Draft07.Formats.Time,
+		Formats.Duration,
+		Formats.Email,
+		Formats.IdnEmail,
+		Formats.Hostname,
+		Formats.IdnHostname,
+		Formats.Ipv4,
+		Formats.Ipv6,
+		Formats.Uri,
+		Formats.UriReference,
+		Formats.Iri,
+		Formats.IriReference,
+		Formats.Uuid,
+		Formats.UriTemplate,
+		Formats.JsonPointer,
+		Formats.RelativeJsonPointer,
+		Formats.Regex
+	);
+
+	/// <summary>
+	/// Gets the formats defined by the V1 dialect.
+	/// </summary>
+	public static FormatRegistry V1 { get; } = new(
+		Formats.DateTime,
+		Formats.Date,
+		Formats.Time,
+		Formats.Duration,
+		Formats.Email,
+		Formats.IdnEmail,
+		Formats.Hostname,
+		Formats.IdnHostname,
+		Formats.Ipv4,
+		Formats.Ipv6,
+		Formats.Uri,
+		Formats.UriReference,
+		Formats.Iri,
+		Formats.IriReference,
+		Formats.Uuid,
+		Formats.UriTemplate,
+		Formats.JsonPointer,
+		Formats.RelativeJsonPointer,
+		Formats.Regex
+	);
+
+	/// <summary>
+	/// Creates a new format registry.
+	/// </summary>
+	/// <param name="formats">The list of formats for the registry to provide.</param>
+	public FormatRegistry(params IEnumerable<Format> formats)
 	{
-		Global.Register(Formats.Date);
-		Global.Register(Formats.DateTime);
-		Global.Register(Formats.Duration);
-		Global.Register(Formats.Email);
-		Global.Register(Formats.Hostname);
-		Global.Register(Formats.IdnEmail);
-		Global.Register(Formats.IdnHostname);
-		Global.Register(Formats.Ipv4);
-		Global.Register(Formats.Ipv6);
-		Global.Register(Formats.Iri);
-		Global.Register(Formats.IriReference);
-		Global.Register(Formats.JsonPointer);
-		Global.Register(Formats.Regex);
-		Global.Register(Formats.RelativeJsonPointer);
-		Global.Register(Formats.Time);
-		Global.Register(Formats.Uri);
-		Global.Register(Formats.UriReference);
-		Global.Register(Formats.UriTemplate);
-		Global.Register(Formats.Uuid);
+		_formats = new ConcurrentDictionary<string, Format>(formats.ToDictionary(x => x.Key, x => x));
 	}
 
 	/// <summary>
