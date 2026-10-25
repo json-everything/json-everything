@@ -16,13 +16,21 @@ on:
       - '.github/workflows/dotnet-core.yml'
   workflow_dispatch:
 
+# Pull requests from forks only ever get a read-only token here.  Anything that needs to write
+# back to the PR (test results, comments) happens in test-results.yml via workflow_run.
 permissions:
   contents: read
-  actions: read
-  checks: write
-  pull-requests: write
 
 jobs:
+  event-file:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Upload Event File
+        uses: actions/upload-artifact@v4
+        with:
+          name: Event File
+          path: ${{ github.event_path }}
+
   build:
     runs-on: ubuntu-latest
     steps:

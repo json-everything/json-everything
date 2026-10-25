@@ -1,21 +1,26 @@
 name: Test Results
 
+# Runs in the context of the base repository, so it has a write token even when
+# "Build & Test" ran for a pull request from a fork.  It never checks out or
+# executes PR code; it only reads the artifacts that build produced.
 on:
   workflow_run:
     workflows: ["Build & Test"]
     types:
       - completed
 
-permissions:
-  contents: read
-  actions: read
-  checks: write
-  pull-requests: write
+permissions: {}
 
 jobs:
   test-results:
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion != 'cancelled' }}
+    if: ${{ github.event.workflow_run.conclusion != 'cancelled' && github.event.workflow_run.conclusion != 'skipped' }}
+    permissions:
+      contents: read
+      actions: read
+      checks: write
+      issues: read
+      pull-requests: write
     steps:
       - name: Download Artifacts
         uses: actions/download-artifact@v4
@@ -23,11 +28,13 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           run-id: ${{ github.event.workflow_run.id }}
           path: artifacts
-      
+
+      # The event file lets the action find the PR, which workflow_run doesn't provide for forks.
       - name: Publish Unit Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
-        if: always()
         with:
           commit: ${{ github.event.workflow_run.head_sha }}
+          event_file: artifacts/Event File/event.json
+          event_name: ${{ github.event.workflow_run.event }}
           files: 'artifacts/**/*.trx'
           check_name: 'Test Results'

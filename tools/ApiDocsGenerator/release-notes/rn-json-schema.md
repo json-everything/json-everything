@@ -22,7 +22,7 @@ order: "09.01"
 - `uri-template`
 - `uuid`
 
-**Format registrion move**
+**Format registrion moved**
 
 `EvaluationOptions.FormatRegistry` has been marked obsolete in favor of a new `FormatRegistry` property on the `Dialect` class.  Additionally, each declared dialect now includes only those formats which the specification explicitly defines for that release.  This should not change default validation since draft-era specifications require that `format` only produces annotations by default.
 

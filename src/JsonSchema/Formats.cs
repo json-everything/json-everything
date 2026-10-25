@@ -13,6 +13,13 @@ namespace Json.Schema;
 /// </summary>
 public static partial class Formats
 {
+	private const int _maxLabelLength = 63;
+	// A decoded label has at most 63 code points, each of which may need a surrogate pair
+	private const int _maxULabelBufferLength = 2 * _maxLabelLength;
+	private const int _punycodeBase = 36;
+	private const int _punycodeTMin = 1;
+	private const int _punycodeTMax = 26;
+
 #if NET7_0_OR_GREATER
 	[GeneratedRegex(@"^((?:([0-9]{4}-[0-9]{2}-[0-9]{2})([Tt_]| )([0-9]{2}:[0-9]{2}:[0-9]{2}(?:\.[0-9]+)?))([Zz]|[\+-][0-9]{2}:[0-9]{2}))\z", RegexOptions.Compiled, 250)]
 	private static partial Regex DateTimeRegex();
@@ -1017,29 +1024,43 @@ public static partial class Formats
 		// Leading or trailing dot
 		if (value[0] == '.' || value[^1] == '.') return false;
 
-		// Check basic pattern
+		// Check basic pattern; this also limits each label to 63 characters
 		if (!HostnameRegex().IsMatch(value)) return false;
 
-		// Split into labels and validate each
-		var labels = value.Split('.');
-		var hasALabel = false;
-		for (var i = 0; i < labels.Length; i++)
+		Span<char> buffer = stackalloc char[_maxULabelBufferLength];
+		var span = value.AsSpan();
+		var isBidiDomain = false;
+		for (var start = 0; start <= span.Length;)
 		{
-			var label = labels[i];
-
-			// Each label max 63 chars
-			if (label.Length > 63) return false;
+			var label = NextLabel(span, ref start, allowIdnSeparators: false);
 
 			// RFC 5891 section 4.2.3.1: -- in positions 3-4 (index 2-3) is reserved for A-labels
 			if (label.Length < 4 || label[2] != '-' || label[3] != '-') continue;
-			if (!label.StartsWith("xn--", StringComparison.OrdinalIgnoreCase)) return false;
+			if (!HasAcePrefix(label)) return false;
 
-			if (!TryGetULabel(label, out var uLabel) || !IsValidULabel(uLabel)) return false;
-			labels[i] = uLabel;
-			hasALabel = true;
+			if (!TryDecodeALabel(label[4..], buffer, out var uLength)) return false;
+			var uLabel = buffer[..uLength];
+			if (!IsValidULabel(uLabel)) return false;
+			isBidiDomain |= HasRtlCharacter(uLabel);
 		}
 
-		return !hasALabel || SatisfiesBidiRule(labels);
+		if (!isBidiDomain) return true;
+
+		// RFC 5893 can only be checked per label once it's known that some label is RTL
+		for (var start = 0; start <= span.Length;)
+		{
+			var label = NextLabel(span, ref start, allowIdnSeparators: false);
+			if (!HasAcePrefix(label))
+			{
+				if (!SatisfiesBidiRule(label)) return false;
+				continue;
+			}
+
+			TryDecodeALabel(label[4..], buffer, out var uLength);
+			if (!SatisfiesBidiRule(buffer[..uLength])) return false;
+		}
+
+		return true;
 	}
 
 	private static bool CheckIdnHostName(JsonElement node)
@@ -1054,96 +1075,315 @@ public static partial class Formats
 		// Empty or contains underscore
 		if (string.IsNullOrEmpty(value) || value.IndexOf('_') >= 0) return false;
 
-		// RFC 3490 section 3.1 (and UTS 46): ideographic, fullwidth, and halfwidth ideographic full stops separate labels
-		value = value.Replace('\u3002', '.').Replace('\uFF0E', '.').Replace('\uFF61', '.');
+		// Leading or trailing separator
+		if (IsLabelSeparator(value[0], allowIdnSeparators: true) || IsLabelSeparator(value[^1], allowIdnSeparators: true)) return false;
 
-		// Leading or trailing dot
-		if (value[0] == '.' || value[^1] == '.') return false;
-
-		// Split into labels and validate each
-		var labels = value.Split('.');
-		var asciiLength = labels.Length - 1;
-		for (var i = 0; i < labels.Length; i++)
+		Span<char> buffer = stackalloc char[_maxULabelBufferLength];
+		var span = value.AsSpan();
+		var isBidiDomain = false;
+		var hasEstimatedLength = false;
+		var asciiLength = -1;
+		for (var start = 0; start <= span.Length;)
 		{
-			if (!TryGetULabel(labels[i], out var uLabel)) return false;
+			var label = NextLabel(span, ref start, allowIdnSeparators: true);
+			if (!TryGetIdnULabel(label, buffer, out var uLength, out var aceLength)) return false;
+
+			var uLabel = buffer[..uLength];
 			if (!IsValidULabel(uLabel)) return false;
 
 			// RFC 5890 section 2.3.2.1: length limits apply to the A-label form
-			var aLabelLength = GetALabelLength(uLabel);
-			if (aLabelLength > 63) return false;
-			asciiLength += aLabelLength;
+			var aLabelLength = aceLength > 0 ? aceLength : GetEstimatedALabelLength(label, ref hasEstimatedLength);
+			if (aLabelLength > _maxLabelLength) return false;
+			asciiLength += 1 + aLabelLength;
 
-			labels[i] = uLabel;
+			isBidiDomain |= HasRtlCharacter(uLabel);
 		}
 
 		// RFC 1034 section 3.1: 255 octets on the wire leaves 253 characters in text form
-		if (asciiLength > 253) return false;
-
-		return SatisfiesBidiRule(labels);
-	}
-
-	private static int GetALabelLength(string uLabel)
-	{
-		var mapped = uLabel.Normalize(NormalizationForm.FormKC).ToLowerInvariant();
-		foreach (var ch in mapped)
+		if (asciiLength > 253)
 		{
-			if (ch >= '\x80') return 4 + GetPunycodeLength(mapped);
+			if (!hasEstimatedLength) return false;
+
+			asciiLength = -1;
+			for (var start = 0; start <= span.Length;)
+			{
+				var label = NextLabel(span, ref start, allowIdnSeparators: true);
+				asciiLength += 1 + (IsAscii(label) ? label.Length : GetMappedALabelLength(label));
+			}
+			if (asciiLength > 253) return false;
 		}
 
-		return mapped.Length;
+		if (!isBidiDomain) return true;
+
+		// RFC 5893 can only be checked per label once it's known that some label is RTL
+		for (var start = 0; start <= span.Length;)
+		{
+			var label = NextLabel(span, ref start, allowIdnSeparators: true);
+			TryGetIdnULabel(label, buffer, out var uLength, out _);
+			if (!SatisfiesBidiRule(buffer[..uLength])) return false;
+		}
+
+		return true;
 	}
 
-	// RFC 3492 section 6.3, counting the output rather than producing it
-	private static int GetPunycodeLength(string input)
-	{
-		const int punycodeBase = 36, tMin = 1, tMax = 26;
+	// RFC 3490 section 3.1 (and UTS 46): ideographic, fullwidth, and halfwidth ideographic full stops also separate labels
+	private static bool IsLabelSeparator(char ch, bool allowIdnSeparators) =>
+		ch == '.' || (allowIdnSeparators && ch is '。' or '．' or '｡');
 
-		var codePoints = new int[input.Length];
-		var count = 0;
-		for (var i = 0; i < input.Length; i++)
+	// Returns the label that begins at `start` and moves `start` past the separator that follows it
+	private static ReadOnlySpan<char> NextLabel(ReadOnlySpan<char> value, ref int start, bool allowIdnSeparators)
+	{
+		var end = start;
+		while (end < value.Length && !IsLabelSeparator(value[end], allowIdnSeparators)) end++;
+
+		var label = value[start..end];
+		start = end + 1;
+		return label;
+	}
+
+	private static bool IsAscii(ReadOnlySpan<char> value)
+	{
+		foreach (var ch in value)
 		{
-			if (char.IsHighSurrogate(input[i]) && i + 1 < input.Length && char.IsLowSurrogate(input[i + 1]))
+			if (ch >= '\x80') return false;
+		}
+
+		return true;
+	}
+
+	private static bool HasAcePrefix(ReadOnlySpan<char> label) =>
+		label.Length >= 4 && (label[0] | 0x20) == 'x' && (label[1] | 0x20) == 'n' && label[2] == '-' && label[3] == '-';
+
+	// UTS 46 width mapping can only produce "xn--" from a label that has both non-ASCII and hyphen-like characters
+	private static bool MayMapToAcePrefix(ReadOnlySpan<char> label) =>
+		label.Length >= 4 && !IsAscii(label) && label.IndexOfAny('-', '－', '﹣') >= 0;
+
+	// Copies the U-label for an idn-hostname label into `buffer`, decoding it if it's an A-label.
+	// `aceLength` is the length of the A-label when the label is one, and 0 otherwise.
+	private static bool TryGetIdnULabel(ReadOnlySpan<char> label, Span<char> buffer, out int uLength, out int aceLength)
+	{
+		uLength = 0;
+		aceLength = 0;
+		if (label.Length is 0 or > _maxLabelLength) return false;
+
+		if (HasAcePrefix(label))
+		{
+			aceLength = label.Length;
+			return TryDecodeALabel(label[4..], buffer, out uLength);
+		}
+
+		// RFC 5891 section 5.3: a label that carries the ACE prefix once mapped is also an A-label
+		if (MayMapToAcePrefix(label))
+		{
+			string mapped;
+			try
 			{
-				codePoints[count++] = char.ConvertToUtf32(input[i], input[i + 1]);
+				mapped = label.ToString().Normalize(NormalizationForm.FormKC);
+			}
+			catch (ArgumentException)
+			{
+				return false;
+			}
+
+			if (HasAcePrefix(mapped.AsSpan()))
+			{
+				aceLength = mapped.Length;
+				return mapped.Length <= _maxLabelLength && TryDecodeALabel(mapped.AsSpan(4), buffer, out uLength);
+			}
+		}
+
+		label.CopyTo(buffer);
+		uLength = label.Length;
+		return true;
+	}
+
+	// Encodes the label as-is, which matches the mapped (NFKC, lowercased) form for nearly all input.
+	// Only when that comes out too long is the label mapped, so that e.g. fullwidth letters are measured as ASCII.
+	private static int GetEstimatedALabelLength(ReadOnlySpan<char> label, ref bool isEstimate)
+	{
+		if (IsAscii(label)) return label.Length;
+
+		Span<int> codePoints = stackalloc int[_maxLabelLength];
+		var count = ToCodePoints(label, codePoints);
+		Span<char> encoded = stackalloc char[_maxLabelLength - 4];
+		var length = EncodePunycode(codePoints[..count], encoded);
+		if (length < 0) return GetMappedALabelLength(label);
+
+		isEstimate = true;
+		return length + 4;
+	}
+
+	// Returns more than 63 for any label that's too long
+	private static int GetMappedALabelLength(ReadOnlySpan<char> label)
+	{
+		string mapped;
+		try
+		{
+			mapped = label.ToString().Normalize(NormalizationForm.FormKC).ToLowerInvariant();
+		}
+		catch (ArgumentException)
+		{
+			return _maxLabelLength + 1;
+		}
+
+		var mappedSpan = mapped.AsSpan();
+		if (HasAcePrefix(mappedSpan) || IsAscii(mappedSpan)) return mapped.Length;
+		if (mapped.Length > _maxLabelLength) return _maxLabelLength + 1;
+
+		Span<int> codePoints = stackalloc int[_maxLabelLength];
+		var count = ToCodePoints(mappedSpan, codePoints);
+		Span<char> encoded = stackalloc char[_maxLabelLength - 4];
+		var length = EncodePunycode(codePoints[..count], encoded);
+		return length < 0 ? _maxLabelLength + 1 : length + 4;
+	}
+
+	private static int ToCodePoints(ReadOnlySpan<char> value, Span<int> codePoints)
+	{
+		var count = 0;
+		for (var i = 0; i < value.Length; i++)
+		{
+			if (char.IsHighSurrogate(value[i]) && i + 1 < value.Length && char.IsLowSurrogate(value[i + 1]))
+			{
+				codePoints[count++] = char.ConvertToUtf32(value[i], value[i + 1]);
 				i++;
 			}
-			else codePoints[count++] = input[i];
+			else codePoints[count++] = value[i];
 		}
 
-		var basicCount = 0;
-		for (var i = 0; i < count; i++)
+		return count;
+	}
+
+	// Punycode is implemented here rather than using IdnMapping: it avoids allocations and native calls,
+	// and .NET Framework's IdnMapping applies IDNA2003 mappings (e.g. "ß" to "ss", dropping ZWJ/ZWNJ).
+
+	// RFC 3492 section 6.2, then RFC 5891 section 5.4: the decoded U-label must encode back to the same A-label
+	private static bool TryDecodeALabel(ReadOnlySpan<char> encoded, Span<char> output, out int length)
+	{
+		length = 0;
+		Span<int> codePoints = stackalloc int[_maxLabelLength];
+		var count = 0;
+
+		var delimiter = encoded.LastIndexOf('-');
+		for (var i = 0; i < delimiter; i++)
 		{
-			if (codePoints[i] < 0x80) basicCount++;
+			if (encoded[i] >= '\x80') return false;
+			codePoints[count++] = encoded[i];
+		}
+		var basicCount = count;
+
+		long n = 0x80, index = 0;
+		var bias = 72;
+		for (var position = delimiter > 0 ? delimiter + 1 : 0; position < encoded.Length;)
+		{
+			var oldIndex = index;
+			long weight = 1;
+			for (var k = _punycodeBase; ; k += _punycodeBase)
+			{
+				if (position >= encoded.Length) return false;
+				var digit = DecodePunycodeDigit(encoded[position++]);
+				if (digit < 0) return false;
+
+				index += digit * weight;
+				if (index > int.MaxValue) return false;
+
+				var t = GetPunycodeThreshold(k, bias);
+				if (digit < t) break;
+
+				weight *= _punycodeBase - t;
+				if (weight > int.MaxValue) return false;
+			}
+
+			if (count == codePoints.Length) return false;
+
+			bias = AdaptPunycodeBias(index - oldIndex, count + 1, oldIndex == 0);
+			n += index / (count + 1);
+			index %= count + 1;
+			if (n > 0x10FFFF || (n >= 0xD800 && n <= 0xDFFF)) return false;
+
+			for (var j = count; j > index; j--)
+			{
+				codePoints[j] = codePoints[j - 1];
+			}
+			codePoints[(int)index] = (int)n;
+			count++;
+			index++;
 		}
 
-		var length = basicCount > 0 ? basicCount + 1 : 0;
+		// RFC 5890 section 2.3.2.1: a U-label must have at least one non-ASCII character
+		if (count == basicCount) return false;
+
+		Span<char> reencoded = stackalloc char[_maxLabelLength];
+		if (EncodePunycode(codePoints[..count], reencoded) != encoded.Length) return false;
+		for (var i = 0; i < encoded.Length; i++)
+		{
+			if ((reencoded[i] | 0x20) != (encoded[i] | 0x20)) return false;
+		}
+
+		foreach (var codePoint in codePoints[..count])
+		{
+			if (codePoint < 0x10000)
+			{
+				output[length++] = (char)codePoint;
+				continue;
+			}
+
+			var offset = codePoint - 0x10000;
+			output[length++] = (char)(0xD800 + (offset >> 10));
+			output[length++] = (char)(0xDC00 + (offset & 0x3FF));
+		}
+
+		return true;
+	}
+
+	// RFC 3492 section 6.3; returns -1 if the result doesn't fit in `output`
+	private static int EncodePunycode(ReadOnlySpan<int> codePoints, Span<char> output)
+	{
+		var length = 0;
+		foreach (var codePoint in codePoints)
+		{
+			if (codePoint >= 0x80) continue;
+			if (length == output.Length) return -1;
+			output[length++] = (char)codePoint;
+		}
+
+		var basicCount = length;
+		if (basicCount > 0)
+		{
+			if (length == output.Length) return -1;
+			output[length++] = '-';
+		}
+
 		long n = 0x80, delta = 0;
 		var bias = 72;
 		var handled = basicCount;
-		while (handled < count)
+		while (handled < codePoints.Length)
 		{
 			var m = long.MaxValue;
-			for (var i = 0; i < count; i++)
+			foreach (var codePoint in codePoints)
 			{
-				if (codePoints[i] >= n && codePoints[i] < m) m = codePoints[i];
+				if (codePoint >= n && codePoint < m) m = codePoint;
 			}
 
 			delta += (m - n) * (handled + 1);
 			n = m;
-			for (var i = 0; i < count; i++)
+			foreach (var codePoint in codePoints)
 			{
-				if (codePoints[i] < n) delta++;
-				if (codePoints[i] != n) continue;
+				if (codePoint < n) delta++;
+				if (codePoint != n) continue;
 
 				var q = delta;
-				for (var k = punycodeBase; ; k += punycodeBase)
+				for (var k = _punycodeBase; ; k += _punycodeBase)
 				{
-					var t = k <= bias ? tMin : k >= bias + tMax ? tMax : k - bias;
+					var t = GetPunycodeThreshold(k, bias);
 					if (q < t) break;
-					length++;
-					q = (q - t) / (punycodeBase - t);
+
+					if (length == output.Length) return -1;
+					output[length++] = EncodePunycodeDigit((int)(t + (q - t) % (_punycodeBase - t)));
+					q = (q - t) / (_punycodeBase - t);
 				}
-				length++;
+
+				if (length == output.Length) return -1;
+				output[length++] = EncodePunycodeDigit((int)q);
 
 				bias = AdaptPunycodeBias(delta, handled + 1, handled == basicCount);
 				delta = 0;
@@ -1157,48 +1397,38 @@ public static partial class Formats
 		return length;
 	}
 
+	private static int GetPunycodeThreshold(int k, int bias) =>
+		k <= bias ? _punycodeTMin : k >= bias + _punycodeTMax ? _punycodeTMax : k - bias;
+
 	private static int AdaptPunycodeBias(long delta, int pointCount, bool isFirst)
 	{
 		delta = isFirst ? delta / 700 : delta / 2;
 		delta += delta / pointCount;
 
 		var k = 0;
-		while (delta > 35 * 26 / 2)
+		while (delta > (_punycodeBase - _punycodeTMin) * _punycodeTMax / 2)
 		{
-			delta /= 35;
-			k += 36;
+			delta /= _punycodeBase - _punycodeTMin;
+			k += _punycodeBase;
 		}
 
-		return (int)(k + 36 * delta / (delta + 38));
+		return (int)(k + (_punycodeBase - _punycodeTMin + 1) * delta / (delta + 38));
 	}
 
-	// RFC 5891 sections 5.3-5.4: a label that carries the ACE prefix once mapped (UTS 46) is an A-label.
-	// It must decode as Punycode, and the decoded U-label must encode back to the same (lowercased) A-label.
-	private static bool TryGetULabel(string label, out string uLabel)
-	{
-		uLabel = label;
-		try
-		{
-			var mapped = label.Normalize(NormalizationForm.FormKC).ToLowerInvariant();
-			if (!mapped.StartsWith("xn--", StringComparison.Ordinal)) return true;
-			if (mapped.Length > 63) return false;
+	private static char EncodePunycodeDigit(int digit) => (char)(digit < 26 ? 'a' + digit : '0' + digit - 26);
 
-			var idn = new IdnMapping { UseStd3AsciiRules = true };
-			uLabel = idn.GetUnicode(mapped);
-			return string.Equals(idn.GetAscii(uLabel), mapped, StringComparison.Ordinal);
-		}
-		catch (ArgumentException)
+	private static int DecodePunycodeDigit(char ch) =>
+		ch switch
 		{
-			return false;
-		}
-	}
+			>= '0' and <= '9' => ch - '0' + 26,
+			>= 'a' and <= 'z' => ch - 'a',
+			>= 'A' and <= 'Z' => ch - 'A',
+			_ => -1
+		};
 
-	private static bool IsValidULabel(string label)
+	private static bool IsValidULabel(ReadOnlySpan<char> label)
 	{
 		if (label.Length == 0) return false;
-
-		// Each label max 63 chars
-		if (label.Length > 63) return false;
 
 		// Cannot start or end with hyphen
 		if (label[0] == '-' || label[^1] == '-') return false;
@@ -1210,13 +1440,19 @@ public static partial class Formats
 		}
 
 		// The only ASCII allowed is letters, digits, and hyphen; non-ASCII must be letters, marks, or digits
-		foreach (var ch in label)
+		for (var i = 0; i < label.Length; i++)
 		{
+			var ch = label[i];
 			if (ch < '\x80')
 			{
 				if (!IsAlphaChar(ch) && !IsDigitChar(ch) && ch != '-') return false;
 			}
-			else if (IsDisallowedIdnCategory(ch)) return false;
+			else if (char.IsHighSurrogate(ch))
+			{
+				if (i + 1 >= label.Length || !char.IsLowSurrogate(label[i + 1])) return false;
+				i++;
+			}
+			else if (char.IsLowSurrogate(ch) || IsDisallowedIdnCategory(ch)) return false;
 		}
 
 		// Check for disallowed starting characters (combining marks)
@@ -1332,7 +1568,7 @@ public static partial class Formats
 	}
 
 	// RFC 5892 appendix A.1: (Joining_Type:{L,D})(Joining_Type:T)* ZWNJ (Joining_Type:T)*(Joining_Type:{R,D})
-	private static bool HasJoiningNeighbors(string label, int index)
+	private static bool HasJoiningNeighbors(ReadOnlySpan<char> label, int index)
 	{
 		var before = index - 1;
 		while (before >= 0 && GetJoiningType(label[before]) == 'T') before--;
@@ -1409,51 +1645,44 @@ public static partial class Formats
 		};
 	}
 
-	// RFC 5893 section 2, using BMP code point ranges as an approximation of the Bidi_Class property
-	private static bool SatisfiesBidiRule(string[] labels)
+	private static bool HasRtlCharacter(ReadOnlySpan<char> label)
 	{
-		var isBidiDomain = false;
-		foreach (var label in labels)
+		foreach (var ch in label)
 		{
-			foreach (var ch in label)
-			{
-				if (!IsRtlLetter(ch) && !IsArabicNumber(ch)) continue;
-				isBidiDomain = true;
-				break;
-			}
-		}
-		if (!isBidiDomain) return true;
-
-		foreach (var label in labels)
-		{
-			// Rule 1: the first character must be L, R, or AL
-			var isRtl = IsRtlLetter(label[0]);
-			if (!isRtl && !IsLtrLetter(label[0])) return false;
-
-			var hasEuropeanNumber = false;
-			var hasArabicNumber = false;
-			foreach (var ch in label)
-			{
-				// Rule 2: no L in an RTL label; rule 5: no R, AL, or AN in an LTR label
-				if (isRtl ? IsLtrLetter(ch) : IsRtlLetter(ch) || IsArabicNumber(ch)) return false;
-				if (IsEuropeanNumber(ch)) hasEuropeanNumber = true;
-				if (IsArabicNumber(ch)) hasArabicNumber = true;
-			}
-
-			// Rule 4: an RTL label can't mix EN and AN
-			if (isRtl && hasEuropeanNumber && hasArabicNumber) return false;
-
-			// Rules 3 and 6: the last character, ignoring trailing NSMs
-			var end = label.Length - 1;
-			while (end > 0 && char.GetUnicodeCategory(label[end]) is UnicodeCategory.NonSpacingMark or UnicodeCategory.EnclosingMark) end--;
-			var last = label[end];
-			if (isRtl
-				    ? !IsRtlLetter(last) && !IsEuropeanNumber(last) && !IsArabicNumber(last)
-				    : !IsLtrLetter(last) && !IsEuropeanNumber(last))
-				return false;
+			if (IsRtlLetter(ch) || IsArabicNumber(ch)) return true;
 		}
 
-		return true;
+		return false;
+	}
+
+	// RFC 5893 section 2 for one label of a domain that has an RTL label, using BMP code point ranges
+	// as an approximation of the Bidi_Class property
+	private static bool SatisfiesBidiRule(ReadOnlySpan<char> label)
+	{
+		// Rule 1: the first character must be L, R, or AL
+		var isRtl = IsRtlLetter(label[0]);
+		if (!isRtl && !IsLtrLetter(label[0])) return false;
+
+		var hasEuropeanNumber = false;
+		var hasArabicNumber = false;
+		foreach (var ch in label)
+		{
+			// Rule 2: no L in an RTL label; rule 5: no R, AL, or AN in an LTR label
+			if (isRtl ? IsLtrLetter(ch) : IsRtlLetter(ch) || IsArabicNumber(ch)) return false;
+			if (IsEuropeanNumber(ch)) hasEuropeanNumber = true;
+			if (IsArabicNumber(ch)) hasArabicNumber = true;
+		}
+
+		// Rule 4: an RTL label can't mix EN and AN
+		if (isRtl && hasEuropeanNumber && hasArabicNumber) return false;
+
+		// Rules 3 and 6: the last character, ignoring trailing NSMs
+		var end = label.Length - 1;
+		while (end > 0 && char.GetUnicodeCategory(label[end]) is UnicodeCategory.NonSpacingMark or UnicodeCategory.EnclosingMark) end--;
+		var last = label[end];
+		return isRtl
+			? IsRtlLetter(last) || IsEuropeanNumber(last) || IsArabicNumber(last)
+			: IsLtrLetter(last) || IsEuropeanNumber(last);
 	}
 
 	// Hebrew, Arabic, Syriac, Thaana, NKo, Samaritan, Mandaic, and the RTL presentation forms
