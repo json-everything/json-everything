@@ -35,7 +35,7 @@ public class EvaluationOptions
 	/// automatically check the global registry as well.
 	/// </summary>
 	[Obsolete("Format registry has been moved to Dialect.")]
-	public FormatRegistry FormatRegistry { get; set; } = FormatRegistry.Global;
+	public FormatRegistry? FormatRegistry { get; set; }
 
 	/// <summary>
 	/// If enabled, annotations that are dropped as a result of a failing
