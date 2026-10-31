@@ -53,7 +53,7 @@ The former will still work for this major version, but it will be removed in the
 
 # [9.5.0](https://github.com/json-everything/json-everything/pull/1062) {#release-schema-9.5.0}
 
-> This package version had some API problems around working with custom formats.  9.6.0 is recommended.
+> This package version had some API problems around working with custom formats.  9.6.0 is recommended.  Thanks to [@vinhch](https://github.com/vinhch) for identifying the issues with this version.
 {: .prompt-warning }
 
 **Updated formats in accordance with updates to JSON Schema Test Suite.**
