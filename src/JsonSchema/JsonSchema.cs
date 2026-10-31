@@ -386,7 +386,7 @@ public class JsonSchema : IBaseDocument
 			Options = options,
 			SchemaRegistry = _buildOptions.SchemaRegistry,
 #pragma warning disable CS0618 // Type or member is obsolete
-			FormatRegistry = _buildOptions.Dialect.FormatRegistry ?? options.FormatRegistry,
+			FormatRegistry = options.FormatRegistry ?? _buildOptions.Dialect.FormatRegistry ?? FormatRegistry.Global,
 #pragma warning restore CS0618 // Type or member is obsolete
 			RefIgnoresSiblingKeywords = _refIgnoresSiblingKeywords,
 			InstanceRoot = instance,

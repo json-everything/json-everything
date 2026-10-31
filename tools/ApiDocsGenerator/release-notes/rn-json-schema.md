@@ -4,7 +4,57 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "09.01"
 ---
+# [9.6.0](https://github.com/json-everything/json-everything/pull/1062) {#release-schema-9.6.0}
+
+**Working with `FormatRegistry` improved.**
+
+Instead of building each format explicitly, three new extension methods have been created:
+
+- `formatRegistry.With(params IEnumerable<Format>)` creates a new registry that contains the source formats plus any that you supply.  Passing any new implementations for already-registered keys will override those keys with the new formats.
+- `formatRegistry.Without(params IEnumerable<string>)` and `formatRegistry.Without(params IEnumerable<Format>)` creates a new registry that contains the source format but omitting any that supply, matched by key.
+
+This pattern mirrors similar extension methods for `Dialect` for adding and removing keywords.
+
+Additionally, a `formatRegistry` parameter has been added to the `dialect.With()` extension method.
+
+**Format registration moved**
+
+9.5.0 marked `EvaluationOptions.FormatRegistry` as obsolete in favor of a new `FormatRegistry` property on the `Dialect` class.  Additionally, each declared dialect now includes only those formats which the specification explicitly defines for that release.  This should not change default validation since draft-era specifications require that `format` only produces annotations by default.
+
+```c#
+var buildOptions = new BuildOptions
+{
+    Dialect = Dialect.Draft07
+};
+var schema = JsonSchema.Build(schemaJson, buildOptions);
+
+var formatRegistry = FormatRegistry.Draft202012.With(new RegexFormat("customFormat", "..."));
+var evalOptions = new EvaluationOptions
+{
+    FormatRegistry = formatRegistry
+};
+var results = schema.Evaluate(instanceJson, evalOptions);
+```
+
+becomes
+
+```c#
+var formatRegistry = FormatRegistry.Draft202012.With(new RegexFormat("customFormat", "..."));
+var buildOptions = new BuildOptions
+{
+    Dialect = Dialect.Draft07.With(formatRegistry: formatRegistry)
+};
+var schema = JsonSchema.Build(schemaJson, buildOptions);
+
+var results = schema.Evaluate(instanceJson);
+```
+
+The former will still work for this major version, but it will be removed in the next.
+
 # [9.5.0](https://github.com/json-everything/json-everything/pull/1062) {#release-schema-9.5.0}
+
+> This package version had some API problems around working with custom formats.  9.6.0 is recommended.  Thanks to [@vinhch](https://github.com/vinhch) for identifying the issues with this version.
+{: .prompt-warning }
 
 **Updated formats in accordance with updates to JSON Schema Test Suite.**
 
@@ -21,38 +71,6 @@ order: "09.01"
 - `uri-reference`
 - `uri-template`
 - `uuid`
-
-**Format registrion moved**
-
-`EvaluationOptions.FormatRegistry` has been marked obsolete in favor of a new `FormatRegistry` property on the `Dialect` class.  Additionally, each declared dialect now includes only those formats which the specification explicitly defines for that release.  This should not change default validation since draft-era specifications require that `format` only produces annotations by default.
-
-```c#
-var schema = JsonSchema.Build(schemaJson);
-
-var formatRegistry = new FormatRegistry();
-formatRegistry.Register(new RegexFormat("customFormat", "..."));
-var evalOptions = new EvaluationOptions
-{
-    FormatRegistry = formatRegistry
-}
-var results = schema.Evaluate(instanceJson, evalOptions);
-```
-
-becomes
-
-```c#
-var formatRegistry = new FormatRegistry();
-formatRegistry.Register(new RegexFormat("customFormat", "..."));
-var buildOptions = new BuildOptions
-{
-    FormatRegistry = formatRegistry
-}
-var schema = JsonSchema.Build(schemaJson, buildOptions);
-
-var results = schema.Evaluate(instanceJson);
-```
-
-The former will still work for this major version, but it will be removed in the next.
 
 # [9.4.1](https://github.com/json-everything/json-everything/pull/1062) {#release-schema-9.4.1}
 

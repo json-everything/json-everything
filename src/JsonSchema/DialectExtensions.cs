@@ -8,10 +8,6 @@ namespace Json.Schema;
 /// Provides extension methods for creating modified instances of the <see cref="Dialect"/> type by adding or removing
 /// keyword handlers.
 /// </summary>
-/// <remarks>These methods enable fluent customization of <see cref="Dialect"/> objects without altering the
-/// original instance. Use <see cref="With"/> to add keyword handlers and <see cref="Without"/> to remove them,
-/// optionally overriding dialect properties such as <c>Id</c>, <c>RefIgnoresSiblingKeywords</c>, and
-/// <c>AllowUnknownKeywords</c> in the resulting instance.</remarks>
 public static class DialectExtensions
 {
 	/// <summary>
@@ -22,22 +18,45 @@ public static class DialectExtensions
 	/// addition of keyword handlers and configuration overrides. The original dialect remains unchanged.</remarks>
 	/// <param name="dialect">The base Dialect to extend. Cannot be null.</param>
 	/// <param name="add">A collection of keyword handlers to add to the new Dialect. Cannot be null.</param>
-	/// <param name="id">An optional identifier for the new Dialect. If null, the identifier from the base dialect is used.</param>
+	/// <param name="id">An optional identifier for the new Dialect.</param>
 	/// <param name="refIgnoresSiblingKeywords">An optional value indicating whether '$ref' keywords ignore sibling keywords. If null, the value from the base
 	/// dialect is used.</param>
 	/// <param name="allowUnknownKeywords">An optional value indicating whether unknown keywords are allowed. If null, the value from the base dialect is
 	/// used.</param>
+	/// <param name="formatRegistry">An optional format registry to use with the new Dialect. If null, the registry from the base dialect is used.</param>
 	/// <returns>A new Dialect instance containing the combined keyword handlers and configuration settings.</returns>
 	public static Dialect With(this Dialect dialect,
 		IEnumerable<IKeywordHandler> add,
 		Uri? id = null,
 		bool? refIgnoresSiblingKeywords = null,
-		bool? allowUnknownKeywords = null) =>
+		bool? allowUnknownKeywords = null,
+		FormatRegistry? formatRegistry = null) =>
 		new(dialect.GetKeywords().Concat(add))
 		{
 			Id = id,
 			RefIgnoresSiblingKeywords = refIgnoresSiblingKeywords ?? dialect.RefIgnoresSiblingKeywords,
-			AllowUnknownKeywords = allowUnknownKeywords ?? dialect.AllowUnknownKeywords
+			AllowUnknownKeywords = allowUnknownKeywords ?? dialect.AllowUnknownKeywords,
+			FormatRegistry = formatRegistry ?? dialect.FormatRegistry
+		};
+
+	/// <summary>
+	/// Creates a new Dialect instance by extending the specified dialect with a new format registry.
+	/// </summary>
+	/// <remarks>This method is useful for creating customized dialects based on an existing one, allowing selective
+	/// addition of keyword handlers and configuration overrides. The original dialect remains unchanged.</remarks>
+	/// <param name="dialect">The base Dialect to extend. Cannot be null.</param>
+	/// <param name="id">An optional identifier for the new Dialect.</param>
+	/// <param name="formatRegistry">An optional format registry to use with the new Dialect. If null, the registry from the base dialect is used.</param>
+	/// <returns>A new Dialect instance containing the combined keyword handlers and configuration settings.</returns>
+	public static Dialect With(this Dialect dialect,
+		Uri? id = null,
+		FormatRegistry? formatRegistry = null) =>
+		new(dialect.GetKeywords())
+		{
+			Id = id,
+			RefIgnoresSiblingKeywords = dialect.RefIgnoresSiblingKeywords,
+			AllowUnknownKeywords = dialect.AllowUnknownKeywords,
+			FormatRegistry = formatRegistry ?? dialect.FormatRegistry
 		};
 
 	/// <summary>
@@ -63,6 +82,7 @@ public static class DialectExtensions
 		{
 			Id = id,
 			RefIgnoresSiblingKeywords = refIgnoresSiblingKeywords ?? dialect.RefIgnoresSiblingKeywords,
-			AllowUnknownKeywords = allowUnknownKeywords ?? dialect.AllowUnknownKeywords
+			AllowUnknownKeywords = allowUnknownKeywords ?? dialect.AllowUnknownKeywords,
+			FormatRegistry = dialect.FormatRegistry
 		};
 }

@@ -179,4 +179,6 @@ public class FormatRegistry
 			Global._formats.GetValueOrDefault(key) ??
 			Formats.CreateUnknown(key);
 	}
+
+	internal IEnumerable<Format> GetFormats() => _formats.Values.Distinct();
 }
