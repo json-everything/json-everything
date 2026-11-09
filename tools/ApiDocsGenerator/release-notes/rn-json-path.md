@@ -4,6 +4,10 @@ title: JsonPath.Net
 icon: fas fa-tag
 order: "09.08"
 ---
+# [3.0.4](https://github.com/json-everything/json-everything/pull/1074) {#release-path-3.0.4}
+
+[#1073](https://github.com/json-everything/json-everything/issues/1073) - Name selectors in which a `\uXXXX` escape is immediately followed by another escape other than `\uXXXX` (e.g. `$["\u0041\t"]`) now parse instead of throwing a `PathParseException`.  Thanks to [@aradalvand](https://github.com/aradalvand) for the fix.
+
 # [3.0.3](https://github.com/json-everything/json-everything/pull/1065) {#release-path-3.0.3}
 
 [#1064](https://github.com/json-everything/json-everything/issues/1064) - Normalized paths now escape control characters other than `\b`, `\t`, `\n`, `\f` and `\r` as `\u00XX`.  Thanks to [@wleeaf](https://github.com/wleeaf) for the fix.
