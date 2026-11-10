@@ -189,7 +189,7 @@ internal class NameSelectorParser : ISelectorParser
 				break;
 			case 'u':
 				var hexStart = i;
-				while (ReadHexCode(source, ref i) && source[i] == '\\')
+				while (ReadHexCode(source, ref i) && i + 1 < source.Length && source[i] == '\\' && source[i + 1] == 'u')
 				{
 					i++; // consume \
 				}

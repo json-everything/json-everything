@@ -108,4 +108,19 @@ public class GithubTests
 		Assert.That(expectedResult.ToJsonString(), Is.EqualTo(matches.ToJsonString()));
 	}
 
+	[TestCase("$[\"\\u0041\\t\"]", "A\t")]
+	[TestCase("$[\"\\u0041\\\"\"]", "A\"")]
+	[TestCase("$[\"\\u0041\\\\\"]", "A\\")]
+	[TestCase("$[\"\\u0041\\u0042\\t\"]", "AB\t")]
+	[TestCase("$[\"\\uD83D\\uDE00\"]", "😀")]
+	[TestCase("$[\"\\uD83D\\uDE00\\\"\"]", "😀\"")]
+	public void Issue1073_UnicodeEscapeFollowedByAnotherEscape(string pathText, string expectedName)
+	{
+		var path = JsonPath.Parse(pathText);
+		var selector = path.Segments[0].Selectors[0];
+
+		Assert.That(selector, Is.TypeOf<NameSelector>());
+		Assert.That(((NameSelector)selector).Name, Is.EqualTo(expectedName));
+	}
+
 }
