@@ -4,6 +4,10 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "09.01"
 ---
+# [9.6.1](https://github.com/json-everything/json-everything/pull/1075) {#release-schema-9.6.1}
+
+Minor bug fix in `hostname` format validation for Draft 6 and v1.
+
 # [9.6.0](https://github.com/json-everything/json-everything/pull/1062) {#release-schema-9.6.0}
 
 **Working with `FormatRegistry` improved.**

@@ -7,7 +7,10 @@ namespace Json.Schema.Tests.Suite;
 public class TestCollection
 {
 	public string Description { get; set; }
+	public string? Compatibility { get; set; }
+	public List<string>? Tags { get; set; }
 	public JsonElement Schema { get; set; }
+	public Dictionary<string, JsonElement>? ExternalSchemas { get; set; }
 	// ReSharper disable once CollectionNeverUpdated.Global
 	public List<TestCase> Tests { get; set; }
 	public bool IsOptional { get; set; }

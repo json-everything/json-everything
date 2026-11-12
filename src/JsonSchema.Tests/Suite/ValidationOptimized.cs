@@ -12,69 +12,35 @@ namespace Json.Schema.Tests.Suite;
 
 public class ValidationOptimized
 {
-	private const string _testCasesPath = @"../../../../../ref-repos/JSON-Schema-Test-Suite/tests";
-	private const string _remoteSchemasPath = @"../../../../../ref-repos/JSON-Schema-Test-Suite/remotes";
+	private const string _testCasesPath = @"../../../../../ref-repos/JSON-Schema-Test-Suite/validation/tests";
 
 	private const bool _useExternal = false;
 	private const bool _runDraftNext = false;
-	private const string _externalTestCasesPath = @"../../../../../../JSON-Schema-Test-Suite/tests";
-	private const string _externalRemoteSchemasPath = @"../../../../../../JSON-Schema-Test-Suite/remotes";
+	private const string _externalTestCasesPath = @"../../../../../../JSON-Schema-Test-Suite/validation/tests";
 
 	// Tests to explicitly ignore: [fileName, collectionDescription, testCaseDescription ("*" for all)]
-	private static readonly HashSet<(string, string, string)> _ignoredTests =
+	private static readonly HashSet<(string, string, string)> _ignoredTests = [];
+
+	private static readonly string[] _supportedProposals =
 	[
-		("idn-email", "validation of an internationalized e-mail addresses", "a local part with a lone UTF-16 surrogate is invalid"),
-		("hostname", "validation of A-label (punycode) host names", "a valid host name (example.test in Hangul)"),
-		("hostname", "validation of A-label (punycode) host names", "Arabic-Indic digits not mixed with Extended Arabic-Indic digits"),
-		("hostname", "validation of A-label (punycode) host names", "Exceptions that are PVALID, left-to-right chars"),
-		("hostname", "validation of A-label (punycode) host names", "Exceptions that are PVALID, right-to-left chars"),
-		("hostname", "validation of A-label (punycode) host names", "Extended Arabic-Indic digits not mixed with Arabic-Indic digits"),
-		("hostname", "validation of A-label (punycode) host names", "Greek KERAIA followed by Greek"),
-		("hostname", "validation of A-label (punycode) host names", "Hebrew GERESH preceded by Hebrew"),
-		("hostname", "validation of A-label (punycode) host names", "Hebrew GERSHAYIM preceded by Hebrew"),
-		("hostname", "validation of A-label (punycode) host names", "KATAKANA MIDDLE DOT with Han"),
-		("hostname", "validation of A-label (punycode) host names", "KATAKANA MIDDLE DOT with Hiragana"),
-		("hostname", "validation of A-label (punycode) host names", "KATAKANA MIDDLE DOT with Katakana"),
-		("hostname", "validation of A-label (punycode) host names", "MIDDLE DOT with surrounding 'l's"),
-		("hostname", "validation of A-label (punycode) host names", "ZERO WIDTH JOINER preceded by Virama"),
-		("hostname", "validation of A-label (punycode) host names", "ZERO WIDTH NON-JOINER not preceded by Virama but matches regexp"),
-		("hostname", "validation of A-label (punycode) host names", "ZERO WIDTH NON-JOINER preceded by Virama"),
-		("idn-hostname", "validation of internationalized host names", "a name longer than 253 characters is invalid"),
-		("idn-hostname", "validation of internationalized host names", "a U-label whose A-label form is longer than 63 octets is invalid"),
-		("idn-hostname", "validation of internationalized host names", "Bidi domain name with a digit-first label is invalid"),
-		("idn-hostname", "validation of internationalized host names", "contains illegal char U+302E Hangul single dot tone mark"),
-		("idn-hostname", "validation of internationalized host names", "Exceptions that are DISALLOWED, left-to-right chars"),
-		("idn-hostname", "validation of internationalized host names", "Exceptions that are DISALLOWED, right-to-left chars"),
-		("idn-hostname", "validation of internationalized host names", "KATAKANA MIDDLE DOT with no Hiragana, Katakana, or Han"),
-		("idn-hostname", "validation of internationalized host names", "KATAKANA MIDDLE DOT with no other characters"),
-		("idn-hostname", "validation of internationalized host names", "label starting with a digit before a right-to-left letter is invalid"),
-		("idn-hostname", "validation of internationalized host names", "left-to-right label containing a right-to-left letter is invalid"),
-		("idn-hostname", "validation of internationalized host names", "right-to-left label mixing both digit types is invalid"),
-		("idn-hostname", "validation of internationalized host names", "valid Chinese Punycode"),
-		("idn-hostname", "validation of internationalized host names", "zero width non-joiner must pass at every occurrence"),
-		("idn-hostname", "validation of separators in internationalized host names", "fullwidth full stop as label separator"),
-		("idn-hostname", "validation of separators in internationalized host names", "halfwidth ideographic full stop as label separator"),
-		("idn-hostname", "validation of separators in internationalized host names", "ideographic full stop as label separator"),
-		("idn-hostname", "validation of separators in internationalized host names", "label too long if separator ignored (fullwidth full stop)"),
-		("idn-hostname", "validation of separators in internationalized host names", "label too long if separator ignored (halfwidth ideographic full stop)"),
-		("idn-hostname", "validation of separators in internationalized host names", "label too long if separator ignored (ideographic full stop)"),
+		//"propertyDependencies"
 	];
 
 	public static IEnumerable<TestCaseData> TestCases()
 	{
-		return GetTests("draft6")
-			.Concat(GetTests("draft7"))
-			.Concat(GetTests("draft2019-09"))
-			.Concat(GetTests("draft2020-12"))
-			.Concat(_runDraftNext ? GetTests("v1") : []);
+		return GetTests(SuiteDialect.Draft06)
+			.Concat(GetTests(SuiteDialect.Draft07))
+			.Concat(GetTests(SuiteDialect.Draft201909))
+			.Concat(GetTests(SuiteDialect.Draft202012))
+			.Concat(_runDraftNext ? GetTests(SuiteDialect.V1) : []);
 	}
 
-	private static IEnumerable<TestCaseData> GetTests(string draftFolder)
+	private static IEnumerable<TestCaseData> GetTests(SuiteDialect suiteDialect)
 	{
 		// ReSharper disable once HeuristicUnreachableCode
 		var testCasesPath = _useExternal ? _externalTestCasesPath : _testCasesPath;
 
-		var testsPath = Path.Combine(TestContext.CurrentContext.WorkDirectory, testCasesPath, $"{draftFolder}/")
+		var testsPath = Path.Combine(TestContext.CurrentContext.WorkDirectory, testCasesPath)
 			.AdjustForPlatform();
 		if (!Directory.Exists(testsPath)) return [];
 
@@ -89,38 +55,39 @@ public class ValidationOptimized
 		{
 			var shortFileName = Path.GetFileNameWithoutExtension(fileName);
 
-			// adjust for format
-			evaluationOptions.RequireFormatValidation = fileName.Contains("format/".AdjustForPlatform());
+			var filePath = fileName.Split('/', '\\');
+			var proposals = filePath.IndexOf("proposals");
+			if (proposals != -1 && proposals + 1 < filePath.Length)
+			{
+				var proposal = filePath[proposals + 1];
+				if (!_supportedProposals.Contains(proposal)) continue;
+			}
 
 			var contents = File.ReadAllText(fileName);
-			var collections = JsonSerializer.Deserialize<List<TestCollection>>(contents, TestEnvironment.TestSuiteSerializationOptions);
+			var testFile = JsonSerializer.Deserialize<TestFile>(contents, TestEnvironment.TestSuiteSerializationOptions);
 
-			foreach (var collection in collections!)
+			foreach (var collection in testFile!.Tests)
 			{
+				if (!suiteDialect.IsCompatible(collection.Compatibility)) continue;
+				if (!suiteDialect.SupportsTags(collection)) continue;
+
 				collection.IsOptional = fileName.Contains("optional");
+
+				// adjust for format
+				evaluationOptions.RequireFormatValidation = SuiteDialect.RequiresFormatValidation(collection);
 
 				foreach (var test in collection.Tests)
 				{
-					var dialect = draftFolder switch
-					{
-						"draft6" => Dialect.Draft06,
-						"draft7" => Dialect.Draft07,
-						"draft2019-09" => Dialect.Draft201909,
-						"draft2020-12" => Dialect.Draft202012,
-						"v1" => Dialect.V1,
-						_ => throw new ArgumentOutOfRangeException(nameof(draftFolder), $"{draftFolder} is unsupported")
-					};
-
 					var buildOptions = new BuildOptions
 					{
-						Dialect = dialect,
+						Dialect = suiteDialect.Dialect,
 						SchemaRegistry = new()
 					};
 					if (_ignoredTests.Contains((shortFileName, collection.Description, test.Description))) continue;
 					if (_ignoredTests.Contains((shortFileName, collection.Description, "*"))) continue;
 
 					var optional = collection.IsOptional ? "(optional) / " : null;
-					var name = $"{draftFolder} / {optional}{shortFileName} / {collection.Description} / {test.Description}";
+					var name = $"{suiteDialect.Name} / {optional}{shortFileName} / {collection.Description} / {test.Description}";
 					var evaluationOptionsCopy = EvaluationOptions.From(evaluationOptions);
 					allTests.Add(new TestCaseData(collection, test, shortFileName, buildOptions, evaluationOptionsCopy) { TestName = name });
 				}
@@ -128,49 +95,6 @@ public class ValidationOptimized
 		}
 
 		return allTests;
-	}
-
-	[OneTimeSetUp]
-	public void LoadRemoteSchemas()
-	{
-		// ReSharper disable once HeuristicUnreachableCode
-		var remotesPath = Path.Combine(TestContext.CurrentContext.WorkDirectory, _useExternal ? _externalRemoteSchemasPath : _remoteSchemasPath)
-			.AdjustForPlatform();
-		if (!Directory.Exists(remotesPath)) throw new Exception("Cannot find remotes folder");
-
-		var fileNames = Directory.GetFiles(remotesPath, "*.json", SearchOption.AllDirectories);
-
-		foreach (var fileName in fileNames)
-		{
-			try
-			{
-				Dialect? dialect;
-				if (fileName.Contains("draft6"))
-					dialect = Dialect.Draft06;
-				else if (fileName.Contains("draft7"))
-					dialect = Dialect.Draft07;
-				else if (fileName.Contains("draft2019-09"))
-					dialect = Dialect.Draft201909;
-				else if (fileName.Contains("draft2020-12"))
-					dialect = Dialect.Draft202012;
-				else
-					dialect = Dialect.V1;
-
-				var buildOptions = new BuildOptions
-				{
-					Dialect = dialect
-				};
-				var uri = new Uri(fileName.Replace(remotesPath, "http://localhost:1234").Replace('\\', '/'));
-				if (SchemaRegistry.Global.Get(uri) != null) return; // may have been loaded from other test if running all together
-
-				var schema = JsonSchema.FromFile(fileName, buildOptions, uri);
-				SchemaRegistry.Global.Register(uri, schema); // it seems a number of remotes have `$id`s different from their file path
-			}
-			catch (JsonSchemaException e)
-			{
-				TestConsole.WriteLine($"Error loading file '{fileName}': {e}");
-			}
-		}
 	}
 
 	[TestCaseSource(nameof(TestCases))]
@@ -191,7 +115,11 @@ public class ValidationOptimized
 		JsonSchema schema;
 		try
 		{
-			schema = Measure.Run("Build", () => JsonSchema.Build(collection.Schema, buildOptions));
+			schema = Measure.Run("Build", () =>
+			{
+				collection.RegisterExternalSchemas(buildOptions);
+				return JsonSchema.Build(collection.Schema, buildOptions);
+			});
 		}
 		catch (Exception e)
 		{
