@@ -66,7 +66,8 @@ public static partial class Formats
 #endif
 
 	/// <summary>
-	/// Defines the `hostname` format.
+	/// Defines the `hostname` format as specified by RFC 1123, without the IDNA A-label rules
+	/// that draft 7 through draft 2020-12 add.
 	/// </summary>
 	public static readonly Format Hostname = new PredicateFormat("hostname", CheckHostName);
 	/// <summary>
@@ -1016,8 +1017,11 @@ public static partial class Formats
 	{
 		if (node.GetSchemaValueType() != SchemaValueType.String) return true;
 
-		var value = node.GetString()!;
+		return CheckHostNameString(node.GetString()!, enforceIdnaRules: false);
+	}
 
+	internal static bool CheckHostNameString(string value, bool enforceIdnaRules)
+	{
 		// Empty, too long, or contains underscore
 		if (string.IsNullOrEmpty(value) || value.Length > 255 || value.IndexOf('_') >= 0) return false;
 
@@ -1026,6 +1030,7 @@ public static partial class Formats
 
 		// Check basic pattern; this also limits each label to 63 characters
 		if (!HostnameRegex().IsMatch(value)) return false;
+		if (!enforceIdnaRules) return true;
 
 		Span<char> buffer = stackalloc char[_maxULabelBufferLength];
 		var span = value.AsSpan();

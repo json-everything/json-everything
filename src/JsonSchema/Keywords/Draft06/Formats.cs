@@ -5,7 +5,7 @@ namespace Json.Schema.Keywords.Draft06;
 /// <summary>
 /// Formats whose validation differs for draft 6 through draft 2020-12.
 /// </summary>
-internal static class Formats
+public static class Formats
 {
 	/// <summary>
 	/// Defines the `date-time` format, which doesn't allow RFC 9557 suffixes.
