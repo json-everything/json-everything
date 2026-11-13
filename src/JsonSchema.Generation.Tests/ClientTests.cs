@@ -387,7 +387,7 @@ public class ClientTests
 		var schemaJson = JsonSerializer.SerializeToNode(schema, TestSerializerContext.Default.JsonSchema);
 		TestConsole.WriteLine(schemaJson);
 
-		Assert.That(schemaJson.IsEquivalentTo(expected), Is.True);
+		JsonAssert.AreEquivalent(expected, schemaJson);
 	}
 
 	public class Issue767_PropertyLevelComments

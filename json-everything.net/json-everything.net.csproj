@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
+    <TargetFramework>net11.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>JsonEverythingNet</RootNamespace>
@@ -13,13 +13,13 @@
 
   <ItemGroup>
     <PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
-    <PackageReference Include="BlazorMonaco" Version="3.4.0" />
-    <PackageReference Include="Markdig" Version="0.44.0" />
+    <PackageReference Include="BlazorMonaco" Version="3.5.0" />
+    <PackageReference Include="Markdig" Version="1.6.0" />
     <PackageReference Include="Markdig.SyntaxHighlighting" Version="1.1.7" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.5" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="10.0.5" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="5.3.0" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="11.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="11.0.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="5.9.0" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="11.0.0" />
   </ItemGroup>
 
   <ItemGroup>

@@ -87,7 +87,7 @@ public class ClientTests
 
 			var yamlText = @"data: 4.789";
 
-			var expected = new JsonObject { ["data"] = 4.789 };
+			var expected = new JsonObject { ["data"] = 4.789m };
 
 			var actual = YamlSerializer.Parse(yamlText).Single().ToJsonNode();
 

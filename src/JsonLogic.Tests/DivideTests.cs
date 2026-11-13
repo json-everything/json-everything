@@ -12,6 +12,6 @@ public class DivideTests
 		var rule = new DivideRule(4, 5);
 
 		var actual = rule.Apply();
-		JsonAssert.AreEquivalent(.8, actual);
+		JsonAssert.AreEquivalent(.8m, actual);
 	}
 }
