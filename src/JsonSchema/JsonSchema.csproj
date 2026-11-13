@@ -17,7 +17,7 @@
     <IncludeBuildOutput>false</IncludeBuildOutput>
 
     <PackageId>JsonSchema.Net</PackageId>
-    <JsonSchemaNetVersion>9.6.1</JsonSchemaNetVersion>
+    <JsonSchemaNetVersion>9.7.0</JsonSchemaNetVersion>
     <AssemblyVersion>9.0.0.0</AssemblyVersion>
     <FileVersion>$(JsonSchemaNetVersion)</FileVersion>
     <Version>$(JsonSchemaNetVersion)</Version>
@@ -72,6 +72,12 @@
     <None Include="bin\$(Configuration)\net9.0\JsonSchema.Net.dll" Pack="true" PackagePath="lib\net9.0" />
     <None Include="bin\$(Configuration)\net9.0\JsonSchema.Net.xml" Pack="true" PackagePath="lib\net9.0" />
     <None Include="bin\$(Configuration)\net9.0\JsonSchema.Net.pdb" Pack="true" PackagePath="lib\net9.0" />
+    <None Include="bin\$(Configuration)\net10.0\JsonSchema.Net.dll" Pack="true" PackagePath="lib\net10.0" />
+    <None Include="bin\$(Configuration)\net10.0\JsonSchema.Net.xml" Pack="true" PackagePath="lib\net10.0" />
+    <None Include="bin\$(Configuration)\net10.0\JsonSchema.Net.pdb" Pack="true" PackagePath="lib\net10.0" />
+    <None Include="bin\$(Configuration)\net11.0\JsonSchema.Net.dll" Pack="true" PackagePath="lib\net11.0" />
+    <None Include="bin\$(Configuration)\net11.0\JsonSchema.Net.xml" Pack="true" PackagePath="lib\net11.0" />
+    <None Include="bin\$(Configuration)\net11.0\JsonSchema.Net.pdb" Pack="true" PackagePath="lib\net11.0" />
   </ItemGroup>
 
   <PropertyGroup Condition="'$(ResourceLanguage)' != '' And '$(ResourceLanguage)' != 'base'">

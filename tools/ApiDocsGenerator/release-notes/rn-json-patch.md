@@ -4,6 +4,10 @@ title: JsonPatch.Net
 icon: fas fa-tag
 order: "09.09"
 ---
+# [5.1.0](https://github.com/json-everything/json-everything/pull/1077) {#release-patch-5.1.0}
+
+Add .Net 11.0 support.
+
 # [5.0.3](https://github.com/json-everything/json-everything/pull/1048) {#release-patch-5.0.3}
 
 [#862](https://github.com/json-everything/json-everything/issues/862) - [@LindqvistMartin](https://github.com/LindqvistMartin) fixed the swapped source and target paths in the `copy` and `move` operation error messages.  Thanks to [@pekaaw](https://github.com/pekaaw) for reporting.

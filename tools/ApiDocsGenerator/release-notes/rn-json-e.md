@@ -4,6 +4,14 @@ title: JsonE.Net
 icon: fas fa-tag
 order: "09.12"
 ---
+# [3.1.0](https://github.com/json-everything/json-everything/pull/1077) {#release-e-3.1.0}
+
+Add .Net 11.0 support.
+
+[#1076](https://github.com/json-everything/json-everything/issues/1076) - .Net 11 changes how `double` and `float` are converted to `decimal`.  When running under .Net 11, numbers read from `double`- and `float`-backed `JsonValue`s, as well as the results of `sqrt()` and the `**` operator, carry their exact binary value and so may have more digits than before.
+
+This is only a minor version bump because this package does not itself introduce a break: updating to this version without updating to .Net 11 changes nothing, and updating to .Net 11 without updating to this version results in the same change in behavior.  It is the .Net update that changes behavior, not this package.
+
 # [3.0.1](https://github.com/json-everything/json-everything/pull/1013) {#release-e-3.0.1}
 
 Updated nuget packages & EULA.

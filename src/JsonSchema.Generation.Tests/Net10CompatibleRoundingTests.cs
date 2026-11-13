@@ -44,6 +44,76 @@ public class Net10CompatibleRoundingTests
 		public decimal Value { get; set; }
 	}
 
+	[IfMin(nameof(Value), 0.1, "group", UseNet10CompatibleRounding = true)]
+	[IfMax(nameof(Value), 4.789, "group", IsExclusive = true, UseNet10CompatibleRounding = true)]
+	// ReSharper disable once ClassNeverInstantiated.Local
+	private class CompatibleRoundingConditionSubject
+	{
+		// ReSharper disable once UnusedMember.Local
+		public decimal Value { get; set; }
+
+		[Required(ConditionGroup = "group")]
+		// ReSharper disable once UnusedMember.Local
+		public string? Other { get; set; }
+	}
+
+	[IfMin(nameof(Value), 0.1, "group")]
+	[IfMax(nameof(Value), 4.789, "group", IsExclusive = true)]
+	// ReSharper disable once ClassNeverInstantiated.Local
+	private class DefaultRoundingConditionSubject
+	{
+		// ReSharper disable once UnusedMember.Local
+		public decimal Value { get; set; }
+
+		[Required(ConditionGroup = "group")]
+		// ReSharper disable once UnusedMember.Local
+		public string? Other { get; set; }
+	}
+
+	[Test]
+	public void ConditionCompatibleRoundingProducesShortValues()
+	{
+		var builder = new JsonSchemaBuilder();
+		builder.FromType<CompatibleRoundingConditionSubject>();
+
+		var schema = builder.Build();
+		TestConsole.WriteLine(schema.Root.Source);
+
+		var condition = schema.Root.Source.GetProperty("if").GetProperty("properties").GetProperty("Value");
+
+		Assert.Multiple(() =>
+		{
+			Assert.That(condition.GetProperty("minimum").GetDecimal(), Is.EqualTo(0.1m));
+			Assert.That(condition.GetProperty("exclusiveMaximum").GetDecimal(), Is.EqualTo(4.789m));
+		});
+	}
+
+	[Test]
+	public void ConditionDefaultRoundingFollowsRuntime()
+	{
+		var builder = new JsonSchemaBuilder();
+		builder.FromType<DefaultRoundingConditionSubject>();
+
+		var schema = builder.Build();
+		TestConsole.WriteLine(schema.Root.Source);
+
+		var condition = schema.Root.Source.GetProperty("if").GetProperty("properties").GetProperty("Value");
+
+#if NET11_0_OR_GREATER
+		var expectedMinimum = 0.1000000000000000055511151231m;
+		var expectedExclusiveMaximum = 4.7889999999999997015720509808m;
+#else
+		var expectedMinimum = 0.1m;
+		var expectedExclusiveMaximum = 4.789m;
+#endif
+
+		Assert.Multiple(() =>
+		{
+			Assert.That(condition.GetProperty("minimum").GetDecimal(), Is.EqualTo(expectedMinimum));
+			Assert.That(condition.GetProperty("exclusiveMaximum").GetDecimal(), Is.EqualTo(expectedExclusiveMaximum));
+		});
+	}
+
 	[Test]
 	public void CompatibleRoundingProducesShortValues()
 	{

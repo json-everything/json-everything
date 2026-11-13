@@ -4,6 +4,10 @@ title: Yaml2JsonNode
 icon: fas fa-tag
 order: "09.13"
 ---
+# [3.1.0](https://github.com/json-everything/json-everything/pull/1077) {#release-yaml-3.1.0}
+
+Add .Net 11.0 support.
+
 # [3.0.2](https://github.com/json-everything/json-everything/pull/1067) {#release-yaml-3.0.2}
 
 [#1066](https://github.com/json-everything/json-everything/issues/1066) - Scalars with an explicit `!!str` tag, or the non-specific `!` tag, are now converted to strings.  For example, `!!str 123` was converted to the number `123`.  Thanks to [@wleeaf](https://github.com/wleeaf) for the fix.

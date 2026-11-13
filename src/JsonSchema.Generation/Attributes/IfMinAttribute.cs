@@ -30,6 +30,11 @@ public class IfMinAttribute : ConditionalAttribute, INestableAttribute, IConditi
 	public bool IsExclusive { get; set; }
 
 	/// <summary>
+	/// (.Net 11 only) Gets or sets whether to force .Net 10 and earlier rounding from `double` to `decimal`.
+	/// </summary>
+	public bool UseNet10CompatibleRounding { get; set; }
+
+	/// <summary>
 	/// The index of the parameter to which the attribute should apply. Default is -1 to indicate the root.
 	/// </summary>
 	public int GenericParameter { get; set; } = -1;
@@ -61,8 +66,8 @@ public class IfMinAttribute : ConditionalAttribute, INestableAttribute, IConditi
 
 		if (PropertyType.IsNumber() || PropertyType.IsNullableNumber())
 		{
-			if (IsExclusive) return new ExclusiveMinimumIntent(Value.ClampToDecimal());
-			return new MinimumIntent(Value.ClampToDecimal());
+			if (IsExclusive) return new ExclusiveMinimumIntent(Value.ClampToDecimal(UseNet10CompatibleRounding));
+			return new MinimumIntent(Value.ClampToDecimal(UseNet10CompatibleRounding));
 		}
 
 		// ReSharper disable once CompareOfFloatsByEqualityOperator

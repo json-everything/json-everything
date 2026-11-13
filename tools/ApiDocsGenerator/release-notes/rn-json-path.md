@@ -4,6 +4,14 @@ title: JsonPath.Net
 icon: fas fa-tag
 order: "09.08"
 ---
+# [3.1.0](https://github.com/json-everything/json-everything/pull/1077) {#release-path-3.1.0}
+
+Add .Net 11.0 support.
+
+[#1076](https://github.com/json-everything/json-everything/issues/1076) - .Net 11 changes how `double` and `float` are converted to `decimal`.  When running under .Net 11, numbers read from `double`- and `float`-backed `JsonValue`s carry their exact binary value (e.g. `4.7889999999999997015720509808` instead of `4.789`).  Values parsed from JSON text or created from a `decimal` are unaffected.
+
+This is only a minor version bump because this package does not itself introduce a break: updating to this version without updating to .Net 11 changes nothing, and updating to .Net 11 without updating to this version results in the same change in behavior.  It is the .Net update that changes behavior, not this package.
+
 # [3.0.4](https://github.com/json-everything/json-everything/pull/1074) {#release-path-3.0.4}
 
 [#1073](https://github.com/json-everything/json-everything/issues/1073) - Name selectors in which a `\uXXXX` escape is immediately followed by another escape other than `\uXXXX` (e.g. `$["\u0041\t"]`) now parse instead of throwing a `PathParseException`.  Thanks to [@aradalvand](https://github.com/aradalvand) for the fix.
