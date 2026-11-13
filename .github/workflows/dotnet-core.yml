@@ -38,12 +38,13 @@ jobs:
       - name: restore submodules
         run: git submodule update --init
       - name: Setup .NET Core
-        uses: actions/setup-dotnet@v2
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: |
             8.0.x
             9.0.x
             10.0.x
+            11.0.x
       - name: Install dependencies
         run: dotnet restore
       - name: Build
