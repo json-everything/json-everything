@@ -362,7 +362,7 @@ public class ClientTests
 	private class Issue696_NullableDecimalWithMultipleOf
 	{
 		[Nullable(true)]
-		[MultipleOf(0.1)]
+		[MultipleOf(0.1, true)]
 		public decimal? Apr { get; set; }
 	}
 

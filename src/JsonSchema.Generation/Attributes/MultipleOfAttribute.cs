@@ -26,9 +26,10 @@ public class MultipleOfAttribute : ConditionalAttribute, INestableAttribute, IAt
 	/// Creates a new <see cref="MultipleOfAttribute"/> instance.
 	/// </summary>
 	/// <param name="value">The value.</param>
-	public MultipleOfAttribute(double value)
+	/// <param name="useNet10CompatibleRounding">(.Net 11 only) <c>>true</c> forces .Net 10 and earlier rounding from <c>>double</c> to <c>>decimal</c></param>
+	public MultipleOfAttribute(double value, bool useNet10CompatibleRounding = false)
 	{
-		Value = (decimal)value;
+		Value = value.ConvertToDecimal(useNet10CompatibleRounding);
 	}
 
 	void IAttributeHandler.AddConstraints(SchemaGenerationContextBase context, Attribute attribute)

@@ -695,4 +695,26 @@ public static class TestModels
 		[MinLength(3, ConditionGroup = "g")]
 		public string? Name { get; set; }
 	}
+
+	/// <summary>
+	/// Uses constraint values that `double` cannot represent exactly, both with and without
+	/// .Net 10 compatible rounding.
+	/// </summary>
+	[GenerateJsonSchema]
+	public class ModelWithInexactDoubleConstraints
+	{
+		[Minimum(0.1)]
+		[Maximum(10.1)]
+		[ExclusiveMinimum(1.1)]
+		[ExclusiveMaximum(4.789)]
+		[MultipleOf(3.14)]
+		public decimal Default { get; set; }
+
+		[Minimum(0.1, true)]
+		[Maximum(10.1, true)]
+		[ExclusiveMinimum(1.1, true)]
+		[ExclusiveMaximum(4.789, true)]
+		[MultipleOf(3.14, true)]
+		public decimal Compatible { get; set; }
+	}
 }

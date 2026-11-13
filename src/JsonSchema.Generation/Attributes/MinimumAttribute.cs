@@ -31,14 +31,15 @@ public class MinimumAttribute : ConditionalAttribute, INestableAttribute, IAttri
 	/// Creates a new <see cref="MinimumAttribute"/> instance.
 	/// </summary>
 	/// <param name="value">The value.</param>
+	/// <param name="useNet10CompatibleRounding">(.Net 11 only) <c>>true</c> forces .Net 10 and earlier rounding from <c>>double</c> to <c>>decimal</c></param>
 	/// <remarks>
 	/// The <paramref name="value"/> parameter is provided as a `double` but stored as a `decimal`
 	/// because `decimal` is not a valid attribute parameter type.
 	/// As such, to prevent overflows, the value is clamped to the `decimal` range prior to being converted.
 	/// </remarks>
-	public MinimumAttribute(double value)
+	public MinimumAttribute(double value, bool useNet10CompatibleRounding = false)
 	{
-		Value = value.ClampToDecimal();
+		Value = value.ConvertToDecimal(useNet10CompatibleRounding);
 	}
 
 	void IAttributeHandler.AddConstraints(SchemaGenerationContextBase context, Attribute attribute)

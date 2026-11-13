@@ -73,11 +73,7 @@ public static class DotnetCompatibility
 	/// </summary>
 	/// <param name="value">The value.</param>
 	/// <param name="useNet10CompatibleRounding">(.Net 11 only) <c>>true</c> forces .Net 10 and earlier rounding from <c>>double</c> to <c>>decimal</c></param>
-	public static decimal ConvertToDecimal(this double value
-#if NET11_0_OR_GREATER
-		, bool useNet10CompatibleRounding = false
-#endif
-	)
+	public static decimal ConvertToDecimal(this double value, bool useNet10CompatibleRounding = false)
 	{
 #if NET11_0_OR_GREATER
 		var converted = (decimal)value;
