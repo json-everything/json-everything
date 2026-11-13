@@ -66,4 +66,40 @@ public static class DotnetCompatibility
 	public static int GetPropertyCount(this JsonElement element) => element.EnumerateObject().Count();
 
 #endif
+
+	/// <summary>
+	/// Performs a conversion from <see cref="Double"/> to <see cref="Decimal"/> while optionally allowing
+	/// for .Net 11's breaking change.
+	/// </summary>
+	/// <param name="value">The value.</param>
+	/// <param name="useNet10CompatibleRounding">(.Net 11 only) <c>>true</c> forces .Net 10 and earlier rounding from <c>>double</c> to <c>>decimal</c></param>
+	public static decimal ConvertToDecimal(this double value
+#if NET11_0_OR_GREATER
+		, bool useNet10CompatibleRounding = false
+#endif
+	)
+	{
+#if NET11_0_OR_GREATER
+		var converted = (decimal)value;
+		if (useNet10CompatibleRounding && converted != 0)
+		{
+			// .Net 10 and earlier kept 15 significant digits when converting double to decimal.
+			var scale = 14 - (int)Math.Floor(Math.Log10(Math.Abs(value)));
+			if (scale < 0)
+			{
+				var factor = (decimal)Math.Pow(10, -scale);
+				converted = Math.Round(converted / factor) * factor;
+			}
+			else if (scale <= 28)
+				converted = Math.Round(converted, scale);
+
+			// Dividing by one at maximum scale strips the trailing zeros left by rounding.
+			converted /= 1.0000000000000000000000000000m;
+		}
+
+		return converted;
+#else
+		return (decimal)value;
+#endif
+	}
 }

@@ -30,7 +30,7 @@ public class AddTests
 		var rule = JsonLogic.Add("3.14");
 
 		var actual = rule.Apply();
-		JsonAssert.AreEquivalent(3.14, actual);
+		JsonAssert.AreEquivalent(3.14m, actual);
 	}
 
 	[Test]

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+    <TargetFrameworks>net8.0;net9.0;net10.0;net11.0</TargetFrameworks>
     <RootNamespace>Json.Benchmarks</RootNamespace>
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
@@ -14,13 +14,13 @@
 	<!-- Microsoft.CodeAnalysis.Analyzers is a downgrade reference to avoid
 		 an analyzer error present in v3.3.4+.
 		 See https://github.com/dotnet/roslyn-analyzers/issues/6395-->
-    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="5.3.0">
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="5.9.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="NJsonSchema" Version="11.1.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="Newtonsoft.Json.Schema" Version="4.0.1" />
+    <PackageReference Include="NJsonSchema" Version="11.6.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageReference Include="Newtonsoft.Json.Schema" Version="4.0.2" />
   </ItemGroup>
 
   <ItemGroup>
