@@ -4,7 +4,11 @@ title: JsonSchema.Net.DataGeneration
 icon: fas fa-tag
 order: "09.07"
 ---
-# [3.1.0](https://github.com/json-everything/json-everything/pull/1015) {#release-schemadatagen-3.1.0}
+# [3.3.0](https://github.com/json-everything/json-everything/pull/1077) {#release-schemadatagen-3.3.0}
+
+Add .Net 11.0 support.
+
+# [3.2.0](https://github.com/json-everything/json-everything/pull/1030) {#release-schemadatagen-3.2.0}
 
 - [#892](https://github.com/json-everything/json-everything/issues/892) - Support recursive references.  Thanks to [@Frassle](https://github.com/Frassle) for the suggestion.
 - Support `$dynamicRef`

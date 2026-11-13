@@ -4,6 +4,10 @@ title: JsonSchema.Net.ArrayExt
 icon: fas fa-tag
 order: "09.03"
 ---
+# [4.1.0](https://github.com/json-everything/json-everything/pull/1077) {#release-schemaarrayext-4.1.0}
+
+Add .Net 11.0 support.
+
 # [4.0.1](https://github.com/json-everything/json-everything/pull/1013) {#release-schemaarrayext-4.0.1}
 
 Updated nuget packages & EULA.

@@ -4,6 +4,10 @@ title: JsonPointer.Net
 icon: fas fa-tag
 order: "09.10"
 ---
+# [7.1.0](https://github.com/json-everything/json-everything/pull/1077) {#release-pointer-7.1.0}
+
+Add .Net 11.0 support.
+
 # [7.0.4](https://github.com/json-everything/json-everything/pull/1069) {#release-pointer-7.0.4}
 
 [#1068](https://github.com/json-everything/json-everything/issues/1068) - `Evaluate()` and `TryEvaluate()` now fail when a `-` array index is followed by more segments, since `-` refers to a nonexistent element.  `TryEvaluate()` on a `JsonNode` also returns `false` instead of throwing when the array is empty.  Thanks to [@wleeaf](https://github.com/wleeaf) for the fix.

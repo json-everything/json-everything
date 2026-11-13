@@ -4,6 +4,16 @@ title: JsonSchema.Net
 icon: fas fa-tag
 order: "09.01"
 ---
+# [9.7.0](https://github.com/json-everything/json-everything/pull/1077) {#release-schema-9.7.0}
+
+Add .Net 11.0 support.
+
+[#1076](https://github.com/json-everything/json-everything/issues/1076) - .Net 11 changes how `double` is converted to `decimal`.  Added the `DotnetCompatibility.ConvertToDecimal()` extension method on `double`, which can optionally apply the .Net 10 and earlier rounding when running under .Net 11.
+
+This is only a minor version bump because this package does not itself introduce a break: updating to this version without updating to .Net 11 changes nothing, and updating to .Net 11 without updating to this version results in the same change in behavior.  It is the .Net update that changes behavior, not this package.
+
+The package now also includes all .Net version builds; 10.0 was previously left out.
+
 # [9.6.1](https://github.com/json-everything/json-everything/pull/1075) {#release-schema-9.6.1}
 
 Minor bug fix in `hostname` format validation for Draft 6 and v1.

@@ -4,6 +4,16 @@ title: JsonSchema.Net.Generation
 icon: fas fa-tag
 order: "09.05"
 ---
+# [7.5.0](https://github.com/json-everything/json-everything/pull/1077) {#release-schemagen-7.5.0}
+
+Add .Net 11.0 support.
+
+[#1076](https://github.com/json-everything/json-everything/issues/1076) - .Net 11 changes how `double` is converted to `decimal`.  When running under .Net 11, this changes the values produced by `[Minimum]`, `[Maximum]`, `[ExclusiveMinimum]`, `[ExclusiveMaximum]`, `[MultipleOf]`, `[IfMin]`, and `[IfMax]` (e.g. `[MultipleOf(0.1)]` produces `0.1000000000000000055511151231`).  These attributes now have a `useNet10CompatibleRounding` option to support the .Net 10 and earlier behavior.  Source generation is unaffected and emits the value as written on all frameworks.
+
+This is only a minor version bump because this package does not itself introduce a break: updating to this version without updating to .Net 11 changes nothing, and updating to .Net 11 without updating to this version results in the same change in behavior.  It is the .Net update that changes behavior, not this package.
+
+Fixed source generation for `[IfMin]` and `[IfMax]` with fractional values (e.g. `[IfMin("Value", 0.1, "group")]`), which previously produced code that did not compile.
+
 # [7.4.1](https://github.com/json-everything/json-everything/pull/1063) {#release-schemagen-7.4.1}
 
 [#951](https://github.com/json-everything/json-everything/issues/951) - Generating a schema for a nullable property whose enumeration intent was built from values rather than member names no longer throws a `NullReferenceException`.  Thanks to [@justinperficient](https://github.com/justinperficient) for reporting.

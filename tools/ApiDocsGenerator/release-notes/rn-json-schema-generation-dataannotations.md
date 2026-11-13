@@ -4,6 +4,16 @@ title: JsonSchema.Net.Generation.DataAnnotations
 icon: fas fa-tag
 order: "09.06"
 ---
+# [3.2.0](https://github.com/json-everything/json-everything/pull/1077) {#release-schemagendataannotations-3.2.0}
+
+Add .Net 11.0 support.
+
+[#1076](https://github.com/json-everything/json-everything/issues/1076) - .Net 11 changes how `double` is converted to `decimal`.  When running under .Net 11, `[Range]` attributes with `double` bounds produce the exact binary value for `minimum` and `maximum` (e.g. `4.7889999999999997015720509808` instead of `4.789`).
+
+This is only a minor version bump because this package does not itself introduce a break: updating to this version without updating to .Net 11 changes nothing, and updating to .Net 11 without updating to this version results in the same change in behavior.  It is the .Net update that changes behavior, not this package.
+
+Removed the unnecessary `System.ComponentModel.Annotations` package dependency for .Net 10.0.  It is now only a dependency for .Net Standard 2.0.
+
 # [3.1.1](https://github.com/json-everything/json-everything/pull/1013) {#release-schemagendataannotations-3.1.1}
 
 Updated nuget packages & EULA.

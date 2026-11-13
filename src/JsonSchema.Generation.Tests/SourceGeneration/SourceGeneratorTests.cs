@@ -1625,4 +1625,37 @@ public class SourceGeneratorTests
 
 		AssertEqual(expected, actual);
 	}
+
+	[Test]
+	public void ConditionalWithInexactDoubleBounds_EmitsValuesAsWritten()
+	{
+		var expectedJson = """
+		{
+		  "$schema": "https://json-schema.org/draft/2020-12/schema",
+		  "$id": "urn:jsonschema:Json.Schema.Generation.Tests.SourceGeneration.TestModels.ConditionalWithInexactDoubleBounds",
+		  "type": "object",
+		  "properties": {
+		    "Value": { "type": "number" },
+		    "Other": { "type": ["null", "string"] }
+		  },
+		  "required": ["Value"],
+		  "if": {
+		    "properties": {
+		      "Value": {
+		        "minimum": 0.1,
+		        "exclusiveMaximum": 4.789
+		      }
+		    },
+		    "required": ["Value"]
+		  },
+		  "then": {
+		    "required": ["Other"]
+		  }
+		}
+		""";
+		var expected = JsonSchema.FromText(expectedJson, new BuildOptions { SchemaRegistry = new SchemaRegistry() });
+		var actual = GeneratedJsonSchemas.TestModels_ConditionalWithInexactDoubleBounds;
+
+		AssertEqual(expected, actual);
+	}
 }

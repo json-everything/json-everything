@@ -14,8 +14,8 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageId>Json.More.Net</PackageId>
-    <Version>3.0.1</Version>
-    <FileVersion>3.0.1</FileVersion>
+    <Version>3.1.0</Version>
+    <FileVersion>3.1.0</FileVersion>
     <AssemblyVersion>3.0.0.0</AssemblyVersion>
     <Authors>Greg Dennis</Authors>
     <Description>Provides extended functionality for the System.Text.Json namespace.</Description>

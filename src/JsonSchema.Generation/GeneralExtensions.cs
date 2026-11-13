@@ -8,13 +8,13 @@ namespace Json.Schema.Generation;
 
 internal static class GeneralExtensions
 {
-	public static decimal ClampToDecimal(this double value)
+	public static decimal ClampToDecimal(this double value, bool useNet10CompatibleRounding = false)
 	{
 		return value <= (double)decimal.MinValue
 			? decimal.MinValue
 			: (double)decimal.MaxValue <= value
 				? decimal.MaxValue
-				: Convert.ToDecimal(value);
+				: value.ConvertToDecimal(useNet10CompatibleRounding);
 	}
 
 	public static List<ISchemaKeywordIntent> AsNullable(this List<ISchemaKeywordIntent> source)

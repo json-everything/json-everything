@@ -108,11 +108,11 @@ internal static class ConditionalSchemaEmitter
 			{
 				case ConditionalTriggerType.Minimum:
 					var minKeyword = trigger.IsExclusive ? "ExclusiveMinimum" : "Minimum";
-					sb.Append($".{minKeyword}({trigger.NumericValue})");
+					sb.Append($".{minKeyword}({CodeEmitterHelpers.FormatValue(trigger.NumericValue)})");
 					break;
 				case ConditionalTriggerType.Maximum:
 					var maxKeyword = trigger.IsExclusive ? "ExclusiveMaximum" : "Maximum";
-					sb.Append($".{maxKeyword}({trigger.NumericValue})");
+					sb.Append($".{maxKeyword}({CodeEmitterHelpers.FormatValue(trigger.NumericValue)})");
 					break;
 			}
 		}

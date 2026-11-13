@@ -717,4 +717,19 @@ public static class TestModels
 		[MultipleOf(3.14, true)]
 		public decimal Compatible { get; set; }
 	}
+
+	/// <summary>
+	/// Uses conditional bounds that `double` cannot represent exactly.
+	/// </summary>
+	[GenerateJsonSchema]
+	[IfMin(nameof(Value), 0.1, "group")]
+	[IfMax(nameof(Value), 4.789, "group", IsExclusive = true)]
+	public class ConditionalWithInexactDoubleBounds
+	{
+		[Required]
+		public decimal Value { get; set; }
+
+		[Required(ConditionGroup = "group")]
+		public string? Other { get; set; }
+	}
 }
