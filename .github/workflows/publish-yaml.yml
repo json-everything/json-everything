@@ -12,6 +12,7 @@ on:
 permissions:
   contents: write
   actions: write
+  id-token: write # required for nuget.org trusted publishing
 
 jobs:
   publish:
@@ -23,13 +24,19 @@ jobs:
         uses: actions/setup-dotnet@v6
         with:
           dotnet-version: 11.0.x
+      # Exchange a GitHub OIDC token for a short-lived nuget.org API key
+      - name: NuGet login
+        id: login
+        uses: NuGet/login@v1
+        with:
+          user: ${{ secrets.NUGET_USER }}
       # Publish
       - name: publish yaml
         id: publish_yaml
         uses: alirezanet/publish-nuget@v3.1.0
         with:
           PROJECT_FILE_PATH: src/Yaml2JsonNode/Yaml2JsonNode.csproj
-          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+          NUGET_KEY: ${{ steps.login.outputs.NUGET_API_KEY }}
           INCLUDE_SYMBOLS: true
           TAG_FORMAT: yaml-v*
           PACKAGE_NAME: Yaml2JsonNode
