@@ -133,6 +133,7 @@ public class JsonNamingPolicyTests
 	public void CustomPolicyAttributeIsUsed()
 	{
 		var expected = new JsonSchemaBuilder()
+			.Schema(MetaSchemas.Draft202012Id)
 			.Type(SchemaValueType.Object)
 			.Properties(
 				("FIRSTVALUE", new JsonSchemaBuilder().Type(SchemaValueType.String))
@@ -148,6 +149,7 @@ public class JsonNamingPolicyTests
 	public void PolicyAppliesToConditionals()
 	{
 		var expected = new JsonSchemaBuilder()
+			.Schema(MetaSchemas.Draft202012Id)
 			.Type(SchemaValueType.Object)
 			.Properties(
 				("trigger_value", new JsonSchemaBuilder().Type(SchemaValueType.String)),

@@ -648,6 +648,7 @@ public class ConditionalTests
 	public void ConditionsUseJsonPropertyName()
 	{
 		JsonSchema expected = new JsonSchemaBuilder()
+			.Schema(MetaSchemas.Draft202012Id)
 			.Type(SchemaValueType.Object)
 			.Properties(
 				("switch", new JsonSchemaBuilder().Type(SchemaValueType.Boolean)),
