@@ -14,8 +14,6 @@ This is only a minor version bump because this package does not itself introduce
 
 The package now also includes all .Net version builds; 10.0 was previously left out.
 
-# [9.6.1](https://github.com/json-everything/json-everything/pull/1075) {#release-schema-9.6.1}
-
 Minor bug fix in `hostname` format validation for Draft 6 and v1.
 
 # [9.6.0](https://github.com/json-everything/json-everything/pull/1062) {#release-schema-9.6.0}

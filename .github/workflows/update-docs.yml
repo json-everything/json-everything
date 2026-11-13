@@ -35,11 +35,11 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Built Tool
-          path: 'tools/ApiDocsGenerator/bin/Release/net10.0/**/*'
+          path: 'tools/ApiDocsGenerator/bin/Release/net11.0/**/*'
       - name: Generate docs
         run: |
           mkdir -p doc-tool
-          cp -a tools/ApiDocsGenerator/bin/Release/net10.0/. doc-tool
+          cp -a tools/ApiDocsGenerator/bin/Release/net11.0/. doc-tool
           rm -rf ./json-everything-docs/_docs/api/*/
           cd ./doc-tool
           ls
