@@ -87,10 +87,7 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 			var memberContext = new MemberGenerationContext(memberTypeContext, unconditionalAttributes, member.IsMarkedAsNullable());
 			memberContext.GenerateIntents();
 
-			var name = SchemaGeneratorConfiguration.Current.PropertyNameResolver!(member);
-			var nameAttribute = unconditionalAttributes.OfType<JsonPropertyNameAttribute>().FirstOrDefault();
-			if (nameAttribute != null)
-				name = nameAttribute.Name;
+			var name = ResolveName(member, typeContext.Type);
 
 			if (unconditionalAttributes.OfType<ObsoleteAttribute>().Any())
 			{
@@ -148,11 +145,11 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 			{
 				var strictProperties = strictPropertyDefinitions.Where(x => Equals(x.Key.Item1, conditionKey))
 					.ToDictionary(x => x.Key.Item2, x => x.Value);
-				var thenSubschema = GenerateThen(consequences, strictProperties);
+				var thenSubschema = GenerateThen(consequences, strictProperties, typeContext.Type);
 
 				if (thenSubschema != null)
 				{
-					context.Intents.Add(GenerateIf(conditionGroups[0]));
+					context.Intents.Add(GenerateIf(conditionGroups[0], typeContext.Type));
 					context.Intents.Add(thenSubschema);
 				}
 			}
@@ -168,12 +165,12 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 				{
 					var strictProperties = strictPropertyDefinitions.Where(x => Equals(x.Key.Item1, conditionKey))
 						.ToDictionary(x => x.Key.Item2, x => x.Value);
-					var thenSubschema = GenerateThen(consequences, strictProperties);
+					var thenSubschema = GenerateThen(consequences, strictProperties, typeContext.Type);
 
 					if (thenSubschema != null)
 						allOf.Subschemas.Add(
 						[
-							GenerateIf(conditionGroup),
+							GenerateIf(conditionGroup, typeContext.Type),
 							thenSubschema
 						]);
 				}
@@ -184,6 +181,20 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 
 		if (addUnevaluatedProperties)
 			context.Intents.Add(new UnevaluatedPropertiesIntent());
+	}
+
+	private static string ResolveName(MemberInfo member, Type type)
+	{
+		var nameAttribute = member.GetCustomAttribute<JsonPropertyNameAttribute>();
+		if (nameAttribute != null) return nameAttribute.Name;
+
+#if NET11_0_OR_GREATER
+		var policy = member.GetCustomAttribute<JsonNamingPolicyAttribute>()?.NamingPolicy ??
+		             type.GetCustomAttribute<JsonNamingPolicyAttribute>(false)?.NamingPolicy;
+		if (policy != null) return policy.ConvertName(member.Name);
+#endif
+
+		return SchemaGeneratorConfiguration.Current.PropertyNameResolver!(member);
 	}
 
 	private static IEnumerable<(IConditionalAttribute Attribute, MemberInfo Member)> ExpandEnumConditions(IConditionalAttribute condition, IEnumerable<MemberInfo> members)
@@ -222,7 +233,7 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 		yield return (condition, member);
 	}
 
-	private static IfIntent GenerateIf(IEnumerable<(IConditionalAttribute Attribute, MemberInfo Member)> conditions)
+	private static IfIntent GenerateIf(IEnumerable<(IConditionalAttribute Attribute, MemberInfo Member)> conditions, Type objectType)
 	{
 		static void AddPotentialValue(SchemaGenerationContextBase context, JsonNode? newValue)
 		{
@@ -248,7 +259,7 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 		var required = new List<string>();
 		foreach (var condition in conditions)
 		{
-			var name = SchemaGeneratorConfiguration.Current.PropertyNameResolver!(condition.Member);
+			var name = ResolveName(condition.Member, objectType);
 			if (!properties.TryGetValue(name, out var context))
 				properties[name] = context = new AdHocGenerationContext();
 			switch (condition.Attribute)
@@ -280,7 +291,7 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 	}
 
 	private static ThenIntent? GenerateThen(List<(MemberInfo member, ConditionalAttribute attribute)> consequences,
-		Dictionary<string, MemberGenerationContext> prebuiltMemberContexts)
+		Dictionary<string, MemberGenerationContext> prebuiltMemberContexts, Type objectType)
 	{
 		var applicable = consequences.Where(x => x.attribute is IAttributeHandler); // should be all
 		var required = consequences.Where(x => x.attribute is RequiredAttribute)
@@ -289,7 +300,7 @@ internal class ObjectSchemaGenerator : ISchemaGenerator
 		var properties = prebuiltMemberContexts;
 		foreach (var consequence in applicable.GroupBy(x => x.member))
 		{
-			var name = SchemaGeneratorConfiguration.Current.PropertyNameResolver!(consequence.Key);
+			var name = ResolveName(consequence.Key, objectType);
 			if (properties.TryGetValue(name, out var localContext))
 				localContext = new MemberGenerationContext(localContext);
 			else

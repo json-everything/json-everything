@@ -1658,4 +1658,48 @@ public class SourceGeneratorTests
 
 		AssertEqual(expected, actual);
 	}
+
+#if NET11_0_OR_GREATER
+	[Test]
+	public void ModelWithNamingPolicy_PolicyOverridesNamingConvention()
+	{
+		var expectedJson = """
+		{
+		  "$schema": "https://json-schema.org/draft/2020-12/schema",
+		  "$id": "urn:jsonschema:Json.Schema.Generation.Tests.SourceGeneration.TestModels.ModelWithNamingPolicy",
+		  "type": "object",
+		  "properties": {
+		    "FIRST_VALUE": { "type": "string" },
+		    "second-value": { "type": "string" },
+		    "Third": { "type": "string" },
+		    "Fourth": { "type": "string" }
+		  }
+		}
+		""";
+		var expected = JsonSchema.FromText(expectedJson, new BuildOptions { SchemaRegistry = new SchemaRegistry() });
+		var actual = GeneratedJsonSchemas.TestModels_ModelWithNamingPolicy;
+
+		AssertEqual(expected, actual);
+	}
+
+	[Test]
+	public void ModelWithMemberNamingPolicy_PolicyOverridesNamingConvention()
+	{
+		var expectedJson = """
+		{
+		  "$schema": "https://json-schema.org/draft/2020-12/schema",
+		  "$id": "urn:jsonschema:Json.Schema.Generation.Tests.SourceGeneration.TestModels.ModelWithMemberNamingPolicy",
+		  "type": "object",
+		  "properties": {
+		    "firstValue": { "type": "string" },
+		    "SecondValue": { "type": "string" }
+		  }
+		}
+		""";
+		var expected = JsonSchema.FromText(expectedJson, new BuildOptions { SchemaRegistry = new SchemaRegistry() });
+		var actual = GeneratedJsonSchemas.TestModels_ModelWithMemberNamingPolicy;
+
+		AssertEqual(expected, actual);
+	}
+#endif
 }
