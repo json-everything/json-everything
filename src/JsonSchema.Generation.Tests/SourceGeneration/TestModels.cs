@@ -732,4 +732,34 @@ public static class TestModels
 		[Required(ConditionGroup = "group")]
 		public string? Other { get; set; }
 	}
+
+#if NET11_0_OR_GREATER
+	/// <summary>
+	/// The `[JsonNamingPolicy]` attribute overrides the naming convention; `[JsonPropertyName]` overrides both.
+	/// </summary>
+	[GenerateJsonSchema(PropertyNaming = NamingConvention.CamelCase)]
+	[JsonNamingPolicy(JsonKnownNamingPolicy.SnakeCaseUpper)]
+	public class ModelWithNamingPolicy
+	{
+		public string FirstValue { get; set; } = string.Empty;
+		[JsonNamingPolicy(JsonKnownNamingPolicy.KebabCaseLower)]
+		public string SecondValue { get; set; } = string.Empty;
+		[JsonPropertyName("Third")]
+		public string ThirdValue { get; set; } = string.Empty;
+		[JsonNamingPolicy(JsonKnownNamingPolicy.KebabCaseLower)]
+		[JsonPropertyName("Fourth")]
+		public string FourthValue { get; set; } = string.Empty;
+	}
+
+	/// <summary>
+	/// A member-level `[JsonNamingPolicy]` overrides the naming convention for that member only.
+	/// </summary>
+	[GenerateJsonSchema(PropertyNaming = NamingConvention.CamelCase)]
+	public class ModelWithMemberNamingPolicy
+	{
+		public string FirstValue { get; set; } = string.Empty;
+		[JsonNamingPolicy(JsonKnownNamingPolicy.PascalCase)]
+		public string secondValue { get; set; } = string.Empty;
+	}
+#endif
 }

@@ -51,6 +51,8 @@ internal static class TypeAnalyzer
 			}
 		}
 
+		propertyNaming = GetNamingPolicy(typeSymbol) ?? propertyNaming;
+
 		var typeKind = DetermineTypeKind(typeSymbol);
 		var enumFormat = typeKind == TypeKind.Enum
 			? CodeEmitterHelpers.DetectEnumFormat(typeSymbol) ?? defaultEnumFormat
@@ -677,7 +679,26 @@ internal static class TypeAnalyzer
 
 		return jsonPropertyNameAttr is { ConstructorArguments.Length: > 0 }
 			? jsonPropertyNameAttr.ConstructorArguments[0].Value?.ToString() ?? member.Name
-			: ApplyNamingConvention(member.Name, naming);
+			: ApplyNamingConvention(member.Name, GetNamingPolicy(member) ?? naming);
+	}
+
+	private static NamingConvention? GetNamingPolicy(ISymbol symbol)
+	{
+		var attribute = symbol.GetAttributes()
+			.FirstOrDefault(a => a.AttributeClass?.Name == "JsonNamingPolicyAttribute");
+
+		if (attribute is not { ConstructorArguments.Length: > 0 }) return null;
+
+		return attribute.ConstructorArguments[0].Value switch
+		{
+			1 => NamingConvention.CamelCase,
+			2 => NamingConvention.LowerSnakeCase,
+			3 => NamingConvention.UpperSnakeCase,
+			4 => NamingConvention.KebabCase,
+			5 => NamingConvention.UpperKebabCase,
+			6 => NamingConvention.PascalCase,
+			_ => null
+		};
 	}
 
 	private static string ApplyNamingConvention(string name, NamingConvention naming) =>

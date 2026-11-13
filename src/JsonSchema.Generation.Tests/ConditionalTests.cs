@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using NUnit.Framework;
 
 using static Json.Schema.Generation.Tests.AssertionExtensions;
@@ -627,5 +628,76 @@ public class ConditionalTests
 		};
 
 		VerifyGeneration<Author>(expected, config);
+	}
+	[If(nameof(Toggle), true, "group")]
+	public class RenamedProperties
+	{
+		[JsonPropertyName("switch")]
+		public bool Toggle { get; set; }
+
+		[JsonPropertyName("value")]
+		[MinLength(5, ConditionGroup = "group")]
+		public string Affected { get; set; }
+
+		[JsonPropertyName("other")]
+		[Required(ConditionGroup = "group")]
+		public string Other { get; set; }
+	}
+
+	[Test]
+	public void ConditionsUseJsonPropertyName()
+	{
+		JsonSchema expected = new JsonSchemaBuilder()
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("switch", new JsonSchemaBuilder().Type(SchemaValueType.Boolean)),
+				("value", new JsonSchemaBuilder().Type(SchemaValueType.String)),
+				("other", new JsonSchemaBuilder().Type(SchemaValueType.String))
+			)
+			.If(new JsonSchemaBuilder()
+				.Properties(
+					("switch", new JsonSchemaBuilder().Const(true))
+				)
+				.Required("switch")
+			)
+			.Then(new JsonSchemaBuilder()
+				.Properties(
+					("value", new JsonSchemaBuilder().Type(SchemaValueType.String).MinLength(5))
+				)
+				.Required("other")
+			);
+
+		VerifyGeneration<RenamedProperties>(expected);
+	}
+
+	[Test]
+	public void StrictConditionsUseJsonPropertyName()
+	{
+		JsonSchema expected = new JsonSchemaBuilder()
+			.Type(SchemaValueType.Object)
+			.Properties(
+				("switch", new JsonSchemaBuilder().Type(SchemaValueType.Boolean))
+			)
+			.If(new JsonSchemaBuilder()
+				.Properties(
+					("switch", new JsonSchemaBuilder().Const(true))
+				)
+				.Required("switch")
+			)
+			.Then(new JsonSchemaBuilder()
+				.Properties(
+					("value", new JsonSchemaBuilder().Type(SchemaValueType.String).MinLength(5)),
+					("other", new JsonSchemaBuilder().Type(SchemaValueType.String))
+				)
+				.Required("other")
+			)
+			.UnevaluatedProperties(false);
+
+		var config = new SchemaGeneratorConfiguration
+		{
+			StrictConditionals = true
+		};
+
+		VerifyGeneration<RenamedProperties>(expected, config);
 	}
 }
