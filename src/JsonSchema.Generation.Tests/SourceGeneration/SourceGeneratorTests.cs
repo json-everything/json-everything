@@ -1591,4 +1591,38 @@ public class SourceGeneratorTests
 
 		AssertEqual(expected, actual);
 	}
+
+	[Test]
+	public void ModelWithInexactDoubleConstraints_EmitsValuesAsWritten()
+	{
+		var expectedJson = """
+		{
+		  "$schema": "https://json-schema.org/draft/2020-12/schema",
+		  "$id": "urn:jsonschema:Json.Schema.Generation.Tests.SourceGeneration.TestModels.ModelWithInexactDoubleConstraints",
+		  "type": "object",
+		  "properties": {
+		    "Default": {
+		      "type": "number",
+		      "minimum": 0.1,
+		      "maximum": 10.1,
+		      "exclusiveMinimum": 1.1,
+		      "exclusiveMaximum": 4.789,
+		      "multipleOf": 3.14
+		    },
+		    "Compatible": {
+		      "type": "number",
+		      "minimum": 0.1,
+		      "maximum": 10.1,
+		      "exclusiveMinimum": 1.1,
+		      "exclusiveMaximum": 4.789,
+		      "multipleOf": 3.14
+		    }
+		  }
+		}
+		""";
+		var expected = JsonSchema.FromText(expectedJson, new BuildOptions { SchemaRegistry = new SchemaRegistry() });
+		var actual = GeneratedJsonSchemas.TestModels_ModelWithInexactDoubleConstraints;
+
+		AssertEqual(expected, actual);
+	}
 }
