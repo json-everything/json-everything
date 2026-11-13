@@ -39,7 +39,7 @@ public class ExclusiveMinimumAttribute : ConditionalAttribute, INestableAttribut
 	/// </remarks>
 	public ExclusiveMinimumAttribute(double value, bool useNet10CompatibleRounding = false)
 	{
-		Value = value.ConvertToDecimal(useNet10CompatibleRounding);
+		Value = value.ClampToDecimal(useNet10CompatibleRounding);
 	}
 
 	void IAttributeHandler.AddConstraints(SchemaGenerationContextBase context, Attribute attribute)
