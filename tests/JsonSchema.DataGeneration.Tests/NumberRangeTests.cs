@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using FluentAssertions;
 using NUnit.Framework;
 
 namespace Json.Schema.DataGeneration.Tests;
@@ -78,7 +77,7 @@ public class NumberRangeTests
 	{
 		var result = NumberRange.Union(a, b);
 
-		result.Should().BeEquivalentTo(expected);
+		Assert.That(result, Is.EquivalentTo(expected));
 	}
 
 	public static IEnumerable<TestCaseData> IntersectionCases
@@ -153,6 +152,6 @@ public class NumberRangeTests
 	{
 		var result = NumberRange.Intersection(a, b);
 
-		result.Should().BeEquivalentTo(expected);
+		Assert.That(result, Is.EquivalentTo(expected));
 	}
 }

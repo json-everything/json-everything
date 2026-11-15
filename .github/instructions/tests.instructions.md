@@ -11,7 +11,7 @@ This repository uses NUnit-based test projects for package validation.
 - Use NUnit attributes (`[Test]`, `[TestCase]`, `[TestCaseSource]`, etc.).
 - Prefer `Assert.That(...)` style assertions for consistency.
 - Prefer NUnit assertions over other assertion frameworks.
-- Some projects still reference FluentAssertions, but it is being phased out. Do not introduce FluentAssertions in new tests, and prefer NUnit when updating existing tests.
+- Do not use FluentAssertions or any other "natural language" assertion library. FluentAssertions has been removed from the repository.
 - Reuse helpers from `tests/TestHelpers/` where available.
 
 ## Test Placement

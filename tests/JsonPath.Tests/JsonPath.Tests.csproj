@@ -7,10 +7,6 @@
   </PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="FluentAssertions" Version="8.11.0" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<ProjectReference Include="..\..\src\JsonPath\JsonPath.csproj" />
 		<ProjectReference Include="..\TestHelpers\TestHelpers.csproj" />
 	</ItemGroup>

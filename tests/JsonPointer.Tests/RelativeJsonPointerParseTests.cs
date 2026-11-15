@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Linq;
-using FluentAssertions;
 using NUnit.Framework;
 
 namespace Json.Pointer.Tests;
@@ -59,12 +58,12 @@ public class RelativeJsonPointerParseTests
 	{
 		var pointer = RelativeJsonPointer.Parse(pointerString);
 
-		pointer.ParentSteps.Should().Be((uint)parentSteps);
-		pointer.ArrayIndexManipulator.Should().Be(indexManipulation);
-		pointer.Pointer.SegmentCount.Should().Be(segments.Length);
+		Assert.That(pointer.ParentSteps, Is.EqualTo((uint)parentSteps));
+		Assert.That(pointer.ArrayIndexManipulator, Is.EqualTo(indexManipulation));
+		Assert.That(pointer.Pointer.SegmentCount, Is.EqualTo(segments.Length));
 		for (int i = 0; i < pointer.Pointer.SegmentCount; i++)
 		{
-			pointer.Pointer.GetSegment(i).Decode().Should().Be(segments[i]);
+			Assert.That(pointer.Pointer.GetSegment(i).Decode(), Is.EqualTo(segments[i]));
 		}
 	}
 
@@ -73,12 +72,12 @@ public class RelativeJsonPointerParseTests
 	{
 		Assert.That(RelativeJsonPointer.TryParse(pointerString, out var pointer), Is.True);
 
-		pointer.ParentSteps.Should().Be((uint)parentSteps);
-		pointer.ArrayIndexManipulator.Should().Be(indexManipulation);
-		pointer.Pointer.SegmentCount.Should().Be(segments.Length);
+		Assert.That(pointer.ParentSteps, Is.EqualTo((uint)parentSteps));
+		Assert.That(pointer.ArrayIndexManipulator, Is.EqualTo(indexManipulation));
+		Assert.That(pointer.Pointer.SegmentCount, Is.EqualTo(segments.Length));
 		for (int i = 0; i < pointer.Pointer.SegmentCount; i++)
 		{
-			pointer.Pointer.GetSegment(i).Decode().Should().Be(segments[i]);
+			Assert.That(pointer.Pointer.GetSegment(i).Decode(), Is.EqualTo(segments[i]));
 		}
 	}
 

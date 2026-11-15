@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Linq;
-using FluentAssertions;
 using NUnit.Framework;
 
 namespace Json.Pointer.Tests;
@@ -71,7 +70,7 @@ public class JsonPointerParseTests
 	{
 		var pointer = JsonPointer.Parse(pointerString);
 
-		pointer.SegmentCount.Should().Be(segments.Length);
+		Assert.That(pointer.SegmentCount, Is.EqualTo(segments.Length));
 		for (int i = 0; i < pointer.SegmentCount; i++)
 		{
 			var segment = pointer.GetSegment(i).Decode();
@@ -86,7 +85,7 @@ public class JsonPointerParseTests
 	{
 		Assert.That(JsonPointer.TryParse(pointerString, out var pointer), Is.True);
 
-		pointer.SegmentCount.Should().Be(segments.Length);
+		Assert.That(pointer.SegmentCount, Is.EqualTo(segments.Length));
 		for (int i = 0; i < pointer.SegmentCount; i++)
 		{
 			var segment = pointer.GetSegment(i).Decode();

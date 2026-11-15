@@ -1,5 +1,4 @@
-﻿using FluentAssertions;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace Json.Schema.DataGeneration.Tests;
 
@@ -22,7 +21,7 @@ public class NumberRangeSetTests
 
 		var result = a * b;
 
-		result.Should().BeEquivalentTo(expected);
+		Assert.That(result.Ranges, Is.EquivalentTo(expected.Ranges));
 	}
 
 	[Test]
@@ -42,7 +41,7 @@ public class NumberRangeSetTests
 
 		var result = b * a;
 
-		result.Should().BeEquivalentTo(expected);
+		Assert.That(result.Ranges, Is.EquivalentTo(expected.Ranges));
 	}
 
 	[Test]
