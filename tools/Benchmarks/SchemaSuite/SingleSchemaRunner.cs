@@ -9,9 +9,10 @@ using NJsonSchemaImpl = NJsonSchema.JsonSchema;
 namespace Json.Benchmarks.SchemaSuite;
 
 [MemoryDiagnoser]
-// [SimpleJob(RuntimeMoniker.Net80, baseline:true)]
-// [SimpleJob(RuntimeMoniker.Net90)]
+[SimpleJob(RuntimeMoniker.Net80, baseline: true)]
+[SimpleJob(RuntimeMoniker.Net90)]
 [SimpleJob(RuntimeMoniker.Net10_0)]
+[SimpleJob(RuntimeMoniker.Net11_0)]
 [EventPipeProfiler(EventPipeProfile.CpuSampling)]
 public class SingleSchemaRunner
 {
@@ -415,10 +416,11 @@ public class SingleSchemaRunner
 		return n;
 	}
 
-	//[Benchmark]
-	//[Arguments(10)]
-	//[Arguments(100)]
-	//[Arguments(1000)]
+	[Benchmark]
+	[Arguments(10)]
+	[Arguments(100)]
+	[Arguments(1000)]
+	[Arguments(100000)]
 	public int JsonSchemaNetEvaluateOnly(int n)
 	{
 		for (int j = 0; j < n; j++)
@@ -445,9 +447,9 @@ public class SingleSchemaRunner
 	}
 
 	[Benchmark]
-	//[Arguments(10)]
-	//[Arguments(100)]
-	//[Arguments(1000)]
+	[Arguments(10)]
+	[Arguments(100)]
+	[Arguments(1000)]
 	[Arguments(100000)]
 	public int JsonSchemaNet(int n)
 	{
@@ -461,11 +463,11 @@ public class SingleSchemaRunner
 		return n;
 	}
 
-	[Benchmark]
+	//[Benchmark]
 	//[Arguments(10)]
 	//[Arguments(100)]
 	//[Arguments(1000)]
-	[Arguments(100000)]
+	//[Arguments(100000)]
 	public int NJsonSchema(int n)
 	{
 		var instanceJson = _instance.GetRawText();

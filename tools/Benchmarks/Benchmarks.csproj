@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="BenchmarkDotNet" Version="0.15.8" />
+    <PackageReference Include="BenchmarkDotNet" Version="0.16.0-preview.2" />
     <PackageReference Include="Humanizer.Core" Version="3.0.10" />
 	<!-- Microsoft.CodeAnalysis.Analyzers is a downgrade reference to avoid
 		 an analyzer error present in v3.3.4+.

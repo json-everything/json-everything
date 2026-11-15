@@ -13,104 +13,70 @@ namespace Json.Benchmarks.SchemaSuite;
 [SimpleJob(RuntimeMoniker.Net80, baseline:true)]
 [SimpleJob(RuntimeMoniker.Net90)]
 [SimpleJob(RuntimeMoniker.Net10_0)]
+[SimpleJob(RuntimeMoniker.Net11_0)]
 public class TestSuiteRunner
 {
 	private const string _benchmarkOffset = @"../../../../../";
-	private const string _testCasesPath = @"../../../../ref-repos/JSON-Schema-Test-Suite/tests";
-	private const string _remoteSchemasPath = @"../../../../ref-repos/JSON-Schema-Test-Suite/remotes";
+	private const string _testCasesPath = @"../../../../ref-repos/JSON-Schema-Test-Suite/validation/tests";
 
 	private const bool _runDraftNext = true;
 
+	private static readonly JsonSerializerOptions _serializerOptions = new()
+	{
+		PropertyNameCaseInsensitive = true
+	};
+
+	private static readonly string[] _supportedProposals =
+	[
+		//"propertyDependencies"
+	];
+
 	public static IEnumerable<TestCollection> GetAllTests()
 	{
-		return GetTests("draft6")
-			.Concat(GetTests("draft7"))
-			.Concat(GetTests("draft2019-09"))
-			.Concat(GetTests("draft2020-12"))
-			.Concat(_runDraftNext ? GetTests("draft-next") : []);
+		return GetTests(SuiteDialect.Draft06)
+			.Concat(GetTests(SuiteDialect.Draft07))
+			.Concat(GetTests(SuiteDialect.Draft201909))
+			.Concat(GetTests(SuiteDialect.Draft202012))
+			.Concat(_runDraftNext ? GetTests(SuiteDialect.V1) : []);
 	}
 
-	private static IEnumerable<TestCollection> GetTests(string draftFolder)
+	private static IEnumerable<TestCollection> GetTests(SuiteDialect suiteDialect)
 	{
-		// ReSharper disable once HeuristicUnreachableCode
-		var testsPath = Path.Combine(Directory.GetCurrentDirectory(), _benchmarkOffset, $"{draftFolder}/")
+		var testsPath = Path.Combine(Directory.GetCurrentDirectory(), _benchmarkOffset, _testCasesPath)
 			.AdjustForPlatform();
 		if (!Directory.Exists(testsPath)) yield break;
 
 		var fileNames = Directory.GetFiles(testsPath, "*.json", SearchOption.AllDirectories);
-		var evaluationOptions = new EvaluationOptions
-		{
-			OutputFormat = OutputFormat.Hierarchical,
-		};
 
 		foreach (var fileName in fileNames)
 		{
-			var shortFileName = Path.GetFileNameWithoutExtension(fileName);
-
-			// adjust for format
-			evaluationOptions.RequireFormatValidation = fileName.Contains("format/".AdjustForPlatform()) &&
-											  // uri-template will throw an exception as it's explicitly unsupported
-											  shortFileName != "uri-template";
+			var filePath = fileName.Split('/', '\\');
+			var proposals = Array.IndexOf(filePath, "proposals");
+			if (proposals != -1 && proposals + 1 < filePath.Length)
+			{
+				var proposal = filePath[proposals + 1];
+				if (!_supportedProposals.Contains(proposal)) continue;
+			}
 
 			var contents = File.ReadAllText(fileName);
-			var collections = JsonSerializer.Deserialize<List<TestCollection>>(contents, new JsonSerializerOptions
-			{
-				PropertyNameCaseInsensitive = true
-			});
+			var testFile = JsonSerializer.Deserialize<TestFile>(contents, _serializerOptions);
 
-			foreach (var collection in collections!)
+			foreach (var collection in testFile!.Tests)
 			{
+				if (!suiteDialect.IsCompatible(collection.Compatibility)) continue;
+				if (!suiteDialect.SupportsTags(collection)) continue;
+
 				collection.IsOptional = fileName.Contains("optional");
-				var dialect = draftFolder switch
+				collection.Dialect = suiteDialect.Dialect;
+				collection.EvaluationOptions = new EvaluationOptions
 				{
-					"draft6" => Dialect.Draft06,
-					"draft7" => Dialect.Draft07,
-					"draft2019-09" => Dialect.Draft201909,
-					"draft2020-12" => Dialect.Draft202012,
-					"draft-next" => Dialect.V1,
-					_ => throw new ArgumentOutOfRangeException(nameof(draftFolder), $"{draftFolder} is unsupported")
+					OutputFormat = OutputFormat.Hierarchical,
+					RequireFormatValidation = SuiteDialect.RequiresFormatValidation(collection)
 				};
-
-				collection.BuildOptions = new BuildOptions
-				{
-					Dialect = dialect,
-					SchemaRegistry = new()
-				};
-				collection.EvaluationOptions = evaluationOptions;
 
 				yield return collection;
 			}
 		}
-	}
-
-	private static void LoadRemoteSchemas()
-	{
-		// ReSharper disable once HeuristicUnreachableCode
-		var remotesPath = Path.Combine(Directory.GetCurrentDirectory(), _benchmarkOffset, _remoteSchemasPath)
-			.AdjustForPlatform();
-		if (!Directory.Exists(remotesPath)) throw new Exception("Cannot find remotes folder");
-
-		var fileNames = Directory.GetFiles(remotesPath, "*.json", SearchOption.AllDirectories);
-
-		foreach (var fileName in fileNames)
-		{
-			try
-			{
-				var schema = JsonSchema.FromFile(fileName);
-				var uri = new Uri(fileName.Replace(remotesPath, "http://localhost:1234").Replace('\\', '/'));
-				SchemaRegistry.Global.Register(uri, schema);
-			}
-			catch (JsonSchemaException)
-			{
-			}
-		}
-	}
-
-	[GlobalSetup]
-	public void BenchmarkSetup()
-	{
-		LoadRemoteSchemas();
-		_ = GetAllTests();
 	}
 
 	[Benchmark]
@@ -127,10 +93,17 @@ public class TestSuiteRunner
 		{
 			foreach (var test in collection.Tests)
 			{
-				for (int j = 0; j < n; j++)
+				try
 				{
-					var schema = JsonSchema.Build(collection.Schema, collection.BuildOptions);
-					_ = schema.Evaluate(test.Data, collection.EvaluationOptions);
+					for (int j = 0; j < n; j++)
+					{
+						var schema = JsonSchema.Build(collection.Schema, collection.CreateBuildOptions());
+						_ = schema.Evaluate(test.Data, collection.EvaluationOptions);
+					}
+				}
+				catch when (collection.IsOptional)
+				{
+					// optional tests may cover functionality that is explicitly unsupported
 				}
 				i++;
 			}
@@ -153,10 +126,17 @@ public class TestSuiteRunner
 		{
 			foreach (var test in collection.Tests)
 			{
-				var schema = JsonSchema.Build(collection.Schema, collection.BuildOptions);
-				for (int j = 0; j < n; j++)
+				try
 				{
-					_ = schema.Evaluate(test.Data, collection.EvaluationOptions);
+					var schema = JsonSchema.Build(collection.Schema, collection.CreateBuildOptions());
+					for (int j = 0; j < n; j++)
+					{
+						_ = schema.Evaluate(test.Data, collection.EvaluationOptions);
+					}
+				}
+				catch when (collection.IsOptional)
+				{
+					// optional tests may cover functionality that is explicitly unsupported
 				}
 				i++;
 			}
