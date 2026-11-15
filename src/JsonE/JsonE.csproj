@@ -2,36 +2,18 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net8.0;net9.0;net10.0;net11.0</TargetFrameworks>
-    <LangVersion>latest</LangVersion>
-    <Nullable>enable</Nullable>
     <NoWarn>CS1570,IDE0290</NoWarn>
-    <IsAotCompatible Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net7.0'))">true</IsAotCompatible>
     <RootNamespace>Json.JsonE</RootNamespace>
     <AssemblyName>JsonE.Net</AssemblyName>
     <DocumentationFile>JsonE.Net.xml</DocumentationFile>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>../../json-everything.snk</AssemblyOriginatorKeyFile>
 
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <Version>3.1.0</Version>
     <FileVersion>3.1.0</FileVersion>
     <AssemblyVersion>3.0.0.0</AssemblyVersion>
-    <Authors>Greg Dennis</Authors>
     <Description>JSON-e built on the System.Text.Json namespace</Description>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageIcon>json-logo-256.png</PackageIcon>
-    <PackageProjectUrl>https://github.com/json-everything/json-everything</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/json-everything/json-everything</RepositoryUrl>
     <PackageTags>json json-e jsone template transform</PackageTags>
     <PackageReleaseNotes>Release notes can be found at https://docs.json-everything.net/rn-json-e/</PackageReleaseNotes>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-	  <PackageLicenseFile>OSMFEULA.txt</PackageLicenseFile>
-	  <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-
-    <PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
   </PropertyGroup>
 
   <ItemGroup>
@@ -43,17 +25,10 @@
 
   <ItemGroup>
     <None Include="..\..\tools\ApiDocsGenerator\release-notes\rn-json-e.md" Link="release-notes.md" />
-    <None Include="README.md" Pack="true" PackagePath="\" />
-    <None Include="..\..\Resources\json-logo-256.png" Pack="true" PackagePath="\" />
-    <None Include="..\..\OSMFEULA.txt" Pack="true" PackagePath="OSMFEULA.txt" />
   </ItemGroup>
 
 	<ItemGroup>
     <ProjectReference Include="..\Json.More\Json.More.csproj" />
   </ItemGroup>
-
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Copy SourceFiles="$(TargetDir)$(DocumentationFile)" DestinationFolder="..\..\doc-tool\xml\" SkipUnchangedFiles="True" OverwriteReadOnlyFiles="True" />
-  </Target>
 
 </Project>

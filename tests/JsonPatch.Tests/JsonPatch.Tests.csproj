@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<RootNamespace>Json.Patch.Tests</RootNamespace>
+
+		<JsonSerializerIsReflectionEnabledByDefault Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net7.0'))">false</JsonSerializerIsReflectionEnabledByDefault>
+	</PropertyGroup>
+
+  <ItemGroup>
+		<ProjectReference Include="..\..\src\JsonPatch\JsonPatch.csproj" />
+		<ProjectReference Include="..\..\src\JsonSchema\JsonSchema.csproj" />
+		<ProjectReference Include="..\TestHelpers\TestHelpers.csproj" />
+	</ItemGroup>
+
+</Project>

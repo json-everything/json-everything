@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<RootNamespace>Json.Schema.Generation.Tests</RootNamespace>
+    <JsonSerializerIsReflectionEnabledByDefault>false</JsonSerializerIsReflectionEnabledByDefault>
+    <DocumentationFile>JsonSchema.Net.Generation.Tests.xml</DocumentationFile>
+    <NoWarn>IDE1006,CS8618,CS1591</NoWarn>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\src\JsonSchema.Generation\JsonSchema.Generation.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="true" />
+		<ProjectReference Include="..\TestHelpers\TestHelpers.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<CompilerVisibleProperty Include="JsonSchemaDefaultPropertyNaming" />
+		<CompilerVisibleProperty Include="JsonSchemaDefaultPropertyOrder" />
+		<CompilerVisibleProperty Include="JsonSchemaDefaultEnumFormat" />
+	</ItemGroup>
+
+</Project>

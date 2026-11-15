@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<RootNamespace>Json.JsonE.Tests</RootNamespace>
+		<JsonSerializerIsReflectionEnabledByDefault Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net7.0'))">false</JsonSerializerIsReflectionEnabledByDefault>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\src\JsonE\JsonE.csproj" />
+		<ProjectReference Include="..\TestHelpers\TestHelpers.csproj" />
+		<ProjectReference Include="..\..\src\Yaml2JsonNode\Yaml2JsonNode.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="Files\**\*">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+
+</Project>

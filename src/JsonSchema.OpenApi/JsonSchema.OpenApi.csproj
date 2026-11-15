@@ -2,36 +2,19 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net8.0;net9.0;net10.0;net11.0</TargetFrameworks>
-    <LangVersion>latest</LangVersion>
-    <Nullable>enable</Nullable>
     <NoWarn>IDE0290</NoWarn>
-    <IsAotCompatible Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net7.0'))">true</IsAotCompatible>
     <RootNamespace>Json.Schema.OpenApi</RootNamespace>
     <AssemblyName>JsonSchema.Net.OpenApi</AssemblyName>
     <DocumentationFile>JsonSchema.Net.OpenApi.xml</DocumentationFile>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>../../json-everything.snk</AssemblyOriginatorKeyFile>
 
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <Version>5.1.0</Version>
     <FileVersion>5.1.0</FileVersion>
     <AssemblyVersion>5.0.0.0</AssemblyVersion>
-    <Authors>Greg Dennis</Authors>
     <Description>Extends JsonSchema.Net to support OpenAPI v3.1's JSON Schema vocabulary extension</Description>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIcon>openapi.png</PackageIcon>
-    <PackageProjectUrl>https://github.com/json-everything/json-everything</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/json-everything/json-everything</RepositoryUrl>
     <PackageTags>json-schema validation schema json openapi open-api api</PackageTags>
     <PackageReleaseNotes>Release notes can be found at https://docs.json-everything.net/rn-json-schema-openapi/</PackageReleaseNotes>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-	  <PackageLicenseFile>OSMFEULA.txt</PackageLicenseFile>
-	  <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-
-    <PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
   </PropertyGroup>
 
   <ItemGroup>
@@ -45,17 +28,11 @@
 
   <ItemGroup>
     <None Include="..\..\tools\ApiDocsGenerator\release-notes\rn-json-schema-openapi.md" Link="release-notes.md" />
-    <None Include="README.md" Pack="true" PackagePath="\" />
     <None Include="..\..\Resources\openapi.png" Pack="true" PackagePath="\" />
-    <None Include="..\..\OSMFEULA.txt" Pack="true" PackagePath="OSMFEULA.txt" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\JsonSchema\JsonSchema.csproj" />
   </ItemGroup>
-
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Copy SourceFiles="$(TargetDir)$(DocumentationFile)" DestinationFolder="..\..\doc-tool\xml\" SkipUnchangedFiles="True" OverwriteReadOnlyFiles="True" />
-  </Target>
 
 </Project>

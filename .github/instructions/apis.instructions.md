@@ -1,5 +1,5 @@
 ---
-applyTo: "src/JsonSchema.Api/**/*.cs,src/JsonSchema.Api.Tests/**/*.cs"
+applyTo: "src/JsonSchema.Api/**/*.cs,tests/JsonSchema.Api.Tests/**/*.cs"
 ---
 
 # API Instructions
@@ -29,5 +29,5 @@ These instructions apply to the `JsonSchema.Api` package and its tests.
 
 ## Tests
 
-- Add or update tests in `src/JsonSchema.Api.Tests/` for API behavior changes.
+- Add or update tests in `tests/JsonSchema.Api.Tests/` for API behavior changes.
 - Verify status code, content type, and error payload shape when changing validation paths.

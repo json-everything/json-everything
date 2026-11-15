@@ -9,8 +9,8 @@ This repository is a multi-package .NET library suite centered on JSON tooling f
 ## Solution Structure
 
 - Core libraries are under `src/<PackageName>/`.
-- Tests are typically under `src/<PackageName>.Tests/`.
-- Shared testing helpers are in `src/TestHelpers/`.
+- Tests are under `tests/<PackageName>.Tests/`.
+- Shared testing helpers are in `tests/TestHelpers/`.
 - Supporting tools are in `tools/`.
 - A Blazor WebAssembly site lives in `json-everything.net/`.
 
@@ -25,7 +25,10 @@ This repository is a multi-package .NET library suite centered on JSON tooling f
 
 - Library projects are commonly multi-targeted (`netstandard2.0`, `net8.0`, `net9.0`, `net10.0`).
 - Do not remove target frameworks unless explicitly requested.
-- Preserve signing, package metadata, and release-note links in project files unless task requirements say otherwise.
+- Preserve signing, package metadata, and release-note links unless task requirements say otherwise.
+- Settings shared by every project in a folder live in `src/Directory.Build.props` (libraries) and `tests/Directory.Build.props` (tests). Do not repeat them in project files; a project file holds only what is specific to that project or overrides a shared default.
+- There is no root-level props file. Settings common to both folders are duplicated in the two files.
+- A library that assembles its own package contents sets `IncludeSharedPackageFiles` to `false` (see `src/JsonSchema/JsonSchema.csproj`).
 
 ## Dependency Direction
 

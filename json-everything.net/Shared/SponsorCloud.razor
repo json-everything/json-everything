@@ -1,4 +1,5 @@
 ﻿@using JsonEverythingNet.Models
+@using JsonEverythingNet.Services
 
 <div id="@_fieldId" class="bubble-field">
 	@foreach (var item in Data)
@@ -26,7 +27,7 @@
 	{
 		if (Data.Count == 0) return;
 
-		await JsRuntime.InvokeVoidAsync("sponsorCloudLayout.layout", _fieldId);
+		await JsRuntime.Call("sponsorCloudLayout.layout", [_fieldId]);
 
 		await base.OnAfterRenderAsync(firstRender);
 	}

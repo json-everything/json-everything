@@ -20,8 +20,8 @@ dotnet test --no-restore --verbosity normal --logger:"trx;LogFileName=test-resul
 Focused examples:
 
 ```bash
-dotnet test src/JsonSchema.Tests/JsonSchema.Tests.csproj
-dotnet test src/JsonSchema.Api.Tests/JsonSchema.Api.Tests.csproj
+dotnet test tests/JsonSchema.Tests/JsonSchema.Tests.csproj
+dotnet test tests/JsonSchema.Api.Tests/JsonSchema.Api.Tests.csproj
 ```
 
 Optional local diagnostic output:

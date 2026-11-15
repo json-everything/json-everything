@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<RootNamespace>Json.Schema.Generation.DataAnnotations.Tests</RootNamespace>
+		<NoWarn>IDE1006,CS8618,CS1591</NoWarn>
+		<JsonSerializerIsReflectionEnabledByDefault Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net7.0'))">false</JsonSerializerIsReflectionEnabledByDefault>
+		<DocumentationFile>JsonSchema.Net.Generation.DataAnnotations.Tests.xml</DocumentationFile>
+	</PropertyGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net481' ">
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+  </ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\src\JsonSchema.Generation\JsonSchema.Generation.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="true" />
+		<ProjectReference Include="..\..\src\JsonSchema.Generation.DataAnnotations\JsonSchema.Generation.DataAnnotations.csproj" />
+		<ProjectReference Include="..\JsonSchema.Generation.Tests\JsonSchema.Generation.Tests.csproj" />
+	</ItemGroup>
+
+</Project>

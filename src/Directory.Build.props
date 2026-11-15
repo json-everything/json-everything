@@ -1,0 +1,39 @@
+<Project>
+
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)../json-everything.snk</AssemblyOriginatorKeyFile>
+    <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
+    <IsAotCompatible Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net7.0'))">true</IsAotCompatible>
+    <PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
+
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <Authors>Greg Dennis</Authors>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIcon>json-logo-256.png</PackageIcon>
+    <PackageProjectUrl>https://github.com/json-everything/json-everything</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/json-everything/json-everything</RepositoryUrl>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <PackageLicenseFile>OSMFEULA.txt</PackageLicenseFile>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+  </PropertyGroup>
+
+  <!--
+    Items and targets are evaluated after every project's properties, so these can depend on what the project sets.
+    A project that assembles its own package contents opts out with IncludeSharedPackageFiles=false.
+  -->
+  <ItemGroup Condition="'$(IsPackable)' != 'false' and '$(IncludeSharedPackageFiles)' != 'false'">
+    <None Include="README.md" Pack="true" PackagePath="\" />
+    <None Include="$(MSBuildThisFileDirectory)..\Resources\json-logo-256.png" Pack="true" PackagePath="\" Condition="'$(PackageIcon)' == 'json-logo-256.png'" />
+    <None Include="$(MSBuildThisFileDirectory)..\OSMFEULA.txt" Pack="true" PackagePath="OSMFEULA.txt" />
+  </ItemGroup>
+
+  <Target Name="CopyDocumentationXml" AfterTargets="PostBuildEvent" Condition="'$(IsPackable)' != 'false' and '$(DocumentationFile)' != ''">
+    <Copy SourceFiles="$(TargetDir)$(DocumentationFile)" DestinationFolder="$(MSBuildThisFileDirectory)..\doc-tool\xml\" SkipUnchangedFiles="True" OverwriteReadOnlyFiles="True" />
+  </Target>
+
+</Project>

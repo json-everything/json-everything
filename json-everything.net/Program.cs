@@ -29,8 +29,12 @@ var themeService = host.Services.GetRequiredService<ThemeService>();
 themeService.SetTheme(isDarkMode);
 
 var jsRuntime = host.Services.GetRequiredService<IJSRuntime>();
-await jsRuntime.InvokeVoidAsync("eval", isDarkMode
-	? "document.documentElement.removeAttribute('data-bs-theme')"
-	: "document.documentElement.setAttribute('data-bs-theme', 'light')");
+await jsRuntime.Call(
+	"eval",
+	[
+		isDarkMode
+			? "document.documentElement.removeAttribute('data-bs-theme')"
+			: "document.documentElement.setAttribute('data-bs-theme', 'light')"
+	]);
 
 await host.RunAsync();

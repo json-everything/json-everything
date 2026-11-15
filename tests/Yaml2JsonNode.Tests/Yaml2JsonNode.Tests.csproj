@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <ImplicitUsings>enable</ImplicitUsings>
+
+	<JsonSerializerIsReflectionEnabledByDefault Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net7.0'))">false</JsonSerializerIsReflectionEnabledByDefault>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Json.More\Json.More.csproj" />
+    <ProjectReference Include="..\TestHelpers\TestHelpers.csproj" />
+    <ProjectReference Include="..\..\src\Yaml2JsonNode\Yaml2JsonNode.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Files\expected-serialized.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Files\yaml-content.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

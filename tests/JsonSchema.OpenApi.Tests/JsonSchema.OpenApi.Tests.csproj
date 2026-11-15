@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<RootNamespace>Json.Schema.OpenApi.Tests</RootNamespace>
+		<JsonSerializerIsReflectionEnabledByDefault Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net7.0'))">false</JsonSerializerIsReflectionEnabledByDefault>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\src\JsonPath\JsonPath.csproj" />
+		<ProjectReference Include="..\..\src\JsonSchema.OpenApi\JsonSchema.OpenApi.csproj" />
+		<ProjectReference Include="..\JsonSchema.Tests\JsonSchema.Tests.csproj" />
+	</ItemGroup>
+
+</Project>

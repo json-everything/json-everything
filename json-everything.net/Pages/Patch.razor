@@ -61,7 +61,7 @@
 					<div class="editor-container">
 						<span class="editor-lang-json">JSON</span>
 						<StandaloneCodeEditor @ref="_patchEditor" Id="editor-patch" ConstructionOptions="BasicOptions"
-							CssClass="h-100"/>
+							CssClass="h-100" OnDidInit="LoadSavedPatch"/>
 					</div>
 				</div>
 				<div class="resize-handle" id="vertical-resize-handle"></div>
@@ -69,7 +69,7 @@
 					<div class="editor-container">
 						<span class="editor-lang-json">JSON</span>
 						<StandaloneCodeEditor @ref="_instanceEditor" Id="editor-instance" ConstructionOptions="BasicOptions"
-							CssClass="h-100"/>
+							CssClass="h-100" OnDidInit="LoadSavedInstance"/>
 					</div>
 				</div>
 			</div>
@@ -89,8 +89,6 @@
 	private StandaloneCodeEditor _patchEditor;
 	private StandaloneCodeEditor _instanceEditor;
 	private StandaloneCodeEditor _outputEditor;
-	private string _savedPatchText = string.Empty;
-	private string _savedInstanceText = string.Empty;
 
 	private readonly PatchOptionsModel _options = new();
 
@@ -139,12 +137,10 @@
 	private StandaloneEditorConstructionOptions BasicOptions(StandaloneCodeEditor _) => EditorOptions.Basic();
 	private StandaloneEditorConstructionOptions ReadOnlyOptions(StandaloneCodeEditor _) => EditorOptions.Readonly();
 
-	protected override async Task OnInitializedAsync()
+	protected override void OnInitialized()
 	{
 		ThemeService.OnThemeChanged += HandleThemeChanged;
-		_savedPatchText = await DataManager.Get("patch") ?? string.Empty;
-		_savedInstanceText = await DataManager.Get("patch-instance") ?? string.Empty;
-		await base.OnInitializedAsync();
+		base.OnInitialized();
 	}
 
 	private static string GetDescription(PatchOperations operation) => operation switch
@@ -265,17 +261,22 @@
 		await DataManager.SaveEditorValue(_instanceEditor, "patch-instance");
 	}
 
+	// Editors can only be used once they've been created, which is signaled by OnDidInit.
+	private async Task LoadSavedPatch()
+	{
+		await DataManager.LoadEditorValue(_patchEditor, "patch");
+	}
+
+	private async Task LoadSavedInstance()
+	{
+		await DataManager.LoadEditorValue(_instanceEditor, "patch-instance");
+	}
+
 	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
 		if (firstRender)
 		{
-			HandleThemeChanged();
-			
-			await JsRuntime.InvokeVoidAsync("initResizableSidebar");
-			
-			await _patchEditor.SetValue(_savedPatchText);
-			await _instanceEditor.SetValue(_savedInstanceText);
-			await _outputEditor.SetValue(string.Empty);
+			await JsRuntime.Call("initResizableSidebar");
 		}
 
 		await base.OnAfterRenderAsync(firstRender);

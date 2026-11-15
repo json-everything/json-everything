@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<RootNamespace>Json.Logic.Tests</RootNamespace>
+		<JsonSerializerIsReflectionEnabledByDefault>false</JsonSerializerIsReflectionEnabledByDefault>
+	</PropertyGroup>
+
+  <ItemGroup>
+		<ProjectReference Include="..\..\src\JsonLogic\JsonLogic.csproj" />
+		<ProjectReference Include="..\TestHelpers\TestHelpers.csproj" />
+	</ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net481' ">
+    <Reference Include="System.Net.Http" />
+  </ItemGroup>
+
+  <ItemGroup>
+		<None Update="Files\**\*">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+
+</Project>

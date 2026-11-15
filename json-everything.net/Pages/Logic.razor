@@ -51,7 +51,7 @@
 					<div class="editor-container">
 						<span class="editor-lang-@_logicEditorLanguage">@_logicEditorLanguage</span>
 						<StandaloneCodeEditor @ref="_logicEditor" Id="editor-logic" ConstructionOptions="BasicOptions"
-							CssClass="h-100" OnDidChangeModelContent="HandleLogicChanged"/>
+							CssClass="h-100" OnDidInit="LoadSavedLogic" OnDidChangeModelContent="HandleLogicChanged"/>
 					</div>
 				</div>
 				<div class="resize-handle" id="vertical-resize-handle"></div>
@@ -59,7 +59,7 @@
 					<div class="editor-container">
 						<span class="editor-lang-@_instanceEditorLanguage">@_instanceEditorLanguage</span>
 						<StandaloneCodeEditor @ref="_instanceEditor" Id="editor-instance" ConstructionOptions="BasicOptions"
-							CssClass="h-100" OnDidChangeModelContent="HandleInstanceChanged" />
+							CssClass="h-100" OnDidInit="LoadSavedInstance" OnDidChangeModelContent="HandleInstanceChanged" />
 					</div>
 				</div>
 			</div>
@@ -81,8 +81,6 @@
 	private StandaloneCodeEditor _instanceEditor;
 	private string _instanceEditorLanguage;
 	private StandaloneCodeEditor _outputEditor;
-	private string _savedLogicText = string.Empty;
-	private string _savedInstanceText = string.Empty;
 #pragma warning restore CS8618
 
 	private readonly List<LibraryVersion> _libraries = [LibraryVersion.GetFor<Rule>()];
@@ -92,12 +90,10 @@
 	private StandaloneEditorConstructionOptions BasicOptions(StandaloneCodeEditor _) => EditorOptions.Basic();
 	private StandaloneEditorConstructionOptions ReadOnlyOptions(StandaloneCodeEditor _) => EditorOptions.Readonly();
 
-	protected override async Task OnInitializedAsync()
+	protected override void OnInitialized()
 	{
 		ThemeService.OnThemeChanged += HandleThemeChanged;
-		_savedLogicText = await DataManager.Get("logic") ?? string.Empty;
-		_savedInstanceText = await DataManager.Get("logic-instance") ?? string.Empty;
-		await base.OnInitializedAsync();
+		base.OnInitialized();
 	}
 
 	private async Task Apply()
@@ -148,20 +144,24 @@
 		await DataManager.SaveEditorValue(_instanceEditor, "logic-instance");
 	}
 
+	// Editors can only be used once they've been created, which is signaled by OnDidInit.
+	private async Task LoadSavedLogic()
+	{
+		await DataManager.LoadEditorValue(_logicEditor, "logic");
+		_logicEditorLanguage = await _logicEditor.DetectLanguage(JsRuntime);
+	}
+
+	private async Task LoadSavedInstance()
+	{
+		await DataManager.LoadEditorValue(_instanceEditor, "logic-instance");
+		_instanceEditorLanguage = await _instanceEditor.DetectLanguage(JsRuntime);
+	}
+
 	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
 		if (firstRender)
 		{
-			HandleThemeChanged();
-			
-			await JsRuntime.InvokeVoidAsync("initResizableSidebar");
-			
-			await _logicEditor.SetValue(_savedLogicText);
-			await _instanceEditor.SetValue(_savedInstanceText);
-			await _outputEditor.SetValue(string.Empty);
-
-			_logicEditorLanguage = await _logicEditor.DetectLanguage(JsRuntime);
-			_instanceEditorLanguage = await _instanceEditor.DetectLanguage(JsRuntime);
+			await JsRuntime.Call("initResizableSidebar");
 		}
 
 		await base.OnAfterRenderAsync(firstRender);

@@ -51,7 +51,7 @@
 					<div class="editor-container">
 						<span class="editor-lang-@_templateEditorLanguage">@_templateEditorLanguage</span>
 						<StandaloneCodeEditor @ref="_templateEditor" Id="editor-schema" ConstructionOptions="BasicOptions"
-							CssClass="h-100" OnDidChangeModelContent="HandleTemplateChanged" />
+							CssClass="h-100" OnDidInit="LoadSavedTemplate" OnDidChangeModelContent="HandleTemplateChanged" />
 					</div>
 				</div>
 				<div class="resize-handle" id="vertical-resize-handle"></div>
@@ -59,7 +59,7 @@
 					<div class="editor-container">
 						<span class="editor-lang-@_contextEditorLanguage">@_contextEditorLanguage</span>
 						<StandaloneCodeEditor @ref="_contextEditor" Id="editor-instance" ConstructionOptions="BasicOptions"
-							CssClass="h-100" OnDidChangeModelContent="HandleContextChanged" />
+							CssClass="h-100" OnDidInit="LoadSavedContext" OnDidChangeModelContent="HandleContextChanged" />
 					</div>
 				</div>
 			</div>
@@ -67,7 +67,7 @@
 			<div class="editor-cell output-cell" id="bottom-editor-cell">
 				<div class="editor-container">
 					<StandaloneCodeEditor @ref="_outputEditor" Id="editor-output" ConstructionOptions="ReadOnlyOptions"
-						CssClass="h-100 mb-2"/>
+						CssClass="h-100 mb-2" OnDidInit="InitializeOutput"/>
 				</div>
 			</div>
 		</div>
@@ -81,8 +81,6 @@
 	private StandaloneCodeEditor _contextEditor;
 	private string _contextEditorLanguage;
 	private StandaloneCodeEditor _outputEditor;
-	private string _savedTemplateText = string.Empty;
-	private string _savedContextText = string.Empty;
 #pragma warning restore CS8618
 
 	private readonly List<LibraryVersion> _libraries = [LibraryVersion.GetFor<JsonFunction>()];
@@ -95,12 +93,10 @@
 	private StandaloneEditorConstructionOptions BasicOptions(StandaloneCodeEditor _) => EditorOptions.Basic();
 	private StandaloneEditorConstructionOptions ReadOnlyOptions(StandaloneCodeEditor _) => EditorOptions.Readonly();
 
-	protected override async Task OnInitializedAsync()
+	protected override void OnInitialized()
 	{
 		ThemeService.OnThemeChanged += HandleThemeChanged;
-		_savedTemplateText = await DataManager.Get("json-e-template") ?? string.Empty;
-		_savedContextText = await DataManager.Get("json-e-context") ?? string.Empty;
-		await base.OnInitializedAsync();
+		base.OnInitialized();
 	}
 
 	private async Task Run()
@@ -181,23 +177,29 @@
 		await DataManager.SaveEditorValue(_contextEditor, "json-e-context");
 	}
 
+	// Editors can only be used once they've been created, which is signaled by OnDidInit.
+	private async Task LoadSavedTemplate()
+	{
+		await DataManager.LoadEditorValue(_templateEditor, "json-e-template");
+		_templateEditorLanguage = await _templateEditor.DetectLanguage(JsRuntime);
+	}
+
+	private async Task LoadSavedContext()
+	{
+		await DataManager.LoadEditorValue(_contextEditor, "json-e-context");
+		_contextEditorLanguage = await _contextEditor.DetectLanguage(JsRuntime);
+	}
+
+	private async Task InitializeOutput()
+	{
+		await _outputEditor.SetLanguageAsync("yaml", JsRuntime);
+	}
+
 	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
 		if (firstRender)
 		{
-			HandleThemeChanged();
-			
-			await JsRuntime.InvokeVoidAsync("initResizableSidebar");
-			
-			await _templateEditor.SetValue(_savedTemplateText);
-			await _contextEditor.SetValue(_savedContextText);
-
-			_templateEditorLanguage = await _templateEditor.DetectLanguage(JsRuntime);
-			_contextEditorLanguage = await _contextEditor.DetectLanguage(JsRuntime);
-
-			await _outputEditor.SetLanguageAsync("yaml", JsRuntime);
-			await _outputEditor.UpdateOptions(new EditorUpdateOptions { TabSize = 2 });
-			await _outputEditor.SetValue(string.Empty);
+			await JsRuntime.Call("initResizableSidebar");
 		}
 
 		await base.OnAfterRenderAsync(firstRender);

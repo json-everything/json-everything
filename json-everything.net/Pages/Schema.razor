@@ -10,7 +10,6 @@
 @using Microsoft.CodeAnalysis
 @using Microsoft.CodeAnalysis.CSharp
 @using System.Reflection
-@using System.Globalization
 @using BlazorMonaco.Editor
 @using Json.Schema.ArrayExt.Keywords
 @using Json.Schema.Data.Keywords
@@ -156,7 +155,7 @@
 					<div class="editor-container">
 						<span class="editor-lang-@_schemaEditorLanguage">@GetLanguageText(_schemaEditorLanguage)</span>
 						<StandaloneCodeEditor @ref="_schemaEditor" Id="editor-schema" ConstructionOptions="BasicOptions"
-						CssClass="h-100" OnDidChangeModelContent="HandleSchemaChanged" />
+						CssClass="h-100" OnDidInit="InitializeSchemaEditor" OnDidChangeModelContent="HandleSchemaChanged" />
 					</div>
 				</div>
 				<div class="resize-handle" id="vertical-resize-handle"></div>
@@ -164,7 +163,7 @@
 					<div class="editor-container">
 						<span class="editor-lang-@_instanceEditorLanguage">@GetLanguageText(_instanceEditorLanguage)</span>
 						<StandaloneCodeEditor @ref="_instanceEditor" Id="editor-instance" ConstructionOptions="BasicOptions"
-						CssClass="h-100" OnDidChangeModelContent="HandleInstanceChanged" />
+						CssClass="h-100" OnDidInit="InitializeInstanceEditor" OnDidChangeModelContent="HandleInstanceChanged" />
 					</div>
 				</div>
 			</div>
@@ -230,6 +229,7 @@
     private IEnumerable<MetadataReference> _references;
     private SchemaOperations _operation = SchemaOperations.Evaluate;
 	private bool _editorsInitialized;
+	private int _initializedEditorCount;
 
 #pragma warning restore CS8618
 
@@ -346,6 +346,7 @@
 
 	protected override async Task OnInitializedAsync()
 	{
+		ThemeService.OnThemeChanged += HandleThemeChanged;
 		await LoadSavedSettings();
 		await base.OnInitializedAsync();
 	}
@@ -722,6 +723,30 @@ namespace JsonEverythingTemp;
 		await DataManager.LoadEditorValue(_instanceEditor, "schema-instance");
 	}
 
+	// Editors can only be used once they've been created, which is signaled by OnDidInit.
+	private async Task InitializeSchemaEditor()
+	{
+		await LoadSavedSchema();
+		await HandleSchemaChanged();
+		HandleEditorInitialized();
+	}
+
+	private async Task InitializeInstanceEditor()
+	{
+		await LoadSavedInstance();
+		await HandleInstanceChanged();
+		HandleEditorInitialized();
+	}
+
+	private void HandleEditorInitialized()
+	{
+		// Configuring for the operation touches both the schema and instance editors.
+		if (++_initializedEditorCount < 2) return;
+
+		_editorsInitialized = true;
+		Operation = _operation;
+	}
+
 	private async Task LoadSavedSettings()
 	{
 		_options.OutputFormat = Enum.Parse<OutputFormat>(await DataManager.Get("schema-output-format") ?? "Hierarchical");
@@ -750,10 +775,7 @@ namespace JsonEverythingTemp;
 	{
 		if (firstRender)
 		{
-			ThemeService.OnThemeChanged += HandleThemeChanged;
-			HandleThemeChanged();
-			
-			await JsRuntime.InvokeVoidAsync("initResizableSidebar");
+			await JsRuntime.Call("initResizableSidebar");
 			
             if (!_dialectsRegistered)
             {
@@ -763,19 +785,7 @@ namespace JsonEverythingTemp;
 	            _dialectsRegistered = true;
             }
 
-			await LoadSavedSchema();
-			await LoadSavedInstance();
-			_editorsInitialized = true;
-			Operation = _operation;
-
 			await LoadAssemblyReferences();
-
-			_schemaEditorLanguage = await _schemaEditor.DetectLanguage(JsRuntime);
-			_instanceEditorLanguage = await _instanceEditor.DetectLanguage(JsRuntime);
-
-			await _outputEditor.SetLanguageAsync("json", JsRuntime);
-			await _outputEditor.UpdateOptions(new EditorUpdateOptions { TabSize = 2 });
-			await _outputEditor.SetValue(string.Empty);
 		}
 
 		var t = _schemaEditorLanguage;

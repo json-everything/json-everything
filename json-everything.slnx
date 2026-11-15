@@ -1,0 +1,165 @@
+<Solution>
+  <Configurations>
+    <BuildType Name="Debug" />
+    <BuildType Name="Localization" />
+    <BuildType Name="Release" />
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/JSON-e/">
+    <Project Path="tests/JsonE.Tests/JsonE.Tests.csproj">
+      <BuildType Solution="Localization|Any CPU" Project="Debug" />
+    </Project>
+    <Project Path="src/JsonE/JsonE.csproj">
+      <BuildType Solution="Localization|Any CPU" Project="Debug" />
+    </Project>
+  </Folder>
+  <Folder Name="/Logic/">
+    <Project Path="tests/JsonLogic.Tests/JsonLogic.Tests.csproj">
+      <BuildType Solution="Localization|Any CPU" Project="Release" />
+    </Project>
+    <Project Path="src/JsonLogic/JsonLogic.csproj">
+      <BuildType Solution="Localization|Any CPU" Project="Release" />
+    </Project>
+  </Folder>
+  <Folder Name="/Patch/">
+    <Project Path="tests/JsonPatch.Tests/JsonPatch.Tests.csproj">
+      <BuildType Solution="Localization|Any CPU" Project="Release" />
+    </Project>
+    <Project Path="src/JsonPatch/JsonPatch.csproj">
+      <BuildType Solution="Localization|Any CPU" Project="Release" />
+    </Project>
+  </Folder>
+  <Folder Name="/Path/">
+    <Project Path="tests/JsonPath.Tests/JsonPath.Tests.csproj">
+      <BuildType Solution="Localization|Any CPU" Project="Release" />
+    </Project>
+    <Project Path="src/JsonPath/JsonPath.csproj">
+      <BuildType Solution="Localization|Any CPU" Project="Release" />
+    </Project>
+  </Folder>
+  <Folder Name="/Pointer/">
+    <Project Path="tests/JsonPointer.Tests/JsonPointer.Tests.csproj">
+      <BuildType Solution="Localization|Any CPU" Project="Release" />
+    </Project>
+    <Project Path="src/JsonPointer/JsonPointer.csproj">
+      <BuildType Solution="Localization|Any CPU" Project="Release" />
+    </Project>
+  </Folder>
+  <Folder Name="/Schema/">
+    <Project Path="src/JsonSchema.Api.Analyzer/JsonSchema.Api.Analyzer.csproj">
+      <BuildType Solution="Localization|*" Project="Debug" />
+    </Project>
+    <Project Path="tests/JsonSchema.Api.Tests/JsonSchema.Api.Tests.csproj">
+      <BuildType Solution="Localization|Any CPU" Project="Release" />
+    </Project>
+    <Project Path="src/JsonSchema.Api/JsonSchema.Api.csproj">
+      <BuildType Solution="Localization|Any CPU" Project="Release" />
+    </Project>
+    <Project Path="tests/JsonSchema.DataGeneration.Tests/JsonSchema.DataGeneration.Tests.csproj">
+      <BuildType Solution="Localization|Any CPU" Project="Release" />
+    </Project>
+    <Project Path="src/JsonSchema.DataGeneration/JsonSchema.DataGeneration.csproj">
+      <BuildType Solution="Localization|Any CPU" Project="Release" />
+    </Project>
+    <Project Path="tests/JsonSchema.Generation.DataAnnotations.Tests/JsonSchema.Generation.DataAnnotations.Tests.csproj">
+      <BuildType Solution="Localization|Any CPU" Project="Debug" />
+    </Project>
+    <Project Path="src/JsonSchema.Generation.DataAnnotations/JsonSchema.Generation.DataAnnotations.csproj">
+      <BuildType Solution="Localization|Any CPU" Project="Debug" />
+    </Project>
+    <Project Path="tests/JsonSchema.Generation.Tests/JsonSchema.Generation.Tests.csproj">
+      <BuildType Solution="Localization|Any CPU" Project="Release" />
+    </Project>
+    <Project Path="src/JsonSchema.Generation/JsonSchema.Generation.csproj">
+      <BuildType Solution="Localization|Any CPU" Project="Release" />
+    </Project>
+    <Project Path="tests/JsonSchema.Tests/JsonSchema.Tests.csproj">
+      <BuildType Solution="Localization|Any CPU" Project="Release" />
+    </Project>
+    <Project Path="src/JsonSchema/JsonSchema.csproj" />
+  </Folder>
+  <Folder Name="/Schema/MetaSchemas/">
+    <File Path="Meta-Schemas/schema06.json" />
+    <File Path="Meta-Schemas/schema07.json" />
+    <File Path="Meta-Schemas/v1.json" />
+  </Folder>
+  <Folder Name="/Schema/MetaSchemas/OpenAPI/" />
+  <Folder Name="/Schema/MetaSchemas/OpenAPI/3.1/">
+    <File Path="Meta-Schemas/OpenAPI/3.1/openapi-dialect-base.json" />
+    <File Path="Meta-Schemas/OpenAPI/3.1/openapi-meta-base.json" />
+    <File Path="Meta-Schemas/OpenAPI/3.1/schema.json" />
+  </Folder>
+  <Folder Name="/Schema/MetaSchemas/schema2019-09/">
+    <File Path="Meta-Schemas/2019-09/applicator.json" />
+    <File Path="Meta-Schemas/2019-09/content.json" />
+    <File Path="Meta-Schemas/2019-09/core.json" />
+    <File Path="Meta-Schemas/2019-09/format.json" />
+    <File Path="Meta-Schemas/2019-09/meta-data.json" />
+    <File Path="Meta-Schemas/2019-09/schema.json" />
+    <File Path="Meta-Schemas/2019-09/validation.json" />
+  </Folder>
+  <Folder Name="/Schema/MetaSchemas/schema2020-12/">
+    <File Path="Meta-Schemas/2020-12/applicator.json" />
+    <File Path="Meta-Schemas/2020-12/content.json" />
+    <File Path="Meta-Schemas/2020-12/core.json" />
+    <File Path="Meta-Schemas/2020-12/format-annotation.json" />
+    <File Path="Meta-Schemas/2020-12/format-assertion.json" />
+    <File Path="Meta-Schemas/2020-12/meta-data.json" />
+    <File Path="Meta-Schemas/2020-12/schema.json" />
+    <File Path="Meta-Schemas/2020-12/unevaluated.json" />
+    <File Path="Meta-Schemas/2020-12/validation.json" />
+  </Folder>
+  <Folder Name="/Schema/Vocabs/">
+    <Project Path="tests/JsonSchema.ArrayExt.Tests/JsonSchema.ArrayExt.Tests.csproj">
+      <BuildType Solution="Localization|Any CPU" Project="Release" />
+    </Project>
+    <Project Path="src/JsonSchema.ArrayExt/JsonSchema.ArrayExt.csproj">
+      <BuildType Solution="Localization|Any CPU" Project="Release" />
+    </Project>
+    <Project Path="tests/JsonSchema.Data.Tests/JsonSchema.Data.Tests.csproj">
+      <BuildType Solution="Localization|Any CPU" Project="Release" />
+    </Project>
+    <Project Path="src/JsonSchema.Data/JsonSchema.Data.csproj">
+      <BuildType Solution="Localization|Any CPU" Project="Release" />
+    </Project>
+    <Project Path="tests/JsonSchema.OpenApi.Tests/JsonSchema.OpenApi.Tests.csproj">
+      <BuildType Solution="Localization|Any CPU" Project="Debug" />
+    </Project>
+    <Project Path="src/JsonSchema.OpenApi/JsonSchema.OpenApi.csproj">
+      <BuildType Solution="Localization|Any CPU" Project="Debug" />
+    </Project>
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+  </Folder>
+  <Folder Name="/tools/">
+    <Project Path="tools/ApiDocsGenerator/ApiDocsGenerator.csproj">
+      <BuildType Solution="Localization|Any CPU" Project="Release" />
+    </Project>
+    <Project Path="tools/Benchmarks/Benchmarks.csproj">
+      <BuildType Solution="Localization|Any CPU" Project="Debug" />
+    </Project>
+  </Folder>
+  <Folder Name="/Utilities/">
+    <Project Path="tests/Json.More.Tests/Json.More.Tests.csproj">
+      <BuildType Solution="Localization|Any CPU" Project="Release" />
+    </Project>
+    <Project Path="src/Json.More/Json.More.csproj">
+      <BuildType Solution="Localization|Any CPU" Project="Release" />
+    </Project>
+    <Project Path="tests/TestHelpers/TestHelpers.csproj">
+      <BuildType Solution="Localization|Any CPU" Project="Debug" />
+    </Project>
+    <Project Path="tests/Yaml2JsonNode.Tests/Yaml2JsonNode.Tests.csproj">
+      <BuildType Solution="Localization|Any CPU" Project="Debug" />
+    </Project>
+    <Project Path="src/Yaml2JsonNode/Yaml2JsonNode.csproj">
+      <BuildType Solution="Localization|Any CPU" Project="Debug" />
+    </Project>
+  </Folder>
+  <Project Path="json-everything.net/json-everything.net.csproj">
+    <BuildType Solution="Localization|Any CPU" Project="Debug" />
+  </Project>
+</Solution>

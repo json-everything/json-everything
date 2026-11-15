@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<RootNamespace>Json.Pointer.Tests</RootNamespace>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="FluentAssertions" Version="8.11.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\src\JsonPointer\JsonPointer.csproj" />
+		<ProjectReference Include="..\TestHelpers\TestHelpers.csproj" />
+	</ItemGroup>
+
+</Project>

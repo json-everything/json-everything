@@ -1,0 +1,27 @@
+<Project>
+
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net9.0;net10.0;net11.0</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)../json-everything.snk</AssemblyOriginatorKeyFile>
+    <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NUnit" Version="5.0.0" />
+  </ItemGroup>
+
+  <!-- TestHelpers is a support library, not a test project, so it doesn't get the test runner. -->
+  <ItemGroup Condition="'$(MSBuildProjectName)' != 'TestHelpers'">
+    <PackageReference Include="NUnit.Analyzers" Version="4.15.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="NUnit3TestAdapter" Version="6.3.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.12.0" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<RootNamespace>Json.Path.Tests</RootNamespace>
+
+    <PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="FluentAssertions" Version="8.11.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\src\JsonPath\JsonPath.csproj" />
+		<ProjectReference Include="..\TestHelpers\TestHelpers.csproj" />
+	</ItemGroup>
+
+</Project>

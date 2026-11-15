@@ -2,20 +2,14 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <LangVersion>latest</LangVersion>
-    <Nullable>enable</Nullable>
     <RootNamespace>Json.Schema.Api.Analyzer</RootNamespace>
     <AssemblyName>JsonSchema.Net.Api.Analyzer</AssemblyName>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>../../json-everything.snk</AssemblyOriginatorKeyFile>
 
     <!-- Packed into JsonSchema.Net.Api; not shipped on its own. -->
     <IsPackable>false</IsPackable>
 
     <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
     <IsRoslynComponent>true</IsRoslynComponent>
-
-    <PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
   </PropertyGroup>
 
   <ItemGroup>
