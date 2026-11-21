@@ -38,7 +38,7 @@ jobs:
       - name: Install dependencies
         run: dotnet restore
       - name: Pre-build solution
-        run: dotnet build json-everything.sln -c Release --no-restore
+        run: dotnet build json-everything.slnx -c Release --no-restore
       - name: Get sponsor data
         run: |
           echo "Building GenerateSponsorList tool..."
