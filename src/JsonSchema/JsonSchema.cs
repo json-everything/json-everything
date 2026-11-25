@@ -22,7 +22,7 @@ namespace Json.Schema;
 public class JsonSchema : IBaseDocument
 {
 	private readonly BuildOptions _buildOptions;
-	private readonly bool _refIgnoresSiblingKeywords;
+	private readonly Dialect? _dialect;
 	private bool _resolved;
 	private Dictionary<JsonPointer, JsonSchemaNode>? _discoveredSchemas;
 
@@ -66,10 +66,10 @@ public class JsonSchema : IBaseDocument
 	}
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 
-	private JsonSchema(JsonSchemaNode root, BuildOptions buildOptions, bool refIgnoresSiblingKeywords)
+	private JsonSchema(JsonSchemaNode root, BuildOptions buildOptions, Dialect dialect)
 	{
 		_buildOptions = buildOptions;
-		_refIgnoresSiblingKeywords = refIgnoresSiblingKeywords;
+		_dialect = dialect;
 		Root = root;
 		BaseUri = Root.BaseUri;
 	}
@@ -147,7 +147,10 @@ public class JsonSchema : IBaseDocument
 		if (node.Source.ValueKind == JsonValueKind.True) return True;
 		if (node.Source.ValueKind == JsonValueKind.False) return False;
 
-		var schema = new JsonSchema(node, context.Options, context.Dialect.RefIgnoresSiblingKeywords)
+		// BuildNode() selects the dialect on its own copy of the context.
+		context.Dialect = SelectDialect(context);
+
+		var schema = new JsonSchema(node, context.Options, context.Dialect)
 		{
 			BaseUri = node.BaseUri
 		};
@@ -199,13 +202,7 @@ public class JsonSchema : IBaseDocument
 		if (context.LocalSchema.ValueKind != JsonValueKind.Object)
 			throw new ArgumentException($"Schemas may only booleans or objects.  Received {context.LocalSchema.ValueKind}");
 
-		if (context.LocalSchema.TryGetProperty("$schema", out var dialect))
-		{
-			if (!Uri.TryCreate(dialect.GetString(), UriKind.Absolute, out var uri))
-				throw new JsonSchemaException("$schema value MUST be an absolute IRI");
-
-			context.Dialect = context.Options.DialectRegistry.Get(uri, context.Options.SchemaRegistry, context.Options.VocabularyRegistry, context.Dialect);
-		}
+		context.Dialect = SelectDialect(context);
 
 		var allowBaseUriChange = context.LocalSchema.TryGetProperty("$ref", out _) &&
 		                         context.Dialect.RefIgnoresSiblingKeywords &&
@@ -261,7 +258,7 @@ public class JsonSchema : IBaseDocument
 		{
 			if (embeddedResource.BaseUri == True.BaseUri || embeddedResource.BaseUri == False.BaseUri) continue;
 
-			var schema = new JsonSchema(embeddedResource, context.Options, context.Dialect.RefIgnoresSiblingKeywords)
+			var schema = new JsonSchema(embeddedResource, context.Options, context.Dialect)
 			{
 				BaseUri = embeddedResource.BaseUri
 			};
@@ -300,6 +297,16 @@ public class JsonSchema : IBaseDocument
 			context.Options.SchemaRegistry.RegisterRecursiveAnchor(context.BaseUri, node);
 
 		return node;
+	}
+
+	private static Dialect SelectDialect(BuildContext context)
+	{
+		if (!context.LocalSchema.TryGetProperty("$schema", out var dialect)) return context.Dialect;
+
+		if (!Uri.TryCreate(dialect.GetString(), UriKind.Absolute, out var uri))
+			throw new JsonSchemaException("$schema value MUST be an absolute IRI");
+
+		return context.Options.DialectRegistry.Get(uri, context.Options.SchemaRegistry, context.Options.VocabularyRegistry, context.Dialect);
 	}
 
 	private static bool TryResolveReferences(JsonSchemaNode node, BuildContext context, HashSet<JsonSchemaNode>? checkedNodes = null)
@@ -388,7 +395,7 @@ public class JsonSchema : IBaseDocument
 #pragma warning disable CS0618 // Type or member is obsolete
 			FormatRegistry = options.FormatRegistry ?? _buildOptions.Dialect.FormatRegistry ?? FormatRegistry.Global,
 #pragma warning restore CS0618 // Type or member is obsolete
-			RefIgnoresSiblingKeywords = _refIgnoresSiblingKeywords,
+			RefIgnoresSiblingKeywords = _dialect?.RefIgnoresSiblingKeywords ?? false,
 			InstanceRoot = instance,
 			Instance = instance,
 			EvaluationPath = JsonPointer.Empty,
@@ -454,6 +461,7 @@ public class JsonSchema : IBaseDocument
 				var newContext = context with
 				{
 					BaseUri = BaseUri,
+					Dialect = _dialect ?? context.Dialect,
 					LocalSchema = localSchema.Value,
 #pragma warning disable CS0618 // Type or member is obsolete
 					PathFromResourceRoot = pointer
