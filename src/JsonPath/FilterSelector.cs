@@ -10,7 +10,7 @@ namespace Json.Path;
 /// <summary>
 /// Represents a filter expression selector.
 /// </summary>
-public class FilterSelector : ISelector
+public class FilterSelector : ISelector, IEquatable<FilterSelector>
 {
 	/// <summary>
 	/// Gets the expression.
@@ -70,6 +70,15 @@ public class FilterSelector : ISelector
 	{
 		return $"?{Expression}";
 	}
+
+	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+	public bool Equals(FilterSelector? other) => other is not null && Equals(Expression, other.Expression);
+
+	/// <summary>Determines whether the specified object is equal to the current object.</summary>
+	public override bool Equals(object? obj) => Equals(obj as FilterSelector);
+
+	/// <summary>Serves as the default hash function.</summary>
+	public override int GetHashCode() => Expression.GetHashCode();
 }
 
 internal class FilterSelectorParser : ISelectorParser

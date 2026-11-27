@@ -11,7 +11,7 @@ namespace Json.Path;
 /// <summary>
 /// Represents a name selector.
 /// </summary>
-public class NameSelector : ISelector, IHaveShorthand
+public class NameSelector : ISelector, IHaveShorthand, IEquatable<NameSelector>
 {
 	/// <summary>
 	/// Gets the name.
@@ -83,6 +83,15 @@ public class NameSelector : ISelector, IHaveShorthand
 		}
 		builder.Append('\'');
 	}
+
+	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+	public bool Equals(NameSelector? other) => other is not null && Name == other.Name;
+
+	/// <summary>Determines whether the specified object is equal to the current object.</summary>
+	public override bool Equals(object? obj) => Equals(obj as NameSelector);
+
+	/// <summary>Serves as the default hash function.</summary>
+	public override int GetHashCode() => Name.GetHashCode();
 }
 
 internal class NameSelectorParser : ISelectorParser

@@ -36,6 +36,11 @@ internal class LiteralValueExpressionNode : LeafValueExpressionNode
 	{
 		return _value.AsJsonString(_options);
 	}
+
+	public override bool Equals(object? obj) =>
+		obj is LiteralValueExpressionNode other && _value.IsEquivalentTo(other._value);
+
+	public override int GetHashCode() => _value?.GetEquivalenceHashCode() ?? 0;
 }
 
 internal class LiteralValueExpressionParser : IValueExpressionParser
