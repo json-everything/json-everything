@@ -159,6 +159,39 @@ public class JsonPath : IEquatable<JsonPath>
 	/// <returns>A new JsonPath instance that includes the appended index selector.</returns>
 	public JsonPath Append(int index) => new(Scope, Segments.Append(new PathSegment(new IndexSelector(index).Yield())));
 
+	/// <summary>
+	/// Appends an existing <see cref="PathSegment"/> to the current JSON path and returns the resulting path.
+	/// </summary>
+	/// <param name="segment">The segment to append.</param>
+	/// <returns>A new <see cref="JsonPath"/> instance that includes the appended segment.</returns>
+	public JsonPath Append(PathSegment segment)
+	{
+		if (segment is null) throw new ArgumentNullException(nameof(segment));
+		return new(Scope, Segments.Append(segment));
+	}
+
+	/// <summary>
+	/// Appends a sequence of <see cref="PathSegment"/> instances to the current JSON path and returns the resulting path.
+	/// </summary>
+	/// <param name="segments">The segments to append.</param>
+	/// <returns>A new <see cref="JsonPath"/> instance that includes the appended segments.</returns>
+	public JsonPath Append(IEnumerable<PathSegment> segments)
+	{
+		if (segments is null) throw new ArgumentNullException(nameof(segments));
+		return new(Scope, Segments.Concat(segments));
+	}
+
+	/// <summary>
+	/// Appends all segments of another <see cref="JsonPath"/> to the current JSON path and returns the resulting path.
+	/// </summary>
+	/// <param name="path">The path whose segments will be appended.</param>
+	/// <returns>A new <see cref="JsonPath"/> instance that includes the appended path's segments.</returns>
+	public JsonPath Append(JsonPath path)
+	{
+		if (path is null) throw new ArgumentNullException(nameof(path));
+		return new(Scope, Segments.Concat(path.Segments));
+	}
+
 	/// <summary>Returns a string that represents the current object.</summary>
 	/// <returns>A string that represents the current object.</returns>
 	public override string ToString()
