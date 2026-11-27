@@ -192,6 +192,107 @@ public class JsonPath : IEquatable<JsonPath>
 		return new(Scope, Segments.Concat(path.Segments));
 	}
 
+	/// <summary>
+	/// Determines whether the current <see cref="JsonPath"/> starts with the specified <paramref name="prefix"/>.
+	/// </summary>
+	/// <param name="prefix">The prefix path to compare against the start of this path.</param>
+	/// <returns><see langword="true"/> if this path has the same scope and starts with all segments of <paramref name="prefix"/>; otherwise, <see langword="false"/>.</returns>
+	public bool StartsWith(JsonPath prefix)
+	{
+		if (prefix is null) throw new ArgumentNullException(nameof(prefix));
+		if (Scope != prefix.Scope || prefix.Segments.Length > Segments.Length) return false;
+
+		for (var i = 0; i < prefix.Segments.Length; i++)
+		{
+			if (!Segments[i].Equals(prefix.Segments[i])) return false;
+		}
+
+		return true;
+	}
+
+	/// <summary>
+	/// Removes the specified <paramref name="prefix"/> from the start of the current <see cref="JsonPath"/> if it matches, returning the remaining path; otherwise returns this instance unchanged.
+	/// </summary>
+	/// <param name="prefix">The prefix path to remove.</param>
+	/// <returns>A new <see cref="JsonPath"/> with <paramref name="prefix"/> removed, or this instance if it does not start with <paramref name="prefix"/>.</returns>
+	public JsonPath TrimStart(JsonPath prefix)
+	{
+		if (prefix is null) throw new ArgumentNullException(nameof(prefix));
+		return TryTrimStart(prefix, out var trimmed) ? trimmed : this;
+	}
+
+	/// <summary>
+	/// Attempts to remove the specified <paramref name="prefix"/> from the start of the current <see cref="JsonPath"/>.
+	/// </summary>
+	/// <param name="prefix">The prefix path to remove.</param>
+	/// <param name="trimmed">When this method returns <see langword="true"/>, contains the remaining path; otherwise <see langword="null"/>.</param>
+	/// <returns><see langword="true"/> if this path starts with <paramref name="prefix"/>; otherwise, <see langword="false"/>.</returns>
+	public bool TryTrimStart(JsonPath prefix, [NotNullWhen(true)] out JsonPath? trimmed)
+	{
+		if (prefix is null) throw new ArgumentNullException(nameof(prefix));
+		if (!StartsWith(prefix))
+		{
+			trimmed = null;
+			return false;
+		}
+
+		trimmed = prefix.Segments.Length == 0
+			? this
+			: new(Scope, Segments.Skip(prefix.Segments.Length));
+		return true;
+	}
+
+	/// <summary>
+	/// Determines whether the current <see cref="JsonPath"/> ends with the specified <paramref name="suffix"/>.
+	/// </summary>
+	/// <param name="suffix">The suffix path to compare against the end of this path.</param>
+	/// <returns><see langword="true"/> if this path has the same scope and ends with all segments of <paramref name="suffix"/>; otherwise, <see langword="false"/>.</returns>
+	public bool EndsWith(JsonPath suffix)
+	{
+		if (suffix is null) throw new ArgumentNullException(nameof(suffix));
+		if (Scope != suffix.Scope || suffix.Segments.Length > Segments.Length) return false;
+
+		var offset = Segments.Length - suffix.Segments.Length;
+		for (var i = 0; i < suffix.Segments.Length; i++)
+		{
+			if (!Segments[offset + i].Equals(suffix.Segments[i])) return false;
+		}
+
+		return true;
+	}
+
+	/// <summary>
+	/// Removes the specified <paramref name="suffix"/> from the end of the current <see cref="JsonPath"/> if it matches, returning the remaining path; otherwise returns this instance unchanged.
+	/// </summary>
+	/// <param name="suffix">The suffix path to remove.</param>
+	/// <returns>A new <see cref="JsonPath"/> with <paramref name="suffix"/> removed, or this instance if it does not end with <paramref name="suffix"/>.</returns>
+	public JsonPath TrimEnd(JsonPath suffix)
+	{
+		if (suffix is null) throw new ArgumentNullException(nameof(suffix));
+		return TryTrimEnd(suffix, out var trimmed) ? trimmed : this;
+	}
+
+	/// <summary>
+	/// Attempts to remove the specified <paramref name="suffix"/> from the end of the current <see cref="JsonPath"/>.
+	/// </summary>
+	/// <param name="suffix">The suffix path to remove.</param>
+	/// <param name="trimmed">When this method returns <see langword="true"/>, contains the remaining path; otherwise <see langword="null"/>.</param>
+	/// <returns><see langword="true"/> if this path ends with <paramref name="suffix"/>; otherwise, <see langword="false"/>.</returns>
+	public bool TryTrimEnd(JsonPath suffix, [NotNullWhen(true)] out JsonPath? trimmed)
+	{
+		if (suffix is null) throw new ArgumentNullException(nameof(suffix));
+		if (!EndsWith(suffix))
+		{
+			trimmed = null;
+			return false;
+		}
+
+		trimmed = suffix.Segments.Length == 0
+			? this
+			: new(Scope, Segments.Take(Segments.Length - suffix.Segments.Length));
+		return true;
+	}
+
 	/// <summary>Returns a string that represents the current object.</summary>
 	/// <returns>A string that represents the current object.</returns>
 	public override string ToString()
