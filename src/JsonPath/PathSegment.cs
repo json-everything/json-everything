@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Nodes;
@@ -8,7 +9,7 @@ namespace Json.Path;
 /// <summary>
 /// Represents a single path segment, generally indicated in the path by square brackets `[]`.
 /// </summary>
-public class PathSegment
+public class PathSegment : IEquatable<PathSegment>
 {
 	/// <summary>
 	/// Gets the collection of selectors present in the path.
@@ -138,5 +139,55 @@ public class PathSegment
 
 	}
 
+	/// <summary>
+	/// Indicates whether the current <see cref="PathSegment"/> is equal to another <see cref="PathSegment"/>.
+	/// </summary>
+	/// <remarks>
+	/// Shorthand syntax (<see cref="IsShorthand"/>) is ignored when comparing segments, so e.g. <c>.foo</c> and <c>['foo']</c> are considered equal.
+	/// </remarks>
+	/// <param name="other">A <see cref="PathSegment"/> to compare with this instance.</param>
+	/// <returns><see langword="true"/> if the current instance is equal to <paramref name="other"/>; otherwise, <see langword="false"/>.</returns>
+	public bool Equals(PathSegment? other)
+	{
+		if (ReferenceEquals(this, other)) return true;
+		if (other is null) return false;
+		if (IsRecursive != other.IsRecursive || Selectors.Length != other.Selectors.Length) return false;
 
+		for (var i = 0; i < Selectors.Length; i++)
+		{
+			if (!Equals(Selectors[i], other.Selectors[i])) return false;
+		}
+
+		return true;
+	}
+
+	/// <summary>Determines whether the specified object is equal to the current object.</summary>
+	/// <param name="obj">The object to compare with the current object.</param>
+	/// <returns><see langword="true"/> if the specified object is equal to the current object; otherwise, <see langword="false"/>.</returns>
+	public override bool Equals(object? obj) => Equals(obj as PathSegment);
+
+	/// <summary>Serves as the default hash function.</summary>
+	/// <returns>A hash code for the current object.</returns>
+	public override int GetHashCode()
+	{
+		unchecked
+		{
+			var hash = IsRecursive ? 1 : 0;
+			foreach (var selector in Selectors)
+			{
+				hash = (hash * 397) ^ selector.GetHashCode();
+			}
+			return hash;
+		}
+	}
+
+	/// <summary>
+	/// Determines whether two <see cref="PathSegment"/> instances are equal.
+	/// </summary>
+	public static bool operator ==(PathSegment? left, PathSegment? right) => Equals(left, right);
+
+	/// <summary>
+	/// Determines whether two <see cref="PathSegment"/> instances are not equal.
+	/// </summary>
+	public static bool operator !=(PathSegment? left, PathSegment? right) => !Equals(left, right);
 }

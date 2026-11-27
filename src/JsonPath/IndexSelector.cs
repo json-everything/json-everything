@@ -9,7 +9,7 @@ namespace Json.Path;
 /// <summary>
 /// Represents an index selector.
 /// </summary>
-public class IndexSelector : ISelector
+public class IndexSelector : ISelector, IEquatable<IndexSelector>
 {
 	/// <summary>
 	/// Gets the index.
@@ -61,6 +61,15 @@ public class IndexSelector : ISelector
 	{
 		builder.Append(Index);
 	}
+
+	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+	public bool Equals(IndexSelector? other) => other is not null && Index == other.Index;
+
+	/// <summary>Determines whether the specified object is equal to the current object.</summary>
+	public override bool Equals(object? obj) => Equals(obj as IndexSelector);
+
+	/// <summary>Serves as the default hash function.</summary>
+	public override int GetHashCode() => Index.GetHashCode();
 }
 
 internal class IndexSelectorParser : ISelectorParser

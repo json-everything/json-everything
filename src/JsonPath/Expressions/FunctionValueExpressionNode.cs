@@ -61,6 +61,32 @@ internal class FunctionValueExpressionNode : LeafValueExpressionNode
 	{
 		return $"{Function.Name}({string.Join(",", (IEnumerable<ValueExpressionNode>)_parameters)})";
 	}
+
+	public override bool Equals(object? obj)
+	{
+		if (obj is not FunctionValueExpressionNode other) return false;
+		if (Function.Name != other.Function.Name || _parameters.Length != other._parameters.Length) return false;
+
+		for (var i = 0; i < _parameters.Length; i++)
+		{
+			if (!Equals(_parameters[i], other._parameters[i])) return false;
+		}
+
+		return true;
+	}
+
+	public override int GetHashCode()
+	{
+		unchecked
+		{
+			var hash = Function.Name.GetHashCode();
+			foreach (var parameter in _parameters)
+			{
+				hash = (hash * 397) ^ parameter.GetHashCode();
+			}
+			return hash;
+		}
+	}
 }
 
 internal class FunctionValueExpressionParser : IValueExpressionParser
