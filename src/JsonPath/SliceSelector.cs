@@ -9,7 +9,7 @@ namespace Json.Path;
 /// <summary>
 /// Represents a slice selector in the form `start : end : step`.
 /// </summary>
-public class SliceSelector : ISelector
+public class SliceSelector : ISelector, IEquatable<SliceSelector>
 {
 	/// <summary>
 	/// Gets the start.
@@ -123,6 +123,24 @@ public class SliceSelector : ISelector
 		}
 
 		return (lower, upper);
+	}
+
+	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+	public bool Equals(SliceSelector? other) => other is not null && Start == other.Start && End == other.End && Step == other.Step;
+
+	/// <summary>Determines whether the specified object is equal to the current object.</summary>
+	public override bool Equals(object? obj) => Equals(obj as SliceSelector);
+
+	/// <summary>Serves as the default hash function.</summary>
+	public override int GetHashCode()
+	{
+		unchecked
+		{
+			var hash = Start.GetHashCode();
+			hash = (hash * 397) ^ End.GetHashCode();
+			hash = (hash * 397) ^ Step.GetHashCode();
+			return hash;
+		}
 	}
 }
 

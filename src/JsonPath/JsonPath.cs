@@ -14,7 +14,7 @@ namespace Json.Path;
 /// </summary>
 [JsonConverter(typeof(JsonPathConverter))]
 [TypeConverter(typeof(JsonPathTypeConverter))]
-public class JsonPath
+public class JsonPath : IEquatable<JsonPath>
 {
 	/// <summary>
 	/// Gets a JSON Path with only a global root and no selectors, namely `$`.
@@ -183,4 +183,53 @@ public class JsonPath
 			segment.BuildString(builder);
 		}
 	}
+
+	/// <summary>
+	/// Indicates whether the current <see cref="JsonPath"/> is equal to another <see cref="JsonPath"/>.
+	/// </summary>
+	/// <param name="other">A <see cref="JsonPath"/> to compare with this instance.</param>
+	/// <returns><see langword="true"/> if the current instance is equal to <paramref name="other"/>; otherwise, <see langword="false"/>.</returns>
+	public bool Equals(JsonPath? other)
+	{
+		if (ReferenceEquals(this, other)) return true;
+		if (other is null) return false;
+		if (Scope != other.Scope || Segments.Length != other.Segments.Length) return false;
+
+		for (var i = 0; i < Segments.Length; i++)
+		{
+			if (!Segments[i].Equals(other.Segments[i])) return false;
+		}
+
+		return true;
+	}
+
+	/// <summary>Determines whether the specified object is equal to the current object.</summary>
+	/// <param name="obj">The object to compare with the current object.</param>
+	/// <returns><see langword="true"/> if the specified object is equal to the current object; otherwise, <see langword="false"/>.</returns>
+	public override bool Equals(object? obj) => Equals(obj as JsonPath);
+
+	/// <summary>Serves as the default hash function.</summary>
+	/// <returns>A hash code for the current object.</returns>
+	public override int GetHashCode()
+	{
+		unchecked
+		{
+			var hash = (int)Scope;
+			foreach (var segment in Segments)
+			{
+				hash = (hash * 397) ^ segment.GetHashCode();
+			}
+			return hash;
+		}
+	}
+
+	/// <summary>
+	/// Determines whether two <see cref="JsonPath"/> instances are equal.
+	/// </summary>
+	public static bool operator ==(JsonPath? left, JsonPath? right) => Equals(left, right);
+
+	/// <summary>
+	/// Determines whether two <see cref="JsonPath"/> instances are not equal.
+	/// </summary>
+	public static bool operator !=(JsonPath? left, JsonPath? right) => !Equals(left, right);
 }

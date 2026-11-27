@@ -9,7 +9,7 @@ namespace Json.Path;
 /// <summary>
 /// Represents a wildcard selector, `[*]` or `.*`.
 /// </summary>
-public class WildcardSelector : ISelector, IHaveShorthand
+public class WildcardSelector : ISelector, IHaveShorthand, IEquatable<WildcardSelector>
 {
 	internal WildcardSelector(){}
 
@@ -68,6 +68,15 @@ public class WildcardSelector : ISelector, IHaveShorthand
 	{
 		builder.Append('*');
 	}
+
+	/// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+	public bool Equals(WildcardSelector? other) => other is not null;
+
+	/// <summary>Determines whether the specified object is equal to the current object.</summary>
+	public override bool Equals(object? obj) => obj is WildcardSelector;
+
+	/// <summary>Serves as the default hash function.</summary>
+	public override int GetHashCode() => typeof(WildcardSelector).GetHashCode();
 }
 
 internal class WildcardSelectorParser : ISelectorParser
