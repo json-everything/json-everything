@@ -20,16 +20,15 @@
 	[Parameter]
 	public string? Content
 	{
-		get => _content;
+		get;
 		set
 		{
-			_content = value;
+			field = value;
 			UpdateView();
 		}
 	}
 
 	private string _value = "";
-	private string? _content;
 
 	protected override Task OnInitializedAsync()
 	{

@@ -13,13 +13,16 @@ Channels for community engagement (where I'll be looking) include:
 Please be sure that you've read the [documentation](https://docs.json-everything.net) and that you're using the library correctly.  It sounds silly, but these kinds of issues are actually quite common.
 
 > [!IMPORTANT]
-> Use the templates provided, even if submitting issues with the CLI or API.  This repo contains automation that runs based on the well-defined layout of those templates.
+> Use the [templates provided](https://github.com/json-everything/json-everything/tree/master/.github/ISSUE_TEMPLATE), even if submitting issues with the CLI or API.  This repo contains automation that runs based on the well-defined layout of those templates.
 
 For bugs, please submit _minimal_ reproductions that demonstrate the problem you're reporting.  Do not send me your production code and expect me to debug it for you.  While testing can never cover every case, these libraries are very thoroughly tested using public suites supplemented by my own test cases.  As such I'm _very_ confident that the libraries adhere to their respective specifications.
 
 ## Submitting PRs
 
 Please be sure that an issue has been opened to allow for proper discussion _before_ submitting a PR.  **DO NOT simply open an issue and immediately open a PR to address it.**  If the project maintainers decide _not_ to merge your PR, you might feel you've wasted your time, and no one wants that.
+
+> [!IMPORTANT]
+> Use the [template provided](https://github.com/json-everything/json-everything/blob/master/.github/pull_request_template.md), even if submitting PRs with the CLI or API.  .Net Foundation requires that all contributors have read and follow this guide and the [Code of Conduct](https://github.com/json-everything/json-everything/blob/master/CODE_OF_CONDUCT.md).  PRs that do not follow these guidelines will be closed without merging, even if they pass the build and add genuine value.
 
 When submitting a PR for a bug fix, please follow this multistep process:
 
