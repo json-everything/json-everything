@@ -29,6 +29,11 @@ internal class ExistsLogicalExpressionNode : LeafLogicalExpressionNode
 
 		return result.Matches.Count != 0;
 	}
+
+	public override bool Equals(object? obj) =>
+		obj is ExistsLogicalExpressionNode other && Path.Equals(other.Path);
+
+	public override int GetHashCode() => Path.GetHashCode();
 }
 
 internal class ExistsLogicalExpressionParser : ILogicalExpressionParser

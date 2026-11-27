@@ -37,6 +37,19 @@ internal class UnaryLogicalExpressionNode : CompositeLogicalExpressionNode
 	{
 		return $"{Operator}{Value}";
 	}
+
+	public override bool Equals(object? obj) =>
+		obj is UnaryLogicalExpressionNode other &&
+		Equals(Operator, other.Operator) &&
+		Equals(Value, other.Value);
+
+	public override int GetHashCode()
+	{
+		unchecked
+		{
+			return (Operator.GetHashCode() * 397) ^ Value.GetHashCode();
+		}
+	}
 }
 
 internal class UnaryLogicalExpressionParser : ILogicalExpressionParser

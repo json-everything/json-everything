@@ -39,6 +39,11 @@ internal class PathValueExpressionNode : LeafValueExpressionNode
 	{
 		return Path.ToString();
 	}
+
+	public override bool Equals(object? obj) =>
+		obj is PathValueExpressionNode other && Path.Equals(other.Path);
+
+	public override int GetHashCode() => Path.GetHashCode();
 }
 
 internal class PathValueExpressionParser : IValueExpressionParser

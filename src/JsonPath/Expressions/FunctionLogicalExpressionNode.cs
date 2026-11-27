@@ -60,6 +60,32 @@ internal class FunctionLogicalExpressionNode : LogicalExpressionNode
 	{
 		return $"{Function.Name}({string.Join(",", (IEnumerable<ValueExpressionNode>)Parameters)})";
 	}
+
+	public override bool Equals(object? obj)
+	{
+		if (obj is not FunctionLogicalExpressionNode other) return false;
+		if (Function.Name != other.Function.Name || Parameters.Length != other.Parameters.Length) return false;
+
+		for (var i = 0; i < Parameters.Length; i++)
+		{
+			if (!Equals(Parameters[i], other.Parameters[i])) return false;
+		}
+
+		return true;
+	}
+
+	public override int GetHashCode()
+	{
+		unchecked
+		{
+			var hash = Function.Name.GetHashCode();
+			foreach (var parameter in Parameters)
+			{
+				hash = (hash * 397) ^ parameter.GetHashCode();
+			}
+			return hash;
+		}
+	}
 }
 
 internal class FunctionLogicalExpressionParser : ILogicalExpressionParser

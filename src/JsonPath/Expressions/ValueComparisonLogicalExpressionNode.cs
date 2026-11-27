@@ -34,6 +34,23 @@ internal class ValueComparisonLogicalExpressionNode : LeafLogicalExpressionNode
 	{
 		return $"{Left}{Operator}{Right}";
 	}
+
+	public override bool Equals(object? obj) =>
+		obj is ValueComparisonLogicalExpressionNode other &&
+		Equals(Operator, other.Operator) &&
+		Equals(Left, other.Left) &&
+		Equals(Right, other.Right);
+
+	public override int GetHashCode()
+	{
+		unchecked
+		{
+			var hash = Operator.GetHashCode();
+			hash = (hash * 397) ^ Left.GetHashCode();
+			hash = (hash * 397) ^ Right.GetHashCode();
+			return hash;
+		}
+	}
 }
 
 internal class ValueComparisonLogicalExpressionParser : ILogicalExpressionParser
