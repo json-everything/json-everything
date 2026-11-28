@@ -1506,4 +1506,80 @@ public class GithubTests
 
 		Assert.DoesNotThrow(() => schema.Evaluate(instance));
 	}
+
+	[Test]
+	public void Issue1079_PointerRefTargetUsesDocumentDialect()
+	{
+		const string schemaText =
+			"""
+			{
+			  "$schema": "https://json-schema.org/draft/2020-12/schema",
+			  "type": "object",
+			  "properties": { "state": { "$ref": "#/definitions/State" } },
+			  "definitions": {
+			    "State": {
+			      "type": "string",
+			      "enum": ["Draft", "Active"],
+			      "x-labels": { "Draft": "Not yet active", "Active": "In force" }
+			    }
+			  }
+			}
+			""";
+
+		var options = new BuildOptions { SchemaRegistry = new SchemaRegistry() };
+		var schema = JsonSchema.FromText(schemaText, options);
+
+		var valid = schema.Evaluate(JsonDocument.Parse("""{ "state": "Draft" }""").RootElement);
+		Assert.That(valid.IsValid, Is.True);
+
+		var invalid = schema.Evaluate(JsonDocument.Parse("""{ "state": "Unknown" }""").RootElement);
+		Assert.That(invalid.IsValid, Is.False);
+	}
+
+	[Test]
+	public void Issue1079_RefSiblingsFollowDocumentDialect()
+	{
+		const string schemaText =
+			"""
+			{
+			  "$schema": "http://json-schema.org/draft-07/schema#",
+			  "properties": { "name": { "$ref": "#/definitions/text", "maxLength": 1 } },
+			  "definitions": { "text": { "type": "string" } }
+			}
+			""";
+
+		var options = new BuildOptions { SchemaRegistry = new SchemaRegistry() };
+		var schema = JsonSchema.FromText(schemaText, options);
+
+		// Draft 7 ignores the keywords next to `$ref`, so `maxLength` doesn't apply.
+		var result = schema.Evaluate(JsonDocument.Parse("""{ "name": "long" }""").RootElement);
+		Assert.That(result.IsValid, Is.True);
+	}
+
+	[Test]
+	public void Issue1079_PointerRefIntoAnotherDocumentUsesThatDocumentsDialect()
+	{
+		var options = new BuildOptions { SchemaRegistry = new SchemaRegistry() };
+		JsonSchema.FromText(
+			"""
+			{
+			  "$schema": "https://json-schema.org/draft/2020-12/schema",
+			  "$id": "https://example.com/components.json",
+			  "definitions": {
+			    "State": { "type": "string", "x-labels": { "Draft": "Not yet active" } }
+			  }
+			}
+			""", options);
+		var schema = JsonSchema.FromText(
+			"""
+			{
+			  "$schema": "https://json-schema.org/v1",
+			  "$id": "https://example.com/request.json",
+			  "properties": { "state": { "$ref": "components.json#/definitions/State" } }
+			}
+			""", options);
+
+		var result = schema.Evaluate(JsonDocument.Parse("""{ "state": "Draft" }""").RootElement);
+		Assert.That(result.IsValid, Is.True);
+	}
 }
