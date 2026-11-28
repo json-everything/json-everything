@@ -4,6 +4,29 @@ title: JsonPath.Net
 icon: fas fa-tag
 order: "09.08"
 ---
+
+# [3.2.0](https://github.com/json-everything/json-everything/pull/1088) {#release-path-3.2.0}
+
+- [#1082](https://github.com/json-everything/json-everything/issues/1082) - Adds equality comparisons to `JsonPath` components.
+- [#1082](https://github.com/json-everything/json-everything/issues/1082) - Adds more `JsonPath` building options.
+- [#1082](https://github.com/json-everything/json-everything/issues/1082) - Adds `JsonPath` segment operations.
+
+Thanks to [@aradalvand](https://github.com/aradalvand) for proposing and implementing these updates.
+
+## Added
+
+- All `*Selector` types now implement `IEquatable<T>`
+- `JsonPath` now implements `IEquatable<T>` with equality operators supported
+- `JsonPath.Append(PathSegment)`
+- `JsonPath.Append(IEnumerable<PathSegment>)`
+- `JsonPath.Append(JsonPath)`
+- `JsonPath.StartsWith(JsonPath)`
+- `JsonPath.TrimStart(JsonPath)`
+- `JsonPath.TryTrimStart(JsonPath)`
+- `JsonPath.EndsWith(JsonPath)`
+- `JsonPath.TrimEnd(JsonPath)`
+- `JsonPath.TryTrimEnd(JsonPath)`
+
 # [3.1.0](https://github.com/json-everything/json-everything/pull/1077) {#release-path-3.1.0}
 
 Add .Net 11.0 support.
