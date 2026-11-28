@@ -4,8 +4,8 @@
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
 # User-specific files
-.notes/
-.github/instructions/personal-preferences.instructions.md
+.scratch/
+CLAUDE.local.md
 *.rsuser
 *.suo
 *.user
