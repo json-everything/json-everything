@@ -1,48 +1,38 @@
 ---
-applyTo: "*.instructions.md"
+paths:
+  - "CLAUDE.md"
+  - "AGENTS.md"
+  - ".github/copilot-instructions.md"
+  - ".claude/rules/**/*.md"
 ---
 
-# Instructions For Instruction Files
+# Instructions For Agent Instruction Files
 
-This document defines standards for authoring instruction files in this repository.
+## File Layout
 
-## File Location And Naming
+- `CLAUDE.md` holds rules that apply to every task.
+- `.claude/rules/` holds rules that apply to particular files, one concern per file.
+- `AGENTS.md` and `.github/copilot-instructions.md` only point other agents at `CLAUDE.md` and `.claude/rules/`. Do not put rules in them.
+- `CLAUDE.local.md` holds a contributor's personal preferences and is not committed.
 
-- Location: `.github/instructions/`
-- Extension: `.instructions.md`
-- Naming: kebab-case (example: `code-style.instructions.md`)
+## Rule Files
 
-## Frontmatter
+- Every rule file starts with YAML frontmatter holding a `paths` list of globs, matched from the repository root:
 
-Every instruction file must start with YAML frontmatter.
+  ```yaml
+  ---
+  paths:
+    - "src/**/*.cs"
+  ---
+  ```
 
-Required shape:
+- A rule that applies to every task goes in `CLAUDE.md`, not in a rule file without `paths`.
 
-```yaml
----
-applyTo: "*.cs"
----
-```
+## Content
 
-Rules:
-
-- `applyTo` is a single string.
-- Use comma-delimited globs when multiple patterns are needed.
-- Keep patterns scoped; avoid `"**"` unless the instruction truly applies everywhere.
-
-## Content Rules
-
+- These files are instructions, not documentation. Do not include anything an agent can work out from the code, such as project structure, what a package does, or conventions the code already follows consistently.
 - Write the desired state, not legacy behavior.
-- Keep each file focused on one concern.
 - Prefer short, concrete rules.
 - Include examples only when they clarify a non-obvious rule.
-- Avoid copying generic enterprise API guidance that does not match this repository.
-
-## Maintenance
-
-- Update instruction files when conventions evolve.
-- Remove outdated guidance promptly.
-- Keep overlap low across files; if a rule belongs in one file, reference it from others instead of repeating it.
-- Treat instruction files as living guidance. Apply proactive updates when recurring user requests or repeated corrections indicate a stable preference or workflow rule.
-- Do not wait for a direct "update instructions" request when a clear pattern is present.
-- Capture repeated mistakes as explicit rules so the same error is less likely to recur.
+- Keep a rule in one file only.
+- Remove outdated rules promptly.
